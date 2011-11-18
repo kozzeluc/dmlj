@@ -34,7 +34,7 @@ public class TmpZoomHandler implements IHandler {
 		} else if (event.getCommand().getId().endsWith("500")) {
 			percentage = 500;
 		}
-		tmpView.zoom(percentage);
+		//tmpView.zoom(percentage); // temporarily unavailable
 		
 		return null;
 	}

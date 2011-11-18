@@ -1,0 +1,5 @@
+Aan te brengen verbeteringen :
+
+- ElementImpl :  berekening elementlengte
+- connections :  momenteel geen connectors voorzien !  wellicht in het schema
+  model zelf hiervoor een entiteit voorzien.
