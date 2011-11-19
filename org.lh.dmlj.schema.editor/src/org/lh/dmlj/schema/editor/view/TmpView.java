@@ -37,50 +37,6 @@ public class TmpView extends ViewPart {
 	public TmpView() {
 		super();		
 	}
-	
-/*	private PolylineConnection connect(IFigure parent, IFigure child, 
-									   String label) {
-		PolylineConnection connection = new PolylineConnection();
-		
-		ConnectionAnchor sourceAnchor;
-		ConnectionAnchor targetAnchor;
-		PolylineDecoration decoration = null;
-		
-		if (parent instanceof RecordFigure) {
-			sourceAnchor = new ChopboxAnchor(parent);
-			targetAnchor = new ChopboxAnchor(child);
-			decoration = new PolylineDecoration();
-			decoration.setTemplate(PolylineDecoration.TRIANGLE_TIP);
-		} else if (parent instanceof IndexFigure) {
-			sourceAnchor = new IndexSourceAnchor((IndexFigure)parent);
-			targetAnchor = new IndexTargetAnchor((RecordFigure)child);
-		} else if (parent instanceof ConnectorFigure) {
-			sourceAnchor = new EllipseAnchor(parent);
-			targetAnchor = new ChopboxAnchor(child);
-			decoration = new PolylineDecoration();
-			decoration.setTemplate(PolylineDecoration.TRIANGLE_TIP);
-		} else {
-			sourceAnchor = new ChopboxAnchor(parent);
-			targetAnchor = new ChopboxAnchor(child);
-		}
-		
-		connection.setSourceAnchor(sourceAnchor);
-		connection.setTargetAnchor(targetAnchor);
-		if (decoration != null) {
-			connection.setTargetDecoration(decoration);
-		}
-		connection.setLineWidth(1);		
-		
-		if (parent != null) {
-			SetDescription setDescription = 
-				new SetDescription(label, parent, targetAnchor);
-			setDescription.setFont(Plugin.getDefault().getFont());
-			primary.add(setDescription);
-			new FigureMover(setDescription);
-		}
-		
-		return connection;
-	}*/	
 
 	@Override
 	public void createPartControl(Composite parent) {
