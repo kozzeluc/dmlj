@@ -4,8 +4,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
-import org.eclipse.ui.PlatformUI;
-import org.lh.dmlj.schema.editor.view.TmpView;
 
 public class TmpZoomHandler implements IHandler {
 
@@ -20,10 +18,10 @@ public class TmpZoomHandler implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-		TmpView tmpView = (TmpView)PlatformUI.getWorkbench()
+		/*TmpView tmpView = (TmpView)PlatformUI.getWorkbench()
 											 .getActiveWorkbenchWindow()
 											 .getActivePage()
-											 .findView(TmpView.ID);
+											 .findView(TmpView.ID);*/
 		int percentage = -1;
 		if (event.getCommand().getId().endsWith("50")) {
 			percentage = 50;

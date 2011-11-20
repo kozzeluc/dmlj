@@ -102,5 +102,15 @@
             restorable="true">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.lh.dmlj.schema.editor.SchemaEditor"
+            default="true"
+            extensions="schema"
+            id="org.lh.dmlj.schema.editor.schemaeditor"
+            name="Schema Editor">
+      </editor>
+   </extension>
 
 </plugin>
