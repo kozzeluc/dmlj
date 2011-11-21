@@ -7,8 +7,10 @@ import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -31,6 +33,9 @@ public class RecordEditPart
 	
 	@Override
 	protected void createEditPolicies() {
+		NonResizableEditPolicy selectionPolicy = new NonResizableEditPolicy();
+		selectionPolicy.setDragAllowed(false);
+		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionPolicy);
 	}
 
 	@Override

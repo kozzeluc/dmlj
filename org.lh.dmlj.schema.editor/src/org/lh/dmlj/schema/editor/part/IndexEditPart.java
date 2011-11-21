@@ -6,12 +6,15 @@ import java.util.List;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
+import org.lh.dmlj.schema.editor.policy.NonResizableIndexEditPolicy;
 
 public class IndexEditPart 
 	extends AbstractDiagramElementEditPart implements NodeEditPart {
@@ -28,6 +31,10 @@ public class IndexEditPart
 	
 	@Override
 	protected void createEditPolicies() {
+		NonResizableEditPolicy selectionPolicy = 
+			new NonResizableIndexEditPolicy();
+		selectionPolicy.setDragAllowed(false);
+		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionPolicy);
 	}
 
 	@Override
