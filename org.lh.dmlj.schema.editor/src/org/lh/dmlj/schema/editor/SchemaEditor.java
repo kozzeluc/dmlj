@@ -20,6 +20,7 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
+import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -46,6 +47,8 @@ public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 		GraphicalViewer viewer = getGraphicalViewer();
 		viewer.setEditPartFactory(new SchemaDiagramEditPartFactory());
 		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
+		viewer.setSelectionManager(new ModifiedSelectionManager(viewer));
+		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 	}
 	
 	@Override
