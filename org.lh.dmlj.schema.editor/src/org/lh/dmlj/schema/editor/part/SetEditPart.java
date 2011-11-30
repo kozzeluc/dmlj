@@ -6,13 +6,14 @@ import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
+import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 
 public class SetEditPart extends AbstractConnectionEditPart {
 
-	public SetEditPart(Set set) {
+	public SetEditPart(MemberRole memberRole) {
 		super();
-		setModel(set);
+		setModel(memberRole);
 	}
 	
 	@Override
@@ -27,7 +28,8 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		
 		PolylineConnection connection = new PolylineConnection();
 		
-		Set set = getModel();
+		MemberRole memberRole = getModel();
+		Set set = memberRole.getSet();
 		if (set.getOwner() != null) { 
 			// user owned set (chained or indexed), make sure an arrow is drawn
 			// at the target end...
@@ -39,10 +41,10 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		connection.setLineWidth(1);				
 		
 		return connection;		
-	}
+	}	
 	
-	public Set getModel() {
-		return (Set) super.getModel();
-	}
+	public MemberRole getModel() {
+		return (MemberRole) super.getModel();
+	}			
 	
 }

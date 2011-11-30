@@ -7,96 +7,44 @@ import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.ConnectionEditPart;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.NodeEditPart;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.IndexTargetAnchor;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public class RecordEditPart 
-	extends AbstractDiagramElementEditPart implements NodeEditPart {
+	extends AbstractDiagramElementEditPart<SchemaRecord>  {
 
-	@SuppressWarnings("unused")
 	private RecordEditPart() {
-		super(); // disabled constructor
+		super(null); // disabled constructor
 	}
 	
 	public RecordEditPart(SchemaRecord record) {
-		super();
-		setModel(record);
-	}
+		super(record);		
+	}	
 	
-	@Override
-	protected void createEditPolicies() {
-		NonResizableEditPolicy selectionPolicy = new NonResizableEditPolicy();
-		selectionPolicy.setDragAllowed(false);
-		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionPolicy);
-	}
-
 	@Override
 	protected IFigure createFigure() {
-		
-		SchemaRecord record = getModel();
-		
-		RecordFigure figure = new RecordFigure();
-		figure.setRecordName(record.getName());
-		figure.setRecordId(record.getId());
-		figure.setStorageMode(record.getStorageMode().toString());
-		figure.setRecordLength(record.getDataLength());
-		figure.setLocationMode(record.getLocationMode().toString());
-		figure.setLocationModeDetails("?");
-		figure.setDuplicatesOption("?");
-		figure.setAreaName(record.getAreaSpecification().getArea().getName());		
-		
-		return figure;
-		
-	}
-	
-	public SchemaRecord getModel() {
-		return (SchemaRecord) super.getModel();
-	}
+		return new RecordFigure();				
+	}	
 	
 	@Override
-	protected List<Set> getModelSourceConnections() {
-		
-		SchemaRecord record = getModel();
-		
-		List<Set> sets = new ArrayList<>();
-		
-		for (OwnerRole ownerRole : record.getOwnerRoles()) {
-			sets.add(ownerRole.getSet());
+	protected List<MemberRole> getModelSourceConnections() {
+		List<MemberRole> memberRoles = new ArrayList<>();
+		for (OwnerRole ownerRole : getModel().getOwnerRoles()) {
+			memberRoles.addAll(ownerRole.getSet().getMembers());
 		}
-		
-		return sets;
+		return memberRoles;
 	}
 	
 	@Override
-	protected List<Set> getModelTargetConnections() {
-		
-		SchemaRecord record = getModel();
-		
-		List<Set> sets = new ArrayList<>();
-		
-		for (MemberRole memberRole : record.getMemberRoles()) {
-			sets.add(memberRole.getSet());
+	protected List<MemberRole> getModelTargetConnections() {
+		List<MemberRole> memberRoles = new ArrayList<>();
+		for (MemberRole memberRole : getModel().getMemberRoles()) {
+			memberRoles.add(memberRole);
 		}
-		
-		return sets;
-	}
-
-	@Override
-	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
-		return new ChopboxAnchor(getFigure());
-	}
-
-	@Override
-	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		return new ChopboxAnchor(getFigure());
+		return memberRoles;
 	}
 
 	@Override
@@ -109,7 +57,17 @@ public class RecordEditPart
 	}
 
 	@Override
-	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		return new ChopboxAnchor(getFigure());
-	}
+	protected void setFigureData() {
+		SchemaRecord record = getModel();
+		RecordFigure figure = (RecordFigure) getFigure();
+		figure.setRecordName(record.getName());
+		figure.setRecordId(record.getId());
+		figure.setStorageMode(record.getStorageMode().toString());
+		figure.setRecordLength(record.getDataLength());
+		figure.setLocationMode(record.getLocationMode().toString());
+		figure.setLocationModeDetails("?");
+		figure.setDuplicatesOption("?");
+		figure.setAreaName(record.getAreaSpecification().getArea().getName());
+	}	
+	
 }

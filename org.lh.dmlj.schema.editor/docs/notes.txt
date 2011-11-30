@@ -4,5 +4,5 @@ Aan te brengen verbeteringen :
 - connections :  
   - momenteel geen connectors voorzien !  wellicht in het schema model zelf 
     hiervoor een entiteit voorzien.
-  - setbeschrijving ontbreekt nog
-  - momenteel is het model object een Set, dit moet een MemberRole worden
+  - setbeschrijving onvolledig
+  - lijn moet volledig customizeerbaar zijn

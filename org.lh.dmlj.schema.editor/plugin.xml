@@ -106,6 +106,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.lh.dmlj.schema.editor.SchemaEditor"
+            contributorClass="org.lh.dmlj.schema.editor.SchemaEditorActionBarContributor"
             default="true"
             extensions="schema"
             id="org.lh.dmlj.schema.editor.schemaeditor"

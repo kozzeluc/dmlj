@@ -30,7 +30,7 @@ public class RecordFigure extends Figure {
 	private Label locationModeDetailsFigure; // CALC-key or VIA-set
 	private Label duplicatesOptionFigure;
 	
-	private Label areaNameFigure;
+	private Label areaNameFigure;	
 	
 	public RecordFigure() {
 		super();
@@ -53,7 +53,8 @@ public class RecordFigure extends Figure {
 		locationModeDetailsFigure = addLabel(0, 26, 102, 14);
 		duplicatesOptionFigure = addLabel(101, 26, 29, 14);
 		
-		areaNameFigure = addLabel(0, 39, 130, 14);
+		areaNameFigure = addLabel(0, 39, 130, 14);		
+		
 	}
 	
 	private Label addLabel(int x, int y, int width, int height) {

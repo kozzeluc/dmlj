@@ -6,54 +6,32 @@ import java.util.List;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.ConnectionEditPart;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
-import org.lh.dmlj.schema.editor.policy.NonResizableIndexEditPolicy;
 
-public class IndexEditPart 
-	extends AbstractDiagramElementEditPart implements NodeEditPart {
+public class IndexEditPart extends AbstractDiagramElementEditPart<SystemOwner> {
 
-	@SuppressWarnings("unused")
 	private IndexEditPart() {
-		super(); // disabled constructor
+		super(null); // disabled constructor
 	}
 	
 	public IndexEditPart(SystemOwner systemOwner) {
-		super();
-		setModel(systemOwner);
-	}
-	
-	@Override
-	protected void createEditPolicies() {
-		NonResizableEditPolicy selectionPolicy = 
-			new NonResizableIndexEditPolicy();
-		selectionPolicy.setDragAllowed(false);
-		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionPolicy);
+		super(systemOwner);
 	}
 
 	@Override
 	protected IFigure createFigure() {
 		return new IndexFigure();
-	}
-	
-	public SystemOwner getModel() {
-		return (SystemOwner) super.getModel();
-	}
+	}	
 	
 	@Override
-	protected List<Set> getModelSourceConnections() {
-		
-		List<Set> sets = new ArrayList<>();
-		
-		sets.add(getModel().getSet());
-		
-		return sets;
+	protected List<MemberRole> getModelSourceConnections() {
+		List<MemberRole> memberRoles = new ArrayList<>();
+		memberRoles.add(getModel().getSet().getMembers().get(0));
+		return memberRoles;
 	}
 
 	@Override
@@ -67,13 +45,8 @@ public class IndexEditPart
 	}
 
 	@Override
-	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
-		return null;
-	}
-
-	@Override
-	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		return null;
+	protected void setFigureData() {
+		//no data to set
 	}
 	
 }

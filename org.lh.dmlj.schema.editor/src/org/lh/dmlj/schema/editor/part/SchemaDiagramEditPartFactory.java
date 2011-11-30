@@ -2,9 +2,10 @@ package org.lh.dmlj.schema.editor.part;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 
 public class SchemaDiagramEditPartFactory implements EditPartFactory {
@@ -21,8 +22,10 @@ public class SchemaDiagramEditPartFactory implements EditPartFactory {
 			return new RecordEditPart((SchemaRecord) model);
 		} else if (model instanceof SystemOwner) {
 			return new IndexEditPart((SystemOwner) model);
-		} else if (model instanceof Set) {
-			return new SetEditPart((Set) model);
+		} else if (model instanceof MemberRole) {
+			return new SetEditPart((MemberRole) model);
+		} else if (model instanceof DiagramLabel) {
+			return new SetDescriptionEditPart((DiagramLabel) model);
 		}
 		throw new IllegalStateException("No EditPart for " + model.getClass());
 	}
