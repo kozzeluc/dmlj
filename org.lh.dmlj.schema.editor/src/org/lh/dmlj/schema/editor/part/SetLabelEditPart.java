@@ -5,19 +5,25 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.model.SetLabel;
 
-public class SetDescriptionEditPart 
-	extends AbstractDiagramElementEditPart<DiagramLabel>  {
+public class SetLabelEditPart 
+    extends AbstractSchemaElementEditPart<SetLabel>  {
 
-	private SetDescriptionEditPart() {
+	private SetLabelEditPart() {
 		super(null); // disabled constructor
 	}
 	
-	public SetDescriptionEditPart(DiagramLabel setDescription) {
-		super(setDescription);		
+	public SetLabelEditPart(SetLabel setLabel) {
+		super(setLabel);		
 	}	
+
+	@Override
+	protected void attachModelChangeListener() {
+		getModel().getMemberRole().eAdapters().add(this);
+		getModel().getDiagramLocation().eAdapters().add(this);		
+	}
 
 	@Override
 	protected IFigure createFigure() {
@@ -26,6 +32,12 @@ public class SetDescriptionEditPart
 		return label;
 	}
 	
+	@Override
+	protected void detachModelChangeListener() {
+		getModel().getDiagramLocation().eAdapters().remove(this);
+		getModel().getMemberRole().eAdapters().remove(this);		
+	}
+
 	@Override
 	public void showSourceFeedback(Request request) {
 		if (request instanceof ChangeBoundsRequest) {

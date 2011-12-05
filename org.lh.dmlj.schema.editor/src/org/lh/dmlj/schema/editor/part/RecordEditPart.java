@@ -14,7 +14,7 @@ import org.lh.dmlj.schema.editor.anchor.IndexTargetAnchor;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public class RecordEditPart 
-	extends AbstractDiagramElementEditPart<SchemaRecord>  {
+	extends AbstractSchemaElementEditPart<SchemaRecord>  {
 
 	private RecordEditPart() {
 		super(null); // disabled constructor
@@ -25,10 +25,22 @@ public class RecordEditPart
 	}	
 	
 	@Override
+	protected void attachModelChangeListener() {
+		getModel().eAdapters().add(this);
+		getModel().getDiagramLocation().eAdapters().add(this);
+	}
+
+	@Override
 	protected IFigure createFigure() {
 		return new RecordFigure();				
 	}	
 	
+	@Override
+	protected void detachModelChangeListener() {
+		getModel().getDiagramLocation().eAdapters().remove(this);
+		getModel().eAdapters().remove(this);
+	}
+
 	@Override
 	protected List<MemberRole> getModelSourceConnections() {
 		List<MemberRole> memberRoles = new ArrayList<>();

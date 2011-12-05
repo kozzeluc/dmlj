@@ -12,14 +12,14 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.lh.dmlj.schema.DiagramElement;
+import org.lh.dmlj.schema.DiagramLocationProvider;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 
-public abstract class AbstractDiagramElementEditPart<T extends DiagramElement> 
+public abstract class AbstractSchemaElementEditPart<T extends DiagramLocationProvider> 
 	extends AbstractGraphicalEditPart implements Adapter, NodeEditPart {
 
-	protected AbstractDiagramElementEditPart(T diagramElement) {
+	protected AbstractSchemaElementEditPart(T diagramElement) {
 		super();
 		setModel(diagramElement);
 	}
@@ -27,16 +27,19 @@ public abstract class AbstractDiagramElementEditPart<T extends DiagramElement>
 	@Override
 	public final void activate() {
 		super.activate();
-		getModel().eAdapters().add(this);
+		attachModelChangeListener();
 	}
 	
 	@Override
 	protected void createEditPolicies() {		
 	}
+	
+	protected abstract void attachModelChangeListener();
+	protected abstract void detachModelChangeListener();
 
 	@Override
 	public final void deactivate() {
-		getModel().eAdapters().remove(this);
+		detachModelChangeListener();
 		super.deactivate();
 	}
 
@@ -79,8 +82,8 @@ public abstract class AbstractDiagramElementEditPart<T extends DiagramElement>
 	@Override
 	public final void notifyChanged(Notification notification) {
 		int featureID = notification.getFeatureID(SchemaRecord.class);
-		if (featureID == SchemaPackage.DIAGRAM_ELEMENT__X ||
-			featureID == SchemaPackage.DIAGRAM_ELEMENT__Y) {
+		if (featureID == SchemaPackage.DIAGRAM_LOCATION__X ||
+			featureID == SchemaPackage.DIAGRAM_LOCATION__Y) {
 			
 			refreshVisuals();
 		}
@@ -89,10 +92,10 @@ public abstract class AbstractDiagramElementEditPart<T extends DiagramElement>
 	@Override
 	protected final void refreshVisuals() {
 		setFigureData();
-		DiagramElement m = (DiagramElement) getModel();		
 		Dimension size = getFigure().getPreferredSize();
-		Rectangle bounds = 
-			new Rectangle(m.getX(), m.getY(), size.width, size.height);
+		Rectangle bounds = new Rectangle(getModel().getDiagramLocation().getX(), 
+										 getModel().getDiagramLocation().getY(), 
+						  				 size.width, size.height);
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,
 															  getFigure(), 
 															  bounds);

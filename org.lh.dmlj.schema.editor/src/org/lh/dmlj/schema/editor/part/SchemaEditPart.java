@@ -16,12 +16,13 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.lh.dmlj.schema.DiagramElement;
+import org.lh.dmlj.schema.DiagramLocationProvider;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
-import org.lh.dmlj.schema.editor.command.MoveDiagramElementCommand;
+import org.lh.dmlj.schema.editor.command.MoveSchemaElementCommand;
+import org.lh.dmlj.schema.editor.model.SetLabel;
 import org.lh.dmlj.schema.editor.policy.ModifiedNonResizableEditPolicy;
 
 public class SchemaEditPart extends AbstractGraphicalEditPart {
@@ -44,14 +45,16 @@ public class SchemaEditPart extends AbstractGraphicalEditPart {
 															EditPart child,
 															Object constraint) {
 				
-				if (child.getModel() instanceof DiagramElement) {
-					// we're dealing with a DiagramElement, it can only be a
+				if (child.getModel() instanceof DiagramLocationProvider) {
+					// we're dealing with a DiagramNode, it can only be a
 					// move request, so create the move command...
 					Rectangle box = (Rectangle)constraint;
-					return new MoveDiagramElementCommand((DiagramElement)child.getModel(), 
-														 box.x, box.y);
+					DiagramLocationProvider locationProvider =
+						(DiagramLocationProvider) child.getModel();
+					return new MoveSchemaElementCommand(locationProvider, box.x, 
+													  box.y);
 				} else {
-					// not a DiagramElement or user is trying to resize, make
+					// not a DiagramNode or user is trying to resize, make
 					// sure he/she gets the right feedback
 					return null;
 				}
@@ -60,7 +63,7 @@ public class SchemaEditPart extends AbstractGraphicalEditPart {
 			protected EditPolicy createChildEditPolicy(EditPart child) {
 				if (child instanceof RecordEditPart ||
 					child instanceof IndexEditPart ||
-					child instanceof SetDescriptionEditPart) {
+					child instanceof SetLabelEditPart) {
 					
 					return new ModifiedNonResizableEditPolicy();
 				}
@@ -94,10 +97,12 @@ public class SchemaEditPart extends AbstractGraphicalEditPart {
 		// records
 		allObjects.addAll(getModel().getRecords());
 		
-		// set descriptions
+		// set connection labels; we instantiate our own object which wraps the
+		// MemberRole instance
 		for (Set set : getModel().getSets()) {
 			for (MemberRole memberRole : set.getMembers()) {
-				allObjects.add(memberRole.getDiagramLabel());
+				SetLabel setLabel = new SetLabel(memberRole);				
+				allObjects.add(setLabel);
 			}
 		}
 		

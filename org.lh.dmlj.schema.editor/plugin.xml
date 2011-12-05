@@ -89,20 +89,6 @@
       </menuContribution>
    </extension>
    <extension
-         point="org.eclipse.ui.views">
-      <category
-            id="org.lh.dmlj.eclipse.views.category"
-            name="DMLJ">
-      </category>
-      <view
-            category="org.lh.dmlj.eclipse.views.category"
-            class="org.lh.dmlj.schema.editor.view.TmpView"
-            id="org.lh.dmlj.schema.editor.tmpview"
-            name="DMLJ Temporary Schema View"
-            restorable="true">
-      </view>
-   </extension>
-   <extension
          point="org.eclipse.ui.editors">
       <editor
             class="org.lh.dmlj.schema.editor.SchemaEditor"

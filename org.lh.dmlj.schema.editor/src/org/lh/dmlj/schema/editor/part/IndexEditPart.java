@@ -12,7 +12,7 @@ import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
 
-public class IndexEditPart extends AbstractDiagramElementEditPart<SystemOwner> {
+public class IndexEditPart extends AbstractSchemaElementEditPart<SystemOwner> {
 
 	private IndexEditPart() {
 		super(null); // disabled constructor
@@ -23,10 +23,22 @@ public class IndexEditPart extends AbstractDiagramElementEditPart<SystemOwner> {
 	}
 
 	@Override
+	protected void attachModelChangeListener() {
+		getModel().eAdapters().add(this);
+		getModel().getDiagramLocation().eAdapters().add(this);
+	}
+
+	@Override
 	protected IFigure createFigure() {
 		return new IndexFigure();
 	}	
 	
+	@Override
+	protected void detachModelChangeListener() {
+		getModel().getDiagramLocation().eAdapters().remove(this);
+		getModel().eAdapters().remove(this);
+	}
+
 	@Override
 	protected List<MemberRole> getModelSourceConnections() {
 		List<MemberRole> memberRoles = new ArrayList<>();

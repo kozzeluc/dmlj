@@ -22,6 +22,7 @@ public class TmpZoomHandler implements IHandler {
 											 .getActiveWorkbenchWindow()
 											 .getActivePage()
 											 .findView(TmpView.ID);*/
+		@SuppressWarnings("unused")
 		int percentage = -1;
 		if (event.getCommand().getId().endsWith("50")) {
 			percentage = 50;
