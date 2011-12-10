@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.Request;
 import org.lh.dmlj.schema.MemberRole;
@@ -20,23 +21,17 @@ public class IndexEditPart extends AbstractSchemaElementEditPart<SystemOwner> {
 	
 	public IndexEditPart(SystemOwner systemOwner) {
 		super(systemOwner);
-	}
-
-	@Override
-	protected void attachModelChangeListener() {
-		getModel().eAdapters().add(this);
-		getModel().getDiagramLocation().eAdapters().add(this);
-	}
+	}	
 
 	@Override
 	protected IFigure createFigure() {
 		return new IndexFigure();
-	}	
-	
+	}		
+
 	@Override
-	protected void detachModelChangeListener() {
-		getModel().getDiagramLocation().eAdapters().remove(this);
-		getModel().eAdapters().remove(this);
+	protected EObject[] getModelObjects() {
+		return new EObject[] {getModel(), 
+							  getModel().getDiagramLocation()};
 	}
 
 	@Override

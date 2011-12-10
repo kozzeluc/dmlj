@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
@@ -23,23 +24,17 @@ public class RecordEditPart
 	public RecordEditPart(SchemaRecord record) {
 		super(record);		
 	}	
-	
-	@Override
-	protected void attachModelChangeListener() {
-		getModel().eAdapters().add(this);
-		getModel().getDiagramLocation().eAdapters().add(this);
-	}
 
 	@Override
 	protected IFigure createFigure() {
 		return new RecordFigure();				
-	}	
+	}
 	
 	@Override
-	protected void detachModelChangeListener() {
-		getModel().getDiagramLocation().eAdapters().remove(this);
-		getModel().eAdapters().remove(this);
-	}
+	protected EObject[] getModelObjects() {
+		return new EObject[] {getModel(), 
+							  getModel().getDiagramLocation()};
+	}	
 
 	@Override
 	protected List<MemberRole> getModelSourceConnections() {

@@ -3,6 +3,7 @@ package org.lh.dmlj.schema.editor.part;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.lh.dmlj.schema.editor.Plugin;
@@ -20,12 +21,6 @@ public class SetLabelEditPart
 	}	
 
 	@Override
-	protected void attachModelChangeListener() {
-		getModel().getMemberRole().eAdapters().add(this);
-		getModel().getDiagramLocation().eAdapters().add(this);		
-	}
-
-	@Override
 	protected IFigure createFigure() {
 		Label label = new Label();
 		label.setFont(Plugin.getDefault().getFont());
@@ -33,9 +28,9 @@ public class SetLabelEditPart
 	}
 	
 	@Override
-	protected void detachModelChangeListener() {
-		getModel().getDiagramLocation().eAdapters().remove(this);
-		getModel().getMemberRole().eAdapters().remove(this);		
+	protected EObject[] getModelObjects() {
+		return new EObject[] {getModel().getMemberRole(), 
+							  getModel().getDiagramLocation()};
 	}
 
 	@Override

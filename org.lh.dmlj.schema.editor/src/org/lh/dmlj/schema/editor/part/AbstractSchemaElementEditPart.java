@@ -7,6 +7,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
@@ -18,6 +19,8 @@ import org.lh.dmlj.schema.SchemaRecord;
 
 public abstract class AbstractSchemaElementEditPart<T extends DiagramLocationProvider> 
 	extends AbstractGraphicalEditPart implements Adapter, NodeEditPart {
+	
+	private EObject[] modelObjects;
 
 	protected AbstractSchemaElementEditPart(T diagramElement) {
 		super();
@@ -27,19 +30,26 @@ public abstract class AbstractSchemaElementEditPart<T extends DiagramLocationPro
 	@Override
 	public final void activate() {
 		super.activate();
-		attachModelChangeListener();
+		EObject[] tmpModelObjects = getModelObjects();
+		modelObjects = new EObject[tmpModelObjects.length];
+		System.arraycopy(tmpModelObjects, 0, modelObjects, 0, 
+						 modelObjects.length);
+		for (int i = 0; i < modelObjects.length; i++) {
+			modelObjects[i].eAdapters().add(this);
+		}
 	}
 	
+	protected abstract EObject[] getModelObjects();
+
 	@Override
 	protected void createEditPolicies() {		
-	}
-	
-	protected abstract void attachModelChangeListener();
-	protected abstract void detachModelChangeListener();
+	}	
 
 	@Override
 	public final void deactivate() {
-		detachModelChangeListener();
+		for (int i = modelObjects.length - 1; i >= 0; i--) {
+			modelObjects[i].eAdapters().remove(this);
+		}
 		super.deactivate();
 	}
 
