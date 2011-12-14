@@ -9,6 +9,7 @@ import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PolylineDecoration;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -107,11 +108,12 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		BendpointEditPolicy bendpointPolicy = new BendpointEditPolicy() {
 			
 			@Override
-			protected Command getCreateBendpointCommand(BendpointRequest request) {		
+			protected Command getCreateBendpointCommand(BendpointRequest request) {						
+				Point p = request.getLocation().getCopy();             
+                getConnection().translateToRelative(p); // explanation why needed ?
 				CreateBendpointCommand command = 
 					new CreateBendpointCommand(getModel(), request.getIndex(), 
-											   request.getLocation().x,
-											   request.getLocation().y);
+											   p.x, p.y);
 				return command;
 			}
 
@@ -124,10 +126,11 @@ public class SetEditPart extends AbstractConnectionEditPart {
 
 			@Override
 			protected Command getMoveBendpointCommand(BendpointRequest request) {
+				Point p = request.getLocation().getCopy();             
+                getConnection().translateToRelative(p); // explanation why needed ?
 				MoveBendpointCommand command = 
 					new MoveBendpointCommand(getModel(), request.getIndex(), 
-											 request.getLocation().x,
-											 request.getLocation().y);
+											 p.x, p.y);
 				return command;
 			}
 			
