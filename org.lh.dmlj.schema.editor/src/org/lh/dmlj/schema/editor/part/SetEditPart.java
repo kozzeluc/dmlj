@@ -68,7 +68,8 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE,
 						  new ConnectionEndpointEditPolicy());
 		
-		refreshBendpointEditPolicy();
+		refreshBendpointEditPolicy();		
+		
 	}
 	
 	@Override

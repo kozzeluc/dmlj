@@ -20,8 +20,12 @@ import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.ui.actions.ToggleGridAction;
+import org.eclipse.gef.ui.actions.ToggleRulerVisibilityAction;
+import org.eclipse.gef.ui.actions.ToggleSnapToGeometryAction;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -33,7 +37,7 @@ import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
 
 public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 	
-	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";
+	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";	
 	
 	private Schema schema;
 	private URI    uri;
@@ -57,6 +61,30 @@ public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
 		viewer.setSelectionManager(new ModifiedSelectionManager(viewer));
 		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
+		
+		// Snap to Geometry property
+		//getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
+		//								 Boolean.TRUE);
+		
+		// Grid properties
+		//getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
+		//								 Boolean.TRUE);
+		// We keep grid visibility and enablement in sync
+		//getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
+		//								 Boolean.TRUE);
+		
+		// Actions
+		IAction showRulers = 
+			new ToggleRulerVisibilityAction(getGraphicalViewer());
+		getActionRegistry().registerAction(showRulers);
+
+		IAction snapAction = 
+			new ToggleSnapToGeometryAction(getGraphicalViewer());
+		getActionRegistry().registerAction(snapAction);
+
+		IAction showGrid = new ToggleGridAction(getGraphicalViewer());
+		getActionRegistry().registerAction(showGrid);
+		
 	}
 	
 	@Override

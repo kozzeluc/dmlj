@@ -45,6 +45,14 @@ public abstract class AbstractBendpointCommand extends Command {
 			SchemaFactory.eINSTANCE.createDiagramLocation();
 		bendpoint.setX(x);
 		bendpoint.setY(y);
+		String p;
+		if (memberRole.getSet().getSystemOwner() != null) {
+			p = "system owner";
+		} else {
+			p = memberRole.getRecord().getName();
+		}
+		bendpoint.setEyecatcher("bendpoint set " + 
+								memberRole.getSet().getName() + "(" + p + ")");
 		
 		// at it to the schema (container)...
 		memberRole.getSet()
