@@ -44,17 +44,12 @@ public abstract class AbstractBendpointCommand extends Command {
 		DiagramLocation bendpoint = 
 			SchemaFactory.eINSTANCE.createDiagramLocation();
 		bendpoint.setX(x);
-		bendpoint.setY(y);
-		String p;
-		if (memberRole.getSet().getSystemOwner() != null) {
-			p = "system owner";
-		} else {
-			p = memberRole.getRecord().getName();
-		}
-		bendpoint.setEyecatcher("bendpoint set " + 
-								memberRole.getSet().getName() + "(" + p + ")");
+		bendpoint.setY(y);		
+		bendpoint.setEyecatcher("bendpoint [" + index + "] set " + 
+								memberRole.getSet().getName() + " (" + 
+								memberRole.getRecord().getName() + ")");
 		
-		// at it to the schema (container)...
+		// add it to the schema (container)...
 		memberRole.getSet()
 		  		  .getSchema()
 		  		  .getDiagramData()
@@ -63,6 +58,15 @@ public abstract class AbstractBendpointCommand extends Command {
 
 		// insert it at the right place in the connection...
 		memberRole.getDiagramBendpoints().add(index, bendpoint);
+		
+		// modify the eyecatcher of subsequent bendpoints, if any...
+		for (int i = index + 1; i < memberRole.getDiagramBendpoints().size(); i++) {
+			DiagramLocation aBendpoint = 
+				memberRole.getDiagramBendpoints().get(i);
+			aBendpoint.setEyecatcher("bendpoint [" + i + "] set " + 
+									 memberRole.getSet().getName() + " (" + 
+									 memberRole.getRecord().getName() + ")");
+		}
 		
 		return bendpoint;
 		
@@ -91,6 +95,15 @@ public abstract class AbstractBendpointCommand extends Command {
 		
 		// remove it from the connection...
 		memberRole.getDiagramBendpoints().remove(index);
+		
+		// modify the eyecatcher of subsequent bendpoints, if any...		
+		for (int i = index; i < memberRole.getDiagramBendpoints().size(); i++) {
+			DiagramLocation aBendpoint =
+				memberRole.getDiagramBendpoints().get(i);
+			aBendpoint.setEyecatcher("bendpoint [" + i + "] set " + 
+									 memberRole.getSet().getName() + " (" + 
+									 memberRole.getRecord().getName() + ")");
+		}
 	}
 	
 }
