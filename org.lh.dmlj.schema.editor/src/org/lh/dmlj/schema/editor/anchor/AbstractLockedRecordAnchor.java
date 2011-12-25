@@ -30,13 +30,14 @@ public abstract class AbstractLockedRecordAnchor extends ChopboxAnchor {
 	public final Point getLocation(Point reference) {
 		PrecisionPoint figureLocation = 
 			new PrecisionPoint(getOwner().getBounds().x,
-							   getOwner().getBounds().y);		
+							   getOwner().getBounds().y);
+		getOwner().translateToAbsolute(figureLocation); // necessary
 		if (owner && memberRole.getDiagramSourceAnchor() == null ||
 			!owner && memberRole.getDiagramTargetAnchor() == null) {
 			
 			if (offset == null) {
 				PrecisionPoint superLocation = 
-					new PrecisionPoint(getDefaultLocation(reference));
+					new PrecisionPoint(getDefaultLocation(reference));				
 				offset = new PrecisionPoint(superLocation.x - figureLocation.x, 
 										    superLocation.y - figureLocation.y);
 			}
