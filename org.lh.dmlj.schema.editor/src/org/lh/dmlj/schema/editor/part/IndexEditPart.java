@@ -7,6 +7,7 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SystemOwner;
@@ -49,6 +50,15 @@ public class IndexEditPart extends AbstractSchemaElementEditPart<SystemOwner> {
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		return new IndexSourceAnchor((IndexFigure) getFigure());
+	}
+	
+	@Override
+	protected void refreshConnections() {
+		MemberRole memberRole = getModel().getSet().getMembers().get(0);
+		GraphicalEditPart editPart = 
+			(GraphicalEditPart) getViewer().getEditPartRegistry()
+									  	   .get(memberRole);
+		editPart.refresh();		
 	}
 
 	@Override

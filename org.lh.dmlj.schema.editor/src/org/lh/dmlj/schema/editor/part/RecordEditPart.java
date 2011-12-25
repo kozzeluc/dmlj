@@ -214,7 +214,19 @@ public class RecordEditPart
 		ReconnectRequest rRequest = (ReconnectRequest)request;		
 		return new ReconnectEndpointAnchor(getFigure(), 
 											   		 rRequest.getLocation());	
-	}	
+	}
+	
+	@Override
+	protected void refreshConnections() {
+		for (OwnerRole ownerRole : getModel().getOwnerRoles()) {
+			for (MemberRole memberRole : ownerRole.getSet().getMembers()) {
+				GraphicalEditPart editPart = 
+					(GraphicalEditPart) getViewer().getEditPartRegistry()
+											  	   .get(memberRole);
+				editPart.refresh();
+			}
+		}		
+	}
 
 	@Override
 	protected void setFigureData() {
