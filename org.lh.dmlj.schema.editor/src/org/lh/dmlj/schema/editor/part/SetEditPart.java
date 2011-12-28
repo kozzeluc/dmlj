@@ -11,10 +11,12 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.BendpointEditPolicy;
@@ -26,6 +28,7 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.CreateBendpointCommand;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
+import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
 import org.lh.dmlj.schema.editor.command.MoveBendpointCommand;
 
 public class SetEditPart extends AbstractConnectionEditPart {
@@ -131,15 +134,68 @@ public class SetEditPart extends AbstractConnectionEditPart {
 			
 			@Override
 			protected Command getCreateBendpointCommand(BendpointRequest request) {						
-				Point p = request.getLocation().getCopy(); 
+				
+				// we will deliver a composite command, consisting of a command
+				// that locks the current owner and member endpoints and a 
+				// command that actually creates the bendpoint...
+				
+				// get the owner endpoint location as an offset pair within the
+				// owner figure; if this is a system owned indexed set, forget
+				// about the owner endpoint location because it is always 
+				// anchored at the same location...
+				Point ownerEndpoint = null;
+				if (getModel().getSet().getSystemOwner() == null) {
+					// user owned set
+					GraphicalEditPart ownerEditPart = 
+						(GraphicalEditPart) getViewer().getEditPartRegistry()
+											  		   .get(getModel().getSet().getOwner().getRecord());
+					Rectangle ownerBounds = 
+						ownerEditPart.getFigure().getBounds().getCopy();
+					ownerEditPart.getFigure().translateToAbsolute(ownerBounds);
+					Point firstPoint = 
+						getConnection().getPoints().getFirstPoint().getCopy();
+					ownerEditPart.getFigure().translateToAbsolute(firstPoint);
+					ownerEndpoint = 
+						new PrecisionPoint(firstPoint.x - ownerBounds.x,
+									   	   firstPoint.y - ownerBounds.y);
+				}
+				
+				// get the member endpoint location as an offset pair within the
+				// member figure...
+				GraphicalEditPart memberEditPart = 
+					(GraphicalEditPart) getViewer().getEditPartRegistry()
+										  		   .get(getModel().getRecord());
+				Rectangle memberBounds = 
+					memberEditPart.getFigure().getBounds().getCopy();
+				memberEditPart.getFigure().translateToAbsolute(memberBounds);
+				Point lastPoint = 
+					getConnection().getPoints().getLastPoint().getCopy();
+				memberEditPart.getFigure().translateToAbsolute(lastPoint);
+				Point memberEndpoint = 
+					new PrecisionPoint(lastPoint.x - memberBounds.x,
+									   lastPoint.y - memberBounds.y);				
+				
+                // create the lock endpoints command; note that the endpoints 
+				// may already be locked, but the command takes care of that...
+				LockEndpointsCommand lockEndpointsCommand =
+    				new LockEndpointsCommand(getModel(), ownerEndpoint, 
+    										 memberEndpoint);
+                
+				// calculate the bendpoint location as a location relative to
+				// the connection...
+                Point p = request.getLocation().getCopy(); 
 				Point ownerLocation = getOwnerFigureLocation();
                 p.x -= ownerLocation.x; 
                 p.y -= ownerLocation.y;
                 getConnection().translateToRelative(p);
-				CreateBendpointCommand command = 
+                
+                // create the create bendpoint command...
+                CreateBendpointCommand createBendpointCommand = 
 					new CreateBendpointCommand(getModel(), request.getIndex(), 
 											   p.x, p.y);
-				return command;
+                
+                // chain both commands together, forming the final command...
+                return lockEndpointsCommand.chain(createBendpointCommand);
 			}
 
 			@Override
