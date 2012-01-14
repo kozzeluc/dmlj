@@ -6,32 +6,40 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	
-	private IFigure figure;
-	private Point 	mouseLocation;
+	private RecordFigure figure;
+	private MemberRole   memberRole;
+	private Point 	     mouseLocation;
 	
 	/**
-	 * @param figure
-	 * @param mouseLocation
-	 * @param reference
-	 * @return the location where the endpoint should go, relative to the given 
-	 *         figure
+	 * @param figure The record figure
+	 * @param mouseLocation The scaled mouseLocation in absolute (scaled) 
+	 *        coordinates
+	 * @param reference The reference point in absolute (scaled) coordinates
+	 * @param zoomLevel The current zoom level
+	 * @return the (unscaled) location where the endpoint should go, relative to 
+	 *         the given record figure
 	 */
-	public static Point getRelativeLocation(IFigure figure, Point mouseLocation, 
-											Point reference) {
+	public static PrecisionPoint getRelativeLocation(RecordFigure figure, 
+													 Point mouseLocation, 
+													 Point reference, 
+													 double zoomLevel) {
 		
 		// get the figure's bounds...
 		Rectangle bounds = figure.getBounds().getCopy();
-		figure.translateToAbsolute(bounds); // necessary !
+		figure.translateToAbsolute(bounds);
 		
-		// get the location of the mouse pointer relative to the figure...
+		// get the (scaled) location of the mouse pointer relative to the 
+		// figure...
 		PrecisionPoint pointer = new PrecisionPoint(mouseLocation.x - bounds.x,
 													mouseLocation.y - bounds.y);		
 		
-		// calculate the connection point based on both the reference and the
-		// location of the mouse pointer in the figure...
+		// calculate the (scaled) connection point based on both the reference 
+		// and the location of the mouse pointer in the figure...
 		int[] offset = new int[] {pointer.y, bounds.width - pointer.x, 
 								  bounds.height - pointer.y, pointer.x};
 		int i = 0;
@@ -40,8 +48,8 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 				i = j;
 			}
 		}
-		int offsetX;
-		int offsetY;
+		double offsetX;
+		double offsetY;
 		if (i == 0) {
 			offsetX = pointer.x;
 			offsetY = 0;
@@ -56,13 +64,18 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 			offsetY = pointer.y;
 		}
 		
-		return new PrecisionPoint(offsetX, offsetY);
+		// unscale the calculated offsets...
+		PrecisionPoint result = new PrecisionPoint(offsetX, offsetY);
+		RecordFigure.unscale(result, figure, zoomLevel);
+		return result;
 	}
 	
-	public ReconnectEndpointAnchor(IFigure figure, Point mouseLocation) {
+	public ReconnectEndpointAnchor(RecordFigure figure, Point mouseLocation,
+								   MemberRole memberRole) {
 		super();
 		this.figure = figure;
 		this.mouseLocation = mouseLocation;		
+		this.memberRole = memberRole;
 	}
 
 	@Override
@@ -72,25 +85,31 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	@Override
 	public Point getLocation(Point reference) {
 		// get the location where the endpoint should go, relative to the 
-		// figure...
-		Point result = getRelativeLocation(figure, mouseLocation, reference);
+		// figure and unscaled...
+		double zoomLevel = 
+			memberRole.getSet().getSchema().getDiagramData().getZoomLevel();
+		PrecisionPoint result = 
+			getRelativeLocation(figure, mouseLocation, reference, zoomLevel);
+		// scale the relative location...
+		RecordFigure.scale(result, figure, zoomLevel);
 		// convert this location to absolute coordinates...
-		PrecisionPoint topLeft = 
-			new PrecisionPoint(figure.getBounds().getTopLeft());
-		figure.translateToAbsolute(topLeft); // necessary !
-		topLeft.x += result.x;
-		topLeft.y += result.y;
+		Point topLeft1 = figure.getBounds().getTopLeft();
+		figure.translateToAbsolute(topLeft1);
+		PrecisionPoint topLeft = new PrecisionPoint(topLeft1);
+		topLeft.setPreciseX(topLeft.preciseX() + result.preciseX());
+		topLeft.setPreciseY(topLeft.preciseY() + result.preciseY());		
+		
 		return topLeft;
 	}
 
 	@Override
 	public IFigure getOwner() {
-		return null;
+		return figure;
 	}
 
 	@Override
 	public Point getReferencePoint() {
-		return null;
+		return figure.getBounds().getCenter();
 	}
 
 	@Override

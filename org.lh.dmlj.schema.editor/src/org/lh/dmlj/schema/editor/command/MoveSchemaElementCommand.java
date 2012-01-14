@@ -18,7 +18,7 @@ public class MoveSchemaElementCommand extends Command {
 	
 	public MoveSchemaElementCommand(DiagramLocationProvider locationProvider, 
 									int x, int y) {
-		super();
+		super("Move " + locationProvider.getLabel());
 		this.locationProvider = locationProvider;
 		this.x = x;
 		this.y = y;		

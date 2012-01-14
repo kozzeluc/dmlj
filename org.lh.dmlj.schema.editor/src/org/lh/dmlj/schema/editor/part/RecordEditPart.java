@@ -77,7 +77,8 @@ public class RecordEditPart
 								(GraphicalEditPart) getViewer().getEditPartRegistry()
 													  		   .get(memberRole.getRecord());
 							reference = 
-								editPart.getFigure().getBounds().getCenter();								
+								editPart.getFigure().getBounds().getCenter();
+							editPart.getFigure().translateToAbsolute(reference);
 						}
 					} else {
 						int i = memberRole.getDiagramBendpoints().size() - 1;
@@ -86,12 +87,15 @@ public class RecordEditPart
 						reference = new PrecisionPoint(lastBendpoint.getX(), 
 													   lastBendpoint.getY());
 					}
+					double zoomLevel = 
+						memberRole.getSet().getSchema().getDiagramData().getZoomLevel();
 					Point location = 
-						ReconnectEndpointAnchor.getRelativeLocation(figure, 
-															request.getLocation(), 
-															reference);
+						ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
+																    request.getLocation(), 
+																    reference,
+																    zoomLevel);
 					return new MoveEndpointCommand(memberRole, location.x, 
-												   location.y, true);
+												   location.y, true);					
 				} else {
 					return null;
 				}
@@ -141,12 +145,15 @@ public class RecordEditPart
 						reference = new PrecisionPoint(firstBendpoint.getX(), 
 													   firstBendpoint.getY());
 					}
+					double zoomLevel = 
+						memberRole.getSet().getSchema().getDiagramData().getZoomLevel();
 					Point location = 
-						ReconnectEndpointAnchor.getRelativeLocation(figure, 
-																	  request.getLocation(), 
-																	  reference);
+						ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
+																	request.getLocation(), 
+																	reference,
+																	zoomLevel);
 					return new MoveEndpointCommand(memberRole, location.x, 
-												   location.y, false);
+												   location.y, false);					
 				} else {
 					return null;
 				}
@@ -186,24 +193,26 @@ public class RecordEditPart
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
-		return new LockedRecordSourceAnchor(getFigure(), 
-									   		(MemberRole)connection.getModel());
+		return new LockedRecordSourceAnchor((RecordFigure) getFigure(), 
+									   		(MemberRole) connection.getModel());
 	}
 	
 	@Override
-	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
+	public ConnectionAnchor getSourceConnectionAnchor(Request request) {		
 		if (!(request instanceof ReconnectRequest)) {
 			return super.getSourceConnectionAnchor(request);
 		}
-		ReconnectRequest rRequest = (ReconnectRequest)request;		
-		return new ReconnectEndpointAnchor(getFigure(), 
-											   		 rRequest.getLocation());	
+		ReconnectRequest rRequest = (ReconnectRequest)request;						
+		MemberRole memberRole = 
+			(MemberRole)rRequest.getConnectionEditPart().getModel();
+		return new ReconnectEndpointAnchor((RecordFigure)getFigure(), 
+										   rRequest.getLocation(), memberRole);	
 	}
 	
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
-		return new LockedRecordTargetAnchor(getFigure(), 
-										   (MemberRole)connection.getModel());
+		return new LockedRecordTargetAnchor((RecordFigure) getFigure(), 
+										   (MemberRole) connection.getModel());
 	}
 	
 	@Override
@@ -212,8 +221,10 @@ public class RecordEditPart
 			return super.getSourceConnectionAnchor(request);
 		}
 		ReconnectRequest rRequest = (ReconnectRequest)request;		
-		return new ReconnectEndpointAnchor(getFigure(), 
-											   		 rRequest.getLocation());	
+		MemberRole memberRole = 
+			(MemberRole)rRequest.getConnectionEditPart().getModel();
+		return new ReconnectEndpointAnchor((RecordFigure)getFigure(), 
+										   rRequest.getLocation(), memberRole);	
 	}
 	
 	@Override

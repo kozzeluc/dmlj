@@ -19,6 +19,11 @@ public class SetLabel implements DiagramLocationProvider {
 		return memberRole.getDiagramLabelLocation();
 	}
 	
+	@Override
+	public String getLabel() {
+		return "set label " + memberRole.getSet().getName();
+	}
+
 	public MemberRole getMemberRole() {
 		return memberRole;
 	}

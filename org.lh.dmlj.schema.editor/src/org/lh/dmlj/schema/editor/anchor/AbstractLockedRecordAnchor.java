@@ -1,61 +1,94 @@
 package org.lh.dmlj.schema.editor.anchor;
 
 import org.eclipse.draw2d.ChopboxAnchor;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public abstract class AbstractLockedRecordAnchor extends ChopboxAnchor {
 
+	protected PrecisionPoint lockedOffset;
 	protected MemberRole 	 memberRole;
-	protected PrecisionPoint offset;
-	protected boolean		 owner;
+	protected Schema		 schema;
 	
-	protected AbstractLockedRecordAnchor(IFigure figure, MemberRole memberRole,
-						 	   			 boolean owner) {
+	protected AbstractLockedRecordAnchor(RecordFigure figure, 
+										 MemberRole memberRole) {
 		super(figure);
-		this.memberRole = memberRole;
-		this.owner = owner;
+		this.memberRole = memberRole;	
+		this.schema = memberRole.getSet().getSchema();
 	}	
 
-	protected abstract Point getDefaultLocation(Point reference);
-	
-	protected final Point getChopboxLocation(Point reference) {
-		return super.getLocation(reference);
+	/**
+	 * Returns the standard chopbox anchor's location, given a reference, for 
+	 * the record figure.<br><br>  
+	 * This method will only be called if the 
+	 * diagramSourceAnchor attribute of the connection's MemberRole model object 
+	 * is not set.  Subclasses can override this method to return a different
+	 * anchor location.
+	 * @param reference The reference point
+	 * @return The anchor location in absolute coordinates
+	 */
+	protected Point getDefaultLocation(Point reference) {
+		return super.getLocation(reference);		
 	}
 	
 	@Override
 	public final Point getLocation(Point reference) {
-		PrecisionPoint figureLocation = 
-			new PrecisionPoint(getOwner().getBounds().x,
-							   getOwner().getBounds().y);
-		getOwner().translateToAbsolute(figureLocation); // necessary
-		if (owner && memberRole.getDiagramSourceAnchor() == null ||
-			!owner && memberRole.getDiagramTargetAnchor() == null) {
-			
-			if (offset == null) {
-				PrecisionPoint superLocation = 
-					new PrecisionPoint(getDefaultLocation(reference));				
-				offset = new PrecisionPoint(superLocation.x - figureLocation.x, 
-										    superLocation.y - figureLocation.y);
+		
+		PrecisionPoint offset = null;
+		
+		// get the (unscaled) offset from the model if available; if not, 
+		// calculate it once...
+		if (getModelEndpoint() != null) {
+			// offset stored in the model
+			DiagramLocation modelEndpoint = getModelEndpoint();
+			offset = 
+				new PrecisionPoint(modelEndpoint.getX(), modelEndpoint.getY());
+		} else if (lockedOffset == null) {			
+			// offset not stored in the model and not previously calculated;
+			// compute it using both the figure's current location and the 
+			// location returned by calling getDefaultLocation()...				
+			Rectangle figureBounds = getOwner().getBounds().getCopy();
+			getOwner().translateToAbsolute(figureBounds);
+			Point defaultLocation = getDefaultLocation(reference);							
+			lockedOffset = new PrecisionPoint(defaultLocation.x - figureBounds.x, 
+											  defaultLocation.y - figureBounds.y);
+			// unscale the offset if needed...
+			double zoomLevel = schema.getDiagramData().getZoomLevel();
+			if (zoomLevel != 1.0) {
+				lockedOffset.setPreciseX(lockedOffset.preciseX() / zoomLevel);
+				lockedOffset.setPreciseY(lockedOffset.preciseY() / zoomLevel);
 			}
-		} else {			
-			DiagramLocation location; // will hold the relative location
-			if (owner) {
-				location = memberRole.getDiagramSourceAnchor();
-			} else {
-				location = memberRole.getDiagramTargetAnchor();
-			}
-			offset = new PrecisionPoint(location.getX(), location.getY());
-		}		
-		PrecisionPoint topLeft = 
+			offset = lockedOffset.getPreciseCopy();
+		} else {
+			offset = lockedOffset.getPreciseCopy();
+		}
+		
+		// scale the (now available) offset...
+		PrecisionPoint scaledOffset = new PrecisionPoint();
+		double zoomLevel = schema.getDiagramData().getZoomLevel();
+		scaledOffset.setPreciseX(offset.preciseX() * zoomLevel);
+		scaledOffset.setPreciseY(offset.preciseY() * zoomLevel);
+		
+		// compute the anchor location using the figure's bounds and the scaled
+		// offset...
+		PrecisionPoint anchorLocation = 
 			new PrecisionPoint(getOwner().getBounds().getTopLeft());
-		getOwner().translateToAbsolute(topLeft); // necessary !
-		topLeft.x += offset.x;
-		topLeft.y += offset.y;
-		return topLeft;
+		getOwner().translateToAbsolute(anchorLocation); 
+		anchorLocation.setPreciseX(anchorLocation.preciseX() + scaledOffset.preciseX());
+		anchorLocation.setPreciseY(anchorLocation.preciseY() + scaledOffset.preciseY());
+		
+		return anchorLocation;
 	}
+	
+	/**
+	 * @return The connection endpoint as an offset to the record figure, as 
+	 *         stored in the model
+	 */
+	protected abstract DiagramLocation getModelEndpoint();	
 	
 }

@@ -30,6 +30,7 @@ import org.lh.dmlj.schema.editor.command.CreateBendpointCommand;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
 import org.lh.dmlj.schema.editor.command.MoveBendpointCommand;
+import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public class SetEditPart extends AbstractConnectionEditPart {
 
@@ -108,14 +109,14 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	
 	public MemberRole getModel() {
 		return (MemberRole) super.getModel();
-	}
+	}	
 	
 	/**
-	 * @return the location, in absolute coordinates and as stored in the model, 
-	 * 	       for the RecordFigure or IndexFigure that acts as the owner of 
-	 * this set
+	 * @return the location, in absolute coordinates and as stored in the model
+	 *         (i.e. unscaled), for the RecordFigure or IndexFigure that acts as 
+	 *         the owner of this set
 	 */
-	private Point getOwnerFigureLocation() {		
+	private PrecisionPoint getOwnerFigureLocation() {		
 		DiagramNode owner;
 		if (getModel().getSet().getSystemOwner() != null) {
 			// system owned set
@@ -125,8 +126,7 @@ public class SetEditPart extends AbstractConnectionEditPart {
 			owner = getModel().getSet().getOwner().getRecord();
 		}
 		DiagramLocation location = owner.getDiagramLocation();
-		Point p = new PrecisionPoint(location.getX(), location.getY());
-		return p;
+		return new PrecisionPoint(location.getX(), location.getY());
 	}
 
 	private void refreshBendpointEditPolicy() {
@@ -139,16 +139,24 @@ public class SetEditPart extends AbstractConnectionEditPart {
 				// that locks the current owner and member endpoints and a 
 				// command that actually creates the bendpoint...
 				
-				// get the owner endpoint location as an offset pair within the
-				// owner figure; if this is a system owned indexed set, forget
-				// about the owner endpoint location because it is always 
-				// anchored at the same location...
-				Point ownerEndpoint = null;
+				// get the current zoomLevel...
+				double zoomLevel = getModel().getSet()
+										     .getSchema()
+										     .getDiagramData()
+										     .getZoomLevel();
+				
+				// get the owner endpoint location as an (unscaled) offset pair 
+				// within the owner figure; if this is a system owned indexed 
+				// set, forget about the owner endpoint location because it is 
+				// always anchored at the same location...
+				PrecisionPoint ownerEndpoint = null;
 				if (getModel().getSet().getSystemOwner() == null) {
 					// user owned set
 					GraphicalEditPart ownerEditPart = 
 						(GraphicalEditPart) getViewer().getEditPartRegistry()
-											  		   .get(getModel().getSet().getOwner().getRecord());
+											  		   .get(getModel().getSet()
+											  				   		  .getOwner()
+											  				   		  .getRecord());
 					Rectangle ownerBounds = 
 						ownerEditPart.getFigure().getBounds().getCopy();
 					ownerEditPart.getFigure().translateToAbsolute(ownerBounds);
@@ -158,10 +166,12 @@ public class SetEditPart extends AbstractConnectionEditPart {
 					ownerEndpoint = 
 						new PrecisionPoint(firstPoint.x - ownerBounds.x,
 									   	   firstPoint.y - ownerBounds.y);
+					RecordFigure.unscale(ownerEndpoint, 
+										 (RecordFigure)ownerEditPart.getFigure(), zoomLevel);
 				}
 				
-				// get the member endpoint location as an offset pair within the
-				// member figure...
+				// get the member endpoint location as an (unscaled) offset pair 
+				// within the member figure...
 				GraphicalEditPart memberEditPart = 
 					(GraphicalEditPart) getViewer().getEditPartRegistry()
 										  		   .get(getModel().getRecord());
@@ -171,9 +181,11 @@ public class SetEditPart extends AbstractConnectionEditPart {
 				Point lastPoint = 
 					getConnection().getPoints().getLastPoint().getCopy();
 				memberEditPart.getFigure().translateToAbsolute(lastPoint);
-				Point memberEndpoint = 
+				PrecisionPoint memberEndpoint = 
 					new PrecisionPoint(lastPoint.x - memberBounds.x,
-									   lastPoint.y - memberBounds.y);				
+									   lastPoint.y - memberBounds.y);
+				RecordFigure.unscale(memberEndpoint, 
+						 			 (RecordFigure)memberEditPart.getFigure(), zoomLevel);
 				
                 // create the lock endpoints command; note that the endpoints 
 				// may already be locked, but the command takes care of that...
@@ -181,13 +193,14 @@ public class SetEditPart extends AbstractConnectionEditPart {
     				new LockEndpointsCommand(getModel(), ownerEndpoint, 
     										 memberEndpoint);
                 
-				// calculate the bendpoint location as a location relative to
-				// the connection...
-                Point p = request.getLocation().getCopy(); 
-				Point ownerLocation = getOwnerFigureLocation();
-                p.x -= ownerLocation.x; 
-                p.y -= ownerLocation.y;
+				// calculate the bendpoint location as an unscaled offset to the
+				// owner figure...
+                PrecisionPoint p = new PrecisionPoint(request.getLocation().x,
+                									  request.getLocation().y); 				
                 getConnection().translateToRelative(p);
+                PrecisionPoint ownerLocation = getOwnerFigureLocation();
+                p.setPreciseX(p.preciseX() - ownerLocation.preciseX());                
+                p.setPreciseY(p.preciseY() - ownerLocation.preciseY());                
                 
                 // create the create bendpoint command...
                 CreateBendpointCommand createBendpointCommand = 
@@ -207,15 +220,22 @@ public class SetEditPart extends AbstractConnectionEditPart {
 
 			@Override
 			protected Command getMoveBendpointCommand(BendpointRequest request) {
-				Point p = request.getLocation().getCopy(); 
-				Point ownerLocation = getOwnerFigureLocation();
-				p.x -= ownerLocation.x; 
-                p.y -= ownerLocation.y;
+				
+				// calculate the bendpoint location as an unscaled offset to the
+				// owner figure...
+                PrecisionPoint p = new PrecisionPoint(request.getLocation().x,
+                									  request.getLocation().y); 				
                 getConnection().translateToRelative(p);
-				MoveBendpointCommand command = 
+                PrecisionPoint ownerLocation = getOwnerFigureLocation();
+                p.setPreciseX(p.preciseX() - ownerLocation.preciseX());                
+                p.setPreciseY(p.preciseY() - ownerLocation.preciseY());
+				
+                // create the move bendpoint command...
+                MoveBendpointCommand command = 
 					new MoveBendpointCommand(getModel(), request.getIndex(), 
 											 p.x, p.y);
-				return command;
+				
+                return command;
 			}
 			
 		};
@@ -223,17 +243,21 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	}
 	
 	@Override
-	protected void refreshVisuals() {
+	protected void refreshVisuals() {		
 		
 		List<Bendpoint> bendpoints = new ArrayList<>();
 		for (DiagramLocation location : getModel().getDiagramBendpoints()) {
 			
-			// the model stores the bendpoint location relative to the owner
-			// figure (which is either a record or index figure); we need to
-			// convert this to an absolute location first...
-			Point ownerLocation = getOwnerFigureLocation();
-			Point p = new PrecisionPoint(ownerLocation.x + location.getX(), 
-								   		 ownerLocation.y + location.getY());	
+			// the model stores the (unscaled) bendpoint location relative to 
+			// the owner figure (which is either a record or index figure); we 
+			// need to convert this to an absolute (unscaled) location...
+			PrecisionPoint ownerLocation = getOwnerFigureLocation();			
+			ownerLocation.setPreciseX(ownerLocation.preciseX());
+			ownerLocation.setPreciseY(ownerLocation.preciseY());
+			
+			PrecisionPoint p = 
+				new PrecisionPoint(ownerLocation.preciseX() + location.getX(), 
+								   ownerLocation.preciseY() + location.getY());			
 			
             AbsoluteBendpoint bendpoint = new AbsoluteBendpoint(p.x, p.y);
 			bendpoints.add(bendpoint);

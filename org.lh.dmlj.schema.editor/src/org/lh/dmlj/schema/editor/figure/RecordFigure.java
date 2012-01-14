@@ -12,10 +12,14 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.lh.dmlj.schema.editor.Plugin;
 
 public class RecordFigure extends Figure {
+	
+	private static final int UNSCALED_WIDTH = 130;
+	private static final int UNSCALED_HEIGHT = 53;
 	
 	private static final DecimalFormat recordIdFormatter = 
 		new DecimalFormat("000");
@@ -32,6 +36,50 @@ public class RecordFigure extends Figure {
 	
 	private Label areaNameFigure;	
 	
+	/**
+	 * Scales the relative anchorPoint on the recordFigure to the given 
+	 * zoomLevel.
+	 * @param anchorPoint The unscaled relative anchor point 
+	 * @param figure The record figure
+	 * @param zoomLevel The zoom level to scale up or down to
+	 */
+	public static void scale(PrecisionPoint anchorPoint, RecordFigure figure, 
+							 double zoomLevel) {
+	
+		Rectangle bounds = figure.getBounds().getCopy();
+		figure.translateToAbsolute(bounds);
+		
+		anchorPoint.setPreciseX(anchorPoint.preciseX() * zoomLevel);
+		if (anchorPoint.preciseX() > bounds.width) {
+			anchorPoint.setPreciseX(bounds.width);
+		}
+		
+		anchorPoint.setPreciseY(anchorPoint.preciseY() * zoomLevel);
+		if (anchorPoint.preciseY() > bounds.height) {
+			anchorPoint.setPreciseY(bounds.height);
+		}
+	}
+	
+	/**
+	 * Unscales the relative anchorPoint on the recordFigure from the given 
+	 * zoomLevel.
+	 * @param anchorPoint The scaled relative anchor point 
+	 * @param figure The record figure
+	 * @param zoomLevel The zoom level to unscale from
+	 */
+	public static void unscale(PrecisionPoint anchorPoint, RecordFigure figure, 
+			 				   double zoomLevel) {			
+	
+		anchorPoint.setPreciseX(anchorPoint.preciseX() / zoomLevel);
+		if (anchorPoint.preciseX() > UNSCALED_WIDTH) {
+			anchorPoint.setPreciseX(UNSCALED_WIDTH);
+		}
+		anchorPoint.setPreciseY(anchorPoint.preciseY() / zoomLevel);
+		if (anchorPoint.preciseY() > UNSCALED_HEIGHT) {
+			anchorPoint.setPreciseY(UNSCALED_HEIGHT);
+		}
+	}
+	
 	public RecordFigure() {
 		super();
 		
@@ -41,7 +89,7 @@ public class RecordFigure extends Figure {
 		XYLayout layout = new XYLayout();
 		setLayoutManager(layout);
 		
-		setPreferredSize(130, 53);
+		setPreferredSize(UNSCALED_WIDTH, UNSCALED_HEIGHT);
 		
 		recordNameFigure = addLabel(0, 0, 130, 14);
 
@@ -53,7 +101,13 @@ public class RecordFigure extends Figure {
 		locationModeDetailsFigure = addLabel(0, 26, 102, 14);
 		duplicatesOptionFigure = addLabel(101, 26, 29, 14);
 		
-		areaNameFigure = addLabel(0, 39, 130, 14);		
+		areaNameFigure = addLabel(0, 39, 130, 14);
+		
+		// show a dot in the center of the record...
+		/*Ellipse dot = new Ellipse();
+		dot.setForegroundColor(ColorConstants.red);
+		dot.setPreferredSize(4, 4);
+		add(dot, new Rectangle(new Point(62, 24), dot.getPreferredSize()));*/
 		
 	}
 	

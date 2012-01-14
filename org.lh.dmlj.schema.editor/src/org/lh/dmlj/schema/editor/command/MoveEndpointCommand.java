@@ -78,6 +78,15 @@ public class MoveEndpointCommand extends Command {
 		  		  .getLocations()
 		  		  .remove(newLocation);
 		
+		if (oldX == null || oldY == null) {
+			if (owner) {
+				memberRole.setDiagramSourceAnchor(null);
+			} else {
+				memberRole.setDiagramTargetAnchor(null);
+			}
+			return;
+		}
+		
 		DiagramLocation oldLocation = 
 			SchemaFactory.eINSTANCE.createDiagramLocation();
 		oldLocation.setX(oldX);

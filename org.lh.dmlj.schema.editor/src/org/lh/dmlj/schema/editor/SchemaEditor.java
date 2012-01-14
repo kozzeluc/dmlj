@@ -2,7 +2,9 @@ package org.lh.dmlj.schema.editor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -18,17 +20,29 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.gef.commands.CommandStackEvent;
+import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
+import org.eclipse.gef.editparts.ZoomListener;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.ui.actions.ZoomInAction;
+import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
 
 public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
@@ -51,12 +65,82 @@ public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 	
 	@Override
 	protected void configureGraphicalViewer() {		
+		
 		super.configureGraphicalViewer();
+		
+		// create the root edit part...
+		ScalableFreeformRootEditPart root = new ScalableFreeformRootEditPart();
+		
+		// set clipping strategy for connection layer
+		/*ConnectionLayer connectionLayer = 
+			(ConnectionLayer) root.getLayer(LayerConstants.CONNECTION_LAYER);
+		connectionLayer.setClippingStrategy(new ViewportAwareConnectionLayerClippingStrategy(connectionLayer));*/
+		
+		List<String> zoomLevels = new ArrayList<>(3);
+		zoomLevels.add(ZoomManager.FIT_ALL);
+		zoomLevels.add(ZoomManager.FIT_WIDTH);
+		zoomLevels.add(ZoomManager.FIT_HEIGHT);
+		root.getZoomManager().setZoomLevelContributions(zoomLevels);
+		
+		IAction zoomIn = new ZoomInAction(root.getZoomManager());
+		IAction zoomOut = new ZoomOutAction(root.getZoomManager());
+		getActionRegistry().registerAction(zoomIn);
+		getActionRegistry().registerAction(zoomOut);		
+		
+		IHandlerService handlerService = 
+			(IHandlerService)PlatformUI.getWorkbench().getService(IHandlerService.class);
+		handlerService.activateHandler(zoomIn.getActionDefinitionId(), 
+									   new ActionHandler(zoomIn));
+		handlerService.activateHandler(zoomOut.getActionDefinitionId(), 
+				   					   new ActionHandler(zoomOut));		
+		
+		// configure the graphical viewer...
 		GraphicalViewer viewer = getGraphicalViewer();
-		viewer.setEditPartFactory(new SchemaDiagramEditPartFactory());
-		viewer.setRootEditPart(new ScalableFreeformRootEditPart());
+		viewer.setRootEditPart(root);
+		viewer.setEditPartFactory(new SchemaDiagramEditPartFactory());		
 		viewer.setSelectionManager(new ModifiedSelectionManager(viewer));
-		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));				
+		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
+		
+		// configure the zoom manager with the zoom level stored in the schema
+		// and attach a zoom listener to change the model via the command stack 
+		// whenever the user zooms in or out...
+		final ZoomManager manager = 
+			(ZoomManager) getGraphicalViewer().getProperty(ZoomManager.class
+																	  .toString());
+		if (manager != null) {
+			manager.setZoom(schema.getDiagramData().getZoomLevel());
+			manager.addZoomListener(new ZoomListener() {
+				@Override
+				public void zoomChanged(double zoom) {			
+					if (zoom != schema.getDiagramData().getZoomLevel()) {
+						SetZoomLevelCommand command = 
+							new SetZoomLevelCommand(schema, zoom);
+						getCommandStack().execute(command);
+					}
+				}
+			});			
+		}		
+		// Scroll-wheel Zoom
+		/*getGraphicalViewer().setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
+										 MouseWheelZoomHandler.SINGLETON);*/
+		
+		// add a listener to the command stack to change the zoom manager's zoom
+		// level when the user performs an undo or redo of a set zoom level
+		// command...
+		getCommandStack().addCommandStackEventListener(new CommandStackEventListener() {
+			@Override
+			public void stackChanged(CommandStackEvent event) {
+				if (event.isPostChangeEvent() && 
+					event.getCommand() instanceof SetZoomLevelCommand &&
+					(event.getDetail() == CommandStack.POST_UNDO ||
+					 event.getDetail() == CommandStack.POST_REDO) &&
+					manager != null) {
+					
+					manager.setZoom(schema.getDiagramData().getZoomLevel());
+				}
+			}
+		});
+		
 	}
 	
 	@Override
@@ -111,6 +195,16 @@ public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 		firePropertyChange(PROP_INPUT);
 	}
 
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class type) {
+		
+		if (type == ZoomManager.class) {
+			String key = ZoomManager.class.toString();
+			return getGraphicalViewer().getProperty(key);
+		}
+
+		return super.getAdapter(type);
+	}	
+	
 	@Override
 	protected PaletteRoot getPaletteRoot() {
 		return null;
