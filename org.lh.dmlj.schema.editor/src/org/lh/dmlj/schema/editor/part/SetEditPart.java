@@ -6,31 +6,23 @@ import java.util.List;
 import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PolylineDecoration;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
-import org.eclipse.gef.editpolicies.BendpointEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
-import org.eclipse.gef.requests.BendpointRequest;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.CreateBendpointCommand;
-import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
-import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
-import org.lh.dmlj.schema.editor.command.MoveBendpointCommand;
-import org.lh.dmlj.schema.editor.figure.RecordFigure;
+import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 
 public class SetEditPart extends AbstractConnectionEditPart {
 
@@ -86,6 +78,9 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		BendpointConnectionRouter router = new BendpointConnectionRouter();
 		connection.setConnectionRouter(router);
 		
+		connection.setLineWidth(1);
+		connection.setForegroundColor(ColorConstants.black);
+		
 		MemberRole memberRole = getModel();
 		Set set = memberRole.getSet();
 		if (set.getOwner() != null) { 
@@ -94,9 +89,9 @@ public class SetEditPart extends AbstractConnectionEditPart {
 			PolylineDecoration decoration = new PolylineDecoration();
 			decoration.setTemplate(PolylineDecoration.TRIANGLE_TIP);
 			connection.setTargetDecoration(decoration);
+		} else {
+			connection.setLineStyle(Graphics.LINE_DASH);
 		}
-		
-		connection.setLineWidth(1);				
 		
 		return connection;		
 	}
@@ -130,116 +125,8 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	}
 
 	private void refreshBendpointEditPolicy() {
-		BendpointEditPolicy bendpointPolicy = new BendpointEditPolicy() {
-			
-			@Override
-			protected Command getCreateBendpointCommand(BendpointRequest request) {						
-				
-				// we will deliver a composite command, consisting of a command
-				// that locks the current owner and member endpoints and a 
-				// command that actually creates the bendpoint...
-				
-				// get the current zoomLevel...
-				double zoomLevel = getModel().getSet()
-										     .getSchema()
-										     .getDiagramData()
-										     .getZoomLevel();
-				
-				// get the owner endpoint location as an (unscaled) offset pair 
-				// within the owner figure; if this is a system owned indexed 
-				// set, forget about the owner endpoint location because it is 
-				// always anchored at the same location...
-				PrecisionPoint ownerEndpoint = null;
-				if (getModel().getSet().getSystemOwner() == null) {
-					// user owned set
-					GraphicalEditPart ownerEditPart = 
-						(GraphicalEditPart) getViewer().getEditPartRegistry()
-											  		   .get(getModel().getSet()
-											  				   		  .getOwner()
-											  				   		  .getRecord());
-					Rectangle ownerBounds = 
-						ownerEditPart.getFigure().getBounds().getCopy();
-					ownerEditPart.getFigure().translateToAbsolute(ownerBounds);
-					Point firstPoint = 
-						getConnection().getPoints().getFirstPoint().getCopy();
-					ownerEditPart.getFigure().translateToAbsolute(firstPoint);
-					ownerEndpoint = 
-						new PrecisionPoint(firstPoint.x - ownerBounds.x,
-									   	   firstPoint.y - ownerBounds.y);
-					RecordFigure.unscale(ownerEndpoint, 
-										 (RecordFigure)ownerEditPart.getFigure(), zoomLevel);
-				}
-				
-				// get the member endpoint location as an (unscaled) offset pair 
-				// within the member figure...
-				GraphicalEditPart memberEditPart = 
-					(GraphicalEditPart) getViewer().getEditPartRegistry()
-										  		   .get(getModel().getRecord());
-				Rectangle memberBounds = 
-					memberEditPart.getFigure().getBounds().getCopy();
-				memberEditPart.getFigure().translateToAbsolute(memberBounds);
-				Point lastPoint = 
-					getConnection().getPoints().getLastPoint().getCopy();
-				memberEditPart.getFigure().translateToAbsolute(lastPoint);
-				PrecisionPoint memberEndpoint = 
-					new PrecisionPoint(lastPoint.x - memberBounds.x,
-									   lastPoint.y - memberBounds.y);
-				RecordFigure.unscale(memberEndpoint, 
-						 			 (RecordFigure)memberEditPart.getFigure(), zoomLevel);
-				
-                // create the lock endpoints command; note that the endpoints 
-				// may already be locked, but the command takes care of that...
-				LockEndpointsCommand lockEndpointsCommand =
-    				new LockEndpointsCommand(getModel(), ownerEndpoint, 
-    										 memberEndpoint);
-                
-				// calculate the bendpoint location as an unscaled offset to the
-				// owner figure...
-                PrecisionPoint p = new PrecisionPoint(request.getLocation().x,
-                									  request.getLocation().y); 				
-                getConnection().translateToRelative(p);
-                PrecisionPoint ownerLocation = getOwnerFigureLocation();
-                p.setPreciseX(p.preciseX() - ownerLocation.preciseX());                
-                p.setPreciseY(p.preciseY() - ownerLocation.preciseY());                
-                
-                // create the create bendpoint command...
-                CreateBendpointCommand createBendpointCommand = 
-					new CreateBendpointCommand(getModel(), request.getIndex(), 
-											   p.x, p.y);
-                
-                // chain both commands together, forming the final command...
-                return lockEndpointsCommand.chain(createBendpointCommand);
-			}
-
-			@Override
-			protected Command getDeleteBendpointCommand(BendpointRequest request) {
-				DeleteBendpointCommand command = 
-					new DeleteBendpointCommand(getModel(), request.getIndex());
-				return command;
-			}
-
-			@Override
-			protected Command getMoveBendpointCommand(BendpointRequest request) {
-				
-				// calculate the bendpoint location as an unscaled offset to the
-				// owner figure...
-                PrecisionPoint p = new PrecisionPoint(request.getLocation().x,
-                									  request.getLocation().y); 				
-                getConnection().translateToRelative(p);
-                PrecisionPoint ownerLocation = getOwnerFigureLocation();
-                p.setPreciseX(p.preciseX() - ownerLocation.preciseX());                
-                p.setPreciseY(p.preciseY() - ownerLocation.preciseY());
-				
-                // create the move bendpoint command...
-                MoveBendpointCommand command = 
-					new MoveBendpointCommand(getModel(), request.getIndex(), 
-											 p.x, p.y);
-				
-                return command;
-			}
-			
-		};
-		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, bendpointPolicy);
+		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, 
+						  new SetBendpointEditPolicy(this));
 	}
 	
 	@Override
@@ -252,9 +139,6 @@ public class SetEditPart extends AbstractConnectionEditPart {
 			// the owner figure (which is either a record or index figure); we 
 			// need to convert this to an absolute (unscaled) location...
 			PrecisionPoint ownerLocation = getOwnerFigureLocation();			
-			ownerLocation.setPreciseX(ownerLocation.preciseX());
-			ownerLocation.setPreciseY(ownerLocation.preciseY());
-			
 			PrecisionPoint p = 
 				new PrecisionPoint(ownerLocation.preciseX() + location.getX(), 
 								   ownerLocation.preciseY() + location.getY());			

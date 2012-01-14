@@ -17,12 +17,12 @@ import org.lh.dmlj.schema.DiagramLocationProvider;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 
-public abstract class AbstractSchemaElementEditPart<T extends DiagramLocationProvider> 
+public abstract class AbstractDiagramNodeEditPart<T extends DiagramLocationProvider> 
 	extends AbstractGraphicalEditPart implements Adapter, NodeEditPart {
 	
 	private EObject[] modelObjects;
 
-	protected AbstractSchemaElementEditPart(T diagramElement) {
+	protected AbstractDiagramNodeEditPart(T diagramElement) {
 		super();
 		setModel(diagramElement);
 	}

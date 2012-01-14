@@ -27,7 +27,7 @@ import org.lh.dmlj.schema.editor.command.MoveEndpointCommand;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public class RecordEditPart 
-	extends AbstractSchemaElementEditPart<SchemaRecord>  {
+	extends AbstractDiagramNodeEditPart<SchemaRecord>  {
 
 	private RecordEditPart() {
 		super(null); // disabled constructor

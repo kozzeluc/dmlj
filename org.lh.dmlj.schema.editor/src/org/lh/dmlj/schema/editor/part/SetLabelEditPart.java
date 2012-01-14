@@ -1,5 +1,6 @@
 package org.lh.dmlj.schema.editor.part;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
@@ -10,7 +11,7 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.model.SetLabel;
 
 public class SetLabelEditPart 
-    extends AbstractSchemaElementEditPart<SetLabel>  {
+    extends AbstractDiagramNodeEditPart<SetLabel>  {
 
 	private SetLabelEditPart() {
 		super(null); // disabled constructor
@@ -40,6 +41,7 @@ public class SetLabelEditPart
 				(SetEditPart) getViewer().getEditPartRegistry().get(getModel().getMemberRole());
 			PolylineConnection connection = (PolylineConnection) setEditPart.getFigure();
 			connection.setLineWidth(2);
+			connection.setForegroundColor(ColorConstants.red);
 		}
 		super.showSourceFeedback(request);
 	}
@@ -51,6 +53,7 @@ public class SetLabelEditPart
 				(SetEditPart) getViewer().getEditPartRegistry().get(getModel().getMemberRole());
 			PolylineConnection connection = (PolylineConnection) setEditPart.getFigure();
 			connection.setLineWidth(1);
+			connection.setForegroundColor(ColorConstants.black);
 		}
 		super.eraseSourceFeedback(request);
 	}

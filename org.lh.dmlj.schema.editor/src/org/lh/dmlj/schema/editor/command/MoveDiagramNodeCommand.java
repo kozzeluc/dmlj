@@ -3,7 +3,7 @@ package org.lh.dmlj.schema.editor.command;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.DiagramLocationProvider;
 
-public class MoveSchemaElementCommand extends Command {
+public class MoveDiagramNodeCommand extends Command {
 	
 	private DiagramLocationProvider locationProvider;
 	private int 					oldX;
@@ -12,11 +12,11 @@ public class MoveSchemaElementCommand extends Command {
 	private int 					y;
 	
 	@SuppressWarnings("unused")
-	private MoveSchemaElementCommand() {
+	private MoveDiagramNodeCommand() {
 		super();
 	}
 	
-	public MoveSchemaElementCommand(DiagramLocationProvider locationProvider, 
+	public MoveDiagramNodeCommand(DiagramLocationProvider locationProvider, 
 									int x, int y) {
 		super("Move " + locationProvider.getLabel());
 		this.locationProvider = locationProvider;

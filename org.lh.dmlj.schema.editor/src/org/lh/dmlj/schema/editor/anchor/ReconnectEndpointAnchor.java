@@ -9,6 +9,10 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
+/**
+ * This anchor will be used when the user moves a connection endpoint; it also
+ * facilitates the static getRelativeLocation method.
+ */
 public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	
 	private RecordFigure figure;
@@ -16,6 +20,8 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	private Point 	     mouseLocation;
 	
 	/**
+	 * Calculates, for a given mouse location, the (unscaled) location where an 
+	 * endpoint should go, relative to a given (record) figure.
 	 * @param figure The record figure
 	 * @param mouseLocation The scaled mouseLocation in absolute (scaled) 
 	 *        coordinates
@@ -93,9 +99,10 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 		// scale the relative location...
 		RecordFigure.scale(result, figure, zoomLevel);
 		// convert this location to absolute coordinates...
-		Point topLeft1 = figure.getBounds().getTopLeft();
-		figure.translateToAbsolute(topLeft1);
-		PrecisionPoint topLeft = new PrecisionPoint(topLeft1);
+		PrecisionPoint topLeft = 
+			new PrecisionPoint(figure.getBounds().getTopLeft().x,
+							   figure.getBounds().getTopLeft().y);
+		figure.translateToAbsolute(topLeft);
 		topLeft.setPreciseX(topLeft.preciseX() + result.preciseX());
 		topLeft.setPreciseY(topLeft.preciseY() + result.preciseY());		
 		
