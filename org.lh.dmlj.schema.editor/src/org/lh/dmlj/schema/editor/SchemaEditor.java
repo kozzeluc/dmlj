@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CommandStackEventListener;
@@ -27,6 +28,7 @@ import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
@@ -34,6 +36,8 @@ import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -42,6 +46,7 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.editor.command.SetShowGridCommand;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
 
@@ -101,6 +106,13 @@ public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 		viewer.setSelectionManager(new ModifiedSelectionManager(viewer));
 		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 		
+		// Grid properties
+		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
+			new Boolean(schema.getDiagramData().isShowGrid()));
+		// We keep grid visibility and enablement in sync
+		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
+			new Boolean(schema.getDiagramData().isShowGrid()));
+		
 		// configure the zoom manager with the zoom level stored in the schema
 		// and attach a zoom listener to change the model via the command stack 
 		// whenever the user zooms in or out...
@@ -124,12 +136,25 @@ public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 		/*getGraphicalViewer().setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
 										 MouseWheelZoomHandler.SINGLETON);*/
 		
+		// (other) Actions
+		IAction showGrid = new ToggleGridAction(getGraphicalViewer());
+		showGrid.addPropertyChangeListener(new IPropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+				SetShowGridCommand command = 
+					new SetShowGridCommand(schema, (Boolean)event.getNewValue());
+				getCommandStack().execute(command);
+			}
+			
+		});
+		getActionRegistry().registerAction(showGrid);
+		
 		// add a listener to the command stack to change the zoom manager's zoom
 		// level when the user performs an undo or redo of a set zoom level
 		// command...
 		getCommandStack().addCommandStackEventListener(new CommandStackEventListener() {
 			@Override
-			public void stackChanged(CommandStackEvent event) {
+			public void stackChanged(CommandStackEvent event) {				
 				if (event.isPostChangeEvent() && 
 					event.getCommand() instanceof SetZoomLevelCommand &&
 					(event.getDetail() == CommandStack.POST_UNDO ||
@@ -137,10 +162,21 @@ public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 					manager != null) {
 					
 					manager.setZoom(schema.getDiagramData().getZoomLevel());
+				} else if (event.isPostChangeEvent() && 
+						   event.getCommand() instanceof SetShowGridCommand &&
+						   (event.getDetail() == CommandStack.POST_UNDO ||
+							event.getDetail() == CommandStack.POST_REDO)) {
+							
+					boolean showGrid = schema.getDiagramData().isShowGrid();
+					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
+													 Boolean.valueOf(showGrid));
+					// We keep grid visibility and enablement in sync
+					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
+													 Boolean.valueOf(showGrid));
 				}
 			}
 		});
-		
+				
 	}
 	
 	@Override

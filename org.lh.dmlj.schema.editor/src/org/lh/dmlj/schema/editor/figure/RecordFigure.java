@@ -84,6 +84,7 @@ public class RecordFigure extends Figure {
 		super();
 		
 		setBackgroundColor(ColorConstants.white);
+		setOpaque(true);
 		setForegroundColor(ColorConstants.black);
 		
 		XYLayout layout = new XYLayout();
@@ -101,13 +102,7 @@ public class RecordFigure extends Figure {
 		locationModeDetailsFigure = addLabel(0, 26, 102, 14);
 		duplicatesOptionFigure = addLabel(101, 26, 29, 14);
 		
-		areaNameFigure = addLabel(0, 39, 130, 14);
-		
-		// show a dot in the center of the record...
-		/*Ellipse dot = new Ellipse();
-		dot.setForegroundColor(ColorConstants.red);
-		dot.setPreferredSize(4, 4);
-		add(dot, new Rectangle(new Point(62, 24), dot.getPreferredSize()));*/
+		areaNameFigure = addLabel(0, 39, 130, 14);		
 		
 	}
 	
@@ -116,7 +111,7 @@ public class RecordFigure extends Figure {
 		label.setLabelAlignment(PositionConstants.LEFT);
 		label.setFont(Plugin.getDefault().getFont());
 		label.setBorder(new CompoundBorder(new LineBorder(1), 
-				 						   new MarginBorder(0, 4, 0, 0)));
+				 						   new MarginBorder(0, 4, 0, 0)));		
 		add(label, 
 			new Rectangle(new Point(x, y), new Dimension(width, height)));
 		return label;

@@ -17,6 +17,7 @@ import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -24,6 +25,7 @@ import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommand;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public class RecordEditPart 
@@ -245,11 +247,22 @@ public class RecordEditPart
 		RecordFigure figure = (RecordFigure) getFigure();
 		figure.setRecordName(record.getName());
 		figure.setRecordId(record.getId());
-		figure.setStorageMode(record.getStorageMode().toString());
+		figure.setStorageMode(Tools.getStorageMode(record.getStorageMode()));
 		figure.setRecordLength(record.getDataLength());
 		figure.setLocationMode(record.getLocationMode().toString());
-		figure.setLocationModeDetails("?");
-		figure.setDuplicatesOption("?");
+		if (record.getLocationMode() == LocationMode.CALC) {
+			String calcKey = Tools.getCalcKey(record.getCalcKey());
+			figure.setLocationModeDetails(calcKey);
+			String duplicatesOption = 
+				Tools.getDuplicatesOption(record.getCalcKey()
+												.getDuplicatesOption());
+			figure.setDuplicatesOption(duplicatesOption);
+		} else if (record.getLocationMode() == LocationMode.VIA) {
+			figure.setLocationModeDetails(record.getViaSpecification()
+											    .getSetName());
+		} else {
+			figure.setLocationModeDetails("");
+		}
 		figure.setAreaName(record.getAreaSpecification().getArea().getName());
 	}	
 	
