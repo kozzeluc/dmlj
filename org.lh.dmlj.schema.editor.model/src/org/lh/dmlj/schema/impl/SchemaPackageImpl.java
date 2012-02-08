@@ -1,0 +1,2248 @@
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
+ */
+package org.lh.dmlj.schema.impl;
+
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EOperation;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+
+import org.lh.dmlj.schema.AreaProcedureCallFunction;
+import org.lh.dmlj.schema.AreaProcedureCallSpecification;
+import org.lh.dmlj.schema.AreaSpecification;
+import org.lh.dmlj.schema.DiagramData;
+import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.DiagramNode;
+import org.lh.dmlj.schema.DuplicatesOption;
+import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.IndexedSetModeSpecification;
+import org.lh.dmlj.schema.Key;
+import org.lh.dmlj.schema.KeyElement;
+import org.lh.dmlj.schema.LocationMode;
+import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.OccursSpecification;
+import org.lh.dmlj.schema.OffsetExpression;
+import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.Procedure;
+import org.lh.dmlj.schema.ProcedureCallTime;
+import org.lh.dmlj.schema.RecordProcedureCallSpecification;
+import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.Role;
+import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaArea;
+import org.lh.dmlj.schema.SchemaFactory;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SetMembershipOption;
+import org.lh.dmlj.schema.SetMode;
+import org.lh.dmlj.schema.SetOrder;
+import org.lh.dmlj.schema.SortSequence;
+import org.lh.dmlj.schema.StorageMode;
+import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.Usage;
+import org.lh.dmlj.schema.ViaSpecification;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model <b>Package</b>.
+ * <!-- end-user-doc -->
+ * @generated
+ */
+public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass schemaEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass schemaAreaEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass schemaRecordEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass setEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass roleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass elementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass keyElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass memberRoleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass systemOwnerEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass viaSpecificationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass diagramNodeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass diagramLocationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass diagramDataEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass keyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass areaSpecificationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass offsetExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass ownerRoleEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass indexedSetModeSpecificationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass areaProcedureCallSpecificationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass recordProcedureCallSpecificationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass procedureEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass occursSpecificationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum setOrderEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum duplicatesOptionEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum locationModeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum setModeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum storageModeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum setMembershipOptionEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum sortSequenceEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum procedureCallTimeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum areaProcedureCallFunctionEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum recordProcedureCallVerbEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum usageEEnum = null;
+
+	/**
+	 * Creates an instance of the model <b>Package</b>, registered with
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.ecore.EPackage.Registry
+	 * @see org.lh.dmlj.schema.SchemaPackage#eNS_URI
+	 * @see #init()
+	 * @generated
+	 */
+	private SchemaPackageImpl() {
+		super(eNS_URI, SchemaFactory.eINSTANCE);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private static boolean isInited = false;
+
+	/**
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+	 * 
+	 * <p>This method is used to initialize {@link SchemaPackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #eNS_URI
+	 * @see #createPackageContents()
+	 * @see #initializePackageContents()
+	 * @generated
+	 */
+	public static SchemaPackage init() {
+		if (isInited) return (SchemaPackage)EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI);
+
+		// Obtain or create and register package
+		SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new SchemaPackageImpl());
+
+		isInited = true;
+
+		// Create package meta-data objects
+		theSchemaPackage.createPackageContents();
+
+		// Initialize created meta-data
+		theSchemaPackage.initializePackageContents();
+
+		// Mark meta-data to indicate it can't be changed
+		theSchemaPackage.freeze();
+
+  
+		// Update the registry and return the package
+		EPackage.Registry.INSTANCE.put(SchemaPackage.eNS_URI, theSchemaPackage);
+		return theSchemaPackage;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getSchema() {
+		return schemaEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchema_Name() {
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchema_Version() {
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchema_Description() {
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchema_MemoDate() {
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchema_Areas() {
+		return (EReference)schemaEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchema_Records() {
+		return (EReference)schemaEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchema_Sets() {
+		return (EReference)schemaEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchema_DiagramData() {
+		return (EReference)schemaEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchema_Procedures() {
+		return (EReference)schemaEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getSchemaArea() {
+		return schemaAreaEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaArea_Name() {
+		return (EAttribute)schemaAreaEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaArea_Schema() {
+		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaArea_Indexes() {
+		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaArea_Procedures() {
+		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaArea_AreaSpecifications() {
+		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaArea_Records() {
+		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getSchemaRecord() {
+		return schemaRecordEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_Name() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_Id() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_ControlLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_DataLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_StorageMode() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_LocationMode() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_MinimumRootLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_MinimumFragmentLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_PrefixLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_Fragmented() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_CalcKey() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_Schema() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(19);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_ViaSpecification() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(20);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_OwnerRoles() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(15);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_MemberRoles() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(14);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_RootElements() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(18);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_Procedures() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(16);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_Keys() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_AreaSpecification() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_Elements() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_Roles() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(17);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getSet() {
+		return setEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSet_Name() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSet_Mode() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSet_Order() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_Schema() {
+		return (EReference)setEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_Owner() {
+		return (EReference)setEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_SystemOwner() {
+		return (EReference)setEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_Members() {
+		return (EReference)setEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_ViaMembers() {
+		return (EReference)setEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getRole() {
+		return roleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_IndexedSetModeSpecification() {
+		return (EReference)setEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getElement() {
+		return elementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_Name() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_Level() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_Usage() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_Offset() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_Length() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_Picture() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_Nullable() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getElement_Record() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getElement_KeyElements() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getElement_Children() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getElement_Redefines() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getElement_OccursSpecification() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getElement_Parent() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getKeyElement() {
+		return keyElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getKeyElement_Element() {
+		return (EReference)keyElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKeyElement_SortSequence() {
+		return (EAttribute)keyElementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getKeyElement_Key() {
+		return (EReference)keyElementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKeyElement_Dbkey() {
+		return (EAttribute)keyElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getMemberRole() {
+		return memberRoleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMemberRole_IndexDbkeyPosition() {
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMemberRole_MembershipOption() {
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMemberRole_NextDbkeyPosition() {
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMemberRole_PriorDbkeyPosition() {
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMemberRole_OwnerDbkeyPosition() {
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMemberRole_Record() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMemberRole_Set() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMemberRole_SortKey() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMemberRole_DiagramTargetAnchor() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMemberRole_DiagramSourceAnchor() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMemberRole_DiagramBendpoints() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMemberRole_DiagramLabelLocation() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getSystemOwner() {
+		return systemOwnerEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSystemOwner_AreaSpecification() {
+		return (EReference)systemOwnerEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSystemOwner_Set() {
+		return (EReference)systemOwnerEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getViaSpecification() {
+		return viaSpecificationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getViaSpecification_SetName() {
+		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getViaSpecification_SymbolicDisplacementName() {
+		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getViaSpecification_Set() {
+		return (EReference)viaSpecificationEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDiagramNode() {
+		return diagramNodeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramNode_DiagramLocation() {
+		return (EReference)diagramNodeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDiagramLocation() {
+		return diagramLocationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramLocation_X() {
+		return (EAttribute)diagramLocationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramLocation_Y() {
+		return (EAttribute)diagramLocationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramLocation_Eyecatcher() {
+		return (EAttribute)diagramLocationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDiagramData() {
+		return diagramDataEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramData_Locations() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_ZoomLevel() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_ShowGrid() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getViaSpecification_Record() {
+		return (EReference)viaSpecificationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getViaSpecification_DisplacementPageCount() {
+		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getKey() {
+		return keyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKey_Length() {
+		return (EAttribute)keyEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKey_DuplicatesOption() {
+		return (EAttribute)keyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKey_Compressed() {
+		return (EAttribute)keyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKey_NaturalSequence() {
+		return (EAttribute)keyEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getKey_Elements() {
+		return (EReference)keyEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getKey_MemberRole() {
+		return (EReference)keyEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getKey_Record() {
+		return (EReference)keyEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAreaSpecification() {
+		return areaSpecificationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAreaSpecification_SymbolicSubareaName() {
+		return (EAttribute)areaSpecificationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAreaSpecification_Area() {
+		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAreaSpecification_OffsetExpression() {
+		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAreaSpecification_Record() {
+		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAreaSpecification_SystemOwner() {
+		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getOffsetExpression() {
+		return offsetExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOffsetExpression_OffsetPageCount() {
+		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOffsetExpression_OffsetPercent() {
+		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOffsetExpression_PageCount() {
+		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOffsetExpression_Percent() {
+		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getOwnerRole() {
+		return ownerRoleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOwnerRole_NextDbkeyPosition() {
+		return (EAttribute)ownerRoleEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOwnerRole_PriorDbkeyPosition() {
+		return (EAttribute)ownerRoleEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOwnerRole_Record() {
+		return (EReference)ownerRoleEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOwnerRole_Set() {
+		return (EReference)ownerRoleEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getIndexedSetModeSpecification() {
+		return indexedSetModeSpecificationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIndexedSetModeSpecification_SymbolicIndexName() {
+		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIndexedSetModeSpecification_KeyCount() {
+		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getIndexedSetModeSpecification_DisplacementPageCount() {
+		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getAreaProcedureCallSpecification() {
+		return areaProcedureCallSpecificationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getAreaProcedureCallSpecification_Procedure() {
+		return (EReference)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAreaProcedureCallSpecification_CallTime() {
+		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAreaProcedureCallSpecification_Function() {
+		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getRecordProcedureCallSpecification() {
+		return recordProcedureCallSpecificationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRecordProcedureCallSpecification_Procedure() {
+		return (EReference)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRecordProcedureCallSpecification_CallTime() {
+		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRecordProcedureCallSpecification_Verb() {
+		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProcedure() {
+		return procedureEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getProcedure_Name() {
+		return (EAttribute)procedureEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getOccursSpecification() {
+		return occursSpecificationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOccursSpecification_Count() {
+		return (EAttribute)occursSpecificationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOccursSpecification_DependingOn() {
+		return (EReference)occursSpecificationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getSetOrder() {
+		return setOrderEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getDuplicatesOption() {
+		return duplicatesOptionEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getLocationMode() {
+		return locationModeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getSetMode() {
+		return setModeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getStorageMode() {
+		return storageModeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getSetMembershipOption() {
+		return setMembershipOptionEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getSortSequence() {
+		return sortSequenceEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getProcedureCallTime() {
+		return procedureCallTimeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getAreaProcedureCallFunction() {
+		return areaProcedureCallFunctionEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getRecordProcedureCallVerb() {
+		return recordProcedureCallVerbEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getUsage() {
+		return usageEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SchemaFactory getSchemaFactory() {
+		return (SchemaFactory)getEFactoryInstance();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private boolean isCreated = false;
+
+	/**
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void createPackageContents() {
+		if (isCreated) return;
+		isCreated = true;
+
+		// Create classes and their features
+		areaProcedureCallSpecificationEClass = createEClass(AREA_PROCEDURE_CALL_SPECIFICATION);
+		createEAttribute(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME);
+		createEAttribute(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION);
+		createEReference(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE);
+
+		areaSpecificationEClass = createEClass(AREA_SPECIFICATION);
+		createEAttribute(areaSpecificationEClass, AREA_SPECIFICATION__SYMBOLIC_SUBAREA_NAME);
+		createEReference(areaSpecificationEClass, AREA_SPECIFICATION__AREA);
+		createEReference(areaSpecificationEClass, AREA_SPECIFICATION__OFFSET_EXPRESSION);
+		createEReference(areaSpecificationEClass, AREA_SPECIFICATION__RECORD);
+		createEReference(areaSpecificationEClass, AREA_SPECIFICATION__SYSTEM_OWNER);
+
+		elementEClass = createEClass(ELEMENT);
+		createEAttribute(elementEClass, ELEMENT__LENGTH);
+		createEAttribute(elementEClass, ELEMENT__LEVEL);
+		createEAttribute(elementEClass, ELEMENT__NAME);
+		createEAttribute(elementEClass, ELEMENT__NULLABLE);
+		createEAttribute(elementEClass, ELEMENT__OFFSET);
+		createEAttribute(elementEClass, ELEMENT__PICTURE);
+		createEAttribute(elementEClass, ELEMENT__USAGE);
+		createEReference(elementEClass, ELEMENT__CHILDREN);
+		createEReference(elementEClass, ELEMENT__KEY_ELEMENTS);
+		createEReference(elementEClass, ELEMENT__OCCURS_SPECIFICATION);
+		createEReference(elementEClass, ELEMENT__PARENT);
+		createEReference(elementEClass, ELEMENT__RECORD);
+		createEReference(elementEClass, ELEMENT__REDEFINES);
+
+		indexedSetModeSpecificationEClass = createEClass(INDEXED_SET_MODE_SPECIFICATION);
+		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__DISPLACEMENT_PAGE_COUNT);
+		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT);
+		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME);
+
+		keyEClass = createEClass(KEY);
+		createEAttribute(keyEClass, KEY__COMPRESSED);
+		createEAttribute(keyEClass, KEY__DUPLICATES_OPTION);
+		createEAttribute(keyEClass, KEY__LENGTH);
+		createEAttribute(keyEClass, KEY__NATURAL_SEQUENCE);
+		createEReference(keyEClass, KEY__ELEMENTS);
+		createEReference(keyEClass, KEY__MEMBER_ROLE);
+		createEReference(keyEClass, KEY__RECORD);
+
+		keyElementEClass = createEClass(KEY_ELEMENT);
+		createEAttribute(keyElementEClass, KEY_ELEMENT__DBKEY);
+		createEAttribute(keyElementEClass, KEY_ELEMENT__SORT_SEQUENCE);
+		createEReference(keyElementEClass, KEY_ELEMENT__ELEMENT);
+		createEReference(keyElementEClass, KEY_ELEMENT__KEY);
+
+		memberRoleEClass = createEClass(MEMBER_ROLE);
+		createEAttribute(memberRoleEClass, MEMBER_ROLE__INDEX_DBKEY_POSITION);
+		createEAttribute(memberRoleEClass, MEMBER_ROLE__MEMBERSHIP_OPTION);
+		createEAttribute(memberRoleEClass, MEMBER_ROLE__NEXT_DBKEY_POSITION);
+		createEAttribute(memberRoleEClass, MEMBER_ROLE__PRIOR_DBKEY_POSITION);
+		createEAttribute(memberRoleEClass, MEMBER_ROLE__OWNER_DBKEY_POSITION);
+		createEReference(memberRoleEClass, MEMBER_ROLE__RECORD);
+		createEReference(memberRoleEClass, MEMBER_ROLE__SET);
+		createEReference(memberRoleEClass, MEMBER_ROLE__SORT_KEY);
+		createEReference(memberRoleEClass, MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR);
+		createEReference(memberRoleEClass, MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR);
+		createEReference(memberRoleEClass, MEMBER_ROLE__DIAGRAM_BENDPOINTS);
+		createEReference(memberRoleEClass, MEMBER_ROLE__DIAGRAM_LABEL_LOCATION);
+
+		occursSpecificationEClass = createEClass(OCCURS_SPECIFICATION);
+		createEAttribute(occursSpecificationEClass, OCCURS_SPECIFICATION__COUNT);
+		createEReference(occursSpecificationEClass, OCCURS_SPECIFICATION__DEPENDING_ON);
+
+		offsetExpressionEClass = createEClass(OFFSET_EXPRESSION);
+		createEAttribute(offsetExpressionEClass, OFFSET_EXPRESSION__OFFSET_PAGE_COUNT);
+		createEAttribute(offsetExpressionEClass, OFFSET_EXPRESSION__OFFSET_PERCENT);
+		createEAttribute(offsetExpressionEClass, OFFSET_EXPRESSION__PAGE_COUNT);
+		createEAttribute(offsetExpressionEClass, OFFSET_EXPRESSION__PERCENT);
+
+		ownerRoleEClass = createEClass(OWNER_ROLE);
+		createEAttribute(ownerRoleEClass, OWNER_ROLE__NEXT_DBKEY_POSITION);
+		createEAttribute(ownerRoleEClass, OWNER_ROLE__PRIOR_DBKEY_POSITION);
+		createEReference(ownerRoleEClass, OWNER_ROLE__RECORD);
+		createEReference(ownerRoleEClass, OWNER_ROLE__SET);
+
+		procedureEClass = createEClass(PROCEDURE);
+		createEAttribute(procedureEClass, PROCEDURE__NAME);
+
+		recordProcedureCallSpecificationEClass = createEClass(RECORD_PROCEDURE_CALL_SPECIFICATION);
+		createEAttribute(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME);
+		createEAttribute(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__VERB);
+		createEReference(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE);
+
+		schemaEClass = createEClass(SCHEMA);
+		createEAttribute(schemaEClass, SCHEMA__DESCRIPTION);
+		createEAttribute(schemaEClass, SCHEMA__MEMO_DATE);
+		createEAttribute(schemaEClass, SCHEMA__NAME);
+		createEAttribute(schemaEClass, SCHEMA__VERSION);
+		createEReference(schemaEClass, SCHEMA__AREAS);
+		createEReference(schemaEClass, SCHEMA__PROCEDURES);
+		createEReference(schemaEClass, SCHEMA__RECORDS);
+		createEReference(schemaEClass, SCHEMA__SETS);
+		createEReference(schemaEClass, SCHEMA__DIAGRAM_DATA);
+
+		schemaAreaEClass = createEClass(SCHEMA_AREA);
+		createEAttribute(schemaAreaEClass, SCHEMA_AREA__NAME);
+		createEReference(schemaAreaEClass, SCHEMA_AREA__AREA_SPECIFICATIONS);
+		createEReference(schemaAreaEClass, SCHEMA_AREA__INDEXES);
+		createEReference(schemaAreaEClass, SCHEMA_AREA__PROCEDURES);
+		createEReference(schemaAreaEClass, SCHEMA_AREA__RECORDS);
+		createEReference(schemaAreaEClass, SCHEMA_AREA__SCHEMA);
+
+		schemaRecordEClass = createEClass(SCHEMA_RECORD);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__CONTROL_LENGTH);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__DATA_LENGTH);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__FRAGMENTED);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__ID);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__LOCATION_MODE);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__MINIMUM_FRAGMENT_LENGTH);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__MINIMUM_ROOT_LENGTH);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__NAME);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__PREFIX_LENGTH);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__STORAGE_MODE);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__AREA_SPECIFICATION);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__CALC_KEY);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__ELEMENTS);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__KEYS);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__MEMBER_ROLES);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__OWNER_ROLES);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__PROCEDURES);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__ROLES);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__ROOT_ELEMENTS);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__SCHEMA);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__VIA_SPECIFICATION);
+
+		setEClass = createEClass(SET);
+		createEAttribute(setEClass, SET__MODE);
+		createEAttribute(setEClass, SET__NAME);
+		createEAttribute(setEClass, SET__ORDER);
+		createEReference(setEClass, SET__INDEXED_SET_MODE_SPECIFICATION);
+		createEReference(setEClass, SET__MEMBERS);
+		createEReference(setEClass, SET__OWNER);
+		createEReference(setEClass, SET__SCHEMA);
+		createEReference(setEClass, SET__SYSTEM_OWNER);
+		createEReference(setEClass, SET__VIA_MEMBERS);
+
+		roleEClass = createEClass(ROLE);
+
+		systemOwnerEClass = createEClass(SYSTEM_OWNER);
+		createEReference(systemOwnerEClass, SYSTEM_OWNER__AREA_SPECIFICATION);
+		createEReference(systemOwnerEClass, SYSTEM_OWNER__SET);
+
+		viaSpecificationEClass = createEClass(VIA_SPECIFICATION);
+		createEAttribute(viaSpecificationEClass, VIA_SPECIFICATION__DISPLACEMENT_PAGE_COUNT);
+		createEAttribute(viaSpecificationEClass, VIA_SPECIFICATION__SET_NAME);
+		createEAttribute(viaSpecificationEClass, VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME);
+		createEReference(viaSpecificationEClass, VIA_SPECIFICATION__RECORD);
+		createEReference(viaSpecificationEClass, VIA_SPECIFICATION__SET);
+
+		diagramNodeEClass = createEClass(DIAGRAM_NODE);
+		createEReference(diagramNodeEClass, DIAGRAM_NODE__DIAGRAM_LOCATION);
+
+		diagramLocationEClass = createEClass(DIAGRAM_LOCATION);
+		createEAttribute(diagramLocationEClass, DIAGRAM_LOCATION__X);
+		createEAttribute(diagramLocationEClass, DIAGRAM_LOCATION__Y);
+		createEAttribute(diagramLocationEClass, DIAGRAM_LOCATION__EYECATCHER);
+
+		diagramDataEClass = createEClass(DIAGRAM_DATA);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__LOCATIONS);
+		createEAttribute(diagramDataEClass, DIAGRAM_DATA__ZOOM_LEVEL);
+		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SHOW_GRID);
+
+		// Create enums
+		areaProcedureCallFunctionEEnum = createEEnum(AREA_PROCEDURE_CALL_FUNCTION);
+		duplicatesOptionEEnum = createEEnum(DUPLICATES_OPTION);
+		locationModeEEnum = createEEnum(LOCATION_MODE);
+		procedureCallTimeEEnum = createEEnum(PROCEDURE_CALL_TIME);
+		recordProcedureCallVerbEEnum = createEEnum(RECORD_PROCEDURE_CALL_VERB);
+		setMembershipOptionEEnum = createEEnum(SET_MEMBERSHIP_OPTION);
+		setModeEEnum = createEEnum(SET_MODE);
+		setOrderEEnum = createEEnum(SET_ORDER);
+		sortSequenceEEnum = createEEnum(SORT_SEQUENCE);
+		storageModeEEnum = createEEnum(STORAGE_MODE);
+		usageEEnum = createEEnum(USAGE);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private boolean isInitialized = false;
+
+	/**
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void initializePackageContents() {
+		if (isInitialized) return;
+		isInitialized = true;
+
+		// Initialize package
+		setName(eNAME);
+		setNsPrefix(eNS_PREFIX);
+		setNsURI(eNS_URI);
+
+		// Create type parameters
+
+		// Set bounds for type parameters
+
+		// Add supertypes to classes
+		memberRoleEClass.getESuperTypes().add(this.getRole());
+		ownerRoleEClass.getESuperTypes().add(this.getRole());
+		schemaRecordEClass.getESuperTypes().add(this.getDiagramNode());
+		systemOwnerEClass.getESuperTypes().add(this.getDiagramNode());
+
+		// Initialize classes and features; add operations and parameters
+		initEClass(areaProcedureCallSpecificationEClass, AreaProcedureCallSpecification.class, "AreaProcedureCallSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAreaProcedureCallSpecification_CallTime(), this.getProcedureCallTime(), "callTime", null, 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAreaProcedureCallSpecification_Function(), this.getAreaProcedureCallFunction(), "function", "", 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAreaProcedureCallSpecification_Procedure(), this.getProcedure(), null, "procedure", null, 1, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(areaSpecificationEClass, AreaSpecification.class, "AreaSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAreaSpecification_SymbolicSubareaName(), ecorePackage.getEString(), "symbolicSubareaName", null, 0, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAreaSpecification_Area(), this.getSchemaArea(), this.getSchemaArea_AreaSpecifications(), "area", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAreaSpecification_OffsetExpression(), this.getOffsetExpression(), null, "offsetExpression", null, 0, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAreaSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_AreaSpecification(), "record", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAreaSpecification_SystemOwner(), this.getSystemOwner(), this.getSystemOwner_AreaSpecification(), "systemOwner", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(elementEClass, Element.class, "Element", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getElement_Length(), ecorePackage.getEShort(), "length", null, 0, 1, Element.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_Level(), ecorePackage.getEShort(), "level", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_Nullable(), ecorePackage.getEBoolean(), "nullable", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_Offset(), ecorePackage.getEShort(), "offset", null, 0, 1, Element.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_Picture(), ecorePackage.getEString(), "picture", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_Usage(), this.getUsage(), "usage", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getElement_Children(), this.getElement(), this.getElement_Parent(), "children", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getElement_KeyElements(), this.getKeyElement(), this.getKeyElement_Element(), "keyElements", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getElement_OccursSpecification(), this.getOccursSpecification(), null, "occursSpecification", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getElement_Parent(), this.getElement(), this.getElement_Children(), "parent", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getElement_Record(), this.getSchemaRecord(), this.getSchemaRecord_Elements(), "record", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getElement_Redefines(), this.getElement(), null, "redefines", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(indexedSetModeSpecificationEClass, IndexedSetModeSpecification.class, "IndexedSetModeSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIndexedSetModeSpecification_DisplacementPageCount(), ecorePackage.getEShortObject(), "displacementPageCount", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIndexedSetModeSpecification_KeyCount(), ecorePackage.getEShortObject(), "keyCount", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIndexedSetModeSpecification_SymbolicIndexName(), ecorePackage.getEString(), "symbolicIndexName", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(keyEClass, Key.class, "Key", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKey_Compressed(), ecorePackage.getEBoolean(), "compressed", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKey_DuplicatesOption(), this.getDuplicatesOption(), "duplicatesOption", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKey_Length(), ecorePackage.getEShort(), "length", null, 0, 1, Key.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKey_NaturalSequence(), ecorePackage.getEBoolean(), "naturalSequence", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getKey_Elements(), this.getKeyElement(), this.getKeyElement_Key(), "elements", null, 1, -1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getKey_MemberRole(), this.getMemberRole(), this.getMemberRole_SortKey(), "memberRole", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getKey_Record(), this.getSchemaRecord(), this.getSchemaRecord_Keys(), "record", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(keyElementEClass, KeyElement.class, "KeyElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyElement_Dbkey(), ecorePackage.getEBoolean(), "dbkey", null, 0, 1, KeyElement.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKeyElement_SortSequence(), this.getSortSequence(), "sortSequence", null, 0, 1, KeyElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getKeyElement_Element(), this.getElement(), this.getElement_KeyElements(), "element", null, 1, 1, KeyElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getKeyElement_Key(), this.getKey(), this.getKey_Elements(), "key", null, 1, 1, KeyElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(memberRoleEClass, MemberRole.class, "MemberRole", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMemberRole_IndexDbkeyPosition(), ecorePackage.getEShortObject(), "indexDbkeyPosition", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMemberRole_MembershipOption(), this.getSetMembershipOption(), "membershipOption", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMemberRole_NextDbkeyPosition(), ecorePackage.getEShortObject(), "nextDbkeyPosition", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMemberRole_PriorDbkeyPosition(), ecorePackage.getEShortObject(), "priorDbkeyPosition", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMemberRole_OwnerDbkeyPosition(), ecorePackage.getEShortObject(), "ownerDbkeyPosition", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_Record(), this.getSchemaRecord(), this.getSchemaRecord_MemberRoles(), "record", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_Set(), this.getSet(), this.getSet_Members(), "set", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_SortKey(), this.getKey(), this.getKey_MemberRole(), "sortKey", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_DiagramTargetAnchor(), this.getDiagramLocation(), null, "diagramTargetAnchor", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_DiagramSourceAnchor(), this.getDiagramLocation(), null, "diagramSourceAnchor", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_DiagramBendpoints(), this.getDiagramLocation(), null, "diagramBendpoints", null, 0, -1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_DiagramLabelLocation(), this.getDiagramLocation(), null, "diagramLabelLocation", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(occursSpecificationEClass, OccursSpecification.class, "OccursSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getOccursSpecification_Count(), ecorePackage.getEShort(), "count", null, 0, 1, OccursSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getOccursSpecification_DependingOn(), this.getElement(), null, "dependingOn", null, 0, 1, OccursSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(offsetExpressionEClass, OffsetExpression.class, "OffsetExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getOffsetExpression_OffsetPageCount(), ecorePackage.getEIntegerObject(), "offsetPageCount", null, 0, 1, OffsetExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getOffsetExpression_OffsetPercent(), ecorePackage.getEShortObject(), "offsetPercent", null, 0, 1, OffsetExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getOffsetExpression_PageCount(), ecorePackage.getEIntegerObject(), "pageCount", null, 0, 1, OffsetExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getOffsetExpression_Percent(), ecorePackage.getEShortObject(), "percent", null, 0, 1, OffsetExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(ownerRoleEClass, OwnerRole.class, "OwnerRole", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getOwnerRole_NextDbkeyPosition(), ecorePackage.getEShort(), "nextDbkeyPosition", null, 0, 1, OwnerRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getOwnerRole_PriorDbkeyPosition(), ecorePackage.getEShortObject(), "priorDbkeyPosition", null, 0, 1, OwnerRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getOwnerRole_Record(), this.getSchemaRecord(), this.getSchemaRecord_OwnerRoles(), "record", null, 1, 1, OwnerRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getOwnerRole_Set(), this.getSet(), this.getSet_Owner(), "set", null, 1, 1, OwnerRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(procedureEClass, Procedure.class, "Procedure", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getProcedure_Name(), ecorePackage.getEString(), "name", null, 0, 1, Procedure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(recordProcedureCallSpecificationEClass, RecordProcedureCallSpecification.class, "RecordProcedureCallSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getRecordProcedureCallSpecification_CallTime(), this.getProcedureCallTime(), "callTime", null, 0, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRecordProcedureCallSpecification_Verb(), this.getRecordProcedureCallVerb(), "verb", null, 0, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRecordProcedureCallSpecification_Procedure(), this.getProcedure(), null, "procedure", null, 1, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(schemaEClass, Schema.class, "Schema", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSchema_Description(), ecorePackage.getEString(), "description", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchema_MemoDate(), ecorePackage.getEString(), "memoDate", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchema_Name(), ecorePackage.getEString(), "name", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchema_Version(), ecorePackage.getEShort(), "version", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchema_Areas(), this.getSchemaArea(), this.getSchemaArea_Schema(), "areas", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchema_Procedures(), this.getProcedure(), null, "procedures", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchema_Records(), this.getSchemaRecord(), this.getSchemaRecord_Schema(), "records", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchema_Sets(), this.getSet(), this.getSet_Schema(), "sets", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchema_DiagramData(), this.getDiagramData(), null, "diagramData", null, 1, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		EOperation op = addEOperation(schemaEClass, this.getSchemaArea(), "getArea", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(schemaEClass, this.getProcedure(), "getProcedure", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(schemaEClass, this.getSchemaRecord(), "getRecord", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(schemaEClass, this.getSchemaRecord(), "getRecord", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "areaName", 1, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEShort(), "recordId", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(schemaEClass, this.getSet(), "getSet", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(schemaAreaEClass, SchemaArea.class, "SchemaArea", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSchemaArea_Name(), ecorePackage.getEString(), "name", null, 0, 1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaArea_AreaSpecifications(), this.getAreaSpecification(), this.getAreaSpecification_Area(), "areaSpecifications", null, 0, -1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaArea_Indexes(), this.getSystemOwner(), null, "indexes", null, 0, -1, SchemaArea.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaArea_Procedures(), this.getAreaProcedureCallSpecification(), null, "procedures", null, 0, -1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaArea_Records(), this.getSchemaRecord(), null, "records", null, 0, -1, SchemaArea.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaArea_Schema(), this.getSchema(), this.getSchema_Areas(), "schema", null, 1, 1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(schemaAreaEClass, this.getSchemaRecord(), "getRecord", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEShort(), "recordId", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(schemaAreaEClass, this.getSchemaRecord(), "getRecord", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(schemaRecordEClass, SchemaRecord.class, "SchemaRecord", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSchemaRecord_ControlLength(), ecorePackage.getEShort(), "controlLength", "-1", 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_DataLength(), ecorePackage.getEShort(), "dataLength", "-1", 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_Fragmented(), ecorePackage.getEBoolean(), "fragmented", null, 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_Id(), ecorePackage.getEShort(), "id", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_LocationMode(), this.getLocationMode(), "locationMode", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_MinimumFragmentLength(), ecorePackage.getEShortObject(), "minimumFragmentLength", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_MinimumRootLength(), ecorePackage.getEShortObject(), "minimumRootLength", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_Name(), ecorePackage.getEString(), "name", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_PrefixLength(), ecorePackage.getEShort(), "prefixLength", null, 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_StorageMode(), this.getStorageMode(), "storageMode", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_AreaSpecification(), this.getAreaSpecification(), this.getAreaSpecification_Record(), "areaSpecification", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_CalcKey(), this.getKey(), null, "calcKey", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_Elements(), this.getElement(), this.getElement_Record(), "elements", null, 1, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_Keys(), this.getKey(), this.getKey_Record(), "keys", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_MemberRoles(), this.getMemberRole(), this.getMemberRole_Record(), "memberRoles", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_OwnerRoles(), this.getOwnerRole(), this.getOwnerRole_Record(), "ownerRoles", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_Procedures(), this.getRecordProcedureCallSpecification(), null, "procedures", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_Roles(), this.getRole(), null, "roles", null, 0, -1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_RootElements(), this.getElement(), null, "rootElements", null, 1, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_Schema(), this.getSchema(), this.getSchema_Records(), "schema", null, 1, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_ViaSpecification(), this.getViaSpecification(), this.getViaSpecification_Record(), "viaSpecification", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		op = addEOperation(schemaRecordEClass, this.getElement(), "getElement", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(schemaRecordEClass, this.getRole(), "getRole", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "setName", 1, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(setEClass, Set.class, "Set", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSet_Mode(), this.getSetMode(), "mode", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSet_Name(), ecorePackage.getEString(), "name", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSet_Order(), this.getSetOrder(), "order", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSet_IndexedSetModeSpecification(), this.getIndexedSetModeSpecification(), null, "indexedSetModeSpecification", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSet_Members(), this.getMemberRole(), this.getMemberRole_Set(), "members", null, 1, -1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSet_Owner(), this.getOwnerRole(), this.getOwnerRole_Set(), "owner", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSet_Schema(), this.getSchema(), this.getSchema_Sets(), "schema", null, 1, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSet_SystemOwner(), this.getSystemOwner(), this.getSystemOwner_Set(), "systemOwner", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSet_ViaMembers(), this.getViaSpecification(), this.getViaSpecification_Set(), "viaMembers", null, 0, -1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(roleEClass, Role.class, "Role", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(systemOwnerEClass, SystemOwner.class, "SystemOwner", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSystemOwner_AreaSpecification(), this.getAreaSpecification(), this.getAreaSpecification_SystemOwner(), "areaSpecification", null, 0, 1, SystemOwner.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSystemOwner_Set(), this.getSet(), this.getSet_SystemOwner(), "set", null, 1, 1, SystemOwner.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(viaSpecificationEClass, ViaSpecification.class, "ViaSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getViaSpecification_DisplacementPageCount(), ecorePackage.getEShortObject(), "displacementPageCount", null, 0, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getViaSpecification_SetName(), ecorePackage.getEString(), "setName", null, 0, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getViaSpecification_SymbolicDisplacementName(), ecorePackage.getEString(), "symbolicDisplacementName", null, 0, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getViaSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_ViaSpecification(), "record", null, 1, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getViaSpecification_Set(), this.getSet(), this.getSet_ViaMembers(), "set", null, 1, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(diagramNodeEClass, DiagramNode.class, "DiagramNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDiagramNode_DiagramLocation(), this.getDiagramLocation(), null, "diagramLocation", null, 1, 1, DiagramNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(diagramLocationEClass, DiagramLocation.class, "DiagramLocation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDiagramLocation_X(), ecorePackage.getEInt(), "x", null, 0, 1, DiagramLocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramLocation_Y(), ecorePackage.getEInt(), "y", null, 0, 1, DiagramLocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramLocation_Eyecatcher(), ecorePackage.getEString(), "eyecatcher", null, 0, 1, DiagramLocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(diagramDataEClass, DiagramData.class, "DiagramData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDiagramData_Locations(), this.getDiagramLocation(), null, "locations", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramData_ZoomLevel(), ecorePackage.getEDouble(), "zoomLevel", "1.0d", 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramData_ShowGrid(), ecorePackage.getEBoolean(), "showGrid", "false", 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		// Initialize enums and add enum literals
+		initEEnum(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.class, "AreaProcedureCallFunction");
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.EVERY_DML_FUNCTION);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_EXCLUSIVE);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_EXCLUSIVE_UPDATE);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_EXCLUSIVE_RETRIEVAL);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_PROTECTED);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_PROTECTED_UPDATE);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_PROTECTED_RETRIEVAL);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_SHARED);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_SHARED_UPDATE);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_SHARED_RETRIEVAL);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_UPDATE);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY_RETRIEVAL);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.FINISH);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.COMMIT);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.ROLLBACK);
+
+		initEEnum(duplicatesOptionEEnum, DuplicatesOption.class, "DuplicatesOption");
+		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.FIRST);
+		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.LAST);
+		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.BY_DBKEY);
+		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.NOT_ALLOWED);
+
+		initEEnum(locationModeEEnum, LocationMode.class, "LocationMode");
+		addEEnumLiteral(locationModeEEnum, LocationMode.CALC);
+		addEEnumLiteral(locationModeEEnum, LocationMode.DIRECT);
+		addEEnumLiteral(locationModeEEnum, LocationMode.VIA);
+
+		initEEnum(procedureCallTimeEEnum, ProcedureCallTime.class, "ProcedureCallTime");
+		addEEnumLiteral(procedureCallTimeEEnum, ProcedureCallTime.BEFORE);
+		addEEnumLiteral(procedureCallTimeEEnum, ProcedureCallTime.AFTER);
+		addEEnumLiteral(procedureCallTimeEEnum, ProcedureCallTime.ON_ERROR_DURING);
+
+		initEEnum(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.class, "RecordProcedureCallVerb");
+		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.EVERY_DML_FUNCTION);
+		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.CONNECT);
+		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.DISCONNECT);
+		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.ERASE);
+		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.FIND);
+		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.GET);
+		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.MODIFY);
+		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.STORE);
+
+		initEEnum(setMembershipOptionEEnum, SetMembershipOption.class, "SetMembershipOption");
+		addEEnumLiteral(setMembershipOptionEEnum, SetMembershipOption.MANDATORY_AUTOMATIC);
+		addEEnumLiteral(setMembershipOptionEEnum, SetMembershipOption.MANDATORY_MANUAL);
+		addEEnumLiteral(setMembershipOptionEEnum, SetMembershipOption.OPTIONAL_AUTOMATIC);
+		addEEnumLiteral(setMembershipOptionEEnum, SetMembershipOption.OPTIONAL_MANUAL);
+
+		initEEnum(setModeEEnum, SetMode.class, "SetMode");
+		addEEnumLiteral(setModeEEnum, SetMode.CHAINED);
+		addEEnumLiteral(setModeEEnum, SetMode.INDEXED);
+
+		initEEnum(setOrderEEnum, SetOrder.class, "SetOrder");
+		addEEnumLiteral(setOrderEEnum, SetOrder.FIRST);
+		addEEnumLiteral(setOrderEEnum, SetOrder.LAST);
+		addEEnumLiteral(setOrderEEnum, SetOrder.NEXT);
+		addEEnumLiteral(setOrderEEnum, SetOrder.PRIOR);
+		addEEnumLiteral(setOrderEEnum, SetOrder.SORTED);
+
+		initEEnum(sortSequenceEEnum, SortSequence.class, "SortSequence");
+		addEEnumLiteral(sortSequenceEEnum, SortSequence.ASCENDING);
+		addEEnumLiteral(sortSequenceEEnum, SortSequence.DESCENDING);
+
+		initEEnum(storageModeEEnum, StorageMode.class, "StorageMode");
+		addEEnumLiteral(storageModeEEnum, StorageMode.FIXED);
+		addEEnumLiteral(storageModeEEnum, StorageMode.FIXED_COMPRESSED);
+		addEEnumLiteral(storageModeEEnum, StorageMode.VARIABLE);
+		addEEnumLiteral(storageModeEEnum, StorageMode.VARIABLE_COMPRESSED);
+
+		initEEnum(usageEEnum, Usage.class, "Usage");
+		addEEnumLiteral(usageEEnum, Usage.DISPLAY);
+		addEEnumLiteral(usageEEnum, Usage.COMPUTATIONAL);
+		addEEnumLiteral(usageEEnum, Usage.COMPUTATIONAL_1);
+		addEEnumLiteral(usageEEnum, Usage.COMPUTATIONAL_2);
+		addEEnumLiteral(usageEEnum, Usage.COMPUTATIONAL_3);
+		addEEnumLiteral(usageEEnum, Usage.BIT);
+		addEEnumLiteral(usageEEnum, Usage.POINTER);
+		addEEnumLiteral(usageEEnum, Usage.DISPLAY_1);
+		addEEnumLiteral(usageEEnum, Usage.CONDITION_NAME);
+
+		// Create resource
+		createResource(eNS_URI);
+	}
+
+} //SchemaPackageImpl

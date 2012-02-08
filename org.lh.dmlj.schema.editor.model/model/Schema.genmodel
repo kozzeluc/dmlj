@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/Tijdelijk Project/src"
+    modelPluginID="Tijdelijk_Project" modelName="Schema" importerID="org.eclipse.emf.importer.cdo"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="org.lh.dmlj.schema.editor.model">
+  <foreignModel>Schema.ecore</foreignModel>
+  <genPackages prefix="Schema" basePackage="org.lh.dmlj" disposableProviderFactory="true"
+      ecorePackage="Schema.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//AreaProcedureCallFunction">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/EVERY_DML_FUNCTION"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_EXCLUSIVE"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_EXCLUSIVE_UPDATE"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_EXCLUSIVE_RETRIEVAL"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_PROTECTED"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_PROTECTED_UPDATE"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_PROTECTED_RETRIEVAL"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_SHARED"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_SHARED_UPDATE"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_SHARED_RETRIEVAL"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_UPDATE"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/READY_RETRIEVAL"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/FINISH"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/COMMIT"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//AreaProcedureCallFunction/ROLLBACK"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//DuplicatesOption">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//DuplicatesOption/FIRST"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//DuplicatesOption/LAST"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//DuplicatesOption/BY_DBKEY"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//DuplicatesOption/NOT_ALLOWED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//LocationMode">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LocationMode/CALC"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LocationMode/DIRECT"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LocationMode/VIA"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//ProcedureCallTime">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//ProcedureCallTime/BEFORE"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//ProcedureCallTime/AFTER"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//ProcedureCallTime/ON_ERROR_DURING"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//RecordProcedureCallVerb">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//RecordProcedureCallVerb/EVERY_DML_FUNCTION"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//RecordProcedureCallVerb/CONNECT"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//RecordProcedureCallVerb/DISCONNECT"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//RecordProcedureCallVerb/ERASE"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//RecordProcedureCallVerb/FIND"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//RecordProcedureCallVerb/GET"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//RecordProcedureCallVerb/MODIFY"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//RecordProcedureCallVerb/STORE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//SetMembershipOption">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMembershipOption/MANDATORY_AUTOMATIC"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMembershipOption/MANDATORY_MANUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMembershipOption/OPTIONAL_AUTOMATIC"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMembershipOption/OPTIONAL_MANUAL"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//SetMode">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMode/CHAINED"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMode/INDEXED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//SetOrder">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetOrder/FIRST"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetOrder/LAST"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetOrder/NEXT"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetOrder/PRIOR"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetOrder/SORTED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//SortSequence">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SortSequence/ASCENDING"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SortSequence/DESCENDING"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//StorageMode">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//StorageMode/FIXED"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//StorageMode/FIXED_COMPRESSED"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//StorageMode/VARIABLE"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//StorageMode/VARIABLE_COMPRESSED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//Usage">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/DISPLAY"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/COMPUTATIONAL"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/COMPUTATIONAL_1"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/COMPUTATIONAL_2"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/COMPUTATIONAL_3"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/BIT"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/POINTER"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/DISPLAY_1"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/CONDITION_NAME"/>
+    </genEnums>
+    <genClasses ecoreClass="Schema.ecore#//AreaProcedureCallSpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//AreaProcedureCallSpecification/callTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//AreaProcedureCallSpecification/function"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//AreaProcedureCallSpecification/procedure"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//AreaSpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//AreaSpecification/symbolicSubareaName"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//AreaSpecification/area"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//AreaSpecification/offsetExpression"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//AreaSpecification/record"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//AreaSpecification/systemOwner"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//Element">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/length"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/level"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/nullable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/offset"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/picture"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/usage"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/children"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/keyElements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/occursSpecification"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/parent"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//Element/record"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/redefines"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//IndexedSetModeSpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexedSetModeSpecification/displacementPageCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexedSetModeSpecification/keyCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexedSetModeSpecification/symbolicIndexName"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//Key">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/compressed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/duplicatesOption"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/length"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/naturalSequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Key/elements"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Key/memberRole"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//Key/record"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//KeyElement">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//KeyElement/dbkey"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//KeyElement/sortSequence"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//KeyElement/element"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//KeyElement/key"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//MemberRole">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//MemberRole/indexDbkeyPosition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//MemberRole/membershipOption"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//MemberRole/nextDbkeyPosition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//MemberRole/priorDbkeyPosition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//MemberRole/ownerDbkeyPosition"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//MemberRole/record"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//MemberRole/set"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//MemberRole/sortKey"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//MemberRole/diagramTargetAnchor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//MemberRole/diagramSourceAnchor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//MemberRole/diagramBendpoints"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//MemberRole/diagramLabelLocation"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//OccursSpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OccursSpecification/count"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//OccursSpecification/dependingOn"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//OffsetExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OffsetExpression/offsetPageCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OffsetExpression/offsetPercent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OffsetExpression/pageCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OffsetExpression/percent"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//OwnerRole">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OwnerRole/nextDbkeyPosition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OwnerRole/priorDbkeyPosition"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//OwnerRole/record"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//OwnerRole/set"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//Procedure">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Procedure/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//RecordProcedureCallSpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//RecordProcedureCallSpecification/callTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//RecordProcedureCallSpecification/verb"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//RecordProcedureCallSpecification/procedure"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//Schema">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Schema/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Schema/memoDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Schema/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Schema/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Schema/areas"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Schema/procedures"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Schema/records"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Schema/sets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Schema/diagramData"/>
+      <genOperations ecoreOperation="Schema.ecore#//Schema/getArea">
+        <genParameters ecoreParameter="Schema.ecore#//Schema/getArea/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="Schema.ecore#//Schema/getProcedure">
+        <genParameters ecoreParameter="Schema.ecore#//Schema/getProcedure/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="Schema.ecore#//Schema/getRecord">
+        <genParameters ecoreParameter="Schema.ecore#//Schema/getRecord/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="Schema.ecore#//Schema/getRecord.1">
+        <genParameters ecoreParameter="Schema.ecore#//Schema/getRecord.1/areaName"/>
+        <genParameters ecoreParameter="Schema.ecore#//Schema/getRecord.1/recordId"/>
+      </genOperations>
+      <genOperations ecoreOperation="Schema.ecore#//Schema/getSet">
+        <genParameters ecoreParameter="Schema.ecore#//Schema/getSet/name"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//SchemaArea">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaArea/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaArea/areaSpecifications"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaArea/indexes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaArea/procedures"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//SchemaArea/records"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//SchemaArea/schema"/>
+      <genOperations ecoreOperation="Schema.ecore#//SchemaArea/getRecord">
+        <genParameters ecoreParameter="Schema.ecore#//SchemaArea/getRecord/recordId"/>
+      </genOperations>
+      <genOperations ecoreOperation="Schema.ecore#//SchemaArea/getRecord.1">
+        <genParameters ecoreParameter="Schema.ecore#//SchemaArea/getRecord.1/name"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//SchemaRecord">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/controlLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/dataLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/fragmented"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/locationMode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/minimumFragmentLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/minimumRootLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/prefixLength"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/storageMode"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/areaSpecification"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/calcKey"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/elements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/keys"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/memberRoles"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/ownerRoles"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/procedures"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/roles"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/rootElements"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/schema"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/viaSpecification"/>
+      <genOperations ecoreOperation="Schema.ecore#//SchemaRecord/getElement">
+        <genParameters ecoreParameter="Schema.ecore#//SchemaRecord/getElement/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="Schema.ecore#//SchemaRecord/getRole">
+        <genParameters ecoreParameter="Schema.ecore#//SchemaRecord/getRole/setName"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//Set">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/mode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/order"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/indexedSetModeSpecification"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/members"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/owner"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//Set/schema"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/systemOwner"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/viaMembers"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Schema.ecore#//Role"/>
+    <genClasses ecoreClass="Schema.ecore#//SystemOwner">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SystemOwner/areaSpecification"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//SystemOwner/set"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//ViaSpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ViaSpecification/displacementPageCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ViaSpecification/setName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ViaSpecification/symbolicDisplacementName"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//ViaSpecification/record"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//ViaSpecification/set"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//DiagramNode">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramNode/diagramLocation"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//DiagramLocation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramLocation/x"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramLocation/y"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramLocation/eyecatcher"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//DiagramData">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/locations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/zoomLevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/showGrid"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
