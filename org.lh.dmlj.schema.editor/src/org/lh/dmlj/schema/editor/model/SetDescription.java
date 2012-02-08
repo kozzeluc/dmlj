@@ -4,11 +4,11 @@ import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramLocationProvider;
 import org.lh.dmlj.schema.MemberRole;
 
-public class SetLabel implements DiagramLocationProvider {
+public class SetDescription implements DiagramLocationProvider {
 	
 	private MemberRole memberRole;
 
-	public SetLabel(MemberRole memberRole) {
+	public SetDescription(MemberRole memberRole) {
 		super();
 		this.memberRole = memberRole;
 	}

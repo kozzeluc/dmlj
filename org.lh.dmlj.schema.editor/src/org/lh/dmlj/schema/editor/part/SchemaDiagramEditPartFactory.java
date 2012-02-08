@@ -6,7 +6,7 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.model.SetLabel;
+import org.lh.dmlj.schema.editor.model.SetDescription;
 
 public class SchemaDiagramEditPartFactory implements EditPartFactory {
 
@@ -24,8 +24,8 @@ public class SchemaDiagramEditPartFactory implements EditPartFactory {
 			return new IndexEditPart((SystemOwner) model);
 		} else if (model instanceof MemberRole) {
 			return new SetEditPart((MemberRole) model);
-		} else if (model instanceof SetLabel) {
-			return new SetLabelEditPart((SetLabel) model);
+		} else if (model instanceof SetDescription) {
+			return new SetDescriptionEditPart((SetDescription) model);
 		}
 		throw new IllegalStateException("No EditPart for " + model.getClass());
 	}

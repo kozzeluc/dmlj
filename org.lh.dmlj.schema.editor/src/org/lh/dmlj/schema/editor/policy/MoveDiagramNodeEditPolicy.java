@@ -11,7 +11,7 @@ import org.lh.dmlj.schema.DiagramLocationProvider;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
 import org.lh.dmlj.schema.editor.part.IndexEditPart;
 import org.lh.dmlj.schema.editor.part.RecordEditPart;
-import org.lh.dmlj.schema.editor.part.SetLabelEditPart;
+import org.lh.dmlj.schema.editor.part.SetDescriptionEditPart;
 
 public class MoveDiagramNodeEditPolicy extends XYLayoutEditPolicy {
 
@@ -43,7 +43,7 @@ public class MoveDiagramNodeEditPolicy extends XYLayoutEditPolicy {
 	protected EditPolicy createChildEditPolicy(EditPart child) {
 		if (child instanceof RecordEditPart ||
 			child instanceof IndexEditPart ||
-			child instanceof SetLabelEditPart) {
+			child instanceof SetDescriptionEditPart) {
 			
 			return new ModifiedNonResizableEditPolicy();
 		}

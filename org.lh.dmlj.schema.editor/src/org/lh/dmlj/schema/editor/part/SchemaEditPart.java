@@ -14,7 +14,7 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
-import org.lh.dmlj.schema.editor.model.SetLabel;
+import org.lh.dmlj.schema.editor.model.SetDescription;
 import org.lh.dmlj.schema.editor.policy.MoveDiagramNodeEditPolicy;
 
 public class SchemaEditPart extends AbstractGraphicalEditPart {
@@ -59,7 +59,7 @@ public class SchemaEditPart extends AbstractGraphicalEditPart {
 		// MemberRole instance
 		for (Set set : getModel().getSets()) {
 			for (MemberRole memberRole : set.getMembers()) {
-				SetLabel setLabel = new SetLabel(memberRole);				
+				SetDescription setLabel = new SetDescription(memberRole);				
 				allObjects.add(setLabel);
 			}
 		}

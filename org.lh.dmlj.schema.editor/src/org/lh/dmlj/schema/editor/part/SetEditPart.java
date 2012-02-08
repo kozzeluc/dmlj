@@ -57,7 +57,8 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	@Override
 	public final void activate() {
 		super.activate();
-		getModel().eAdapters().add(changeListener);		
+		getModel().eAdapters().add(changeListener);
+		getModel().getSet().eAdapters().add(changeListener);	
 	}	
 	
 	@Override
@@ -98,6 +99,7 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	
 	@Override
 	public final void deactivate() {
+		getModel().getSet().eAdapters().remove(changeListener);
 		getModel().eAdapters().remove(changeListener);		
 		super.deactivate();
 	}

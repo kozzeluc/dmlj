@@ -9,16 +9,16 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.SetDescriptionFigure;
-import org.lh.dmlj.schema.editor.model.SetLabel;
+import org.lh.dmlj.schema.editor.model.SetDescription;
 
-public class SetLabelEditPart 
-    extends AbstractDiagramNodeEditPart<SetLabel>  {
+public class SetDescriptionEditPart 
+    extends AbstractDiagramNodeEditPart<SetDescription>  {
 
-	private SetLabelEditPart() {
+	private SetDescriptionEditPart() {
 		super(null); // disabled constructor
 	}
 	
-	public SetLabelEditPart(SetLabel setLabel) {
+	public SetDescriptionEditPart(SetDescription setLabel) {
 		super(setLabel);		
 	}	
 
@@ -29,7 +29,8 @@ public class SetLabelEditPart
 	
 	@Override
 	protected EObject[] getModelObjects() {
-		return new EObject[] {getModel().getMemberRole(), 
+		return new EObject[] {getModel().getMemberRole(),
+						      getModel().getMemberRole().getSet(),
 							  getModel().getDiagramLocation()};
 	}
 

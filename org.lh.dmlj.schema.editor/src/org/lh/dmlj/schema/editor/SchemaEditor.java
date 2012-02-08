@@ -45,12 +45,17 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.command.SetShowGridCommand;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
 
-public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
+public class SchemaEditor 
+	extends GraphicalEditorWithFlyoutPalette 
+	implements ITabbedPropertySheetPageContributor {
 	
 	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";	
 	
@@ -236,11 +241,26 @@ public class SchemaEditor extends GraphicalEditorWithFlyoutPalette {
 		if (type == ZoomManager.class) {
 			String key = ZoomManager.class.toString();
 			return getGraphicalViewer().getProperty(key);
+		} else if (type == IPropertySheetPage.class) {
+            return new TabbedPropertySheetPage(this);
 		}
 
 		return super.getAdapter(type);
 	}	
 	
+	@Override
+	public CommandStack getCommandStack() {
+		// we need this if we want to be able to change attributes in the
+		// Properties View, so that's why we override this method and make it
+		// public
+		return super.getCommandStack();
+	}
+	
+	@Override
+	public String getContributorId() {
+		return getSite().getId();
+	}
+
 	@Override
 	protected PaletteRoot getPaletteRoot() {
 		return null;
