@@ -194,6 +194,7 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 		try {
 			getContainer().run(false, false, operation);
 		} catch (Throwable e) {
+			e.printStackTrace();
 			Throwable cause = e.getCause();
 			if (cause != null) {
 				// file niet in een project (folder) of project niet open

@@ -4,13 +4,16 @@ import static dmlj.core.NavigationType.FIRST;
 import static dmlj.core.NavigationType.NEXT;
 import static dmlj.core.NavigationType.OWNER;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.lh.dmlj.idmsntwk.CalcKey_S_010;
 import org.lh.dmlj.idmsntwk.CalcKey_Schema_1045;
 import org.lh.dmlj.idmsntwk.Column_1028;
@@ -116,22 +119,19 @@ public class SchemaImportTool {
 		 SortSequence.DESCENDING};		// 1
 	
 	// schema diagram related things:
-	
 	private static final int X_INITIAL_VALUE = 50;	
-	private static final int X_INCREMENT = 275;	
+	private static final int X_HALF_INCREMENT = 130;	
+	private static final int X_INCREMENT = 2 * X_HALF_INCREMENT;	
 	private static final int Y_INITIAL_VALUE = 100;		
 	private static final int Y_INCREMENT = 135;
+	
+	private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";	
 	
 	private IDatabase catalog;
 	private IDatabase dictionary;
 	private boolean[] options;    
 	private String 	  schemaName;
-    private int 	  schemaVersion;
-    
-    private int       columnCount; // calculated when we know the record count 
-    private int 	  nextX = X_INITIAL_VALUE;
-    private int 	  nextY = Y_INITIAL_VALUE;
-    private int       xMaxValue;   // calculated when we know the record count    	
+    private int 	  schemaVersion;    
     
     public SchemaImportTool(IDatabase dictionary, String schemaName, 
 			 				int schemaVersion, boolean[] options, 
@@ -1471,13 +1471,55 @@ public class SchemaImportTool {
 			}
 		}	
 		
-		// now that we know how many records the schema contains, compute the
-		// number of columns and set each record's diagram data...
-		columnCount = 
-			(int) Math.ceil(Math.sqrt((double)schema.getRecords().size()));
-		xMaxValue = X_INITIAL_VALUE + (columnCount - 1) * X_INCREMENT;  
-		for (SchemaRecord record : schema.getRecords()) {
-			setDiagramData(record);
+		  
+		if (schema.getName().equals("IDMSNTWK") && schema.getVersion() == 1 ||
+			schema.getName().equals("EMPSCHM") && schema.getVersion() == 100) {
+			
+			// get the diagram data for all records using a Properties object...
+			ClassLoader cl = SchemaImportTool.class.getClassLoader();
+			InputStream in = 
+				cl.getResourceAsStream("/resources/" + schema.getName() +
+									   " version " + schema.getVersion() +
+									   " (Record Locations).txt");			
+			Properties locations = new Properties();
+			try {
+				locations.load(in);
+				in.close();
+			} catch (Throwable t) {
+				throw new Error(t);
+			}			
+			List<SchemaRecord> notSet = new ArrayList<>();
+			for (SchemaRecord record : schema.getRecords()) {	
+				// calculate and set the record's diagram data...
+				if (locations.containsKey(record.getName())) {
+					Rectangle rectangle = 
+						toRectangle(locations.getProperty(record.getName()));
+					setDiagramData(record, rectangle.x, rectangle.y);
+				} else {
+					notSet.add(record);
+				}
+			}	
+			if (!notSet.isEmpty()) {
+				throw new Error("not all record diagram data set: " + 
+								notSet.toString());
+			}
+		} else {
+		    // now that we know how many records the schema contains, compute 
+			// the number of columns so that it is about the same as the number
+			// of rows...
+			int columnCount = 
+				(int) Math.ceil(Math.sqrt((double)schema.getRecords().size()));
+			int maxX = X_INITIAL_VALUE + (columnCount - 1) * X_INCREMENT;		    
+			int x = X_INITIAL_VALUE;
+		    int y = Y_INITIAL_VALUE;
+			for (SchemaRecord record : schema.getRecords()) {
+				setDiagramData(record, x, y);
+				x += X_INCREMENT;				
+				if (x > maxX) {
+					x = X_INITIAL_VALUE;
+					y += Y_INCREMENT;				
+				}				
+			}
 		}
 		
 		// sets...
@@ -1744,22 +1786,33 @@ public class SchemaImportTool {
 		processIndexedSetMember(set, dictionary, smr_052, suffix);
 	}
 
-	private void setDiagramData(SchemaRecord record) {
-		
+	private void setDiagramData(SchemaRecord record, int x, int y) {		
 		DiagramLocation location =
 			SchemaFactory.eINSTANCE.createDiagramLocation();
 		record.getSchema().getDiagramData().getLocations().add(location);
 		record.setDiagramLocation(location);		
-		location.setX(nextX);
-		location.setY(nextY);
-		location.setEyecatcher("record " + record.getName());
-		System.out.println(location);
+		location.setX(x);
+		location.setY(y);
+		location.setEyecatcher("record " + record.getName());		
+	}
+
+	private Rectangle toRectangle(String property) {
 		
-		nextX += X_INCREMENT;
-		if (nextX > xMaxValue) {
-			nextX = X_INITIAL_VALUE;
-			nextY += Y_INCREMENT;				
+		// the first part of the property value passed consists of one or two
+		// letters corresponding to the row, the second part is any number from 
+		// 1 onwards and represents the column		
+		int row;
+		int column;		
+		try {
+			row = LETTERS.indexOf(property.substring(0, 1));
+			column = Integer.valueOf(String.valueOf(property.substring(1))) - 1;			
+		} catch (NumberFormatException e) {
+			row = 26 + 26 * LETTERS.indexOf(property.substring(0, 1)) +
+				  LETTERS.indexOf(property.substring(1, 2));
+			column = Integer.valueOf(String.valueOf(property.substring(2))) - 1;				
 		}
-		
+				
+		return new Rectangle(X_INITIAL_VALUE + column * X_HALF_INCREMENT, 
+							 Y_INITIAL_VALUE + row * Y_INCREMENT, 0, 0);
 	}	
 }

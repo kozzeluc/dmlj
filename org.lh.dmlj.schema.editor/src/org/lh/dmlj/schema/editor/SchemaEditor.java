@@ -6,9 +6,16 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -36,12 +43,20 @@ import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
@@ -59,13 +74,141 @@ public class SchemaEditor
 	
 	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";	
 	
-	private Schema schema;
-	private URI    uri;
+	// This class listens to changes to the file system in the workspace, and
+	// makes changes accordingly.
+	// 1) An open, saved file gets deleted -> close the editor
+	// 2) An open file gets renamed or moved -> change the editor's input
+	// accordingly
+	class ResourceTracker 
+		implements IResourceChangeListener, IResourceDeltaVisitor {
+		public void resourceChanged(IResourceChangeEvent event) {
+			IResourceDelta delta = event.getDelta();
+			try {
+				if (delta != null) {
+					delta.accept(this);
+				}
+			} catch (CoreException exception) {
+				// What should be done here?
+			}
+		}
+
+		public boolean visit(IResourceDelta delta) {
+			if (delta == null || 
+				!delta.getResource().equals(((IFileEditorInput) getEditorInput()).getFile())) {
+					return true;
+			}
+
+			if (delta.getKind() == IResourceDelta.REMOVED) {
+				Display display = getSite().getShell().getDisplay();
+				if ((IResourceDelta.MOVED_TO & delta.getFlags()) == 0) { // if
+																		 // the
+																		 // file
+																		 // was
+																		 // deleted
+					// NOTE: The case where an open, unsaved file is deleted is
+					// being handled by the
+					// PartListener added to the Workbench in the initialize()
+					// method.
+					display.asyncExec(new Runnable() {
+						public void run() {
+							if (!isDirty()) {
+								closeEditor(false);
+							}
+						}
+					});
+				} else { // else if it was moved or renamed
+					final IFile newFile = 
+						ResourcesPlugin.getWorkspace()
+									   .getRoot()
+									   .getFile(delta.getMovedToPath());
+					display.asyncExec(new Runnable() {
+						public void run() {
+							superSetInput(new FileEditorInput(newFile));
+						}
+					});
+				}
+			} else if (delta.getKind() == IResourceDelta.CHANGED) {
+				if (!editorSaving) {
+					// the file was overwritten somehow (could have been
+					// replaced by another
+					// version in the respository)
+					final IFile newFile = 
+						ResourcesPlugin.getWorkspace()
+									   .getRoot()
+									   .getFile(delta.getFullPath());
+					Display display = getSite().getShell().getDisplay();
+					display.asyncExec(new Runnable() {
+						public void run() {
+							setInput(new FileEditorInput(newFile));
+							getCommandStack().flush();
+						}
+					});
+				}
+			}
+			return false;
+		}
+	}
+
+	private IPartListener partListener = new IPartListener() {
+		// If an open, unsaved file was deleted, query the user to either do a
+		// "Save As" or close the editor.
+		public void partActivated(IWorkbenchPart part) {
+			if (part != SchemaEditor.this) {
+				return;
+			}
+			if (!((IFileEditorInput) getEditorInput()).getFile().exists()) {
+				Shell shell = getSite().getShell();
+				String title = "File Deleted";
+				String message = 
+					"The file has been deleted from the file system.  Do you " +
+					"want to save your changes or close the editor without " + 
+					"saving ?";
+				String[] buttons = { "Save", "Close" };
+				MessageDialog dialog = 
+					new MessageDialog(shell, title, null, message, 
+									  MessageDialog.QUESTION, buttons, 0);
+				if (dialog.open() == 0) {
+					if (!performSaveAs()) {
+						partActivated(part);
+					}
+				} else {
+					closeEditor(false);
+				}
+			}
+		}
+
+		public void partBroughtToTop(IWorkbenchPart part) {
+		}
+
+		public void partClosed(IWorkbenchPart part) {
+		}
+
+		public void partDeactivated(IWorkbenchPart part) {
+		}
+
+		public void partOpened(IWorkbenchPart part) {
+		}
+	};	
+	
+	private boolean 		editorSaving = false;
+	private ResourceTracker resourceListener = new ResourceTracker();
+	private Schema 			schema;
+	private URI    			uri;
+	private IResource 	   	workspaceResource;
 	
 	public SchemaEditor() {
 		super();
 		setEditDomain(new DefaultEditDomain(this));		
 	}
+	
+	private void closeEditor(final boolean save) {
+		final Display display = PlatformUI.getWorkbench().getDisplay();        
+    	display.asyncExec(new Runnable() {
+    		public void run() {		
+    			getSite().getPage().closeEditor(SchemaEditor.this, save);
+    		}
+    	});
+	}	
 
 	@Override
 	public void commandStackChanged(EventObject event) {
@@ -184,8 +327,18 @@ public class SchemaEditor
 				
 	}
 	
+	public void dispose() {
+		getSite().getWorkbenchWindow().getPartService()
+				.removePartListener(partListener);
+		partListener = null;
+		((IFileEditorInput) getEditorInput()).getFile().getWorkspace()
+				.removeResourceChangeListener(resourceListener);
+		super.dispose();
+	}	
+	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
+		editorSaving = true;
 		// Serialize the model
 		ResourceSet resourceSet = new ResourceSetImpl();
 		Resource resource = resourceSet.createResource(uri);
@@ -200,10 +353,21 @@ public class SchemaEditor
 			ErrorDialog.openError(getSite().getShell(), "Exception", 
 								  e.getMessage(), status);
 		}
+		
+		// refresh the resource in the workspace to avoid 'Resource is out of 
+		// sync with the file system' messages
+		try {			
+			workspaceResource.refreshLocal(IResource.DEPTH_ZERO, null);
+		} catch (Throwable e) {
+			e.printStackTrace(); // just log whatever problem we encounter
+		}		
+		
 		// Update the editor state to indicate that the contents have been saved 
 		// and notify all listeners about the change in state
 		getCommandStack().markSaveLocation();
 		firePropertyChange(PROP_DIRTY);
+		
+		editorSaving = false;
 	}
 	
 	@Override
@@ -277,17 +441,111 @@ public class SchemaEditor
 		return true;
 	}
 	
+	private boolean performSaveAs() {
+		SaveAsDialog dialog = 
+			new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
+		dialog.setOriginalFile(((IFileEditorInput) getEditorInput()).getFile());
+		dialog.open();
+		IPath path = dialog.getResult();
+
+		if (path == null) {
+			return false;
+		}
+
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		final IFile file = workspace.getRoot().getFile(path);
+
+		if (!file.exists()) {
+			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+				public void execute(final IProgressMonitor monitor) {
+					// Serialize the model
+					ResourceSet resourceSet = new ResourceSetImpl();
+					URI tmpURI = 
+						URI.createFileURI(file.getLocation().toFile().getAbsolutePath());
+					Resource resource = resourceSet.createResource(tmpURI);
+					resource.getContents().add(schema);
+					try {
+						resource.save(null);
+					} catch (IOException e) {
+						e.printStackTrace();						
+					}
+				}
+			};
+			try {
+				new ProgressMonitorDialog(getSite().getWorkbenchWindow()
+						.getShell()).run(false, true, op);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			try {	
+				IContainer container = file.getParent(); 
+				if (container != null) {
+					container.refreshLocal(IResource.DEPTH_INFINITE, null);
+				}
+			} catch (Throwable e) {
+				e.printStackTrace(); // just log whatever problem we encounter
+			}
+			superSetInput(new FileEditorInput(file));
+			try {
+				if (workspaceResource != null) {
+					workspaceResource.refreshLocal(IResource.DEPTH_ZERO, null);
+				}
+			} catch (Throwable e) {
+				e.printStackTrace(); // just log whatever problem we encounter
+			}
+			getCommandStack().markSaveLocation();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}	
+	
 	protected void setInput(IEditorInput input) {
-		super.setInput(input);
-		IFile iFile = ((IFileEditorInput) input).getFile();
-		setPartName(iFile.getName());
-		File file = iFile.getLocation().toFile();
-		uri = URI.createFileURI(file.getAbsolutePath());
+		superSetInput(input);
+		
 		ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry()
 		   		   .getExtensionToFactoryMap()
 		   		   .put("schema", new XMIResourceFactoryImpl());
 		Resource resource = resourceSet.getResource(uri, true);
 		schema = (Schema)resource.getContents().get(0);		
+	}
+	
+	@Override
+	protected void setSite(IWorkbenchPartSite site) {
+		super.setSite(site);
+		getSite().getWorkbenchWindow()
+				 .getPartService()
+				 .addPartListener(partListener);
+	}	
+	
+	private void superSetInput(IEditorInput input) {
+		// The workspace never changes for an editor. So, removing and re-adding
+		// the
+		// resourceListener is not necessary. But it is being done here for the
+		// sake
+		// of proper implementation. Plus, the resourceListener needs to be
+		// added
+		// to the workspace the first time around.
+		if (getEditorInput() != null) {
+			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+			file.getWorkspace().removeResourceChangeListener(resourceListener);
+		}
+
+		super.setInput(input);
+
+		if (getEditorInput() != null) {
+			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+			workspaceResource = 
+				ResourcesPlugin.getWorkspace()
+							   .getRoot()
+							   .findMember(file.getFullPath());
+			uri = URI.createFileURI(file.getLocation().toFile().getAbsolutePath());			
+			file.getWorkspace().addResourceChangeListener(resourceListener);
+			setPartName(file.getName());
+		}
 	}
 }
