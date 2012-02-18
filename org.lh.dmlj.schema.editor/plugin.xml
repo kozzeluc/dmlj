@@ -13,6 +13,16 @@
       </editor>
    </extension>
    <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.lh.dmlj.eclipse.newWizards.category"
+            class="org.lh.dmlj.schema.editor.wizard.NewSchemaWizard"
+            icon="icons/schema.gif"
+            id="org.lh.dmlj.schema.editor.wizard.new"
+            name="Schema (Extended)">
+      </wizard>
+   </extension>
+   <extension
          point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
             contributorId="org.lh.dmlj.schema.editor.schemaeditor"
@@ -197,7 +207,7 @@
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.RecordCalcKeySection"
-               filter="org.lh.dmlj.schema.editor.property.CalcRecordFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.CalcRecordFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordCalcKey"
                tab="org.lh.dmlj.schema.editor.propertyTabCalc">
             <input
@@ -207,7 +217,7 @@
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionRecordCalcKey"
                class="org.lh.dmlj.schema.editor.property.RecordCalcKeyDuplicatesOptionSection"
-               filter="org.lh.dmlj.schema.editor.property.CalcRecordFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.CalcRecordFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordCalcKeyDuplicatesOption"
                tab="org.lh.dmlj.schema.editor.propertyTabCalc">
             <input
@@ -216,7 +226,7 @@
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.RecordViaSetSection"
-               filter="org.lh.dmlj.schema.editor.property.ViaRecordFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
                tab="org.lh.dmlj.schema.editor.propertyTabVia">
             <input
@@ -226,7 +236,7 @@
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
                class="org.lh.dmlj.schema.editor.property.ViaSpecificationSymbolicDisplacementNameSection"
-               filter="org.lh.dmlj.schema.editor.property.ViaRecordWithSymbolicDisplacementFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordWithSymbolicDisplacementFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordViaSetSymbolicDisplacementName"
                tab="org.lh.dmlj.schema.editor.propertyTabVia">
             <input
@@ -236,7 +246,7 @@
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
                class="org.lh.dmlj.schema.editor.property.ViaSpecificationDisplacementCountSection"
-               filter="org.lh.dmlj.schema.editor.property.ViaRecordWithDisplacementPageCountFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordWithDisplacementPageCountFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordViaSetDisplacementPageCount"
                tab="org.lh.dmlj.schema.editor.propertyTabVia">
             <input
@@ -289,41 +299,41 @@
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.SetOwnerNameSection"
-               filter="org.lh.dmlj.schema.editor.property.UserOwnedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetOwnerName"
                tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.SetSystemOwnerNameSection"
-               filter="org.lh.dmlj.schema.editor.property.SystemOwnedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.SystemOwnedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetSystemOwnerName"
                tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionSetOwnerName"
                class="org.lh.dmlj.schema.editor.property.SetOwnerAreaSection"
-               filter="org.lh.dmlj.schema.editor.property.UserOwnedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetOwnerArea"
                tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionSetSystemOwnerName"
                class="org.lh.dmlj.schema.editor.property.SetOwnerAreaSection"
-               filter="org.lh.dmlj.schema.editor.property.SystemOwnedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.SystemOwnedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetSystemOwnerArea"
                tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionSetOwnerArea"
                class="org.lh.dmlj.schema.editor.property.OwnerRoleNextPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.UserOwnedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionOwnerRoleNextPointer"
                tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionOwnerRoleNextPointer"
                class="org.lh.dmlj.schema.editor.property.OwnerRolePriorPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.UserOwnedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionOwnerRolePriorPointer"
                tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
          </propertySection>
@@ -359,69 +369,69 @@
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionSetMemberArea"
                class="org.lh.dmlj.schema.editor.property.MemberRoleNextPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.ChainedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.ChainedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionMemberRoleNextPointer"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleNextPointer"
                class="org.lh.dmlj.schema.editor.property.MemberRolePriorPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.ChainedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.ChainedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionMemberRolePriorPointer"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionSetMemberArea"
                class="org.lh.dmlj.schema.editor.property.MemberRoleIndexPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.IndexedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.IndexedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionMemberRoleIndexPointer"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRolePriorPointer"
                class="org.lh.dmlj.schema.editor.property.MemberRoleOwnerPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.ChainedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.ChainedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionMemberRoleOwnerPointer_ChainedSet"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleIndexPointer"
                class="org.lh.dmlj.schema.editor.property.MemberRoleOwnerPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.UserOwnedIndexedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedIndexedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionMemberRoleOwnerPointer_UserOwnedIndexedSet"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleOwnerPointer_ChainedSet"
                class="org.lh.dmlj.schema.editor.property.MemberRoleMembershipSection"
-               filter="org.lh.dmlj.schema.editor.property.ChainedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.ChainedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionMemberRoleMembership_ChainedSet"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleOwnerPointer_UserOwnedIndexedSet"
                class="org.lh.dmlj.schema.editor.property.MemberRoleMembershipSection"
-               filter="org.lh.dmlj.schema.editor.property.UserOwnedIndexedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedIndexedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionMemberRoleMembership_UserOwnedIndexedSet"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleIndexPointer"
                class="org.lh.dmlj.schema.editor.property.MemberRoleMembershipSection"
-               filter="org.lh.dmlj.schema.editor.property.SystemOwnedIndexedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.SystemOwnedIndexedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionMemberRoleMembership_SystemOwnedIndexedSet"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.SetSortKeySection"
-               filter="org.lh.dmlj.schema.editor.property.SortedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.SortedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetSortKey"
                tab="org.lh.dmlj.schema.editor.propertyTabSortedSet">
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionSetSortKey"
                class="org.lh.dmlj.schema.editor.property.SetSortKeyDuplicatesOptionSection"
-               filter="org.lh.dmlj.schema.editor.property.SortedSetFilter"
+               filter="org.lh.dmlj.schema.editor.property.filter.SortedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetSortKeyDuplicatesOption"
                tab="org.lh.dmlj.schema.editor.propertyTabSortedSet">
          </propertySection>

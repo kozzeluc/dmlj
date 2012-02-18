@@ -1,0 +1,37 @@
+<%@ jet package="org.lh.dmlj.schema.editor.template" class="SegmentTemplate"%>
+<%
+Object[] args = (Object[])argument;
+String id = (String)args[0];
+String areaName = (String)args[1];
+int maximumRecordsPerPage = ((Integer)args[2]).intValue();
+String dsname = (String)args[3];
+int pagesize = ((Integer)args[4]).intValue();
+int lowPageNumber = ((Integer)args[5]).intValue();
+int highPageNumber = ((Integer)args[6]).intValue();
+int pageCount = highPageNumber - lowPageNumber + 1;
+%>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dmlj="http://www.dmlj.org/schema/segments"
+       xsi:schemaLocation="
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+     http://www.dmlj.org/schema/segments http://www.dmlj.org/schema/segments.xsd">
+
+  <dmlj:segment id="<%= id %>"
+                maximum-records-per-page="<%= maximumRecordsPerPage %>">
+    <dmlj:file name="<%= areaName %>"
+               dsname="<%= dsname %>"
+               blocksize="<%= pagesize %>"/>
+    <dmlj:area name="<%= areaName %>"
+               pagesize="<%= pagesize %>"
+               start-page="<%= lowPageNumber %>"
+               end-page="<%= highPageNumber %>">
+      <dmlj:area-to-file-mapping file="<%= areaName %>"
+                                 start-block="1"
+                                 blocks="<%= pageCount %>"/>
+    </dmlj:area>
+  </dmlj:segment>
+
+</beans>

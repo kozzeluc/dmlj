@@ -1,4 +1,4 @@
-package org.lh.dmlj.schema.editor.property;
+package org.lh.dmlj.schema.editor.property.filter;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;

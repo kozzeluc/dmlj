@@ -1,13 +1,12 @@
-package org.lh.dmlj.schema.editor.property;
+package org.lh.dmlj.schema.editor.property.filter;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
 import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.model.SetDescription;
 
-public class IndexedSetFilter implements IFilter {
+public class SystemOwnedSetFilter implements IFilter {
 
 	@Override
 	public boolean select(Object object) {
@@ -17,16 +16,16 @@ public class IndexedSetFilter implements IFilter {
         Object modelObject = ((EditPart) object).getModel();        
         if (modelObject instanceof MemberRole) {
         	MemberRole memberRole = (MemberRole) modelObject;
-        	return memberRole.getSet().getMode() == SetMode.INDEXED;
+        	return memberRole.getSet().getSystemOwner() != null;
         } else if (modelObject instanceof SetDescription) {
         	MemberRole memberRole = 
         		((SetDescription)modelObject).getMemberRole();
-        	return memberRole.getSet().getMode() == SetMode.INDEXED;
+        	return memberRole.getSet().getSystemOwner() != null;
         } else if (modelObject instanceof SystemOwner) {
         	return true;
         } else {
         	return false;
-        }
+        }        
 	}
 
 }
