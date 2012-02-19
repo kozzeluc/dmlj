@@ -245,7 +245,13 @@ public class RecordEditPart
 	protected void setFigureData() {
 		SchemaRecord record = getModel();
 		RecordFigure figure = (RecordFigure) getFigure();
-		figure.setRecordName(record.getName());
+		// we need to manipulate the record name in the case of some dictionary
+		// records (DDLCATLOD area, which has the same structure as DDLDCLOD)...
+		StringBuilder recordName = new StringBuilder(record.getName());
+		if (record.getName().endsWith("_")) {
+			recordName.setLength(recordName.length() - 1);
+		}
+		figure.setRecordName(recordName.toString());
 		figure.setRecordId(record.getId());
 		figure.setStorageMode(Tools.getStorageMode(record.getStorageMode()));
 		figure.setRecordLength(record.getDataLength());

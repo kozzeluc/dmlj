@@ -63,18 +63,24 @@ public class SetDescriptionEditPart
 		
 		MemberRole memberRole = getModel().getMemberRole();
 		
-		SetDescriptionFigure setDescription = 
-			(SetDescriptionFigure) getFigure();
+		SetDescriptionFigure figure = (SetDescriptionFigure) getFigure();
 		
-		setDescription.setName(memberRole.getSet().getName());
+		// we need to manipulate the set name in the case of some dictionary
+		// sets (DDLCATLOD area, which has the same structure as DDLDCLOD)...
+		StringBuilder setName = 
+			new StringBuilder(memberRole.getSet().getName());
+		if (setName.toString().endsWith("_")) {
+			setName.setLength(setName.length() - 1);
+		}
+		figure.setName(setName.toString());
 		
-		setDescription.setPointers(Tools.getPointers(memberRole));
-		setDescription.setMembershipOption(Tools.getMembershipOption(memberRole));
-		setDescription.setOrder(memberRole.getSet().getOrder().toString());
+		figure.setPointers(Tools.getPointers(memberRole));
+		figure.setMembershipOption(Tools.getMembershipOption(memberRole));
+		figure.setOrder(memberRole.getSet().getOrder().toString());
 		
-		setDescription.setSortKeys(Tools.getSortKeys(memberRole));		
+		figure.setSortKeys(Tools.getSortKeys(memberRole));		
 		
-		setDescription.setSystemOwnerArea(Tools.getSystemOwnerArea(memberRole));
+		figure.setSystemOwnerArea(Tools.getSystemOwnerArea(memberRole));
 		
 	}
 
