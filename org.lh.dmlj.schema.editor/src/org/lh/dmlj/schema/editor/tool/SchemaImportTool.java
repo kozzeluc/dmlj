@@ -1523,6 +1523,9 @@ public class SchemaImportTool {
 		}
 		
 		// sets...
+		// REMARK:  the order of the member roles for a record in our model
+		// differ from that of the schema compiler output; we should look into
+		// this at some time later !
 		for (Sor_046 sor_046 : dictionary.<Sor_046>walk(s_010, "S-SOR", NEXT)) {
 			// defer the creation of "AREA-INDEX", "AREA-TABLE" and 
 			// "TABLE-INDEX" since they are stored in the catalog too... 

@@ -109,7 +109,7 @@ public class RecordFigure extends Figure {
 	private Label addLabel(int x, int y, int width, int height) {
 		Label label = new Label();
 		label.setLabelAlignment(PositionConstants.LEFT);
-		label.setFont(Plugin.getDefault().getFont());
+		label.setFont(Plugin.getDefault().getFigureFont());
 		label.setBorder(new CompoundBorder(new LineBorder(1), 
 				 						   new MarginBorder(0, 4, 0, 0)));		
 		add(label, 

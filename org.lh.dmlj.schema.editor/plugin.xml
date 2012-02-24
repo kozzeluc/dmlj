@@ -76,6 +76,12 @@
                id="org.lh.dmlj.schema.editor.propertyTabSortedSet"
                label="SORTED">
          </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabSortedSet"
+               category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabSyntax"
+               label="Syntax">
+         </propertyTab>
       </propertyTabs>
    </extension>
    <extension
@@ -210,9 +216,6 @@
                filter="org.lh.dmlj.schema.editor.property.filter.CalcRecordFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordCalcKey"
                tab="org.lh.dmlj.schema.editor.propertyTabCalc">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionRecordCalcKey"
@@ -220,18 +223,12 @@
                filter="org.lh.dmlj.schema.editor.property.filter.CalcRecordFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordCalcKeyDuplicatesOption"
                tab="org.lh.dmlj.schema.editor.propertyTabCalc">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.RecordViaSetSection"
                filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
                tab="org.lh.dmlj.schema.editor.propertyTabVia">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
@@ -239,9 +236,6 @@
                filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordWithSymbolicDisplacementFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordViaSetSymbolicDisplacementName"
                tab="org.lh.dmlj.schema.editor.propertyTabVia">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
          </propertySection>
          <propertySection
                afterSection="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
@@ -249,6 +243,11 @@
                filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordWithDisplacementPageCountFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordViaSetDisplacementPageCount"
                tab="org.lh.dmlj.schema.editor.propertyTabVia">
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.RecordSyntaxSection"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordSyntax"
+               tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
             <input
                   type="org.lh.dmlj.schema.SchemaRecord">
             </input>
@@ -434,6 +433,20 @@
                filter="org.lh.dmlj.schema.editor.property.filter.SortedSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetSortKeyDuplicatesOption"
                tab="org.lh.dmlj.schema.editor.propertyTabSortedSet">
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.SetSyntaxSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSetSyntax"
+               tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
+            <input
+                  type="org.lh.dmlj.schema.MemberRole">
+            </input>
+            <input
+                  type="org.lh.dmlj.schema.editor.model.SetDescription">
+            </input>
+            <input
+                  type="org.lh.dmlj.schema.SystemOwner">
+            </input>
          </propertySection>
       </propertySections>
    </extension>

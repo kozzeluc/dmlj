@@ -1,0 +1,182 @@
+<%@ jet package="org.lh.dmlj.schema.editor.template" imports="org.lh.dmlj.schema.*" class="SetTemplate"%>
+<%
+
+/*
+This template will generate a set's DDL syntax.
+  
+See SetTemplateTest for a JUnit testcase.
+*/
+Set set = (Set)argument;
+String setName;
+if (set.getName().endsWith("_")) {
+	setName = set.getName().substring(0, set.getName().length() - 1);
+} else {
+	setName = set.getName();
+}
+String mode;
+if (set.getMode() == SetMode.CHAINED) {
+    if (set.getOwner().getPriorDbkeyPosition() != null) {
+        mode = "CHAIN LINKED TO PRIOR";
+    } else {
+        mode = "CHAIN";
+    }
+} else {
+    IndexedSetModeSpecification indexedSetModeSpecification =
+        set.getIndexedSetModeSpecification();
+    if (indexedSetModeSpecification.getSymbolicIndexName() != null) {
+        mode = "INDEX USING " + 
+               indexedSetModeSpecification.getSymbolicIndexName();
+    } else if (indexedSetModeSpecification.getDisplacementPageCount() != null &&
+               indexedSetModeSpecification.getDisplacementPageCount() != 0) {
+        mode = "INDEX BLOCK CONTAINS " + 
+               indexedSetModeSpecification.getKeyCount() + 
+               " KEYS DISPLACEMENT IS " + 
+               indexedSetModeSpecification.getDisplacementPageCount();
+    } else {
+         mode = "INDEX BLOCK CONTAINS " + 
+               indexedSetModeSpecification.getKeyCount() + " KEYS";
+    }
+}
+%>
+     ADD
+     SET NAME IS <%= setName %>
+         ORDER IS <%= set.getOrder().toString() %>
+         MODE IS <%= mode %>
+<%
+if (set.getOwner() != null) {
+    String recordName;
+    if (set.getOwner().getRecord().getName().endsWith("_")) {
+        StringBuilder p = 
+       	    new StringBuilder(set.getOwner().getRecord().getName()); 
+        p.setLength(p.length() - 1);
+        recordName = p.toString();
+    } else {
+        recordName = set.getOwner().getRecord().getName();
+    }
+%>
+         OWNER IS <%= recordName %>
+*+           WITHIN AREA <%= set.getOwner().getRecord().getAreaSpecification().getArea().getName() %>
+             NEXT DBKEY POSITION IS <%= set.getOwner().getNextDbkeyPosition() %>
+<% 
+    if (set.getOwner().getPriorDbkeyPosition() != null) {
+%>             
+             PRIOR DBKEY POSITION IS <%= set.getOwner().getPriorDbkeyPosition() %>
+<%
+    }
+} else {
+    AreaSpecification areaSpecification = 
+        set.getSystemOwner().getAreaSpecification();
+    String areaName = areaSpecification.getArea().getName();
+    String symbolicSubareaName = areaSpecification.getSymbolicSubareaName();
+    OffsetExpression offsetExpression = areaSpecification.getOffsetExpression();    
+%>
+         OWNER IS SYSTEM
+<%
+    if (symbolicSubareaName != null) {
+%>
+             WITHIN AREA <%= areaName %> SUBAREA <%= symbolicSubareaName %>
+<%
+	} else if (offsetExpression != null) { 
+	    String p;
+	    if (offsetExpression.getOffsetPageCount() != null) {
+	        p = offsetExpression.getOffsetPageCount() + " PAGES";
+	    } else if (offsetExpression.getOffsetPercent() != null) {
+	    	p = offsetExpression.getOffsetPercent() + " PERCENT";
+	    } else {
+	        p = "0";
+	    }
+	    String q;
+	    if (offsetExpression.getPercent() != null) {
+	        q = offsetExpression.getPercent() + " PERCENT";
+	    } else if (offsetExpression.getPageCount() != null) {
+	        q = offsetExpression.getPageCount() + " PAGES";
+	    } else {
+	        q = "100 PERCENT";
+	    }
+%>
+             WITHIN AREA <%= areaName %> OFFSET <%= p %> FOR <%= q %> 
+<%
+    } else {
+%>
+             WITHIN AREA <%= areaName %>
+<%
+    }
+}
+for (MemberRole memberRole : set.getMembers()) {
+    String recordName;
+    if (memberRole.getRecord().getName().endsWith("_")) {
+        StringBuilder p = new StringBuilder(memberRole.getRecord().getName()); 
+        p.setLength(p.length() - 1);
+        recordName = p.toString();
+    } else {
+        recordName = memberRole.getRecord().getName();
+    }
+%>
+         MEMBER IS <%= recordName %>
+*+           WITHIN AREA <%= memberRole.getRecord().getAreaSpecification().getArea().getName() %>
+<%
+    if (memberRole.getNextDbkeyPosition() != null) {
+%>
+             NEXT DBKEY POSITION IS <%= memberRole.getNextDbkeyPosition() %>
+<%
+    }
+    if (memberRole.getPriorDbkeyPosition() != null) {
+%>             
+             PRIOR DBKEY POSITION IS <%= memberRole.getPriorDbkeyPosition() %>
+<%
+    }
+    if (memberRole.getIndexDbkeyPosition() != null) {
+%>
+             INDEX DBKEY POSITION IS <%= memberRole.getIndexDbkeyPosition() %>
+<%
+    } else if (set.getSystemOwner() != null) {
+%>
+             INDEX DBKEY POSITION IS OMITTED
+<%
+    }
+    if (memberRole.getOwnerDbkeyPosition() != null) {
+%>
+             LINKED TO OWNER
+             OWNER DBKEY POSITION IS <%= memberRole.getOwnerDbkeyPosition() %>
+<%
+    }    
+%>
+             <%= memberRole.getMembershipOption().toString().replaceAll("_", " ") %>
+<%
+    if (set.getOrder() == SetOrder.SORTED) {
+        Key key = memberRole.getSortKey();
+%>
+             KEY IS (
+<%
+        for (KeyElement keyElement : key.getElements()) {
+            String bracket;
+            if (keyElement == key.getElements().get(key.getElements().size() - 1)) {
+                bracket = ")";
+            } else {
+                bracket = "";
+            }
+%>
+                 <%= keyElement.getElement().getName() %> <%= keyElement.getSortSequence() %> <%= bracket %>
+<%
+        }
+%>
+                 DUPLICATES ARE <%= key.getDuplicatesOption().toString().replaceAll("_", " ") %>
+<%
+        if (key.isNaturalSequence()) {
+%>
+                 NATURAL SEQUENCE
+<%
+        }
+        if (set.getMode() == SetMode.INDEXED && key.isCompressed()) {
+%>
+                 COMPRESSED
+<%
+        } else if (set.getMode() == SetMode.INDEXED) {
+%>
+                 UNCOMPRESSED
+<%
+        }
+    }
+}
+%>
+         .

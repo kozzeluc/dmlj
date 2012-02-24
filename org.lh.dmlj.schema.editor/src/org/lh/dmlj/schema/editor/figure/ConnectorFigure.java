@@ -35,7 +35,7 @@ public class ConnectorFigure extends PolygonShape {
 		
 		label = new Label();
 		label.setLabelAlignment(PositionConstants.CENTER);
-		label.setFont(Plugin.getDefault().getFont());
+		label.setFont(Plugin.getDefault().getFigureFont());
 		add(label, 
 			new Rectangle(new Point(0, 0), new Dimension(20, 20)));		
 	}

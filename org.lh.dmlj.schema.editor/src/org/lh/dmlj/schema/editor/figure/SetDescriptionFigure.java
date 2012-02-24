@@ -35,7 +35,7 @@ public class SetDescriptionFigure extends Figure {
 		FlowPage flowPage = new FlowPage();
 		
 		textFlow = new TextFlow();
-		textFlow.setFont(Plugin.getDefault().getFont());
+		textFlow.setFont(Plugin.getDefault().getFigureFont());
 		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow,
 													      ParagraphTextLayout.WORD_WRAP_SOFT));		
 		

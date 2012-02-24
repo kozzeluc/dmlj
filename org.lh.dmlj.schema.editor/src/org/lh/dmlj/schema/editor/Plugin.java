@@ -23,7 +23,10 @@ public class Plugin extends AbstractUIPlugin {
 	// The shared instance
 	private static Plugin plugin;
 	
-	private Font font = new Font(Display.getCurrent(), "Arial", 6, SWT.NORMAL);
+	private Font figureFont = 
+		new Font(Display.getCurrent(), "Arial", 6, SWT.NORMAL);
+	private Font syntaxFont = 
+		new Font(Display.getCurrent(), "Courier New", 10, SWT.NORMAL);
 	private File tmpFolder;
 	
 	private static boolean copy(InputStream source, File target) {
@@ -96,10 +99,14 @@ public class Plugin extends AbstractUIPlugin {
 	public Plugin() {
 	}
 
-	public Font getFont() {
-		return font;
+	public Font getFigureFont() {
+		return figureFont;
 	}
-	
+
+	public Font getSyntaxFont() {
+		return syntaxFont;
+	}
+
 	public File getTemporaryFilesFolder() {
 		return tmpFolder;
 	}
@@ -157,7 +164,7 @@ public class Plugin extends AbstractUIPlugin {
 		deleteDirectoryContents(tmpFolder);
 		tmpFolder.delete();		
 		
-		font.dispose();
+		figureFont.dispose();
 		plugin = null;
 		super.stop(context);
 	}

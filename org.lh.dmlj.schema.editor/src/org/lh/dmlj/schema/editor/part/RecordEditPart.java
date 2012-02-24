@@ -264,8 +264,20 @@ public class RecordEditPart
 												.getDuplicatesOption());
 			figure.setDuplicatesOption(duplicatesOption);
 		} else if (record.getLocationMode() == LocationMode.VIA) {
-			figure.setLocationModeDetails(record.getViaSpecification()
-											    .getSetName());
+			String setName;
+			if (record.getViaSpecification().getSetName().endsWith("_")) {
+				// we need to manipulate the via set name in the case of some 
+				// dictionary records (DDLCATLOD area, which has the same 
+				// structure as DDLDCLOD)...
+				setName = record.getViaSpecification()
+								.getSetName()
+								.substring(0, record.getViaSpecification()
+													.getSetName()
+													.length() - 1);
+			} else {
+				setName = record.getViaSpecification().getSetName();
+			}
+			figure.setLocationModeDetails(setName);
 		} else {
 			figure.setLocationModeDetails("");
 		}
