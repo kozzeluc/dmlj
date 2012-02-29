@@ -52,8 +52,8 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 				(GraphicalEditPart) editPart.getViewer()
 											.getEditPartRegistry()
 									  		.get(memberRole.getSet()
-									  		.getOwner()
-									  		.getRecord());
+									  					   .getOwner()
+									  					   .getRecord());
 			Rectangle ownerBounds = 
 				ownerEditPart.getFigure().getBounds().getCopy();
 			ownerEditPart.getFigure().translateToAbsolute(ownerBounds);

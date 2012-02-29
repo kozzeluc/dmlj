@@ -1,0 +1,94 @@
+<%@ jet package="org.lh.dmlj.schema.editor.template" imports="org.lh.dmlj.schema.editor.property.*" class="RecordInfoTemplate"%>
+<%
+RecordInfoValueObject valueObject = (RecordInfoValueObject)argument;
+%>
+<HTML>
+<TITLE><%= valueObject.getRecordName() %></TITLE>
+<BODY>
+<H2><%= valueObject.getRecordName() %></H2>
+<P><%= valueObject.getDescription() %></P>
+<%
+if (valueObject.getRecordLength() != null) {
+%>	
+<P><B>Record length: </B><%= valueObject.getRecordLength() %></P>	
+<%
+}
+if (valueObject.getEstablishedBy() != null) {
+%>	
+<P><B>Established by: </B><%= valueObject.getEstablishedBy() %></P>	
+<%
+}
+if (valueObject.getOwnerOf() != null) {
+%>	
+<P><B>Owner of: </B><%= valueObject.getOwnerOf() %></P>	
+<%
+}
+if (valueObject.getMemberOf() != null) {
+%>	
+<P><B>Member of: </B><%= valueObject.getMemberOf() %></P>	
+<%
+}
+if (valueObject.getLocationMode() != null) {
+%>	
+<P><B>Location mode: </B><%= valueObject.getLocationMode() %></P>	
+<%
+}
+if (valueObject.getWithinArea() != null) {
+%>	
+<P><B>Within area: </B><%= valueObject.getWithinArea() %></P>
+<TABLE WIDTH=100%>
+<TR>
+<TD COLSPAN=3><HR></TD>
+</TR>
+<TR>
+<TH WIDTH=30% ALIGN=LEFT>Field</TH> 
+<TH WIDTH=20% ALIGN=LEFT>Picture</TH> 
+<TH WIDTH=50% ALIGN=LEFT>Description</TH>
+</TR>	
+<%
+}
+for (ElementInfoValueObject valueObject2 : valueObject.getElementInfoValueObjects()) {
+%>
+<TR>
+<TD COLSPAN=3><HR></TD>
+</TR>
+<TR>
+<TD VALIGN=TOP><%= valueObject2.getLevelAndElementName() %></TD>
+<%
+if (valueObject2.getPictureAndUsage() != null) {
+%>
+<TD VALIGN=TOP><%= valueObject2.getPictureAndUsage() %></TD>
+<%
+} else {
+%>
+<TD VALIGN=TOP></TD>
+<%
+}
+if (valueObject2.getDescription() != null) {
+%>
+<TD VALIGN=TOP><%= valueObject2.getDescription() %></TD>
+<%
+} else {
+%>
+<TD VALIGN=TOP></TD>
+<%
+}
+%>
+</TR>
+<%
+}
+%>
+<TR>
+<TD COLSPAN=3><HR></TD>
+</TR>
+</TABLE>
+<%
+if (valueObject.getDocumentName() != null &&
+    valueObject.getDocumentId() != null) {
+%>
+<P>(Source: <%= valueObject.getDocumentName() %> - <%= valueObject.getDocumentId() %>)</P>
+<%
+}
+%>
+</BODY>
+</HTML>

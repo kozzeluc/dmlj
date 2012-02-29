@@ -82,6 +82,12 @@
                id="org.lh.dmlj.schema.editor.propertyTabSyntax"
                label="Syntax">
          </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabSyntax"
+               category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabInfo"
+               label="Info">
+         </propertyTab>
       </propertyTabs>
    </extension>
    <extension
@@ -251,6 +257,12 @@
             <input
                   type="org.lh.dmlj.schema.SchemaRecord">
             </input>
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.RecordInfoSection"
+               filter="org.lh.dmlj.schema.editor.property.filter.IdmsntwkVersion1RecordFilter"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordInfo"
+               tab="org.lh.dmlj.schema.editor.propertyTabInfo">
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.SetNameSection"

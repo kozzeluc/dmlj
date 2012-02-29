@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lucene-core-3.5.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="geronimo-jta_1.1_spec-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="neo4j-kernel-1.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="neo4j-lucene-index-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="commons-logging.jar"/>
 	<classpathentry exported="true" kind="lib" path="spring-beans.jar"/>
 	<classpathentry exported="true" kind="lib" path="spring-context.jar"/>
