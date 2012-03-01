@@ -29,9 +29,9 @@ import org.lh.dmlj.schema.editor.SchemaEditor;
 public abstract class AbstractSectionWithStyledText 
 	extends AbstractPropertySection {
 	
-	private Object      editPartModelObject;
-	private StyledText  styledText;
-	private Class<?>[]  validEditPartModelObjectTypes;	
+	private Object		editPartModelObject;
+	private StyledText	styledText;
+	private Class<?>[]	validEditPartModelObjectTypes;	
 		
 	protected AbstractSectionWithStyledText(Class<?>[] validEditPartModelObjectTypes) {
 		super();
@@ -46,8 +46,7 @@ public abstract class AbstractSectionWithStyledText
         Composite composite = 
         	getWidgetFactory().createFlatFormComposite(parent);
 
-		styledText = new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);		
-		
+		styledText = new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);				
 		styledText.setFont(getFont());
 				
 		FormData data = new FormData();	
@@ -55,6 +54,13 @@ public abstract class AbstractSectionWithStyledText
         data.right = new FormAttachment(100, 0);
         data.top = new FormAttachment(0, ITabbedPropertyConstants.VSPACE);
 		styledText.setLayoutData(data);
+		
+		// if we ever want to add 'dynamic tooltips', a MouseTrackListener is
+		// way to go...
+		/*MouseTrackListener mouseTrackListener = getMouseTrackListener();
+		if (mouseTrackListener != null) {
+			styledText.addMouseTrackListener(mouseTrackListener);
+		}*/
         
 	}
 	
