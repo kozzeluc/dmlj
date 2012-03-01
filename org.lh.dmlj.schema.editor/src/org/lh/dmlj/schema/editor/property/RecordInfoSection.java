@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -23,11 +24,20 @@ public class RecordInfoSection extends AbstractPropertySection {
 	
 	private static RecordInfoTemplate TEMPLATE = new RecordInfoTemplate();
 	
-	private Object  editPartModelObject;
-	private Browser browser;
+	private Object  		editPartModelObject;
+	private Browser 		browser;
+	private Control 		control;
+	
+	private ControlListener controlListener = new ControlAdapter() {			
+		@Override
+		public void controlResized(ControlEvent e) {
+			Rectangle bounds = control.getBounds();
+			browser.setBounds(0, 0, 0, bounds.height);
+		}			
+	};
 		
 	public RecordInfoSection() {
-		super();	
+		super();		
 	}
 	
 	@Override
@@ -41,7 +51,7 @@ public class RecordInfoSection extends AbstractPropertySection {
 		
 		super.createControls(parent, aTabbedPropertySheetPage);        		
 		
-		final Control control = aTabbedPropertySheetPage.getControl();
+		control = aTabbedPropertySheetPage.getControl();
 		
 		browser = new Browser(parent, SWT.NONE);
 		Rectangle bounds = control.getBounds();
@@ -49,14 +59,16 @@ public class RecordInfoSection extends AbstractPropertySection {
 		
 		// whenever the container control changes size, adjust the browser size
 		// as well...
-		control.addControlListener(new ControlAdapter() {			
-			@Override
-			public void controlResized(ControlEvent e) {
-				Rectangle bounds = control.getBounds();
-				browser.setBounds(0, 0, 0, bounds.height);
-			}			
-		});
+		control.addControlListener(controlListener);
         
+	}
+	
+	@Override
+	public void dispose() {
+		if (control != null && !control.isDisposed()) {
+			control.removeControlListener(controlListener);
+		}
+		super.dispose();
 	}
 	
 	@Override

@@ -9,6 +9,7 @@ import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
@@ -93,6 +94,19 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		} else {
 			connection.setLineStyle(Graphics.LINE_DASH);
 		}
+		
+		// add a tooltip containing the set's name; this is helpful if the
+        // connection endpoints are not easy to locate...
+        String adjustedSetName;
+        if (set.getName().endsWith("_")) {
+            StringBuilder p = new StringBuilder(set.getName());
+            p.setLength(p.length() - 1);
+            adjustedSetName = p.toString();
+        } else {
+            adjustedSetName = set.getName();
+        }
+        Label tooltip = new Label(adjustedSetName);
+        connection.setToolTip(tooltip);
 		
 		return connection;		
 	}
