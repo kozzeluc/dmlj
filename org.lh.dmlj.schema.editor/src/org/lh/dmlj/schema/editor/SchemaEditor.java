@@ -34,7 +34,11 @@ import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.palette.MarqueeToolEntry;
 import org.eclipse.gef.palette.PaletteRoot;
+import org.eclipse.gef.palette.PaletteToolbar;
+import org.eclipse.gef.palette.PanningSelectionToolEntry;
+import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
@@ -427,7 +431,16 @@ public class SchemaEditor
 
 	@Override
 	protected PaletteRoot getPaletteRoot() {
-		return null;
+		PaletteRoot palette = new PaletteRoot();
+        
+        PaletteToolbar toolbar = new PaletteToolbar("Tools");
+        ToolEntry tool = new PanningSelectionToolEntry();
+        toolbar.add(tool);
+        palette.setDefaultEntry(tool);
+        toolbar.add(new MarqueeToolEntry());
+        palette.add(toolbar);
+       
+        return palette; 
 	}
 
 	@Override
