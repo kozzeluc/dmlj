@@ -38,6 +38,23 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="systemOwner" lowerBound="1"
         eType="#//SystemOwner" eOpposite="#//SystemOwner/areaSpecification"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramData">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="locations" upperBound="-1"
+        eType="#//DiagramLocation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showGrid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="zoomLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="1.0d"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramLocation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="eyecatcher" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramLocation" lowerBound="1"
+        eType="#//DiagramLocation"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="DuplicatesOption">
     <eLiterals name="FIRST"/>
     <eLiterals name="LAST" value="1"/>
@@ -45,26 +62,26 @@
     <eLiterals name="NOT_ALLOWED" value="3"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//Element" eOpposite="#//Element/parent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="keyElements" upperBound="-1"
+        eType="#//KeyElement" eOpposite="#//KeyElement/element"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
         changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="level" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nullable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
-        changeable="false" volatile="true" transient="true" derived="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="picture" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="usage" eType="#//Usage"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
-        eType="#//Element" eOpposite="#//Element/parent"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="keyElements" upperBound="-1"
-        eType="#//KeyElement" eOpposite="#//KeyElement/element"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="occursSpecification" eType="#//OccursSpecification"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Element"
         eOpposite="#//Element/children"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="picture" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//SchemaRecord"
         eOpposite="#//SchemaRecord/elements"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="redefines" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="usage" eType="#//Usage"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexedSetModeSpecification">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displacementPageCount"
@@ -75,24 +92,24 @@
   <eClassifiers xsi:type="ecore:EClass" name="Key">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="compressed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duplicatesOption" eType="#//DuplicatesOption"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
-        changeable="false" volatile="true" transient="true" derived="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="naturalSequence" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" lowerBound="1"
         upperBound="-1" eType="#//KeyElement" containment="true" eOpposite="#//KeyElement/key"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberRole" eType="#//MemberRole"
         eOpposite="#//MemberRole/sortKey"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="naturalSequence" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//SchemaRecord"
         eOpposite="#//SchemaRecord/keys"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="KeyElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dbkey" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         changeable="false" volatile="true" transient="true" derived="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sortSequence" eType="#//SortSequence"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="element" lowerBound="1"
         eType="#//Element" eOpposite="#//Element/keyElements"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="key" lowerBound="1" eType="#//Key"
         eOpposite="#//Key/elements"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sortSequence" eType="#//SortSequence"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="LocationMode">
     <eLiterals name="CALC" literal="CALC"/>
@@ -100,6 +117,12 @@
     <eLiterals name="VIA" value="2"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MemberRole" eSuperTypes="#//Role">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramBendpoints" upperBound="-1"
+        eType="#//DiagramLocation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramLabelLocation" lowerBound="1"
+        eType="#//DiagramLocation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramSourceAnchor" eType="#//DiagramLocation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramTargetAnchor" eType="#//DiagramLocation"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexDbkeyPosition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="membershipOption" eType="#//SetMembershipOption"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextDbkeyPosition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
@@ -111,12 +134,6 @@
         eOpposite="#//Set/members"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sortKey" eType="#//Key"
         eOpposite="#//Key/memberRole"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramTargetAnchor" eType="#//DiagramLocation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramSourceAnchor" eType="#//DiagramLocation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramBendpoints" upperBound="-1"
-        eType="#//DiagramLocation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramLabelLocation" lowerBound="1"
-        eType="#//DiagramLocation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OccursSpecification">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
@@ -146,9 +163,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RecordProcedureCallSpecification">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="callTime" eType="#//ProcedureCallTime"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="verb" eType="#//RecordProcedureCallVerb"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" lowerBound="1"
         eType="#//Procedure"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="verb" eType="#//RecordProcedureCallVerb"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RecordProcedureCallVerb">
     <eLiterals name="EVERY_DML_FUNCTION" value="-1"/>
@@ -160,6 +177,7 @@
     <eLiterals name="MODIFY" value="5"/>
     <eLiterals name="STORE" value="6"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Role" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Schema">
     <eOperations name="getArea" eType="#//SchemaArea">
       <eParameters name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -177,20 +195,20 @@
     <eOperations name="getSet" eType="#//Set">
       <eParameters name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="memoDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="areas" upperBound="-1"
         eType="#//SchemaArea" containment="true" eOpposite="#//SchemaArea/schema"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramData" lowerBound="1"
+        eType="#//DiagramData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="memoDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedures" upperBound="-1"
         eType="#//Procedure" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="records" upperBound="-1"
         eType="#//SchemaRecord" containment="true" eOpposite="#//SchemaRecord/schema"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sets" upperBound="-1" eType="#//Set"
         containment="true" eOpposite="#//Set/schema"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramData" lowerBound="1"
-        eType="#//DiagramData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SchemaArea">
     <eOperations name="getRecord" eType="#//SchemaRecord">
@@ -199,12 +217,12 @@
     <eOperations name="getRecord" eType="#//SchemaRecord">
       <eParameters name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="areaSpecifications" upperBound="-1"
         eType="#//AreaSpecification" containment="true" eOpposite="#//AreaSpecification/area"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="indexes" upperBound="-1"
         eType="#//SystemOwner" changeable="false" volatile="true" transient="true"
         derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedures" upperBound="-1"
         eType="#//AreaProcedureCallSpecification" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="records" upperBound="-1"
@@ -260,13 +278,13 @@
         containment="true" eOpposite="#//ViaSpecification/record"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Set">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode" eType="#//SetMode"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="order" eType="#//SetOrder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="indexedSetModeSpecification"
         eType="#//IndexedSetModeSpecification" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="members" lowerBound="1"
         upperBound="-1" eType="#//MemberRole" containment="true" eOpposite="#//MemberRole/set"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode" eType="#//SetMode"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="order" eType="#//SetOrder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//OwnerRole"
         containment="true" eOpposite="#//OwnerRole/set"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="schema" lowerBound="1"
@@ -293,7 +311,6 @@
     <eLiterals name="PRIOR" value="3"/>
     <eLiterals name="SORTED" value="4"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Role" abstract="true"/>
   <eClassifiers xsi:type="ecore:EEnum" name="SortSequence">
     <eLiterals name="ASCENDING"/>
     <eLiterals name="DESCENDING" value="1"/>
@@ -310,17 +327,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//Set"
         eOpposite="#//Set/systemOwner"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ViaSpecification">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displacementPageCount"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="setName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="symbolicDisplacementName"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="record" lowerBound="1"
-        eType="#//SchemaRecord" eOpposite="#//SchemaRecord/viaSpecification"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//Set"
-        eOpposite="#//Set/viaMembers"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Usage">
     <eLiterals name="DISPLAY"/>
     <eLiterals name="COMPUTATIONAL" value="1"/>
@@ -332,21 +338,15 @@
     <eLiterals name="DISPLAY_1" value="7"/>
     <eLiterals name="CONDITION_NAME" value="88"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramNode">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramLocation" lowerBound="1"
-        eType="#//DiagramLocation"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramLocation">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="eyecatcher" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramData">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="locations" upperBound="-1"
-        eType="#//DiagramLocation" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="zoomLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
-        defaultValueLiteral="1.0d"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showGrid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="false"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ViaSpecification">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displacementPageCount"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="record" lowerBound="1"
+        eType="#//SchemaRecord" eOpposite="#//SchemaRecord/viaSpecification"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//Set"
+        eOpposite="#//Set/viaMembers"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="setName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="symbolicDisplacementName"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>
