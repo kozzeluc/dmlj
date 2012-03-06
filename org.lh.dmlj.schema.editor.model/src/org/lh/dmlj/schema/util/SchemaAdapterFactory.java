@@ -80,6 +80,18 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createAreaSpecificationAdapter();
 			}
 			@Override
+			public Adapter caseDiagramData(DiagramData object) {
+				return createDiagramDataAdapter();
+			}
+			@Override
+			public Adapter caseDiagramLocation(DiagramLocation object) {
+				return createDiagramLocationAdapter();
+			}
+			@Override
+			public Adapter caseDiagramNode(DiagramNode object) {
+				return createDiagramNodeAdapter();
+			}
+			@Override
 			public Adapter caseElement(Element object) {
 				return createElementAdapter();
 			}
@@ -120,6 +132,10 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createRecordProcedureCallSpecificationAdapter();
 			}
 			@Override
+			public Adapter caseRole(Role object) {
+				return createRoleAdapter();
+			}
+			@Override
 			public Adapter caseSchema(Schema object) {
 				return createSchemaAdapter();
 			}
@@ -136,28 +152,12 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createSetAdapter();
 			}
 			@Override
-			public Adapter caseRole(Role object) {
-				return createRoleAdapter();
-			}
-			@Override
 			public Adapter caseSystemOwner(SystemOwner object) {
 				return createSystemOwnerAdapter();
 			}
 			@Override
 			public Adapter caseViaSpecification(ViaSpecification object) {
 				return createViaSpecificationAdapter();
-			}
-			@Override
-			public Adapter caseDiagramNode(DiagramNode object) {
-				return createDiagramNodeAdapter();
-			}
-			@Override
-			public Adapter caseDiagramLocation(DiagramLocation object) {
-				return createDiagramLocationAdapter();
-			}
-			@Override
-			public Adapter caseDiagramData(DiagramData object) {
-				return createDiagramDataAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {

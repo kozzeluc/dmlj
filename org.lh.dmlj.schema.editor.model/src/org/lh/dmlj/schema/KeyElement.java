@@ -17,9 +17,9 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.KeyElement#isDbkey <em>Dbkey</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.KeyElement#getSortSequence <em>Sort Sequence</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.KeyElement#getElement <em>Element</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.KeyElement#getKey <em>Key</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.KeyElement#getSortSequence <em>Sort Sequence</em>}</li>
  * </ul>
  * </p>
  *

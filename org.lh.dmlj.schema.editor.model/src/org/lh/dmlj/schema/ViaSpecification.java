@@ -17,10 +17,10 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getDisplacementPageCount <em>Displacement Page Count</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getSetName <em>Set Name</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getSymbolicDisplacementName <em>Symbolic Displacement Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getSet <em>Set</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getSetName <em>Set Name</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getSymbolicDisplacementName <em>Symbolic Displacement Name</em>}</li>
  * </ul>
  * </p>
  *

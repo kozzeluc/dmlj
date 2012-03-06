@@ -36,10 +36,10 @@ import org.lh.dmlj.schema.SchemaRecord;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isCompressed <em>Compressed</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getDuplicatesOption <em>Duplicates Option</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getLength <em>Length</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isNaturalSequence <em>Natural Sequence</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getElements <em>Elements</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getLength <em>Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getMemberRole <em>Member Role</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isNaturalSequence <em>Natural Sequence</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getRecord <em>Record</em>}</li>
  * </ul>
  * </p>
@@ -84,6 +84,15 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 */
 	protected DuplicatesOption duplicatesOption = DUPLICATES_OPTION_EDEFAULT;
 	/**
+	 * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getElements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<KeyElement> elements;
+	/**
 	 * The default value of the '{@link #getLength() <em>Length</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -92,6 +101,15 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * @ordered
 	 */
 	protected static final short LENGTH_EDEFAULT = 0;
+	/**
+	 * The cached value of the '{@link #getMemberRole() <em>Member Role</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMemberRole()
+	 * @generated
+	 * @ordered
+	 */
+	protected MemberRole memberRole;
 	/**
 	 * The default value of the '{@link #isNaturalSequence() <em>Natural Sequence</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -110,24 +128,6 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * @ordered
 	 */
 	protected boolean naturalSequence = NATURAL_SEQUENCE_EDEFAULT;
-	/**
-	 * The cached value of the '{@link #getElements() <em>Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getElements()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<KeyElement> elements;
-	/**
-	 * The cached value of the '{@link #getMemberRole() <em>Member Role</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMemberRole()
-	 * @generated
-	 * @ordered
-	 */
-	protected MemberRole memberRole;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -411,15 +411,15 @@ public class KeyImpl extends EObjectImpl implements Key {
 				return isCompressed();
 			case SchemaPackage.KEY__DUPLICATES_OPTION:
 				return getDuplicatesOption();
-			case SchemaPackage.KEY__LENGTH:
-				return getLength();
-			case SchemaPackage.KEY__NATURAL_SEQUENCE:
-				return isNaturalSequence();
 			case SchemaPackage.KEY__ELEMENTS:
 				return getElements();
+			case SchemaPackage.KEY__LENGTH:
+				return getLength();
 			case SchemaPackage.KEY__MEMBER_ROLE:
 				if (resolve) return getMemberRole();
 				return basicGetMemberRole();
+			case SchemaPackage.KEY__NATURAL_SEQUENCE:
+				return isNaturalSequence();
 			case SchemaPackage.KEY__RECORD:
 				return getRecord();
 		}
@@ -441,15 +441,15 @@ public class KeyImpl extends EObjectImpl implements Key {
 			case SchemaPackage.KEY__DUPLICATES_OPTION:
 				setDuplicatesOption((DuplicatesOption)newValue);
 				return;
-			case SchemaPackage.KEY__NATURAL_SEQUENCE:
-				setNaturalSequence((Boolean)newValue);
-				return;
 			case SchemaPackage.KEY__ELEMENTS:
 				getElements().clear();
 				getElements().addAll((Collection<? extends KeyElement>)newValue);
 				return;
 			case SchemaPackage.KEY__MEMBER_ROLE:
 				setMemberRole((MemberRole)newValue);
+				return;
+			case SchemaPackage.KEY__NATURAL_SEQUENCE:
+				setNaturalSequence((Boolean)newValue);
 				return;
 			case SchemaPackage.KEY__RECORD:
 				setRecord((SchemaRecord)newValue);
@@ -472,14 +472,14 @@ public class KeyImpl extends EObjectImpl implements Key {
 			case SchemaPackage.KEY__DUPLICATES_OPTION:
 				setDuplicatesOption(DUPLICATES_OPTION_EDEFAULT);
 				return;
-			case SchemaPackage.KEY__NATURAL_SEQUENCE:
-				setNaturalSequence(NATURAL_SEQUENCE_EDEFAULT);
-				return;
 			case SchemaPackage.KEY__ELEMENTS:
 				getElements().clear();
 				return;
 			case SchemaPackage.KEY__MEMBER_ROLE:
 				setMemberRole((MemberRole)null);
+				return;
+			case SchemaPackage.KEY__NATURAL_SEQUENCE:
+				setNaturalSequence(NATURAL_SEQUENCE_EDEFAULT);
 				return;
 			case SchemaPackage.KEY__RECORD:
 				setRecord((SchemaRecord)null);
@@ -500,14 +500,14 @@ public class KeyImpl extends EObjectImpl implements Key {
 				return compressed != COMPRESSED_EDEFAULT;
 			case SchemaPackage.KEY__DUPLICATES_OPTION:
 				return duplicatesOption != DUPLICATES_OPTION_EDEFAULT;
-			case SchemaPackage.KEY__LENGTH:
-				return getLength() != LENGTH_EDEFAULT;
-			case SchemaPackage.KEY__NATURAL_SEQUENCE:
-				return naturalSequence != NATURAL_SEQUENCE_EDEFAULT;
 			case SchemaPackage.KEY__ELEMENTS:
 				return elements != null && !elements.isEmpty();
+			case SchemaPackage.KEY__LENGTH:
+				return getLength() != LENGTH_EDEFAULT;
 			case SchemaPackage.KEY__MEMBER_ROLE:
 				return memberRole != null;
+			case SchemaPackage.KEY__NATURAL_SEQUENCE:
+				return naturalSequence != NATURAL_SEQUENCE_EDEFAULT;
 			case SchemaPackage.KEY__RECORD:
 				return getRecord() != null;
 		}

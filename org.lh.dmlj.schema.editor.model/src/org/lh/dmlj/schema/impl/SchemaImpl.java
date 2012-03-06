@@ -35,21 +35,30 @@ import org.lh.dmlj.schema.Set;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getAreas <em>Areas</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getDiagramData <em>Diagram Data</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getMemoDate <em>Memo Date</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getVersion <em>Version</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getAreas <em>Areas</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getProcedures <em>Procedures</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getRecords <em>Records</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getSets <em>Sets</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getDiagramData <em>Diagram Data</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getVersion <em>Version</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class SchemaImpl extends EObjectImpl implements Schema {
+	/**
+	 * The cached value of the '{@link #getAreas() <em>Areas</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAreas()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<SchemaArea> areas;
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -68,6 +77,15 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * @ordered
 	 */
 	protected String description = DESCRIPTION_EDEFAULT;
+	/**
+	 * The cached value of the '{@link #getDiagramData() <em>Diagram Data</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDiagramData()
+	 * @generated
+	 * @ordered
+	 */
+	protected DiagramData diagramData;
 	/**
 	 * The default value of the '{@link #getMemoDate() <em>Memo Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -105,33 +123,6 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 */
 	protected String name = NAME_EDEFAULT;
 	/**
-	 * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final short VERSION_EDEFAULT = 0;
-	/**
-	 * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected short version = VERSION_EDEFAULT;
-	/**
-	 * The cached value of the '{@link #getAreas() <em>Areas</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAreas()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<SchemaArea> areas;
-	/**
 	 * The cached value of the '{@link #getProcedures() <em>Procedures</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -158,16 +149,24 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * @ordered
 	 */
 	protected EList<Set> sets;
-
 	/**
-	 * The cached value of the '{@link #getDiagramData() <em>Diagram Data</em>}' containment reference.
+	 * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDiagramData()
+	 * @see #getVersion()
 	 * @generated
 	 * @ordered
 	 */
-	protected DiagramData diagramData;
+	protected static final short VERSION_EDEFAULT = 0;
+	/**
+	 * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected short version = VERSION_EDEFAULT;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -460,14 +459,14 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 		switch (featureID) {
 			case SchemaPackage.SCHEMA__AREAS:
 				return ((InternalEList<?>)getAreas()).basicRemove(otherEnd, msgs);
+			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
+				return basicSetDiagramData(null, msgs);
 			case SchemaPackage.SCHEMA__PROCEDURES:
 				return ((InternalEList<?>)getProcedures()).basicRemove(otherEnd, msgs);
 			case SchemaPackage.SCHEMA__RECORDS:
 				return ((InternalEList<?>)getRecords()).basicRemove(otherEnd, msgs);
 			case SchemaPackage.SCHEMA__SETS:
 				return ((InternalEList<?>)getSets()).basicRemove(otherEnd, msgs);
-			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
-				return basicSetDiagramData(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -480,24 +479,24 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA__AREAS:
+				return getAreas();
 			case SchemaPackage.SCHEMA__DESCRIPTION:
 				return getDescription();
+			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
+				return getDiagramData();
 			case SchemaPackage.SCHEMA__MEMO_DATE:
 				return getMemoDate();
 			case SchemaPackage.SCHEMA__NAME:
 				return getName();
-			case SchemaPackage.SCHEMA__VERSION:
-				return getVersion();
-			case SchemaPackage.SCHEMA__AREAS:
-				return getAreas();
 			case SchemaPackage.SCHEMA__PROCEDURES:
 				return getProcedures();
 			case SchemaPackage.SCHEMA__RECORDS:
 				return getRecords();
 			case SchemaPackage.SCHEMA__SETS:
 				return getSets();
-			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
-				return getDiagramData();
+			case SchemaPackage.SCHEMA__VERSION:
+				return getVersion();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -511,21 +510,21 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA__AREAS:
+				getAreas().clear();
+				getAreas().addAll((Collection<? extends SchemaArea>)newValue);
+				return;
 			case SchemaPackage.SCHEMA__DESCRIPTION:
 				setDescription((String)newValue);
+				return;
+			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
+				setDiagramData((DiagramData)newValue);
 				return;
 			case SchemaPackage.SCHEMA__MEMO_DATE:
 				setMemoDate((String)newValue);
 				return;
 			case SchemaPackage.SCHEMA__NAME:
 				setName((String)newValue);
-				return;
-			case SchemaPackage.SCHEMA__VERSION:
-				setVersion((Short)newValue);
-				return;
-			case SchemaPackage.SCHEMA__AREAS:
-				getAreas().clear();
-				getAreas().addAll((Collection<? extends SchemaArea>)newValue);
 				return;
 			case SchemaPackage.SCHEMA__PROCEDURES:
 				getProcedures().clear();
@@ -539,8 +538,8 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 				getSets().clear();
 				getSets().addAll((Collection<? extends Set>)newValue);
 				return;
-			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
-				setDiagramData((DiagramData)newValue);
+			case SchemaPackage.SCHEMA__VERSION:
+				setVersion((Short)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -554,20 +553,20 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA__AREAS:
+				getAreas().clear();
+				return;
 			case SchemaPackage.SCHEMA__DESCRIPTION:
 				setDescription(DESCRIPTION_EDEFAULT);
+				return;
+			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
+				setDiagramData((DiagramData)null);
 				return;
 			case SchemaPackage.SCHEMA__MEMO_DATE:
 				setMemoDate(MEMO_DATE_EDEFAULT);
 				return;
 			case SchemaPackage.SCHEMA__NAME:
 				setName(NAME_EDEFAULT);
-				return;
-			case SchemaPackage.SCHEMA__VERSION:
-				setVersion(VERSION_EDEFAULT);
-				return;
-			case SchemaPackage.SCHEMA__AREAS:
-				getAreas().clear();
 				return;
 			case SchemaPackage.SCHEMA__PROCEDURES:
 				getProcedures().clear();
@@ -578,8 +577,8 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 			case SchemaPackage.SCHEMA__SETS:
 				getSets().clear();
 				return;
-			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
-				setDiagramData((DiagramData)null);
+			case SchemaPackage.SCHEMA__VERSION:
+				setVersion(VERSION_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -593,24 +592,24 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA__AREAS:
+				return areas != null && !areas.isEmpty();
 			case SchemaPackage.SCHEMA__DESCRIPTION:
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
+			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
+				return diagramData != null;
 			case SchemaPackage.SCHEMA__MEMO_DATE:
 				return MEMO_DATE_EDEFAULT == null ? memoDate != null : !MEMO_DATE_EDEFAULT.equals(memoDate);
 			case SchemaPackage.SCHEMA__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case SchemaPackage.SCHEMA__VERSION:
-				return version != VERSION_EDEFAULT;
-			case SchemaPackage.SCHEMA__AREAS:
-				return areas != null && !areas.isEmpty();
 			case SchemaPackage.SCHEMA__PROCEDURES:
 				return procedures != null && !procedures.isEmpty();
 			case SchemaPackage.SCHEMA__RECORDS:
 				return records != null && !records.isEmpty();
 			case SchemaPackage.SCHEMA__SETS:
 				return sets != null && !sets.isEmpty();
-			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
-				return diagramData != null;
+			case SchemaPackage.SCHEMA__VERSION:
+				return version != VERSION_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

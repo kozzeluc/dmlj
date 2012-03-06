@@ -17,6 +17,10 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramBendpoints <em>Diagram Bendpoints</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramLabelLocation <em>Diagram Label Location</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramSourceAnchor <em>Diagram Source Anchor</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramTargetAnchor <em>Diagram Target Anchor</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getIndexDbkeyPosition <em>Index Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getMembershipOption <em>Membership Option</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getNextDbkeyPosition <em>Next Dbkey Position</em>}</li>
@@ -25,10 +29,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getSortKey <em>Sort Key</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramTargetAnchor <em>Diagram Target Anchor</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramSourceAnchor <em>Diagram Source Anchor</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramBendpoints <em>Diagram Bendpoints</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramLabelLocation <em>Diagram Label Location</em>}</li>
  * </ul>
  * </p>
  *

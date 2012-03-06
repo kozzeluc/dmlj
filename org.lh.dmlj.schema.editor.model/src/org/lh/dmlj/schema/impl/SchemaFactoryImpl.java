@@ -63,6 +63,8 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 		switch (eClass.getClassifierID()) {
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION: return createAreaProcedureCallSpecification();
 			case SchemaPackage.AREA_SPECIFICATION: return createAreaSpecification();
+			case SchemaPackage.DIAGRAM_DATA: return createDiagramData();
+			case SchemaPackage.DIAGRAM_LOCATION: return createDiagramLocation();
 			case SchemaPackage.ELEMENT: return createElement();
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION: return createIndexedSetModeSpecification();
 			case SchemaPackage.KEY: return createKey();
@@ -79,9 +81,6 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 			case SchemaPackage.SET: return createSet();
 			case SchemaPackage.SYSTEM_OWNER: return createSystemOwner();
 			case SchemaPackage.VIA_SPECIFICATION: return createViaSpecification();
-			case SchemaPackage.DIAGRAM_NODE: return createDiagramNode();
-			case SchemaPackage.DIAGRAM_LOCATION: return createDiagramLocation();
-			case SchemaPackage.DIAGRAM_DATA: return createDiagramData();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -245,16 +244,6 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	public ViaSpecification createViaSpecification() {
 		ViaSpecificationImpl viaSpecification = new ViaSpecificationImpl();
 		return viaSpecification;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DiagramNode createDiagramNode() {
-		DiagramNodeImpl diagramNode = new DiagramNodeImpl();
-		return diagramNode;
 	}
 
 	/**

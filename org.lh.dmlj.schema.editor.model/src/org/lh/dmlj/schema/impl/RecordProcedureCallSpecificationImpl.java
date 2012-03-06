@@ -27,8 +27,8 @@ import org.lh.dmlj.schema.SchemaPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getCallTime <em>Call Time</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getVerb <em>Verb</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getProcedure <em>Procedure</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getVerb <em>Verb</em>}</li>
  * </ul>
  * </p>
  *
@@ -54,6 +54,15 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 	 */
 	protected ProcedureCallTime callTime = CALL_TIME_EDEFAULT;
 	/**
+	 * The cached value of the '{@link #getProcedure() <em>Procedure</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getProcedure()
+	 * @generated
+	 * @ordered
+	 */
+	protected Procedure procedure;
+	/**
 	 * The default value of the '{@link #getVerb() <em>Verb</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -71,15 +80,6 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 	 * @ordered
 	 */
 	protected RecordProcedureCallVerb verb = VERB_EDEFAULT;
-	/**
-	 * The cached value of the '{@link #getProcedure() <em>Procedure</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getProcedure()
-	 * @generated
-	 * @ordered
-	 */
-	protected Procedure procedure;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -190,11 +190,11 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 		switch (featureID) {
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
 				return getCallTime();
-			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
-				return getVerb();
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE:
 				if (resolve) return getProcedure();
 				return basicGetProcedure();
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
+				return getVerb();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -210,11 +210,11 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
 				setCallTime((ProcedureCallTime)newValue);
 				return;
-			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
-				setVerb((RecordProcedureCallVerb)newValue);
-				return;
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE:
 				setProcedure((Procedure)newValue);
+				return;
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
+				setVerb((RecordProcedureCallVerb)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -231,11 +231,11 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
 				setCallTime(CALL_TIME_EDEFAULT);
 				return;
-			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
-				setVerb(VERB_EDEFAULT);
-				return;
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE:
 				setProcedure((Procedure)null);
+				return;
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
+				setVerb(VERB_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -251,10 +251,10 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 		switch (featureID) {
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
 				return callTime != CALL_TIME_EDEFAULT;
-			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
-				return verb != VERB_EDEFAULT;
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE:
 				return procedure != null;
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
+				return verb != VERB_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

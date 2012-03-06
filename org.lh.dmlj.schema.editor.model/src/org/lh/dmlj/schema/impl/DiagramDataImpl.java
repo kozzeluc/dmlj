@@ -34,8 +34,8 @@ import org.lh.dmlj.schema.SchemaPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getLocations <em>Locations</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getZoomLevel <em>Zoom Level</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#isShowGrid <em>Show Grid</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getZoomLevel <em>Zoom Level</em>}</li>
  * </ul>
  * </p>
  *
@@ -51,25 +51,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * @ordered
 	 */
 	protected EList<DiagramLocation> locations;
-
-	/**
-	 * The default value of the '{@link #getZoomLevel() <em>Zoom Level</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getZoomLevel()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final double ZOOM_LEVEL_EDEFAULT = 1.0;
-	/**
-	 * The cached value of the '{@link #getZoomLevel() <em>Zoom Level</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getZoomLevel()
-	 * @generated
-	 * @ordered
-	 */
-	protected double zoomLevel = ZOOM_LEVEL_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isShowGrid() <em>Show Grid</em>}' attribute.
@@ -90,6 +71,26 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * @ordered
 	 */
 	protected boolean showGrid = SHOW_GRID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getZoomLevel() <em>Zoom Level</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getZoomLevel()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final double ZOOM_LEVEL_EDEFAULT = 1.0;
+
+	/**
+	 * The cached value of the '{@link #getZoomLevel() <em>Zoom Level</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getZoomLevel()
+	 * @generated
+	 * @ordered
+	 */
+	protected double zoomLevel = ZOOM_LEVEL_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -188,10 +189,10 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 		switch (featureID) {
 			case SchemaPackage.DIAGRAM_DATA__LOCATIONS:
 				return getLocations();
-			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
-				return getZoomLevel();
 			case SchemaPackage.DIAGRAM_DATA__SHOW_GRID:
 				return isShowGrid();
+			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
+				return getZoomLevel();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -209,11 +210,11 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 				getLocations().clear();
 				getLocations().addAll((Collection<? extends DiagramLocation>)newValue);
 				return;
-			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
-				setZoomLevel((Double)newValue);
-				return;
 			case SchemaPackage.DIAGRAM_DATA__SHOW_GRID:
 				setShowGrid((Boolean)newValue);
+				return;
+			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
+				setZoomLevel((Double)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -230,11 +231,11 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 			case SchemaPackage.DIAGRAM_DATA__LOCATIONS:
 				getLocations().clear();
 				return;
-			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
-				setZoomLevel(ZOOM_LEVEL_EDEFAULT);
-				return;
 			case SchemaPackage.DIAGRAM_DATA__SHOW_GRID:
 				setShowGrid(SHOW_GRID_EDEFAULT);
+				return;
+			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
+				setZoomLevel(ZOOM_LEVEL_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -250,10 +251,10 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 		switch (featureID) {
 			case SchemaPackage.DIAGRAM_DATA__LOCATIONS:
 				return locations != null && !locations.isEmpty();
-			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
-				return zoomLevel != ZOOM_LEVEL_EDEFAULT;
 			case SchemaPackage.DIAGRAM_DATA__SHOW_GRID:
 				return showGrid != SHOW_GRID_EDEFAULT;
+			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
+				return zoomLevel != ZOOM_LEVEL_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -268,10 +269,10 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (zoomLevel: ");
-		result.append(zoomLevel);
-		result.append(", showGrid: ");
+		result.append(" (showGrid: ");
 		result.append(showGrid);
+		result.append(", zoomLevel: ");
+		result.append(zoomLevel);
 		result.append(')');
 		return result.toString();
 	}

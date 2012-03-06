@@ -17,9 +17,9 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.lh.dmlj.schema.SchemaArea#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaArea#getAreaSpecifications <em>Area Specifications</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaArea#getIndexes <em>Indexes</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaArea#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaArea#getProcedures <em>Procedures</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaArea#getRecords <em>Records</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaArea#getSchema <em>Schema</em>}</li>

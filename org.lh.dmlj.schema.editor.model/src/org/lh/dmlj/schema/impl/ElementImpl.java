@@ -34,25 +34,43 @@ import org.lh.dmlj.schema.common.PictureAnalyzer;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getChildren <em>Children</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getKeyElements <em>Key Elements</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getLength <em>Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getLevel <em>Level</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#isNullable <em>Nullable</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getOffset <em>Offset</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getPicture <em>Picture</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getUsage <em>Usage</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getChildren <em>Children</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getKeyElements <em>Key Elements</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getOccursSpecification <em>Occurs Specification</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getOffset <em>Offset</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getParent <em>Parent</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getPicture <em>Picture</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getRedefines <em>Redefines</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getUsage <em>Usage</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class ElementImpl extends EObjectImpl implements Element {
+	/**
+	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getChildren()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Element> children;
+	/**
+	 * The cached value of the '{@link #getKeyElements() <em>Key Elements</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getKeyElements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<KeyElement> keyElements;
 	/**
 	 * The default value of the '{@link #getLength() <em>Length</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -117,6 +135,15 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 */
 	protected boolean nullable = NULLABLE_EDEFAULT;
 	/**
+	 * The cached value of the '{@link #getOccursSpecification() <em>Occurs Specification</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOccursSpecification()
+	 * @generated
+	 * @ordered
+	 */
+	protected OccursSpecification occursSpecification;
+	/**
 	 * The default value of the '{@link #getOffset() <em>Offset</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -125,6 +152,15 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * @ordered
 	 */
 	protected static final short OFFSET_EDEFAULT = 0;
+	/**
+	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getParent()
+	 * @generated
+	 * @ordered
+	 */
+	protected Element parent;
 	/**
 	 * The default value of the '{@link #getPicture() <em>Picture</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -144,6 +180,15 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 */
 	protected String picture = PICTURE_EDEFAULT;
 	/**
+	 * The cached value of the '{@link #getRedefines() <em>Redefines</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRedefines()
+	 * @generated
+	 * @ordered
+	 */
+	protected Element redefines;
+	/**
 	 * The default value of the '{@link #getUsage() <em>Usage</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -161,51 +206,6 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * @ordered
 	 */
 	protected Usage usage = USAGE_EDEFAULT;
-	/**
-	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getChildren()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Element> children;
-	/**
-	 * The cached value of the '{@link #getKeyElements() <em>Key Elements</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getKeyElements()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<KeyElement> keyElements;
-	/**
-	 * The cached value of the '{@link #getOccursSpecification() <em>Occurs Specification</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOccursSpecification()
-	 * @generated
-	 * @ordered
-	 */
-	protected OccursSpecification occursSpecification;
-	/**
-	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getParent()
-	 * @generated
-	 * @ordered
-	 */
-	protected Element parent;
-	/**
-	 * The cached value of the '{@link #getRedefines() <em>Redefines</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getRedefines()
-	 * @generated
-	 * @ordered
-	 */
-	protected Element redefines;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -700,6 +700,10 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.ELEMENT__CHILDREN:
+				return getChildren();
+			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
+				return getKeyElements();
 			case SchemaPackage.ELEMENT__LENGTH:
 				return getLength();
 			case SchemaPackage.ELEMENT__LEVEL:
@@ -708,26 +712,22 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return getName();
 			case SchemaPackage.ELEMENT__NULLABLE:
 				return isNullable();
-			case SchemaPackage.ELEMENT__OFFSET:
-				return getOffset();
-			case SchemaPackage.ELEMENT__PICTURE:
-				return getPicture();
-			case SchemaPackage.ELEMENT__USAGE:
-				return getUsage();
-			case SchemaPackage.ELEMENT__CHILDREN:
-				return getChildren();
-			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
-				return getKeyElements();
 			case SchemaPackage.ELEMENT__OCCURS_SPECIFICATION:
 				return getOccursSpecification();
+			case SchemaPackage.ELEMENT__OFFSET:
+				return getOffset();
 			case SchemaPackage.ELEMENT__PARENT:
 				if (resolve) return getParent();
 				return basicGetParent();
+			case SchemaPackage.ELEMENT__PICTURE:
+				return getPicture();
 			case SchemaPackage.ELEMENT__RECORD:
 				return getRecord();
 			case SchemaPackage.ELEMENT__REDEFINES:
 				if (resolve) return getRedefines();
 				return basicGetRedefines();
+			case SchemaPackage.ELEMENT__USAGE:
+				return getUsage();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -741,6 +741,14 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.ELEMENT__CHILDREN:
+				getChildren().clear();
+				getChildren().addAll((Collection<? extends Element>)newValue);
+				return;
+			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
+				getKeyElements().clear();
+				getKeyElements().addAll((Collection<? extends KeyElement>)newValue);
+				return;
 			case SchemaPackage.ELEMENT__LEVEL:
 				setLevel((Short)newValue);
 				return;
@@ -750,31 +758,23 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case SchemaPackage.ELEMENT__NULLABLE:
 				setNullable((Boolean)newValue);
 				return;
-			case SchemaPackage.ELEMENT__PICTURE:
-				setPicture((String)newValue);
-				return;
-			case SchemaPackage.ELEMENT__USAGE:
-				setUsage((Usage)newValue);
-				return;
-			case SchemaPackage.ELEMENT__CHILDREN:
-				getChildren().clear();
-				getChildren().addAll((Collection<? extends Element>)newValue);
-				return;
-			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
-				getKeyElements().clear();
-				getKeyElements().addAll((Collection<? extends KeyElement>)newValue);
-				return;
 			case SchemaPackage.ELEMENT__OCCURS_SPECIFICATION:
 				setOccursSpecification((OccursSpecification)newValue);
 				return;
 			case SchemaPackage.ELEMENT__PARENT:
 				setParent((Element)newValue);
 				return;
+			case SchemaPackage.ELEMENT__PICTURE:
+				setPicture((String)newValue);
+				return;
 			case SchemaPackage.ELEMENT__RECORD:
 				setRecord((SchemaRecord)newValue);
 				return;
 			case SchemaPackage.ELEMENT__REDEFINES:
 				setRedefines((Element)newValue);
+				return;
+			case SchemaPackage.ELEMENT__USAGE:
+				setUsage((Usage)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -788,6 +788,12 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.ELEMENT__CHILDREN:
+				getChildren().clear();
+				return;
+			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
+				getKeyElements().clear();
+				return;
 			case SchemaPackage.ELEMENT__LEVEL:
 				setLevel(LEVEL_EDEFAULT);
 				return;
@@ -797,29 +803,23 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case SchemaPackage.ELEMENT__NULLABLE:
 				setNullable(NULLABLE_EDEFAULT);
 				return;
-			case SchemaPackage.ELEMENT__PICTURE:
-				setPicture(PICTURE_EDEFAULT);
-				return;
-			case SchemaPackage.ELEMENT__USAGE:
-				setUsage(USAGE_EDEFAULT);
-				return;
-			case SchemaPackage.ELEMENT__CHILDREN:
-				getChildren().clear();
-				return;
-			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
-				getKeyElements().clear();
-				return;
 			case SchemaPackage.ELEMENT__OCCURS_SPECIFICATION:
 				setOccursSpecification((OccursSpecification)null);
 				return;
 			case SchemaPackage.ELEMENT__PARENT:
 				setParent((Element)null);
 				return;
+			case SchemaPackage.ELEMENT__PICTURE:
+				setPicture(PICTURE_EDEFAULT);
+				return;
 			case SchemaPackage.ELEMENT__RECORD:
 				setRecord((SchemaRecord)null);
 				return;
 			case SchemaPackage.ELEMENT__REDEFINES:
 				setRedefines((Element)null);
+				return;
+			case SchemaPackage.ELEMENT__USAGE:
+				setUsage(USAGE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -833,6 +833,10 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.ELEMENT__CHILDREN:
+				return children != null && !children.isEmpty();
+			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
+				return keyElements != null && !keyElements.isEmpty();
 			case SchemaPackage.ELEMENT__LENGTH:
 				return getLength() != LENGTH_EDEFAULT;
 			case SchemaPackage.ELEMENT__LEVEL:
@@ -841,24 +845,20 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case SchemaPackage.ELEMENT__NULLABLE:
 				return nullable != NULLABLE_EDEFAULT;
-			case SchemaPackage.ELEMENT__OFFSET:
-				return getOffset() != OFFSET_EDEFAULT;
-			case SchemaPackage.ELEMENT__PICTURE:
-				return PICTURE_EDEFAULT == null ? picture != null : !PICTURE_EDEFAULT.equals(picture);
-			case SchemaPackage.ELEMENT__USAGE:
-				return usage != USAGE_EDEFAULT;
-			case SchemaPackage.ELEMENT__CHILDREN:
-				return children != null && !children.isEmpty();
-			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
-				return keyElements != null && !keyElements.isEmpty();
 			case SchemaPackage.ELEMENT__OCCURS_SPECIFICATION:
 				return occursSpecification != null;
+			case SchemaPackage.ELEMENT__OFFSET:
+				return getOffset() != OFFSET_EDEFAULT;
 			case SchemaPackage.ELEMENT__PARENT:
 				return parent != null;
+			case SchemaPackage.ELEMENT__PICTURE:
+				return PICTURE_EDEFAULT == null ? picture != null : !PICTURE_EDEFAULT.equals(picture);
 			case SchemaPackage.ELEMENT__RECORD:
 				return getRecord() != null;
 			case SchemaPackage.ELEMENT__REDEFINES:
 				return redefines != null;
+			case SchemaPackage.ELEMENT__USAGE:
+				return usage != USAGE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

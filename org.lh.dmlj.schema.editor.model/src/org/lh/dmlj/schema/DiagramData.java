@@ -19,8 +19,8 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getLocations <em>Locations</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.DiagramData#getZoomLevel <em>Zoom Level</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isShowGrid <em>Show Grid</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getZoomLevel <em>Zoom Level</em>}</li>
  * </ul>
  * </p>
  *

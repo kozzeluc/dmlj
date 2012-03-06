@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getDiagramNode()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface DiagramNode extends EObject {

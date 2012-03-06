@@ -81,6 +81,24 @@ public class SchemaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SchemaPackage.DIAGRAM_DATA: {
+				DiagramData diagramData = (DiagramData)theEObject;
+				T result = caseDiagramData(diagramData);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.DIAGRAM_LOCATION: {
+				DiagramLocation diagramLocation = (DiagramLocation)theEObject;
+				T result = caseDiagramLocation(diagramLocation);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.DIAGRAM_NODE: {
+				DiagramNode diagramNode = (DiagramNode)theEObject;
+				T result = caseDiagramNode(diagramNode);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SchemaPackage.ELEMENT: {
 				Element element = (Element)theEObject;
 				T result = caseElement(element);
@@ -143,6 +161,12 @@ public class SchemaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SchemaPackage.ROLE: {
+				Role role = (Role)theEObject;
+				T result = caseRole(role);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SchemaPackage.SCHEMA: {
 				Schema schema = (Schema)theEObject;
 				T result = caseSchema(schema);
@@ -168,12 +192,6 @@ public class SchemaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case SchemaPackage.ROLE: {
-				Role role = (Role)theEObject;
-				T result = caseRole(role);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case SchemaPackage.SYSTEM_OWNER: {
 				SystemOwner systemOwner = (SystemOwner)theEObject;
 				T result = caseSystemOwner(systemOwner);
@@ -184,24 +202,6 @@ public class SchemaSwitch<T> extends Switch<T> {
 			case SchemaPackage.VIA_SPECIFICATION: {
 				ViaSpecification viaSpecification = (ViaSpecification)theEObject;
 				T result = caseViaSpecification(viaSpecification);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case SchemaPackage.DIAGRAM_NODE: {
-				DiagramNode diagramNode = (DiagramNode)theEObject;
-				T result = caseDiagramNode(diagramNode);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case SchemaPackage.DIAGRAM_LOCATION: {
-				DiagramLocation diagramLocation = (DiagramLocation)theEObject;
-				T result = caseDiagramLocation(diagramLocation);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case SchemaPackage.DIAGRAM_DATA: {
-				DiagramData diagramData = (DiagramData)theEObject;
-				T result = caseDiagramData(diagramData);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

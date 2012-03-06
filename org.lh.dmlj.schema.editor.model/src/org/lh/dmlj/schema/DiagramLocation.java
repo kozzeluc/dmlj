@@ -16,9 +16,9 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.DiagramLocation#getEyecatcher <em>Eyecatcher</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramLocation#getX <em>X</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramLocation#getY <em>Y</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.DiagramLocation#getEyecatcher <em>Eyecatcher</em>}</li>
  * </ul>
  * </p>
  *

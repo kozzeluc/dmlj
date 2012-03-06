@@ -18,19 +18,19 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.Element#getChildren <em>Children</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Element#getKeyElements <em>Key Elements</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getLength <em>Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getLevel <em>Level</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#isNullable <em>Nullable</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Element#getOffset <em>Offset</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Element#getPicture <em>Picture</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Element#getUsage <em>Usage</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Element#getChildren <em>Children</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Element#getKeyElements <em>Key Elements</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getOccursSpecification <em>Occurs Specification</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Element#getOffset <em>Offset</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getParent <em>Parent</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Element#getPicture <em>Picture</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getRedefines <em>Redefines</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Element#getUsage <em>Usage</em>}</li>
  * </ul>
  * </p>
  *

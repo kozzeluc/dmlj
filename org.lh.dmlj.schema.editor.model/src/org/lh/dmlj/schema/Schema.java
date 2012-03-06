@@ -18,15 +18,15 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.Schema#getAreas <em>Areas</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Schema#getDiagramData <em>Diagram Data</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getMemoDate <em>Memo Date</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getName <em>Name</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Schema#getVersion <em>Version</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Schema#getAreas <em>Areas</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getProcedures <em>Procedures</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getRecords <em>Records</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getSets <em>Sets</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Schema#getDiagramData <em>Diagram Data</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Schema#getVersion <em>Version</em>}</li>
  * </ul>
  * </p>
  *

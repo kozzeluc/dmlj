@@ -17,11 +17,11 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.Set#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Set#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getMode <em>Mode</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getOrder <em>Order</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Set#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Set#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getOwner <em>Owner</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getSchema <em>Schema</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getSystemOwner <em>System Owner</em>}</li>

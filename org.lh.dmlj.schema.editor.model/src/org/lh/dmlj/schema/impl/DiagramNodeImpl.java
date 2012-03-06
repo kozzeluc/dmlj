@@ -32,7 +32,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  *
  * @generated
  */
-public class DiagramNodeImpl extends EObjectImpl implements DiagramNode {
+public abstract class DiagramNodeImpl extends EObjectImpl implements DiagramNode {
 	/**
 	 * The cached value of the '{@link #getDiagramLocation() <em>Diagram Location</em>}' reference.
 	 * <!-- begin-user-doc -->

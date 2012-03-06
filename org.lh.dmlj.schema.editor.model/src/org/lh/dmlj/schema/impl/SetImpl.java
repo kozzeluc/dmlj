@@ -39,11 +39,11 @@ import org.lh.dmlj.schema.ViaSpecification;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMode <em>Mode</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getOrder <em>Order</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getOwner <em>Owner</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getSchema <em>Schema</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getSystemOwner <em>System Owner</em>}</li>
@@ -54,6 +54,24 @@ import org.lh.dmlj.schema.ViaSpecification;
  * @generated
  */
 public class SetImpl extends EObjectImpl implements Set {
+	/**
+	 * The cached value of the '{@link #getIndexedSetModeSpecification() <em>Indexed Set Mode Specification</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIndexedSetModeSpecification()
+	 * @generated
+	 * @ordered
+	 */
+	protected IndexedSetModeSpecification indexedSetModeSpecification;
+	/**
+	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMembers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<MemberRole> members;
 	/**
 	 * The default value of the '{@link #getMode() <em>Mode</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -108,24 +126,6 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * @ordered
 	 */
 	protected SetOrder order = ORDER_EDEFAULT;
-	/**
-	 * The cached value of the '{@link #getIndexedSetModeSpecification() <em>Indexed Set Mode Specification</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getIndexedSetModeSpecification()
-	 * @generated
-	 * @ordered
-	 */
-	protected IndexedSetModeSpecification indexedSetModeSpecification;
-	/**
-	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMembers()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<MemberRole> members;
 	/**
 	 * The cached value of the '{@link #getOwner() <em>Owner</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -462,16 +462,16 @@ public class SetImpl extends EObjectImpl implements Set {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
+				return getIndexedSetModeSpecification();
+			case SchemaPackage.SET__MEMBERS:
+				return getMembers();
 			case SchemaPackage.SET__MODE:
 				return getMode();
 			case SchemaPackage.SET__NAME:
 				return getName();
 			case SchemaPackage.SET__ORDER:
 				return getOrder();
-			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
-				return getIndexedSetModeSpecification();
-			case SchemaPackage.SET__MEMBERS:
-				return getMembers();
 			case SchemaPackage.SET__OWNER:
 				return getOwner();
 			case SchemaPackage.SET__SCHEMA:
@@ -493,6 +493,13 @@ public class SetImpl extends EObjectImpl implements Set {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
+				setIndexedSetModeSpecification((IndexedSetModeSpecification)newValue);
+				return;
+			case SchemaPackage.SET__MEMBERS:
+				getMembers().clear();
+				getMembers().addAll((Collection<? extends MemberRole>)newValue);
+				return;
 			case SchemaPackage.SET__MODE:
 				setMode((SetMode)newValue);
 				return;
@@ -501,13 +508,6 @@ public class SetImpl extends EObjectImpl implements Set {
 				return;
 			case SchemaPackage.SET__ORDER:
 				setOrder((SetOrder)newValue);
-				return;
-			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
-				setIndexedSetModeSpecification((IndexedSetModeSpecification)newValue);
-				return;
-			case SchemaPackage.SET__MEMBERS:
-				getMembers().clear();
-				getMembers().addAll((Collection<? extends MemberRole>)newValue);
 				return;
 			case SchemaPackage.SET__OWNER:
 				setOwner((OwnerRole)newValue);
@@ -534,6 +534,12 @@ public class SetImpl extends EObjectImpl implements Set {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
+				setIndexedSetModeSpecification((IndexedSetModeSpecification)null);
+				return;
+			case SchemaPackage.SET__MEMBERS:
+				getMembers().clear();
+				return;
 			case SchemaPackage.SET__MODE:
 				setMode(MODE_EDEFAULT);
 				return;
@@ -542,12 +548,6 @@ public class SetImpl extends EObjectImpl implements Set {
 				return;
 			case SchemaPackage.SET__ORDER:
 				setOrder(ORDER_EDEFAULT);
-				return;
-			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
-				setIndexedSetModeSpecification((IndexedSetModeSpecification)null);
-				return;
-			case SchemaPackage.SET__MEMBERS:
-				getMembers().clear();
 				return;
 			case SchemaPackage.SET__OWNER:
 				setOwner((OwnerRole)null);
@@ -573,16 +573,16 @@ public class SetImpl extends EObjectImpl implements Set {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
+				return indexedSetModeSpecification != null;
+			case SchemaPackage.SET__MEMBERS:
+				return members != null && !members.isEmpty();
 			case SchemaPackage.SET__MODE:
 				return mode != MODE_EDEFAULT;
 			case SchemaPackage.SET__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case SchemaPackage.SET__ORDER:
 				return order != ORDER_EDEFAULT;
-			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
-				return indexedSetModeSpecification != null;
-			case SchemaPackage.SET__MEMBERS:
-				return members != null && !members.isEmpty();
 			case SchemaPackage.SET__OWNER:
 				return owner != null;
 			case SchemaPackage.SET__SCHEMA:

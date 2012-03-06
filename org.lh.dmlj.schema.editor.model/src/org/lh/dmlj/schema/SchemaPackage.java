@@ -68,7 +68,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchema()
 	 * @generated
 	 */
-	int SCHEMA = 12;
+	int SCHEMA = 16;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaAreaImpl <em>Area</em>}' class.
@@ -78,7 +78,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchemaArea()
 	 * @generated
 	 */
-	int SCHEMA_AREA = 13;
+	int SCHEMA_AREA = 17;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaRecordImpl <em>Record</em>}' class.
@@ -88,7 +88,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchemaRecord()
 	 * @generated
 	 */
-	int SCHEMA_RECORD = 14;
+	int SCHEMA_RECORD = 18;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SetImpl <em>Set</em>}' class.
@@ -98,7 +98,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSet()
 	 * @generated
 	 */
-	int SET = 15;
+	int SET = 19;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ElementImpl <em>Element</em>}' class.
@@ -108,7 +108,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getElement()
 	 * @generated
 	 */
-	int ELEMENT = 2;
+	int ELEMENT = 5;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.KeyElementImpl <em>Key Element</em>}' class.
@@ -118,7 +118,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getKeyElement()
 	 * @generated
 	 */
-	int KEY_ELEMENT = 5;
+	int KEY_ELEMENT = 8;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SystemOwnerImpl <em>System Owner</em>}' class.
@@ -128,7 +128,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSystemOwner()
 	 * @generated
 	 */
-	int SYSTEM_OWNER = 17;
+	int SYSTEM_OWNER = 20;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl <em>Via Specification</em>}' class.
@@ -138,7 +138,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getViaSpecification()
 	 * @generated
 	 */
-	int VIA_SPECIFICATION = 18;
+	int VIA_SPECIFICATION = 21;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.KeyImpl <em>Key</em>}' class.
@@ -148,7 +148,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getKey()
 	 * @generated
 	 */
-	int KEY = 4;
+	int KEY = 7;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.AreaSpecificationImpl <em>Area Specification</em>}' class.
@@ -168,7 +168,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOffsetExpression()
 	 * @generated
 	 */
-	int OFFSET_EXPRESSION = 8;
+	int OFFSET_EXPRESSION = 11;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl <em>Indexed Set Mode Specification</em>}' class.
@@ -178,7 +178,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getIndexedSetModeSpecification()
 	 * @generated
 	 */
-	int INDEXED_SET_MODE_SPECIFICATION = 3;
+	int INDEXED_SET_MODE_SPECIFICATION = 6;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.AreaProcedureCallSpecificationImpl <em>Area Procedure Call Specification</em>}' class.
@@ -281,67 +281,184 @@ public interface SchemaPackage extends EPackage {
 	int AREA_SPECIFICATION_FEATURE_COUNT = 5;
 
 	/**
-	 * The feature id for the '<em><b>Length</b></em>' attribute.
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RoleImpl <em>Role</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.RoleImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRole()
 	 * @generated
-	 * @ordered
 	 */
-	int ELEMENT__LENGTH = 0;
+	int ROLE = 15;
 
 	/**
-	 * The feature id for the '<em><b>Level</b></em>' attribute.
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl <em>Record Procedure Call Specification</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallSpecification()
 	 * @generated
-	 * @ordered
 	 */
-	int ELEMENT__LEVEL = 1;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION = 14;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ProcedureImpl <em>Procedure</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.ProcedureImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedure()
 	 * @generated
-	 * @ordered
 	 */
-	int ELEMENT__NAME = 2;
+	int PROCEDURE = 13;
 
 	/**
-	 * The feature id for the '<em><b>Nullable</b></em>' attribute.
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl <em>Occurs Specification</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.OccursSpecificationImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOccursSpecification()
 	 * @generated
-	 * @ordered
 	 */
-	int ELEMENT__NULLABLE = 3;
+	int OCCURS_SPECIFICATION = 10;
 
 	/**
-	 * The feature id for the '<em><b>Offset</b></em>' attribute.
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.MemberRoleImpl <em>Member Role</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.MemberRoleImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getMemberRole()
 	 * @generated
-	 * @ordered
 	 */
-	int ELEMENT__OFFSET = 4;
+	int MEMBER_ROLE = 9;
 
 	/**
-	 * The feature id for the '<em><b>Picture</b></em>' attribute.
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.OwnerRoleImpl <em>Owner Role</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.OwnerRoleImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOwnerRole()
 	 * @generated
-	 * @ordered
 	 */
-	int ELEMENT__PICTURE = 5;
+	int OWNER_ROLE = 12;
 
 	/**
-	 * The feature id for the '<em><b>Usage</b></em>' attribute.
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramNodeImpl <em>Diagram Node</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.DiagramNodeImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramNode()
+	 * @generated
+	 */
+	int DIAGRAM_NODE = 4;
+
+	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramLocationImpl <em>Diagram Location</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.DiagramLocationImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramLocation()
+	 * @generated
+	 */
+	int DIAGRAM_LOCATION = 3;
+
+	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramDataImpl <em>Diagram Data</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.DiagramDataImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramData()
+	 * @generated
+	 */
+	int DIAGRAM_DATA = 2;
+
+	/**
+	 * The feature id for the '<em><b>Locations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__USAGE = 6;
+	int DIAGRAM_DATA__LOCATIONS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Show Grid</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__SHOW_GRID = 1;
+
+	/**
+	 * The feature id for the '<em><b>Zoom Level</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__ZOOM_LEVEL = 2;
+
+	/**
+	 * The number of structural features of the '<em>Diagram Data</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA_FEATURE_COUNT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Eyecatcher</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LOCATION__EYECATCHER = 0;
+
+	/**
+	 * The feature id for the '<em><b>X</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LOCATION__X = 1;
+
+	/**
+	 * The feature id for the '<em><b>Y</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LOCATION__Y = 2;
+
+	/**
+	 * The number of structural features of the '<em>Diagram Location</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LOCATION_FEATURE_COUNT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_NODE__DIAGRAM_LOCATION = 0;
+
+	/**
+	 * The number of structural features of the '<em>Diagram Node</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_NODE_FEATURE_COUNT = 1;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' reference list.
@@ -350,7 +467,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__CHILDREN = 7;
+	int ELEMENT__CHILDREN = 0;
 
 	/**
 	 * The feature id for the '<em><b>Key Elements</b></em>' reference list.
@@ -359,7 +476,43 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__KEY_ELEMENTS = 8;
+	int ELEMENT__KEY_ELEMENTS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Length</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__LENGTH = 2;
+
+	/**
+	 * The feature id for the '<em><b>Level</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__LEVEL = 3;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__NAME = 4;
+
+	/**
+	 * The feature id for the '<em><b>Nullable</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__NULLABLE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Occurs Specification</b></em>' containment reference.
@@ -368,7 +521,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__OCCURS_SPECIFICATION = 9;
+	int ELEMENT__OCCURS_SPECIFICATION = 6;
+
+	/**
+	 * The feature id for the '<em><b>Offset</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__OFFSET = 7;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' reference.
@@ -377,7 +539,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__PARENT = 10;
+	int ELEMENT__PARENT = 8;
+
+	/**
+	 * The feature id for the '<em><b>Picture</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__PICTURE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Record</b></em>' container reference.
@@ -386,7 +557,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__RECORD = 11;
+	int ELEMENT__RECORD = 10;
 
 	/**
 	 * The feature id for the '<em><b>Redefines</b></em>' reference.
@@ -395,7 +566,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__REDEFINES = 12;
+	int ELEMENT__REDEFINES = 11;
+
+	/**
+	 * The feature id for the '<em><b>Usage</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__USAGE = 12;
 
 	/**
 	 * The number of structural features of the '<em>Element</em>' class.
@@ -461,31 +641,22 @@ public interface SchemaPackage extends EPackage {
 	int KEY__DUPLICATES_OPTION = 1;
 
 	/**
-	 * The feature id for the '<em><b>Length</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int KEY__LENGTH = 2;
-
-	/**
-	 * The feature id for the '<em><b>Natural Sequence</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int KEY__NATURAL_SEQUENCE = 3;
-
-	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__ELEMENTS = 4;
+	int KEY__ELEMENTS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Length</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEY__LENGTH = 3;
 
 	/**
 	 * The feature id for the '<em><b>Member Role</b></em>' reference.
@@ -494,7 +665,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__MEMBER_ROLE = 5;
+	int KEY__MEMBER_ROLE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Natural Sequence</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEY__NATURAL_SEQUENCE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Record</b></em>' container reference.
@@ -524,22 +704,13 @@ public interface SchemaPackage extends EPackage {
 	int KEY_ELEMENT__DBKEY = 0;
 
 	/**
-	 * The feature id for the '<em><b>Sort Sequence</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int KEY_ELEMENT__SORT_SEQUENCE = 1;
-
-	/**
 	 * The feature id for the '<em><b>Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int KEY_ELEMENT__ELEMENT = 2;
+	int KEY_ELEMENT__ELEMENT = 1;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' container reference.
@@ -548,7 +719,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY_ELEMENT__KEY = 3;
+	int KEY_ELEMENT__KEY = 2;
+
+	/**
+	 * The feature id for the '<em><b>Sort Sequence</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEY_ELEMENT__SORT_SEQUENCE = 3;
 
 	/**
 	 * The number of structural features of the '<em>Key Element</em>' class.
@@ -560,16 +740,6 @@ public interface SchemaPackage extends EPackage {
 	int KEY_ELEMENT_FEATURE_COUNT = 4;
 
 	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RoleImpl <em>Role</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.RoleImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRole()
-	 * @generated
-	 */
-	int ROLE = 16;
-
-	/**
 	 * The number of structural features of the '<em>Role</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -579,143 +749,13 @@ public interface SchemaPackage extends EPackage {
 	int ROLE_FEATURE_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl <em>Record Procedure Call Specification</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallSpecification()
-	 * @generated
-	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION = 11;
-
-	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ProcedureImpl <em>Procedure</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.ProcedureImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedure()
-	 * @generated
-	 */
-	int PROCEDURE = 10;
-
-	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl <em>Occurs Specification</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.OccursSpecificationImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOccursSpecification()
-	 * @generated
-	 */
-	int OCCURS_SPECIFICATION = 7;
-
-	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.MemberRoleImpl <em>Member Role</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.MemberRoleImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getMemberRole()
-	 * @generated
-	 */
-	int MEMBER_ROLE = 6;
-
-	/**
-	 * The feature id for the '<em><b>Index Dbkey Position</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__INDEX_DBKEY_POSITION = ROLE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Membership Option</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__MEMBERSHIP_OPTION = ROLE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Next Dbkey Position</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__NEXT_DBKEY_POSITION = ROLE_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Prior Dbkey Position</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__PRIOR_DBKEY_POSITION = ROLE_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Owner Dbkey Position</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__OWNER_DBKEY_POSITION = ROLE_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Record</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__RECORD = ROLE_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Set</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__SET = ROLE_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>Sort Key</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__SORT_KEY = ROLE_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>Diagram Target Anchor</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR = ROLE_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>Diagram Source Anchor</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR = ROLE_FEATURE_COUNT + 9;
-
-	/**
 	 * The feature id for the '<em><b>Diagram Bendpoints</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER_ROLE__DIAGRAM_BENDPOINTS = ROLE_FEATURE_COUNT + 10;
+	int MEMBER_ROLE__DIAGRAM_BENDPOINTS = ROLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Diagram Label Location</b></em>' reference.
@@ -724,7 +764,97 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER_ROLE__DIAGRAM_LABEL_LOCATION = ROLE_FEATURE_COUNT + 11;
+	int MEMBER_ROLE__DIAGRAM_LABEL_LOCATION = ROLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Source Anchor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR = ROLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Target Anchor</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR = ROLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Index Dbkey Position</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__INDEX_DBKEY_POSITION = ROLE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Membership Option</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__MEMBERSHIP_OPTION = ROLE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Next Dbkey Position</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__NEXT_DBKEY_POSITION = ROLE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Prior Dbkey Position</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__PRIOR_DBKEY_POSITION = ROLE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Owner Dbkey Position</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__OWNER_DBKEY_POSITION = ROLE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Record</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__RECORD = ROLE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Set</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__SET = ROLE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Sort Key</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MEMBER_ROLE__SORT_KEY = ROLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The number of structural features of the '<em>Member Role</em>' class.
@@ -808,16 +938,6 @@ public interface SchemaPackage extends EPackage {
 	int OFFSET_EXPRESSION_FEATURE_COUNT = 4;
 
 	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.OwnerRoleImpl <em>Owner Role</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.OwnerRoleImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOwnerRole()
-	 * @generated
-	 */
-	int OWNER_ROLE = 9;
-
-	/**
 	 * The feature id for the '<em><b>Next Dbkey Position</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -890,22 +1010,22 @@ public interface SchemaPackage extends EPackage {
 	int RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = 0;
 
 	/**
-	 * The feature id for the '<em><b>Verb</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION__VERB = 1;
-
-	/**
 	 * The feature id for the '<em><b>Procedure</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = 2;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Verb</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RECORD_PROCEDURE_CALL_SPECIFICATION__VERB = 2;
 
 	/**
 	 * The number of structural features of the '<em>Record Procedure Call Specification</em>' class.
@@ -917,13 +1037,31 @@ public interface SchemaPackage extends EPackage {
 	int RECORD_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = 3;
 
 	/**
+	 * The feature id for the '<em><b>Areas</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA__AREAS = 0;
+
+	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__DESCRIPTION = 0;
+	int SCHEMA__DESCRIPTION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Data</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA__DIAGRAM_DATA = 2;
 
 	/**
 	 * The feature id for the '<em><b>Memo Date</b></em>' attribute.
@@ -932,7 +1070,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__MEMO_DATE = 1;
+	int SCHEMA__MEMO_DATE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -941,25 +1079,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__NAME = 2;
-
-	/**
-	 * The feature id for the '<em><b>Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCHEMA__VERSION = 3;
-
-	/**
-	 * The feature id for the '<em><b>Areas</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCHEMA__AREAS = 4;
+	int SCHEMA__NAME = 4;
 
 	/**
 	 * The feature id for the '<em><b>Procedures</b></em>' containment reference list.
@@ -989,13 +1109,13 @@ public interface SchemaPackage extends EPackage {
 	int SCHEMA__SETS = 7;
 
 	/**
-	 * The feature id for the '<em><b>Diagram Data</b></em>' containment reference.
+	 * The feature id for the '<em><b>Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__DIAGRAM_DATA = 8;
+	int SCHEMA__VERSION = 8;
 
 	/**
 	 * The number of structural features of the '<em>Schema</em>' class.
@@ -1007,22 +1127,13 @@ public interface SchemaPackage extends EPackage {
 	int SCHEMA_FEATURE_COUNT = 9;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SCHEMA_AREA__NAME = 0;
-
-	/**
 	 * The feature id for the '<em><b>Area Specifications</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_AREA__AREA_SPECIFICATIONS = 1;
+	int SCHEMA_AREA__AREA_SPECIFICATIONS = 0;
 
 	/**
 	 * The feature id for the '<em><b>Indexes</b></em>' reference list.
@@ -1031,7 +1142,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_AREA__INDEXES = 2;
+	int SCHEMA_AREA__INDEXES = 1;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_AREA__NAME = 2;
 
 	/**
 	 * The feature id for the '<em><b>Procedures</b></em>' containment reference list.
@@ -1068,34 +1188,6 @@ public interface SchemaPackage extends EPackage {
 	 * @ordered
 	 */
 	int SCHEMA_AREA_FEATURE_COUNT = 6;
-
-	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramNodeImpl <em>Diagram Node</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.DiagramNodeImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramNode()
-	 * @generated
-	 */
-	int DIAGRAM_NODE = 19;
-
-	/**
-	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_NODE__DIAGRAM_LOCATION = 0;
-
-	/**
-	 * The number of structural features of the '<em>Diagram Node</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_NODE_FEATURE_COUNT = 1;
 
 	/**
 	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
@@ -1305,40 +1397,13 @@ public interface SchemaPackage extends EPackage {
 	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 21;
 
 	/**
-	 * The feature id for the '<em><b>Mode</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SET__MODE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SET__NAME = 1;
-
-	/**
-	 * The feature id for the '<em><b>Order</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SET__ORDER = 2;
-
-	/**
 	 * The feature id for the '<em><b>Indexed Set Mode Specification</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SET__INDEXED_SET_MODE_SPECIFICATION = 3;
+	int SET__INDEXED_SET_MODE_SPECIFICATION = 0;
 
 	/**
 	 * The feature id for the '<em><b>Members</b></em>' containment reference list.
@@ -1347,7 +1412,34 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__MEMBERS = 4;
+	int SET__MEMBERS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Mode</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__MODE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__NAME = 3;
+
+	/**
+	 * The feature id for the '<em><b>Order</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__ORDER = 4;
 
 	/**
 	 * The feature id for the '<em><b>Owner</b></em>' containment reference.
@@ -1440,31 +1532,13 @@ public interface SchemaPackage extends EPackage {
 	int VIA_SPECIFICATION__DISPLACEMENT_PAGE_COUNT = 0;
 
 	/**
-	 * The feature id for the '<em><b>Set Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIA_SPECIFICATION__SET_NAME = 1;
-
-	/**
-	 * The feature id for the '<em><b>Symbolic Displacement Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME = 2;
-
-	/**
 	 * The feature id for the '<em><b>Record</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VIA_SPECIFICATION__RECORD = 3;
+	int VIA_SPECIFICATION__RECORD = 1;
 
 	/**
 	 * The feature id for the '<em><b>Set</b></em>' reference.
@@ -1473,7 +1547,25 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIA_SPECIFICATION__SET = 4;
+	int VIA_SPECIFICATION__SET = 2;
+
+	/**
+	 * The feature id for the '<em><b>Set Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIA_SPECIFICATION__SET_NAME = 3;
+
+	/**
+	 * The feature id for the '<em><b>Symbolic Displacement Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME = 4;
 
 	/**
 	 * The number of structural features of the '<em>Via Specification</em>' class.
@@ -1483,98 +1575,6 @@ public interface SchemaPackage extends EPackage {
 	 * @ordered
 	 */
 	int VIA_SPECIFICATION_FEATURE_COUNT = 5;
-
-	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramLocationImpl <em>Diagram Location</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.DiagramLocationImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramLocation()
-	 * @generated
-	 */
-	int DIAGRAM_LOCATION = 20;
-
-	/**
-	 * The feature id for the '<em><b>X</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_LOCATION__X = 0;
-
-	/**
-	 * The feature id for the '<em><b>Y</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_LOCATION__Y = 1;
-
-	/**
-	 * The feature id for the '<em><b>Eyecatcher</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_LOCATION__EYECATCHER = 2;
-
-	/**
-	 * The number of structural features of the '<em>Diagram Location</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_LOCATION_FEATURE_COUNT = 3;
-
-	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramDataImpl <em>Diagram Data</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.DiagramDataImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramData()
-	 * @generated
-	 */
-	int DIAGRAM_DATA = 21;
-
-	/**
-	 * The feature id for the '<em><b>Locations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__LOCATIONS = 0;
-
-	/**
-	 * The feature id for the '<em><b>Zoom Level</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__ZOOM_LEVEL = 1;
-
-	/**
-	 * The feature id for the '<em><b>Show Grid</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__SHOW_GRID = 2;
-
-	/**
-	 * The number of structural features of the '<em>Diagram Data</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetOrder <em>Set Order</em>}' enum.

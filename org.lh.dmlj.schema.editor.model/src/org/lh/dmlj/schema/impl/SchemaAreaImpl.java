@@ -37,9 +37,9 @@ import org.lh.dmlj.schema.SystemOwner;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getAreaSpecifications <em>Area Specifications</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getIndexes <em>Indexes</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getProcedures <em>Procedures</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getRecords <em>Records</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getSchema <em>Schema</em>}</li>
@@ -49,6 +49,15 @@ import org.lh.dmlj.schema.SystemOwner;
  * @generated
  */
 public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
+	/**
+	 * The cached value of the '{@link #getAreaSpecifications() <em>Area Specifications</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAreaSpecifications()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<AreaSpecification> areaSpecifications;
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -67,15 +76,6 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
-	/**
-	 * The cached value of the '{@link #getAreaSpecifications() <em>Area Specifications</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAreaSpecifications()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<AreaSpecification> areaSpecifications;
 	/**
 	 * The cached value of the '{@link #getProcedures() <em>Procedures</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -319,12 +319,12 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SchemaPackage.SCHEMA_AREA__NAME:
-				return getName();
 			case SchemaPackage.SCHEMA_AREA__AREA_SPECIFICATIONS:
 				return getAreaSpecifications();
 			case SchemaPackage.SCHEMA_AREA__INDEXES:
 				return getIndexes();
+			case SchemaPackage.SCHEMA_AREA__NAME:
+				return getName();
 			case SchemaPackage.SCHEMA_AREA__PROCEDURES:
 				return getProcedures();
 			case SchemaPackage.SCHEMA_AREA__RECORDS:
@@ -344,12 +344,12 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SchemaPackage.SCHEMA_AREA__NAME:
-				setName((String)newValue);
-				return;
 			case SchemaPackage.SCHEMA_AREA__AREA_SPECIFICATIONS:
 				getAreaSpecifications().clear();
 				getAreaSpecifications().addAll((Collection<? extends AreaSpecification>)newValue);
+				return;
+			case SchemaPackage.SCHEMA_AREA__NAME:
+				setName((String)newValue);
 				return;
 			case SchemaPackage.SCHEMA_AREA__PROCEDURES:
 				getProcedures().clear();
@@ -370,11 +370,11 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.SCHEMA_AREA__NAME:
-				setName(NAME_EDEFAULT);
-				return;
 			case SchemaPackage.SCHEMA_AREA__AREA_SPECIFICATIONS:
 				getAreaSpecifications().clear();
+				return;
+			case SchemaPackage.SCHEMA_AREA__NAME:
+				setName(NAME_EDEFAULT);
 				return;
 			case SchemaPackage.SCHEMA_AREA__PROCEDURES:
 				getProcedures().clear();
@@ -394,12 +394,12 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.SCHEMA_AREA__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case SchemaPackage.SCHEMA_AREA__AREA_SPECIFICATIONS:
 				return areaSpecifications != null && !areaSpecifications.isEmpty();
 			case SchemaPackage.SCHEMA_AREA__INDEXES:
 				return !getIndexes().isEmpty();
+			case SchemaPackage.SCHEMA_AREA__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case SchemaPackage.SCHEMA_AREA__PROCEDURES:
 				return procedures != null && !procedures.isEmpty();
 			case SchemaPackage.SCHEMA_AREA__RECORDS:

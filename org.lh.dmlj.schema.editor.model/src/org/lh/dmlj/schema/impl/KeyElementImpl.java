@@ -29,9 +29,9 @@ import org.lh.dmlj.schema.SortSequence;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#isDbkey <em>Dbkey</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#getSortSequence <em>Sort Sequence</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#getElement <em>Element</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#getKey <em>Key</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#getSortSequence <em>Sort Sequence</em>}</li>
  * </ul>
  * </p>
  *
@@ -47,6 +47,15 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 * @ordered
 	 */
 	protected static final boolean DBKEY_EDEFAULT = false;
+	/**
+	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected Element element;
 	/**
 	 * The default value of the '{@link #getSortSequence() <em>Sort Sequence</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -65,15 +74,6 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 * @ordered
 	 */
 	protected SortSequence sortSequence = SORT_SEQUENCE_EDEFAULT;
-	/**
-	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getElement()
-	 * @generated
-	 * @ordered
-	 */
-	protected Element element;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -284,13 +284,13 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 		switch (featureID) {
 			case SchemaPackage.KEY_ELEMENT__DBKEY:
 				return isDbkey();
-			case SchemaPackage.KEY_ELEMENT__SORT_SEQUENCE:
-				return getSortSequence();
 			case SchemaPackage.KEY_ELEMENT__ELEMENT:
 				if (resolve) return getElement();
 				return basicGetElement();
 			case SchemaPackage.KEY_ELEMENT__KEY:
 				return getKey();
+			case SchemaPackage.KEY_ELEMENT__SORT_SEQUENCE:
+				return getSortSequence();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -303,14 +303,14 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SchemaPackage.KEY_ELEMENT__SORT_SEQUENCE:
-				setSortSequence((SortSequence)newValue);
-				return;
 			case SchemaPackage.KEY_ELEMENT__ELEMENT:
 				setElement((Element)newValue);
 				return;
 			case SchemaPackage.KEY_ELEMENT__KEY:
 				setKey((Key)newValue);
+				return;
+			case SchemaPackage.KEY_ELEMENT__SORT_SEQUENCE:
+				setSortSequence((SortSequence)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -324,14 +324,14 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.KEY_ELEMENT__SORT_SEQUENCE:
-				setSortSequence(SORT_SEQUENCE_EDEFAULT);
-				return;
 			case SchemaPackage.KEY_ELEMENT__ELEMENT:
 				setElement((Element)null);
 				return;
 			case SchemaPackage.KEY_ELEMENT__KEY:
 				setKey((Key)null);
+				return;
+			case SchemaPackage.KEY_ELEMENT__SORT_SEQUENCE:
+				setSortSequence(SORT_SEQUENCE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -347,12 +347,12 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 		switch (featureID) {
 			case SchemaPackage.KEY_ELEMENT__DBKEY:
 				return isDbkey() != DBKEY_EDEFAULT;
-			case SchemaPackage.KEY_ELEMENT__SORT_SEQUENCE:
-				return sortSequence != SORT_SEQUENCE_EDEFAULT;
 			case SchemaPackage.KEY_ELEMENT__ELEMENT:
 				return element != null;
 			case SchemaPackage.KEY_ELEMENT__KEY:
 				return getKey() != null;
+			case SchemaPackage.KEY_ELEMENT__SORT_SEQUENCE:
+				return sortSequence != SORT_SEQUENCE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -30,6 +30,10 @@ import org.lh.dmlj.schema.SetMembershipOption;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramBendpoints <em>Diagram Bendpoints</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramLabelLocation <em>Diagram Label Location</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramSourceAnchor <em>Diagram Source Anchor</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramTargetAnchor <em>Diagram Target Anchor</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getIndexDbkeyPosition <em>Index Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getMembershipOption <em>Membership Option</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getNextDbkeyPosition <em>Next Dbkey Position</em>}</li>
@@ -38,16 +42,52 @@ import org.lh.dmlj.schema.SetMembershipOption;
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getSortKey <em>Sort Key</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramTargetAnchor <em>Diagram Target Anchor</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramSourceAnchor <em>Diagram Source Anchor</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramBendpoints <em>Diagram Bendpoints</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramLabelLocation <em>Diagram Label Location</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class MemberRoleImpl extends RoleImpl implements MemberRole {
+	/**
+	 * The cached value of the '{@link #getDiagramBendpoints() <em>Diagram Bendpoints</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDiagramBendpoints()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DiagramLocation> diagramBendpoints;
+
+	/**
+	 * The cached value of the '{@link #getDiagramLabelLocation() <em>Diagram Label Location</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDiagramLabelLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected DiagramLocation diagramLabelLocation;
+
+	/**
+	 * The cached value of the '{@link #getDiagramSourceAnchor() <em>Diagram Source Anchor</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDiagramSourceAnchor()
+	 * @generated
+	 * @ordered
+	 */
+	protected DiagramLocation diagramSourceAnchor;
+
+	/**
+	 * The cached value of the '{@link #getDiagramTargetAnchor() <em>Diagram Target Anchor</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDiagramTargetAnchor()
+	 * @generated
+	 * @ordered
+	 */
+	protected DiagramLocation diagramTargetAnchor;
+
 	/**
 	 * The default value of the '{@link #getIndexDbkeyPosition() <em>Index Dbkey Position</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -167,46 +207,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * @ordered
 	 */
 	protected Key sortKey;
-
-	/**
-	 * The cached value of the '{@link #getDiagramTargetAnchor() <em>Diagram Target Anchor</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiagramTargetAnchor()
-	 * @generated
-	 * @ordered
-	 */
-	protected DiagramLocation diagramTargetAnchor;
-
-	/**
-	 * The cached value of the '{@link #getDiagramSourceAnchor() <em>Diagram Source Anchor</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiagramSourceAnchor()
-	 * @generated
-	 * @ordered
-	 */
-	protected DiagramLocation diagramSourceAnchor;
-
-	/**
-	 * The cached value of the '{@link #getDiagramBendpoints() <em>Diagram Bendpoints</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiagramBendpoints()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<DiagramLocation> diagramBendpoints;
-
-	/**
-	 * The cached value of the '{@link #getDiagramLabelLocation() <em>Diagram Label Location</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiagramLabelLocation()
-	 * @generated
-	 * @ordered
-	 */
-	protected DiagramLocation diagramLabelLocation;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -683,6 +683,17 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
+				return getDiagramBendpoints();
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
+				if (resolve) return getDiagramLabelLocation();
+				return basicGetDiagramLabelLocation();
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
+				if (resolve) return getDiagramSourceAnchor();
+				return basicGetDiagramSourceAnchor();
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
+				if (resolve) return getDiagramTargetAnchor();
+				return basicGetDiagramTargetAnchor();
 			case SchemaPackage.MEMBER_ROLE__INDEX_DBKEY_POSITION:
 				return getIndexDbkeyPosition();
 			case SchemaPackage.MEMBER_ROLE__MEMBERSHIP_OPTION:
@@ -701,17 +712,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				if (resolve) return getSortKey();
 				return basicGetSortKey();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
-				if (resolve) return getDiagramTargetAnchor();
-				return basicGetDiagramTargetAnchor();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
-				if (resolve) return getDiagramSourceAnchor();
-				return basicGetDiagramSourceAnchor();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
-				return getDiagramBendpoints();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
-				if (resolve) return getDiagramLabelLocation();
-				return basicGetDiagramLabelLocation();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -725,6 +725,19 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
+				getDiagramBendpoints().clear();
+				getDiagramBendpoints().addAll((Collection<? extends DiagramLocation>)newValue);
+				return;
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
+				setDiagramLabelLocation((DiagramLocation)newValue);
+				return;
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
+				setDiagramSourceAnchor((DiagramLocation)newValue);
+				return;
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
+				setDiagramTargetAnchor((DiagramLocation)newValue);
+				return;
 			case SchemaPackage.MEMBER_ROLE__INDEX_DBKEY_POSITION:
 				setIndexDbkeyPosition((Short)newValue);
 				return;
@@ -749,19 +762,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				setSortKey((Key)newValue);
 				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
-				setDiagramTargetAnchor((DiagramLocation)newValue);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
-				setDiagramSourceAnchor((DiagramLocation)newValue);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
-				getDiagramBendpoints().clear();
-				getDiagramBendpoints().addAll((Collection<? extends DiagramLocation>)newValue);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
-				setDiagramLabelLocation((DiagramLocation)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -774,6 +774,18 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
+				getDiagramBendpoints().clear();
+				return;
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
+				setDiagramLabelLocation((DiagramLocation)null);
+				return;
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
+				setDiagramSourceAnchor((DiagramLocation)null);
+				return;
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
+				setDiagramTargetAnchor((DiagramLocation)null);
+				return;
 			case SchemaPackage.MEMBER_ROLE__INDEX_DBKEY_POSITION:
 				setIndexDbkeyPosition(INDEX_DBKEY_POSITION_EDEFAULT);
 				return;
@@ -798,18 +810,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				setSortKey((Key)null);
 				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
-				setDiagramTargetAnchor((DiagramLocation)null);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
-				setDiagramSourceAnchor((DiagramLocation)null);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
-				getDiagramBendpoints().clear();
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
-				setDiagramLabelLocation((DiagramLocation)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -822,6 +822,14 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
+				return diagramBendpoints != null && !diagramBendpoints.isEmpty();
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
+				return diagramLabelLocation != null;
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
+				return diagramSourceAnchor != null;
+			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
+				return diagramTargetAnchor != null;
 			case SchemaPackage.MEMBER_ROLE__INDEX_DBKEY_POSITION:
 				return INDEX_DBKEY_POSITION_EDEFAULT == null ? indexDbkeyPosition != null : !INDEX_DBKEY_POSITION_EDEFAULT.equals(indexDbkeyPosition);
 			case SchemaPackage.MEMBER_ROLE__MEMBERSHIP_OPTION:
@@ -838,14 +846,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 				return getSet() != null;
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				return sortKey != null;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
-				return diagramTargetAnchor != null;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
-				return diagramSourceAnchor != null;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
-				return diagramBendpoints != null && !diagramBendpoints.isEmpty();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
-				return diagramLabelLocation != null;
 		}
 		return super.eIsSet(featureID);
 	}

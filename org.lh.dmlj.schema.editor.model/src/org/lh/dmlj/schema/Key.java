@@ -19,10 +19,10 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Key#isCompressed <em>Compressed</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getDuplicatesOption <em>Duplicates Option</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Key#getLength <em>Length</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Key#isNaturalSequence <em>Natural Sequence</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getElements <em>Elements</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Key#getLength <em>Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getMemberRole <em>Member Role</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Key#isNaturalSequence <em>Natural Sequence</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getRecord <em>Record</em>}</li>
  * </ul>
  * </p>

@@ -17,8 +17,8 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getCallTime <em>Call Time</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getVerb <em>Verb</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getProcedure <em>Procedure</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getVerb <em>Verb</em>}</li>
  * </ul>
  * </p>
  *

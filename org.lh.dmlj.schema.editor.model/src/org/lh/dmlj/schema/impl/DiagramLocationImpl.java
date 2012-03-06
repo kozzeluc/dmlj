@@ -23,15 +23,35 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.DiagramLocationImpl#getEyecatcher <em>Eyecatcher</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLocationImpl#getX <em>X</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLocationImpl#getY <em>Y</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.DiagramLocationImpl#getEyecatcher <em>Eyecatcher</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation {
+	/**
+	 * The default value of the '{@link #getEyecatcher() <em>Eyecatcher</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEyecatcher()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String EYECATCHER_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getEyecatcher() <em>Eyecatcher</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEyecatcher()
+	 * @generated
+	 * @ordered
+	 */
+	protected String eyecatcher = EYECATCHER_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getX() <em>X</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -71,26 +91,6 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	 * @ordered
 	 */
 	protected int y = Y_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getEyecatcher() <em>Eyecatcher</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEyecatcher()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String EYECATCHER_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getEyecatcher() <em>Eyecatcher</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEyecatcher()
-	 * @generated
-	 * @ordered
-	 */
-	protected String eyecatcher = EYECATCHER_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -182,12 +182,12 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.DIAGRAM_LOCATION__EYECATCHER:
+				return getEyecatcher();
 			case SchemaPackage.DIAGRAM_LOCATION__X:
 				return getX();
 			case SchemaPackage.DIAGRAM_LOCATION__Y:
 				return getY();
-			case SchemaPackage.DIAGRAM_LOCATION__EYECATCHER:
-				return getEyecatcher();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -200,14 +200,14 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.DIAGRAM_LOCATION__EYECATCHER:
+				setEyecatcher((String)newValue);
+				return;
 			case SchemaPackage.DIAGRAM_LOCATION__X:
 				setX((Integer)newValue);
 				return;
 			case SchemaPackage.DIAGRAM_LOCATION__Y:
 				setY((Integer)newValue);
-				return;
-			case SchemaPackage.DIAGRAM_LOCATION__EYECATCHER:
-				setEyecatcher((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -221,14 +221,14 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.DIAGRAM_LOCATION__EYECATCHER:
+				setEyecatcher(EYECATCHER_EDEFAULT);
+				return;
 			case SchemaPackage.DIAGRAM_LOCATION__X:
 				setX(X_EDEFAULT);
 				return;
 			case SchemaPackage.DIAGRAM_LOCATION__Y:
 				setY(Y_EDEFAULT);
-				return;
-			case SchemaPackage.DIAGRAM_LOCATION__EYECATCHER:
-				setEyecatcher(EYECATCHER_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -242,12 +242,12 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.DIAGRAM_LOCATION__EYECATCHER:
+				return EYECATCHER_EDEFAULT == null ? eyecatcher != null : !EYECATCHER_EDEFAULT.equals(eyecatcher);
 			case SchemaPackage.DIAGRAM_LOCATION__X:
 				return x != X_EDEFAULT;
 			case SchemaPackage.DIAGRAM_LOCATION__Y:
 				return y != Y_EDEFAULT;
-			case SchemaPackage.DIAGRAM_LOCATION__EYECATCHER:
-				return EYECATCHER_EDEFAULT == null ? eyecatcher != null : !EYECATCHER_EDEFAULT.equals(eyecatcher);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -262,12 +262,12 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (x: ");
+		result.append(" (eyecatcher: ");
+		result.append(eyecatcher);
+		result.append(", x: ");
 		result.append(x);
 		result.append(", y: ");
 		result.append(y);
-		result.append(", eyecatcher: ");
-		result.append(eyecatcher);
 		result.append(')');
 		return result.toString();
 	}

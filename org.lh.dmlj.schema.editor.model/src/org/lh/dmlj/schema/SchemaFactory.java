@@ -107,15 +107,6 @@ public interface SchemaFactory extends EFactory {
 	ViaSpecification createViaSpecification();
 
 	/**
-	 * Returns a new object of class '<em>Diagram Node</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Diagram Node</em>'.
-	 * @generated
-	 */
-	DiagramNode createDiagramNode();
-
-	/**
 	 * Returns a new object of class '<em>Diagram Location</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
