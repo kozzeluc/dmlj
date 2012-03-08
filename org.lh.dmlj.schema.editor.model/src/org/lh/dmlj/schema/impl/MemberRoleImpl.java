@@ -16,8 +16,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.lh.dmlj.schema.Connection;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -40,7 +40,7 @@ import org.lh.dmlj.schema.SetMembershipOption;
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getSortKey <em>Sort Key</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getConnections <em>Connections</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getConnectionParts <em>Connection Parts</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getConnectionLabel <em>Connection Label</em>}</li>
  * </ul>
  * </p>
@@ -169,14 +169,14 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	protected Key sortKey;
 
 	/**
-	 * The cached value of the '{@link #getConnections() <em>Connections</em>}' reference list.
+	 * The cached value of the '{@link #getConnectionParts() <em>Connection Parts</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getConnections()
+	 * @see #getConnectionParts()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Connection> connections;
+	protected EList<ConnectionPart> connectionParts;
 
 	/**
 	 * The cached value of the '{@link #getConnectionLabel() <em>Connection Label</em>}' reference.
@@ -478,11 +478,11 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Connection> getConnections() {
-		if (connections == null) {
-			connections = new EObjectWithInverseResolvingEList<Connection>(Connection.class, this, SchemaPackage.MEMBER_ROLE__CONNECTIONS, SchemaPackage.CONNECTION__MEMBER_ROLE);
+	public EList<ConnectionPart> getConnectionParts() {
+		if (connectionParts == null) {
+			connectionParts = new EObjectWithInverseResolvingEList<ConnectionPart>(ConnectionPart.class, this, SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS, SchemaPackage.CONNECTION_PART__MEMBER_ROLE);
 		}
-		return connections;
+		return connectionParts;
 	}
 
 	/**
@@ -566,8 +566,8 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 				if (sortKey != null)
 					msgs = ((InternalEObject)sortKey).eInverseRemove(this, SchemaPackage.KEY__MEMBER_ROLE, Key.class, msgs);
 				return basicSetSortKey((Key)otherEnd, msgs);
-			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getConnections()).basicAdd(otherEnd, msgs);
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getConnectionParts()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
 				if (connectionLabel != null)
 					msgs = ((InternalEObject)connectionLabel).eInverseRemove(this, SchemaPackage.CONNECTION_LABEL__MEMBER_ROLE, ConnectionLabel.class, msgs);
@@ -590,8 +590,8 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 				return basicSetSet(null, msgs);
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				return basicSetSortKey(null, msgs);
-			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
-				return ((InternalEList<?>)getConnections()).basicRemove(otherEnd, msgs);
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS:
+				return ((InternalEList<?>)getConnectionParts()).basicRemove(otherEnd, msgs);
 			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
 				return basicSetConnectionLabel(null, msgs);
 		}
@@ -638,8 +638,8 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				if (resolve) return getSortKey();
 				return basicGetSortKey();
-			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
-				return getConnections();
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS:
+				return getConnectionParts();
 			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
 				if (resolve) return getConnectionLabel();
 				return basicGetConnectionLabel();
@@ -680,9 +680,9 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				setSortKey((Key)newValue);
 				return;
-			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
-				getConnections().clear();
-				getConnections().addAll((Collection<? extends Connection>)newValue);
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS:
+				getConnectionParts().clear();
+				getConnectionParts().addAll((Collection<? extends ConnectionPart>)newValue);
 				return;
 			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
 				setConnectionLabel((ConnectionLabel)newValue);
@@ -723,8 +723,8 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				setSortKey((Key)null);
 				return;
-			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
-				getConnections().clear();
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS:
+				getConnectionParts().clear();
 				return;
 			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
 				setConnectionLabel((ConnectionLabel)null);
@@ -757,8 +757,8 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 				return getSet() != null;
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				return sortKey != null;
-			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
-				return connections != null && !connections.isEmpty();
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS:
+				return connectionParts != null && !connectionParts.isEmpty();
 			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
 				return connectionLabel != null;
 		}

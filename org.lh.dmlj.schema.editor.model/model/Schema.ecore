@@ -38,13 +38,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="systemOwner" lowerBound="1"
         eType="#//SystemOwner" eOpposite="#//SystemOwner/areaSpecification"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Connection">
+  <eClassifiers xsi:type="ecore:EClass" name="ConnectionPart">
     <eStructuralFeatures xsi:type="ecore:EReference" name="connector" eType="#//Connector"
-        eOpposite="#//Connector/connection"/>
+        eOpposite="#//Connector/connectionPart"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="bendpointLocations" upperBound="-1"
         eType="#//DiagramLocation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberRole" lowerBound="1"
-        eType="#//MemberRole" eOpposite="#//MemberRole/connections"/>
+        eType="#//MemberRole" eOpposite="#//MemberRole/connectionParts"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourceEndpointLocation"
         eType="#//DiagramLocation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetEndpointLocation"
@@ -59,8 +59,8 @@
         eType="#//MemberRole" eOpposite="#//MemberRole/connectionLabel"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Connector" eSuperTypes="#//DiagramNode">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="connection" lowerBound="1"
-        eType="#//Connection" eOpposite="#//Connection/connector"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connectionPart" lowerBound="1"
+        eType="#//ConnectionPart" eOpposite="#//ConnectionPart/connector"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="location" lowerBound="1"
         eType="#//DiagramLocation"/>
@@ -68,8 +68,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="DiagramData">
     <eStructuralFeatures xsi:type="ecore:EReference" name="connectionLabels" upperBound="-1"
         eType="#//ConnectionLabel" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="connections" upperBound="-1"
-        eType="#//Connection" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connectionParts" upperBound="-1"
+        eType="#//ConnectionPart" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="connectors" upperBound="-1"
         eType="#//Connector" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="horizontalRuler" lowerBound="1"
@@ -181,8 +181,8 @@
         eOpposite="#//Set/members"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sortKey" eType="#//Key"
         eOpposite="#//Key/memberRole"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="connections" lowerBound="1"
-        upperBound="2" eType="#//Connection" eOpposite="#//Connection/memberRole"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connectionParts" lowerBound="1"
+        upperBound="2" eType="#//ConnectionPart" eOpposite="#//ConnectionPart/memberRole"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="connectionLabel" lowerBound="1"
         eType="#//ConnectionLabel" eOpposite="#//ConnectionLabel/memberRole"/>
   </eClassifiers>

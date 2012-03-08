@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.lh.dmlj.schema.Connection;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
@@ -39,7 +39,7 @@ import org.lh.dmlj.schema.Unit;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getConnectionLabels <em>Connection Labels</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getConnections <em>Connections</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getConnectionParts <em>Connection Parts</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getConnectors <em>Connectors</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getHorizontalRuler <em>Horizontal Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getLocations <em>Locations</em>}</li>
@@ -69,14 +69,14 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	protected EList<ConnectionLabel> connectionLabels;
 
 	/**
-	 * The cached value of the '{@link #getConnections() <em>Connections</em>}' containment reference list.
+	 * The cached value of the '{@link #getConnectionParts() <em>Connection Parts</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getConnections()
+	 * @see #getConnectionParts()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Connection> connections;
+	protected EList<ConnectionPart> connectionParts;
 
 	/**
 	 * The cached value of the '{@link #getConnectors() <em>Connectors</em>}' containment reference list.
@@ -304,11 +304,11 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Connection> getConnections() {
-		if (connections == null) {
-			connections = new EObjectContainmentEList<Connection>(Connection.class, this, SchemaPackage.DIAGRAM_DATA__CONNECTIONS);
+	public EList<ConnectionPart> getConnectionParts() {
+		if (connectionParts == null) {
+			connectionParts = new EObjectContainmentEList<ConnectionPart>(ConnectionPart.class, this, SchemaPackage.DIAGRAM_DATA__CONNECTION_PARTS);
 		}
-		return connections;
+		return connectionParts;
 	}
 
 	/**
@@ -580,8 +580,8 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 		switch (featureID) {
 			case SchemaPackage.DIAGRAM_DATA__CONNECTION_LABELS:
 				return ((InternalEList<?>)getConnectionLabels()).basicRemove(otherEnd, msgs);
-			case SchemaPackage.DIAGRAM_DATA__CONNECTIONS:
-				return ((InternalEList<?>)getConnections()).basicRemove(otherEnd, msgs);
+			case SchemaPackage.DIAGRAM_DATA__CONNECTION_PARTS:
+				return ((InternalEList<?>)getConnectionParts()).basicRemove(otherEnd, msgs);
 			case SchemaPackage.DIAGRAM_DATA__CONNECTORS:
 				return ((InternalEList<?>)getConnectors()).basicRemove(otherEnd, msgs);
 			case SchemaPackage.DIAGRAM_DATA__LOCATIONS:
@@ -602,8 +602,8 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 		switch (featureID) {
 			case SchemaPackage.DIAGRAM_DATA__CONNECTION_LABELS:
 				return getConnectionLabels();
-			case SchemaPackage.DIAGRAM_DATA__CONNECTIONS:
-				return getConnections();
+			case SchemaPackage.DIAGRAM_DATA__CONNECTION_PARTS:
+				return getConnectionParts();
 			case SchemaPackage.DIAGRAM_DATA__CONNECTORS:
 				return getConnectors();
 			case SchemaPackage.DIAGRAM_DATA__HORIZONTAL_RULER:
@@ -647,9 +647,9 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 				getConnectionLabels().clear();
 				getConnectionLabels().addAll((Collection<? extends ConnectionLabel>)newValue);
 				return;
-			case SchemaPackage.DIAGRAM_DATA__CONNECTIONS:
-				getConnections().clear();
-				getConnections().addAll((Collection<? extends Connection>)newValue);
+			case SchemaPackage.DIAGRAM_DATA__CONNECTION_PARTS:
+				getConnectionParts().clear();
+				getConnectionParts().addAll((Collection<? extends ConnectionPart>)newValue);
 				return;
 			case SchemaPackage.DIAGRAM_DATA__CONNECTORS:
 				getConnectors().clear();
@@ -705,8 +705,8 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 			case SchemaPackage.DIAGRAM_DATA__CONNECTION_LABELS:
 				getConnectionLabels().clear();
 				return;
-			case SchemaPackage.DIAGRAM_DATA__CONNECTIONS:
-				getConnections().clear();
+			case SchemaPackage.DIAGRAM_DATA__CONNECTION_PARTS:
+				getConnectionParts().clear();
 				return;
 			case SchemaPackage.DIAGRAM_DATA__CONNECTORS:
 				getConnectors().clear();
@@ -758,8 +758,8 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 		switch (featureID) {
 			case SchemaPackage.DIAGRAM_DATA__CONNECTION_LABELS:
 				return connectionLabels != null && !connectionLabels.isEmpty();
-			case SchemaPackage.DIAGRAM_DATA__CONNECTIONS:
-				return connections != null && !connections.isEmpty();
+			case SchemaPackage.DIAGRAM_DATA__CONNECTION_PARTS:
+				return connectionParts != null && !connectionParts.isEmpty();
 			case SchemaPackage.DIAGRAM_DATA__CONNECTORS:
 				return connectors != null && !connectors.isEmpty();
 			case SchemaPackage.DIAGRAM_DATA__HORIZONTAL_RULER:

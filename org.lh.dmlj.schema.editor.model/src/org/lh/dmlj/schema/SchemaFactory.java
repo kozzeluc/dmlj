@@ -152,13 +152,13 @@ public interface SchemaFactory extends EFactory {
 	AreaSpecification createAreaSpecification();
 
 	/**
-	 * Returns a new object of class '<em>Connection</em>'.
+	 * Returns a new object of class '<em>Connection Part</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Connection</em>'.
+	 * @return a new object of class '<em>Connection Part</em>'.
 	 * @generated
 	 */
-	Connection createConnection();
+	ConnectionPart createConnectionPart();
 
 	/**
 	 * Returns a new object of class '<em>Connection Label</em>'.

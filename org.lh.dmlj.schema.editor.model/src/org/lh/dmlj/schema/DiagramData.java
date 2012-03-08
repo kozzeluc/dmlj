@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectionLabels <em>Connection Labels</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnections <em>Connections</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectionParts <em>Connection Parts</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectors <em>Connectors</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getHorizontalRuler <em>Horizontal Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getLocations <em>Locations</em>}</li>
@@ -57,20 +57,20 @@ public interface DiagramData extends EObject {
 	EList<ConnectionLabel> getConnectionLabels();
 
 	/**
-	 * Returns the value of the '<em><b>Connections</b></em>' containment reference list.
-	 * The list contents are of type {@link org.lh.dmlj.schema.Connection}.
+	 * Returns the value of the '<em><b>Connection Parts</b></em>' containment reference list.
+	 * The list contents are of type {@link org.lh.dmlj.schema.ConnectionPart}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Connections</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Connection Parts</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Connections</em>' containment reference list.
-	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Connections()
+	 * @return the value of the '<em>Connection Parts</em>' containment reference list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_ConnectionParts()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Connection> getConnections();
+	EList<ConnectionPart> getConnectionParts();
 
 	/**
 	 * Returns the value of the '<em><b>Connectors</b></em>' containment reference list.

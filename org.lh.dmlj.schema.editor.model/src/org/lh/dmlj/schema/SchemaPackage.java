@@ -281,14 +281,14 @@ public interface SchemaPackage extends EPackage {
 	int AREA_SPECIFICATION_FEATURE_COUNT = 5;
 
 	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ConnectionImpl <em>Connection</em>}' class.
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ConnectionPartImpl <em>Connection Part</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.impl.ConnectionImpl
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getConnection()
+	 * @see org.lh.dmlj.schema.impl.ConnectionPartImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getConnectionPart()
 	 * @generated
 	 */
-	int CONNECTION = 2;
+	int CONNECTION_PART = 2;
 
 	/**
 	 * The feature id for the '<em><b>Connector</b></em>' reference.
@@ -297,7 +297,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION__CONNECTOR = 0;
+	int CONNECTION_PART__CONNECTOR = 0;
 
 	/**
 	 * The feature id for the '<em><b>Bendpoint Locations</b></em>' reference list.
@@ -306,7 +306,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION__BENDPOINT_LOCATIONS = 1;
+	int CONNECTION_PART__BENDPOINT_LOCATIONS = 1;
 
 	/**
 	 * The feature id for the '<em><b>Member Role</b></em>' reference.
@@ -315,7 +315,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION__MEMBER_ROLE = 2;
+	int CONNECTION_PART__MEMBER_ROLE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Source Endpoint Location</b></em>' reference.
@@ -324,7 +324,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION__SOURCE_ENDPOINT_LOCATION = 3;
+	int CONNECTION_PART__SOURCE_ENDPOINT_LOCATION = 3;
 
 	/**
 	 * The feature id for the '<em><b>Target Endpoint Location</b></em>' reference.
@@ -333,16 +333,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION__TARGET_ENDPOINT_LOCATION = 4;
+	int CONNECTION_PART__TARGET_ENDPOINT_LOCATION = 4;
 
 	/**
-	 * The number of structural features of the '<em>Connection</em>' class.
+	 * The number of structural features of the '<em>Connection Part</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION_FEATURE_COUNT = 5;
+	int CONNECTION_PART_FEATURE_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RoleImpl <em>Role</em>}' class.
@@ -527,13 +527,13 @@ public interface SchemaPackage extends EPackage {
 	int CONNECTOR__DIAGRAM_LOCATION = DIAGRAM_NODE__DIAGRAM_LOCATION;
 
 	/**
-	 * The feature id for the '<em><b>Connection</b></em>' reference.
+	 * The feature id for the '<em><b>Connection Part</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR__CONNECTION = DIAGRAM_NODE_FEATURE_COUNT + 0;
+	int CONNECTOR__CONNECTION_PART = DIAGRAM_NODE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Label</b></em>' attribute.
@@ -572,13 +572,13 @@ public interface SchemaPackage extends EPackage {
 	int DIAGRAM_DATA__CONNECTION_LABELS = 0;
 
 	/**
-	 * The feature id for the '<em><b>Connections</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Connection Parts</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DATA__CONNECTIONS = 1;
+	int DIAGRAM_DATA__CONNECTION_PARTS = 1;
 
 	/**
 	 * The feature id for the '<em><b>Connectors</b></em>' containment reference list.
@@ -1122,13 +1122,13 @@ public interface SchemaPackage extends EPackage {
 	int MEMBER_ROLE__SORT_KEY = ROLE_FEATURE_COUNT + 7;
 
 	/**
-	 * The feature id for the '<em><b>Connections</b></em>' reference list.
+	 * The feature id for the '<em><b>Connection Parts</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MEMBER_ROLE__CONNECTIONS = ROLE_FEATURE_COUNT + 8;
+	int MEMBER_ROLE__CONNECTION_PARTS = ROLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Connection Label</b></em>' reference.
@@ -2943,15 +2943,15 @@ public interface SchemaPackage extends EPackage {
 	EReference getMemberRole_SortKey();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.lh.dmlj.schema.MemberRole#getConnections <em>Connections</em>}'.
+	 * Returns the meta object for the reference list '{@link org.lh.dmlj.schema.MemberRole#getConnectionParts <em>Connection Parts</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Connections</em>'.
-	 * @see org.lh.dmlj.schema.MemberRole#getConnections()
+	 * @return the meta object for the reference list '<em>Connection Parts</em>'.
+	 * @see org.lh.dmlj.schema.MemberRole#getConnectionParts()
 	 * @see #getMemberRole()
 	 * @generated
 	 */
-	EReference getMemberRole_Connections();
+	EReference getMemberRole_ConnectionParts();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.MemberRole#getConnectionLabel <em>Connection Label</em>}'.
@@ -3125,15 +3125,15 @@ public interface SchemaPackage extends EPackage {
 	EReference getDiagramData_ConnectionLabels();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.lh.dmlj.schema.DiagramData#getConnections <em>Connections</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.lh.dmlj.schema.DiagramData#getConnectionParts <em>Connection Parts</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Connections</em>'.
-	 * @see org.lh.dmlj.schema.DiagramData#getConnections()
+	 * @return the meta object for the containment reference list '<em>Connection Parts</em>'.
+	 * @see org.lh.dmlj.schema.DiagramData#getConnectionParts()
 	 * @see #getDiagramData()
 	 * @generated
 	 */
-	EReference getDiagramData_Connections();
+	EReference getDiagramData_ConnectionParts();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.lh.dmlj.schema.DiagramData#getConnectors <em>Connectors</em>}'.
@@ -3442,69 +3442,69 @@ public interface SchemaPackage extends EPackage {
 	EReference getAreaSpecification_SystemOwner();
 
 	/**
-	 * Returns the meta object for class '{@link org.lh.dmlj.schema.Connection <em>Connection</em>}'.
+	 * Returns the meta object for class '{@link org.lh.dmlj.schema.ConnectionPart <em>Connection Part</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Connection</em>'.
-	 * @see org.lh.dmlj.schema.Connection
+	 * @return the meta object for class '<em>Connection Part</em>'.
+	 * @see org.lh.dmlj.schema.ConnectionPart
 	 * @generated
 	 */
-	EClass getConnection();
+	EClass getConnectionPart();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.Connection#getConnector <em>Connector</em>}'.
+	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.ConnectionPart#getConnector <em>Connector</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Connector</em>'.
-	 * @see org.lh.dmlj.schema.Connection#getConnector()
-	 * @see #getConnection()
+	 * @see org.lh.dmlj.schema.ConnectionPart#getConnector()
+	 * @see #getConnectionPart()
 	 * @generated
 	 */
-	EReference getConnection_Connector();
+	EReference getConnectionPart_Connector();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.lh.dmlj.schema.Connection#getBendpointLocations <em>Bendpoint Locations</em>}'.
+	 * Returns the meta object for the reference list '{@link org.lh.dmlj.schema.ConnectionPart#getBendpointLocations <em>Bendpoint Locations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference list '<em>Bendpoint Locations</em>'.
-	 * @see org.lh.dmlj.schema.Connection#getBendpointLocations()
-	 * @see #getConnection()
+	 * @see org.lh.dmlj.schema.ConnectionPart#getBendpointLocations()
+	 * @see #getConnectionPart()
 	 * @generated
 	 */
-	EReference getConnection_BendpointLocations();
+	EReference getConnectionPart_BendpointLocations();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.Connection#getMemberRole <em>Member Role</em>}'.
+	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.ConnectionPart#getMemberRole <em>Member Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Member Role</em>'.
-	 * @see org.lh.dmlj.schema.Connection#getMemberRole()
-	 * @see #getConnection()
+	 * @see org.lh.dmlj.schema.ConnectionPart#getMemberRole()
+	 * @see #getConnectionPart()
 	 * @generated
 	 */
-	EReference getConnection_MemberRole();
+	EReference getConnectionPart_MemberRole();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.Connection#getSourceEndpointLocation <em>Source Endpoint Location</em>}'.
+	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.ConnectionPart#getSourceEndpointLocation <em>Source Endpoint Location</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Source Endpoint Location</em>'.
-	 * @see org.lh.dmlj.schema.Connection#getSourceEndpointLocation()
-	 * @see #getConnection()
+	 * @see org.lh.dmlj.schema.ConnectionPart#getSourceEndpointLocation()
+	 * @see #getConnectionPart()
 	 * @generated
 	 */
-	EReference getConnection_SourceEndpointLocation();
+	EReference getConnectionPart_SourceEndpointLocation();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.Connection#getTargetEndpointLocation <em>Target Endpoint Location</em>}'.
+	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.ConnectionPart#getTargetEndpointLocation <em>Target Endpoint Location</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Target Endpoint Location</em>'.
-	 * @see org.lh.dmlj.schema.Connection#getTargetEndpointLocation()
-	 * @see #getConnection()
+	 * @see org.lh.dmlj.schema.ConnectionPart#getTargetEndpointLocation()
+	 * @see #getConnectionPart()
 	 * @generated
 	 */
-	EReference getConnection_TargetEndpointLocation();
+	EReference getConnectionPart_TargetEndpointLocation();
 
 	/**
 	 * Returns the meta object for class '{@link org.lh.dmlj.schema.ConnectionLabel <em>Connection Label</em>}'.
@@ -3560,15 +3560,15 @@ public interface SchemaPackage extends EPackage {
 	EClass getConnector();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.Connector#getConnection <em>Connection</em>}'.
+	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.Connector#getConnectionPart <em>Connection Part</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Connection</em>'.
-	 * @see org.lh.dmlj.schema.Connector#getConnection()
+	 * @return the meta object for the reference '<em>Connection Part</em>'.
+	 * @see org.lh.dmlj.schema.Connector#getConnectionPart()
 	 * @see #getConnector()
 	 * @generated
 	 */
-	EReference getConnector_Connection();
+	EReference getConnector_ConnectionPart();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Connector#getLabel <em>Label</em>}'.
@@ -4729,12 +4729,12 @@ public interface SchemaPackage extends EPackage {
 		EReference MEMBER_ROLE__SORT_KEY = eINSTANCE.getMemberRole_SortKey();
 
 		/**
-		 * The meta object literal for the '<em><b>Connections</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Connection Parts</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MEMBER_ROLE__CONNECTIONS = eINSTANCE.getMemberRole_Connections();
+		EReference MEMBER_ROLE__CONNECTION_PARTS = eINSTANCE.getMemberRole_ConnectionParts();
 
 		/**
 		 * The meta object literal for the '<em><b>Connection Label</b></em>' reference feature.
@@ -4875,12 +4875,12 @@ public interface SchemaPackage extends EPackage {
 		EReference DIAGRAM_DATA__CONNECTION_LABELS = eINSTANCE.getDiagramData_ConnectionLabels();
 
 		/**
-		 * The meta object literal for the '<em><b>Connections</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Connection Parts</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DIAGRAM_DATA__CONNECTIONS = eINSTANCE.getDiagramData_Connections();
+		EReference DIAGRAM_DATA__CONNECTION_PARTS = eINSTANCE.getDiagramData_ConnectionParts();
 
 		/**
 		 * The meta object literal for the '<em><b>Connectors</b></em>' containment reference list feature.
@@ -5111,14 +5111,14 @@ public interface SchemaPackage extends EPackage {
 		EReference AREA_SPECIFICATION__SYSTEM_OWNER = eINSTANCE.getAreaSpecification_SystemOwner();
 
 		/**
-		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.ConnectionImpl <em>Connection</em>}' class.
+		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.ConnectionPartImpl <em>Connection Part</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.lh.dmlj.schema.impl.ConnectionImpl
-		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getConnection()
+		 * @see org.lh.dmlj.schema.impl.ConnectionPartImpl
+		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getConnectionPart()
 		 * @generated
 		 */
-		EClass CONNECTION = eINSTANCE.getConnection();
+		EClass CONNECTION_PART = eINSTANCE.getConnectionPart();
 
 		/**
 		 * The meta object literal for the '<em><b>Connector</b></em>' reference feature.
@@ -5126,7 +5126,7 @@ public interface SchemaPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONNECTION__CONNECTOR = eINSTANCE.getConnection_Connector();
+		EReference CONNECTION_PART__CONNECTOR = eINSTANCE.getConnectionPart_Connector();
 
 		/**
 		 * The meta object literal for the '<em><b>Bendpoint Locations</b></em>' reference list feature.
@@ -5134,7 +5134,7 @@ public interface SchemaPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONNECTION__BENDPOINT_LOCATIONS = eINSTANCE.getConnection_BendpointLocations();
+		EReference CONNECTION_PART__BENDPOINT_LOCATIONS = eINSTANCE.getConnectionPart_BendpointLocations();
 
 		/**
 		 * The meta object literal for the '<em><b>Member Role</b></em>' reference feature.
@@ -5142,7 +5142,7 @@ public interface SchemaPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONNECTION__MEMBER_ROLE = eINSTANCE.getConnection_MemberRole();
+		EReference CONNECTION_PART__MEMBER_ROLE = eINSTANCE.getConnectionPart_MemberRole();
 
 		/**
 		 * The meta object literal for the '<em><b>Source Endpoint Location</b></em>' reference feature.
@@ -5150,7 +5150,7 @@ public interface SchemaPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONNECTION__SOURCE_ENDPOINT_LOCATION = eINSTANCE.getConnection_SourceEndpointLocation();
+		EReference CONNECTION_PART__SOURCE_ENDPOINT_LOCATION = eINSTANCE.getConnectionPart_SourceEndpointLocation();
 
 		/**
 		 * The meta object literal for the '<em><b>Target Endpoint Location</b></em>' reference feature.
@@ -5158,7 +5158,7 @@ public interface SchemaPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONNECTION__TARGET_ENDPOINT_LOCATION = eINSTANCE.getConnection_TargetEndpointLocation();
+		EReference CONNECTION_PART__TARGET_ENDPOINT_LOCATION = eINSTANCE.getConnectionPart_TargetEndpointLocation();
 
 		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.ConnectionLabelImpl <em>Connection Label</em>}' class.
@@ -5205,12 +5205,12 @@ public interface SchemaPackage extends EPackage {
 		EClass CONNECTOR = eINSTANCE.getConnector();
 
 		/**
-		 * The meta object literal for the '<em><b>Connection</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Connection Part</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONNECTOR__CONNECTION = eINSTANCE.getConnector_Connection();
+		EReference CONNECTOR__CONNECTION_PART = eINSTANCE.getConnector_ConnectionPart();
 
 		/**
 		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature.

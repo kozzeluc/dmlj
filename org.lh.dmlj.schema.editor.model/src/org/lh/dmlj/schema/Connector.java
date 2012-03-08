@@ -15,7 +15,7 @@ package org.lh.dmlj.schema;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.lh.dmlj.schema.Connector#getConnection <em>Connection</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Connector#getConnectionPart <em>Connection Part</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Connector#getLabel <em>Label</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Connector#getLocation <em>Location</em>}</li>
  * </ul>
@@ -27,32 +27,32 @@ package org.lh.dmlj.schema;
  */
 public interface Connector extends DiagramNode {
 	/**
-	 * Returns the value of the '<em><b>Connection</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Connection#getConnector <em>Connector</em>}'.
+	 * Returns the value of the '<em><b>Connection Part</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.ConnectionPart#getConnector <em>Connector</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Connection</em>' reference isn't clear,
+	 * If the meaning of the '<em>Connection Part</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Connection</em>' reference.
-	 * @see #setConnection(Connection)
-	 * @see org.lh.dmlj.schema.SchemaPackage#getConnector_Connection()
-	 * @see org.lh.dmlj.schema.Connection#getConnector
+	 * @return the value of the '<em>Connection Part</em>' reference.
+	 * @see #setConnectionPart(ConnectionPart)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getConnector_ConnectionPart()
+	 * @see org.lh.dmlj.schema.ConnectionPart#getConnector
 	 * @model opposite="connector" required="true"
 	 * @generated
 	 */
-	Connection getConnection();
+	ConnectionPart getConnectionPart();
 
 	/**
-	 * Sets the value of the '{@link org.lh.dmlj.schema.Connector#getConnection <em>Connection</em>}' reference.
+	 * Sets the value of the '{@link org.lh.dmlj.schema.Connector#getConnectionPart <em>Connection Part</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Connection</em>' reference.
-	 * @see #getConnection()
+	 * @param value the new value of the '<em>Connection Part</em>' reference.
+	 * @see #getConnectionPart()
 	 * @generated
 	 */
-	void setConnection(Connection value);
+	void setConnectionPart(ConnectionPart value);
 
 	/**
 	 * Returns the value of the '<em><b>Label</b></em>' attribute.

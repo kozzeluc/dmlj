@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
-import org.lh.dmlj.schema.Connection;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.MemberRole;
@@ -29,22 +29,22 @@ import org.lh.dmlj.schema.SchemaPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Connection</b></em>'.
+ * An implementation of the model object '<em><b>Connection Part</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.lh.dmlj.schema.impl.ConnectionImpl#getConnector <em>Connector</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ConnectionImpl#getBendpointLocations <em>Bendpoint Locations</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ConnectionImpl#getMemberRole <em>Member Role</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ConnectionImpl#getSourceEndpointLocation <em>Source Endpoint Location</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ConnectionImpl#getTargetEndpointLocation <em>Target Endpoint Location</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getConnector <em>Connector</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getBendpointLocations <em>Bendpoint Locations</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getMemberRole <em>Member Role</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getSourceEndpointLocation <em>Source Endpoint Location</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getTargetEndpointLocation <em>Target Endpoint Location</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ConnectionImpl extends EObjectImpl implements Connection {
+public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	/**
 	 * The cached value of the '{@link #getConnector() <em>Connector</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -100,7 +100,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ConnectionImpl() {
+	protected ConnectionPartImpl() {
 		super();
 	}
 
@@ -111,7 +111,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return SchemaPackage.Literals.CONNECTION;
+		return SchemaPackage.Literals.CONNECTION_PART;
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 			connector = (Connector)eResolveProxy(oldConnector);
 			if (connector != oldConnector) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION__CONNECTOR, oldConnector, connector));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION_PART__CONNECTOR, oldConnector, connector));
 			}
 		}
 		return connector;
@@ -149,7 +149,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 		Connector oldConnector = connector;
 		connector = newConnector;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION__CONNECTOR, oldConnector, newConnector);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_PART__CONNECTOR, oldConnector, newConnector);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -164,14 +164,14 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 		if (newConnector != connector) {
 			NotificationChain msgs = null;
 			if (connector != null)
-				msgs = ((InternalEObject)connector).eInverseRemove(this, SchemaPackage.CONNECTOR__CONNECTION, Connector.class, msgs);
+				msgs = ((InternalEObject)connector).eInverseRemove(this, SchemaPackage.CONNECTOR__CONNECTION_PART, Connector.class, msgs);
 			if (newConnector != null)
-				msgs = ((InternalEObject)newConnector).eInverseAdd(this, SchemaPackage.CONNECTOR__CONNECTION, Connector.class, msgs);
+				msgs = ((InternalEObject)newConnector).eInverseAdd(this, SchemaPackage.CONNECTOR__CONNECTION_PART, Connector.class, msgs);
 			msgs = basicSetConnector(newConnector, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION__CONNECTOR, newConnector, newConnector));
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_PART__CONNECTOR, newConnector, newConnector));
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	 */
 	public EList<DiagramLocation> getBendpointLocations() {
 		if (bendpointLocations == null) {
-			bendpointLocations = new EObjectResolvingEList<DiagramLocation>(DiagramLocation.class, this, SchemaPackage.CONNECTION__BENDPOINT_LOCATIONS);
+			bendpointLocations = new EObjectResolvingEList<DiagramLocation>(DiagramLocation.class, this, SchemaPackage.CONNECTION_PART__BENDPOINT_LOCATIONS);
 		}
 		return bendpointLocations;
 	}
@@ -197,7 +197,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 			memberRole = (MemberRole)eResolveProxy(oldMemberRole);
 			if (memberRole != oldMemberRole) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION__MEMBER_ROLE, oldMemberRole, memberRole));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION_PART__MEMBER_ROLE, oldMemberRole, memberRole));
 			}
 		}
 		return memberRole;
@@ -221,7 +221,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 		MemberRole oldMemberRole = memberRole;
 		memberRole = newMemberRole;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION__MEMBER_ROLE, oldMemberRole, newMemberRole);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_PART__MEMBER_ROLE, oldMemberRole, newMemberRole);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -236,14 +236,14 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 		if (newMemberRole != memberRole) {
 			NotificationChain msgs = null;
 			if (memberRole != null)
-				msgs = ((InternalEObject)memberRole).eInverseRemove(this, SchemaPackage.MEMBER_ROLE__CONNECTIONS, MemberRole.class, msgs);
+				msgs = ((InternalEObject)memberRole).eInverseRemove(this, SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS, MemberRole.class, msgs);
 			if (newMemberRole != null)
-				msgs = ((InternalEObject)newMemberRole).eInverseAdd(this, SchemaPackage.MEMBER_ROLE__CONNECTIONS, MemberRole.class, msgs);
+				msgs = ((InternalEObject)newMemberRole).eInverseAdd(this, SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS, MemberRole.class, msgs);
 			msgs = basicSetMemberRole(newMemberRole, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION__MEMBER_ROLE, newMemberRole, newMemberRole));
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_PART__MEMBER_ROLE, newMemberRole, newMemberRole));
 	}
 
 	/**
@@ -257,7 +257,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 			sourceEndpointLocation = (DiagramLocation)eResolveProxy(oldSourceEndpointLocation);
 			if (sourceEndpointLocation != oldSourceEndpointLocation) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION__SOURCE_ENDPOINT_LOCATION, oldSourceEndpointLocation, sourceEndpointLocation));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION_PART__SOURCE_ENDPOINT_LOCATION, oldSourceEndpointLocation, sourceEndpointLocation));
 			}
 		}
 		return sourceEndpointLocation;
@@ -281,7 +281,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 		DiagramLocation oldSourceEndpointLocation = sourceEndpointLocation;
 		sourceEndpointLocation = newSourceEndpointLocation;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION__SOURCE_ENDPOINT_LOCATION, oldSourceEndpointLocation, sourceEndpointLocation));
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_PART__SOURCE_ENDPOINT_LOCATION, oldSourceEndpointLocation, sourceEndpointLocation));
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 			targetEndpointLocation = (DiagramLocation)eResolveProxy(oldTargetEndpointLocation);
 			if (targetEndpointLocation != oldTargetEndpointLocation) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION__TARGET_ENDPOINT_LOCATION, oldTargetEndpointLocation, targetEndpointLocation));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION_PART__TARGET_ENDPOINT_LOCATION, oldTargetEndpointLocation, targetEndpointLocation));
 			}
 		}
 		return targetEndpointLocation;
@@ -319,7 +319,7 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 		DiagramLocation oldTargetEndpointLocation = targetEndpointLocation;
 		targetEndpointLocation = newTargetEndpointLocation;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION__TARGET_ENDPOINT_LOCATION, oldTargetEndpointLocation, targetEndpointLocation));
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_PART__TARGET_ENDPOINT_LOCATION, oldTargetEndpointLocation, targetEndpointLocation));
 	}
 
 	/**
@@ -330,13 +330,13 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTION__CONNECTOR:
+			case SchemaPackage.CONNECTION_PART__CONNECTOR:
 				if (connector != null)
-					msgs = ((InternalEObject)connector).eInverseRemove(this, SchemaPackage.CONNECTOR__CONNECTION, Connector.class, msgs);
+					msgs = ((InternalEObject)connector).eInverseRemove(this, SchemaPackage.CONNECTOR__CONNECTION_PART, Connector.class, msgs);
 				return basicSetConnector((Connector)otherEnd, msgs);
-			case SchemaPackage.CONNECTION__MEMBER_ROLE:
+			case SchemaPackage.CONNECTION_PART__MEMBER_ROLE:
 				if (memberRole != null)
-					msgs = ((InternalEObject)memberRole).eInverseRemove(this, SchemaPackage.MEMBER_ROLE__CONNECTIONS, MemberRole.class, msgs);
+					msgs = ((InternalEObject)memberRole).eInverseRemove(this, SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS, MemberRole.class, msgs);
 				return basicSetMemberRole((MemberRole)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -350,9 +350,9 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTION__CONNECTOR:
+			case SchemaPackage.CONNECTION_PART__CONNECTOR:
 				return basicSetConnector(null, msgs);
-			case SchemaPackage.CONNECTION__MEMBER_ROLE:
+			case SchemaPackage.CONNECTION_PART__MEMBER_ROLE:
 				return basicSetMemberRole(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -366,18 +366,18 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTION__CONNECTOR:
+			case SchemaPackage.CONNECTION_PART__CONNECTOR:
 				if (resolve) return getConnector();
 				return basicGetConnector();
-			case SchemaPackage.CONNECTION__BENDPOINT_LOCATIONS:
+			case SchemaPackage.CONNECTION_PART__BENDPOINT_LOCATIONS:
 				return getBendpointLocations();
-			case SchemaPackage.CONNECTION__MEMBER_ROLE:
+			case SchemaPackage.CONNECTION_PART__MEMBER_ROLE:
 				if (resolve) return getMemberRole();
 				return basicGetMemberRole();
-			case SchemaPackage.CONNECTION__SOURCE_ENDPOINT_LOCATION:
+			case SchemaPackage.CONNECTION_PART__SOURCE_ENDPOINT_LOCATION:
 				if (resolve) return getSourceEndpointLocation();
 				return basicGetSourceEndpointLocation();
-			case SchemaPackage.CONNECTION__TARGET_ENDPOINT_LOCATION:
+			case SchemaPackage.CONNECTION_PART__TARGET_ENDPOINT_LOCATION:
 				if (resolve) return getTargetEndpointLocation();
 				return basicGetTargetEndpointLocation();
 		}
@@ -393,20 +393,20 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTION__CONNECTOR:
+			case SchemaPackage.CONNECTION_PART__CONNECTOR:
 				setConnector((Connector)newValue);
 				return;
-			case SchemaPackage.CONNECTION__BENDPOINT_LOCATIONS:
+			case SchemaPackage.CONNECTION_PART__BENDPOINT_LOCATIONS:
 				getBendpointLocations().clear();
 				getBendpointLocations().addAll((Collection<? extends DiagramLocation>)newValue);
 				return;
-			case SchemaPackage.CONNECTION__MEMBER_ROLE:
+			case SchemaPackage.CONNECTION_PART__MEMBER_ROLE:
 				setMemberRole((MemberRole)newValue);
 				return;
-			case SchemaPackage.CONNECTION__SOURCE_ENDPOINT_LOCATION:
+			case SchemaPackage.CONNECTION_PART__SOURCE_ENDPOINT_LOCATION:
 				setSourceEndpointLocation((DiagramLocation)newValue);
 				return;
-			case SchemaPackage.CONNECTION__TARGET_ENDPOINT_LOCATION:
+			case SchemaPackage.CONNECTION_PART__TARGET_ENDPOINT_LOCATION:
 				setTargetEndpointLocation((DiagramLocation)newValue);
 				return;
 		}
@@ -421,19 +421,19 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTION__CONNECTOR:
+			case SchemaPackage.CONNECTION_PART__CONNECTOR:
 				setConnector((Connector)null);
 				return;
-			case SchemaPackage.CONNECTION__BENDPOINT_LOCATIONS:
+			case SchemaPackage.CONNECTION_PART__BENDPOINT_LOCATIONS:
 				getBendpointLocations().clear();
 				return;
-			case SchemaPackage.CONNECTION__MEMBER_ROLE:
+			case SchemaPackage.CONNECTION_PART__MEMBER_ROLE:
 				setMemberRole((MemberRole)null);
 				return;
-			case SchemaPackage.CONNECTION__SOURCE_ENDPOINT_LOCATION:
+			case SchemaPackage.CONNECTION_PART__SOURCE_ENDPOINT_LOCATION:
 				setSourceEndpointLocation((DiagramLocation)null);
 				return;
-			case SchemaPackage.CONNECTION__TARGET_ENDPOINT_LOCATION:
+			case SchemaPackage.CONNECTION_PART__TARGET_ENDPOINT_LOCATION:
 				setTargetEndpointLocation((DiagramLocation)null);
 				return;
 		}
@@ -448,18 +448,18 @@ public class ConnectionImpl extends EObjectImpl implements Connection {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTION__CONNECTOR:
+			case SchemaPackage.CONNECTION_PART__CONNECTOR:
 				return connector != null;
-			case SchemaPackage.CONNECTION__BENDPOINT_LOCATIONS:
+			case SchemaPackage.CONNECTION_PART__BENDPOINT_LOCATIONS:
 				return bendpointLocations != null && !bendpointLocations.isEmpty();
-			case SchemaPackage.CONNECTION__MEMBER_ROLE:
+			case SchemaPackage.CONNECTION_PART__MEMBER_ROLE:
 				return memberRole != null;
-			case SchemaPackage.CONNECTION__SOURCE_ENDPOINT_LOCATION:
+			case SchemaPackage.CONNECTION_PART__SOURCE_ENDPOINT_LOCATION:
 				return sourceEndpointLocation != null;
-			case SchemaPackage.CONNECTION__TARGET_ENDPOINT_LOCATION:
+			case SchemaPackage.CONNECTION_PART__TARGET_ENDPOINT_LOCATION:
 				return targetEndpointLocation != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //ConnectionImpl
+} //ConnectionPartImpl

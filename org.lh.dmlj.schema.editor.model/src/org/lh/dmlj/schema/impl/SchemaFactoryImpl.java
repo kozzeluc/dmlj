@@ -63,7 +63,7 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 		switch (eClass.getClassifierID()) {
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION: return createAreaProcedureCallSpecification();
 			case SchemaPackage.AREA_SPECIFICATION: return createAreaSpecification();
-			case SchemaPackage.CONNECTION: return createConnection();
+			case SchemaPackage.CONNECTION_PART: return createConnectionPart();
 			case SchemaPackage.CONNECTION_LABEL: return createConnectionLabel();
 			case SchemaPackage.CONNECTOR: return createConnector();
 			case SchemaPackage.DIAGRAM_DATA: return createDiagramData();
@@ -318,9 +318,9 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Connection createConnection() {
-		ConnectionImpl connection = new ConnectionImpl();
-		return connection;
+	public ConnectionPart createConnectionPart() {
+		ConnectionPartImpl connectionPart = new ConnectionPartImpl();
+		return connectionPart;
 	}
 
 	/**

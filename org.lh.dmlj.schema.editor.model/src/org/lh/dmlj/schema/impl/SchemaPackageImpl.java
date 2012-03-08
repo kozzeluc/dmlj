@@ -18,8 +18,8 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.AreaSpecification;
-import org.lh.dmlj.schema.Connection;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
@@ -190,7 +190,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass connectionEClass = null;
+	private EClass connectionPartEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1166,7 +1166,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMemberRole_Connections() {
+	public EReference getMemberRole_ConnectionParts() {
 		return (EReference)memberRoleEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -1319,7 +1319,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDiagramData_Connections() {
+	public EReference getDiagramData_ConnectionParts() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1580,8 +1580,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getConnection() {
-		return connectionEClass;
+	public EClass getConnectionPart() {
+		return connectionPartEClass;
 	}
 
 	/**
@@ -1589,8 +1589,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConnection_Connector() {
-		return (EReference)connectionEClass.getEStructuralFeatures().get(0);
+	public EReference getConnectionPart_Connector() {
+		return (EReference)connectionPartEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1598,8 +1598,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConnection_BendpointLocations() {
-		return (EReference)connectionEClass.getEStructuralFeatures().get(1);
+	public EReference getConnectionPart_BendpointLocations() {
+		return (EReference)connectionPartEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1607,8 +1607,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConnection_MemberRole() {
-		return (EReference)connectionEClass.getEStructuralFeatures().get(2);
+	public EReference getConnectionPart_MemberRole() {
+		return (EReference)connectionPartEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1616,8 +1616,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConnection_SourceEndpointLocation() {
-		return (EReference)connectionEClass.getEStructuralFeatures().get(3);
+	public EReference getConnectionPart_SourceEndpointLocation() {
+		return (EReference)connectionPartEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1625,8 +1625,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConnection_TargetEndpointLocation() {
-		return (EReference)connectionEClass.getEStructuralFeatures().get(4);
+	public EReference getConnectionPart_TargetEndpointLocation() {
+		return (EReference)connectionPartEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1679,7 +1679,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConnector_Connection() {
+	public EReference getConnector_ConnectionPart() {
 		return (EReference)connectorEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2110,12 +2110,12 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(areaSpecificationEClass, AREA_SPECIFICATION__RECORD);
 		createEReference(areaSpecificationEClass, AREA_SPECIFICATION__SYSTEM_OWNER);
 
-		connectionEClass = createEClass(CONNECTION);
-		createEReference(connectionEClass, CONNECTION__CONNECTOR);
-		createEReference(connectionEClass, CONNECTION__BENDPOINT_LOCATIONS);
-		createEReference(connectionEClass, CONNECTION__MEMBER_ROLE);
-		createEReference(connectionEClass, CONNECTION__SOURCE_ENDPOINT_LOCATION);
-		createEReference(connectionEClass, CONNECTION__TARGET_ENDPOINT_LOCATION);
+		connectionPartEClass = createEClass(CONNECTION_PART);
+		createEReference(connectionPartEClass, CONNECTION_PART__CONNECTOR);
+		createEReference(connectionPartEClass, CONNECTION_PART__BENDPOINT_LOCATIONS);
+		createEReference(connectionPartEClass, CONNECTION_PART__MEMBER_ROLE);
+		createEReference(connectionPartEClass, CONNECTION_PART__SOURCE_ENDPOINT_LOCATION);
+		createEReference(connectionPartEClass, CONNECTION_PART__TARGET_ENDPOINT_LOCATION);
 
 		connectionLabelEClass = createEClass(CONNECTION_LABEL);
 		createEAttribute(connectionLabelEClass, CONNECTION_LABEL__ALIGNMENT);
@@ -2123,13 +2123,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(connectionLabelEClass, CONNECTION_LABEL__MEMBER_ROLE);
 
 		connectorEClass = createEClass(CONNECTOR);
-		createEReference(connectorEClass, CONNECTOR__CONNECTION);
+		createEReference(connectorEClass, CONNECTOR__CONNECTION_PART);
 		createEAttribute(connectorEClass, CONNECTOR__LABEL);
 		createEReference(connectorEClass, CONNECTOR__LOCATION);
 
 		diagramDataEClass = createEClass(DIAGRAM_DATA);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTION_LABELS);
-		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTIONS);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTION_PARTS);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTORS);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__HORIZONTAL_RULER);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__LOCATIONS);
@@ -2198,7 +2198,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(memberRoleEClass, MEMBER_ROLE__RECORD);
 		createEReference(memberRoleEClass, MEMBER_ROLE__SET);
 		createEReference(memberRoleEClass, MEMBER_ROLE__SORT_KEY);
-		createEReference(memberRoleEClass, MEMBER_ROLE__CONNECTIONS);
+		createEReference(memberRoleEClass, MEMBER_ROLE__CONNECTION_PARTS);
 		createEReference(memberRoleEClass, MEMBER_ROLE__CONNECTION_LABEL);
 
 		occursSpecificationEClass = createEClass(OCCURS_SPECIFICATION);
@@ -2360,12 +2360,12 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getAreaSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_AreaSpecification(), "record", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAreaSpecification_SystemOwner(), this.getSystemOwner(), this.getSystemOwner_AreaSpecification(), "systemOwner", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(connectionEClass, Connection.class, "Connection", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getConnection_Connector(), this.getConnector(), this.getConnector_Connection(), "connector", null, 0, 1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getConnection_BendpointLocations(), this.getDiagramLocation(), null, "bendpointLocations", null, 0, -1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getConnection_MemberRole(), this.getMemberRole(), this.getMemberRole_Connections(), "memberRole", null, 1, 1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getConnection_SourceEndpointLocation(), this.getDiagramLocation(), null, "sourceEndpointLocation", null, 0, 1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getConnection_TargetEndpointLocation(), this.getDiagramLocation(), null, "targetEndpointLocation", null, 0, 1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(connectionPartEClass, ConnectionPart.class, "ConnectionPart", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConnectionPart_Connector(), this.getConnector(), this.getConnector_ConnectionPart(), "connector", null, 0, 1, ConnectionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnectionPart_BendpointLocations(), this.getDiagramLocation(), null, "bendpointLocations", null, 0, -1, ConnectionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnectionPart_MemberRole(), this.getMemberRole(), this.getMemberRole_ConnectionParts(), "memberRole", null, 1, 1, ConnectionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnectionPart_SourceEndpointLocation(), this.getDiagramLocation(), null, "sourceEndpointLocation", null, 0, 1, ConnectionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnectionPart_TargetEndpointLocation(), this.getDiagramLocation(), null, "targetEndpointLocation", null, 0, 1, ConnectionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(connectionLabelEClass, ConnectionLabel.class, "ConnectionLabel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getConnectionLabel_Alignment(), this.getLabelAlignment(), "alignment", "", 0, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2373,13 +2373,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getConnectionLabel_MemberRole(), this.getMemberRole(), this.getMemberRole_ConnectionLabel(), "memberRole", null, 1, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getConnector_Connection(), this.getConnection(), this.getConnection_Connector(), "connection", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnector_ConnectionPart(), this.getConnectionPart(), this.getConnectionPart_Connector(), "connectionPart", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getConnector_Label(), ecorePackage.getEString(), "label", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getConnector_Location(), this.getDiagramLocation(), null, "location", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(diagramDataEClass, DiagramData.class, "DiagramData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDiagramData_ConnectionLabels(), this.getConnectionLabel(), null, "connectionLabels", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDiagramData_Connections(), this.getConnection(), null, "connections", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_ConnectionParts(), this.getConnectionPart(), null, "connectionParts", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_Connectors(), this.getConnector(), null, "connectors", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_HorizontalRuler(), this.getRuler(), null, "horizontalRuler", null, 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_Locations(), this.getDiagramLocation(), null, "locations", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2448,7 +2448,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getMemberRole_Record(), this.getSchemaRecord(), this.getSchemaRecord_MemberRoles(), "record", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMemberRole_Set(), this.getSet(), this.getSet_Members(), "set", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMemberRole_SortKey(), this.getKey(), this.getKey_MemberRole(), "sortKey", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMemberRole_Connections(), this.getConnection(), this.getConnection_MemberRole(), "connections", null, 1, 2, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_ConnectionParts(), this.getConnectionPart(), this.getConnectionPart_MemberRole(), "connectionParts", null, 1, 2, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMemberRole_ConnectionLabel(), this.getConnectionLabel(), this.getConnectionLabel_MemberRole(), "connectionLabel", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(occursSpecificationEClass, OccursSpecification.class, "OccursSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

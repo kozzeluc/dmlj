@@ -80,8 +80,8 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createAreaSpecificationAdapter();
 			}
 			@Override
-			public Adapter caseConnection(Connection object) {
-				return createConnectionAdapter();
+			public Adapter caseConnectionPart(ConnectionPart object) {
+				return createConnectionPartAdapter();
 			}
 			@Override
 			public Adapter caseConnectionLabel(ConnectionLabel object) {
@@ -438,16 +438,16 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.Connection <em>Connection</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.ConnectionPart <em>Connection Part</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.lh.dmlj.schema.Connection
+	 * @see org.lh.dmlj.schema.ConnectionPart
 	 * @generated
 	 */
-	public Adapter createConnectionAdapter() {
+	public Adapter createConnectionPartAdapter() {
 		return null;
 	}
 

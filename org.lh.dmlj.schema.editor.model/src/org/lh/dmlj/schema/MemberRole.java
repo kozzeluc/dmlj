@@ -25,7 +25,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getSortKey <em>Sort Key</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getConnections <em>Connections</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.MemberRole#getConnectionParts <em>Connection Parts</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getConnectionLabel <em>Connection Label</em>}</li>
  * </ul>
  * </p>
@@ -253,22 +253,22 @@ public interface MemberRole extends Role {
 	void setSortKey(Key value);
 
 	/**
-	 * Returns the value of the '<em><b>Connections</b></em>' reference list.
-	 * The list contents are of type {@link org.lh.dmlj.schema.Connection}.
-	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Connection#getMemberRole <em>Member Role</em>}'.
+	 * Returns the value of the '<em><b>Connection Parts</b></em>' reference list.
+	 * The list contents are of type {@link org.lh.dmlj.schema.ConnectionPart}.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.ConnectionPart#getMemberRole <em>Member Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Connections</em>' reference list isn't clear,
+	 * If the meaning of the '<em>Connection Parts</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Connections</em>' reference list.
-	 * @see org.lh.dmlj.schema.SchemaPackage#getMemberRole_Connections()
-	 * @see org.lh.dmlj.schema.Connection#getMemberRole
+	 * @return the value of the '<em>Connection Parts</em>' reference list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getMemberRole_ConnectionParts()
+	 * @see org.lh.dmlj.schema.ConnectionPart#getMemberRole
 	 * @model opposite="memberRole" required="true" upper="2"
 	 * @generated
 	 */
-	EList<Connection> getConnections();
+	EList<ConnectionPart> getConnectionParts();
 
 	/**
 	 * Returns the value of the '<em><b>Connection Label</b></em>' reference.

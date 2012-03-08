@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.lh.dmlj.schema.Connection;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -26,7 +26,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getConnection <em>Connection</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getConnectionPart <em>Connection Part</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getLabel <em>Label</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getLocation <em>Location</em>}</li>
  * </ul>
@@ -36,14 +36,14 @@ import org.lh.dmlj.schema.SchemaPackage;
  */
 public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	/**
-	 * The cached value of the '{@link #getConnection() <em>Connection</em>}' reference.
+	 * The cached value of the '{@link #getConnectionPart() <em>Connection Part</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getConnection()
+	 * @see #getConnectionPart()
 	 * @generated
 	 * @ordered
 	 */
-	protected Connection connection;
+	protected ConnectionPart connectionPart;
 
 	/**
 	 * The default value of the '{@link #getLabel() <em>Label</em>}' attribute.
@@ -99,16 +99,16 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Connection getConnection() {
-		if (connection != null && connection.eIsProxy()) {
-			InternalEObject oldConnection = (InternalEObject)connection;
-			connection = (Connection)eResolveProxy(oldConnection);
-			if (connection != oldConnection) {
+	public ConnectionPart getConnectionPart() {
+		if (connectionPart != null && connectionPart.eIsProxy()) {
+			InternalEObject oldConnectionPart = (InternalEObject)connectionPart;
+			connectionPart = (ConnectionPart)eResolveProxy(oldConnectionPart);
+			if (connectionPart != oldConnectionPart) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTOR__CONNECTION, oldConnection, connection));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTOR__CONNECTION_PART, oldConnectionPart, connectionPart));
 			}
 		}
-		return connection;
+		return connectionPart;
 	}
 
 	/**
@@ -116,8 +116,8 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Connection basicGetConnection() {
-		return connection;
+	public ConnectionPart basicGetConnectionPart() {
+		return connectionPart;
 	}
 
 	/**
@@ -125,11 +125,11 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetConnection(Connection newConnection, NotificationChain msgs) {
-		Connection oldConnection = connection;
-		connection = newConnection;
+	public NotificationChain basicSetConnectionPart(ConnectionPart newConnectionPart, NotificationChain msgs) {
+		ConnectionPart oldConnectionPart = connectionPart;
+		connectionPart = newConnectionPart;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTOR__CONNECTION, oldConnection, newConnection);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTOR__CONNECTION_PART, oldConnectionPart, newConnectionPart);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -140,18 +140,18 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setConnection(Connection newConnection) {
-		if (newConnection != connection) {
+	public void setConnectionPart(ConnectionPart newConnectionPart) {
+		if (newConnectionPart != connectionPart) {
 			NotificationChain msgs = null;
-			if (connection != null)
-				msgs = ((InternalEObject)connection).eInverseRemove(this, SchemaPackage.CONNECTION__CONNECTOR, Connection.class, msgs);
-			if (newConnection != null)
-				msgs = ((InternalEObject)newConnection).eInverseAdd(this, SchemaPackage.CONNECTION__CONNECTOR, Connection.class, msgs);
-			msgs = basicSetConnection(newConnection, msgs);
+			if (connectionPart != null)
+				msgs = ((InternalEObject)connectionPart).eInverseRemove(this, SchemaPackage.CONNECTION_PART__CONNECTOR, ConnectionPart.class, msgs);
+			if (newConnectionPart != null)
+				msgs = ((InternalEObject)newConnectionPart).eInverseAdd(this, SchemaPackage.CONNECTION_PART__CONNECTOR, ConnectionPart.class, msgs);
+			msgs = basicSetConnectionPart(newConnectionPart, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTOR__CONNECTION, newConnection, newConnection));
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTOR__CONNECTION_PART, newConnectionPart, newConnectionPart));
 	}
 
 	/**
@@ -221,10 +221,10 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTOR__CONNECTION:
-				if (connection != null)
-					msgs = ((InternalEObject)connection).eInverseRemove(this, SchemaPackage.CONNECTION__CONNECTOR, Connection.class, msgs);
-				return basicSetConnection((Connection)otherEnd, msgs);
+			case SchemaPackage.CONNECTOR__CONNECTION_PART:
+				if (connectionPart != null)
+					msgs = ((InternalEObject)connectionPart).eInverseRemove(this, SchemaPackage.CONNECTION_PART__CONNECTOR, ConnectionPart.class, msgs);
+				return basicSetConnectionPart((ConnectionPart)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -237,8 +237,8 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTOR__CONNECTION:
-				return basicSetConnection(null, msgs);
+			case SchemaPackage.CONNECTOR__CONNECTION_PART:
+				return basicSetConnectionPart(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -251,9 +251,9 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTOR__CONNECTION:
-				if (resolve) return getConnection();
-				return basicGetConnection();
+			case SchemaPackage.CONNECTOR__CONNECTION_PART:
+				if (resolve) return getConnectionPart();
+				return basicGetConnectionPart();
 			case SchemaPackage.CONNECTOR__LABEL:
 				return getLabel();
 			case SchemaPackage.CONNECTOR__LOCATION:
@@ -271,8 +271,8 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTOR__CONNECTION:
-				setConnection((Connection)newValue);
+			case SchemaPackage.CONNECTOR__CONNECTION_PART:
+				setConnectionPart((ConnectionPart)newValue);
 				return;
 			case SchemaPackage.CONNECTOR__LABEL:
 				setLabel((String)newValue);
@@ -292,8 +292,8 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTOR__CONNECTION:
-				setConnection((Connection)null);
+			case SchemaPackage.CONNECTOR__CONNECTION_PART:
+				setConnectionPart((ConnectionPart)null);
 				return;
 			case SchemaPackage.CONNECTOR__LABEL:
 				setLabel(LABEL_EDEFAULT);
@@ -313,8 +313,8 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.CONNECTOR__CONNECTION:
-				return connection != null;
+			case SchemaPackage.CONNECTOR__CONNECTION_PART:
+				return connectionPart != null;
 			case SchemaPackage.CONNECTOR__LABEL:
 				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
 			case SchemaPackage.CONNECTOR__LOCATION:
