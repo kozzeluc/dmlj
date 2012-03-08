@@ -1,0 +1,227 @@
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
+ */
+package org.lh.dmlj.schema.impl;
+
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.lh.dmlj.schema.Guide;
+import org.lh.dmlj.schema.Ruler;
+import org.lh.dmlj.schema.RulerType;
+import org.lh.dmlj.schema.SchemaPackage;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Ruler</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.RulerImpl#getGuides <em>Guides</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.RulerImpl#getType <em>Type</em>}</li>
+ * </ul>
+ * </p>
+ *
+ * @generated
+ */
+public class RulerImpl extends EObjectImpl implements Ruler {
+	/**
+	 * The cached value of the '{@link #getGuides() <em>Guides</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGuides()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Guide> guides;
+
+	/**
+	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final RulerType TYPE_EDEFAULT = RulerType.HORIZONTAL;
+
+	/**
+	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected RulerType type = TYPE_EDEFAULT;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected RulerImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return SchemaPackage.Literals.RULER;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Guide> getGuides() {
+		if (guides == null) {
+			guides = new EObjectContainmentEList<Guide>(Guide.class, this, SchemaPackage.RULER__GUIDES);
+		}
+		return guides;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RulerType getType() {
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setType(RulerType newType) {
+		RulerType oldType = type;
+		type = newType == null ? TYPE_EDEFAULT : newType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.RULER__TYPE, oldType, type));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.RULER__GUIDES:
+				return ((InternalEList<?>)getGuides()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case SchemaPackage.RULER__GUIDES:
+				return getGuides();
+			case SchemaPackage.RULER__TYPE:
+				return getType();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case SchemaPackage.RULER__GUIDES:
+				getGuides().clear();
+				getGuides().addAll((Collection<? extends Guide>)newValue);
+				return;
+			case SchemaPackage.RULER__TYPE:
+				setType((RulerType)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case SchemaPackage.RULER__GUIDES:
+				getGuides().clear();
+				return;
+			case SchemaPackage.RULER__TYPE:
+				setType(TYPE_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case SchemaPackage.RULER__GUIDES:
+				return guides != null && !guides.isEmpty();
+			case SchemaPackage.RULER__TYPE:
+				return type != TYPE_EDEFAULT;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (type: ");
+		result.append(type);
+		result.append(')');
+		return result.toString();
+	}
+
+} //RulerImpl

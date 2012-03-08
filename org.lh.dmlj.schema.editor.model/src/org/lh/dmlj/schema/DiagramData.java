@@ -18,9 +18,20 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectionLabels <em>Connection Labels</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnections <em>Connections</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectors <em>Connectors</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getHorizontalRuler <em>Horizontal Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getLocations <em>Locations</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isShowGrid <em>Show Grid</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#isShowRulers <em>Show Rulers</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#isSnapToGeometry <em>Snap To Geometry</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#isSnapToGrid <em>Snap To Grid</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#isSnapToGuides <em>Snap To Guides</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getUnit <em>Unit</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getVerticalRuler <em>Vertical Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getZoomLevel <em>Zoom Level</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getRulers <em>Rulers</em>}</li>
  * </ul>
  * </p>
  *
@@ -29,6 +40,80 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface DiagramData extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Connection Labels</b></em>' containment reference list.
+	 * The list contents are of type {@link org.lh.dmlj.schema.ConnectionLabel}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Connection Labels</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Connection Labels</em>' containment reference list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_ConnectionLabels()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<ConnectionLabel> getConnectionLabels();
+
+	/**
+	 * Returns the value of the '<em><b>Connections</b></em>' containment reference list.
+	 * The list contents are of type {@link org.lh.dmlj.schema.Connection}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Connections</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Connections</em>' containment reference list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Connections()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Connection> getConnections();
+
+	/**
+	 * Returns the value of the '<em><b>Connectors</b></em>' containment reference list.
+	 * The list contents are of type {@link org.lh.dmlj.schema.Connector}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Connectors</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Connectors</em>' containment reference list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Connectors()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Connector> getConnectors();
+
+	/**
+	 * Returns the value of the '<em><b>Horizontal Ruler</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Horizontal Ruler</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Horizontal Ruler</em>' reference.
+	 * @see #setHorizontalRuler(Ruler)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_HorizontalRuler()
+	 * @model required="true"
+	 * @generated
+	 */
+	Ruler getHorizontalRuler();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#getHorizontalRuler <em>Horizontal Ruler</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Horizontal Ruler</em>' reference.
+	 * @see #getHorizontalRuler()
+	 * @generated
+	 */
+	void setHorizontalRuler(Ruler value);
+
 	/**
 	 * Returns the value of the '<em><b>Locations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.lh.dmlj.schema.DiagramLocation}.
@@ -73,6 +158,22 @@ public interface DiagramData extends EObject {
 	void setZoomLevel(double value);
 
 	/**
+	 * Returns the value of the '<em><b>Rulers</b></em>' containment reference list.
+	 * The list contents are of type {@link org.lh.dmlj.schema.Ruler}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Rulers</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Rulers</em>' containment reference list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Rulers()
+	 * @model containment="true" lower="2" upper="2"
+	 * @generated
+	 */
+	EList<Ruler> getRulers();
+
+	/**
 	 * Returns the value of the '<em><b>Show Grid</b></em>' attribute.
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
@@ -98,5 +199,165 @@ public interface DiagramData extends EObject {
 	 * @generated
 	 */
 	void setShowGrid(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Show Rulers</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Show Rulers</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Show Rulers</em>' attribute.
+	 * @see #setShowRulers(boolean)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_ShowRulers()
+	 * @model
+	 * @generated
+	 */
+	boolean isShowRulers();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#isShowRulers <em>Show Rulers</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Show Rulers</em>' attribute.
+	 * @see #isShowRulers()
+	 * @generated
+	 */
+	void setShowRulers(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Snap To Geometry</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Snap To Geometry</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Snap To Geometry</em>' attribute.
+	 * @see #setSnapToGeometry(boolean)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_SnapToGeometry()
+	 * @model
+	 * @generated
+	 */
+	boolean isSnapToGeometry();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#isSnapToGeometry <em>Snap To Geometry</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Snap To Geometry</em>' attribute.
+	 * @see #isSnapToGeometry()
+	 * @generated
+	 */
+	void setSnapToGeometry(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Snap To Grid</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Snap To Grid</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Snap To Grid</em>' attribute.
+	 * @see #setSnapToGrid(boolean)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_SnapToGrid()
+	 * @model
+	 * @generated
+	 */
+	boolean isSnapToGrid();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#isSnapToGrid <em>Snap To Grid</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Snap To Grid</em>' attribute.
+	 * @see #isSnapToGrid()
+	 * @generated
+	 */
+	void setSnapToGrid(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Snap To Guides</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Snap To Guides</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Snap To Guides</em>' attribute.
+	 * @see #setSnapToGuides(boolean)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_SnapToGuides()
+	 * @model
+	 * @generated
+	 */
+	boolean isSnapToGuides();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#isSnapToGuides <em>Snap To Guides</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Snap To Guides</em>' attribute.
+	 * @see #isSnapToGuides()
+	 * @generated
+	 */
+	void setSnapToGuides(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Unit</b></em>' attribute.
+	 * The default value is <code>""</code>.
+	 * The literals are from the enumeration {@link org.lh.dmlj.schema.Unit}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Unit</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Unit</em>' attribute.
+	 * @see org.lh.dmlj.schema.Unit
+	 * @see #setUnit(Unit)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Unit()
+	 * @model default="" required="true"
+	 * @generated
+	 */
+	Unit getUnit();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#getUnit <em>Unit</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Unit</em>' attribute.
+	 * @see org.lh.dmlj.schema.Unit
+	 * @see #getUnit()
+	 * @generated
+	 */
+	void setUnit(Unit value);
+
+	/**
+	 * Returns the value of the '<em><b>Vertical Ruler</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vertical Ruler</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Vertical Ruler</em>' reference.
+	 * @see #setVerticalRuler(Ruler)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_VerticalRuler()
+	 * @model required="true"
+	 * @generated
+	 */
+	Ruler getVerticalRuler();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#getVerticalRuler <em>Vertical Ruler</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Vertical Ruler</em>' reference.
+	 * @see #getVerticalRuler()
+	 * @generated
+	 */
+	void setVerticalRuler(Ruler value);
 
 } // DiagramData

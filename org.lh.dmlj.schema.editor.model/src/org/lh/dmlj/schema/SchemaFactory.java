@@ -71,6 +71,15 @@ public interface SchemaFactory extends EFactory {
 	Element createElement();
 
 	/**
+	 * Returns a new object of class '<em>Guide</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Guide</em>'.
+	 * @generated
+	 */
+	Guide createGuide();
+
+	/**
 	 * Returns a new object of class '<em>Key Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -143,6 +152,33 @@ public interface SchemaFactory extends EFactory {
 	AreaSpecification createAreaSpecification();
 
 	/**
+	 * Returns a new object of class '<em>Connection</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Connection</em>'.
+	 * @generated
+	 */
+	Connection createConnection();
+
+	/**
+	 * Returns a new object of class '<em>Connection Label</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Connection Label</em>'.
+	 * @generated
+	 */
+	ConnectionLabel createConnectionLabel();
+
+	/**
+	 * Returns a new object of class '<em>Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Connector</em>'.
+	 * @generated
+	 */
+	Connector createConnector();
+
+	/**
 	 * Returns a new object of class '<em>Offset Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -186,6 +222,15 @@ public interface SchemaFactory extends EFactory {
 	 * @generated
 	 */
 	RecordProcedureCallSpecification createRecordProcedureCallSpecification();
+
+	/**
+	 * Returns a new object of class '<em>Ruler</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Ruler</em>'.
+	 * @generated
+	 */
+	Ruler createRuler();
 
 	/**
 	 * Returns a new object of class '<em>Procedure</em>'.

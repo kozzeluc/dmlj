@@ -18,14 +18,19 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.AreaSpecification;
+import org.lh.dmlj.schema.Connection;
+import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.IndexedSetModeSpecification;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
+import org.lh.dmlj.schema.LabelAlignment;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OccursSpecification;
@@ -36,6 +41,8 @@ import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
 import org.lh.dmlj.schema.Role;
+import org.lh.dmlj.schema.Ruler;
+import org.lh.dmlj.schema.RulerType;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
@@ -48,6 +55,7 @@ import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.Unit;
 import org.lh.dmlj.schema.Usage;
 import org.lh.dmlj.schema.ViaSpecification;
 
@@ -98,7 +106,21 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass rulerEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass elementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass guideEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -168,6 +190,27 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass connectionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass connectionLabelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass connectorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass offsetExpressionEClass = null;
 
 	/**
@@ -231,6 +274,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum labelAlignmentEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum locationModeEEnum = null;
 
 	/**
@@ -246,6 +296,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	private EEnum storageModeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum unitEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -281,6 +338,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	private EEnum recordProcedureCallVerbEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum rulerTypeEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -796,6 +860,33 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getRuler() {
+		return rulerEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRuler_Guides() {
+		return (EReference)rulerEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getRuler_Type() {
+		return (EAttribute)rulerEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getSet_IndexedSetModeSpecification() {
 		return (EReference)setEClass.getEStructuralFeatures().get(0);
 	}
@@ -834,6 +925,24 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 */
 	public EAttribute getElement_Usage() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getGuide() {
+		return guideEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getGuide_Position() {
+		return (EAttribute)guideEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -986,7 +1095,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getMemberRole_IndexDbkeyPosition() {
-		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -995,7 +1104,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getMemberRole_MembershipOption() {
-		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(5);
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1004,7 +1113,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getMemberRole_NextDbkeyPosition() {
-		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(6);
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1013,7 +1122,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getMemberRole_PriorDbkeyPosition() {
-		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(7);
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1022,7 +1131,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getMemberRole_OwnerDbkeyPosition() {
-		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(8);
+		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1031,7 +1140,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getMemberRole_Record() {
-		return (EReference)memberRoleEClass.getEStructuralFeatures().get(9);
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -1040,7 +1149,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getMemberRole_Set() {
-		return (EReference)memberRoleEClass.getEStructuralFeatures().get(10);
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -1049,7 +1158,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getMemberRole_SortKey() {
-		return (EReference)memberRoleEClass.getEStructuralFeatures().get(11);
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -1057,8 +1166,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMemberRole_DiagramTargetAnchor() {
-		return (EReference)memberRoleEClass.getEStructuralFeatures().get(3);
+	public EReference getMemberRole_Connections() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -1066,26 +1175,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMemberRole_DiagramSourceAnchor() {
-		return (EReference)memberRoleEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getMemberRole_DiagramBendpoints() {
-		return (EReference)memberRoleEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getMemberRole_DiagramLabelLocation() {
-		return (EReference)memberRoleEClass.getEStructuralFeatures().get(1);
+	public EReference getMemberRole_ConnectionLabel() {
+		return (EReference)memberRoleEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -1219,7 +1310,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDiagramData_Locations() {
+	public EReference getDiagramData_ConnectionLabels() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1228,8 +1319,53 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getDiagramData_Connections() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramData_Connectors() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramData_HorizontalRuler() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramData_Locations() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getDiagramData_ZoomLevel() {
-		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramData_Rulers() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -1238,7 +1374,61 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getDiagramData_ShowGrid() {
-		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_ShowRulers() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_SnapToGeometry() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_SnapToGrid() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_SnapToGuides() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_Unit() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramData_VerticalRuler() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -1383,6 +1573,132 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 */
 	public EReference getAreaSpecification_SystemOwner() {
 		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getConnection() {
+		return connectionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnection_Connector() {
+		return (EReference)connectionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnection_BendpointLocations() {
+		return (EReference)connectionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnection_MemberRole() {
+		return (EReference)connectionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnection_SourceEndpointLocation() {
+		return (EReference)connectionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnection_TargetEndpointLocation() {
+		return (EReference)connectionEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getConnectionLabel() {
+		return connectionLabelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConnectionLabel_Alignment() {
+		return (EAttribute)connectionLabelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnectionLabel_Location() {
+		return (EReference)connectionLabelEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnectionLabel_MemberRole() {
+		return (EReference)connectionLabelEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getConnector() {
+		return connectorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnector_Connection() {
+		return (EReference)connectorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConnector_Label() {
+		return (EAttribute)connectorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnector_Location() {
+		return (EReference)connectorEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1651,6 +1967,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getLabelAlignment() {
+		return labelAlignmentEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getLocationMode() {
 		return locationModeEEnum;
 	}
@@ -1671,6 +1996,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 */
 	public EEnum getStorageMode() {
 		return storageModeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getUnit() {
+		return unitEEnum;
 	}
 
 	/**
@@ -1723,6 +2057,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getRulerType() {
+		return rulerTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getUsage() {
 		return usageEEnum;
 	}
@@ -1767,10 +2110,38 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(areaSpecificationEClass, AREA_SPECIFICATION__RECORD);
 		createEReference(areaSpecificationEClass, AREA_SPECIFICATION__SYSTEM_OWNER);
 
+		connectionEClass = createEClass(CONNECTION);
+		createEReference(connectionEClass, CONNECTION__CONNECTOR);
+		createEReference(connectionEClass, CONNECTION__BENDPOINT_LOCATIONS);
+		createEReference(connectionEClass, CONNECTION__MEMBER_ROLE);
+		createEReference(connectionEClass, CONNECTION__SOURCE_ENDPOINT_LOCATION);
+		createEReference(connectionEClass, CONNECTION__TARGET_ENDPOINT_LOCATION);
+
+		connectionLabelEClass = createEClass(CONNECTION_LABEL);
+		createEAttribute(connectionLabelEClass, CONNECTION_LABEL__ALIGNMENT);
+		createEReference(connectionLabelEClass, CONNECTION_LABEL__LOCATION);
+		createEReference(connectionLabelEClass, CONNECTION_LABEL__MEMBER_ROLE);
+
+		connectorEClass = createEClass(CONNECTOR);
+		createEReference(connectorEClass, CONNECTOR__CONNECTION);
+		createEAttribute(connectorEClass, CONNECTOR__LABEL);
+		createEReference(connectorEClass, CONNECTOR__LOCATION);
+
 		diagramDataEClass = createEClass(DIAGRAM_DATA);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTION_LABELS);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTIONS);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTORS);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__HORIZONTAL_RULER);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__LOCATIONS);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SHOW_GRID);
+		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SHOW_RULERS);
+		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SNAP_TO_GEOMETRY);
+		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SNAP_TO_GRID);
+		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SNAP_TO_GUIDES);
+		createEAttribute(diagramDataEClass, DIAGRAM_DATA__UNIT);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__VERTICAL_RULER);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__ZOOM_LEVEL);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__RULERS);
 
 		diagramLocationEClass = createEClass(DIAGRAM_LOCATION);
 		createEAttribute(diagramLocationEClass, DIAGRAM_LOCATION__EYECATCHER);
@@ -1795,6 +2166,9 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(elementEClass, ELEMENT__REDEFINES);
 		createEAttribute(elementEClass, ELEMENT__USAGE);
 
+		guideEClass = createEClass(GUIDE);
+		createEAttribute(guideEClass, GUIDE__POSITION);
+
 		indexedSetModeSpecificationEClass = createEClass(INDEXED_SET_MODE_SPECIFICATION);
 		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__DISPLACEMENT_PAGE_COUNT);
 		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT);
@@ -1816,10 +2190,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(keyElementEClass, KEY_ELEMENT__SORT_SEQUENCE);
 
 		memberRoleEClass = createEClass(MEMBER_ROLE);
-		createEReference(memberRoleEClass, MEMBER_ROLE__DIAGRAM_BENDPOINTS);
-		createEReference(memberRoleEClass, MEMBER_ROLE__DIAGRAM_LABEL_LOCATION);
-		createEReference(memberRoleEClass, MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR);
-		createEReference(memberRoleEClass, MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR);
 		createEAttribute(memberRoleEClass, MEMBER_ROLE__INDEX_DBKEY_POSITION);
 		createEAttribute(memberRoleEClass, MEMBER_ROLE__MEMBERSHIP_OPTION);
 		createEAttribute(memberRoleEClass, MEMBER_ROLE__NEXT_DBKEY_POSITION);
@@ -1828,6 +2198,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(memberRoleEClass, MEMBER_ROLE__RECORD);
 		createEReference(memberRoleEClass, MEMBER_ROLE__SET);
 		createEReference(memberRoleEClass, MEMBER_ROLE__SORT_KEY);
+		createEReference(memberRoleEClass, MEMBER_ROLE__CONNECTIONS);
+		createEReference(memberRoleEClass, MEMBER_ROLE__CONNECTION_LABEL);
 
 		occursSpecificationEClass = createEClass(OCCURS_SPECIFICATION);
 		createEAttribute(occursSpecificationEClass, OCCURS_SPECIFICATION__COUNT);
@@ -1854,6 +2226,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__VERB);
 
 		roleEClass = createEClass(ROLE);
+
+		rulerEClass = createEClass(RULER);
+		createEReference(rulerEClass, RULER__GUIDES);
+		createEAttribute(rulerEClass, RULER__TYPE);
 
 		schemaEClass = createEClass(SCHEMA);
 		createEReference(schemaEClass, SCHEMA__AREAS);
@@ -1922,14 +2298,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		// Create enums
 		areaProcedureCallFunctionEEnum = createEEnum(AREA_PROCEDURE_CALL_FUNCTION);
 		duplicatesOptionEEnum = createEEnum(DUPLICATES_OPTION);
+		labelAlignmentEEnum = createEEnum(LABEL_ALIGNMENT);
 		locationModeEEnum = createEEnum(LOCATION_MODE);
 		procedureCallTimeEEnum = createEEnum(PROCEDURE_CALL_TIME);
 		recordProcedureCallVerbEEnum = createEEnum(RECORD_PROCEDURE_CALL_VERB);
+		rulerTypeEEnum = createEEnum(RULER_TYPE);
 		setMembershipOptionEEnum = createEEnum(SET_MEMBERSHIP_OPTION);
 		setModeEEnum = createEEnum(SET_MODE);
 		setOrderEEnum = createEEnum(SET_ORDER);
 		sortSequenceEEnum = createEEnum(SORT_SEQUENCE);
 		storageModeEEnum = createEEnum(STORAGE_MODE);
+		unitEEnum = createEEnum(UNIT);
 		usageEEnum = createEEnum(USAGE);
 	}
 
@@ -1961,6 +2340,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		connectionLabelEClass.getESuperTypes().add(this.getDiagramNode());
+		connectorEClass.getESuperTypes().add(this.getDiagramNode());
 		memberRoleEClass.getESuperTypes().add(this.getRole());
 		ownerRoleEClass.getESuperTypes().add(this.getRole());
 		schemaRecordEClass.getESuperTypes().add(this.getDiagramNode());
@@ -1979,10 +2360,38 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getAreaSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_AreaSpecification(), "record", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAreaSpecification_SystemOwner(), this.getSystemOwner(), this.getSystemOwner_AreaSpecification(), "systemOwner", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(connectionEClass, Connection.class, "Connection", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConnection_Connector(), this.getConnector(), this.getConnector_Connection(), "connector", null, 0, 1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnection_BendpointLocations(), this.getDiagramLocation(), null, "bendpointLocations", null, 0, -1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnection_MemberRole(), this.getMemberRole(), this.getMemberRole_Connections(), "memberRole", null, 1, 1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnection_SourceEndpointLocation(), this.getDiagramLocation(), null, "sourceEndpointLocation", null, 0, 1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnection_TargetEndpointLocation(), this.getDiagramLocation(), null, "targetEndpointLocation", null, 0, 1, Connection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(connectionLabelEClass, ConnectionLabel.class, "ConnectionLabel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getConnectionLabel_Alignment(), this.getLabelAlignment(), "alignment", "", 0, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnectionLabel_Location(), this.getDiagramLocation(), null, "location", null, 1, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnectionLabel_MemberRole(), this.getMemberRole(), this.getMemberRole_ConnectionLabel(), "memberRole", null, 1, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConnector_Connection(), this.getConnection(), this.getConnection_Connector(), "connection", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getConnector_Label(), ecorePackage.getEString(), "label", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnector_Location(), this.getDiagramLocation(), null, "location", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(diagramDataEClass, DiagramData.class, "DiagramData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDiagramData_ConnectionLabels(), this.getConnectionLabel(), null, "connectionLabels", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_Connections(), this.getConnection(), null, "connections", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_Connectors(), this.getConnector(), null, "connectors", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_HorizontalRuler(), this.getRuler(), null, "horizontalRuler", null, 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_Locations(), this.getDiagramLocation(), null, "locations", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_ShowGrid(), ecorePackage.getEBoolean(), "showGrid", "false", 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramData_ShowRulers(), ecorePackage.getEBoolean(), "showRulers", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramData_SnapToGeometry(), ecorePackage.getEBoolean(), "snapToGeometry", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramData_SnapToGrid(), ecorePackage.getEBoolean(), "snapToGrid", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramData_SnapToGuides(), ecorePackage.getEBoolean(), "snapToGuides", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagramData_Unit(), this.getUnit(), "unit", "", 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_VerticalRuler(), this.getRuler(), null, "verticalRuler", null, 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_ZoomLevel(), ecorePackage.getEDouble(), "zoomLevel", "1.0d", 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_Rulers(), this.getRuler(), null, "rulers", null, 2, 2, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(diagramLocationEClass, DiagramLocation.class, "DiagramLocation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDiagramLocation_Eyecatcher(), ecorePackage.getEString(), "eyecatcher", null, 0, 1, DiagramLocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2007,6 +2416,9 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getElement_Redefines(), this.getElement(), null, "redefines", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getElement_Usage(), this.getUsage(), "usage", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(guideEClass, Guide.class, "Guide", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getGuide_Position(), ecorePackage.getEInt(), "position", null, 0, 1, Guide.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(indexedSetModeSpecificationEClass, IndexedSetModeSpecification.class, "IndexedSetModeSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIndexedSetModeSpecification_DisplacementPageCount(), ecorePackage.getEShortObject(), "displacementPageCount", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIndexedSetModeSpecification_KeyCount(), ecorePackage.getEShortObject(), "keyCount", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2028,10 +2440,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getKeyElement_SortSequence(), this.getSortSequence(), "sortSequence", null, 0, 1, KeyElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(memberRoleEClass, MemberRole.class, "MemberRole", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMemberRole_DiagramBendpoints(), this.getDiagramLocation(), null, "diagramBendpoints", null, 0, -1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMemberRole_DiagramLabelLocation(), this.getDiagramLocation(), null, "diagramLabelLocation", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMemberRole_DiagramSourceAnchor(), this.getDiagramLocation(), null, "diagramSourceAnchor", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMemberRole_DiagramTargetAnchor(), this.getDiagramLocation(), null, "diagramTargetAnchor", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMemberRole_IndexDbkeyPosition(), ecorePackage.getEShortObject(), "indexDbkeyPosition", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMemberRole_MembershipOption(), this.getSetMembershipOption(), "membershipOption", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMemberRole_NextDbkeyPosition(), ecorePackage.getEShortObject(), "nextDbkeyPosition", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2040,6 +2448,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getMemberRole_Record(), this.getSchemaRecord(), this.getSchemaRecord_MemberRoles(), "record", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMemberRole_Set(), this.getSet(), this.getSet_Members(), "set", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getMemberRole_SortKey(), this.getKey(), this.getKey_MemberRole(), "sortKey", null, 0, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_Connections(), this.getConnection(), this.getConnection_MemberRole(), "connections", null, 1, 2, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMemberRole_ConnectionLabel(), this.getConnectionLabel(), this.getConnectionLabel_MemberRole(), "connectionLabel", null, 1, 1, MemberRole.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(occursSpecificationEClass, OccursSpecification.class, "OccursSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getOccursSpecification_Count(), ecorePackage.getEShort(), "count", null, 0, 1, OccursSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2066,6 +2476,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getRecordProcedureCallSpecification_Verb(), this.getRecordProcedureCallVerb(), "verb", null, 0, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(roleEClass, Role.class, "Role", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(rulerEClass, Ruler.class, "Ruler", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getRuler_Guides(), this.getGuide(), null, "guides", null, 0, -1, Ruler.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRuler_Type(), this.getRulerType(), "type", null, 0, 1, Ruler.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(schemaEClass, Schema.class, "Schema", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSchema_Areas(), this.getSchemaArea(), this.getSchemaArea_Schema(), "areas", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2183,6 +2597,11 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.BY_DBKEY);
 		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.NOT_ALLOWED);
 
+		initEEnum(labelAlignmentEEnum, LabelAlignment.class, "LabelAlignment");
+		addEEnumLiteral(labelAlignmentEEnum, LabelAlignment.LEFT);
+		addEEnumLiteral(labelAlignmentEEnum, LabelAlignment.RIGHT);
+		addEEnumLiteral(labelAlignmentEEnum, LabelAlignment.CENTER);
+
 		initEEnum(locationModeEEnum, LocationMode.class, "LocationMode");
 		addEEnumLiteral(locationModeEEnum, LocationMode.CALC);
 		addEEnumLiteral(locationModeEEnum, LocationMode.DIRECT);
@@ -2202,6 +2621,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.GET);
 		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.MODIFY);
 		addEEnumLiteral(recordProcedureCallVerbEEnum, RecordProcedureCallVerb.STORE);
+
+		initEEnum(rulerTypeEEnum, RulerType.class, "RulerType");
+		addEEnumLiteral(rulerTypeEEnum, RulerType.HORIZONTAL);
+		addEEnumLiteral(rulerTypeEEnum, RulerType.VERTICAL);
 
 		initEEnum(setMembershipOptionEEnum, SetMembershipOption.class, "SetMembershipOption");
 		addEEnumLiteral(setMembershipOptionEEnum, SetMembershipOption.MANDATORY_AUTOMATIC);
@@ -2229,6 +2652,11 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEEnumLiteral(storageModeEEnum, StorageMode.FIXED_COMPRESSED);
 		addEEnumLiteral(storageModeEEnum, StorageMode.VARIABLE);
 		addEEnumLiteral(storageModeEEnum, StorageMode.VARIABLE_COMPRESSED);
+
+		initEEnum(unitEEnum, Unit.class, "Unit");
+		addEEnumLiteral(unitEEnum, Unit.CENTIMETERS);
+		addEEnumLiteral(unitEEnum, Unit.INCHES);
+		addEEnumLiteral(unitEEnum, Unit.PIXELS);
 
 		initEEnum(usageEEnum, Usage.class, "Usage");
 		addEEnumLiteral(usageEEnum, Usage.DISPLAY);

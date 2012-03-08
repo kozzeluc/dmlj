@@ -283,9 +283,4 @@ public class SystemOwnerImpl extends DiagramNodeImpl implements SystemOwner {
 		return super.eIsSet(featureID);
 	}
 
-	@Override
-	public String getLabel() {
-		return "index " + getSet().getName();
-	}
-
 } //SystemOwnerImpl

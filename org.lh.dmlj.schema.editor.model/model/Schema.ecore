@@ -38,13 +38,58 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="systemOwner" lowerBound="1"
         eType="#//SystemOwner" eOpposite="#//SystemOwner/areaSpecification"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Connection">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connector" eType="#//Connector"
+        eOpposite="#//Connector/connection"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bendpointLocations" upperBound="-1"
+        eType="#//DiagramLocation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberRole" lowerBound="1"
+        eType="#//MemberRole" eOpposite="#//MemberRole/connections"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceEndpointLocation"
+        eType="#//DiagramLocation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetEndpointLocation"
+        eType="#//DiagramLocation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConnectionLabel" eSuperTypes="#//DiagramNode">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alignment" eType="#//LabelAlignment"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="location" lowerBound="1"
+        eType="#//DiagramLocation"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="memberRole" lowerBound="1"
+        eType="#//MemberRole" eOpposite="#//MemberRole/connectionLabel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Connector" eSuperTypes="#//DiagramNode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connection" lowerBound="1"
+        eType="#//Connection" eOpposite="#//Connection/connector"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="location" lowerBound="1"
+        eType="#//DiagramLocation"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramData">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connectionLabels" upperBound="-1"
+        eType="#//ConnectionLabel" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connections" upperBound="-1"
+        eType="#//Connection" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connectors" upperBound="-1"
+        eType="#//Connector" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="horizontalRuler" lowerBound="1"
+        eType="#//Ruler"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="locations" upperBound="-1"
         eType="#//DiagramLocation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="showGrid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showRulers" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="snapToGeometry" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="snapToGrid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="snapToGuides" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" lowerBound="1" eType="#//Unit"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="verticalRuler" lowerBound="1"
+        eType="#//Ruler"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="zoomLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
         defaultValueLiteral="1.0d"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rulers" lowerBound="2"
+        upperBound="2" eType="#//Ruler" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramLocation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="eyecatcher" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -83,6 +128,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="redefines" eType="#//Element"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="usage" eType="#//Usage"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Guide">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexedSetModeSpecification">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displacementPageCount"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
@@ -111,18 +159,17 @@
         eOpposite="#//Key/elements"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sortSequence" eType="#//SortSequence"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="LabelAlignment">
+    <eLiterals name="LEFT"/>
+    <eLiterals name="RIGHT" value="1"/>
+    <eLiterals name="CENTER" value="2" literal="CENTER"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="LocationMode">
     <eLiterals name="CALC" literal="CALC"/>
     <eLiterals name="DIRECT" value="1"/>
     <eLiterals name="VIA" value="2"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MemberRole" eSuperTypes="#//Role">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramBendpoints" upperBound="-1"
-        eType="#//DiagramLocation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramLabelLocation" lowerBound="1"
-        eType="#//DiagramLocation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramSourceAnchor" eType="#//DiagramLocation"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramTargetAnchor" eType="#//DiagramLocation"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexDbkeyPosition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="membershipOption" eType="#//SetMembershipOption"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextDbkeyPosition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
@@ -134,6 +181,10 @@
         eOpposite="#//Set/members"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sortKey" eType="#//Key"
         eOpposite="#//Key/memberRole"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connections" lowerBound="1"
+        upperBound="2" eType="#//Connection" eOpposite="#//Connection/memberRole"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connectionLabel" lowerBound="1"
+        eType="#//ConnectionLabel" eOpposite="#//ConnectionLabel/memberRole"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OccursSpecification">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
@@ -178,6 +229,15 @@
     <eLiterals name="STORE" value="6"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Role" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Ruler">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guides" upperBound="-1"
+        eType="#//Guide" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//RulerType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="RulerType">
+    <eLiterals name="HORIZONTAL" literal="HORIZONTAL"/>
+    <eLiterals name="VERTICAL" value="1" literal="VERTICAL"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Schema">
     <eOperations name="getArea" eType="#//SchemaArea">
       <eParameters name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -326,6 +386,11 @@
         eOpposite="#//AreaSpecification/systemOwner"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//Set"
         eOpposite="#//Set/systemOwner"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Unit">
+    <eLiterals name="CENTIMETERS" value="1"/>
+    <eLiterals name="INCHES"/>
+    <eLiterals name="PIXELS" value="2"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Usage">
     <eLiterals name="DISPLAY"/>

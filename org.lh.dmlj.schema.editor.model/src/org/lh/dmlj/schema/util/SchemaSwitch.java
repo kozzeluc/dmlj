@@ -81,6 +81,26 @@ public class SchemaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SchemaPackage.CONNECTION: {
+				Connection connection = (Connection)theEObject;
+				T result = caseConnection(connection);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.CONNECTION_LABEL: {
+				ConnectionLabel connectionLabel = (ConnectionLabel)theEObject;
+				T result = caseConnectionLabel(connectionLabel);
+				if (result == null) result = caseDiagramNode(connectionLabel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.CONNECTOR: {
+				Connector connector = (Connector)theEObject;
+				T result = caseConnector(connector);
+				if (result == null) result = caseDiagramNode(connector);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SchemaPackage.DIAGRAM_DATA: {
 				DiagramData diagramData = (DiagramData)theEObject;
 				T result = caseDiagramData(diagramData);
@@ -102,6 +122,12 @@ public class SchemaSwitch<T> extends Switch<T> {
 			case SchemaPackage.ELEMENT: {
 				Element element = (Element)theEObject;
 				T result = caseElement(element);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.GUIDE: {
+				Guide guide = (Guide)theEObject;
+				T result = caseGuide(guide);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -164,6 +190,12 @@ public class SchemaSwitch<T> extends Switch<T> {
 			case SchemaPackage.ROLE: {
 				Role role = (Role)theEObject;
 				T result = caseRole(role);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.RULER: {
+				Ruler ruler = (Ruler)theEObject;
+				T result = caseRuler(ruler);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -285,6 +317,21 @@ public class SchemaSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Ruler</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Ruler</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRuler(Ruler object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -296,6 +343,21 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseElement(Element object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Guide</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Guide</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseGuide(Guide object) {
 		return null;
 	}
 
@@ -431,6 +493,51 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseAreaSpecification(AreaSpecification object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Connection</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Connection</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConnection(Connection object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Connection Label</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Connection Label</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConnectionLabel(ConnectionLabel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Connector</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConnector(Connector object) {
 		return null;
 	}
 

@@ -17,10 +17,6 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramBendpoints <em>Diagram Bendpoints</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramLabelLocation <em>Diagram Label Location</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramSourceAnchor <em>Diagram Source Anchor</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.MemberRole#getDiagramTargetAnchor <em>Diagram Target Anchor</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getIndexDbkeyPosition <em>Index Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getMembershipOption <em>Membership Option</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getNextDbkeyPosition <em>Next Dbkey Position</em>}</li>
@@ -29,6 +25,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.MemberRole#getSortKey <em>Sort Key</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.MemberRole#getConnections <em>Connections</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.MemberRole#getConnectionLabel <em>Connection Label</em>}</li>
  * </ul>
  * </p>
  *
@@ -255,97 +253,49 @@ public interface MemberRole extends Role {
 	void setSortKey(Key value);
 
 	/**
-	 * Returns the value of the '<em><b>Diagram Target Anchor</b></em>' reference.
+	 * Returns the value of the '<em><b>Connections</b></em>' reference list.
+	 * The list contents are of type {@link org.lh.dmlj.schema.Connection}.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Connection#getMemberRole <em>Member Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Diagram Target Anchor</em>' reference isn't clear,
+	 * If the meaning of the '<em>Connections</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Diagram Target Anchor</em>' reference.
-	 * @see #setDiagramTargetAnchor(DiagramLocation)
-	 * @see org.lh.dmlj.schema.SchemaPackage#getMemberRole_DiagramTargetAnchor()
-	 * @model
+	 * @return the value of the '<em>Connections</em>' reference list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getMemberRole_Connections()
+	 * @see org.lh.dmlj.schema.Connection#getMemberRole
+	 * @model opposite="memberRole" required="true" upper="2"
 	 * @generated
 	 */
-	DiagramLocation getDiagramTargetAnchor();
+	EList<Connection> getConnections();
 
 	/**
-	 * Sets the value of the '{@link org.lh.dmlj.schema.MemberRole#getDiagramTargetAnchor <em>Diagram Target Anchor</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Diagram Target Anchor</em>' reference.
-	 * @see #getDiagramTargetAnchor()
-	 * @generated
-	 */
-	void setDiagramTargetAnchor(DiagramLocation value);
-
-	/**
-	 * Returns the value of the '<em><b>Diagram Source Anchor</b></em>' reference.
+	 * Returns the value of the '<em><b>Connection Label</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.ConnectionLabel#getMemberRole <em>Member Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Diagram Source Anchor</em>' reference isn't clear,
+	 * If the meaning of the '<em>Connection Label</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Diagram Source Anchor</em>' reference.
-	 * @see #setDiagramSourceAnchor(DiagramLocation)
-	 * @see org.lh.dmlj.schema.SchemaPackage#getMemberRole_DiagramSourceAnchor()
-	 * @model
+	 * @return the value of the '<em>Connection Label</em>' reference.
+	 * @see #setConnectionLabel(ConnectionLabel)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getMemberRole_ConnectionLabel()
+	 * @see org.lh.dmlj.schema.ConnectionLabel#getMemberRole
+	 * @model opposite="memberRole" required="true"
 	 * @generated
 	 */
-	DiagramLocation getDiagramSourceAnchor();
+	ConnectionLabel getConnectionLabel();
 
 	/**
-	 * Sets the value of the '{@link org.lh.dmlj.schema.MemberRole#getDiagramSourceAnchor <em>Diagram Source Anchor</em>}' reference.
+	 * Sets the value of the '{@link org.lh.dmlj.schema.MemberRole#getConnectionLabel <em>Connection Label</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Diagram Source Anchor</em>' reference.
-	 * @see #getDiagramSourceAnchor()
+	 * @param value the new value of the '<em>Connection Label</em>' reference.
+	 * @see #getConnectionLabel()
 	 * @generated
 	 */
-	void setDiagramSourceAnchor(DiagramLocation value);
-
-	/**
-	 * Returns the value of the '<em><b>Diagram Bendpoints</b></em>' reference list.
-	 * The list contents are of type {@link org.lh.dmlj.schema.DiagramLocation}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Diagram Bendpoints</em>' reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Diagram Bendpoints</em>' reference list.
-	 * @see org.lh.dmlj.schema.SchemaPackage#getMemberRole_DiagramBendpoints()
-	 * @model
-	 * @generated
-	 */
-	EList<DiagramLocation> getDiagramBendpoints();
-
-	/**
-	 * Returns the value of the '<em><b>Diagram Label Location</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Diagram Label Location</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Diagram Label Location</em>' reference.
-	 * @see #setDiagramLabelLocation(DiagramLocation)
-	 * @see org.lh.dmlj.schema.SchemaPackage#getMemberRole_DiagramLabelLocation()
-	 * @model required="true"
-	 * @generated
-	 */
-	DiagramLocation getDiagramLabelLocation();
-
-	/**
-	 * Sets the value of the '{@link org.lh.dmlj.schema.MemberRole#getDiagramLabelLocation <em>Diagram Label Location</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Diagram Label Location</em>' reference.
-	 * @see #getDiagramLabelLocation()
-	 * @generated
-	 */
-	void setDiagramLabelLocation(DiagramLocation value);
+	void setConnectionLabel(ConnectionLabel value);
 
 } // MemberRole

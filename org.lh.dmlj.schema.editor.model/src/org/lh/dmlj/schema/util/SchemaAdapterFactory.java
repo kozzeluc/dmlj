@@ -80,6 +80,18 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createAreaSpecificationAdapter();
 			}
 			@Override
+			public Adapter caseConnection(Connection object) {
+				return createConnectionAdapter();
+			}
+			@Override
+			public Adapter caseConnectionLabel(ConnectionLabel object) {
+				return createConnectionLabelAdapter();
+			}
+			@Override
+			public Adapter caseConnector(Connector object) {
+				return createConnectorAdapter();
+			}
+			@Override
 			public Adapter caseDiagramData(DiagramData object) {
 				return createDiagramDataAdapter();
 			}
@@ -94,6 +106,10 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseElement(Element object) {
 				return createElementAdapter();
+			}
+			@Override
+			public Adapter caseGuide(Guide object) {
+				return createGuideAdapter();
 			}
 			@Override
 			public Adapter caseIndexedSetModeSpecification(IndexedSetModeSpecification object) {
@@ -134,6 +150,10 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseRole(Role object) {
 				return createRoleAdapter();
+			}
+			@Override
+			public Adapter caseRuler(Ruler object) {
+				return createRulerAdapter();
 			}
 			@Override
 			public Adapter caseSchema(Schema object) {
@@ -250,6 +270,20 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.Ruler <em>Ruler</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.Ruler
+	 * @generated
+	 */
+	public Adapter createRulerAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.Element <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -260,6 +294,20 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.Guide <em>Guide</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.Guide
+	 * @generated
+	 */
+	public Adapter createGuideAdapter() {
 		return null;
 	}
 
@@ -386,6 +434,48 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createAreaSpecificationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.Connection <em>Connection</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.Connection
+	 * @generated
+	 */
+	public Adapter createConnectionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.ConnectionLabel <em>Connection Label</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.ConnectionLabel
+	 * @generated
+	 */
+	public Adapter createConnectionLabelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.Connector <em>Connector</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.Connector
+	 * @generated
+	 */
+	public Adapter createConnectorAdapter() {
 		return null;
 	}
 

@@ -9,7 +9,6 @@ package org.lh.dmlj.schema;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>System Owner</b></em>'.
- * @extends DiagramLocationProvider
  * <!-- end-user-doc -->
  *
  * <p>
@@ -24,7 +23,7 @@ package org.lh.dmlj.schema;
  * @model
  * @generated
  */
-public interface SystemOwner extends DiagramNode, DiagramLocationProvider {
+public interface SystemOwner extends DiagramNode {
 	/**
 	 * Returns the value of the '<em><b>Area Specification</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.AreaSpecification#getSystemOwner <em>System Owner</em>}'.

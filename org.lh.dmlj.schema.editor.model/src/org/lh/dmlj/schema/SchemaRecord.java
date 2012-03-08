@@ -11,7 +11,6 @@ import org.eclipse.emf.common.util.EList;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Record</b></em>'.
- * @extends DiagramLocationProvider
  * <!-- end-user-doc -->
  *
  * <p>
@@ -45,7 +44,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface SchemaRecord extends DiagramNode, DiagramLocationProvider {
+public interface SchemaRecord extends DiagramNode {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

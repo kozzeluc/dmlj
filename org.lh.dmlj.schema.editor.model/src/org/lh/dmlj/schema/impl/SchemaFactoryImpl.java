@@ -63,9 +63,13 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 		switch (eClass.getClassifierID()) {
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION: return createAreaProcedureCallSpecification();
 			case SchemaPackage.AREA_SPECIFICATION: return createAreaSpecification();
+			case SchemaPackage.CONNECTION: return createConnection();
+			case SchemaPackage.CONNECTION_LABEL: return createConnectionLabel();
+			case SchemaPackage.CONNECTOR: return createConnector();
 			case SchemaPackage.DIAGRAM_DATA: return createDiagramData();
 			case SchemaPackage.DIAGRAM_LOCATION: return createDiagramLocation();
 			case SchemaPackage.ELEMENT: return createElement();
+			case SchemaPackage.GUIDE: return createGuide();
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION: return createIndexedSetModeSpecification();
 			case SchemaPackage.KEY: return createKey();
 			case SchemaPackage.KEY_ELEMENT: return createKeyElement();
@@ -75,6 +79,7 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 			case SchemaPackage.OWNER_ROLE: return createOwnerRole();
 			case SchemaPackage.PROCEDURE: return createProcedure();
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION: return createRecordProcedureCallSpecification();
+			case SchemaPackage.RULER: return createRuler();
 			case SchemaPackage.SCHEMA: return createSchema();
 			case SchemaPackage.SCHEMA_AREA: return createSchemaArea();
 			case SchemaPackage.SCHEMA_RECORD: return createSchemaRecord();
@@ -98,12 +103,16 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 				return createAreaProcedureCallFunctionFromString(eDataType, initialValue);
 			case SchemaPackage.DUPLICATES_OPTION:
 				return createDuplicatesOptionFromString(eDataType, initialValue);
+			case SchemaPackage.LABEL_ALIGNMENT:
+				return createLabelAlignmentFromString(eDataType, initialValue);
 			case SchemaPackage.LOCATION_MODE:
 				return createLocationModeFromString(eDataType, initialValue);
 			case SchemaPackage.PROCEDURE_CALL_TIME:
 				return createProcedureCallTimeFromString(eDataType, initialValue);
 			case SchemaPackage.RECORD_PROCEDURE_CALL_VERB:
 				return createRecordProcedureCallVerbFromString(eDataType, initialValue);
+			case SchemaPackage.RULER_TYPE:
+				return createRulerTypeFromString(eDataType, initialValue);
 			case SchemaPackage.SET_MEMBERSHIP_OPTION:
 				return createSetMembershipOptionFromString(eDataType, initialValue);
 			case SchemaPackage.SET_MODE:
@@ -114,6 +123,8 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 				return createSortSequenceFromString(eDataType, initialValue);
 			case SchemaPackage.STORAGE_MODE:
 				return createStorageModeFromString(eDataType, initialValue);
+			case SchemaPackage.UNIT:
+				return createUnitFromString(eDataType, initialValue);
 			case SchemaPackage.USAGE:
 				return createUsageFromString(eDataType, initialValue);
 			default:
@@ -133,12 +144,16 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 				return convertAreaProcedureCallFunctionToString(eDataType, instanceValue);
 			case SchemaPackage.DUPLICATES_OPTION:
 				return convertDuplicatesOptionToString(eDataType, instanceValue);
+			case SchemaPackage.LABEL_ALIGNMENT:
+				return convertLabelAlignmentToString(eDataType, instanceValue);
 			case SchemaPackage.LOCATION_MODE:
 				return convertLocationModeToString(eDataType, instanceValue);
 			case SchemaPackage.PROCEDURE_CALL_TIME:
 				return convertProcedureCallTimeToString(eDataType, instanceValue);
 			case SchemaPackage.RECORD_PROCEDURE_CALL_VERB:
 				return convertRecordProcedureCallVerbToString(eDataType, instanceValue);
+			case SchemaPackage.RULER_TYPE:
+				return convertRulerTypeToString(eDataType, instanceValue);
 			case SchemaPackage.SET_MEMBERSHIP_OPTION:
 				return convertSetMembershipOptionToString(eDataType, instanceValue);
 			case SchemaPackage.SET_MODE:
@@ -149,6 +164,8 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 				return convertSortSequenceToString(eDataType, instanceValue);
 			case SchemaPackage.STORAGE_MODE:
 				return convertStorageModeToString(eDataType, instanceValue);
+			case SchemaPackage.UNIT:
+				return convertUnitToString(eDataType, instanceValue);
 			case SchemaPackage.USAGE:
 				return convertUsageToString(eDataType, instanceValue);
 			default:
@@ -204,6 +221,16 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	public Element createElement() {
 		ElementImpl element = new ElementImpl();
 		return element;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Guide createGuide() {
+		GuideImpl guide = new GuideImpl();
+		return guide;
 	}
 
 	/**
@@ -291,6 +318,36 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Connection createConnection() {
+		ConnectionImpl connection = new ConnectionImpl();
+		return connection;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConnectionLabel createConnectionLabel() {
+		ConnectionLabelImpl connectionLabel = new ConnectionLabelImpl();
+		return connectionLabel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Connector createConnector() {
+		ConnectorImpl connector = new ConnectorImpl();
+		return connector;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public OffsetExpression createOffsetExpression() {
 		OffsetExpressionImpl offsetExpression = new OffsetExpressionImpl();
 		return offsetExpression;
@@ -334,6 +391,16 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	public RecordProcedureCallSpecification createRecordProcedureCallSpecification() {
 		RecordProcedureCallSpecificationImpl recordProcedureCallSpecification = new RecordProcedureCallSpecificationImpl();
 		return recordProcedureCallSpecification;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Ruler createRuler() {
+		RulerImpl ruler = new RulerImpl();
+		return ruler;
 	}
 
 	/**
@@ -401,6 +468,26 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public LabelAlignment createLabelAlignmentFromString(EDataType eDataType, String initialValue) {
+		LabelAlignment result = LabelAlignment.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertLabelAlignmentToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public LocationMode createLocationModeFromString(EDataType eDataType, String initialValue) {
 		LocationMode result = LocationMode.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -453,6 +540,26 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	 * @generated
 	 */
 	public String convertStorageModeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Unit createUnitFromString(EDataType eDataType, String initialValue) {
+		Unit result = Unit.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertUnitToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 
@@ -553,6 +660,26 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	 * @generated
 	 */
 	public String convertRecordProcedureCallVerbToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RulerType createRulerTypeFromString(EDataType eDataType, String initialValue) {
+		RulerType result = RulerType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertRulerTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

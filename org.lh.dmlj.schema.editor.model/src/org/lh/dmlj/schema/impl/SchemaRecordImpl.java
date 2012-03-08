@@ -1206,11 +1206,6 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 		result.append(storageMode);
 		result.append(')');
 		return result.toString();
-	}
-
-	@Override
-	public String getLabel() {
-		return "record " + getName();
-	}
+	}	
 
 } //SchemaRecordImpl

@@ -13,9 +13,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.lh.dmlj.schema.DiagramLocation;
+import org.eclipse.emf.ecore.util.InternalEList;
+import org.lh.dmlj.schema.Connection;
+import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -30,10 +32,6 @@ import org.lh.dmlj.schema.SetMembershipOption;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramBendpoints <em>Diagram Bendpoints</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramLabelLocation <em>Diagram Label Location</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramSourceAnchor <em>Diagram Source Anchor</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getDiagramTargetAnchor <em>Diagram Target Anchor</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getIndexDbkeyPosition <em>Index Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getMembershipOption <em>Membership Option</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getNextDbkeyPosition <em>Next Dbkey Position</em>}</li>
@@ -42,52 +40,14 @@ import org.lh.dmlj.schema.SetMembershipOption;
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getSortKey <em>Sort Key</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getConnections <em>Connections</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getConnectionLabel <em>Connection Label</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class MemberRoleImpl extends RoleImpl implements MemberRole {
-	/**
-	 * The cached value of the '{@link #getDiagramBendpoints() <em>Diagram Bendpoints</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiagramBendpoints()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<DiagramLocation> diagramBendpoints;
-
-	/**
-	 * The cached value of the '{@link #getDiagramLabelLocation() <em>Diagram Label Location</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiagramLabelLocation()
-	 * @generated
-	 * @ordered
-	 */
-	protected DiagramLocation diagramLabelLocation;
-
-	/**
-	 * The cached value of the '{@link #getDiagramSourceAnchor() <em>Diagram Source Anchor</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiagramSourceAnchor()
-	 * @generated
-	 * @ordered
-	 */
-	protected DiagramLocation diagramSourceAnchor;
-
-	/**
-	 * The cached value of the '{@link #getDiagramTargetAnchor() <em>Diagram Target Anchor</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiagramTargetAnchor()
-	 * @generated
-	 * @ordered
-	 */
-	protected DiagramLocation diagramTargetAnchor;
-
 	/**
 	 * The default value of the '{@link #getIndexDbkeyPosition() <em>Index Dbkey Position</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -207,6 +167,26 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * @ordered
 	 */
 	protected Key sortKey;
+
+	/**
+	 * The cached value of the '{@link #getConnections() <em>Connections</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConnections()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Connection> connections;
+
+	/**
+	 * The cached value of the '{@link #getConnectionLabel() <em>Connection Label</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConnectionLabel()
+	 * @generated
+	 * @ordered
+	 */
+	protected ConnectionLabel connectionLabel;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -498,16 +478,28 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DiagramLocation getDiagramTargetAnchor() {
-		if (diagramTargetAnchor != null && diagramTargetAnchor.eIsProxy()) {
-			InternalEObject oldDiagramTargetAnchor = (InternalEObject)diagramTargetAnchor;
-			diagramTargetAnchor = (DiagramLocation)eResolveProxy(oldDiagramTargetAnchor);
-			if (diagramTargetAnchor != oldDiagramTargetAnchor) {
+	public EList<Connection> getConnections() {
+		if (connections == null) {
+			connections = new EObjectWithInverseResolvingEList<Connection>(Connection.class, this, SchemaPackage.MEMBER_ROLE__CONNECTIONS, SchemaPackage.CONNECTION__MEMBER_ROLE);
+		}
+		return connections;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConnectionLabel getConnectionLabel() {
+		if (connectionLabel != null && connectionLabel.eIsProxy()) {
+			InternalEObject oldConnectionLabel = (InternalEObject)connectionLabel;
+			connectionLabel = (ConnectionLabel)eResolveProxy(oldConnectionLabel);
+			if (connectionLabel != oldConnectionLabel) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR, oldDiagramTargetAnchor, diagramTargetAnchor));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL, oldConnectionLabel, connectionLabel));
 			}
 		}
-		return diagramTargetAnchor;
+		return connectionLabel;
 	}
 
 	/**
@@ -515,8 +507,8 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DiagramLocation basicGetDiagramTargetAnchor() {
-		return diagramTargetAnchor;
+	public ConnectionLabel basicGetConnectionLabel() {
+		return connectionLabel;
 	}
 
 	/**
@@ -524,28 +516,14 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setDiagramTargetAnchor(DiagramLocation newDiagramTargetAnchor) {
-		DiagramLocation oldDiagramTargetAnchor = diagramTargetAnchor;
-		diagramTargetAnchor = newDiagramTargetAnchor;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR, oldDiagramTargetAnchor, diagramTargetAnchor));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DiagramLocation getDiagramSourceAnchor() {
-		if (diagramSourceAnchor != null && diagramSourceAnchor.eIsProxy()) {
-			InternalEObject oldDiagramSourceAnchor = (InternalEObject)diagramSourceAnchor;
-			diagramSourceAnchor = (DiagramLocation)eResolveProxy(oldDiagramSourceAnchor);
-			if (diagramSourceAnchor != oldDiagramSourceAnchor) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR, oldDiagramSourceAnchor, diagramSourceAnchor));
-			}
+	public NotificationChain basicSetConnectionLabel(ConnectionLabel newConnectionLabel, NotificationChain msgs) {
+		ConnectionLabel oldConnectionLabel = connectionLabel;
+		connectionLabel = newConnectionLabel;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL, oldConnectionLabel, newConnectionLabel);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
-		return diagramSourceAnchor;
+		return msgs;
 	}
 
 	/**
@@ -553,32 +531,18 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DiagramLocation basicGetDiagramSourceAnchor() {
-		return diagramSourceAnchor;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setDiagramSourceAnchor(DiagramLocation newDiagramSourceAnchor) {
-		DiagramLocation oldDiagramSourceAnchor = diagramSourceAnchor;
-		diagramSourceAnchor = newDiagramSourceAnchor;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR, oldDiagramSourceAnchor, diagramSourceAnchor));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<DiagramLocation> getDiagramBendpoints() {
-		if (diagramBendpoints == null) {
-			diagramBendpoints = new EObjectResolvingEList<DiagramLocation>(DiagramLocation.class, this, SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS);
+	public void setConnectionLabel(ConnectionLabel newConnectionLabel) {
+		if (newConnectionLabel != connectionLabel) {
+			NotificationChain msgs = null;
+			if (connectionLabel != null)
+				msgs = ((InternalEObject)connectionLabel).eInverseRemove(this, SchemaPackage.CONNECTION_LABEL__MEMBER_ROLE, ConnectionLabel.class, msgs);
+			if (newConnectionLabel != null)
+				msgs = ((InternalEObject)newConnectionLabel).eInverseAdd(this, SchemaPackage.CONNECTION_LABEL__MEMBER_ROLE, ConnectionLabel.class, msgs);
+			msgs = basicSetConnectionLabel(newConnectionLabel, msgs);
+			if (msgs != null) msgs.dispatch();
 		}
-		return diagramBendpoints;
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL, newConnectionLabel, newConnectionLabel));
 	}
 
 	/**
@@ -586,44 +550,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DiagramLocation getDiagramLabelLocation() {
-		if (diagramLabelLocation != null && diagramLabelLocation.eIsProxy()) {
-			InternalEObject oldDiagramLabelLocation = (InternalEObject)diagramLabelLocation;
-			diagramLabelLocation = (DiagramLocation)eResolveProxy(oldDiagramLabelLocation);
-			if (diagramLabelLocation != oldDiagramLabelLocation) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION, oldDiagramLabelLocation, diagramLabelLocation));
-			}
-		}
-		return diagramLabelLocation;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DiagramLocation basicGetDiagramLabelLocation() {
-		return diagramLabelLocation;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setDiagramLabelLocation(DiagramLocation newDiagramLabelLocation) {
-		DiagramLocation oldDiagramLabelLocation = diagramLabelLocation;
-		diagramLabelLocation = newDiagramLabelLocation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION, oldDiagramLabelLocation, diagramLabelLocation));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -639,6 +566,12 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 				if (sortKey != null)
 					msgs = ((InternalEObject)sortKey).eInverseRemove(this, SchemaPackage.KEY__MEMBER_ROLE, Key.class, msgs);
 				return basicSetSortKey((Key)otherEnd, msgs);
+			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getConnections()).basicAdd(otherEnd, msgs);
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
+				if (connectionLabel != null)
+					msgs = ((InternalEObject)connectionLabel).eInverseRemove(this, SchemaPackage.CONNECTION_LABEL__MEMBER_ROLE, ConnectionLabel.class, msgs);
+				return basicSetConnectionLabel((ConnectionLabel)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -657,6 +590,10 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 				return basicSetSet(null, msgs);
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				return basicSetSortKey(null, msgs);
+			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
+				return ((InternalEList<?>)getConnections()).basicRemove(otherEnd, msgs);
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
+				return basicSetConnectionLabel(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -683,17 +620,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
-				return getDiagramBendpoints();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
-				if (resolve) return getDiagramLabelLocation();
-				return basicGetDiagramLabelLocation();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
-				if (resolve) return getDiagramSourceAnchor();
-				return basicGetDiagramSourceAnchor();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
-				if (resolve) return getDiagramTargetAnchor();
-				return basicGetDiagramTargetAnchor();
 			case SchemaPackage.MEMBER_ROLE__INDEX_DBKEY_POSITION:
 				return getIndexDbkeyPosition();
 			case SchemaPackage.MEMBER_ROLE__MEMBERSHIP_OPTION:
@@ -712,6 +638,11 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				if (resolve) return getSortKey();
 				return basicGetSortKey();
+			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
+				return getConnections();
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
+				if (resolve) return getConnectionLabel();
+				return basicGetConnectionLabel();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -725,19 +656,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
-				getDiagramBendpoints().clear();
-				getDiagramBendpoints().addAll((Collection<? extends DiagramLocation>)newValue);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
-				setDiagramLabelLocation((DiagramLocation)newValue);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
-				setDiagramSourceAnchor((DiagramLocation)newValue);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
-				setDiagramTargetAnchor((DiagramLocation)newValue);
-				return;
 			case SchemaPackage.MEMBER_ROLE__INDEX_DBKEY_POSITION:
 				setIndexDbkeyPosition((Short)newValue);
 				return;
@@ -762,6 +680,13 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				setSortKey((Key)newValue);
 				return;
+			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
+				getConnections().clear();
+				getConnections().addAll((Collection<? extends Connection>)newValue);
+				return;
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
+				setConnectionLabel((ConnectionLabel)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -774,18 +699,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
-				getDiagramBendpoints().clear();
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
-				setDiagramLabelLocation((DiagramLocation)null);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
-				setDiagramSourceAnchor((DiagramLocation)null);
-				return;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
-				setDiagramTargetAnchor((DiagramLocation)null);
-				return;
 			case SchemaPackage.MEMBER_ROLE__INDEX_DBKEY_POSITION:
 				setIndexDbkeyPosition(INDEX_DBKEY_POSITION_EDEFAULT);
 				return;
@@ -810,6 +723,12 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				setSortKey((Key)null);
 				return;
+			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
+				getConnections().clear();
+				return;
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
+				setConnectionLabel((ConnectionLabel)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -822,14 +741,6 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_BENDPOINTS:
-				return diagramBendpoints != null && !diagramBendpoints.isEmpty();
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_LABEL_LOCATION:
-				return diagramLabelLocation != null;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_SOURCE_ANCHOR:
-				return diagramSourceAnchor != null;
-			case SchemaPackage.MEMBER_ROLE__DIAGRAM_TARGET_ANCHOR:
-				return diagramTargetAnchor != null;
 			case SchemaPackage.MEMBER_ROLE__INDEX_DBKEY_POSITION:
 				return INDEX_DBKEY_POSITION_EDEFAULT == null ? indexDbkeyPosition != null : !INDEX_DBKEY_POSITION_EDEFAULT.equals(indexDbkeyPosition);
 			case SchemaPackage.MEMBER_ROLE__MEMBERSHIP_OPTION:
@@ -846,6 +757,10 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 				return getSet() != null;
 			case SchemaPackage.MEMBER_ROLE__SORT_KEY:
 				return sortKey != null;
+			case SchemaPackage.MEMBER_ROLE__CONNECTIONS:
+				return connections != null && !connections.isEmpty();
+			case SchemaPackage.MEMBER_ROLE__CONNECTION_LABEL:
+				return connectionLabel != null;
 		}
 		return super.eIsSet(featureID);
 	}
