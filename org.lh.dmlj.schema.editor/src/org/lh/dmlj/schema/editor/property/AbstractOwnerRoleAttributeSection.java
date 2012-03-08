@@ -1,10 +1,10 @@
 package org.lh.dmlj.schema.editor.property;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.model.SetDescription;
 
 /**
  * An abstract superclass for sections in the tabbed properties view that can be
@@ -14,7 +14,7 @@ import org.lh.dmlj.schema.editor.model.SetDescription;
  * offered read-only during construction and, if they want a description to
  * be shown, the getDescription method of this class' superclass.<br><br>
  * Valid edit part model object types for these kind of sections are MemberRole
- * and SetDescription.
+ * and ConnectionLabel.
  */
 public abstract class AbstractOwnerRoleAttributeSection
     extends AbstractStructuralFeatureSection<OwnerRole> {	
@@ -29,9 +29,9 @@ public abstract class AbstractOwnerRoleAttributeSection
 		if (editPartModelObject instanceof MemberRole) {
 			set = ((MemberRole) editPartModelObject).getSet();
 		} else {
-			SetDescription setDescription =
-				(SetDescription) editPartModelObject;
-			set = setDescription.getMemberRole().getSet();
+			ConnectionLabel connectionLabel =
+				(ConnectionLabel) editPartModelObject;
+			set = connectionLabel.getMemberRole().getSet();
 		}
 		return set.getOwner();		
 	}	
@@ -39,7 +39,7 @@ public abstract class AbstractOwnerRoleAttributeSection
 	@Override
 	protected final Class<?>[] getValidEditPartModelObjectTypes() {
 		return new Class<?>[] {MemberRole.class,
-							   SetDescription.class};
+							   ConnectionLabel.class};
 	}
 	
 }

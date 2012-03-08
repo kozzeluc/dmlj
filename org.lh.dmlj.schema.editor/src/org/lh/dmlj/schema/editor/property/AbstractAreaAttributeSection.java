@@ -1,11 +1,11 @@
 package org.lh.dmlj.schema.editor.property;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.model.SetDescription;
 
 /**
  * An abstract superclass for sections in the tabbed properties view that can be
@@ -15,8 +15,8 @@ import org.lh.dmlj.schema.editor.model.SetDescription;
  * offered read-only during construction and, if they want a description to
  * be shown, the getDescription method of this class' superclass.<br><br>
  * Valid edit part model object types for these kind of sections are MemberRole,
- * SchemaRecord, SetDescription and SystemOwner.  In the case of MemberRole,
- * SetDescription and SystemOwner edit part model objects, subclasses should 
+ * SchemaRecord, ConnectionLabel and SystemOwner.  In the case of MemberRole,
+ * ConnectionLabel and SystemOwner edit part model objects, subclasses should 
  * override the isOwner() method to indicate if the set's (possibly system) 
  * owner- or member area is to be used.
  */
@@ -28,19 +28,20 @@ public abstract class AbstractAreaAttributeSection
 	}
 
 	@Override
-	protected final SchemaArea getModelObject(Object editPartModelObject) {		
+	protected final SchemaArea getModelObject(Object editPartModelObject) {	
+		// the MemberRole will change to a Connection soon...
 		if (editPartModelObject instanceof MemberRole ||
-			editPartModelObject instanceof SetDescription) {
+			editPartModelObject instanceof ConnectionLabel) {
 				
-			// we're dealing with a set connection or description, get the 
+			// we're dealing with a set connection or label, get the 
 			// MemberRole...
 			MemberRole memberRole;			
 			if (editPartModelObject instanceof MemberRole) {
 				memberRole = (MemberRole) editPartModelObject;
 			} else {
-				SetDescription setDescription =
-					(SetDescription) editPartModelObject;
-				memberRole = setDescription.getMemberRole();
+				ConnectionLabel connectionLabel =
+					(ConnectionLabel) editPartModelObject;
+				memberRole = connectionLabel.getMemberRole();
 			}
 			
 			// if we're in owner mode, get the owner area, otherwise the member 
@@ -96,7 +97,7 @@ public abstract class AbstractAreaAttributeSection
 	protected final Class<?>[] getValidEditPartModelObjectTypes() {
 		return new Class<?>[] {MemberRole.class,
 							   SchemaRecord.class,
-							   SetDescription.class,
+							   ConnectionLabel.class,
 							   SystemOwner.class};
 	}
 	

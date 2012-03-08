@@ -13,11 +13,11 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.lh.dmlj.schema.DiagramLocationProvider;
+import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 
-public abstract class AbstractDiagramNodeEditPart<T extends DiagramLocationProvider> 
+public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode> 
 	extends AbstractGraphicalEditPart implements Adapter, NodeEditPart {
 	
 	private EObject[] modelObjects;

@@ -38,6 +38,8 @@ import org.lh.dmlj.idmsntwk.Table_1050;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.AreaSpecification;
+import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DuplicatesOption;
@@ -54,6 +56,8 @@ import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.Ruler;
+import org.lh.dmlj.schema.RulerType;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
@@ -516,6 +520,17 @@ public class SchemaImportTool {
 		// assumption: the set is connected to its schema
 		MemberRole memberRole = SchemaFactory.eINSTANCE.createMemberRole();
 		set.getMembers().add(memberRole);
+		
+		// create the Connection for the MemberRole; a Connection represents a
+		// line in the diagram...
+		ConnectionPart connectionPart = 
+			SchemaFactory.eINSTANCE.createConnectionPart();		
+		memberRole.getConnectionParts().add(connectionPart);
+		memberRole.getSet()
+				  .getSchema()
+				  .getDiagramData()
+				  .getConnectionParts()
+				  .add(connectionPart);
 
 		Table_1050 table_1050 = 
 			catalog.find(constraint_1029, "REFERENCING-TABLE", OWNER);
@@ -593,6 +608,16 @@ public class SchemaImportTool {
 		// assumption: the set is connected to its schema
 		MemberRole memberRole = SchemaFactory.eINSTANCE.createMemberRole();
 		set.getMembers().add(memberRole);
+		
+		// create the Connection for the MemberRole; a Connection represents a
+		// line in the diagram...
+		ConnectionPart connectionPart = 
+			SchemaFactory.eINSTANCE.createConnectionPart();		
+		memberRole.getConnectionParts().add(connectionPart);
+		memberRole.getSet().getSchema()
+		  				   .getDiagramData()
+		  				   .getConnectionParts()
+		  				   .add(connectionPart);
 
 		Table_1050 table_1050 = 
 			catalog.find(constraint_1029, "REFERENCING-TABLE", OWNER);
@@ -634,8 +659,19 @@ public class SchemaImportTool {
 	
 		// assumption: the set is connected to its schema
 		MemberRole memberRole = SchemaFactory.eINSTANCE.createMemberRole();
-		set.getMembers().add(memberRole);		
-	
+		set.getMembers().add(memberRole);
+		
+		// create the Connection for the MemberRole; a Connection represents a
+		// line in the diagram...
+		ConnectionPart connectionPart = 
+			SchemaFactory.eINSTANCE.createConnectionPart();		
+		memberRole.getConnectionParts().add(connectionPart);
+		memberRole.getSet()
+		  		  .getSchema()
+		  		  .getDiagramData()
+		  		  .getConnectionParts()
+		  		  .add(connectionPart);
+		
 		Table_1050 table_1050 = catalog.find(index_1041, "TABLE-INDEX", OWNER);
 		
 		String recordName = table_1050.getName_1050().replaceAll("_", "-") +
@@ -879,6 +915,17 @@ public class SchemaImportTool {
 		// assumption: the set is connected to its schema		
 		MemberRole memberRole = SchemaFactory.eINSTANCE.createMemberRole();
 		set.getMembers().add(memberRole);
+		
+		// create the Connection for the MemberRole; a Connection represents a
+		// line in the diagram...
+		ConnectionPart connectionPart = 
+			SchemaFactory.eINSTANCE.createConnectionPart();		
+		memberRole.getConnectionParts().add(connectionPart);
+		memberRole.getSet()
+		  		  .getSchema()
+		  		  .getDiagramData()
+		  		  .getConnectionParts()
+		  		  .add(connectionPart);
 		
 		String recordName;
 		if (suffix == null) {
@@ -1225,6 +1272,17 @@ public class SchemaImportTool {
 		MemberRole memberRole = SchemaFactory.eINSTANCE.createMemberRole();
 		set.getMembers().add(memberRole);
 		
+		// create the Connection for the MemberRole; a Connection represents a
+		// line in the diagram...
+		ConnectionPart connectionPart = 
+			SchemaFactory.eINSTANCE.createConnectionPart();		
+		memberRole.getConnectionParts().add(connectionPart);
+		memberRole.getSet()
+		  		  .getSchema()
+		  		  .getDiagramData()
+		  		  .getConnectionParts()
+		  		  .add(connectionPart);
+		
 		Srcd_113 srcd_113 = dictionary.find(smr_052, "SRCD-SMR", OWNER);
 		Sam_056 sam_056 = dictionary.find(srcd_113, "SRCD-SAM", FIRST);		
 		
@@ -1389,10 +1447,17 @@ public class SchemaImportTool {
 		schema.setDescription(s_010.getDescr_010());
 		schema.setMemoDate(s_010.getSDt_010());
 		
-		// diagram data (owner)...
-		DiagramData diagramData = 
-			SchemaFactory.eINSTANCE.createDiagramData();
+		// diagram data with rulers...
+		DiagramData diagramData = SchemaFactory.eINSTANCE.createDiagramData();		
 		schema.setDiagramData(diagramData);
+		Ruler verticalRuler = SchemaFactory.eINSTANCE.createRuler();
+		verticalRuler.setType(RulerType.VERTICAL);
+		diagramData.setVerticalRuler(verticalRuler);
+		diagramData.getRulers().add(verticalRuler); 	// ruler container
+		Ruler horizontalRuler = SchemaFactory.eINSTANCE.createRuler();
+		verticalRuler.setType(RulerType.HORIZONTAL);
+		diagramData.setHorizontalRuler(horizontalRuler);
+		diagramData.getRulers().add(horizontalRuler);	// ruler container
 		
 		// areas...
 		for (Sa_018 sa_018 : dictionary.<Sa_018>walk(s_010, "S-SA", NEXT)) {
@@ -1654,10 +1719,18 @@ public class SchemaImportTool {
 			int i = 0;
 			for (MemberRole memberRole : record.getMemberRoles()) {
 								
+				// deal with the set label...
+				ConnectionLabel connectionLabel = 
+					SchemaFactory.eINSTANCE.createConnectionLabel();
+				schema.getDiagramData()
+					  .getConnectionLabels()
+					  .add(connectionLabel);
 				DiagramLocation location = 
 					SchemaFactory.eINSTANCE.createDiagramLocation();
 				schema.getDiagramData().getLocations().add(location);
-				memberRole.setDiagramLabelLocation(location);
+				connectionLabel.setLocation(location);
+				memberRole.setConnectionLabel(connectionLabel);
+				
 				// we don't provide a source- and targetAnchor nor any 
 				// bendpoints for the diagram connection here
 				location.setX(record.getDiagramLocation().getX());

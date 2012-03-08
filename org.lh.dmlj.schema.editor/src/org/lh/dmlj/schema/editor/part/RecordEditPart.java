@@ -58,7 +58,9 @@ public class RecordEditPart
 			@Override
 			protected Command getReconnectSourceCommand(ReconnectRequest request) {
 				// do not allow to change the owner of the set; only the start
-				// location can be changed...
+				// location can be changed; we currently don't support split
+				// set connections (i.e. a set with 2 connection parts each with 
+				// a Connector attached)...
 				if (!(request.getConnectionEditPart() instanceof SetEditPart)) {
 					return null;
 				}
@@ -67,9 +69,14 @@ public class RecordEditPart
 				OwnerRole ownerRole = memberRole.getSet().getOwner();
 				if (ownerRole != null && ownerRole.getRecord() == record) {	
 					Point reference;
-					if (memberRole.getDiagramBendpoints().isEmpty()) {
+					if (memberRole.getConnectionParts()
+								  .get(0)
+								  .getBendpointLocations()
+								  .isEmpty()) {
 						DiagramLocation targetConnectionPoint = 
-								memberRole.getDiagramTargetAnchor();
+							memberRole.getConnectionParts()
+									  .get(0)
+									  .getTargetEndpointLocation();
 						if (targetConnectionPoint != null) {							
 							reference = 
 								new PrecisionPoint(targetConnectionPoint.getX(), 
@@ -83,9 +90,15 @@ public class RecordEditPart
 							editPart.getFigure().translateToAbsolute(reference);
 						}
 					} else {
-						int i = memberRole.getDiagramBendpoints().size() - 1;
+						int i = memberRole.getConnectionParts()
+										  .get(0)
+										  .getBendpointLocations()
+										  .size() - 1;
 						DiagramLocation lastBendpoint = 
-							memberRole.getDiagramBendpoints().get(i);
+							memberRole.getConnectionParts()
+									  .get(0)
+									  .getBendpointLocations()
+									  .get(i);
 						reference = new PrecisionPoint(lastBendpoint.getX(), 
 													   lastBendpoint.getY());
 					}
@@ -106,7 +119,9 @@ public class RecordEditPart
 			@Override
 			protected Command getReconnectTargetCommand(ReconnectRequest request) {
 				// do not allow to change the member of the set; only the end
-				// location can be changed...
+				// location can be changed; we currently don't support split set
+				// connections (i.e. sets with 2 connections each with a 
+				// Connector attached)...
 				if (!(request.getConnectionEditPart() instanceof SetEditPart)) {
 					return null;
 				}
@@ -114,9 +129,14 @@ public class RecordEditPart
 					(MemberRole) request.getConnectionEditPart().getModel();
 				if (record == memberRole.getRecord()) {					
 					Point reference;
-					if (memberRole.getDiagramBendpoints().isEmpty()) {
+					if (memberRole.getConnectionParts()
+								  .get(0)
+								  .getBendpointLocations()
+								  .isEmpty()) {
 						DiagramLocation sourceConnectionPoint = 
-							memberRole.getDiagramSourceAnchor();
+							memberRole.getConnectionParts()
+									  .get(0)
+									  .getSourceEndpointLocation();
 						if (sourceConnectionPoint != null) {
 							reference = 
 								new PrecisionPoint(sourceConnectionPoint.getX(), 
@@ -143,7 +163,10 @@ public class RecordEditPart
 						}
 					} else {
 						DiagramLocation firstBendpoint = 
-							memberRole.getDiagramBendpoints().get(0);
+							memberRole.getConnectionParts()
+									  .get(0)
+									  .getBendpointLocations()
+									  .get(0);
 						reference = new PrecisionPoint(firstBendpoint.getX(), 
 													   firstBendpoint.getY());
 					}

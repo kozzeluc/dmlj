@@ -14,7 +14,6 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
-import org.lh.dmlj.schema.editor.model.SetDescription;
 import org.lh.dmlj.schema.editor.policy.MoveDiagramNodeEditPolicy;
 
 public class SchemaEditPart extends AbstractGraphicalEditPart {
@@ -55,12 +54,10 @@ public class SchemaEditPart extends AbstractGraphicalEditPart {
 		// records
 		allObjects.addAll(getModel().getRecords());
 		
-		// set connection labels; we instantiate our own object which wraps the
-		// MemberRole instance
+		// set connection labels
 		for (Set set : getModel().getSets()) {
 			for (MemberRole memberRole : set.getMembers()) {
-				SetDescription setLabel = new SetDescription(memberRole);				
-				allObjects.add(setLabel);
+				allObjects.add(memberRole.getConnectionLabel());
 			}
 		}
 		

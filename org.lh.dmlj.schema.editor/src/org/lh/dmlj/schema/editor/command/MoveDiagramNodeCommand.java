@@ -1,41 +1,63 @@
 package org.lh.dmlj.schema.editor.command;
 
 import org.eclipse.gef.commands.Command;
-import org.lh.dmlj.schema.DiagramLocationProvider;
+import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramNode;
+import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.SystemOwner;
 
 public class MoveDiagramNodeCommand extends Command {
 	
-	private DiagramLocationProvider locationProvider;
-	private int 					oldX;
-	private int 					oldY;
-	private int 					x;
-	private int 					y;
+	private DiagramNode diagramNode;
+	private int 		oldX;
+	private int 		oldY;
+	private int 		x;
+	private int 		y;
 	
 	@SuppressWarnings("unused")
 	private MoveDiagramNodeCommand() {
 		super();
 	}
 	
-	public MoveDiagramNodeCommand(DiagramLocationProvider locationProvider, 
-									int x, int y) {
-		super("Move " + locationProvider.getLabel());
-		this.locationProvider = locationProvider;
+	public MoveDiagramNodeCommand(DiagramNode diagramNode, int x, int y) {
+		super();		
+		this.diagramNode = diagramNode;
 		this.x = x;
-		this.y = y;		
+		this.y = y;
+		if (diagramNode instanceof SchemaRecord) {
+			setLabel("Move record " + ((SchemaRecord)diagramNode).getName());
+		} else if (diagramNode instanceof SystemOwner) {
+			setLabel("Move index " + 
+					 ((SystemOwner)diagramNode).getSet().getName());
+		} else if (diagramNode instanceof ConnectionLabel) {
+			setLabel("Move connection label for set " + 
+					 ((ConnectionLabel)diagramNode).getMemberRole()
+					 							   .getSet()
+					 							   .getName());
+		} else if (diagramNode instanceof Connector) {
+			setLabel("Move connector for set " + 
+					 ((Connector)diagramNode).getConnectionPart()
+					 				     	 .getMemberRole()
+					 				     	 .getSet()
+					 					  	 .getName());
+		} else {
+			setLabel("Move");
+		}
 	}
 	
 	@Override
 	public void execute() {
-		oldX = locationProvider.getDiagramLocation().getX();
-		oldY = locationProvider.getDiagramLocation().getY();
-		locationProvider.getDiagramLocation().setX(x);
-		locationProvider.getDiagramLocation().setY(y);
+		oldX = diagramNode.getDiagramLocation().getX();
+		oldY = diagramNode.getDiagramLocation().getY();
+		diagramNode.getDiagramLocation().setX(x);
+		diagramNode.getDiagramLocation().setY(y);
 	}
 	
 	@Override
 	public void undo() {
-		locationProvider.getDiagramLocation().setX(oldX);
-		locationProvider.getDiagramLocation().setY(oldY);
+		diagramNode.getDiagramLocation().setX(oldX);
+		diagramNode.getDiagramLocation().setY(oldY);
 	}
 	
 }

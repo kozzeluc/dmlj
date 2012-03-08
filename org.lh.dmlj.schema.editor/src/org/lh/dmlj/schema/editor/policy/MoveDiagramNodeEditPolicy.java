@@ -7,7 +7,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.lh.dmlj.schema.DiagramLocationProvider;
+import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
 import org.lh.dmlj.schema.editor.part.IndexEditPart;
 import org.lh.dmlj.schema.editor.part.RecordEditPart;
@@ -24,14 +24,12 @@ public class MoveDiagramNodeEditPolicy extends XYLayoutEditPolicy {
 													EditPart child,
 													Object constraint) {
 		
-		if (child.getModel() instanceof DiagramLocationProvider) {
+		if (child.getModel() instanceof DiagramNode) {
 			// we're dealing with a DiagramNode, it can only be a
 			// move request, so create the move command...
 			Rectangle box = (Rectangle)constraint;
-			DiagramLocationProvider locationProvider =
-				(DiagramLocationProvider) child.getModel();
-			return new MoveDiagramNodeCommand(locationProvider, box.x, 
-											  box.y);
+			DiagramNode locationProvider = (DiagramNode) child.getModel();
+			return new MoveDiagramNodeCommand(locationProvider, box.x, box.y);
 		} else {
 			// not a DiagramNode or user is trying to resize, make
 			// sure he/she gets the right feedback
@@ -41,6 +39,9 @@ public class MoveDiagramNodeEditPolicy extends XYLayoutEditPolicy {
 	
 	@Override
 	protected EditPolicy createChildEditPolicy(EditPart child) {
+		// todo: expand the next if statement to also return a 
+		// ModifiedNonResizableEditPolicy for ConnectorEditPart instances once
+		// that class is created
 		if (child instanceof RecordEditPart ||
 			child instanceof IndexEditPart ||
 			child instanceof SetDescriptionEditPart) {

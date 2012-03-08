@@ -56,13 +56,22 @@ public abstract class AbstractBendpointCommand extends Command {
 		  		  .getLocations()
 		  		  .add(bendpoint);
 
-		// insert it at the right place in the connection...
-		memberRole.getDiagramBendpoints().add(index, bendpoint);
+		// insert it at the right place in the connection (we currently don't
+		// support split connections, i.e. only 1 connection part per set, not 
+		// 2)...
+		memberRole.getConnectionParts()
+				  .get(0)
+				  .getBendpointLocations()
+				  .add(index, bendpoint);
 		
 		// modify the eyecatcher of subsequent bendpoints, if any...
-		for (int i = index + 1; i < memberRole.getDiagramBendpoints().size(); i++) {
-			DiagramLocation aBendpoint = 
-				memberRole.getDiagramBendpoints().get(i);
+		int j = 
+			memberRole.getConnectionParts().get(0).getBendpointLocations().size();
+		for (int i = index + 1; i < j; i++) {
+			DiagramLocation aBendpoint = memberRole.getConnectionParts()
+												   .get(0)
+												   .getBendpointLocations()
+												   .get(i);
 			aBendpoint.setEyecatcher("bendpoint [" + i + "] set " + 
 									 memberRole.getSet().getName() + " (" + 
 									 memberRole.getRecord().getName() + ")");
@@ -73,7 +82,8 @@ public abstract class AbstractBendpointCommand extends Command {
 	}
 	
 	/**
-	 * Removes a bendpoint from the MemberRole (which represents the connection) 
+	 * Removes a bendpoint from the first Connection in the MemberRole (which 
+	 * represents the connection; we don't support split connections for a set) 
 	 * and the schema (container).  Upon return, oldX and oldY will contain the 
 	 * removed bendpoint's x and y attributes.
 	 * @param index the index of the bendpoint to remove
@@ -81,8 +91,10 @@ public abstract class AbstractBendpointCommand extends Command {
 	protected void removeBendpoint(int index) {
 		
 		// go grab the bendpoint and save the x and y attributes...
-		DiagramLocation bendpoint = 
-			memberRole.getDiagramBendpoints().get(index);
+		DiagramLocation bendpoint = memberRole.getConnectionParts()
+					  						  .get(0)
+					  						  .getBendpointLocations()
+					  						  .get(index);
 		oldX = bendpoint.getX();
 		oldY = bendpoint.getY();
 			
@@ -93,13 +105,20 @@ public abstract class AbstractBendpointCommand extends Command {
 				  .getLocations()
 				  .remove(bendpoint);
 		
-		// remove it from the connection...
-		memberRole.getDiagramBendpoints().remove(index);
+		// remove it from the MemberRole's first connection...
+		memberRole.getConnectionParts()
+				  .get(0)
+				  .getBendpointLocations()
+				  .remove(index);
 		
-		// modify the eyecatcher of subsequent bendpoints, if any...		
-		for (int i = index; i < memberRole.getDiagramBendpoints().size(); i++) {
-			DiagramLocation aBendpoint =
-				memberRole.getDiagramBendpoints().get(i);
+		// modify the eyecatcher of subsequent bendpoints, if any...
+		int j = 
+			memberRole.getConnectionParts().get(0).getBendpointLocations().size();
+		for (int i = index; i < j; i++) {
+			DiagramLocation aBendpoint = memberRole.getConnectionParts()
+												   .get(0)
+												   .getBendpointLocations()
+												   .get(i);
 			aBendpoint.setEyecatcher("bendpoint [" + i + "] set " + 
 									 memberRole.getSet().getName() + " (" + 
 									 memberRole.getRecord().getName() + ")");

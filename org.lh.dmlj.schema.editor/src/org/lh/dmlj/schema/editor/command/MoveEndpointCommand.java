@@ -26,11 +26,16 @@ public class MoveEndpointCommand extends Command {
 	@Override
 	public void execute() {
 		
+		// we currently don't support split connections (i.e. a set with 2
+		// connection parts each with a connector attached)...
+		
 		DiagramLocation oldLocation;
 		if (owner) {
-			oldLocation = memberRole.getDiagramSourceAnchor();
+			oldLocation = 
+				memberRole.getConnectionParts().get(0).getSourceEndpointLocation();
 		} else {
-			oldLocation = memberRole.getDiagramTargetAnchor();
+			oldLocation = 
+				memberRole.getConnectionParts().get(0).getTargetEndpointLocation();
 		}
 		if (oldLocation != null) {
 			oldX = oldLocation.getX();
@@ -56,9 +61,9 @@ public class MoveEndpointCommand extends Command {
 		  		  .add(newLocation);
 	
 		if (owner) {
-			memberRole.setDiagramSourceAnchor(newLocation);
+			memberRole.getConnectionParts().get(0).setSourceEndpointLocation(null);
 		} else {
-			memberRole.setDiagramTargetAnchor(newLocation);
+			memberRole.getConnectionParts().get(0).setTargetEndpointLocation(null);
 		}
 		
 	}
@@ -68,9 +73,11 @@ public class MoveEndpointCommand extends Command {
 		
 		DiagramLocation newLocation; 
 		if (owner) {
-			newLocation = memberRole.getDiagramSourceAnchor();
+			newLocation = 
+				memberRole.getConnectionParts().get(0).getSourceEndpointLocation();
 		} else {
-			newLocation = memberRole.getDiagramTargetAnchor();
+			newLocation = 
+				memberRole.getConnectionParts().get(0).getTargetEndpointLocation();
 		}
 		memberRole.getSet()
 		  		  .getSchema()
@@ -80,9 +87,13 @@ public class MoveEndpointCommand extends Command {
 		
 		if (oldX == null || oldY == null) {
 			if (owner) {
-				memberRole.setDiagramSourceAnchor(null);
+				memberRole.getConnectionParts()
+						  .get(0)
+						  .setSourceEndpointLocation(null);
 			} else {
-				memberRole.setDiagramTargetAnchor(null);
+				memberRole.getConnectionParts()	
+						  .get(0)
+						  .setTargetEndpointLocation(null);
 			}
 			return;
 		}
@@ -102,9 +113,13 @@ public class MoveEndpointCommand extends Command {
 		  		  .add(oldLocation);
 		
 		if (owner) {
-			memberRole.setDiagramSourceAnchor(oldLocation);
+			memberRole.getConnectionParts()
+					  .get(0)
+					  .setSourceEndpointLocation(oldLocation);
 		} else {
-			memberRole.setDiagramTargetAnchor(oldLocation);
+			memberRole.getConnectionParts()
+					  .get(0)
+					  .setTargetEndpointLocation(oldLocation);
 		}
 		
 	}

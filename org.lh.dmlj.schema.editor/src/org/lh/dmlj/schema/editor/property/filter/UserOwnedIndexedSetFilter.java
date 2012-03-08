@@ -2,9 +2,9 @@ package org.lh.dmlj.schema.editor.property.filter;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
+import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SetMode;
-import org.lh.dmlj.schema.editor.model.SetDescription;
 
 public class UserOwnedIndexedSetFilter implements IFilter {
 
@@ -17,8 +17,8 @@ public class UserOwnedIndexedSetFilter implements IFilter {
         MemberRole memberRole;
         if (modelObject instanceof MemberRole) {
         	memberRole = (MemberRole) modelObject;
-        } else if (modelObject instanceof SetDescription) {
-        	memberRole = ((SetDescription)modelObject).getMemberRole();
+        } else if (modelObject instanceof ConnectionLabel) {
+        	memberRole = ((ConnectionLabel)modelObject).getMemberRole();
         } else {
         	return false;
         }

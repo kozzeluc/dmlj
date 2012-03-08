@@ -25,6 +25,22 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 
+/**
+ * Currently, this edit part has a MemberRole as its model; in the future, a
+ * ConnectionPart will be the model object type for instances of this class.
+ * <br><br>  
+ * A ConnectionPart represents a line, possibly bended, representing the set.  
+ * A set (MemberRole) will contain maximum 2 ConnectionPart instances; if only 1 
+ * ConnectionPart is present, the line is drawn directly between the figures 
+ * representing the owner and (a) member of the set.  If 2 ConnectionParts 
+ * are present for a set (MemberRole), it means that 1 line is drawn between
+ * the owner figure and the first connector (figure) and 1 line between the 
+ * second connector (figure) and the member record figure.<br><br>
+ * 
+ * As such, SetEditPart instances currently represent a direct line between the
+ * owner and member figures and each MemberRole is considered to contain only 1
+ * ConnectionPart instance.
+ */
 public class SetEditPart extends AbstractConnectionEditPart {
 
 	private Adapter changeListener = new Adapter() {
@@ -149,7 +165,11 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	protected void refreshVisuals() {		
 		
 		List<Bendpoint> bendpoints = new ArrayList<>();
-		for (DiagramLocation location : getModel().getDiagramBendpoints()) {
+		// since our current model object is a MemberRole instance, we know that
+		// no connectors are currently involved
+		for (DiagramLocation location : getModel().getConnectionParts()
+												  .get(0)
+												  .getBendpointLocations()) {
 			
 			// the model stores the (unscaled) bendpoint location relative to 
 			// the owner figure (which is either a record or index figure); we 

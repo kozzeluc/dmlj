@@ -32,7 +32,9 @@ public class LockedRecordSourceAnchor extends AbstractLockedRecordAnchor {
 	
 	@Override
 	protected DiagramLocation getModelEndpoint() {
-		return memberRole.getDiagramSourceAnchor();
+		// we currently don't support split connections (i.e. 2 connection 
+		// parts, each with a Connector attached, for 1 set)
+		return memberRole.getConnectionParts().get(0).getSourceEndpointLocation();
 	}	
 	
 }

@@ -25,8 +25,12 @@ public class LockEndpointsCommand extends Command {
 	}
 	
 	@Override
-	public void execute() {		
-		if (memberRole.getDiagramSourceAnchor() == null && 
+	public void execute() {	
+		// we currently don't support split connections (i.e. sets with 2
+		// 2 connections parts each with a connector attached to it)...
+		if (memberRole.getConnectionParts()
+					  .get(0)
+					  .getSourceEndpointLocation() == null && 
 			ownerEndpoint != null) {
 			
 			// the owner endpoint will only be added for user owned sets			
@@ -36,7 +40,9 @@ public class LockEndpointsCommand extends Command {
 			location.setY(ownerEndpoint.y);
 			location.setEyecatcher("set " + memberRole.getSet().getName() + 
 								   " owner endpoint");
-			memberRole.setDiagramSourceAnchor(location);
+			memberRole.getConnectionParts()
+			  		  .get(0)
+			  		  .setSourceEndpointLocation(location);
 			
 			memberRole.getSet()
 	  		  		  .getSchema()
@@ -46,7 +52,9 @@ public class LockEndpointsCommand extends Command {
 			
 			ownerEndpointSet = true;
 		}
-		if (memberRole.getDiagramTargetAnchor() == null) {
+		if (memberRole.getConnectionParts()
+					  .get(0)
+					  .getTargetEndpointLocation() == null) {
 			
 			DiagramLocation location = 
 				SchemaFactory.eINSTANCE.createDiagramLocation();
@@ -54,7 +62,9 @@ public class LockEndpointsCommand extends Command {
 			location.setY(memberEndpoint.y);
 			location.setEyecatcher("set " + memberRole.getSet().getName() + 
 								   " member endpoint");
-			memberRole.setDiagramTargetAnchor(location);
+			memberRole.getConnectionParts()
+					  .get(0)
+					  .setTargetEndpointLocation(location);
 				
 			memberRole.getSet()
 			  		  .getSchema()
@@ -70,7 +80,8 @@ public class LockEndpointsCommand extends Command {
 	public void undo() {
 		if (memberEndpointSet) {
 			
-			DiagramLocation location = memberRole.getDiagramTargetAnchor();
+			DiagramLocation location = 
+				memberRole.getConnectionParts().get(0).getTargetEndpointLocation();
 			
 			memberRole.getSet()
 	  		  		  .getSchema()
@@ -78,12 +89,13 @@ public class LockEndpointsCommand extends Command {
 	  		  		  .getLocations()
 	  		  		  .remove(location);
 					
-			memberRole.setDiagramTargetAnchor(null);
+			memberRole.getConnectionParts().get(0).setTargetEndpointLocation(null);
 			
 		}
 		if (ownerEndpointSet) {
 			
-			DiagramLocation location = memberRole.getDiagramSourceAnchor();
+			DiagramLocation location = 
+				memberRole.getConnectionParts().get(0).getSourceEndpointLocation();
 			
 			memberRole.getSet()
 	  		  		  .getSchema()
@@ -91,7 +103,7 @@ public class LockEndpointsCommand extends Command {
 	  		  		  .getLocations()
 	  		  		  .remove(location);
 					
-			memberRole.setDiagramSourceAnchor(null);
+			memberRole.getConnectionParts().get(0).setSourceEndpointLocation(null);
 			
 		}
 	}

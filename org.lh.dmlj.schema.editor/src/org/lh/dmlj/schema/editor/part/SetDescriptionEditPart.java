@@ -6,20 +6,20 @@ import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.SetDescriptionFigure;
-import org.lh.dmlj.schema.editor.model.SetDescription;
 
 public class SetDescriptionEditPart 
-    extends AbstractDiagramNodeEditPart<SetDescription>  {
+    extends AbstractDiagramNodeEditPart<ConnectionLabel>  {
 
 	private SetDescriptionEditPart() {
 		super(null); // disabled constructor
 	}
 	
-	public SetDescriptionEditPart(SetDescription setLabel) {
-		super(setLabel);		
+	public SetDescriptionEditPart(ConnectionLabel connectionLabel) {
+		super(connectionLabel);		
 	}	
 
 	@Override
@@ -29,7 +29,8 @@ public class SetDescriptionEditPart
 	
 	@Override
 	protected EObject[] getModelObjects() {
-		return new EObject[] {getModel().getMemberRole(),
+		return new EObject[] {getModel(),
+							  getModel().getMemberRole(),
 						      getModel().getMemberRole().getSet(),
 							  getModel().getDiagramLocation()};
 	}
@@ -37,9 +38,17 @@ public class SetDescriptionEditPart
 	@Override
 	public void showSourceFeedback(Request request) {
 		if (request instanceof ChangeBoundsRequest) {
+			// change the line color of the connection to which this label
+			// belongs to red so that the user can see to which connection the
+			// label belongs; currently it is assumed that there is only 1
+			// ConnectionPart instance for a set (MemberRole)
 			SetEditPart setEditPart = 
-				(SetEditPart) getViewer().getEditPartRegistry().get(getModel().getMemberRole());
-			PolylineConnection connection = (PolylineConnection) setEditPart.getFigure();
+				(SetEditPart) getViewer().getEditPartRegistry()
+										 .get(getModel().getMemberRole()
+												 		.getConnectionParts()
+												 		.get(0));
+			PolylineConnection connection = 
+				(PolylineConnection) setEditPart.getFigure();
 			connection.setLineWidth(2);
 			connection.setForegroundColor(ColorConstants.red);
 		}
@@ -49,8 +58,15 @@ public class SetDescriptionEditPart
 	@Override
 	public void eraseSourceFeedback(Request request) {
 		if (request instanceof ChangeBoundsRequest) {
+			// change the line color of the connection to which this label
+			// belongs back to black; currently it is assumed that there is only 
+			// 1 ConnectionPart instance for a set (MemberRole)
 			SetEditPart setEditPart = 
-				(SetEditPart) getViewer().getEditPartRegistry().get(getModel().getMemberRole());
+				(SetEditPart) getViewer().getEditPartRegistry()
+										 .get(getModel()
+										 .getMemberRole()
+										 .getConnectionParts()
+										 .get(0));
 			PolylineConnection connection = (PolylineConnection) setEditPart.getFigure();
 			connection.setLineWidth(1);
 			connection.setForegroundColor(ColorConstants.black);
