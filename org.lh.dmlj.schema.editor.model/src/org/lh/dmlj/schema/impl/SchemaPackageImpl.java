@@ -1652,17 +1652,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConnectionLabel_Location() {
-		return (EReference)connectionLabelEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getConnectionLabel_MemberRole() {
-		return (EReference)connectionLabelEClass.getEStructuralFeatures().get(2);
+		return (EReference)connectionLabelEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2119,7 +2110,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		connectionLabelEClass = createEClass(CONNECTION_LABEL);
 		createEAttribute(connectionLabelEClass, CONNECTION_LABEL__ALIGNMENT);
-		createEReference(connectionLabelEClass, CONNECTION_LABEL__LOCATION);
 		createEReference(connectionLabelEClass, CONNECTION_LABEL__MEMBER_ROLE);
 
 		connectorEClass = createEClass(CONNECTOR);
@@ -2369,7 +2359,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		initEClass(connectionLabelEClass, ConnectionLabel.class, "ConnectionLabel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getConnectionLabel_Alignment(), this.getLabelAlignment(), "alignment", "", 0, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getConnectionLabel_Location(), this.getDiagramLocation(), null, "location", null, 1, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getConnectionLabel_MemberRole(), this.getMemberRole(), this.getMemberRole_ConnectionLabel(), "memberRole", null, 1, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

@@ -481,22 +481,13 @@ public interface SchemaPackage extends EPackage {
 	int CONNECTION_LABEL__ALIGNMENT = DIAGRAM_NODE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Location</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTION_LABEL__LOCATION = DIAGRAM_NODE_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Member Role</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION_LABEL__MEMBER_ROLE = DIAGRAM_NODE_FEATURE_COUNT + 2;
+	int CONNECTION_LABEL__MEMBER_ROLE = DIAGRAM_NODE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Connection Label</em>' class.
@@ -505,7 +496,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTION_LABEL_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 3;
+	int CONNECTION_LABEL_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ConnectorImpl <em>Connector</em>}' class.
@@ -3528,17 +3519,6 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getConnectionLabel_Alignment();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.ConnectionLabel#getLocation <em>Location</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Location</em>'.
-	 * @see org.lh.dmlj.schema.ConnectionLabel#getLocation()
-	 * @see #getConnectionLabel()
-	 * @generated
-	 */
-	EReference getConnectionLabel_Location();
-
-	/**
 	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.ConnectionLabel#getMemberRole <em>Member Role</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5177,14 +5157,6 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONNECTION_LABEL__ALIGNMENT = eINSTANCE.getConnectionLabel_Alignment();
-
-		/**
-		 * The meta object literal for the '<em><b>Location</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CONNECTION_LABEL__LOCATION = eINSTANCE.getConnectionLabel_Location();
 
 		/**
 		 * The meta object literal for the '<em><b>Member Role</b></em>' reference feature.

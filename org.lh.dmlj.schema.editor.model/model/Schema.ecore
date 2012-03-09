@@ -53,8 +53,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="ConnectionLabel" eSuperTypes="#//DiagramNode">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="alignment" eType="#//LabelAlignment"
         defaultValueLiteral=""/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="location" lowerBound="1"
-        eType="#//DiagramLocation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberRole" lowerBound="1"
         eType="#//MemberRole" eOpposite="#//MemberRole/connectionLabel"/>
   </eClassifiers>

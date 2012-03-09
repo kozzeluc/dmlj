@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.lh.dmlj.schema.ConnectionLabel;
-import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.LabelAlignment;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -28,7 +27,6 @@ import org.lh.dmlj.schema.SchemaPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectionLabelImpl#getAlignment <em>Alignment</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ConnectionLabelImpl#getLocation <em>Location</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectionLabelImpl#getMemberRole <em>Member Role</em>}</li>
  * </ul>
  * </p>
@@ -55,16 +53,6 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 	 * @ordered
 	 */
 	protected LabelAlignment alignment = ALIGNMENT_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getLocation() <em>Location</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLocation()
-	 * @generated
-	 * @ordered
-	 */
-	protected DiagramLocation location;
 
 	/**
 	 * The cached value of the '{@link #getMemberRole() <em>Member Role</em>}' reference.
@@ -114,44 +102,6 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 		alignment = newAlignment == null ? ALIGNMENT_EDEFAULT : newAlignment;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_LABEL__ALIGNMENT, oldAlignment, alignment));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DiagramLocation getLocation() {
-		if (location != null && location.eIsProxy()) {
-			InternalEObject oldLocation = (InternalEObject)location;
-			location = (DiagramLocation)eResolveProxy(oldLocation);
-			if (location != oldLocation) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTION_LABEL__LOCATION, oldLocation, location));
-			}
-		}
-		return location;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DiagramLocation basicGetLocation() {
-		return location;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLocation(DiagramLocation newLocation) {
-		DiagramLocation oldLocation = location;
-		location = newLocation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_LABEL__LOCATION, oldLocation, location));
 	}
 
 	/**
@@ -254,9 +204,6 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 		switch (featureID) {
 			case SchemaPackage.CONNECTION_LABEL__ALIGNMENT:
 				return getAlignment();
-			case SchemaPackage.CONNECTION_LABEL__LOCATION:
-				if (resolve) return getLocation();
-				return basicGetLocation();
 			case SchemaPackage.CONNECTION_LABEL__MEMBER_ROLE:
 				if (resolve) return getMemberRole();
 				return basicGetMemberRole();
@@ -274,9 +221,6 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 		switch (featureID) {
 			case SchemaPackage.CONNECTION_LABEL__ALIGNMENT:
 				setAlignment((LabelAlignment)newValue);
-				return;
-			case SchemaPackage.CONNECTION_LABEL__LOCATION:
-				setLocation((DiagramLocation)newValue);
 				return;
 			case SchemaPackage.CONNECTION_LABEL__MEMBER_ROLE:
 				setMemberRole((MemberRole)newValue);
@@ -296,9 +240,6 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 			case SchemaPackage.CONNECTION_LABEL__ALIGNMENT:
 				setAlignment(ALIGNMENT_EDEFAULT);
 				return;
-			case SchemaPackage.CONNECTION_LABEL__LOCATION:
-				setLocation((DiagramLocation)null);
-				return;
 			case SchemaPackage.CONNECTION_LABEL__MEMBER_ROLE:
 				setMemberRole((MemberRole)null);
 				return;
@@ -316,8 +257,6 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 		switch (featureID) {
 			case SchemaPackage.CONNECTION_LABEL__ALIGNMENT:
 				return alignment != ALIGNMENT_EDEFAULT;
-			case SchemaPackage.CONNECTION_LABEL__LOCATION:
-				return location != null;
 			case SchemaPackage.CONNECTION_LABEL__MEMBER_ROLE:
 				return memberRole != null;
 		}
