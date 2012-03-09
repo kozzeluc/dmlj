@@ -74,8 +74,12 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	@Override
 	public final void activate() {
 		super.activate();
-		getModel().eAdapters().add(changeListener);
-		getModel().getSet().eAdapters().add(changeListener);	
+		getModel().eAdapters().add(changeListener);			 // MemberRole
+		getModel().getSet().eAdapters().add(changeListener); // Set	
+		getModel().getConnectionParts()						 // ConnectionPart
+				  .get(0)									 // (first;
+				  .eAdapters()								 // split connections
+				  .add(changeListener);						 // not supported)		
 	}	
 	
 	@Override
@@ -129,6 +133,10 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	
 	@Override
 	public final void deactivate() {
+		getModel().getConnectionParts()						 // ConnectionPart
+		  		  .get(0)									 // (first;
+		  		  .eAdapters()								 // split connections
+		  		  .remove(changeListener);					 // not supported)
 		getModel().getSet().eAdapters().remove(changeListener);
 		getModel().eAdapters().remove(changeListener);		
 		super.deactivate();

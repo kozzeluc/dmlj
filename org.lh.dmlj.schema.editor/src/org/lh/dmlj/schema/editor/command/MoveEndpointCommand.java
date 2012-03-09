@@ -61,9 +61,13 @@ public class MoveEndpointCommand extends Command {
 		  		  .add(newLocation);
 	
 		if (owner) {
-			memberRole.getConnectionParts().get(0).setSourceEndpointLocation(null);
+			memberRole.getConnectionParts()
+					  .get(0)
+					  .setSourceEndpointLocation(newLocation);
 		} else {
-			memberRole.getConnectionParts().get(0).setTargetEndpointLocation(null);
+			memberRole.getConnectionParts()
+					  .get(0)
+					  .setTargetEndpointLocation(newLocation);
 		}
 		
 	}
@@ -74,10 +78,14 @@ public class MoveEndpointCommand extends Command {
 		DiagramLocation newLocation; 
 		if (owner) {
 			newLocation = 
-				memberRole.getConnectionParts().get(0).getSourceEndpointLocation();
+				memberRole.getConnectionParts()
+						  .get(0)
+						  .getSourceEndpointLocation();
 		} else {
 			newLocation = 
-				memberRole.getConnectionParts().get(0).getTargetEndpointLocation();
+				memberRole.getConnectionParts()
+						  .get(0)
+						  .getTargetEndpointLocation();
 		}
 		memberRole.getSet()
 		  		  .getSchema()

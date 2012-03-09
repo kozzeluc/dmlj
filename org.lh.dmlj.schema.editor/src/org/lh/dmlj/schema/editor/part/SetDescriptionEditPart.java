@@ -38,15 +38,14 @@ public class SetDescriptionEditPart
 	@Override
 	public void showSourceFeedback(Request request) {
 		if (request instanceof ChangeBoundsRequest) {
-			// change the line color of the connection to which this label
-			// belongs to red so that the user can see to which connection the
-			// label belongs; currently it is assumed that there is only 1
-			// ConnectionPart instance for a set (MemberRole)
+			// Change the line color of the connection parts to which this label
+			// belongs to red so that the user can see to which connection parts
+			// the label belongs; currently it is assumed that there is only 1
+			// connection part for a set; the edit part's model object type is
+			// currently MemberRole but this will soon change to ConnectionPart.
 			SetEditPart setEditPart = 
 				(SetEditPart) getViewer().getEditPartRegistry()
-										 .get(getModel().getMemberRole()
-												 		.getConnectionParts()
-												 		.get(0));
+										 .get(getModel().getMemberRole());
 			PolylineConnection connection = 
 				(PolylineConnection) setEditPart.getFigure();
 			connection.setLineWidth(2);
@@ -58,15 +57,14 @@ public class SetDescriptionEditPart
 	@Override
 	public void eraseSourceFeedback(Request request) {
 		if (request instanceof ChangeBoundsRequest) {
-			// change the line color of the connection to which this label
+			// Change the line color of the connection parts to which this label
 			// belongs back to black; currently it is assumed that there is only 
-			// 1 ConnectionPart instance for a set (MemberRole)
+			// 1 connection part for a set; the edit part's model object type is
+			// currently MemberRole but this will soon change to ConnectionPart.
 			SetEditPart setEditPart = 
 				(SetEditPart) getViewer().getEditPartRegistry()
 										 .get(getModel()
-										 .getMemberRole()
-										 .getConnectionParts()
-										 .get(0));
+										 .getMemberRole());
 			PolylineConnection connection = (PolylineConnection) setEditPart.getFigure();
 			connection.setLineWidth(1);
 			connection.setForegroundColor(ColorConstants.black);

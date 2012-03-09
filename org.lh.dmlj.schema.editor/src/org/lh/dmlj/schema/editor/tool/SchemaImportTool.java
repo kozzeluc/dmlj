@@ -1455,7 +1455,7 @@ public class SchemaImportTool {
 		diagramData.setVerticalRuler(verticalRuler);
 		diagramData.getRulers().add(verticalRuler); 	// ruler container
 		Ruler horizontalRuler = SchemaFactory.eINSTANCE.createRuler();
-		verticalRuler.setType(RulerType.HORIZONTAL);
+		horizontalRuler.setType(RulerType.HORIZONTAL);
 		diagramData.setHorizontalRuler(horizontalRuler);
 		diagramData.getRulers().add(horizontalRuler);	// ruler container
 		
@@ -1728,7 +1728,7 @@ public class SchemaImportTool {
 				DiagramLocation location = 
 					SchemaFactory.eINSTANCE.createDiagramLocation();
 				schema.getDiagramData().getLocations().add(location);
-				connectionLabel.setLocation(location);
+				connectionLabel.setDiagramLocation(location);
 				memberRole.setConnectionLabel(connectionLabel);
 				
 				// we don't provide a source- and targetAnchor nor any 
