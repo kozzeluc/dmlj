@@ -1,23 +1,23 @@
 package org.lh.dmlj.schema.editor.command;
 
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaFactory;
 
 public class MoveEndpointCommand extends Command {
 	
-	private MemberRole memberRole;
-	private Integer	   oldX;
-	private Integer	   oldY;
-	private boolean    owner;
-	private int 	   x;
-	private int 	   y;	
+	private ConnectionPart connectionPart;
+	private Integer	   	   oldX;
+	private Integer	   	   oldY;
+	private boolean    	   owner;
+	private int 	   	   x;
+	private int 	   	   y;	
 	
-	public MoveEndpointCommand(MemberRole memberRole, int x, int y, 
-										 boolean owner) {
+	public MoveEndpointCommand(ConnectionPart connectionPart, int x, int y, 
+							   boolean owner) {
 		super();
-		this.memberRole = memberRole;
+		this.connectionPart = connectionPart;
 		this.x = x;
 		this.y = y; 
 		this.owner = owner;
@@ -31,20 +31,19 @@ public class MoveEndpointCommand extends Command {
 		
 		DiagramLocation oldLocation;
 		if (owner) {
-			oldLocation = 
-				memberRole.getConnectionParts().get(0).getSourceEndpointLocation();
+			oldLocation = connectionPart.getSourceEndpointLocation();
 		} else {
-			oldLocation = 
-				memberRole.getConnectionParts().get(0).getTargetEndpointLocation();
+			oldLocation = connectionPart.getTargetEndpointLocation();
 		}
 		if (oldLocation != null) {
 			oldX = oldLocation.getX();
 			oldY = oldLocation.getY();
-			memberRole.getSet()
-					  .getSchema()
-					  .getDiagramData()
-					  .getLocations()
-					  .remove(oldLocation);
+			connectionPart.getMemberRole()
+						  .getSet()
+						  .getSchema()
+						  .getDiagramData()
+						  .getLocations()
+						  .remove(oldLocation);
 		}
 		
 		DiagramLocation newLocation = 
@@ -52,22 +51,21 @@ public class MoveEndpointCommand extends Command {
 		newLocation.setX(x);
 		newLocation.setY(y);
 		String p = owner ? " owner endpoint" : " member endpoint";
-		newLocation.setEyecatcher("set " + memberRole.getSet().getName() + p);
+		newLocation.setEyecatcher("set " + connectionPart.getMemberRole()
+														 .getSet()
+														 .getName() + p);
 		
-		memberRole.getSet()
-		  		  .getSchema()
-		  		  .getDiagramData()
-		  		  .getLocations()
-		  		  .add(newLocation);
+		connectionPart.getMemberRole()
+					  .getSet()
+					  .getSchema()
+					  .getDiagramData()
+					  .getLocations()
+					  .add(newLocation);
 	
 		if (owner) {
-			memberRole.getConnectionParts()
-					  .get(0)
-					  .setSourceEndpointLocation(newLocation);
+			connectionPart.setSourceEndpointLocation(newLocation);
 		} else {
-			memberRole.getConnectionParts()
-					  .get(0)
-					  .setTargetEndpointLocation(newLocation);
+			connectionPart.setTargetEndpointLocation(newLocation);
 		}
 		
 	}
@@ -77,31 +75,22 @@ public class MoveEndpointCommand extends Command {
 		
 		DiagramLocation newLocation; 
 		if (owner) {
-			newLocation = 
-				memberRole.getConnectionParts()
-						  .get(0)
-						  .getSourceEndpointLocation();
+			newLocation = connectionPart.getSourceEndpointLocation();
 		} else {
-			newLocation = 
-				memberRole.getConnectionParts()
-						  .get(0)
-						  .getTargetEndpointLocation();
+			newLocation = connectionPart.getTargetEndpointLocation();
 		}
-		memberRole.getSet()
-		  		  .getSchema()
-		  		  .getDiagramData()
-		  		  .getLocations()
-		  		  .remove(newLocation);
+		connectionPart.getMemberRole()
+					  .getSet()
+					  .getSchema()
+					  .getDiagramData()
+					  .getLocations()
+					  .remove(newLocation);
 		
 		if (oldX == null || oldY == null) {
 			if (owner) {
-				memberRole.getConnectionParts()
-						  .get(0)
-						  .setSourceEndpointLocation(null);
+				connectionPart.setSourceEndpointLocation(null);
 			} else {
-				memberRole.getConnectionParts()	
-						  .get(0)
-						  .setTargetEndpointLocation(null);
+				connectionPart.setTargetEndpointLocation(null);
 			}
 			return;
 		}
@@ -112,22 +101,21 @@ public class MoveEndpointCommand extends Command {
 		oldLocation.setY(oldY);
 		String p = owner ? "owner" : "member";
 		oldLocation.setEyecatcher("set " + p + " connection point" + 
-								  memberRole.getSet().getName() + "(" + p + ")");
+								  connectionPart.getMemberRole()
+								  				.getSet()
+								  				.getName() + "(" + p + ")");
 			
-		memberRole.getSet()
-		  		  .getSchema()
-		  		  .getDiagramData()
-		  		  .getLocations()
-		  		  .add(oldLocation);
+		connectionPart.getMemberRole()
+					  .getSet()
+					  .getSchema()
+					  .getDiagramData()
+					  .getLocations()
+					  .add(oldLocation);
 		
 		if (owner) {
-			memberRole.getConnectionParts()
-					  .get(0)
-					  .setSourceEndpointLocation(oldLocation);
+			connectionPart.setSourceEndpointLocation(oldLocation);
 		} else {
-			memberRole.getConnectionParts()
-					  .get(0)
-					  .setTargetEndpointLocation(oldLocation);
+			connectionPart.setTargetEndpointLocation(oldLocation);
 		}
 		
 	}

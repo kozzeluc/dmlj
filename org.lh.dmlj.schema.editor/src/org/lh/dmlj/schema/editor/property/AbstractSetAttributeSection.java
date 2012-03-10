@@ -2,7 +2,7 @@ package org.lh.dmlj.schema.editor.property;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.lh.dmlj.schema.ConnectionLabel;
-import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
@@ -14,8 +14,8 @@ import org.lh.dmlj.schema.SystemOwner;
  * Subclasses must supply the attribute and an indicator if the attribute is 
  * offered read-only during construction and, if they want a description to
  * be shown, the getDescription method of this class' superclass.<br><br>
- * Valid edit part model object types for these kind of sections are MemberRole,
- * SchemaRecord, ConnectionLabel and SystemOwner.
+ * Valid edit part model object types for these kind of sections are 
+ * ConnectionPart, SchemaRecord, ConnectionLabel and SystemOwner.
  */
 public abstract class AbstractSetAttributeSection 
 	extends AbstractStructuralFeatureSection<Set> {		
@@ -27,8 +27,9 @@ public abstract class AbstractSetAttributeSection
 
 	@Override
 	protected final Set getModelObject(Object editPartModelObject) {
-		if (editPartModelObject instanceof MemberRole) {
-			return ((MemberRole) editPartModelObject).getSet();
+		if (editPartModelObject instanceof ConnectionPart) {
+			return ((ConnectionPart) editPartModelObject).getMemberRole()
+														 .getSet();
 		} else if (editPartModelObject instanceof SchemaRecord) {
 			SchemaRecord record = (SchemaRecord) editPartModelObject;
 			return record.getViaSpecification().getSet();
@@ -44,9 +45,9 @@ public abstract class AbstractSetAttributeSection
 	
 	@Override
 	protected final Class<?>[] getValidEditPartModelObjectTypes() {
-		return new Class<?>[] {MemberRole.class,
-							   SchemaRecord.class,
-							   ConnectionLabel.class,
+		return new Class<?>[] {ConnectionLabel.class,
+							   ConnectionPart.class,
+							   SchemaRecord.class,							   
 							   SystemOwner.class};
 	}
 	

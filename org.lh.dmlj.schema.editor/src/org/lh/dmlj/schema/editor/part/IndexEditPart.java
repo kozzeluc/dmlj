@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
@@ -36,10 +37,11 @@ public class IndexEditPart extends AbstractDiagramNodeEditPart<SystemOwner> {
 	}
 
 	@Override
-	protected List<MemberRole> getModelSourceConnections() {
-		List<MemberRole> memberRoles = new ArrayList<>();
-		memberRoles.add(getModel().getSet().getMembers().get(0));
-		return memberRoles;
+	protected List<ConnectionPart> getModelSourceConnections() {
+		List<ConnectionPart> connectionParts = new ArrayList<>();
+		MemberRole memberRole = getModel().getSet().getMembers().get(0);
+		connectionParts.addAll(memberRole.getConnectionParts());
+		return connectionParts;
 	}
 
 	@Override
@@ -55,10 +57,12 @@ public class IndexEditPart extends AbstractDiagramNodeEditPart<SystemOwner> {
 	@Override
 	protected void refreshConnections() {
 		MemberRole memberRole = getModel().getSet().getMembers().get(0);
-		GraphicalEditPart editPart = 
-			(GraphicalEditPart) getViewer().getEditPartRegistry()
-									  	   .get(memberRole);
-		editPart.refresh();		
+		for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
+			GraphicalEditPart editPart = 
+				(GraphicalEditPart) getViewer().getEditPartRegistry()
+										  	   .get(connectionPart);
+			editPart.refresh();		
+		}
 	}
 
 	@Override

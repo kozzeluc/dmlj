@@ -19,27 +19,26 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 
-/**
- * Currently, this edit part has a MemberRole as its model; in the future, a
- * ConnectionPart will be the model object type for instances of this class.
- * <br><br>  
+/** 
  * A ConnectionPart represents a line, possibly bended, representing the set.  
- * A set (MemberRole) will contain maximum 2 ConnectionPart instances; if only 1 
+ * A set will contain a maximum of 2 ConnectionPart instances; if only 1 
  * ConnectionPart is present, the line is drawn directly between the figures 
  * representing the owner and (a) member of the set.  If 2 ConnectionParts 
- * are present for a set (MemberRole), it means that 1 line is drawn between
- * the owner figure and the first connector (figure) and 1 line between the 
- * second connector (figure) and the member record figure.<br><br>
+ * are present for a set, it means that 1 line is drawn between the owner figure 
+ * and the first connector (figure) and 1 line between the second connector 
+ * (figure) and the member record (figure).<br><br>
  * 
- * As such, SetEditPart instances currently represent a direct line between the
+ * SetEditPart instances currently represent a direct line between the
  * owner and member figures and each MemberRole is considered to contain only 1
- * ConnectionPart instance.
+ * ConnectionPart instance (in other words, we currently don't support 
+ * connectors).
  */
 public class SetEditPart extends AbstractConnectionEditPart {
 
@@ -66,20 +65,20 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		
 	};
 	
-	public SetEditPart(MemberRole memberRole) {
+	public SetEditPart(ConnectionPart connectionPart) {
 		super();
-		setModel(memberRole);
+		setModel(connectionPart);
 	}
 	
 	@Override
 	public final void activate() {
 		super.activate();
-		getModel().eAdapters().add(changeListener);			 // MemberRole
-		getModel().getSet().eAdapters().add(changeListener); // Set	
-		getModel().getConnectionParts()						 // ConnectionPart
-				  .get(0)									 // (first;
-				  .eAdapters()								 // split connections
-				  .add(changeListener);						 // not supported)		
+		// add a model change listener for the ConnectionPart, the MemberRole to
+		// which it belongs and the Set; we ignore the other ConnectionPart
+		// belonging to the MemberRole, if any...
+		getModel().eAdapters().add(changeListener);			 
+		getModel().getMemberRole().eAdapters().add(changeListener); 	
+		getModel().getMemberRole().getSet().eAdapters().add(changeListener);
 	}	
 	
 	@Override
@@ -103,7 +102,7 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		connection.setLineWidth(1);
 		connection.setForegroundColor(ColorConstants.black);
 		
-		MemberRole memberRole = getModel();
+		MemberRole memberRole = getModel().getMemberRole();
 		Set set = memberRole.getSet();
 		if (set.getOwner() != null) { 
 			// user owned set (chained or indexed), make sure an arrow is drawn
@@ -133,17 +132,15 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	
 	@Override
 	public final void deactivate() {
-		getModel().getConnectionParts()						 // ConnectionPart
-		  		  .get(0)									 // (first;
-		  		  .eAdapters()								 // split connections
-		  		  .remove(changeListener);					 // not supported)
-		getModel().getSet().eAdapters().remove(changeListener);
-		getModel().eAdapters().remove(changeListener);		
+		// remove the model change listeners...		 	
+		getModel().getMemberRole().getSet().eAdapters().remove(changeListener);
+		getModel().getMemberRole().eAdapters().remove(changeListener);
+		getModel().eAdapters().remove(changeListener);			 
 		super.deactivate();
 	}
 	
-	public MemberRole getModel() {
-		return (MemberRole) super.getModel();
+	public ConnectionPart getModel() {
+		return (ConnectionPart) super.getModel();
 	}	
 	
 	/**
@@ -153,12 +150,12 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	 */
 	private PrecisionPoint getOwnerFigureLocation() {		
 		DiagramNode owner;
-		if (getModel().getSet().getSystemOwner() != null) {
+		if (getModel().getMemberRole().getSet().getSystemOwner() != null) {
 			// system owned set
-			owner = getModel().getSet().getSystemOwner();			 
+			owner = getModel().getMemberRole().getSet().getSystemOwner();			 
 		} else {
 			// user owned set
-			owner = getModel().getSet().getOwner().getRecord();
+			owner = getModel().getMemberRole().getSet().getOwner().getRecord();
 		}
 		DiagramLocation location = owner.getDiagramLocation();
 		return new PrecisionPoint(location.getX(), location.getY());
@@ -173,11 +170,8 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	protected void refreshVisuals() {		
 		
 		List<Bendpoint> bendpoints = new ArrayList<>();
-		// since our current model object is a MemberRole instance, we know that
 		// no connectors are currently involved
-		for (DiagramLocation location : getModel().getConnectionParts()
-												  .get(0)
-												  .getBendpointLocations()) {
+		for (DiagramLocation location : getModel().getBendpointLocations()) {
 			
 			// the model stores the (unscaled) bendpoint location relative to 
 			// the owner figure (which is either a record or index figure); we 

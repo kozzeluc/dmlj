@@ -7,9 +7,9 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.BendpointEditPolicy;
 import org.eclipse.gef.requests.BendpointRequest;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.command.CreateBendpointCommand;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
@@ -19,13 +19,13 @@ import org.lh.dmlj.schema.editor.part.SetEditPart;
 
 public class SetBendpointEditPolicy extends BendpointEditPolicy {
 
-	private MemberRole  memberRole;
-	private SetEditPart editPart;
+	private ConnectionPart connectionPart;
+	private SetEditPart    editPart;
 	
 	public SetBendpointEditPolicy(SetEditPart editPart) {
 		super();
 		this.editPart = editPart;
-		this.memberRole = editPart.getModel();
+		this.connectionPart = editPart.getModel();
 	}
 	
 	@Override
@@ -36,24 +36,26 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 		// command that actually creates the bendpoint...
 		
 		// get the current zoomLevel...
-		double zoomLevel = memberRole.getSet()
-								     .getSchema()
-								     .getDiagramData()
-								     .getZoomLevel();
+		double zoomLevel = connectionPart.getMemberRole()
+									     .getSet()
+									     .getSchema()
+									     .getDiagramData()
+									     .getZoomLevel();
 		
 		// get the owner endpoint location as an (unscaled) offset pair 
 		// within the owner figure; if this is a system owned indexed 
 		// set, forget about the owner endpoint location because it is 
 		// always anchored at the same location...
 		PrecisionPoint ownerEndpoint = null;
-		if (memberRole.getSet().getSystemOwner() == null) {
+		if (connectionPart.getMemberRole().getSet().getSystemOwner() == null) {
 			// user owned set
 			GraphicalEditPart ownerEditPart = 
 				(GraphicalEditPart) editPart.getViewer()
 											.getEditPartRegistry()
-									  		.get(memberRole.getSet()
-									  					   .getOwner()
-									  					   .getRecord());
+									  		.get(connectionPart.getMemberRole()
+									  						   .getSet()
+									  						   .getOwner()
+									  						   .getRecord());
 			Rectangle ownerBounds = 
 				ownerEditPart.getFigure().getBounds().getCopy();
 			ownerEditPart.getFigure().translateToAbsolute(ownerBounds);
@@ -72,7 +74,8 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 		GraphicalEditPart memberEditPart = 
 			(GraphicalEditPart) editPart.getViewer()
 										.getEditPartRegistry()
-								  		.get(memberRole.getRecord());
+								  		.get(connectionPart.getMemberRole()
+								  						   .getRecord());
 		Rectangle memberBounds = 
 			memberEditPart.getFigure().getBounds().getCopy();
 		memberEditPart.getFigure().translateToAbsolute(memberBounds);
@@ -88,8 +91,8 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
         // create the lock endpoints command; note that the endpoints 
 		// may already be locked, but the command takes care of that...
 		LockEndpointsCommand lockEndpointsCommand =
-			new LockEndpointsCommand(memberRole, ownerEndpoint, 
-									 memberEndpoint);
+			new LockEndpointsCommand(connectionPart.getMemberRole(), 
+									 ownerEndpoint, memberEndpoint);
         
 		// calculate the bendpoint location as an unscaled offset to the
 		// owner figure...
@@ -102,8 +105,8 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
         
         // create the create bendpoint command...
         CreateBendpointCommand createBendpointCommand = 
-			new CreateBendpointCommand(memberRole, request.getIndex(), 
-									   p.x, p.y);
+			new CreateBendpointCommand(connectionPart.getMemberRole(), 
+									   request.getIndex(), p.x, p.y);
         
         // chain both commands together, forming the final command...
         return lockEndpointsCommand.chain(createBendpointCommand);
@@ -112,7 +115,8 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 	@Override
 	protected Command getDeleteBendpointCommand(BendpointRequest request) {
 		DeleteBendpointCommand command = 
-			new DeleteBendpointCommand(memberRole, request.getIndex());
+			new DeleteBendpointCommand(connectionPart.getMemberRole(), 
+									   request.getIndex());
 		return command;
 	}
 
@@ -130,8 +134,8 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 		
         // create the move bendpoint command...
         MoveBendpointCommand command = 
-			new MoveBendpointCommand(memberRole, request.getIndex(), 
-									 p.x, p.y);
+			new MoveBendpointCommand(connectionPart.getMemberRole(), 
+									 request.getIndex(), p.x, p.y);
 		
         return command;
 	}	
@@ -143,12 +147,12 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 	 */
 	private PrecisionPoint getOwnerFigureLocation() {		
 		DiagramNode owner;
-		if (memberRole.getSet().getSystemOwner() != null) {
+		if (connectionPart.getMemberRole().getSet().getSystemOwner() != null) {
 			// system owned set
-			owner = memberRole.getSet().getSystemOwner();			 
+			owner = connectionPart.getMemberRole().getSet().getSystemOwner();			 
 		} else {
 			// user owned set
-			owner = memberRole.getSet().getOwner().getRecord();
+			owner = connectionPart.getMemberRole().getSet().getOwner().getRecord();
 		}
 		DiagramLocation location = owner.getDiagramLocation();
 		return new PrecisionPoint(location.getX(), location.getY());

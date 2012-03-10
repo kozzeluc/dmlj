@@ -3,6 +3,7 @@ package org.lh.dmlj.schema.editor.property.filter;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
@@ -17,8 +18,9 @@ public class SortedSetFilter implements IFilter {
 		}
         Object modelObject = ((EditPart) object).getModel();
         Set set;
-        if (modelObject instanceof MemberRole) {
-        	MemberRole memberRole = (MemberRole) modelObject;
+        if (modelObject instanceof ConnectionPart) {
+        	MemberRole memberRole = 
+            	((ConnectionPart)modelObject).getMemberRole();
         	set = memberRole.getSet();
         } else if (modelObject instanceof ConnectionLabel) {
         	MemberRole memberRole = 

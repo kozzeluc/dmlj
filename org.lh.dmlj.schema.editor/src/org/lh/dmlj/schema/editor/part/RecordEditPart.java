@@ -16,11 +16,13 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
@@ -60,56 +62,52 @@ public class RecordEditPart
 				// do not allow to change the owner of the set; only the start
 				// location can be changed; we currently don't support split
 				// set connections (i.e. a set with 2 connection parts each with 
-				// a Connector attached)...
+				// a connector attached)...
 				if (!(request.getConnectionEditPart() instanceof SetEditPart)) {
 					return null;
 				}
-				MemberRole memberRole = 
-					(MemberRole) request.getConnectionEditPart().getModel();
-				OwnerRole ownerRole = memberRole.getSet().getOwner();
+				ConnectionPart connectionPart = 
+					(ConnectionPart) request.getConnectionEditPart().getModel();
+				OwnerRole ownerRole = 
+					connectionPart.getMemberRole().getSet().getOwner();
 				if (ownerRole != null && ownerRole.getRecord() == record) {	
 					Point reference;
-					if (memberRole.getConnectionParts()
-								  .get(0)
-								  .getBendpointLocations()
-								  .isEmpty()) {
+					if (connectionPart.getBendpointLocations().isEmpty()) {
 						DiagramLocation targetConnectionPoint = 
-							memberRole.getConnectionParts()
-									  .get(0)
-									  .getTargetEndpointLocation();
+							connectionPart.getTargetEndpointLocation();
 						if (targetConnectionPoint != null) {							
 							reference = 
 								new PrecisionPoint(targetConnectionPoint.getX(), 
 												   targetConnectionPoint.getY());
 						} else {
+							SchemaRecord record =
+								connectionPart.getMemberRole().getRecord();
 							GraphicalEditPart editPart = 
 								(GraphicalEditPart) getViewer().getEditPartRegistry()
-													  		   .get(memberRole.getRecord());
+													  		   .get(record);
 							reference = 
 								editPart.getFigure().getBounds().getCenter();
 							editPart.getFigure().translateToAbsolute(reference);
 						}
 					} else {
-						int i = memberRole.getConnectionParts()
-										  .get(0)
-										  .getBendpointLocations()
-										  .size() - 1;
+						int i = 
+							connectionPart.getBendpointLocations().size() - 1;
 						DiagramLocation lastBendpoint = 
-							memberRole.getConnectionParts()
-									  .get(0)
-									  .getBendpointLocations()
-									  .get(i);
+							connectionPart.getBendpointLocations().get(i);
 						reference = new PrecisionPoint(lastBendpoint.getX(), 
 													   lastBendpoint.getY());
 					}
-					double zoomLevel = 
-						memberRole.getSet().getSchema().getDiagramData().getZoomLevel();
+					double zoomLevel = connectionPart.getMemberRole()
+													 .getSet()
+													 .getSchema()
+													 .getDiagramData()
+													 .getZoomLevel();
 					Point location = 
 						ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
 																    request.getLocation(), 
 																    reference,
 																    zoomLevel);
-					return new MoveEndpointCommand(memberRole, location.x, 
+					return new MoveEndpointCommand(connectionPart, location.x, 
 												   location.y, true);					
 				} else {
 					return null;
@@ -121,30 +119,29 @@ public class RecordEditPart
 				// do not allow to change the member of the set; only the end
 				// location can be changed; we currently don't support split set
 				// connections (i.e. sets with 2 connections each with a 
-				// Connector attached)...
+				// connector attached)...
 				if (!(request.getConnectionEditPart() instanceof SetEditPart)) {
 					return null;
 				}
-				MemberRole memberRole = 
-					(MemberRole) request.getConnectionEditPart().getModel();
-				if (record == memberRole.getRecord()) {					
+				ConnectionPart connectionPart = 
+					(ConnectionPart) request.getConnectionEditPart().getModel();
+				if (record == connectionPart.getMemberRole().getRecord()) {					
 					Point reference;
-					if (memberRole.getConnectionParts()
-								  .get(0)
-								  .getBendpointLocations()
-								  .isEmpty()) {
+					if (connectionPart.getBendpointLocations().isEmpty()) {
 						DiagramLocation sourceConnectionPoint = 
-							memberRole.getConnectionParts()
-									  .get(0)
-									  .getSourceEndpointLocation();
+							connectionPart.getSourceEndpointLocation();
 						if (sourceConnectionPoint != null) {
 							reference = 
 								new PrecisionPoint(sourceConnectionPoint.getX(), 
 										   		   sourceConnectionPoint.getY());
-						} else if (memberRole.getSet().getOwner() != null) {
+						} else if (connectionPart.getMemberRole()
+												 .getSet()
+												 .getOwner() != null) {
 							// user owned set
-							SchemaRecord owner = 
-								memberRole.getSet().getOwner().getRecord();
+							SchemaRecord owner = connectionPart.getMemberRole()
+											  				   .getSet()
+											  				   .getOwner()
+											  				   .getRecord();
 							GraphicalEditPart editPart = 
 								(GraphicalEditPart) getViewer().getEditPartRegistry()
 														  	   .get(owner);							
@@ -155,29 +152,33 @@ public class RecordEditPart
 							
 						} else {
 							// system owned set
+							SystemOwner systemOwner = 
+								connectionPart.getMemberRole()
+											  .getSet()
+											  .getSystemOwner();
 							GraphicalEditPart editPart = 
 								(GraphicalEditPart) getViewer().getEditPartRegistry()
-														  	   .get(memberRole.getSet().getSystemOwner());
+														  	   .get(systemOwner);
 							reference = 
 								editPart.getFigure().getBounds().getBottom();							
 						}
 					} else {
 						DiagramLocation firstBendpoint = 
-							memberRole.getConnectionParts()
-									  .get(0)
-									  .getBendpointLocations()
-									  .get(0);
+							connectionPart.getBendpointLocations().get(0);
 						reference = new PrecisionPoint(firstBendpoint.getX(), 
 													   firstBendpoint.getY());
 					}
-					double zoomLevel = 
-						memberRole.getSet().getSchema().getDiagramData().getZoomLevel();
+					double zoomLevel = connectionPart.getMemberRole()
+													 .getSet()
+													 .getSchema()
+													 .getDiagramData()
+													 .getZoomLevel();
 					Point location = 
 						ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
 																	request.getLocation(), 
 																	reference,
 																	zoomLevel);
-					return new MoveEndpointCommand(memberRole, location.x, 
+					return new MoveEndpointCommand(connectionPart, location.x, 
 												   location.y, false);					
 				} else {
 					return null;
@@ -199,27 +200,37 @@ public class RecordEditPart
 	}	
 
 	@Override
-	protected List<MemberRole> getModelSourceConnections() {
-		List<MemberRole> memberRoles = new ArrayList<>();
+	protected List<ConnectionPart> getModelSourceConnections() {
+		List<ConnectionPart> connectionParts = new ArrayList<>();
 		for (OwnerRole ownerRole : getModel().getOwnerRoles()) {
-			memberRoles.addAll(ownerRole.getSet().getMembers());
+			for (MemberRole memberRole : ownerRole.getSet().getMembers()) { 
+				for (ConnectionPart connectionPart : 
+					 memberRole.getConnectionParts()) {
+					
+					connectionParts.add(connectionPart);
+				}
+			}
 		}
-		return memberRoles;
+		return connectionParts;
 	}
 	
 	@Override
-	protected List<MemberRole> getModelTargetConnections() {
-		List<MemberRole> memberRoles = new ArrayList<>();
+	protected List<ConnectionPart> getModelTargetConnections() {
+		List<ConnectionPart> connectionParts = new ArrayList<>();
 		for (MemberRole memberRole : getModel().getMemberRoles()) {
-			memberRoles.add(memberRole);
+			for (ConnectionPart connectionPart : 
+				 memberRole.getConnectionParts()) {
+				
+				connectionParts.add(connectionPart);
+			}
 		}
-		return memberRoles;
+		return connectionParts;
 	}
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
 		return new LockedRecordSourceAnchor((RecordFigure) getFigure(), 
-									   		(MemberRole) connection.getModel());
+									   		(ConnectionPart) connection.getModel());
 	}
 	
 	@Override
@@ -228,16 +239,17 @@ public class RecordEditPart
 			return super.getSourceConnectionAnchor(request);
 		}
 		ReconnectRequest rRequest = (ReconnectRequest)request;						
-		MemberRole memberRole = 
-			(MemberRole)rRequest.getConnectionEditPart().getModel();
+		ConnectionPart connectionPart = 
+			(ConnectionPart)rRequest.getConnectionEditPart().getModel();
 		return new ReconnectEndpointAnchor((RecordFigure)getFigure(), 
-										   rRequest.getLocation(), memberRole);	
+										   rRequest.getLocation(), 
+										   connectionPart);	
 	}
 	
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
 		return new LockedRecordTargetAnchor((RecordFigure) getFigure(), 
-										   (MemberRole) connection.getModel());
+										    (ConnectionPart) connection.getModel());
 	}
 	
 	@Override
@@ -246,20 +258,25 @@ public class RecordEditPart
 			return super.getSourceConnectionAnchor(request);
 		}
 		ReconnectRequest rRequest = (ReconnectRequest)request;		
-		MemberRole memberRole = 
-			(MemberRole)rRequest.getConnectionEditPart().getModel();
+		ConnectionPart connectionPart = 
+			(ConnectionPart)rRequest.getConnectionEditPart().getModel();
 		return new ReconnectEndpointAnchor((RecordFigure)getFigure(), 
-										   rRequest.getLocation(), memberRole);	
+										   rRequest.getLocation(), 
+										   connectionPart);	
 	}
 	
 	@Override
 	protected void refreshConnections() {
 		for (OwnerRole ownerRole : getModel().getOwnerRoles()) {
 			for (MemberRole memberRole : ownerRole.getSet().getMembers()) {
-				GraphicalEditPart editPart = 
-					(GraphicalEditPart) getViewer().getEditPartRegistry()
-											  	   .get(memberRole);
-				editPart.refresh();
+				for (ConnectionPart connectionPart : 
+					 memberRole.getConnectionParts()) {
+					
+					GraphicalEditPart editPart = 
+						(GraphicalEditPart) getViewer().getEditPartRegistry()
+												  	   .get(connectionPart);
+					editPart.refresh();
+				}
 			}
 		}		
 	}

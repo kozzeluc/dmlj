@@ -2,21 +2,21 @@ package org.lh.dmlj.schema.editor.anchor;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 /**
  * An anchor that will locate the target (member) connection endpoint for a 
  * record as follows :
  * <ul>
- * <li>If the diagramTargetAnchor attribute of the connection's MemberRole
- *     model object is set, these offsets to the record figure location (stored 
- *     at a scale of 1) are used to calculate the location of the connection 
- *     endpoint.<br><br></li>
- * <li>If the diagramTargetAnchor attribute of the connection's MemberRole
- *     model object is NOT set, the anchor location is determined depending on 
- *     the kind of set we're dealing with :<br><br>
+ * <li>If the targetEndpointLocation attribute of the connection's 
+ *     ConnectionPart model object is set, these offsets to the record figure 
+ *     location (stored at a scale of 1) are used to calculate the location of 
+ *     the connection endpoint.<br><br></li>
+ * <li>If the targetEndpointLocation attribute of the connection's 
+ *     ConnectionPart model object is NOT set, the anchor location is determined 
+ *     depending on the kind of set we're dealing with :<br><br>
  *     <ul> 
  *     <li>In the case of a <i>user owned set</i>, the location returned by a 
  *         standard chopbox anchor for the record figure will be used.
@@ -26,9 +26,8 @@ import org.lh.dmlj.schema.editor.figure.RecordFigure;
  *         location.</li>
  *     </ul>
  *     In either case, the anchor location will be locked (i.e. the same value
- *     will be returned until the 
- *     diagramTargetAnchor attribute of the connection's MemberRole model object 
- *     is set)
+ *     will be returned until the targetEndpointLocation attribute of the 
+ *     connection's ConnectionPart model object is set)
  * </ul>
  */
 public class LockedRecordTargetAnchor extends AbstractLockedRecordAnchor {
@@ -36,10 +35,12 @@ public class LockedRecordTargetAnchor extends AbstractLockedRecordAnchor {
 	/**
 	 * Constructs a LockedRecordTargetAnchor with the given record figure.
 	 * @param figure The target (member) record figure
-	 * @param memberRole The MemberRole model object representing the connection
+	 * @param connectionPart The ConnectionPart model object representing the 
+	 *        connection
 	 */
-	public LockedRecordTargetAnchor(RecordFigure figure, MemberRole memberRole) {
-		super(figure, memberRole);
+	public LockedRecordTargetAnchor(RecordFigure figure, 
+									ConnectionPart connectionPart) {
+		super(figure, connectionPart);
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class LockedRecordTargetAnchor extends AbstractLockedRecordAnchor {
 		
 		// in the case of a user owned set, just call the super implementation
 		// of this method...
-		if (memberRole.getSet().getSystemOwner() == null) {
+		if (connectionPart.getMemberRole().getSet().getSystemOwner() == null) {
 			return super.getDefaultLocation(originalReference);
 		}
 		
@@ -108,8 +109,8 @@ public class LockedRecordTargetAnchor extends AbstractLockedRecordAnchor {
 	@Override
 	protected DiagramLocation getModelEndpoint() {
 		// we currently don't support split connections (i.e. 2 connection
-		// parts, each with a Connector attached, for 1 set)
-		return memberRole.getConnectionParts().get(0).getTargetEndpointLocation();
+		// parts, each with a connector attached, for 1 set)
+		return connectionPart.getTargetEndpointLocation();
 	}
 	
 }

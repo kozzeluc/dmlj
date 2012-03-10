@@ -4,31 +4,31 @@ import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public abstract class AbstractLockedRecordAnchor extends ChopboxAnchor {
 
 	protected PrecisionPoint lockedOffset;
-	protected MemberRole 	 memberRole;
+	protected ConnectionPart connectionPart;
 	protected Schema		 schema;
 	
 	protected AbstractLockedRecordAnchor(RecordFigure figure, 
-										 MemberRole memberRole) {
+									     ConnectionPart connectionPart) {
 		super(figure);
-		this.memberRole = memberRole;	
-		this.schema = memberRole.getSet().getSchema();
+		this.connectionPart = connectionPart;	
+		this.schema = connectionPart.getMemberRole().getSet().getSchema();
 	}	
 
 	/**
 	 * Returns the standard chopbox anchor's location, given a reference, for 
 	 * the record figure.<br><br>  
-	 * This method will only be called if the 
-	 * diagramSourceAnchor attribute of the connection's MemberRole model object 
-	 * is not set.  Subclasses can override this method to return a different
-	 * anchor location.
+	 * This method will only be called if the sourceEndpointLocation (or 
+	 * targetEndpointLocation) attribute of the connection's ConnectionPart 
+	 * model object is not set.  Subclasses can override this method to return a 
+	 * different anchor location.
 	 * @param reference The reference point
 	 * @return The anchor location in absolute coordinates
 	 */
@@ -55,8 +55,9 @@ public abstract class AbstractLockedRecordAnchor extends ChopboxAnchor {
 			Rectangle figureBounds = getOwner().getBounds().getCopy();
 			getOwner().translateToAbsolute(figureBounds);
 			Point defaultLocation = getDefaultLocation(reference);							
-			lockedOffset = new PrecisionPoint(defaultLocation.x - figureBounds.x, 
-											  defaultLocation.y - figureBounds.y);
+			lockedOffset = 
+				new PrecisionPoint(defaultLocation.x - figureBounds.x, 
+								   defaultLocation.y - figureBounds.y);
 			// unscale the offset if needed...
 			double zoomLevel = schema.getDiagramData().getZoomLevel();
 			if (zoomLevel != 1.0) {
@@ -79,8 +80,10 @@ public abstract class AbstractLockedRecordAnchor extends ChopboxAnchor {
 		PrecisionPoint anchorLocation = 
 			new PrecisionPoint(getOwner().getBounds().getTopLeft());
 		getOwner().translateToAbsolute(anchorLocation); 
-		anchorLocation.setPreciseX(anchorLocation.preciseX() + scaledOffset.preciseX());
-		anchorLocation.setPreciseY(anchorLocation.preciseY() + scaledOffset.preciseY());
+		anchorLocation.setPreciseX(anchorLocation.preciseX() + 
+								   scaledOffset.preciseX());
+		anchorLocation.setPreciseY(anchorLocation.preciseY() + 
+								   scaledOffset.preciseY());
 		
 		return anchorLocation;
 	}

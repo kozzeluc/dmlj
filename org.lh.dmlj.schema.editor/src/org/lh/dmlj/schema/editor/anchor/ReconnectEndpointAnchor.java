@@ -6,7 +6,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 /**
@@ -15,9 +15,9 @@ import org.lh.dmlj.schema.editor.figure.RecordFigure;
  */
 public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	
-	private RecordFigure figure;
-	private MemberRole   memberRole;
-	private Point 	     mouseLocation;
+	private RecordFigure   figure;
+	private ConnectionPart connectionPart;
+	private Point 	       mouseLocation;
 	
 	/**
 	 * Calculates, for a given mouse location, the (unscaled) location where an 
@@ -77,11 +77,11 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	}
 	
 	public ReconnectEndpointAnchor(RecordFigure figure, Point mouseLocation,
-								   MemberRole memberRole) {
+								   ConnectionPart connectionPart) {
 		super();
 		this.figure = figure;
 		this.mouseLocation = mouseLocation;		
-		this.memberRole = memberRole;
+		this.connectionPart = connectionPart;
 	}
 
 	@Override
@@ -92,8 +92,11 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	public Point getLocation(Point reference) {
 		// get the location where the endpoint should go, relative to the 
 		// figure and unscaled...
-		double zoomLevel = 
-			memberRole.getSet().getSchema().getDiagramData().getZoomLevel();
+		double zoomLevel = connectionPart.getMemberRole()
+										 .getSet()
+										 .getSchema()
+										 .getDiagramData()
+										 .getZoomLevel();
 		PrecisionPoint result = 
 			getRelativeLocation(figure, mouseLocation, reference, zoomLevel);
 		// scale the relative location...

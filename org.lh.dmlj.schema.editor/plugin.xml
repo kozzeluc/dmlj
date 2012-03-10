@@ -269,7 +269,7 @@
                id="org.lh.dmlj.schema.editor.propertySectionSetName"
                tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
             <input
-                  type="org.lh.dmlj.schema.MemberRole">
+                  type="org.lh.dmlj.schema.ConnectionPart">
             </input>
             <input
                   type="org.lh.dmlj.schema.ConnectionLabel">
@@ -284,7 +284,7 @@
                id="org.lh.dmlj.schema.editor.propertySectionSetMode"
                tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
             <input
-                  type="org.lh.dmlj.schema.MemberRole">
+                  type="org.lh.dmlj.schema.ConnectionPart">
             </input>
             <input
                   type="org.lh.dmlj.schema.ConnectionLabel">
@@ -299,7 +299,7 @@
                id="org.lh.dmlj.schema.editor.propertySectionSetOrder"
                tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
             <input
-                  type="org.lh.dmlj.schema.MemberRole">
+                  type="org.lh.dmlj.schema.ConnectionPart">
             </input>
             <input
                   type="org.lh.dmlj.schema.ConnectionLabel">
@@ -353,7 +353,7 @@
                id="org.lh.dmlj.schema.editor.propertySectionSetMemberName"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
             <input
-                  type="org.lh.dmlj.schema.MemberRole">
+                  type="org.lh.dmlj.schema.ConnectionPart">
             </input>
             <input
                   type="org.lh.dmlj.schema.ConnectionLabel">
@@ -368,7 +368,7 @@
                id="org.lh.dmlj.schema.editor.propertySectionSetMemberArea"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
             <input
-                  type="org.lh.dmlj.schema.MemberRole">
+                  type="org.lh.dmlj.schema.ConnectionPart">
             </input>
             <input
                   type="org.lh.dmlj.schema.ConnectionLabel">
@@ -451,7 +451,7 @@
                id="org.lh.dmlj.schema.editor.propertySectionSetSyntax"
                tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
             <input
-                  type="org.lh.dmlj.schema.MemberRole">
+                  type="org.lh.dmlj.schema.ConnectionPart">
             </input>
             <input
                   type="org.lh.dmlj.schema.ConnectionLabel">

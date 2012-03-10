@@ -1,22 +1,22 @@
 package org.lh.dmlj.schema.editor.anchor;
 
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 /**
  * An anchor that will locate the source (owner) connection endpoint for a 
  * record as follows :
  * <ul>
- * <li>If the diagramSourceAnchor attribute of the connection's MemberRole
- *     model object is set, these offsets to the record figure location(stored 
- *     at a scale of 1) are used to calculate the location of the connection 
- *     endpoint.<br><br></li>
- * <li>If the diagramSourceAnchor attribute of the connection's MemberRole
- *     model object is NOT set, the location returned by a standard chopbox 
- *     anchor for the record figure will be used and locked (i.e. the same value
- *     will be returned until the diagramSourceAnchor attribute of the 
- *     connection's MemberRole model object is set).</li>
+ * <li>If the sourceEndpointLocation attribute of the connection's 
+ *     ConnectionPart model object is set, these offsets to the record figure 
+ *     location (stored at a scale of 1) are used to calculate the location of 
+ *     the connection endpoint.<br><br></li>
+ * <li>If the sourceEndpointLocation attribute of the connection's 
+ *     ConnectionPart model object is NOT set, the location returned by a 
+ *     standard chopbox anchor for the record figure will be used and locked 
+ *     (i.e. the same value will be returned until the sourceEndpointLocation 
+ *     attribute of the connection's ConnectionPart model object is set).</li>
  * </ul>
  */
 public class LockedRecordSourceAnchor extends AbstractLockedRecordAnchor {
@@ -24,17 +24,19 @@ public class LockedRecordSourceAnchor extends AbstractLockedRecordAnchor {
 	/**
 	 * Constructs a LockedRecordSourceAnchor with the given record figure.
 	 * @param figure The source (owner) record figure
-	 * @param memberRole The MemberRole model object representing the connection
+	 * @param connectionPart The ConnectionPart model object representing the 
+	 *        connection
 	 */
-	public LockedRecordSourceAnchor(RecordFigure figure, MemberRole memberRole) {
-		super(figure, memberRole);
+	public LockedRecordSourceAnchor(RecordFigure figure, 
+									ConnectionPart connectionPart) {
+		super(figure, connectionPart);
 	}
 	
 	@Override
 	protected DiagramLocation getModelEndpoint() {
 		// we currently don't support split connections (i.e. 2 connection 
-		// parts, each with a Connector attached, for 1 set)
-		return memberRole.getConnectionParts().get(0).getSourceEndpointLocation();
+		// parts, each with a connector attached, for 1 set)
+		return connectionPart.getSourceEndpointLocation();
 	}	
 	
 }

@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.SetDescriptionFigure;
@@ -40,16 +41,18 @@ public class SetDescriptionEditPart
 		if (request instanceof ChangeBoundsRequest) {
 			// Change the line color of the connection parts to which this label
 			// belongs to red so that the user can see to which connection parts
-			// the label belongs; currently it is assumed that there is only 1
-			// connection part for a set; the edit part's model object type is
-			// currently MemberRole but this will soon change to ConnectionPart.
-			SetEditPart setEditPart = 
-				(SetEditPart) getViewer().getEditPartRegistry()
-										 .get(getModel().getMemberRole());
-			PolylineConnection connection = 
-				(PolylineConnection) setEditPart.getFigure();
-			connection.setLineWidth(2);
-			connection.setForegroundColor(ColorConstants.red);
+			// the label belongs.
+			for (ConnectionPart connectionPart : 
+				 getModel().getMemberRole().getConnectionParts()) {
+				
+				SetEditPart setEditPart = 
+					(SetEditPart) getViewer().getEditPartRegistry()
+											 .get(connectionPart);
+				PolylineConnection connection = 
+					(PolylineConnection) setEditPart.getFigure();
+				connection.setLineWidth(2);
+				connection.setForegroundColor(ColorConstants.red);
+			}
 		}
 		super.showSourceFeedback(request);
 	}
@@ -58,16 +61,18 @@ public class SetDescriptionEditPart
 	public void eraseSourceFeedback(Request request) {
 		if (request instanceof ChangeBoundsRequest) {
 			// Change the line color of the connection parts to which this label
-			// belongs back to black; currently it is assumed that there is only 
-			// 1 connection part for a set; the edit part's model object type is
-			// currently MemberRole but this will soon change to ConnectionPart.
-			SetEditPart setEditPart = 
-				(SetEditPart) getViewer().getEditPartRegistry()
-										 .get(getModel()
-										 .getMemberRole());
-			PolylineConnection connection = (PolylineConnection) setEditPart.getFigure();
-			connection.setLineWidth(1);
-			connection.setForegroundColor(ColorConstants.black);
+			// belongs back to black.
+			for (ConnectionPart connectionPart : 
+				 getModel().getMemberRole().getConnectionParts()) {
+				
+				SetEditPart setEditPart = 
+					(SetEditPart) getViewer().getEditPartRegistry()
+											 .get(connectionPart);
+				PolylineConnection connection = 
+					(PolylineConnection) setEditPart.getFigure();
+				connection.setLineWidth(1);
+				connection.setForegroundColor(ColorConstants.black);
+			}
 		}
 		super.eraseSourceFeedback(request);
 	}
