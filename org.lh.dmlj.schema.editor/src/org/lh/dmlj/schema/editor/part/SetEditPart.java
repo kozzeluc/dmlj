@@ -17,13 +17,18 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
+import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
+import org.eclipse.gef.requests.CreateRequest;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.editor.command.CreateConnectorCommand;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 
 /** 
@@ -83,6 +88,21 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	
 	@Override
 	protected void createEditPolicies() {
+		
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutEditPolicy() {
+
+			@Override
+			protected Command getCreateCommand(CreateRequest request) {
+				if (request.getNewObjectType() != Connector.class ||
+					getModel().getMemberRole().getConnectionParts().size() > 1) {
+					
+					return null;
+				}				
+				return new CreateConnectorCommand(getModel().getMemberRole(),
+						   						  request.getLocation());
+			}
+			
+		});	
 		
 		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE,
 						  new ConnectionEndpointEditPolicy());

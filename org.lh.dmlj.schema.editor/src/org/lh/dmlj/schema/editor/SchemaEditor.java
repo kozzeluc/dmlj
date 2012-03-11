@@ -34,11 +34,14 @@ import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
+import org.eclipse.gef.palette.PaletteDrawer;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.PaletteToolbar;
 import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
+import org.eclipse.gef.requests.SimpleFactory;
 import org.eclipse.gef.ui.actions.ToggleGridAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
@@ -67,6 +70,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.command.SetShowGridCommand;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
@@ -433,12 +437,23 @@ public class SchemaEditor
 	protected PaletteRoot getPaletteRoot() {
 		PaletteRoot palette = new PaletteRoot();
         
-        PaletteToolbar toolbar = new PaletteToolbar("Tools");
+        // selection tools
+		PaletteToolbar toolbar = new PaletteToolbar("Tools");
         ToolEntry tool = new PanningSelectionToolEntry();
         toolbar.add(tool);
         palette.setDefaultEntry(tool);
         toolbar.add(new MarqueeToolEntry());
         palette.add(toolbar);
+        
+        // connector creation tool        
+        CombinedTemplateCreationEntry component = 
+        	new CombinedTemplateCreationEntry("Connector", "Add a connector", 
+        			new SimpleFactory(Connector.class), null, null);
+        
+        // Elements drawer
+        PaletteDrawer createComponentsDrawer = new PaletteDrawer("Elements");
+        createComponentsDrawer.add(component);
+        palette.add(createComponentsDrawer);
        
         return palette; 
 	}
