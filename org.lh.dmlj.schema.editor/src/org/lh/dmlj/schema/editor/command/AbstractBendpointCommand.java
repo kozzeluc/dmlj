@@ -1,29 +1,29 @@
 package org.lh.dmlj.schema.editor.command;
 
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaFactory;
 
 public abstract class AbstractBendpointCommand extends Command {
 
-	protected int 		 index;
-	protected MemberRole memberRole;
-	protected int		 oldX;
-	protected int		 oldY;
-	protected int		 x;
-	protected int		 y;
+	protected ConnectionPart connectionPart;
+	protected int 		 	 index;	
+	protected int		 	 oldX;
+	protected int		 	 oldY;
+	protected int		 	 x;
+	protected int		 	 y;
 	
-	public AbstractBendpointCommand(MemberRole memberRole, int index) {
+	public AbstractBendpointCommand(ConnectionPart connectionPart, int index) {
 		super();
-		this.memberRole = memberRole; 
+		this.connectionPart = connectionPart; 
 		this.index = index;
 	}
 	
-	public AbstractBendpointCommand(MemberRole memberRole, int index, int x, 
-									int y) {
+	public AbstractBendpointCommand(ConnectionPart connectionPart, int index, 
+								    int x, int y) {
 		super();
-		this.memberRole = memberRole; 
+		this.connectionPart = connectionPart; 
 		this.index = index;
 		this.x = x;
 		this.y = y;
@@ -31,8 +31,8 @@ public abstract class AbstractBendpointCommand extends Command {
 	
 	/**
 	 * Creates a new bendpoint and inserts it at the right index in the 
-	 * MemberRole (which represents the connection) and as the last element of 
-	 * the schema container's diagram data.
+	 * ConnectionPart (which represents the connection) and as the last element 
+	 * of the schema container's diagram data.
 	 * @param index the index at which the bendpoints needs to be inserted
 	 * @param x the bendpoint's (absolute) x coordinate
 	 * @param y the bendpoint's (absolute) y coordinate
@@ -40,41 +40,83 @@ public abstract class AbstractBendpointCommand extends Command {
 	 */
 	protected DiagramLocation insertBendpoint(int index, int x, int y) {
 	
+		// The line representing a set consists of either 1 or 2 connections; in
+		// the latter case a connector is present on both source and target 
+		// endpoint locations; the numbering of the eyecatcher indexes for the 
+		// second ConnectionPart's bendpoints starts at 1 plus the last 
+		// bendpoint of the first ConnectionPart (or zero if the first 
+		// ConnectionPart has no bendpoints).  Although the eyecatcher is 
+		// purely documentational, this avoids duplicate eyecatcher indexes for
+		// a set.
+		int eyecatcherIndex = index;
+		if (connectionPart.getMemberRole()
+						  .getConnectionParts()
+						  .indexOf(connectionPart) > 0) {
+			
+			eyecatcherIndex += connectionPart.getMemberRole()
+										     .getConnectionParts()
+										     .get(0)
+										     .getBendpointLocations()
+										     .size();
+		}
+		
 		// create the bendpoint...
 		DiagramLocation bendpoint = 
 			SchemaFactory.eINSTANCE.createDiagramLocation();
 		bendpoint.setX(x);
-		bendpoint.setY(y);		
-		bendpoint.setEyecatcher("bendpoint [" + index + "] set " + 
-								memberRole.getSet().getName() + " (" + 
-								memberRole.getRecord().getName() + ")");
+		bendpoint.setY(y);
+		bendpoint.setEyecatcher("bendpoint [" + eyecatcherIndex + "] set " + 
+								connectionPart.getMemberRole()
+											  .getSet()
+											  .getName() + " (" + 
+								connectionPart.getMemberRole()
+											  .getRecord()
+											  .getName() + ")");
 		
 		// add it to the schema (container)...
-		memberRole.getSet()
-		  		  .getSchema()
-		  		  .getDiagramData()
-		  		  .getLocations()
-		  		  .add(bendpoint);
+		connectionPart.getMemberRole()
+					  .getSet()
+					  .getSchema()
+					  .getDiagramData()
+					  .getLocations()
+					  .add(bendpoint);
 
-		// insert it at the right place in the connection (we currently don't
-		// support split connections, i.e. only 1 connection part per set, not 
-		// 2)...
-		memberRole.getConnectionParts()
-				  .get(0)
-				  .getBendpointLocations()
-				  .add(index, bendpoint);
+		// insert it at the right place in the connection...
+		connectionPart.getBendpointLocations().add(index, bendpoint);
 		
 		// modify the eyecatcher of subsequent bendpoints, if any...
-		int j = 
-			memberRole.getConnectionParts().get(0).getBendpointLocations().size();
+		int j = connectionPart.getBendpointLocations().size();
 		for (int i = index + 1; i < j; i++) {
-			DiagramLocation aBendpoint = memberRole.getConnectionParts()
-												   .get(0)
-												   .getBendpointLocations()
-												   .get(i);
-			aBendpoint.setEyecatcher("bendpoint [" + i + "] set " + 
-									 memberRole.getSet().getName() + " (" + 
-									 memberRole.getRecord().getName() + ")");
+			DiagramLocation aBendpoint = 
+				connectionPart.getBendpointLocations().get(i);
+			aBendpoint.setEyecatcher("bendpoint [" + ++eyecatcherIndex + 
+									 "] set " + 
+									 connectionPart.getMemberRole()
+									 			   .getSet()
+									 			   .getName() + " (" + 
+									 connectionPart.getMemberRole()
+									 			   .getRecord()
+									 			   .getName() + ")");
+		}
+		if (connectionPart.getMemberRole().getConnectionParts().size() > 1 &&
+			connectionPart.getMemberRole()
+				  		  .getConnectionParts()
+				  		  .indexOf(connectionPart) == 0) {
+			
+			for (DiagramLocation aBendpoint : connectionPart.getMemberRole()
+															.getConnectionParts()
+															.get(1)
+															.getBendpointLocations()) {
+				
+				aBendpoint.setEyecatcher("bendpoint [" + ++eyecatcherIndex + 
+						 				 "] set " + 
+						 				 connectionPart.getMemberRole()
+						 				 			   .getSet()
+						 				 			   .getName() + " (" + 
+						 				 connectionPart.getMemberRole()
+						 				 			   .getRecord()
+						 				 			   .getName() + ")");
+			}
 		}
 		
 		return bendpoint;
@@ -82,47 +124,84 @@ public abstract class AbstractBendpointCommand extends Command {
 	}
 	
 	/**
-	 * Removes a bendpoint from the first Connection in the MemberRole (which 
-	 * represents the connection; we don't support split connections for a set) 
-	 * and the schema (container).  Upon return, oldX and oldY will contain the 
-	 * removed bendpoint's x and y attributes.
+	 * Removes a bendpoint from the ConnectionPart (which represents the 
+	 * connection and the schema (container).  Upon return, oldX and oldY will 
+	 * contain the removed bendpoint's x and y attributes.
 	 * @param index the index of the bendpoint to remove
 	 */
 	protected void removeBendpoint(int index) {
 		
 		// go grab the bendpoint and save the x and y attributes...
-		DiagramLocation bendpoint = memberRole.getConnectionParts()
-					  						  .get(0)
-					  						  .getBendpointLocations()
-					  						  .get(index);
+		DiagramLocation bendpoint = 
+			connectionPart.getBendpointLocations().get(index);
 		oldX = bendpoint.getX();
 		oldY = bendpoint.getY();
 			
 		// remove it from the schema (container)...
-		memberRole.getSet()
-				  .getSchema()
-				  .getDiagramData()
-				  .getLocations()
-				  .remove(bendpoint);
+		connectionPart.getMemberRole()
+					  .getSet()
+					  .getSchema()
+					  .getDiagramData()
+					  .getLocations()
+					  .remove(bendpoint);
 		
-		// remove it from the MemberRole's first connection...
-		memberRole.getConnectionParts()
-				  .get(0)
-				  .getBendpointLocations()
-				  .remove(index);
+		// remove it from the ConnectionPart...
+		connectionPart.getBendpointLocations().remove(index);
+		
+		// The line representing a set consists of either 1 or 2 connections; in
+		// the latter case a connector is present on both source and target 
+		// endpoint locations; the numbering of the eyecatcher indexes for the 
+		// second ConnectionPart's bendpoints starts at 1 plus the last 
+		// bendpoint of the first ConnectionPart (or zero if the first 
+		// ConnectionPart has no bendpoints).  Although the eyecatcher is 
+		// purely documentational, this avoids duplicate eyecatcher indexes for
+		// a set.
+		int eyecatcherIndex = index;
+		if (connectionPart.getMemberRole()
+						  .getConnectionParts()
+						  .indexOf(connectionPart) > 0) {
+			
+			eyecatcherIndex += connectionPart.getMemberRole()
+										     .getConnectionParts()
+										     .get(0)
+										     .getBendpointLocations()
+										     .size();
+		}		
 		
 		// modify the eyecatcher of subsequent bendpoints, if any...
-		int j = 
-			memberRole.getConnectionParts().get(0).getBendpointLocations().size();
+		int j = connectionPart.getBendpointLocations().size();
 		for (int i = index; i < j; i++) {
-			DiagramLocation aBendpoint = memberRole.getConnectionParts()
-												   .get(0)
-												   .getBendpointLocations()
-												   .get(i);
-			aBendpoint.setEyecatcher("bendpoint [" + i + "] set " + 
-									 memberRole.getSet().getName() + " (" + 
-									 memberRole.getRecord().getName() + ")");
+			DiagramLocation aBendpoint = 
+				connectionPart.getBendpointLocations().get(i);
+			aBendpoint.setEyecatcher("bendpoint [" + eyecatcherIndex++ + 
+									 "] set " + 
+									 connectionPart.getMemberRole()
+									 			   .getSet()
+									 			   .getName() + " (" + 
+									 connectionPart.getMemberRole()
+									 			   .getRecord()
+									 			   .getName() + ")");
 		}
-	}
+		if (connectionPart.getMemberRole().getConnectionParts().size() > 1 &&
+			connectionPart.getMemberRole()
+				  		  .getConnectionParts()
+				  		  .indexOf(connectionPart) == 0) {
+				
+			for (DiagramLocation aBendpoint : connectionPart.getMemberRole()
+															.getConnectionParts()
+															.get(1)
+															.getBendpointLocations()) {
+					
+				aBendpoint.setEyecatcher("bendpoint [" + eyecatcherIndex++ + 
+						 				 "] set " + 
+						 				 connectionPart.getMemberRole()
+						 				 			   .getSet()
+						 				 			   .getName() + " (" + 
+						 				 connectionPart.getMemberRole()
+						 				 			   .getRecord()
+						 				 			   .getName() + ")");
+			}
+		}		
+	}	
 	
 }

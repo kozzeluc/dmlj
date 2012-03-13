@@ -4,6 +4,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
@@ -25,6 +26,10 @@ public class SortedSetFilter implements IFilter {
         } else if (modelObject instanceof ConnectionLabel) {
         	MemberRole memberRole = 
         		((ConnectionLabel)modelObject).getMemberRole();
+        	set = memberRole.getSet();
+        } else if (modelObject instanceof Connector) {
+        	MemberRole memberRole = 
+        		((Connector)modelObject).getConnectionPart().getMemberRole();
         	set = memberRole.getSet();
         } else if (modelObject instanceof SystemOwner) {
         	SystemOwner systemOwner = (SystemOwner) modelObject;

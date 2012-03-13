@@ -28,15 +28,16 @@ import org.lh.dmlj.schema.editor.command.SetStringAttributeCommand;
 
 /**
  * An abstract superclass for sections in the tabbed properties view that can be
- * used to edit an attribute or view a reference in an Ecore model object.  
+ * used to view/edit an attribute or view a reference in an Ecore model object.  
  * Setting the new attribute value is done through the command stack.<br><br>
- * Subclasses must supply the attribute and an indicator if the attribute is 
- * offered read-only or the reference during construction, must override the 
- * getModelObject and getValidEditPartModelObjectTypes methods and, if they want 
- * a description to be shown, the getDescription method.  Subclasses should 
- * override the getLabel method if they want another label than the attribute's 
- * name to be used.  Subclasses can override the getStringValue method if they 
- * want to manipulate the attribute's value or reference to be shown.
+ * Subclasses must supply the attribute or the reference and (in the case of an
+ * attribute) an indicator if it is offered read-only during construction, must 
+ * override the getModelObject and getValidEditPartModelObjectTypes methods and, 
+ * if they want a description to be shown, the getDescription method.  
+ * Subclasses should override the getLabel method if they want another label 
+ * than the attribute's name to be used.  Subclasses can override the 
+ * getStringValue method if they want to manipulate the attribute's value or 
+ * reference to be shown.
  */
 public abstract class AbstractStructuralFeatureSection<T extends EObject> 
 	extends AbstractPropertySection {
@@ -215,7 +216,7 @@ public abstract class AbstractStructuralFeatureSection<T extends EObject>
 		@Override
 		public void keyReleased(KeyEvent e) {
 			Text labelText = (Text) e.getSource();
-			if (e.keyCode == 13) {								
+			if (e.keyCode == 13 || e.keyCode == 16777296) { // enter-keys								
 				SetStringAttributeCommand command = 
 					new SetStringAttributeCommand(modelObject,
 										  	      attribute,

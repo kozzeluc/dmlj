@@ -47,6 +47,8 @@ import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
  */
 public class SetEditPart extends AbstractConnectionEditPart {
 
+	private MemberRole memberRole;
+	
 	private Adapter changeListener = new Adapter() {
 		
 		@Override
@@ -73,6 +75,10 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	public SetEditPart(ConnectionPart connectionPart) {
 		super();
 		setModel(connectionPart);
+		// keep track of the MemberRole because if connectors are involved and
+		// deleted, the reference to that MemberRole will be nullified in the
+		// ConnectionPart
+		this.memberRole = connectionPart.getMemberRole();
 	}
 	
 	@Override
@@ -82,8 +88,8 @@ public class SetEditPart extends AbstractConnectionEditPart {
 		// which it belongs and the Set; we ignore the other ConnectionPart
 		// belonging to the MemberRole, if any...
 		getModel().eAdapters().add(changeListener);			 
-		getModel().getMemberRole().eAdapters().add(changeListener); 	
-		getModel().getMemberRole().getSet().eAdapters().add(changeListener);
+		memberRole.eAdapters().add(changeListener); 	
+		memberRole.getSet().eAdapters().add(changeListener);
 	}	
 	
 	@Override
@@ -93,13 +99,21 @@ public class SetEditPart extends AbstractConnectionEditPart {
 
 			@Override
 			protected Command getCreateCommand(CreateRequest request) {
+				
+				// make sure the connector tool is used and that the current
+				// set line consists of only 1 part
 				if (request.getNewObjectType() != Connector.class ||
 					getModel().getMemberRole().getConnectionParts().size() > 1) {
 					
 					return null;
-				}				
-				return new CreateConnectorCommand(getModel().getMemberRole(),
-						   						  request.getLocation());
+				}	
+				
+				// calculate the unscaled connector location...
+		        PrecisionPoint p = new PrecisionPoint(request.getLocation().x,
+		        									  request.getLocation().y); 				
+		        getFigure().translateToRelative(p);
+				
+				return new CreateConnectorCommand(getModel().getMemberRole(), p);
 			}
 			
 		});	
@@ -153,10 +167,14 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	@Override
 	public final void deactivate() {
 		// remove the model change listeners...		 	
-		getModel().getMemberRole().getSet().eAdapters().remove(changeListener);
-		getModel().getMemberRole().eAdapters().remove(changeListener);
+		memberRole.getSet().eAdapters().remove(changeListener);
+		memberRole.eAdapters().remove(changeListener);
 		getModel().eAdapters().remove(changeListener);			 
 		super.deactivate();
+	}
+	
+	public MemberRole getMemberRole() {
+		return memberRole;
 	}
 	
 	public ConnectionPart getModel() {
@@ -170,12 +188,12 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	 */
 	private PrecisionPoint getOwnerFigureLocation() {		
 		DiagramNode owner;
-		if (getModel().getMemberRole().getSet().getSystemOwner() != null) {
+		if (memberRole.getSet().getSystemOwner() != null) {
 			// system owned set
-			owner = getModel().getMemberRole().getSet().getSystemOwner();			 
+			owner = memberRole.getSet().getSystemOwner();			 
 		} else {
 			// user owned set
-			owner = getModel().getMemberRole().getSet().getOwner().getRecord();
+			owner = memberRole.getSet().getOwner().getRecord();
 		}
 		DiagramLocation location = owner.getDiagramLocation();
 		return new PrecisionPoint(location.getX(), location.getY());

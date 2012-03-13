@@ -68,6 +68,14 @@ public class RecordEditPart
 				}
 				ConnectionPart connectionPart = 
 					(ConnectionPart) request.getConnectionEditPart().getModel();
+				List<ConnectionPart> connectionParts = 
+					connectionPart.getMemberRole().getConnectionParts();
+				if (connectionParts.size() > 1 && 
+					connectionPart == connectionParts.get(1)) {
+						
+					// cannot set the source endpoint location on a connector 
+					return null;
+				}
 				OwnerRole ownerRole = 
 					connectionPart.getMemberRole().getSet().getOwner();
 				if (ownerRole != null && ownerRole.getRecord() == record) {	
@@ -117,14 +125,20 @@ public class RecordEditPart
 			@Override
 			protected Command getReconnectTargetCommand(ReconnectRequest request) {
 				// do not allow to change the member of the set; only the end
-				// location can be changed; we currently don't support split set
-				// connections (i.e. sets with 2 connections each with a 
-				// connector attached)...
+				// location can be changed
 				if (!(request.getConnectionEditPart() instanceof SetEditPart)) {
 					return null;
 				}
 				ConnectionPart connectionPart = 
 					(ConnectionPart) request.getConnectionEditPart().getModel();
+				List<ConnectionPart> connectionParts = 
+					connectionPart.getMemberRole().getConnectionParts();
+				if (connectionParts.size() > 1 && 
+					connectionPart == connectionParts.get(0)) {
+					
+					// cannot set the target endpoint location on a connector 
+					return null;
+				}
 				if (record == connectionPart.getMemberRole().getRecord()) {					
 					Point reference;
 					if (connectionPart.getBendpointLocations().isEmpty()) {
@@ -203,12 +217,10 @@ public class RecordEditPart
 	protected List<ConnectionPart> getModelSourceConnections() {
 		List<ConnectionPart> connectionParts = new ArrayList<>();
 		for (OwnerRole ownerRole : getModel().getOwnerRoles()) {
-			for (MemberRole memberRole : ownerRole.getSet().getMembers()) { 
-				for (ConnectionPart connectionPart : 
-					 memberRole.getConnectionParts()) {
-					
-					connectionParts.add(connectionPart);
-				}
+			for (MemberRole memberRole : ownerRole.getSet().getMembers()) { 				 
+				ConnectionPart connectionPart = 
+					memberRole.getConnectionParts().get(0);					
+				connectionParts.add(connectionPart);				
 			}
 		}
 		return connectionParts;
@@ -218,11 +230,10 @@ public class RecordEditPart
 	protected List<ConnectionPart> getModelTargetConnections() {
 		List<ConnectionPart> connectionParts = new ArrayList<>();
 		for (MemberRole memberRole : getModel().getMemberRoles()) {
-			for (ConnectionPart connectionPart : 
-				 memberRole.getConnectionParts()) {
-				
-				connectionParts.add(connectionPart);
-			}
+			int i = memberRole.getConnectionParts().size();
+			ConnectionPart connectionPart = 
+					memberRole.getConnectionParts().get(i - 1);					
+			connectionParts.add(connectionPart);
 		}
 		return connectionParts;
 	}

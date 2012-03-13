@@ -9,6 +9,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
+import org.lh.dmlj.schema.editor.part.ConnectorEditPart;
 import org.lh.dmlj.schema.editor.part.IndexEditPart;
 import org.lh.dmlj.schema.editor.part.RecordEditPart;
 import org.lh.dmlj.schema.editor.part.SetDescriptionEditPart;
@@ -38,13 +39,11 @@ public class MoveDiagramNodeEditPolicy extends XYLayoutEditPolicy {
 	}
 	
 	@Override
-	protected EditPolicy createChildEditPolicy(EditPart child) {
-		// todo: expand the next if statement to also return a 
-		// ModifiedNonResizableEditPolicy for ConnectorEditPart instances once
-		// that class is created
+	protected EditPolicy createChildEditPolicy(EditPart child) {		
 		if (child instanceof RecordEditPart ||
 			child instanceof IndexEditPart ||
-			child instanceof SetDescriptionEditPart) {
+			child instanceof SetDescriptionEditPart ||
+			child instanceof ConnectorEditPart) {
 			
 			return new ModifiedNonResizableEditPolicy();
 		}

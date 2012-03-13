@@ -4,6 +4,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SetMode;
 
@@ -23,6 +24,10 @@ public class ChainedSetFilter implements IFilter {
         	MemberRole memberRole = 
         		((ConnectionLabel)modelObject).getMemberRole();
         	return memberRole.getSet().getMode() == SetMode.CHAINED;
+        } else if (modelObject instanceof Connector) {
+        	MemberRole memberRole = 
+            	((Connector)modelObject).getConnectionPart().getMemberRole();
+            return memberRole.getSet().getMode() == SetMode.CHAINED;
         } else {
         	return false;
         }        

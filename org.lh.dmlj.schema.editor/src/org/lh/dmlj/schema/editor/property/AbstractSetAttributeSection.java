@@ -3,6 +3,7 @@ package org.lh.dmlj.schema.editor.property;
 import org.eclipse.emf.ecore.EAttribute;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
@@ -15,7 +16,7 @@ import org.lh.dmlj.schema.SystemOwner;
  * offered read-only during construction and, if they want a description to
  * be shown, the getDescription method of this class' superclass.<br><br>
  * Valid edit part model object types for these kind of sections are 
- * ConnectionPart, SchemaRecord, ConnectionLabel and SystemOwner.
+ * ConnectionPart, SchemaRecord, ConnectionLabel, SystemOwner and Connector.
  */
 public abstract class AbstractSetAttributeSection 
 	extends AbstractStructuralFeatureSection<Set> {		
@@ -37,9 +38,12 @@ public abstract class AbstractSetAttributeSection
 			ConnectionLabel setDescription =
 				(ConnectionLabel) editPartModelObject;
 			return setDescription.getMemberRole().getSet();
-		} else {
+		} else if (editPartModelObject instanceof SystemOwner) {
 			SystemOwner systemOwner = (SystemOwner) editPartModelObject;
 			return systemOwner.getSet();
+		} else {
+			Connector connector = (Connector) editPartModelObject;
+			return connector.getConnectionPart().getMemberRole().getSet();
 		}
 	}	
 	
@@ -47,6 +51,7 @@ public abstract class AbstractSetAttributeSection
 	protected final Class<?>[] getValidEditPartModelObjectTypes() {
 		return new Class<?>[] {ConnectionLabel.class,
 							   ConnectionPart.class,
+							   Connector.class,
 							   SchemaRecord.class,							   
 							   SystemOwner.class};
 	}

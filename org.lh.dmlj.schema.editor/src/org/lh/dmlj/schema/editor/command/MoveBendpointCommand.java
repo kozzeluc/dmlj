@@ -1,11 +1,12 @@
 package org.lh.dmlj.schema.editor.command;
 
-import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.ConnectionPart;
 
 public class MoveBendpointCommand extends AbstractBendpointCommand {	
 	
-	public MoveBendpointCommand(MemberRole memberRole, int index, int x, int y) {
-		super(memberRole, index, x, y);		
+	public MoveBendpointCommand(ConnectionPart connectionPart, int index, int x, 
+								int y) {
+		super(connectionPart, index, x, y);		
 	}
 	
 	@Override

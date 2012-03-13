@@ -26,8 +26,6 @@ public class LockEndpointsCommand extends Command {
 	
 	@Override
 	public void execute() {	
-		// we currently don't support split connections (i.e. sets with 2
-		// 2 connections parts each with a connector attached to it)...
 		if (memberRole.getConnectionParts()
 					  .get(0)
 					  .getSourceEndpointLocation() == null && 
@@ -53,7 +51,7 @@ public class LockEndpointsCommand extends Command {
 			ownerEndpointSet = true;
 		}
 		if (memberRole.getConnectionParts()
-					  .get(0)
+					  .get(memberRole.getConnectionParts().size() - 1)
 					  .getTargetEndpointLocation() == null) {
 			
 			DiagramLocation location = 
@@ -63,7 +61,7 @@ public class LockEndpointsCommand extends Command {
 			location.setEyecatcher("set " + memberRole.getSet().getName() + 
 								   " member endpoint");
 			memberRole.getConnectionParts()
-					  .get(0)
+			  		  .get(memberRole.getConnectionParts().size() - 1)
 					  .setTargetEndpointLocation(location);
 				
 			memberRole.getSet()

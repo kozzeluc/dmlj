@@ -5,14 +5,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipFile;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.lh.dmlj.schema.editor.job.JavadocDatabaseBuildJob;
@@ -44,6 +50,7 @@ public class Plugin extends AbstractUIPlugin {
 	private GraphDatabaseService 	neo4jDb;
 	private Font 					figureFont = 
 		new Font(Display.getCurrent(), "Arial", 6, SWT.NORMAL);
+	private Map<String, Image> 	 	images = new HashMap<String, Image>();
 	private Font 					syntaxFont = 
 		new Font(Display.getCurrent(), "Courier New", 10, SWT.NORMAL);
 	private File 					tmpFolder;
@@ -204,6 +211,23 @@ public class Plugin extends AbstractUIPlugin {
 	public Font getFigureFont() {
 		return figureFont;
 	}
+	
+	public Image getImage(String path) {
+		if (images.containsKey(path)) {
+			return images.get(path);
+		}
+		Image image = null;
+		URL baseURL = getBundle().getEntry("/");
+		try {
+			URL url = new URL(baseURL, path);
+			image = ImageDescriptor.createFromURL(url).createImage();
+		} catch (MalformedURLException e) {			
+		}
+		if (image != null) {
+			images.put(path, image);
+		}
+		return image;
+	}	
 	
 	/**
 	 * Creates a RecordInfoValueObject for the given record, provided that a

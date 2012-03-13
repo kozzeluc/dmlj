@@ -4,6 +4,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EReference;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -16,9 +17,9 @@ import org.lh.dmlj.schema.SystemOwner;
  * description to be shown, the getDescription method of this class' superclass.
  * <br><br>
  * Valid edit part model object types for these kind of sections are 
- * ConnectionPart, SchemaRecord, ConnectionLabel and SystemOwner.  For set 
- * related edit part model object types the set's sort key will be taken as the 
- * section's model object, for a schema record it will be the CALC key.
+ * ConnectionPart, SchemaRecord, ConnectionLabel, SystemOwner and Connector.  
+ * For set related edit part model object types the set's sort key will be taken 
+ * as the section's model object, for a schema record it will be the CALC key.
  */
 public abstract class AbstractKeyAttributeSection
     extends AbstractStructuralFeatureSection<Key> {	
@@ -44,6 +45,9 @@ public abstract class AbstractKeyAttributeSection
 			ConnectionLabel connectionLabel = 
 				(ConnectionLabel) editPartModelObject;
 			return connectionLabel.getMemberRole().getSortKey();
+		} else if (editPartModelObject instanceof Connector) {
+			Connector connector = (Connector) editPartModelObject;
+			return connector.getConnectionPart().getMemberRole().getSortKey();
 		} else {
 			// system owner
 			SystemOwner systemOwner = (SystemOwner) editPartModelObject;
@@ -55,6 +59,7 @@ public abstract class AbstractKeyAttributeSection
 	protected final Class<?>[] getValidEditPartModelObjectTypes() {
 		return new Class<?>[] {ConnectionLabel.class,
 							   ConnectionPart.class,
+							   Connector.class,
 							   SchemaRecord.class,							   
 							   SystemOwner.class};
 	}	

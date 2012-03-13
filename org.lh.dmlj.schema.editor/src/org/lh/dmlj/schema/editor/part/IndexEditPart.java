@@ -40,7 +40,8 @@ public class IndexEditPart extends AbstractDiagramNodeEditPart<SystemOwner> {
 	protected List<ConnectionPart> getModelSourceConnections() {
 		List<ConnectionPart> connectionParts = new ArrayList<>();
 		MemberRole memberRole = getModel().getSet().getMembers().get(0);
-		connectionParts.addAll(memberRole.getConnectionParts());
+		ConnectionPart connectionPart = memberRole.getConnectionParts().get(0);					
+		connectionParts.add(connectionPart);
 		return connectionParts;
 	}
 

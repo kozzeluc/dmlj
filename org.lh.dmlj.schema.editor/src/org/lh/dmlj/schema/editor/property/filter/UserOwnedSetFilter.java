@@ -4,6 +4,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 
 public class UserOwnedSetFilter implements IFilter {
@@ -19,6 +20,9 @@ public class UserOwnedSetFilter implements IFilter {
         	memberRole = ((ConnectionPart)modelObject).getMemberRole();
         } else if (modelObject instanceof ConnectionLabel) {
         	memberRole = ((ConnectionLabel)modelObject).getMemberRole();
+        } else if (modelObject instanceof Connector) {
+        	memberRole = 
+        		((Connector)modelObject).getConnectionPart().getMemberRole();
         } else {
         	return false;
         }

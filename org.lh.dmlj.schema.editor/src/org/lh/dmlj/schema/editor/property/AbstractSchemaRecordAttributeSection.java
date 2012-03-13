@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EAttribute;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
@@ -16,11 +17,11 @@ import org.lh.dmlj.schema.SystemOwner;
  * offered read-only during construction and, if they want a description to
  * be shown, the getDescription method of this class' superclass.<br><br>
  * Valid edit part model object types for these kind of sections are 
- * ConnectionPart, SchemaRecord, ConnectionLabel and SystemOwner.  In the case 
- * of ConnectionPart and ConnectionLabel model objects, subclasses should 
- * override the isOwner() method to indicate if the set's owner or member record 
- * is to be used (in the case of system owned indexed sets, the member record 
- * will ALWAYS be used).
+ * ConnectionPart, SchemaRecord, ConnectionLabel, SystemOwner and Connector.  In 
+ * the case of ConnectionPart, ConnectionLabel and Connector model objects, 
+ * subclasses should override the isOwner() method to indicate if the set's 
+ * owner or member record is to be used (in the case of system owned indexed 
+ * sets, the member record will ALWAYS be used).
  */
 public abstract class AbstractSchemaRecordAttributeSection 
 	extends AbstractStructuralFeatureSection<SchemaRecord> {		
@@ -33,18 +34,22 @@ public abstract class AbstractSchemaRecordAttributeSection
 	@Override
 	protected final SchemaRecord getModelObject(Object editPartModelObject) {
 		if (editPartModelObject instanceof ConnectionPart ||
-			editPartModelObject instanceof ConnectionLabel) {
+			editPartModelObject instanceof ConnectionLabel ||
+			editPartModelObject instanceof Connector) {
 			
-			// we're dealing with a set connection part or label, get the 
-			// MemberRole...
+			// we're dealing with a set connection part, connector or label, get  
+			// the MemberRole...
 			MemberRole memberRole;			
 			if (editPartModelObject instanceof ConnectionPart) {
 				memberRole = 
 					((ConnectionPart) editPartModelObject).getMemberRole();
-			} else {
+			} else if (editPartModelObject instanceof ConnectionLabel) {
 				ConnectionLabel connectionLabel =
 					(ConnectionLabel) editPartModelObject;
 				memberRole = connectionLabel.getMemberRole();
+			} else {
+				memberRole = ((Connector) editPartModelObject).getConnectionPart()
+															  .getMemberRole();
 			}
 			
 			// if we're in owner mode, get the owner record (which really should
@@ -72,6 +77,7 @@ public abstract class AbstractSchemaRecordAttributeSection
 	protected final Class<?>[] getValidEditPartModelObjectTypes() {
 		return new Class<?>[] {ConnectionLabel.class,
 							   ConnectionPart.class,
+							   Connector.class,
 							   SchemaRecord.class,							   
 							   SystemOwner.class};
 	}

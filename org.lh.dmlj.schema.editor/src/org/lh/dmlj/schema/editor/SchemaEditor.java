@@ -52,6 +52,7 @@ import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Display;
@@ -445,13 +446,20 @@ public class SchemaEditor
         toolbar.add(new MarqueeToolEntry());
         palette.add(toolbar);
         
-        // connector creation tool        
+        // connector creation tool  
+        ImageDescriptor connector16 = 
+        	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/connector16.GIF"));
+        ImageDescriptor connector24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/connector24.GIF"));
         CombinedTemplateCreationEntry component = 
-        	new CombinedTemplateCreationEntry("Connector", "Add a connector", 
-        			new SimpleFactory(Connector.class), null, null);
+        	new CombinedTemplateCreationEntry("Connector", 
+        									  "Add connectors to connection", 
+        									  new SimpleFactory(Connector.class), 
+        									  connector16, 
+        									  connector24);
         
         // Elements drawer
-        PaletteDrawer createComponentsDrawer = new PaletteDrawer("Elements");
+        PaletteDrawer createComponentsDrawer = new PaletteDrawer("Sets");
         createComponentsDrawer.add(component);
         palette.add(createComponentsDrawer);
        

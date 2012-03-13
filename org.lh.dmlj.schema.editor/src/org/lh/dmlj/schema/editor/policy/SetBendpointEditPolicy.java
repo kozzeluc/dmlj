@@ -1,5 +1,6 @@
 package org.lh.dmlj.schema.editor.policy;
 
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -59,8 +60,23 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 			Rectangle ownerBounds = 
 				ownerEditPart.getFigure().getBounds().getCopy();
 			ownerEditPart.getFigure().translateToAbsolute(ownerBounds);
+			Connection connection;
+			if (connectionPart.getMemberRole().getConnectionParts().size() == 1) {
+				// in a one piece set line, the connection directly orriginates 
+				// from the owner record
+				connection = getConnection();
+			} else {
+				// we're in a two piece set line, go get the first connection
+				ConnectionPart connectionPart1 =
+					connectionPart.getMemberRole().getConnectionParts().get(0);
+				SetEditPart setEditPart = 
+					(SetEditPart) editPart.getViewer()
+										  .getEditPartRegistry()
+										  .get(connectionPart1);
+				connection = setEditPart.getConnectionFigure();
+			}
 			Point firstPoint = 
-				getConnection().getPoints().getFirstPoint().getCopy();
+				connection.getPoints().getFirstPoint().getCopy();
 			ownerEditPart.getFigure().translateToAbsolute(firstPoint);
 			ownerEndpoint = 
 				new PrecisionPoint(firstPoint.x - ownerBounds.x,
@@ -79,8 +95,23 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 		Rectangle memberBounds = 
 			memberEditPart.getFigure().getBounds().getCopy();
 		memberEditPart.getFigure().translateToAbsolute(memberBounds);
+		Connection connection;
+		if (connectionPart.getMemberRole().getConnectionParts().size() == 1) {
+			// in a one piece set line, the connection directly points to the
+			// member record
+			connection = getConnection();
+		} else {
+			// we're in a two piece set line, go get the second connection
+			ConnectionPart connectionPart2 =
+				connectionPart.getMemberRole().getConnectionParts().get(1);
+			SetEditPart setEditPart = 
+				(SetEditPart) editPart.getViewer()
+									  .getEditPartRegistry()
+									  .get(connectionPart2);
+			connection = setEditPart.getConnectionFigure();
+		}
 		Point lastPoint = 
-			getConnection().getPoints().getLastPoint().getCopy();
+			connection.getPoints().getLastPoint().getCopy();
 		memberEditPart.getFigure().translateToAbsolute(lastPoint);
 		PrecisionPoint memberEndpoint = 
 			new PrecisionPoint(lastPoint.x - memberBounds.x,
@@ -105,8 +136,8 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
         
         // create the create bendpoint command...
         CreateBendpointCommand createBendpointCommand = 
-			new CreateBendpointCommand(connectionPart.getMemberRole(), 
-									   request.getIndex(), p.x, p.y);
+			new CreateBendpointCommand(connectionPart, request.getIndex(), p.x, 
+									   p.y);
         
         // chain both commands together, forming the final command...
         return lockEndpointsCommand.chain(createBendpointCommand);
@@ -115,8 +146,7 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 	@Override
 	protected Command getDeleteBendpointCommand(BendpointRequest request) {
 		DeleteBendpointCommand command = 
-			new DeleteBendpointCommand(connectionPart.getMemberRole(), 
-									   request.getIndex());
+			new DeleteBendpointCommand(connectionPart, request.getIndex());
 		return command;
 	}
 
@@ -134,8 +164,8 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 		
         // create the move bendpoint command...
         MoveBendpointCommand command = 
-			new MoveBendpointCommand(connectionPart.getMemberRole(), 
-									 request.getIndex(), p.x, p.y);
+			new MoveBendpointCommand(connectionPart, request.getIndex(), p.x, 
+									 p.y);
 		
         return command;
 	}	
