@@ -94,6 +94,12 @@
                id="org.lh.dmlj.schema.editor.propertyTabInfo"
                label="Info">
          </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabInfo"
+               category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabDiagram"
+               label="Diagram">
+         </propertyTab>
       </propertyTabs>
    </extension>
    <extension
@@ -131,6 +137,14 @@
                class="org.lh.dmlj.schema.editor.property.SchemaMemoDateSection"
                id="org.lh.dmlj.schema.editor.propertySectionSchemaMemoDate"
                tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
+            <input
+                  type="org.lh.dmlj.schema.Schema">
+            </input>
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.SchemaShowGridSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSchemaShowGrid"
+               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
             <input
                   type="org.lh.dmlj.schema.Schema">
             </input>

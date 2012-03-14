@@ -20,7 +20,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -42,19 +44,22 @@ import org.eclipse.gef.palette.PaletteToolbar;
 import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.SimpleFactory;
-import org.eclipse.gef.ui.actions.ToggleGridAction;
+import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.gef.ui.rulers.RulerComposite;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -73,15 +78,20 @@ import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributo
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.editor.command.SetShowGridCommand;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommand;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
+import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
 
 public class SchemaEditor 
 	extends GraphicalEditorWithFlyoutPalette 
 	implements ITabbedPropertySheetPageContributor {
 	
-	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";	
+	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";
+	
+	private static final EAttribute ATTRIBUTE_SHOW_GRID = 
+		SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
 	
 	// This class listens to changes to the file system in the workspace, and
 	// makes changes accordingly.
@@ -197,13 +207,16 @@ public class SchemaEditor
 
 		public void partOpened(IWorkbenchPart part) {
 		}
-	};	
+	};
 	
-	private boolean 		editorSaving = false;
-	private ResourceTracker resourceListener = new ResourceTracker();
-	private Schema 			schema;
-	private URI    			uri;
-	private IResource 	   	workspaceResource;
+	private boolean 					editorSaving = false;
+	private SchemaEditorRulerProvider   horizontalRulerProvider;
+	private ResourceTracker 			resourceListener = new ResourceTracker();	
+	private RulerComposite				rulerComp;	
+	private Schema 						schema;
+	private URI    						uri;
+	private SchemaEditorRulerProvider   verticalRulerProvider;
+	private IResource 	   				workspaceResource;	
 	
 	public SchemaEditor() {
 		super();
@@ -263,12 +276,39 @@ public class SchemaEditor
 		viewer.setSelectionManager(new ModifiedSelectionManager(viewer));
 		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 		
+	    // left (vertical) ruler properties				
+	    verticalRulerProvider = 
+	        new SchemaEditorRulerProvider(schema.getDiagramData()
+	        								    .getVerticalRuler());
+	    getGraphicalViewer().setProperty(RulerProvider.PROPERTY_VERTICAL_RULER,
+	  				     				 verticalRulerProvider);		
+	    
+	    // top (horizontal) ruler properties
+	    horizontalRulerProvider = 
+	        new SchemaEditorRulerProvider(schema.getDiagramData()
+	        									.getHorizontalRuler());		
+	    getGraphicalViewer().setProperty(RulerProvider.PROPERTY_HORIZONTAL_RULER, 
+					     				 horizontalRulerProvider);
+	    
+	    // ruler visibility (currently, the rulers are always visible)
+	    getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
+					     				 Boolean.TRUE);
+
+	    // Snap to Geometry property
+	    //getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
+	    //				       Boolean.TRUE);		
+		
 		// Grid properties
 		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
 			new Boolean(schema.getDiagramData().isShowGrid()));
 		// We keep grid visibility and enablement in sync
 		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
 			new Boolean(schema.getDiagramData().isShowGrid()));
+		// Set the grid spacing; the value that we need (for a spacing of half a
+	    // centimeter) is somewhere between 18 and 19 (pixels); 19 seems to be 
+	    // the better choice over 18 but is not exactly what we need...
+	    getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING,
+					     				 new Dimension(19, 19));
 		
 		// configure the zoom manager with the zoom level stored in the schema
 		// and attach a zoom listener to change the model via the command stack 
@@ -294,21 +334,30 @@ public class SchemaEditor
 										 MouseWheelZoomHandler.SINGLETON);*/
 		
 		// (other) Actions
-		IAction showGrid = new ToggleGridAction(getGraphicalViewer());
+		/*IAction showGrid = new ToggleGridAction(getGraphicalViewer());
 		showGrid.addPropertyChangeListener(new IPropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
-				SetShowGridCommand command = 
-					new SetShowGridCommand(schema, (Boolean)event.getNewValue());
+				EAttribute attribute =
+					SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
+				boolean value = (Boolean)event.getNewValue();
+				String label = value ? "Show grid" : "Hide grid";
+				SetBooleanAttributeCommand command = 
+					new SetBooleanAttributeCommand(schema.getDiagramData(),
+												   attribute, value, label);
 				getCommandStack().execute(command);
 			}
 			
 		});
-		getActionRegistry().registerAction(showGrid);
+		getActionRegistry().registerAction(showGrid);*/
 		
-		// add a listener to the command stack to change the zoom manager's zoom
-		// level when the user performs an undo or redo of a set zoom level
-		// command...
+		// add a listener to the command stack to 
+		// - change the zoom manager's zoom level when the user performs an undo 
+		//   or redo of a set zoom level command
+		// - show or hide the grid (and snap to grid)
+		// we should consider changing this implementation to add a listener 
+		// that is notified when an attribute of the schema's diagram data 
+		// changes value
 		getCommandStack().addCommandStackEventListener(new CommandStackEventListener() {
 			@Override
 			public void stackChanged(CommandStackEvent event) {				
@@ -320,9 +369,12 @@ public class SchemaEditor
 					
 					manager.setZoom(schema.getDiagramData().getZoomLevel());
 				} else if (event.isPostChangeEvent() && 
-						   event.getCommand() instanceof SetShowGridCommand &&
+						   event.getCommand() instanceof SetBooleanAttributeCommand &&
+						   ((SetBooleanAttributeCommand)event.getCommand())
+						   									 .getAttribute() == ATTRIBUTE_SHOW_GRID &&
 						   (event.getDetail() == CommandStack.POST_UNDO ||
-							event.getDetail() == CommandStack.POST_REDO)) {
+							event.getDetail() == CommandStack.POST_REDO ||
+							event.getDetail() == CommandStack.POST_EXECUTE)) {
 							
 					boolean showGrid = schema.getDiagramData().isShowGrid();
 					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
@@ -336,7 +388,18 @@ public class SchemaEditor
 				
 	}
 	
+	@Override
+	protected void createGraphicalViewer(Composite parent) {
+		rulerComp = new RulerComposite(parent, SWT.NONE);
+	    super.createGraphicalViewer(rulerComp);
+	    ScrollingGraphicalViewer graphicalViewer = 
+	    	(ScrollingGraphicalViewer) getGraphicalViewer();
+	    rulerComp.setGraphicalViewer(graphicalViewer);
+	}	
+	
 	public void dispose() {
+		verticalRulerProvider.dispose();
+		horizontalRulerProvider.dispose();
 		getSite().getWorkbenchWindow().getPartService()
 				.removePartListener(partListener);
 		partListener = null;
@@ -433,6 +496,11 @@ public class SchemaEditor
 	public String getContributorId() {
 		return getSite().getId();
 	}
+	
+	@Override
+	protected Control getGraphicalControl() {
+		return rulerComp;
+	}	
 
 	@Override
 	protected PaletteRoot getPaletteRoot() {

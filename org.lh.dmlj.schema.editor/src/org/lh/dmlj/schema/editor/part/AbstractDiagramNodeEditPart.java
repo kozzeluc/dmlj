@@ -15,7 +15,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.SchemaRecord;
 
 public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode> 
 	extends AbstractGraphicalEditPart implements Adapter, NodeEditPart {
@@ -91,7 +90,7 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 
 	@Override
 	public final void notifyChanged(Notification notification) {
-		int featureID = notification.getFeatureID(SchemaRecord.class);
+		int featureID = notification.getFeatureID(DiagramNode.class);
 		if (featureID == SchemaPackage.DIAGRAM_LOCATION__X ||
 			featureID == SchemaPackage.DIAGRAM_LOCATION__Y) {
 			

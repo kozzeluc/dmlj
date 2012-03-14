@@ -33,13 +33,12 @@ public class ConnectorLabelSection extends AbstractPropertySection {
 	private static final String 	DESCRIPTION = 
 		"A text to be shown in this set's connectors";
 	
-	private Connector 		  connector;
-	private Text 	   		  labelText;
-	private CustomKeyListener listener;
+	private Connector 		  		connector;
+	private Text 	   		  		labelText;
+	private CustomKeyListener 		listener = new CustomKeyListener();
 	
 	public ConnectorLabelSection() {
-		super();
-		listener = new CustomKeyListener();
+		super();		
 	}	
 	
 	private String capitalize(String name) {
@@ -69,10 +68,8 @@ public class ConnectorLabelSection extends AbstractPropertySection {
         	new FormAttachment(0, AbstractStructuralFeatureSection.CUSTOM_LABEL_WIDTH);
         data.right = new FormAttachment(100, 0);
         data.top = new FormAttachment(0, ITabbedPropertyConstants.VSPACE);
-        labelText.setLayoutData(data); 
-        if (listener != null) {
-        	labelText.addKeyListener(listener);
-        }
+        labelText.setLayoutData(data);         
+        labelText.addKeyListener(listener);
    
         CLabel labelLabel = 
         	getWidgetFactory().createCLabel(composite, 

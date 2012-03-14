@@ -3,6 +3,7 @@ package org.lh.dmlj.schema.editor.command;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Schema;
 
+@Deprecated
 public class SetShowGridCommand extends Command {
 	
 	private Schema  schema; 

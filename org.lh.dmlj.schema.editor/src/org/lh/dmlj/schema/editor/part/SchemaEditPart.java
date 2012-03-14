@@ -11,9 +11,16 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.SnapToGeometry;
+import org.eclipse.gef.SnapToGrid;
+import org.eclipse.gef.SnapToGuides;
+import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
+import org.eclipse.gef.rulers.RulerProvider;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
@@ -46,9 +53,14 @@ public class SchemaEditPart
 	
 	@Override
 	protected void createEditPolicies() {
+		
 		// install the edit policy for moving diagram nodes...
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, 
-						  new MoveDiagramNodeEditPolicy());		
+						  new MoveDiagramNodeEditPolicy());	
+		
+		// install the snap feedback policy...
+		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy());
+		  
 	}
 
 	@Override
@@ -64,6 +76,39 @@ public class SchemaEditPart
 		getModel().getDiagramData().eAdapters().remove(this);
 		super.deactivate();
 	}
+	
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	    if (adapter == SnapToHelper.class) {
+	        // make sure we can snap figures to guides and geometry
+	        List<Object> snapStrategies = new ArrayList<>();
+	        Boolean val = 
+	            (Boolean) getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
+	        if (val != null && val.booleanValue()) {
+	            snapStrategies.add(new SnapToGuides(this));
+	        }
+	        val = (Boolean) getViewer().getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
+	        if (val != null && val.booleanValue()) {
+	            snapStrategies.add(new SnapToGeometry(this));
+	        }
+	        val = (Boolean) getViewer().getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
+	        if (val != null && val.booleanValue()) {
+	            snapStrategies.add(new SnapToGrid(this));
+	        }
+	        if (snapStrategies.isEmpty()) {
+	            return null;
+	        }
+	        if (snapStrategies.size() == 1) {
+	            return snapStrategies.get(0);
+	        }
+	  			
+	        SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
+	        ss = snapStrategies.toArray(ss);			
+	  			
+	        return new CompoundSnapToHelper(ss);
+	    }
+	    return super.getAdapter(adapter);
+	}	
 	
 	public Schema getModel() {
 		return (Schema) super.getModel();
