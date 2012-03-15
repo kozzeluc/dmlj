@@ -1,6 +1,9 @@
 package org.lh.dmlj.schema.editor.property;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.viewers.ISelection;
@@ -31,8 +34,10 @@ public class SchemaShowGridSection extends AbstractPropertySection {
 		"Indicates whether the diagram grid is visible or not";
 		
 	private Button 	   		  		checkbox;
+	private CustomSelectionListener	checkBoxListener = 
+		new CustomSelectionListener();
 	private DiagramData 	  		diagramData;
-	private CustomSelectionListener	listener = new CustomSelectionListener();
+	private ModelChangeListener	    modelChangeListener;
 	
 	public SchemaShowGridSection() {
 		super();		
@@ -52,16 +57,24 @@ public class SchemaShowGridSection extends AbstractPropertySection {
         FormData data = new FormData();
         data.top = new FormAttachment(0, ITabbedPropertyConstants.VSPACE);
         checkbox.setLayoutData(data);         
-        checkbox.addSelectionListener(listener);                
+        checkbox.addSelectionListener(checkBoxListener);                
         
+        modelChangeListener = new ModelChangeListener(checkbox);
+	}
+	
+	@Override
+	public void dispose() {
+		if (diagramData != null) {
+			diagramData.eAdapters().remove(modelChangeListener);
+		}
 	}
 
 	@Override
 	public final void refresh() {		
-		checkbox.removeSelectionListener(listener);		
+		checkbox.removeSelectionListener(checkBoxListener);		
 		Object value = diagramData.eGet(ATTRIBUTE);		
 		checkbox.setSelection((boolean) value);		
-		checkbox.addSelectionListener(listener);
+		checkbox.addSelectionListener(checkBoxListener);
 	}
 
 	@Override
@@ -79,11 +92,15 @@ public class SchemaShowGridSection extends AbstractPropertySection {
         Assert.isTrue(input instanceof SchemaEditPart, "not a SchemaEditPart");
         Schema schema = ((SchemaEditPart) input).getModel();
         
+        if (diagramData != null) {
+			diagramData.eAdapters().remove(modelChangeListener);
+		}
         diagramData = schema.getDiagramData();         
         Assert.isTrue(diagramData != null, "no diagram data");
+        diagramData.eAdapters().add(modelChangeListener);
                 
-        listener.setCommandStack(editor.getCommandStack());
-        listener.setDiagramData(diagramData);
+        checkBoxListener.setCommandStack(editor.getCommandStack());
+        checkBoxListener.setDiagramData(diagramData);
 	}
 	
     private static class CustomSelectionListener extends SelectionAdapter {
@@ -114,5 +131,41 @@ public class SchemaShowGridSection extends AbstractPropertySection {
 		}
         
     };	
+    
+    private static class ModelChangeListener implements Adapter {
+
+    	private Button checkbox;
+    	
+    	private ModelChangeListener(Button checkbox) {
+    		super();
+    		this.checkbox = checkbox;
+    	}
+    	
+		@Override
+		public Notifier getTarget() {
+			return null;
+		}
+
+		@Override
+		public boolean isAdapterForType(Object type) {			
+			return false;
+		}
+
+		@Override
+		public void notifyChanged(Notification notification) {			
+			if (notification.getEventType() == Notification.SET &&
+				notification.getFeature() == ATTRIBUTE) {
+				
+				if (!checkbox.isDisposed()) {
+					checkbox.setSelection(notification.getNewBooleanValue());
+				}
+			}
+		}
+
+		@Override
+		public void setTarget(Notifier newTarget) {						
+		}
+    	
+    }
 	
 }
