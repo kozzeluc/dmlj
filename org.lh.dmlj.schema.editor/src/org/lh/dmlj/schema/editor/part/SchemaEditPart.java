@@ -20,7 +20,6 @@ import org.eclipse.gef.SnapToGuides;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
-import org.eclipse.gef.rulers.RulerProvider;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
@@ -80,19 +79,19 @@ public class SchemaEditPart
 	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 	    if (adapter == SnapToHelper.class) {
-	        // make sure we can snap figures to guides and geometry
+	        // make sure we can snap figures to the grid, guides and geometry
 	        List<Object> snapStrategies = new ArrayList<>();
-	        Boolean val = 
-	            (Boolean) getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
-	        if (val != null && val.booleanValue()) {
-	            snapStrategies.add(new SnapToGuides(this));
+	        if (getModel().getDiagramData().isShowRulers() &&
+	        	getModel().getDiagramData().isSnapToGuides()) {
+	            
+	        	snapStrategies.add(new SnapToGuides(this));
 	        }
-	        val = (Boolean) getViewer().getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
-	        if (val != null && val.booleanValue()) {
+	        if (getModel().getDiagramData().isSnapToGeometry()) {
 	            snapStrategies.add(new SnapToGeometry(this));
-	        }
-	        val = (Boolean) getViewer().getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
-	        if (val != null && val.booleanValue()) {
+	        }	        
+	        if (getModel().getDiagramData().isShowGrid() &&
+	        	getModel().getDiagramData().isSnapToGrid()) {
+	        	
 	            snapStrategies.add(new SnapToGrid(this));
 	        }
 	        if (snapStrategies.isEmpty()) {

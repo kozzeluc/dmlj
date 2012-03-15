@@ -3,31 +3,31 @@ package org.lh.dmlj.schema.editor.property;
 import org.eclipse.emf.ecore.EAttribute;
 import org.lh.dmlj.schema.SchemaPackage;
 
-public class SchemaShowGridSection 
+public class SchemaSnapToGeometrySection 
 	extends AbstractDiagramDataBooleanAttributeSection {	
 
 	private static final EAttribute ATTRIBUTE = 
-		SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
+		SchemaPackage.eINSTANCE.getDiagramData_SnapToGeometry();
 	private static final String 	DESCRIPTION = 
-		"Indicates whether the diagram grid is visible or not"; 
+		"Indicates whether figures should snap to geometry"; 
 	
-	public SchemaShowGridSection() {
+	public SchemaSnapToGeometrySection() {
 		super(ATTRIBUTE);		
 	}
 	
 	@Override
 	protected String getCheckboxLabel() {
-		return "Show grid";
+		return "Snap to geometry";
 	}
 	
 	@Override
 	protected String getCommandLabelForFalse() {
-		return "Hide grid";
+		return "Disable snap to geometry";
 	}
 	
 	@Override
 	protected String getCommandLabelForTrue() {
-		return "Show grid";
+		return "Enable snap to geometry";
 	}
 	
 	@Override

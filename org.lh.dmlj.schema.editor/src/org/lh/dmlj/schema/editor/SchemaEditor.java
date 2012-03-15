@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
@@ -92,6 +93,8 @@ public class SchemaEditor
 	
 	private static final EAttribute ATTRIBUTE_SHOW_GRID = 
 		SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
+	private static final EAttribute ATTRIBUTE_SHOW_RULERS = 
+		SchemaPackage.eINSTANCE.getDiagramData_ShowRulers();	
 	
 	// This class listens to changes to the file system in the workspace, and
 	// makes changes accordingly.
@@ -292,21 +295,22 @@ public class SchemaEditor
 	    
 	    // ruler visibility (currently, the rulers are always visible)
 	    getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
-					     				 Boolean.TRUE);
+					     				 schema.getDiagramData().isShowRulers());
 
 	    // Snap to Geometry property
-	    //getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
-	    //				       Boolean.TRUE);		
+	    getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
+	    				       			 schema.getDiagramData()
+	    				       			 	   .isSnapToGeometry());		
 		
 		// Grid properties
 		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
-			new Boolean(schema.getDiagramData().isShowGrid()));
-		// We keep grid visibility and enablement in sync
+			new Boolean(schema.getDiagramData().isSnapToGrid()));
 		getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
 			new Boolean(schema.getDiagramData().isShowGrid()));
 		// Set the grid spacing; the value that we need (for a spacing of half a
 	    // centimeter) is somewhere between 18 and 19 (pixels); 19 seems to be 
-	    // the better choice over 18 but is not exactly what we need...
+	    // the better choice over 18 but is not exactly what we need.
+		// todo: store the grid spacing in the model.
 	    getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING,
 					     				 new Dimension(19, 19));
 		
@@ -331,30 +335,13 @@ public class SchemaEditor
 		}		
 		// Scroll-wheel Zoom
 		/*getGraphicalViewer().setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
-										 MouseWheelZoomHandler.SINGLETON);*/
-		
-		// (other) Actions
-		/*IAction showGrid = new ToggleGridAction(getGraphicalViewer());
-		showGrid.addPropertyChangeListener(new IPropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent event) {
-				EAttribute attribute =
-					SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
-				boolean value = (Boolean)event.getNewValue();
-				String label = value ? "Show grid" : "Hide grid";
-				SetBooleanAttributeCommand command = 
-					new SetBooleanAttributeCommand(schema.getDiagramData(),
-												   attribute, value, label);
-				getCommandStack().execute(command);
-			}
-			
-		});
-		getActionRegistry().registerAction(showGrid);*/
+										 MouseWheelZoomHandler.SINGLETON);*/		
 		
 		// add a listener to the command stack to 
 		// - change the zoom manager's zoom level when the user performs an undo 
 		//   or redo of a set zoom level command
-		// - show or hide the grid (and snap to grid)
+		// - show or hide the rulers
+		// - show or hide the grid
 		// we should consider changing this implementation to add a listener 
 		// that is notified when an attribute of the schema's diagram data 
 		// changes value
@@ -371,15 +358,23 @@ public class SchemaEditor
 				} else if (event.isPostChangeEvent() && 
 						   event.getCommand() instanceof SetBooleanAttributeCommand &&
 						   ((SetBooleanAttributeCommand)event.getCommand())
+						   									 .getAttribute() == ATTRIBUTE_SHOW_RULERS &&
+						   (event.getDetail() == CommandStack.POST_UNDO ||
+							event.getDetail() == CommandStack.POST_REDO ||
+							event.getDetail() == CommandStack.POST_EXECUTE)) {
+							
+					boolean showRulers = schema.getDiagramData().isShowRulers();
+					getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
+													 Boolean.valueOf(showRulers));
+				} else if (event.isPostChangeEvent() && 
+						   event.getCommand() instanceof SetBooleanAttributeCommand &&
+						   ((SetBooleanAttributeCommand)event.getCommand())
 						   									 .getAttribute() == ATTRIBUTE_SHOW_GRID &&
 						   (event.getDetail() == CommandStack.POST_UNDO ||
 							event.getDetail() == CommandStack.POST_REDO ||
 							event.getDetail() == CommandStack.POST_EXECUTE)) {
 							
-					boolean showGrid = schema.getDiagramData().isShowGrid();
-					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED,
-													 Boolean.valueOf(showGrid));
-					// We keep grid visibility and enablement in sync
+					boolean showGrid = schema.getDiagramData().isShowGrid();					
 					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
 													 Boolean.valueOf(showGrid));
 				}
@@ -395,7 +390,7 @@ public class SchemaEditor
 	    ScrollingGraphicalViewer graphicalViewer = 
 	    	(ScrollingGraphicalViewer) getGraphicalViewer();
 	    rulerComp.setGraphicalViewer(graphicalViewer);
-	}	
+	}
 	
 	public void dispose() {
 		verticalRulerProvider.dispose();
@@ -537,7 +532,7 @@ public class SchemaEditor
 	@Override
 	protected void initializeGraphicalViewer() {		
 		super.initializeGraphicalViewer();
-		getGraphicalViewer().setContents(schema);
+		getGraphicalViewer().setContents(schema);		
 	}
 	
 	@Override

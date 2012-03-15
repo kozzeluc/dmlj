@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: DMLJ Schema Editor
+Bundle-Name: CA IDMS Schema Diagram Editor
 Bundle-SymbolicName: org.lh.dmlj.schema.editor;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.lh.dmlj.schema.editor.Plugin
@@ -27,3 +27,4 @@ Bundle-ClassPath: org.lh.dmlj.idmsntwk.jar,
  neo4j-lucene-index-1.6.jar,
  lucene-core-3.5.0.jar,
  geronimo-jta_1.1_spec-1.1.1.jar
+Bundle-Vendor: Luc Hermans

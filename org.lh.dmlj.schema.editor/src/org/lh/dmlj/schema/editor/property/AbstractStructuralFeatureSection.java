@@ -3,6 +3,9 @@ package org.lh.dmlj.schema.editor.property;
 import java.util.Arrays;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -47,6 +50,7 @@ public abstract class AbstractStructuralFeatureSection<T extends EObject>
 	private EStructuralFeature 	structuralFeature;
 	private CustomKeyListener  	listener;
 	private Text 	   		   	labelText;
+	private ModelChangeListener	modelChangeListener;
 	private T 		  		   	modelObject;
 	private Class<?>[] 		   	validEditPartModelObjectTypes;
 	
@@ -116,6 +120,18 @@ public abstract class AbstractStructuralFeatureSection<T extends EObject>
         data.top = new FormAttachment(labelText, 0, SWT.CENTER);
         labelLabel.setLayoutData(data);
         
+        // make sure that any changes to the model object (e.g. due to an undo
+        // or redo) are reflected in the text field...
+        modelChangeListener = 
+        	new ModelChangeListener(labelText, structuralFeature);        
+        
+	}
+	
+	@Override
+	public void dispose() {
+		if (modelObject != null) {
+			modelObject.eAdapters().remove(modelChangeListener);
+		}
 	}
 	
 	protected String getLabel() {
@@ -194,12 +210,22 @@ public abstract class AbstractStructuralFeatureSection<T extends EObject>
         Object editPartModelObject = ((EditPart) input).getModel();
         Assert.isTrue(isValidType(editPartModelObject), 
         			  "not a " + Arrays.asList(validEditPartModelObjectTypes));
+        
+        if (modelObject != null) {
+			modelObject.eAdapters().remove(modelChangeListener);
+		}
+        
         modelObject = getModelObject(editPartModelObject);        
+        
+        // always listen for model changes, even if the attribute is read-only;
+        // the model change listener might not yet be instantiated though
+        modelObject.eAdapters().add(modelChangeListener);
         
         if (listener != null) {
         	listener.setCommandStack(editor.getCommandStack());
         	listener.setModelObject(modelObject);
-        }
+        }        
+        
 	}
 	
     private static class CustomKeyListener extends KeyAdapter {
@@ -233,6 +259,50 @@ public abstract class AbstractStructuralFeatureSection<T extends EObject>
 			this.modelObject = modelObject;
 		}
         
-    };	
+    };
+    
+    private static class ModelChangeListener implements Adapter {
+
+    	private EStructuralFeature structuralFeature;
+    	private Text 			   text;
+    	
+    	private ModelChangeListener(Text text, 
+    								EStructuralFeature structuralFeature) {
+    		super();
+    		this.text = text;
+    		this.structuralFeature = structuralFeature;
+    	}
+    	
+		@Override
+		public Notifier getTarget() {
+			return null;
+		}
+
+		@Override
+		public boolean isAdapterForType(Object type) {			
+			return false;
+		}
+
+		@Override
+		public void notifyChanged(Notification notification) {			
+			if (notification.getEventType() == Notification.SET &&
+				notification.getFeature() == structuralFeature) {
+				
+				if (!text.isDisposed()) {
+					String newValue = notification.getNewStringValue();
+					if (newValue != null) {
+						text.setText(newValue);
+					} else {
+						text.setText("");
+					}
+				}
+			}
+		}
+
+		@Override
+		public void setTarget(Notifier newTarget) {						
+		}
+    	
+    }    
 	
 }

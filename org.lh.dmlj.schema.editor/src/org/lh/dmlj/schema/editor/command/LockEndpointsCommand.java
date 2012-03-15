@@ -37,7 +37,8 @@ public class LockEndpointsCommand extends Command {
 			location.setX(ownerEndpoint.x);
 			location.setY(ownerEndpoint.y);
 			location.setEyecatcher("set " + memberRole.getSet().getName() + 
-								   " owner endpoint");
+								   " owner endpoint (" +
+								   memberRole.getRecord().getName() + ")");
 			memberRole.getConnectionParts()
 			  		  .get(0)
 			  		  .setSourceEndpointLocation(location);
@@ -59,7 +60,8 @@ public class LockEndpointsCommand extends Command {
 			location.setX(memberEndpoint.x);
 			location.setY(memberEndpoint.y);
 			location.setEyecatcher("set " + memberRole.getSet().getName() + 
-								   " member endpoint");
+								   " member endpoint (" +
+								   memberRole.getRecord().getName() + ")");
 			memberRole.getConnectionParts()
 			  		  .get(memberRole.getConnectionParts().size() - 1)
 					  .setTargetEndpointLocation(location);

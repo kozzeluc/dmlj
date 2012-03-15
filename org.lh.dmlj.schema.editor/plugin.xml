@@ -142,8 +142,44 @@
             </input>
          </propertySection>
          <propertySection
+               class="org.lh.dmlj.schema.editor.property.SchemaShowRulersSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSchemaShowRulers"
+               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
+            <input
+                  type="org.lh.dmlj.schema.Schema">
+            </input>
+         </propertySection>
+         <propertySection
+               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaShowRulers"
                class="org.lh.dmlj.schema.editor.property.SchemaShowGridSection"
                id="org.lh.dmlj.schema.editor.propertySectionSchemaShowGrid"
+               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
+            <input
+                  type="org.lh.dmlj.schema.Schema">
+            </input>
+         </propertySection>
+         <propertySection
+               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaShowGrid"
+               class="org.lh.dmlj.schema.editor.property.SchemaSnapToGuidesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGuides"
+               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
+            <input
+                  type="org.lh.dmlj.schema.Schema">
+            </input>
+         </propertySection>
+         <propertySection
+               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGuides"
+               class="org.lh.dmlj.schema.editor.property.SchemaSnapToGridSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGrid"
+               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
+            <input
+                  type="org.lh.dmlj.schema.Schema">
+            </input>
+         </propertySection>
+         <propertySection
+               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGrid"
+               class="org.lh.dmlj.schema.editor.property.SchemaSnapToGeometrySection"
+               id="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGeometry"
                tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
             <input
                   type="org.lh.dmlj.schema.Schema">

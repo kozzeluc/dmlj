@@ -1,6 +1,9 @@
 package org.lh.dmlj.schema.editor.property;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.CommandStack;
@@ -36,6 +39,7 @@ public class ConnectorLabelSection extends AbstractPropertySection {
 	private Connector 		  		connector;
 	private Text 	   		  		labelText;
 	private CustomKeyListener 		listener = new CustomKeyListener();
+	private ModelChangeListener	    modelChangeListener;
 	
 	public ConnectorLabelSection() {
 		super();		
@@ -83,7 +87,18 @@ public class ConnectorLabelSection extends AbstractPropertySection {
         data.top = new FormAttachment(labelText, 0, SWT.CENTER);
         labelLabel.setLayoutData(data);
         
+        // make sure that any changes to the model object (e.g. due to an undo
+        // or redo) are reflected in the text field...
+        modelChangeListener = new ModelChangeListener(labelText);
+        
 	}
+	
+	@Override
+	public void dispose() {
+		if (connector != null) {
+			connector.eAdapters().remove(modelChangeListener);
+		}
+	}	
 
 	@Override
 	public final void refresh() {		
@@ -112,6 +127,10 @@ public class ConnectorLabelSection extends AbstractPropertySection {
         Assert.isTrue(input instanceof EditPart, "not an EditPart");
         Object editPartModelObject = ((EditPart) input).getModel();
         
+        if (connector != null) {
+			connector.eAdapters().remove(modelChangeListener);
+		}
+        
         connector = null; 
         if (editPartModelObject instanceof ConnectionPart) {
         	ConnectionPart connectionPart = 
@@ -136,6 +155,9 @@ public class ConnectorLabelSection extends AbstractPropertySection {
         						   .getConnector();
         }
         Assert.isTrue(connector != null, "no connector");
+        // listening for model changes on only 1 connector of the pair will do
+        // the job
+        connector.eAdapters().add(modelChangeListener); 
                 
         listener.setCommandStack(editor.getCommandStack());
         listener.setConnector(connector);
@@ -190,6 +212,47 @@ public class ConnectorLabelSection extends AbstractPropertySection {
 			this.connector = connector;
 		}
         
-    };	
+    };
+    
+    private static class ModelChangeListener implements Adapter {
+
+    	private Text text;
+    	
+    	private ModelChangeListener(Text text) {
+    		super();
+    		this.text = text;
+    	}
+    	
+		@Override
+		public Notifier getTarget() {
+			return null;
+		}
+
+		@Override
+		public boolean isAdapterForType(Object type) {			
+			return false;
+		}
+
+		@Override
+		public void notifyChanged(Notification notification) {			
+			if (notification.getEventType() == Notification.SET &&
+				notification.getFeature() == ATTRIBUTE) {
+				
+				if (!text.isDisposed()) {
+					String newValue = notification.getNewStringValue();
+					if (newValue != null) {
+						text.setText(newValue);
+					} else {
+						text.setText("");
+					}
+				}
+			}
+		}
+
+		@Override
+		public void setTarget(Notifier newTarget) {						
+		}
+    	
+    }    
 	
 }

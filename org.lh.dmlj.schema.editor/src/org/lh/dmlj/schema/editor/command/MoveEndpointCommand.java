@@ -24,10 +24,7 @@ public class MoveEndpointCommand extends Command {
 	}
 	
 	@Override
-	public void execute() {
-		
-		// we currently don't support split connections (i.e. a set with 2
-		// connection parts each with a connector attached)...
+	public void execute() {		
 		
 		DiagramLocation oldLocation;
 		if (owner) {
@@ -50,10 +47,14 @@ public class MoveEndpointCommand extends Command {
 			SchemaFactory.eINSTANCE.createDiagramLocation();
 		newLocation.setX(x);
 		newLocation.setY(y);
-		String p = owner ? " owner endpoint" : " member endpoint";
-		newLocation.setEyecatcher("set " + connectionPart.getMemberRole()
-														 .getSet()
-														 .getName() + p);
+		String p = owner ? " owner endpoint (" : " member endpoint (";
+		newLocation.setEyecatcher("set " + 
+								  connectionPart.getMemberRole()
+												.getSet()
+												.getName() + p +
+												connectionPart.getMemberRole()
+															  .getRecord()
+														 	  .getName() + ")");
 		
 		connectionPart.getMemberRole()
 					  .getSet()
@@ -99,11 +100,14 @@ public class MoveEndpointCommand extends Command {
 			SchemaFactory.eINSTANCE.createDiagramLocation();
 		oldLocation.setX(oldX);
 		oldLocation.setY(oldY);
-		String p = owner ? "owner" : "member";
-		oldLocation.setEyecatcher("set " + p + " connection point" + 
+		String p = owner ? "owner " : "member ";
+		oldLocation.setEyecatcher("set " + p + " endpoint " + 
 								  connectionPart.getMemberRole()
 								  				.getSet()
-								  				.getName() + "(" + p + ")");
+								  				.getName() + " (" + 
+								  connectionPart.getMemberRole()
+								  				.getRecord()
+								  				.getName() + ")");
 			
 		connectionPart.getMemberRole()
 					  .getSet()
