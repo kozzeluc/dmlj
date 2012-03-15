@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Ruler#getGuides <em>Guides</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Ruler#getType <em>Type</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Ruler#getDiagramData <em>Diagram Data</em>}</li>
  * </ul>
  * </p>
  *
@@ -72,5 +73,33 @@ public interface Ruler extends EObject {
 	 * @generated
 	 */
 	void setType(RulerType value);
+
+	/**
+	 * Returns the value of the '<em><b>Diagram Data</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.DiagramData#getRulers <em>Rulers</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Diagram Data</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Diagram Data</em>' container reference.
+	 * @see #setDiagramData(DiagramData)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getRuler_DiagramData()
+	 * @see org.lh.dmlj.schema.DiagramData#getRulers
+	 * @model opposite="rulers" required="true" transient="false"
+	 * @generated
+	 */
+	DiagramData getDiagramData();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.Ruler#getDiagramData <em>Diagram Data</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Diagram Data</em>' container reference.
+	 * @see #getDiagramData()
+	 * @generated
+	 */
+	void setDiagramData(DiagramData value);
 
 } // Ruler

@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.lh.dmlj.schema.ConnectionLabel;
@@ -401,9 +402,24 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 */
 	public EList<Ruler> getRulers() {
 		if (rulers == null) {
-			rulers = new EObjectContainmentEList<Ruler>(Ruler.class, this, SchemaPackage.DIAGRAM_DATA__RULERS);
+			rulers = new EObjectContainmentWithInverseEList<Ruler>(Ruler.class, this, SchemaPackage.DIAGRAM_DATA__RULERS, SchemaPackage.RULER__DIAGRAM_DATA);
 		}
 		return rulers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.DIAGRAM_DATA__RULERS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRulers()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**

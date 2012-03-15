@@ -160,6 +160,7 @@ public interface DiagramData extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Rulers</b></em>' containment reference list.
 	 * The list contents are of type {@link org.lh.dmlj.schema.Ruler}.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Ruler#getDiagramData <em>Diagram Data</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Rulers</em>' containment reference list isn't clear,
@@ -168,7 +169,8 @@ public interface DiagramData extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Rulers</em>' containment reference list.
 	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Rulers()
-	 * @model containment="true" lower="2" upper="2"
+	 * @see org.lh.dmlj.schema.Ruler#getDiagramData
+	 * @model opposite="diagramData" containment="true" lower="2" upper="2"
 	 * @generated
 	 */
 	EList<Ruler> getRulers();

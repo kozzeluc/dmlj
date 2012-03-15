@@ -87,7 +87,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="zoomLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
         defaultValueLiteral="1.0d"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rulers" lowerBound="2"
-        upperBound="2" eType="#//Ruler" containment="true"/>
+        upperBound="2" eType="#//Ruler" containment="true" eOpposite="#//Ruler/diagramData"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramLocation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="eyecatcher" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -231,6 +231,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="guides" upperBound="-1"
         eType="#//Guide" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//RulerType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramData" lowerBound="1"
+        eType="#//DiagramData" eOpposite="#//DiagramData/rulers"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RulerType">
     <eLiterals name="HORIZONTAL" literal="HORIZONTAL"/>

@@ -1339,13 +1339,22 @@ public interface SchemaPackage extends EPackage {
 	int RULER__TYPE = 1;
 
 	/**
+	 * The feature id for the '<em><b>Diagram Data</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RULER__DIAGRAM_DATA = 2;
+
+	/**
 	 * The number of structural features of the '<em>Ruler</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RULER_FEATURE_COUNT = 2;
+	int RULER_FEATURE_COUNT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Areas</b></em>' containment reference list.
@@ -2595,6 +2604,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getRuler_Type();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.Ruler#getDiagramData <em>Diagram Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Diagram Data</em>'.
+	 * @see org.lh.dmlj.schema.Ruler#getDiagramData()
+	 * @see #getRuler()
+	 * @generated
+	 */
+	EReference getRuler_DiagramData();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.Set#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}'.
@@ -4451,6 +4471,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute RULER__TYPE = eINSTANCE.getRuler_Type();
+
+		/**
+		 * The meta object literal for the '<em><b>Diagram Data</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RULER__DIAGRAM_DATA = eINSTANCE.getRuler_DiagramData();
 
 		/**
 		 * The meta object literal for the '<em><b>Indexed Set Mode Specification</b></em>' containment reference feature.

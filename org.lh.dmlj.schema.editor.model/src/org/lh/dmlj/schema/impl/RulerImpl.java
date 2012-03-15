@@ -20,8 +20,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.RulerType;
@@ -36,6 +38,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.RulerImpl#getGuides <em>Guides</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.RulerImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.RulerImpl#getDiagramData <em>Diagram Data</em>}</li>
  * </ul>
  * </p>
  *
@@ -129,13 +132,86 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public DiagramData getDiagramData() {
+		if (eContainerFeatureID() != SchemaPackage.RULER__DIAGRAM_DATA) return null;
+		return (DiagramData)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDiagramData(DiagramData newDiagramData, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newDiagramData, SchemaPackage.RULER__DIAGRAM_DATA, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDiagramData(DiagramData newDiagramData) {
+		if (newDiagramData != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.RULER__DIAGRAM_DATA && newDiagramData != null)) {
+			if (EcoreUtil.isAncestor(this, newDiagramData))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newDiagramData != null)
+				msgs = ((InternalEObject)newDiagramData).eInverseAdd(this, SchemaPackage.DIAGRAM_DATA__RULERS, DiagramData.class, msgs);
+			msgs = basicSetDiagramData(newDiagramData, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.RULER__DIAGRAM_DATA, newDiagramData, newDiagramData));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.RULER__DIAGRAM_DATA:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetDiagramData((DiagramData)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case SchemaPackage.RULER__GUIDES:
 				return ((InternalEList<?>)getGuides()).basicRemove(otherEnd, msgs);
+			case SchemaPackage.RULER__DIAGRAM_DATA:
+				return basicSetDiagramData(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case SchemaPackage.RULER__DIAGRAM_DATA:
+				return eInternalContainer().eInverseRemove(this, SchemaPackage.DIAGRAM_DATA__RULERS, DiagramData.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -150,6 +226,8 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 				return getGuides();
 			case SchemaPackage.RULER__TYPE:
 				return getType();
+			case SchemaPackage.RULER__DIAGRAM_DATA:
+				return getDiagramData();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -170,6 +248,9 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 			case SchemaPackage.RULER__TYPE:
 				setType((RulerType)newValue);
 				return;
+			case SchemaPackage.RULER__DIAGRAM_DATA:
+				setDiagramData((DiagramData)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -188,6 +269,9 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 			case SchemaPackage.RULER__TYPE:
 				setType(TYPE_EDEFAULT);
 				return;
+			case SchemaPackage.RULER__DIAGRAM_DATA:
+				setDiagramData((DiagramData)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -204,6 +288,8 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 				return guides != null && !guides.isEmpty();
 			case SchemaPackage.RULER__TYPE:
 				return type != TYPE_EDEFAULT;
+			case SchemaPackage.RULER__DIAGRAM_DATA:
+				return getDiagramData() != null;
 		}
 		return super.eIsSet(featureID);
 	}
