@@ -21,6 +21,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -80,7 +83,6 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommand;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
 import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
@@ -214,6 +216,7 @@ public class SchemaEditor
 	
 	private boolean 					editorSaving = false;
 	private SchemaEditorRulerProvider   horizontalRulerProvider;
+	private Adapter						modelChangeListener;
 	private ResourceTracker 			resourceListener = new ResourceTracker();	
 	private RulerComposite				rulerComp;	
 	private Schema 						schema;
@@ -340,11 +343,9 @@ public class SchemaEditor
 		// add a listener to the command stack to 
 		// - change the zoom manager's zoom level when the user performs an undo 
 		//   or redo of a set zoom level command
-		// - show or hide the rulers
-		// - show or hide the grid
-		// we should consider changing this implementation to add a listener 
-		// that is notified when an attribute of the schema's diagram data 
-		// changes value
+		// it works better this way than via the model change listener hereafter
+		// since we only need to cover the zoom command's undo and redo and we
+		// do get some strange effects if we work with the model change listener
 		getCommandStack().addCommandStackEventListener(new CommandStackEventListener() {
 			@Override
 			public void stackChanged(CommandStackEvent event) {				
@@ -354,33 +355,44 @@ public class SchemaEditor
 					 event.getDetail() == CommandStack.POST_REDO) &&
 					manager != null) {
 					
-					manager.setZoom(schema.getDiagramData().getZoomLevel());
-				} else if (event.isPostChangeEvent() && 
-						   event.getCommand() instanceof SetBooleanAttributeCommand &&
-						   ((SetBooleanAttributeCommand)event.getCommand())
-						   									 .getAttribute() == ATTRIBUTE_SHOW_RULERS &&
-						   (event.getDetail() == CommandStack.POST_UNDO ||
-							event.getDetail() == CommandStack.POST_REDO ||
-							event.getDetail() == CommandStack.POST_EXECUTE)) {
-							
-					boolean showRulers = schema.getDiagramData().isShowRulers();
+					manager.setZoom(schema.getDiagramData().getZoomLevel());				
+				}
+			}
+		});
+		
+		// attach a model change listener to respond to changes to the zoom
+		// level, rulers&guides and grid visibility
+		modelChangeListener = new Adapter() {
+			@Override
+			public Notifier getTarget() {
+				return null;
+			}
+			@Override
+			public boolean isAdapterForType(Object type) {
+				return false;
+			}
+			@Override
+			public void notifyChanged(Notification notification) {
+				if (notification.getEventType() == Notification.SET &&
+					notification.getFeature() == ATTRIBUTE_SHOW_RULERS) {
+					
+					boolean showRulers = notification.getNewBooleanValue();
 					getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
 													 Boolean.valueOf(showRulers));
-				} else if (event.isPostChangeEvent() && 
-						   event.getCommand() instanceof SetBooleanAttributeCommand &&
-						   ((SetBooleanAttributeCommand)event.getCommand())
-						   									 .getAttribute() == ATTRIBUTE_SHOW_GRID &&
-						   (event.getDetail() == CommandStack.POST_UNDO ||
-							event.getDetail() == CommandStack.POST_REDO ||
-							event.getDetail() == CommandStack.POST_EXECUTE)) {
-							
-					boolean showGrid = schema.getDiagramData().isShowGrid();					
+				} else if (notification.getEventType() == Notification.SET &&
+						   notification.getFeature() == ATTRIBUTE_SHOW_GRID) {
+					
+					boolean showGrid = notification.getNewBooleanValue();					
 					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
 													 Boolean.valueOf(showGrid));
 				}
 			}
-		});
-				
+			@Override
+			public void setTarget(Notifier newTarget) {				
+			}
+		};
+		schema.getDiagramData().eAdapters().add(modelChangeListener);
+		
 	}
 	
 	@Override
@@ -393,6 +405,7 @@ public class SchemaEditor
 	}
 	
 	public void dispose() {
+		schema.getDiagramData().eAdapters().remove(modelChangeListener);
 		verticalRulerProvider.dispose();
 		horizontalRulerProvider.dispose();
 		getSite().getWorkbenchWindow().getPartService()
