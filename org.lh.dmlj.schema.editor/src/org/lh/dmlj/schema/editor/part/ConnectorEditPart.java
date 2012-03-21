@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.EllipseAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
@@ -17,6 +16,7 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorsCommand;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 
@@ -100,22 +100,22 @@ public class ConnectorEditPart extends AbstractDiagramNodeEditPart<Connector> {
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
-		return new EllipseAnchor(getFigure());
+		return new ConnectorAnchor((ConnectorFigure) getFigure());
 	}
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		return new EllipseAnchor(getFigure());
+		return new ConnectorAnchor((ConnectorFigure) getFigure());
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
-		return new EllipseAnchor(getFigure());
+		return new ConnectorAnchor((ConnectorFigure) getFigure());
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		return new EllipseAnchor(getFigure());
+		return new ConnectorAnchor((ConnectorFigure) getFigure());
 	}
 
 	@Override

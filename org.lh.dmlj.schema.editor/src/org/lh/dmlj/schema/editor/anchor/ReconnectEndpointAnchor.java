@@ -119,7 +119,9 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 
 	@Override
 	public Point getReferencePoint() {
-		return figure.getBounds().getCenter();
+		PrecisionPoint pp = new PrecisionPoint(figure.getBounds().getCenter());
+		figure.translateToAbsolute(pp);
+		return pp;
 	}
 
 	@Override
