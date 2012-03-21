@@ -28,7 +28,6 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getConnectionPart <em>Connection Part</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getLabel <em>Label</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getLocation <em>Location</em>}</li>
  * </ul>
  * </p>
  *
@@ -64,16 +63,6 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * @ordered
 	 */
 	protected String label = LABEL_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getLocation() <em>Location</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLocation()
-	 * @generated
-	 * @ordered
-	 */
-	protected DiagramLocation location;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -180,44 +169,6 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DiagramLocation getLocation() {
-		if (location != null && location.eIsProxy()) {
-			InternalEObject oldLocation = (InternalEObject)location;
-			location = (DiagramLocation)eResolveProxy(oldLocation);
-			if (location != oldLocation) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, SchemaPackage.CONNECTOR__LOCATION, oldLocation, location));
-			}
-		}
-		return location;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DiagramLocation basicGetLocation() {
-		return location;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLocation(DiagramLocation newLocation) {
-		DiagramLocation oldLocation = location;
-		location = newLocation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTOR__LOCATION, oldLocation, location));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -256,9 +207,6 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 				return basicGetConnectionPart();
 			case SchemaPackage.CONNECTOR__LABEL:
 				return getLabel();
-			case SchemaPackage.CONNECTOR__LOCATION:
-				if (resolve) return getLocation();
-				return basicGetLocation();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -276,9 +224,6 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 				return;
 			case SchemaPackage.CONNECTOR__LABEL:
 				setLabel((String)newValue);
-				return;
-			case SchemaPackage.CONNECTOR__LOCATION:
-				setLocation((DiagramLocation)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -298,9 +243,6 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 			case SchemaPackage.CONNECTOR__LABEL:
 				setLabel(LABEL_EDEFAULT);
 				return;
-			case SchemaPackage.CONNECTOR__LOCATION:
-				setLocation((DiagramLocation)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -317,8 +259,6 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 				return connectionPart != null;
 			case SchemaPackage.CONNECTOR__LABEL:
 				return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
-			case SchemaPackage.CONNECTOR__LOCATION:
-				return location != null;
 		}
 		return super.eIsSet(featureID);
 	}

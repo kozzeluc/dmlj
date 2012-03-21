@@ -17,7 +17,6 @@ package org.lh.dmlj.schema;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Connector#getConnectionPart <em>Connection Part</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Connector#getLabel <em>Label</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Connector#getLocation <em>Location</em>}</li>
  * </ul>
  * </p>
  *
@@ -79,31 +78,5 @@ public interface Connector extends DiagramNode {
 	 * @generated
 	 */
 	void setLabel(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Location</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Location</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Location</em>' reference.
-	 * @see #setLocation(DiagramLocation)
-	 * @see org.lh.dmlj.schema.SchemaPackage#getConnector_Location()
-	 * @model required="true"
-	 * @generated
-	 */
-	DiagramLocation getLocation();
-
-	/**
-	 * Sets the value of the '{@link org.lh.dmlj.schema.Connector#getLocation <em>Location</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Location</em>' reference.
-	 * @see #getLocation()
-	 * @generated
-	 */
-	void setLocation(DiagramLocation value);
 
 } // Connector

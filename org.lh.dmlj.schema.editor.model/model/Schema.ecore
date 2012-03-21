@@ -60,8 +60,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="connectionPart" lowerBound="1"
         eType="#//ConnectionPart" eOpposite="#//ConnectionPart/connector"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="location" lowerBound="1"
-        eType="#//DiagramLocation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramData">
     <eStructuralFeatures xsi:type="ecore:EReference" name="connectionLabels" upperBound="-1"

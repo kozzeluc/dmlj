@@ -536,22 +536,13 @@ public interface SchemaPackage extends EPackage {
 	int CONNECTOR__LABEL = DIAGRAM_NODE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Location</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONNECTOR__LOCATION = DIAGRAM_NODE_FEATURE_COUNT + 2;
-
-	/**
 	 * The number of structural features of the '<em>Connector</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 3;
+	int CONNECTOR_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Connection Labels</b></em>' containment reference list.
@@ -3582,17 +3573,6 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getConnector_Label();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.Connector#getLocation <em>Location</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Location</em>'.
-	 * @see org.lh.dmlj.schema.Connector#getLocation()
-	 * @see #getConnector()
-	 * @generated
-	 */
-	EReference getConnector_Location();
-
-	/**
 	 * Returns the meta object for class '{@link org.lh.dmlj.schema.OffsetExpression <em>Offset Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5219,14 +5199,6 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONNECTOR__LABEL = eINSTANCE.getConnector_Label();
-
-		/**
-		 * The meta object literal for the '<em><b>Location</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CONNECTOR__LOCATION = eINSTANCE.getConnector_Location();
 
 		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl <em>Offset Expression</em>}' class.

@@ -1697,15 +1697,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getConnector_Location() {
-		return (EReference)connectorEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getOffsetExpression() {
 		return offsetExpressionEClass;
 	}
@@ -2124,7 +2115,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		connectorEClass = createEClass(CONNECTOR);
 		createEReference(connectorEClass, CONNECTOR__CONNECTION_PART);
 		createEAttribute(connectorEClass, CONNECTOR__LABEL);
-		createEReference(connectorEClass, CONNECTOR__LOCATION);
 
 		diagramDataEClass = createEClass(DIAGRAM_DATA);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTION_LABELS);
@@ -2374,7 +2364,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getConnector_ConnectionPart(), this.getConnectionPart(), this.getConnectionPart_Connector(), "connectionPart", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getConnector_Label(), ecorePackage.getEString(), "label", null, 0, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getConnector_Location(), this.getDiagramLocation(), null, "location", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(diagramDataEClass, DiagramData.class, "DiagramData", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDiagramData_ConnectionLabels(), this.getConnectionLabel(), null, "connectionLabels", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
