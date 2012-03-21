@@ -3,17 +3,26 @@ package org.lh.dmlj.schema.editor.anchor;
 import org.eclipse.draw2d.AbstractConnectionAnchor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 
 /**
  * An anchor that behaves the same as the EllipseAnchor - this is our own 
- * version and it can be of interest in the future because the calculations
+ * version and it can be of interest in the future because of the calculations
  * being performed.
  */
 public class ConnectorAnchor extends AbstractConnectionAnchor {
 
-	public ConnectorAnchor(ConnectorFigure figure) {
+	private DiagramData diagramData;
+	
+	public ConnectorAnchor(ConnectorFigure figure, Connector connector) {
 		super(figure);
+		diagramData = connector.getConnectionPart()
+							   .getMemberRole()
+							   .getSet()
+							   .getSchema()
+							   .getDiagramData();
 	}
 
 	@Override
@@ -56,10 +65,10 @@ public class ConnectorAnchor extends AbstractConnectionAnchor {
 		}
 		
 		// calculate deltaX and -Y
-		double deltaX = Math.cos(Math.toRadians(a)) * 
-						(double)ConnectorFigure.UNSCALED_RADIUS;
-		double deltaY = -Math.sin(Math.toRadians(a)) * 
-						(double)ConnectorFigure.UNSCALED_RADIUS;		
+		double scaledRadius = 
+			(double)ConnectorFigure.UNSCALED_RADIUS * diagramData.getZoomLevel();
+		double deltaX = Math.cos(Math.toRadians(a)) * scaledRadius;
+		double deltaY = -Math.sin(Math.toRadians(a)) * scaledRadius;		
 		
 		PrecisionPoint result = 
 			new PrecisionPoint(pOrigin.preciseX() + deltaX,

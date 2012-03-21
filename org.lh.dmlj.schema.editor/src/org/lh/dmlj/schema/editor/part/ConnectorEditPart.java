@@ -100,22 +100,22 @@ public class ConnectorEditPart extends AbstractDiagramNodeEditPart<Connector> {
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
-		return new ConnectorAnchor((ConnectorFigure) getFigure());
+		return new ConnectorAnchor((ConnectorFigure) getFigure(), getModel());
 	}
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		return new ConnectorAnchor((ConnectorFigure) getFigure());
+		return new ConnectorAnchor((ConnectorFigure) getFigure(), getModel());
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
-		return new ConnectorAnchor((ConnectorFigure) getFigure());
+		return new ConnectorAnchor((ConnectorFigure) getFigure(), getModel());
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		return new ConnectorAnchor((ConnectorFigure) getFigure());
+		return new ConnectorAnchor((ConnectorFigure) getFigure(), getModel());
 	}
 
 	@Override

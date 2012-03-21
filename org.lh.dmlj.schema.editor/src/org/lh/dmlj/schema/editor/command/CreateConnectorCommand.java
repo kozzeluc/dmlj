@@ -62,7 +62,7 @@ public class CreateConnectorCommand extends AbstractConnectorsCommand {
 			// create the second connection part, set its source and target 
 			// endpoint locations, if any, and its connector
 			connectionPart2 = SchemaFactory.eINSTANCE.createConnectionPart();
-			connectionPart2.setSourceEndpointLocation(connector[1].getLocation());
+			connectionPart2.setSourceEndpointLocation(connector[1].getDiagramLocation());
 			DiagramLocation targetEndpointLocation = 
 				memberRole.getConnectionParts().get(0).getTargetEndpointLocation();
 			connectionPart2.setTargetEndpointLocation(targetEndpointLocation);
