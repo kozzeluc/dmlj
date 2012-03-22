@@ -22,7 +22,6 @@ import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
@@ -113,7 +112,6 @@ public class RecordEditPart
 					Point location = 
 						ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
 																    request.getLocation(), 
-																    reference,
 																    zoomLevel);
 					return new MoveEndpointCommand(connectionPart, location.x, 
 												   location.y, true);					
@@ -140,48 +138,6 @@ public class RecordEditPart
 					return null;
 				}
 				if (record == connectionPart.getMemberRole().getRecord()) {					
-					Point reference;
-					if (connectionPart.getBendpointLocations().isEmpty()) {
-						DiagramLocation sourceConnectionPoint = 
-							connectionPart.getSourceEndpointLocation();
-						if (sourceConnectionPoint != null) {
-							reference = 
-								new PrecisionPoint(sourceConnectionPoint.getX(), 
-										   		   sourceConnectionPoint.getY());
-						} else if (connectionPart.getMemberRole()
-												 .getSet()
-												 .getOwner() != null) {
-							// user owned set
-							SchemaRecord owner = connectionPart.getMemberRole()
-											  				   .getSet()
-											  				   .getOwner()
-											  				   .getRecord();
-							GraphicalEditPart editPart = 
-								(GraphicalEditPart) getViewer().getEditPartRegistry()
-														  	   .get(owner);							
-							reference = 
-								editPart.getFigure().getBounds().getCenter();
-							
-							
-							
-						} else {
-							// system owned set
-							SystemOwner systemOwner = 
-								connectionPart.getMemberRole()
-											  .getSet()
-											  .getSystemOwner();
-							GraphicalEditPart editPart = 
-								(GraphicalEditPart) getViewer().getEditPartRegistry()
-														  	   .get(systemOwner);
-							reference = 
-								editPart.getFigure().getBounds().getBottom();							
-						}
-					} else {
-						DiagramLocation firstBendpoint = 
-							connectionPart.getBendpointLocations().get(0);
-						reference = new PrecisionPoint(firstBendpoint.getX(), 
-													   firstBendpoint.getY());
-					}
 					double zoomLevel = connectionPart.getMemberRole()
 													 .getSet()
 													 .getSchema()
@@ -190,7 +146,6 @@ public class RecordEditPart
 					Point location = 
 						ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
 																	request.getLocation(), 
-																	reference,
 																	zoomLevel);
 					return new MoveEndpointCommand(connectionPart, location.x, 
 												   location.y, false);					

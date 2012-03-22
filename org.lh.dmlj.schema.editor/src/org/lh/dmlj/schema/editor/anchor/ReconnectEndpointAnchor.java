@@ -30,9 +30,27 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	 * @return the (unscaled) location where the endpoint should go, relative to 
 	 *         the given record figure
 	 */
+	@Deprecated
 	public static PrecisionPoint getRelativeLocation(RecordFigure figure, 
 													 Point mouseLocation, 
 													 Point reference, 
+													 double zoomLevel) {
+		
+		return getRelativeLocation(figure, mouseLocation, zoomLevel);
+	}
+	
+	/**
+	 * Calculates, for a given mouse location, the (unscaled) location where an 
+	 * endpoint should go, relative to a given (record) figure.
+	 * @param figure The record figure
+	 * @param mouseLocation The scaled mouseLocation in absolute (scaled) 
+	 *        coordinates
+	 * @param zoomLevel The current zoom level
+	 * @return the (unscaled) location where the endpoint should go, relative to 
+	 *         the given record figure
+	 */
+	public static PrecisionPoint getRelativeLocation(RecordFigure figure, 
+													 Point mouseLocation, 
 													 double zoomLevel) {
 		
 		// get the figure's bounds...
@@ -74,7 +92,7 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 		PrecisionPoint result = new PrecisionPoint(offsetX, offsetY);
 		RecordFigure.unscale(result, figure, zoomLevel);
 		return result;
-	}
+	}	
 	
 	public ReconnectEndpointAnchor(RecordFigure figure, Point mouseLocation,
 								   ConnectionPart connectionPart) {
@@ -98,7 +116,7 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 										 .getDiagramData()
 										 .getZoomLevel();
 		PrecisionPoint result = 
-			getRelativeLocation(figure, mouseLocation, reference, zoomLevel);
+			getRelativeLocation(figure, mouseLocation, zoomLevel);
 		// scale the relative location...
 		RecordFigure.scale(result, figure, zoomLevel);
 		// convert this location to absolute coordinates...
@@ -118,10 +136,26 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	}
 
 	@Override
-	public Point getReferencePoint() {
-		PrecisionPoint pp = new PrecisionPoint(figure.getBounds().getCenter());
-		figure.translateToAbsolute(pp);
-		return pp;
+	public Point getReferencePoint() {		
+		
+		double zoomLevel = connectionPart.getMemberRole()
+										 .getSet()
+										 .getSchema()
+										 .getDiagramData()
+										 .getZoomLevel();
+		PrecisionPoint relativeLocation = 
+			getRelativeLocation(figure, mouseLocation, zoomLevel);
+		
+		PrecisionPoint location = 
+			new PrecisionPoint(figure.getBounds().preciseX(),
+							   figure.getBounds().preciseY());
+		figure.translateToAbsolute(location);
+		location.setPreciseX(location.preciseX() + 
+							 relativeLocation.preciseX());
+		location.setPreciseY(location.preciseY() + 
+				 			 relativeLocation.preciseY());
+		
+		return location;
 	}
 
 	@Override

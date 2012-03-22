@@ -108,8 +108,6 @@ public class LockedRecordTargetAnchor extends AbstractLockedRecordAnchor {
 
 	@Override
 	protected DiagramLocation getModelEndpoint() {
-		// we currently don't support split connections (i.e. 2 connection
-		// parts, each with a connector attached, for 1 set)
 		return connectionPart.getTargetEndpointLocation();
 	}
 	

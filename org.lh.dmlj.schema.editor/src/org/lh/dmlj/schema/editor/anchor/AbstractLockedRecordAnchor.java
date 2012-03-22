@@ -94,4 +94,39 @@ public abstract class AbstractLockedRecordAnchor extends ChopboxAnchor {
 	 */
 	protected abstract DiagramLocation getModelEndpoint();	
 	
+	@Override
+	public final Point getReferencePoint() {
+		if (getModelEndpoint() != null) {
+			
+			// we have something stored in the model; let's use it to create the
+			// reference point
+			DiagramLocation modelEndpoint = getModelEndpoint();
+			PrecisionPoint offset = 
+				new PrecisionPoint(modelEndpoint.getX(), modelEndpoint.getY());
+			
+			// scale the (now available) offset...
+			PrecisionPoint scaledOffset = new PrecisionPoint();
+			double zoomLevel = schema.getDiagramData().getZoomLevel();
+			scaledOffset.setPreciseX(offset.preciseX() * zoomLevel);
+			scaledOffset.setPreciseY(offset.preciseY() * zoomLevel);
+			
+			// compute the anchor location using the figure's bounds and the scaled
+			// offset...
+			PrecisionPoint anchorLocation = 
+				new PrecisionPoint(getOwner().getBounds().getTopLeft());
+			getOwner().translateToAbsolute(anchorLocation); 
+			anchorLocation.setPreciseX(anchorLocation.preciseX() + 
+									   scaledOffset.preciseX());
+			anchorLocation.setPreciseY(anchorLocation.preciseY() + 
+									   scaledOffset.preciseY());
+			
+			return anchorLocation;			
+		} else {
+			PrecisionPoint pp = 
+					new PrecisionPoint(getOwner().getBounds().getCenter());
+			getOwner().translateToAbsolute(pp);
+			return pp;
+		}
+	}	
+	
 }
