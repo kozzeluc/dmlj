@@ -5,20 +5,20 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.ComponentEditPolicy;
-import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
-import org.lh.dmlj.schema.editor.command.DeleteConnectorsCommand;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
+import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
 
 public class ConnectorEditPart extends AbstractDiagramNodeEditPart<Connector> {
 
@@ -37,29 +37,29 @@ public class ConnectorEditPart extends AbstractDiagramNodeEditPart<Connector> {
 
 	@Override
 	protected void createEditPolicies() {
-		installEditPolicy(EditPolicy.COMPONENT_ROLE,
-			new ComponentEditPolicy() {
-			
-			@Override
-			protected Command createDeleteCommand(GroupRequest deleteRequest) {
-				List<?> editParts = deleteRequest.getEditParts(); 
-				if (editParts.size() != 1 ||
-					!(editParts.get(0) instanceof ConnectorEditPart)) {
-					
-					return null;
-				}
-				Connector connector = 
-					((ConnectorEditPart)editParts.get(0)).getModel();
-				MemberRole memberRole = 
-					connector.getConnectionPart().getMemberRole();
-				return new DeleteConnectorsCommand(memberRole);				
-			}
-		});
+		// make sure we can delete connectors:
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, 
+						  new ConnectorComponentEditPolicy());
 	}
 	
 	@Override
 	protected IFigure createFigure() {
-		return new ConnectorFigure();
+		Figure figure = new ConnectorFigure();
+		
+		// add a tooltip containing the set's name...
+        String adjustedSetName;
+        Set set = getModel().getConnectionPart().getMemberRole().getSet();
+        if (set.getName().endsWith("_")) {
+            StringBuilder p = new StringBuilder(set.getName());
+            p.setLength(p.length() - 1);
+            adjustedSetName = p.toString();
+        } else {
+            adjustedSetName = set.getName();
+        }
+        Label tooltip = new Label(adjustedSetName);
+        figure.setToolTip(tooltip);
+        
+        return figure;
 	}		
 
 	public MemberRole getMemberRole() {
