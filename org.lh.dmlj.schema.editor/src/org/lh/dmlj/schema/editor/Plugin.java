@@ -7,9 +7,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
 
@@ -266,6 +268,8 @@ public class Plugin extends AbstractUIPlugin {
 		
 		// we need to create an ElementInfoValueObject for each related element
 		// database node and make sure the elements are in the right order...
+		List<ElementInfoValueObject> elementInfoValueObjects = 
+			new ArrayList<>();
 		for (Relationship relationship :
 			 recordNode.getRelationships(RelTypes.RECORD_ELEMENT)) {
 			
@@ -274,9 +278,9 @@ public class Plugin extends AbstractUIPlugin {
 			ElementInfoValueObject elementInfoValueObject =
 				createElementInfoValueObject(elementNode);
 			
-			recordInfoValueObject.getElementInfoValueObjects().add(elementInfoValueObject);
+			elementInfoValueObjects.add(elementInfoValueObject);
 		}			
-		Collections.sort(recordInfoValueObject.getElementInfoValueObjects(),
+		Collections.sort(elementInfoValueObjects,
 						 new Comparator<ElementInfoValueObject>() {
 			@Override
 			public int compare(ElementInfoValueObject valueObject1,
@@ -284,7 +288,9 @@ public class Plugin extends AbstractUIPlugin {
 				
 				return valueObject1.getSeqNo() - valueObject2.getSeqNo();
 			}
-		});				
+		});		
+		recordInfoValueObject.getElementInfoValueObjects()
+							 .addAll(elementInfoValueObjects);
 		
 		// we're done
 		return recordInfoValueObject;
