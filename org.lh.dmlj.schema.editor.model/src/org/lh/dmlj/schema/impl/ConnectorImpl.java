@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
-import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.SchemaPackage;
 
 /**
