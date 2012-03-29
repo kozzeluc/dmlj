@@ -9,7 +9,8 @@ public class ElementInfoValueObject {
 	private int	   seqNo;
 	
 	public ElementInfoValueObject(int seqNo) {
-		super();		
+		super();	
+		this.seqNo = seqNo;
 	}
 
 	public String getDescription() {
