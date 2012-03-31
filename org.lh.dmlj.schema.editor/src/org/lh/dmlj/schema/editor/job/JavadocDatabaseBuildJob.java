@@ -62,7 +62,7 @@ public class JavadocDatabaseBuildJob extends Job {
 	
 	public JavadocDatabaseBuildJob(ZipFile zipFile, 
 								   GraphDatabaseService neo4jDb) {
-		super("IDMSNTWK V1 Javadoc caching");
+		super("Build IDMSNTWK V1 Info cache");
 		this.zipFile = zipFile;
 		this.neo4jDb = neo4jDb;
 	}	

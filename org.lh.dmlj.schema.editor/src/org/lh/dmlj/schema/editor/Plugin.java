@@ -17,6 +17,7 @@ import java.util.zip.ZipFile;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -42,13 +43,16 @@ public class Plugin extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String 		PLUGIN_ID = 
 		"org.lh.dmlj.schema.editor"; //$NON-NLS-1$
+	
+	private static final String 	JAVADOC_LEVEL_NAME = "Javadoc_IDMSNTWK";
+	private static final String 	JAVADOC_LEVEL_VALUE = "r16SP2";
 
 	// The shared instance
 	private static Plugin 			plugin;
 	
 	// Neo4j relationship(s)
 	public static enum RelTypes implements RelationshipType { RECORD_ELEMENT };	
-		
+			
 	private GraphDatabaseService 	neo4jDb;
 	private Font 					figureFont = 
 		new Font(Display.getCurrent(), "Arial", 6, SWT.NORMAL);
@@ -350,36 +354,101 @@ public class Plugin extends AbstractUIPlugin {
 						    " to the temporary files folder");
 		}
 		
-		// copy the Javadoc .zip file to the temporary files folder, create and 
-		// populate the Neo4j database that will hold this information, which 
-		// will be used in the property view's "Info" tab when a record of 
-		// schema IDMSNTWK version 1 is selected in the editor...
-		source = 
-			cl.getResourceAsStream("/resources/Javadoc_IDMSNTWK_r16SP2.zip");		
-		target = new File(tmpFolder, "Javadoc_IDMSNTWK_r16SP2.zip");
-		final File fTarget = target;
-		if (!copy(source, target)) {
-			throw new Error("cannot copy " + target.getName() + 
-						    " to the temporary files folder");
-		}
-		File dbFolder = new File(tmpFolder, "Javadoc_IDMSNTWK_r16SP2");
-		neo4jDb = new EmbeddedGraphDatabase(dbFolder.getAbsolutePath());
-		final ZipFile zipFile = new ZipFile(target);
-		JavadocDatabaseBuildJob job = 
-			new JavadocDatabaseBuildJob(zipFile, neo4jDb);
-		job.addJobChangeListener(new JobChangeAdapter() {
-			@Override
-			public void done(IJobChangeEvent event) {	
-				// close the Javadoc .zip file ant (try to) delete it...
-				try {
-					zipFile.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fTarget.delete();
+		// Determine the Neo4j database path and create and populate the 
+		// database if needed.  The Neo4j database is used in the property 
+		// view's "Info" tab when a record of schema IDMSNTWK version 1 is 
+		// selected in the editor.  We keep an indicator in the plug-in's
+		// preference store so that we know if the database is fully loaded or
+		// not.
+		File dbFolder = new File(getStateLocation().toFile(), 
+								 JAVADOC_LEVEL_NAME + "_" + JAVADOC_LEVEL_VALUE);	
+		boolean createDatabase = true;
+		if (getPreferenceStore().contains(JAVADOC_LEVEL_NAME) &&
+			getPreferenceStore().getString(JAVADOC_LEVEL_NAME)
+							    .equals(JAVADOC_LEVEL_VALUE) &&
+			dbFolder.exists() && dbFolder.listFiles().length > 0) {
+			
+			// The database exists and is fully loaded if the preference store
+			// contains the right Javadoc level value AND the database folder
+			// exists AND if opening the database doesn't provide any trouble.
+			try {
+				// open the existing database
+				neo4jDb = new EmbeddedGraphDatabase(dbFolder.getAbsolutePath());
+				// the database seems to have opened without problems, so it
+				// looks to be OK; we're done !				
+				createDatabase = false;				
+			} catch (Throwable t) {
+				// we will not be able to delete the database folder and so the
+				// creation of a fresh database will only fail - the only way to
+				// fix this situation is a workbench restart
 			}
-		});
-		job.schedule();		
+			
+		}
+						
+		if (createDatabase) {
+			
+			// set the preference store property to a question mark; if the user
+			// exits the database before the database is fully loaded, we will
+			// have a trace of that and rebuild the database again			
+			getPreferenceStore().setValue(JAVADOC_LEVEL_NAME, "?");
+			InstanceScope.INSTANCE.getNode(PLUGIN_ID).flush();
+			
+			// clean the database folder
+			if (dbFolder.exists()) {
+				deleteDirectoryContents(dbFolder);
+			} 
+			
+			// copy the Javadoc .zip file to the temporary files folder
+			source = cl.getResourceAsStream("/resources/" + JAVADOC_LEVEL_NAME + 
+									   		"_" + JAVADOC_LEVEL_VALUE + ".zip");		
+			target = new File(tmpFolder, JAVADOC_LEVEL_NAME + "_" + 
+							  JAVADOC_LEVEL_VALUE + ".zip");
+			final File fTarget = target;
+			if (!copy(source, target)) {
+				throw new Error("cannot copy " + target.getName() + 
+							    " to the temporary files folder");
+			}
+			
+			// create the database; if it already exited and the files in the
+			// folder would be corrupt, we will get an error here, for which 
+			// there really is only 1 solution: a restart of the workbench...
+			try {
+				neo4jDb = new EmbeddedGraphDatabase(dbFolder.getAbsolutePath());
+			} catch (Throwable t) {
+				throw new Error("Cannot build IDMSNTWK V1 Info cache, " +
+								"RESTART THE WORKBENCH to fix this please");
+			}
+			
+			// ...and populate it in the background using a job
+			final ZipFile zipFile = new ZipFile(target);
+			JavadocDatabaseBuildJob job = 
+				new JavadocDatabaseBuildJob(zipFile, neo4jDb);
+			job.addJobChangeListener(new JobChangeAdapter() {
+				@Override
+				public void done(IJobChangeEvent event) {
+					// close the Javadoc .zip file and (try to) delete it...
+					try {
+						zipFile.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					fTarget.delete(); // delete the .zip file in the tmpFolder
+					// set the plug-in's preference store indicator if the job
+					// finished succesfully
+					if (event.getResult().isOK()) {
+						getPreferenceStore().setValue(JAVADOC_LEVEL_NAME, 
+													  JAVADOC_LEVEL_VALUE);
+						try {
+							InstanceScope.INSTANCE.getNode(PLUGIN_ID).flush();
+						} catch (Throwable t) {
+							// ignore, hopefully the plug-in's preference store
+							// gets flushed somewhere later :-)
+						}
+					}
+				}
+			});
+			job.schedule();
+		}
 	}
 
 	/*
@@ -392,8 +461,16 @@ public class Plugin extends AbstractUIPlugin {
 		try {
 			neo4jDb.shutdown();
 		} catch (Throwable t) {
-			t.printStackTrace();
+			//t.printStackTrace();
 		}
+				
+		/* 
+		We leave the Neo4j database as it is, even if the user is exiting the 
+		workbench before it is fully loaded and thus missing some information 
+		(reason: we might not be able to delete it); the database folder will be 
+		cleaned and the database built again when the workbench restarts, 
+		provided this plug-in is active of course.
+		 */
 		
 		// cleanup our temporary file folder...
 		deleteDirectoryContents(tmpFolder);
