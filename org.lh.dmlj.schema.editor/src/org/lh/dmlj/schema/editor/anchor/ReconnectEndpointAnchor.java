@@ -25,26 +25,6 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	 * @param figure The record figure
 	 * @param mouseLocation The scaled mouseLocation in absolute (scaled) 
 	 *        coordinates
-	 * @param reference The reference point in absolute (scaled) coordinates
-	 * @param zoomLevel The current zoom level
-	 * @return the (unscaled) location where the endpoint should go, relative to 
-	 *         the given record figure
-	 */
-	@Deprecated
-	public static PrecisionPoint getRelativeLocation(RecordFigure figure, 
-													 Point mouseLocation, 
-													 Point reference, 
-													 double zoomLevel) {
-		
-		return getRelativeLocation(figure, mouseLocation, zoomLevel);
-	}
-	
-	/**
-	 * Calculates, for a given mouse location, the (unscaled) location where an 
-	 * endpoint should go, relative to a given (record) figure.
-	 * @param figure The record figure
-	 * @param mouseLocation The scaled mouseLocation in absolute (scaled) 
-	 *        coordinates
 	 * @param zoomLevel The current zoom level
 	 * @return the (unscaled) location where the endpoint should go, relative to 
 	 *         the given record figure
@@ -138,23 +118,33 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 	@Override
 	public Point getReferencePoint() {		
 		
+		// get the current zoom level
 		double zoomLevel = connectionPart.getMemberRole()
 										 .getSet()
 										 .getSchema()
 										 .getDiagramData()
 										 .getZoomLevel();
+		
+		// calculate the (unscaled) offset of the mouse pointer relative to the 
+		// record's top left corner
 		PrecisionPoint relativeLocation = 
 			getRelativeLocation(figure, mouseLocation, zoomLevel);
 		
+		// get the record figure's absolute location
 		PrecisionPoint location = 
 			new PrecisionPoint(figure.getBounds().preciseX(),
 							   figure.getBounds().preciseY());
 		figure.translateToAbsolute(location);
-		location.setPreciseX(location.preciseX() + 
-							 relativeLocation.preciseX());
-		location.setPreciseY(location.preciseY() + 
-				 			 relativeLocation.preciseY());
 		
+		// calculate the scaled offset for the new connection end point
+		double offsetX = relativeLocation.preciseX() * zoomLevel;
+		double offsetY = relativeLocation.preciseY() * zoomLevel;
+		
+		// calculate the absolute reconnect endpoint location...
+		location.setPreciseX(location.preciseX() + offsetX);
+		location.setPreciseY(location.preciseY() + offsetY);
+		
+		// ...and return it to the caller
 		return location;
 	}
 
