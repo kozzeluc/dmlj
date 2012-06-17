@@ -10,18 +10,12 @@ public class SetBooleanAttributeCommand extends Command {
 	private EAttribute	attribute;
 	private boolean		value;
 	
-	private boolean		oldValue;
-
-	public SetBooleanAttributeCommand(EObject object, EAttribute attribute, 
-							 		  boolean value) {
-		this(object, attribute, value,
-			 "Set " + attribute.getName() + " to " + value);
-	}
+	private boolean		oldValue;	
 		
 	public SetBooleanAttributeCommand(EObject object, EAttribute attribute, 
 		 		  					  boolean value, String label) {		
 		
-		super(label);
+		super("Set '" + label + "' to " + value);
 		this.object = object;
 		this.attribute = attribute;
 		this.value = value;

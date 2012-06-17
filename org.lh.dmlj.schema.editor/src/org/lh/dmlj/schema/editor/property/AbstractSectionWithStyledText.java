@@ -98,7 +98,8 @@ public abstract class AbstractSectionWithStyledText
         Assert.isTrue(input instanceof EditPart, "not an EditPart");
         editPartModelObject = ((EditPart) input).getModel();
         Assert.isTrue(isValidType(editPartModelObject), 
-  			  		  "not a " + Arrays.asList(validEditPartModelObjectTypes));
+  			  		  "not a " + Arrays.asList(validEditPartModelObjectTypes) +
+  			  		  " but a " + editPartModelObject.getClass().getName());
                 
 	}	
 	

@@ -47,13 +47,19 @@
                label="Length">
          </propertyTab>
          <propertyTab
-               afterTab="org.lh.dmlj.schema.editor.propertyTabGeneral"
+               afterTab="org.lh.dmlj.schema.editor.propertyTabLength"
+               category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabProcedures"
+               label="Procedures">
+         </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabLength"
                category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabCalc"
                label="CALC">
          </propertyTab>
          <propertyTab
-               afterTab="org.lh.dmlj.schema.editor.propertyTabGeneral"
+               afterTab="org.lh.dmlj.schema.editor.propertyTabLengt"
                category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabVia"
                label="VIA">
@@ -107,203 +113,53 @@
       <propertySections
             contributorId="org.lh.dmlj.schema.editor.schemaeditor">
          <propertySection
-               class="org.lh.dmlj.schema.editor.property.SchemaNameSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaName"
+               class="org.lh.dmlj.schema.editor.property.SchemaGeneralPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSchemaGeneral"
                tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
             <input
                   type="org.lh.dmlj.schema.Schema">
             </input>
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaName"
-               class="org.lh.dmlj.schema.editor.property.SchemaVersionSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaVersion"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.Schema">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaVersion"
-               class="org.lh.dmlj.schema.editor.property.SchemaDescriptionSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaDescription"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.Schema">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionDescriptionDate"
-               class="org.lh.dmlj.schema.editor.property.SchemaMemoDateSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaMemoDate"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.Schema">
-            </input>
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.SchemaShowRulersSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaShowRulers"
+               class="org.lh.dmlj.schema.editor.property.SchemaDiagramPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSchemaDiagram"
                tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
             <input
                   type="org.lh.dmlj.schema.Schema">
             </input>
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaShowRulers"
-               class="org.lh.dmlj.schema.editor.property.SchemaShowGridSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaShowGrid"
-               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
-            <input
-                  type="org.lh.dmlj.schema.Schema">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaShowGrid"
-               class="org.lh.dmlj.schema.editor.property.SchemaSnapToGuidesSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGuides"
-               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
-            <input
-                  type="org.lh.dmlj.schema.Schema">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGuides"
-               class="org.lh.dmlj.schema.editor.property.SchemaSnapToGridSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGrid"
-               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
-            <input
-                  type="org.lh.dmlj.schema.Schema">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGrid"
-               class="org.lh.dmlj.schema.editor.property.SchemaSnapToGeometrySection"
-               id="org.lh.dmlj.schema.editor.propertySectionSchemaSnapToGeometry"
-               tab="org.lh.dmlj.schema.editor.propertyTabDiagram">
-            <input
-                  type="org.lh.dmlj.schema.Schema">
-            </input>
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.RecordNameSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordName"
+               class="org.lh.dmlj.schema.editor.property.RecordGeneralPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordGeneral"
                tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
             <input
                   type="org.lh.dmlj.schema.SchemaRecord">
             </input>
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordName"
-               class="org.lh.dmlj.schema.editor.property.RecordIdSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordId"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordStorageMode"
-               class="org.lh.dmlj.schema.editor.property.RecordStorageModeSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordStorageMode"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordStorageMode"
-               class="org.lh.dmlj.schema.editor.property.RecordLocationModeSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordLocationMode"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionLocationStorageMode"
-               class="org.lh.dmlj.schema.editor.property.RecordAreaSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordArea"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.RecordPrefixLengthSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordPrefixLength"
+               class="org.lh.dmlj.schema.editor.property.RecordLengthPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordLength"
                tab="org.lh.dmlj.schema.editor.propertyTabRecordLength">
             <input
                   type="org.lh.dmlj.schema.SchemaRecord">
             </input>
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordPrefixLength"
-               class="org.lh.dmlj.schema.editor.property.RecordDataLengthSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordDataLength"
-               tab="org.lh.dmlj.schema.editor.propertyTabRecordLength">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
+               class="org.lh.dmlj.schema.editor.property.RecordProcedurePropertiesSection"
+               filter="org.lh.dmlj.schema.editor.property.filter.RecordWithProceduresFilter"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordProcedures"
+               tab="org.lh.dmlj.schema.editor.propertyTabProcedures">
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordDataLength"
-               class="org.lh.dmlj.schema.editor.property.RecordControlLengthSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordControlLength"
-               tab="org.lh.dmlj.schema.editor.propertyTabRecordLength">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordControlLength"
-               class="org.lh.dmlj.schema.editor.property.RecordMinimumRootLengthSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordMinimumRootLength"
-               tab="org.lh.dmlj.schema.editor.propertyTabRecordLength">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordMinimumRootLength"
-               class="org.lh.dmlj.schema.editor.property.RecordMinimumFragmentLengthSection"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordMinimumFragmentLength"
-               tab="org.lh.dmlj.schema.editor.propertyTabRecordLength">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.RecordCalcKeySection"
+               class="org.lh.dmlj.schema.editor.property.RecordCalcPropertiesSection"
                filter="org.lh.dmlj.schema.editor.property.filter.CalcRecordFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordCalcKey"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordCalc"
                tab="org.lh.dmlj.schema.editor.propertyTabCalc">
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordCalcKey"
-               class="org.lh.dmlj.schema.editor.property.RecordCalcKeyDuplicatesOptionSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.CalcRecordFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordCalcKeyDuplicatesOption"
-               tab="org.lh.dmlj.schema.editor.propertyTabCalc">
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.RecordViaSetSection"
+               class="org.lh.dmlj.schema.editor.property.RecordViaPropertiesSection"
                filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
-               tab="org.lh.dmlj.schema.editor.propertyTabVia">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
-               class="org.lh.dmlj.schema.editor.property.ViaSpecificationSymbolicDisplacementNameSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordWithSymbolicDisplacementFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordViaSetSymbolicDisplacementName"
-               tab="org.lh.dmlj.schema.editor.propertyTabVia">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionRecordViaSet"
-               class="org.lh.dmlj.schema.editor.property.ViaSpecificationDisplacementCountSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.ViaRecordWithDisplacementPageCountFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionRecordViaSetDisplacementPageCount"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordVia"
                tab="org.lh.dmlj.schema.editor.propertyTabVia">
          </propertySection>
          <propertySection
@@ -321,224 +177,48 @@
                tab="org.lh.dmlj.schema.editor.propertyTabInfo">
          </propertySection>
          <propertySection
-               class="org.lh.dmlj.schema.editor.property.SetNameSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSetName"
+               class="org.lh.dmlj.schema.editor.property.SetGeneralPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSetGeneral"
                tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
             <input
-                  type="org.lh.dmlj.schema.ConnectionPart">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.ConnectionLabel">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.SystemOwner">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.Connector">
+                  type="org.lh.dmlj.schema.MemberRole">
             </input>
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetName"
-               class="org.lh.dmlj.schema.editor.property.SetModeSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSetMode"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.ConnectionPart">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.ConnectionLabel">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.SystemOwner">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.Connector">
-            </input>
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetMode"
-               class="org.lh.dmlj.schema.editor.property.SetOrderSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSetOrder"
-               tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
-            <input
-                  type="org.lh.dmlj.schema.ConnectionPart">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.ConnectionLabel">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.SystemOwner">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.Connector">
-            </input>
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.SetOwnerNameSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionSetOwnerName"
+               class="org.lh.dmlj.schema.editor.property.SetOwnerPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSetOwner"
                tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.SetSystemOwnerNameSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.SystemOwnedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionSetSystemOwnerName"
-               tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetOwnerName"
-               class="org.lh.dmlj.schema.editor.property.SetOwnerAreaSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionSetOwnerArea"
-               tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetSystemOwnerName"
-               class="org.lh.dmlj.schema.editor.property.SetOwnerAreaSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.SystemOwnedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionSetSystemOwnerArea"
-               tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetOwnerArea"
-               class="org.lh.dmlj.schema.editor.property.OwnerRoleNextPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionOwnerRoleNextPointer"
-               tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionOwnerRoleNextPointer"
-               class="org.lh.dmlj.schema.editor.property.OwnerRolePriorPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionOwnerRolePriorPointer"
-               tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.SetMemberNameSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSetMemberName"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
             <input
-                  type="org.lh.dmlj.schema.ConnectionPart">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.ConnectionLabel">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.SystemOwner">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.Connector">
+                  type="org.lh.dmlj.schema.MemberRole">
             </input>
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetMemberName"
-               class="org.lh.dmlj.schema.editor.property.SetMemberAreaSection"
-               id="org.lh.dmlj.schema.editor.propertySectionSetMemberArea"
+               class="org.lh.dmlj.schema.editor.property.SetMemberPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSetMember"
                tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
             <input
-                  type="org.lh.dmlj.schema.ConnectionPart">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.ConnectionLabel">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.SystemOwner">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.Connector">
+                  type="org.lh.dmlj.schema.MemberRole">
             </input>
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetMemberArea"
-               class="org.lh.dmlj.schema.editor.property.MemberRoleNextPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.ChainedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionMemberRoleNextPointer"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleNextPointer"
-               class="org.lh.dmlj.schema.editor.property.MemberRolePriorPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.ChainedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionMemberRolePriorPointer"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetMemberArea"
-               class="org.lh.dmlj.schema.editor.property.MemberRoleIndexPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.IndexedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionMemberRoleIndexPointer"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRolePriorPointer"
-               class="org.lh.dmlj.schema.editor.property.MemberRoleOwnerPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.ChainedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionMemberRoleOwnerPointer_ChainedSet"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleIndexPointer"
-               class="org.lh.dmlj.schema.editor.property.MemberRoleOwnerPointerSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedIndexedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionMemberRoleOwnerPointer_UserOwnedIndexedSet"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleOwnerPointer_ChainedSet"
-               class="org.lh.dmlj.schema.editor.property.MemberRoleMembershipSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.ChainedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionMemberRoleMembership_ChainedSet"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleOwnerPointer_UserOwnedIndexedSet"
-               class="org.lh.dmlj.schema.editor.property.MemberRoleMembershipSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.UserOwnedIndexedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionMemberRoleMembership_UserOwnedIndexedSet"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
-         </propertySection>
-         <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionMemberRoleIndexPointer"
-               class="org.lh.dmlj.schema.editor.property.MemberRoleMembershipSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.SystemOwnedIndexedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionMemberRoleMembership_SystemOwnedIndexedSet"
-               tab="org.lh.dmlj.schema.editor.propertyTabMemberSet">
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.SetSortKeySection"
+               class="org.lh.dmlj.schema.editor.property.SetSortedPropertiesSection"
                filter="org.lh.dmlj.schema.editor.property.filter.SortedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionSetSortKey"
+               id="org.lh.dmlj.schema.editor.propertySectionSetSorted"
                tab="org.lh.dmlj.schema.editor.propertyTabSortedSet">
          </propertySection>
          <propertySection
-               afterSection="org.lh.dmlj.schema.editor.propertySectionSetSortKey"
-               class="org.lh.dmlj.schema.editor.property.SetSortKeyDuplicatesOptionSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.SortedSetFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionSetSortKeyDuplicatesOption"
-               tab="org.lh.dmlj.schema.editor.propertyTabSortedSet">
+               class="org.lh.dmlj.schema.editor.property.SetConnectorPropertiesSection"
+               filter="org.lh.dmlj.schema.editor.property.filter.ConnectionWithConnectorsFilter"
+               id="org.lh.dmlj.schema.editor.propertySectionSetConnectors"
+               tab="org.lh.dmlj.schema.editor.propertyTabConnectors">
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.SetSyntaxSection"
                id="org.lh.dmlj.schema.editor.propertySectionSetSyntax"
                tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
             <input
-                  type="org.lh.dmlj.schema.ConnectionPart">
+                  type="org.lh.dmlj.schema.MemberRole">
             </input>
-            <input
-                  type="org.lh.dmlj.schema.ConnectionLabel">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.SystemOwner">
-            </input>
-            <input
-                  type="org.lh.dmlj.schema.Connector">
-            </input>
-         </propertySection>
-         <propertySection
-               class="org.lh.dmlj.schema.editor.property.ConnectorLabelSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.ConnectionWithConnectorsFilter"
-               id="org.lh.dmlj.schema.editor.propertySectionSetConnectors"
-               tab="org.lh.dmlj.schema.editor.propertyTabConnectors">
          </propertySection>
       </propertySections>
    </extension>

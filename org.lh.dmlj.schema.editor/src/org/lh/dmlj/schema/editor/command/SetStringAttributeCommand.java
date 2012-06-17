@@ -13,9 +13,9 @@ public class SetStringAttributeCommand extends Command {
 	private String 		oldValue;
 
 	public SetStringAttributeCommand(EObject object, EAttribute attribute, 
-							 		 String value) {
+							 		 String value, String label) {
 		
-		super("Set " + attribute.getName() + " to '" + value + "'");
+		super("Set '" + label + "' to '" + value + "'");
 		this.object = object;
 		this.attribute = attribute;
 		this.value = value;
