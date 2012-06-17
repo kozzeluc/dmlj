@@ -324,7 +324,26 @@ public class SchemaEditor
 			(ZoomManager) getGraphicalViewer().getProperty(ZoomManager.class
 																	  .toString());
 		if (manager != null) {
-			manager.setZoom(schema.getDiagramData().getZoomLevel());
+			
+			// get the zoom level from the model and set the zoom managers level
+			// to it (it will be ignored if out of range)
+			double zoomLevel = schema.getDiagramData().getZoomLevel();
+			manager.setZoom(zoomLevel);
+			
+			// make sure the zoom level in the model matches the value in the 
+			// zoom level combo; if there is a mismatch, connection endpoints 
+			// and bendpoints will go crazy
+			if (manager.getZoom() != zoomLevel) {
+				// the zoom level is probably 'Page', 'Width' or 'Height'; for
+				// now, we will adjust the zoom level in the model (the file IS
+				// marked as dirty), but it would be better if we could just
+				// 'select' the right zoom level.				
+				SetZoomLevelCommand command = 
+					new SetZoomLevelCommand(schema, manager.getZoom(), false);
+				getCommandStack().execute(command);				
+			}
+			
+			// make sure we are informed of zoom changes
 			manager.addZoomListener(new ZoomListener() {
 				@Override
 				public void zoomChanged(double zoom) {			
