@@ -74,12 +74,13 @@ public class PropertyEditor extends MouseAdapter {
 		}
 		
 		// if the feature is not editable we're also done
-		if (!section.isEditableFeature(feature)) {
+		if (section.getEditableObject(feature) == null) {
 			return;
 		}
 		
 		// edit the feature value depending on its type
-		if (feature.getEType().getName().equals("EString")) {
+		if (feature.getEType().getName().equals("EString") ||
+			feature.getEType().getName().equals("EShort")) {
 			
 			// the cell editor can use all available horizontal space
 			tableEditor.grabHorizontal = true;
@@ -93,11 +94,11 @@ public class PropertyEditor extends MouseAdapter {
 			// changed, when enter is pressed, and dispose of the 
 			// editor control when escape is pressed:
 			text.addKeyListener(new KeyAdapter() {
-				/*public void keyPressed(KeyEvent e) {
+				public void keyPressed(KeyEvent e) {
 					
 					// this method is only needed for features with a
 					// numeric type							
-					if (feature == null) {
+					if (!feature.getEType().getName().equals("EShort")) {
 						return;
 					}
 					
@@ -113,7 +114,7 @@ public class PropertyEditor extends MouseAdapter {
 						e.doit = false;
 					}
 					
-				}*/						
+				}						
 				public void keyReleased(KeyEvent e) {
 					if (e.keyCode == 13 || 
 						e.keyCode == 16777296) { // enter-keys								
@@ -242,7 +243,7 @@ public class PropertyEditor extends MouseAdapter {
 			// start editing the cell in which the user clicked the
 			// mouse
 			combo.setFocus();
-			tableEditor.setEditor(combo, item, 1);					
+			tableEditor.setEditor(combo, item, 1);							
 			
 		} else {
 			

@@ -35,9 +35,9 @@ public class ModelChangeListener implements Adapter {
 	public void notifyChanged(Notification notification) {			
 		if (notification.getEventType() == Notification.SET &&
 			notification.getFeature() instanceof EStructuralFeature &&
-			section.isEditableFeature((EStructuralFeature) notification.getFeature())) {				
+			section.getEditableObject((EStructuralFeature) notification.getFeature()) != null) {				
 			
-			// because changing 1 property might cause the need to hide 
+			// because changing 1 property might cause the need to hide or show 
 			// others, it's best to refresh the whole section; mind that the
 			// property being edited will no longer be selected and thus its 
 			// description will no longer be shown

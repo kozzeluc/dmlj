@@ -86,11 +86,6 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 			return target.getConnectionParts().get(0).getConnector().getLabel();
 		}
 		return super.getValue(feature);
-	}
-
-	@Override
-	protected boolean isEditableFeature(EStructuralFeature feature) {		
-		return feature == SchemaPackage.eINSTANCE.getConnector_Label();
-	}
+	}	
 
 }

@@ -25,6 +25,7 @@ import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommand;
+import org.lh.dmlj.schema.editor.command.SetShortAttributeCommand;
 import org.lh.dmlj.schema.editor.command.SetStringAttributeCommand;
 
 public abstract class AbstractPropertiesSection<T extends EObject>
@@ -116,6 +117,9 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		} else if (feature.getEType().getName().equals("EBoolean")) {
 			boolean b = Boolean.valueOf(newValue).booleanValue();
 			return new SetBooleanAttributeCommand(target, attribute, b, label);
+		} else if (feature.getEType().getName().equals("EShort")) {
+			short i = Short.valueOf(newValue).shortValue();
+			return new SetShortAttributeCommand(target, attribute, i, label);
 		} else {
 			throw new Error("unsupported type: " + feature.getEType().getName());
 		}
@@ -129,15 +133,18 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	
 	/**
 	 * Subclasses that provide editable features should override this method and
-	 * return the object that contains the given feature, so that we can listen
-	 * for model changes in order to keep the properties table synchronized with
-	 * the model.
+	 * return the object that contains the given feature, so that we can provide 
+	 * a cell editor and listen for model changes in order to keep the 
+	 * properties table synchronized with the model.<br><br>
+	 * By default, a feature is read-only in the properties table.
 	 * @param feature the feature for which an editable object is needed
-	 * @return the object that contains the given feature
+	 * @return the object that contains the given feature or null if the feature
+	 *         is read-only
 	 */
 	protected EObject getEditableObject(EStructuralFeature feature) {
 		// we might need to change the type of the return value to a list or
-		// array in the future
+		// array in the future if we need to listen to several objects for the
+		// feature
 		return null;
 	}
 
@@ -161,10 +168,10 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	 * for 1 or more features.
 	 * @param feature a feature from the list returned by getFeatures()
 	 * @return true if the feature's value should be editable
-	 */
+	 *//*
 	protected boolean isEditableFeature(EStructuralFeature feature) {
 		return false;
-	}
+	}*/
 
 	@Override
 	public final void refresh() {
@@ -185,14 +192,10 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		removeModelChangeListeners();
 		editableObjects.clear();
 		for (EStructuralFeature feature : features) {
-			if (isEditableFeature(feature)) {
-				editableFeatures.add(feature);
-				EObject editableObject = getEditableObject(feature);
-				if (editableObject == null) {
-					throw new RuntimeException("Editable object cannot be " +
-											   "null (feature=" + 
-											   feature.getName() + ")");
-				}
+			EObject editableObject = getEditableObject(feature);
+			if (editableObject != null) {
+				// feature is editable because an editable object is provided
+				editableFeatures.add(feature);								
 				if (!editableObjects.contains(editableObject)) {
 					// just keep 1 reference to the editable object
 					editableObjects.add(editableObject);

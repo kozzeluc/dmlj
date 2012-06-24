@@ -75,17 +75,4 @@ public class SchemaDiagramPropertiesSection
 		return super.getLabel(feature);
 	}	
 	
-	@Override
-	protected boolean isEditableFeature(EStructuralFeature feature) {
-		if (feature == SchemaPackage.eINSTANCE.getDiagramData_ShowRulers() ||
-			feature == SchemaPackage.eINSTANCE.getDiagramData_ShowGrid() ||
-			feature == SchemaPackage.eINSTANCE.getDiagramData_SnapToGuides() ||
-			feature == SchemaPackage.eINSTANCE.getDiagramData_SnapToGrid() ||
-			feature == SchemaPackage.eINSTANCE.getDiagramData_SnapToGeometry()) {
-			
-			return true;
-		}
-		return super.isEditableFeature(feature);
-	}
-	
 }

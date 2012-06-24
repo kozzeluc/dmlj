@@ -3,6 +3,7 @@ package org.lh.dmlj.schema.editor.property;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.SchemaPackage;
 
@@ -32,6 +33,17 @@ public class SchemaGeneralPropertiesSection
 	}
 	
 	@Override
+	protected EObject getEditableObject(EStructuralFeature feature) {
+		if (feature == SchemaPackage.eINSTANCE.getSchema_Name() ||
+			feature == SchemaPackage.eINSTANCE.getSchema_Version()) {
+			
+			return target;
+		}
+		return super.getEditableObject(feature);
+	}
+	
+	
+	@Override
 	protected List<EStructuralFeature> getFeatures() {
 		List<EStructuralFeature> features = new ArrayList<>();
 		features.add(SchemaPackage.eINSTANCE.getSchema_Name());
@@ -53,6 +65,6 @@ public class SchemaGeneralPropertiesSection
 			return "Memo date";
 		}
 		return super.getLabel(feature);
-	}
+	}	
 
 }
