@@ -17,9 +17,11 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.Key#isCalcKey <em>Calc Key</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#isCompressed <em>Compressed</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getDuplicatesOption <em>Duplicates Option</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getElements <em>Elements</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Key#getElementSummary <em>Element Summary</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getLength <em>Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getMemberRole <em>Member Role</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#isNaturalSequence <em>Natural Sequence</em>}</li>
@@ -32,6 +34,21 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Key extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Calc Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Calc Key</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Calc Key</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getKey_CalcKey()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isCalcKey();
+
 	/**
 	 * Returns the value of the '<em><b>Length</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -145,6 +162,21 @@ public interface Key extends EObject {
 	 * @generated
 	 */
 	EList<KeyElement> getElements();
+
+	/**
+	 * Returns the value of the '<em><b>Element Summary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Element Summary</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Element Summary</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getKey_ElementSummary()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	String getElementSummary();
 
 	/**
 	 * Returns the value of the '<em><b>Member Role</b></em>' reference.

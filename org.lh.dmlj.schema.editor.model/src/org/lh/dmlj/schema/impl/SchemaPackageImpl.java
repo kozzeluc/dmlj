@@ -1472,25 +1472,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getKey_Length() {
-		return (EAttribute)keyEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getKey_DuplicatesOption() {
-		return (EAttribute)keyEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getKey_Compressed() {
+	public EAttribute getKey_CalcKey() {
 		return (EAttribute)keyEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1499,7 +1481,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getKey_NaturalSequence() {
+	public EAttribute getKey_Length() {
 		return (EAttribute)keyEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1508,8 +1490,44 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getKey_DuplicatesOption() {
+		return (EAttribute)keyEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKey_Compressed() {
+		return (EAttribute)keyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKey_NaturalSequence() {
+		return (EAttribute)keyEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getKey_Elements() {
-		return (EReference)keyEClass.getEStructuralFeatures().get(2);
+		return (EReference)keyEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getKey_ElementSummary() {
+		return (EAttribute)keyEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1518,7 +1536,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getKey_MemberRole() {
-		return (EReference)keyEClass.getEStructuralFeatures().get(4);
+		return (EReference)keyEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -1527,7 +1545,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getKey_Record() {
-		return (EReference)keyEClass.getEStructuralFeatures().get(6);
+		return (EReference)keyEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -2164,9 +2182,11 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME);
 
 		keyEClass = createEClass(KEY);
+		createEAttribute(keyEClass, KEY__CALC_KEY);
 		createEAttribute(keyEClass, KEY__COMPRESSED);
 		createEAttribute(keyEClass, KEY__DUPLICATES_OPTION);
 		createEReference(keyEClass, KEY__ELEMENTS);
+		createEAttribute(keyEClass, KEY__ELEMENT_SUMMARY);
 		createEAttribute(keyEClass, KEY__LENGTH);
 		createEReference(keyEClass, KEY__MEMBER_ROLE);
 		createEAttribute(keyEClass, KEY__NATURAL_SEQUENCE);
@@ -2413,9 +2433,11 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getIndexedSetModeSpecification_SymbolicIndexName(), ecorePackage.getEString(), "symbolicIndexName", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(keyEClass, Key.class, "Key", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKey_CalcKey(), ecorePackage.getEBoolean(), "calcKey", null, 0, 1, Key.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getKey_Compressed(), ecorePackage.getEBoolean(), "compressed", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getKey_DuplicatesOption(), this.getDuplicatesOption(), "duplicatesOption", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getKey_Elements(), this.getKeyElement(), this.getKeyElement_Key(), "elements", null, 1, -1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getKey_ElementSummary(), ecorePackage.getEString(), "elementSummary", null, 0, 1, Key.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getKey_Length(), ecorePackage.getEShort(), "length", null, 0, 1, Key.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getKey_MemberRole(), this.getMemberRole(), this.getMemberRole_SortKey(), "memberRole", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getKey_NaturalSequence(), ecorePackage.getEBoolean(), "naturalSequence", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

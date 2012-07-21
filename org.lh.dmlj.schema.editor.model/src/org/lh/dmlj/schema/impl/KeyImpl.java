@@ -7,6 +7,8 @@
 package org.lh.dmlj.schema.impl;
 
 import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -23,6 +25,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
+import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -34,9 +37,11 @@ import org.lh.dmlj.schema.SchemaRecord;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isCalcKey <em>Calc Key</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isCompressed <em>Compressed</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getDuplicatesOption <em>Duplicates Option</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getElements <em>Elements</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getElementSummary <em>Element Summary</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getLength <em>Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getMemberRole <em>Member Role</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isNaturalSequence <em>Natural Sequence</em>}</li>
@@ -47,6 +52,15 @@ import org.lh.dmlj.schema.SchemaRecord;
  * @generated
  */
 public class KeyImpl extends EObjectImpl implements Key {
+	/**
+	 * The default value of the '{@link #isCalcKey() <em>Calc Key</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isCalcKey()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean CALC_KEY_EDEFAULT = false;
 	/**
 	 * The default value of the '{@link #isCompressed() <em>Compressed</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -92,6 +106,15 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * @ordered
 	 */
 	protected EList<KeyElement> elements;
+	/**
+	 * The default value of the '{@link #getElementSummary() <em>Element Summary</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getElementSummary()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ELEMENT_SUMMARY_EDEFAULT = null;
 	/**
 	 * The default value of the '{@link #getLength() <em>Length</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -145,6 +168,17 @@ public class KeyImpl extends EObjectImpl implements Key {
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.KEY;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isCalcKey() {
+		SchemaRecord record = getRecord();
+		return record.getLocationMode() == LocationMode.CALC &&
+			   record.getCalcKey() == this;
 	}
 
 	/**
@@ -241,6 +275,31 @@ public class KeyImpl extends EObjectImpl implements Key {
 			elements = new EObjectContainmentWithInverseEList<KeyElement>(KeyElement.class, this, SchemaPackage.KEY__ELEMENTS, SchemaPackage.KEY_ELEMENT__KEY);
 		}
 		return elements;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getElementSummary() {
+		List<KeyElement> keyElements = getElements();			
+		if (keyElements.size() == 1 && keyElements.get(0).isDbkey()) {
+			return "DBKEY";
+		} else {
+			StringBuilder p = new StringBuilder();
+			for (KeyElement keyElement : keyElements) {
+				if (p.length() > 0) {
+					p.append(", ");
+				}
+				p.append(keyElement.getElement().getName());
+				if (!isCalcKey()) {
+					p.append(" ");
+					p.append(keyElement.getSortSequence().toString());
+				}
+			}
+			return p.toString();
+		}
 	}
 
 	/**
@@ -407,12 +466,16 @@ public class KeyImpl extends EObjectImpl implements Key {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.KEY__CALC_KEY:
+				return isCalcKey();
 			case SchemaPackage.KEY__COMPRESSED:
 				return isCompressed();
 			case SchemaPackage.KEY__DUPLICATES_OPTION:
 				return getDuplicatesOption();
 			case SchemaPackage.KEY__ELEMENTS:
 				return getElements();
+			case SchemaPackage.KEY__ELEMENT_SUMMARY:
+				return getElementSummary();
 			case SchemaPackage.KEY__LENGTH:
 				return getLength();
 			case SchemaPackage.KEY__MEMBER_ROLE:
@@ -496,12 +559,16 @@ public class KeyImpl extends EObjectImpl implements Key {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.KEY__CALC_KEY:
+				return isCalcKey() != CALC_KEY_EDEFAULT;
 			case SchemaPackage.KEY__COMPRESSED:
 				return compressed != COMPRESSED_EDEFAULT;
 			case SchemaPackage.KEY__DUPLICATES_OPTION:
 				return duplicatesOption != DUPLICATES_OPTION_EDEFAULT;
 			case SchemaPackage.KEY__ELEMENTS:
 				return elements != null && !elements.isEmpty();
+			case SchemaPackage.KEY__ELEMENT_SUMMARY:
+				return ELEMENT_SUMMARY_EDEFAULT == null ? getElementSummary() != null : !ELEMENT_SUMMARY_EDEFAULT.equals(getElementSummary());
 			case SchemaPackage.KEY__LENGTH:
 				return getLength() != LENGTH_EDEFAULT;
 			case SchemaPackage.KEY__MEMBER_ROLE:

@@ -906,13 +906,22 @@ public interface SchemaPackage extends EPackage {
 	int INDEXED_SET_MODE_SPECIFICATION_FEATURE_COUNT = 3;
 
 	/**
+	 * The feature id for the '<em><b>Calc Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEY__CALC_KEY = 0;
+
+	/**
 	 * The feature id for the '<em><b>Compressed</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__COMPRESSED = 0;
+	int KEY__COMPRESSED = 1;
 
 	/**
 	 * The feature id for the '<em><b>Duplicates Option</b></em>' attribute.
@@ -921,7 +930,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__DUPLICATES_OPTION = 1;
+	int KEY__DUPLICATES_OPTION = 2;
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -930,7 +939,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__ELEMENTS = 2;
+	int KEY__ELEMENTS = 3;
+
+	/**
+	 * The feature id for the '<em><b>Element Summary</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEY__ELEMENT_SUMMARY = 4;
 
 	/**
 	 * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -939,7 +957,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__LENGTH = 3;
+	int KEY__LENGTH = 5;
 
 	/**
 	 * The feature id for the '<em><b>Member Role</b></em>' reference.
@@ -948,7 +966,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__MEMBER_ROLE = 4;
+	int KEY__MEMBER_ROLE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Natural Sequence</b></em>' attribute.
@@ -957,7 +975,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__NATURAL_SEQUENCE = 5;
+	int KEY__NATURAL_SEQUENCE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Record</b></em>' container reference.
@@ -966,7 +984,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY__RECORD = 6;
+	int KEY__RECORD = 8;
 
 	/**
 	 * The number of structural features of the '<em>Key</em>' class.
@@ -975,7 +993,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int KEY_FEATURE_COUNT = 7;
+	int KEY_FEATURE_COUNT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Dbkey</b></em>' attribute.
@@ -3302,6 +3320,17 @@ public interface SchemaPackage extends EPackage {
 	EClass getKey();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Key#isCalcKey <em>Calc Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Calc Key</em>'.
+	 * @see org.lh.dmlj.schema.Key#isCalcKey()
+	 * @see #getKey()
+	 * @generated
+	 */
+	EAttribute getKey_CalcKey();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Key#getLength <em>Length</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3355,6 +3384,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getKey_Elements();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Key#getElementSummary <em>Element Summary</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Element Summary</em>'.
+	 * @see org.lh.dmlj.schema.Key#getElementSummary()
+	 * @see #getKey()
+	 * @generated
+	 */
+	EAttribute getKey_ElementSummary();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.Key#getMemberRole <em>Member Role</em>}'.
@@ -4993,6 +5033,14 @@ public interface SchemaPackage extends EPackage {
 		EClass KEY = eINSTANCE.getKey();
 
 		/**
+		 * The meta object literal for the '<em><b>Calc Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEY__CALC_KEY = eINSTANCE.getKey_CalcKey();
+
+		/**
 		 * The meta object literal for the '<em><b>Length</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5031,6 +5079,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference KEY__ELEMENTS = eINSTANCE.getKey_Elements();
+
+		/**
+		 * The meta object literal for the '<em><b>Element Summary</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEY__ELEMENT_SUMMARY = eINSTANCE.getKey_ElementSummary();
 
 		/**
 		 * The meta object literal for the '<em><b>Member Role</b></em>' reference feature.

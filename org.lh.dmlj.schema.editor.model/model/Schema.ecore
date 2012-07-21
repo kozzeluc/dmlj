@@ -134,10 +134,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="symbolicIndexName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Key">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="calcKey" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="compressed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duplicatesOption" eType="#//DuplicatesOption"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" lowerBound="1"
         upperBound="-1" eType="#//KeyElement" containment="true" eOpposite="#//KeyElement/key"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementSummary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
         changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberRole" eType="#//MemberRole"
