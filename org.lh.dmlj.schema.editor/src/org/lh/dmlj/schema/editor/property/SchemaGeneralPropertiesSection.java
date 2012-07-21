@@ -126,16 +126,18 @@ public class SchemaGeneralPropertiesSection
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchema_MemoDate()) {
 			// get the new memo date (format: mm/dd/yy)
 			String newMemoDate = (String) newValue;
-			String message = 
-				"Unparsable date: \"" + newMemoDate + "\" - please enter a " +
-				"valid date in the format \"mm/dd/yy\"";
-			try {
-				Date date = MEMO_DATE_FORMAT.parse(newMemoDate);
-				if (!MEMO_DATE_FORMAT.format(date).equals(newMemoDate)) {
+			if (newMemoDate != null) {
+				String message = 
+					"Unparsable date: \"" + newMemoDate + "\" - please enter a " +
+					"valid date in the format \"mm/dd/yy\"";
+				try {
+					Date date = MEMO_DATE_FORMAT.parse(newMemoDate);
+					if (!MEMO_DATE_FORMAT.format(date).equals(newMemoDate)) {
+						return new ErrorEditHandler(message);
+					}
+				} catch (ParseException e) {
 					return new ErrorEditHandler(message);
 				}
-			} catch (ParseException e) {
-				return new ErrorEditHandler(message);
 			}
 			return super.getEditHandler(attribute, newMemoDate);
 		}
