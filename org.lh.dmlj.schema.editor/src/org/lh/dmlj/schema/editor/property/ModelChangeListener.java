@@ -3,7 +3,7 @@ package org.lh.dmlj.schema.editor.property;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EAttribute;
 
 /**
  * A model change listener that will synchronize the property values in an 
@@ -34,8 +34,8 @@ public class ModelChangeListener implements Adapter {
 	@Override
 	public void notifyChanged(Notification notification) {			
 		if (notification.getEventType() == Notification.SET &&
-			notification.getFeature() instanceof EStructuralFeature &&
-			section.getEditableObject((EStructuralFeature) notification.getFeature()) != null) {				
+			notification.getFeature() instanceof EAttribute &&
+			section.getEditableObject((EAttribute) notification.getFeature()) != null) {				
 			
 			// because changing 1 property might cause the need to hide or show 
 			// others, it's best to refresh the whole section; mind that the

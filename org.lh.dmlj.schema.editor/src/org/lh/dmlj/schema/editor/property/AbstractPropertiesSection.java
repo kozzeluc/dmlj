@@ -6,9 +6,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -24,17 +22,14 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.editor.SchemaEditor;
-import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommand;
-import org.lh.dmlj.schema.editor.command.SetShortAttributeCommand;
-import org.lh.dmlj.schema.editor.command.SetStringAttributeCommand;
 
 public abstract class AbstractPropertiesSection<T extends EObject>
 	extends AbstractPropertySection {		
 
+	private List<EAttribute> 		 attributes = new ArrayList<>();
 	private DescriptionManager	     descriptionManager;
-	private List<EStructuralFeature> editableFeatures = new ArrayList<>();
+	private List<EAttribute> 		 editableAttributes = new ArrayList<>();
 	private List<EObject>  			 editableObjects = new ArrayList<>();
-	private List<EStructuralFeature> features = new ArrayList<>();
 	private ModelChangeListener	     modelChangeListener = 
 		new ModelChangeListener(this);
 	private PropertyEditor			 propertyEditor;
@@ -83,7 +78,7 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		descriptionManager = new DescriptionManager(page, this, table);		
 		
 		// add the property editor
-		propertyEditor = new PropertyEditor(this, table);
+		propertyEditor = new PropertyEditor(page, this, table);
 	
 	}
 	
@@ -95,83 +90,64 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		// without pressing the enter or 1 of the tab keys).
 		removeModelChangeListeners();
 	};
-
-	/**
-	 * Subclasses should override this method if the feature applies to another
-	 * object than the 'target' or if anything else than just setting the new
-	 * feature value has to be done.
-	 * @param feature the feature whose value was edited
-	 * @param newValue the new value for the feature
-	 * @return the command that will set the feature's value
-	 */
-	protected Command getEditCommand(EStructuralFeature feature, 
-									 String newValue) {
-		if (!(feature instanceof EAttribute)) {
-			throw new Error("unsupported type: " + feature.getEType().getName());
-		}
-		EAttribute attribute = (EAttribute) feature;
-		String label = getLabel(feature);
-		if (feature.getEType().getName().equals("EString")) {
-			return new SetStringAttributeCommand(target, attribute, newValue, 
-												 label);
-		} else if (feature.getEType().getName().equals("EBoolean")) {
-			boolean b = Boolean.valueOf(newValue).booleanValue();
-			return new SetBooleanAttributeCommand(target, attribute, b, label);
-		} else if (feature.getEType().getName().equals("EShort")) {
-			short i = Short.valueOf(newValue).shortValue();
-			return new SetShortAttributeCommand(target, attribute, i, label);
-		} else {
-			throw new Error("unsupported type: " + feature.getEType().getName());
-		}
-	}
 	
-	protected abstract List<EStructuralFeature> getFeatures();
+	protected abstract List<EAttribute> getAttributes();
 
-	protected String getDescription(EStructuralFeature feature) {
+	protected String getDescription(EAttribute attribute) {
 		return null;
 	}
-	
+
 	/**
-	 * Subclasses that provide editable features should override this method and
-	 * return the object that contains the given feature, so that we can provide 
-	 * a cell editor and listen for model changes in order to keep the 
+	 * Subclasses that provide editable attributes should override this method 
+	 * and return the object that contains the given atribute, so that we can 
+	 * provide a cell editor and listen for model changes in order to keep the 
 	 * properties table synchronized with the model.<br><br>
-	 * By default, a feature is read-only in the properties table.
-	 * @param feature the feature for which an editable object is needed
-	 * @return the object that contains the given feature or null if the feature
-	 *         is read-only
+	 * By default, an attribute is read-only in the properties table.
+	 * @param attribute the attribute for which an editable object is needed
+	 * @return the object that contains the given attribute or null if the 
+	 *         attribute is read-only
 	 */
-	protected EObject getEditableObject(EStructuralFeature feature) {
+	protected EObject getEditableObject(EAttribute attribute) {
 		// we might need to change the type of the return value to a list or
 		// array in the future if we need to listen to several objects for the
-		// feature
+		// attribute
 		return null;
 	}
 
-	protected String getLabel(EStructuralFeature feature) {
-		return feature.getName();
+	/**
+	 * Subclasses should override this method if some validation needs to be 
+	 * done prior to changing the given attribute's value, the attribute applies 
+	 * to another object than the 'target' or if anything else than just setting 
+	 * the new attribute value has to be done.
+	 * @param attribute the attribute whose value is being edited
+	 * @param newValue the new value for the attribute, as entered by the user 
+	 *        and which can be safely casted to the attribute's type (primitive
+	 *        types are wrapped in their type wrapper); can be null in the case
+	 *        the attribute's type is not a primitive type
+	 * @return the edit handler containing a validation message and/or that 
+	 *         contains the command to set the attribute's value
+	 */
+	protected IEditHandler getEditHandler(EAttribute attribute, 
+										  Object newValue) {
+		
+		return new StandardEditHandler(target, attribute, getLabel(attribute), 
+									   newValue);
+	};
+	
+	protected String getLabel(EAttribute attribute) {
+		return attribute.getName();
 	}	
 	
 	protected abstract T getTarget(Object object);
 
-	protected String getValue(EStructuralFeature feature) {
-		Object value = target.eGet(feature);
+	protected String getValue(EAttribute attribute) {
+		Object value = target.eGet(attribute);
 		if (value != null) {
 			return value.toString();
 		} else {
 			return "";
 		}
-	}
-
-	/**
-	 * Subclasses should override this method if a cell editor is to be provided
-	 * for 1 or more features.
-	 * @param feature a feature from the list returned by getFeatures()
-	 * @return true if the feature's value should be editable
-	 *//*
-	protected boolean isEditableFeature(EStructuralFeature feature) {
-		return false;
-	}*/
+	}	
 
 	@Override
 	public final void refresh() {
@@ -182,20 +158,20 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		// remove all table rows
 		table.removeAll();
 	
-		// get the list of (relevant) features
-		features.clear();
-		features.addAll(getFeatures());
+		// get the list of (relevant) attributes
+		attributes.clear();
+		attributes.addAll(getAttributes());
 		
-		// create the list of features for which we have to provide editing and
-		// make sure we are notified of changes to the model
-		editableFeatures.clear();
+		// create the list of attributes for which we have to provide editing 
+		// and make sure we are notified of changes to the model
+		editableAttributes.clear();
 		removeModelChangeListeners();
 		editableObjects.clear();
-		for (EStructuralFeature feature : features) {
-			EObject editableObject = getEditableObject(feature);
+		for (EAttribute attribute : attributes) {
+			EObject editableObject = getEditableObject(attribute);
 			if (editableObject != null) {
-				// feature is editable because an editable object is provided
-				editableFeatures.add(feature);								
+				// attribute is editable because an editable object is provided
+				editableAttributes.add(attribute);								
 				if (!editableObjects.contains(editableObject)) {
 					// just keep 1 reference to the editable object
 					editableObjects.add(editableObject);
@@ -205,14 +181,14 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		}
 		
 		// add the (relevant) properties to the table		
-		for (EStructuralFeature feature : features) {
+		for (EAttribute attribute : attributes) {
 			
 			TableItem item = new TableItem(table, SWT.NONE);
 			
-			String name = getLabel(feature);
+			String name = getLabel(attribute);
 			item.setText(0, name);
 			
-			String value = getValue(feature);	
+			String value = getValue(attribute);	
 			if (value != null) {
 				item.setText(1, value);
 			} else {

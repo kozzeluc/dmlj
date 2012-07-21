@@ -3,14 +3,13 @@ package org.lh.dmlj.schema.editor.property;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.lh.dmlj.schema.KeyElement;
+import org.eclipse.emf.ecore.EAttribute;
 import org.lh.dmlj.schema.SchemaPackage;
 
 public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 
-	private static final EStructuralFeature[] FEATURES = 
-		{SchemaPackage.eINSTANCE.getKey_Elements(),
+	private static final EAttribute[] ATTRIBUTES = 
+		{SchemaPackage.eINSTANCE.getKey_ElementSummary(),
 		 SchemaPackage.eINSTANCE.getKey_DuplicatesOption()};
 	
 	public SetSortedPropertiesSection() {
@@ -18,60 +17,46 @@ public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 	}	
 	
 	@Override
-	protected String getDescription(EStructuralFeature feature) {
-		if (feature == SchemaPackage.eINSTANCE.getKey_Elements()) {
+	protected String getDescription(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
 			return "Identifies the member record element(s) on whose values " +
 				   "the set is to be sorted (that is, the sort control " +
 				   "element)";			
-		} else if (feature == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
 			return "Specifies how CA IDMS/DB handles a record occurrence " +
 				   "whose sort key duplicates an existing occurrence's sort " +
 				   "key";
 		}
-		return super.getDescription(feature);
+		return super.getDescription(attribute);
 	}
 	
 	@Override
-	protected List<EStructuralFeature> getFeatures() {		
-		return Arrays.asList(FEATURES);
+	protected List<EAttribute> getAttributes() {		
+		return Arrays.asList(ATTRIBUTES);
 	}
 	
 	@Override
-	protected String getLabel(EStructuralFeature feature) {
-		if (feature == SchemaPackage.eINSTANCE.getKey_Elements()) {
+	protected String getLabel(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
 			return "Key element(s)";
-		} else if (feature == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
 			return "Duplicates";
-		} return super.getLabel(feature);
+		} return super.getLabel(attribute);
 	}
 	
 	@Override
-	protected String getValue(EStructuralFeature feature) {		
+	protected String getValue(EAttribute attribute) {		
 		
-		if (feature == SchemaPackage.eINSTANCE.getKey_Elements()) {
-			List<KeyElement> keyElements = target.getSortKey().getElements();			
-			if (keyElements.size() == 1 && keyElements.get(0).isDbkey()) {
-				return "DBKEY";
-			} else {
-				StringBuilder p = new StringBuilder();
-				for (KeyElement keyElement : keyElements) {
-					if (p.length() > 0) {
-						p.append(", ");
-					}
-					p.append(keyElement.getElement().getName());
-					p.append(" ");
-					p.append(keyElement.getSortSequence().toString());
-				}
-				return p.toString();
-			}
-		} else if (feature == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
+			return target.getSortKey().getElementSummary();
+		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
 			return target.getSortKey()
 						 .getDuplicatesOption()
 						 .toString()
 						 .replaceAll("_", " ");
 		}
 		
-		return super.getValue(feature);
+		return super.getValue(attribute);
 	}
 
 }

@@ -1,8 +1,10 @@
 package org.lh.dmlj.schema.editor.property;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.FocusAdapter;
@@ -18,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * A property editor that is triggered when the user clicks the mouse button
@@ -27,17 +30,83 @@ public class PropertyEditor extends MouseAdapter {
 
 	private CommandStack	 		 	 commandStack;
 	private AbstractPropertiesSection<?> section;
+	private IStatusLineManager 		 	 statusLineManager;
 	private TableEditor 				 tableEditor;
 	
-	public PropertyEditor(AbstractPropertiesSection<?> section, Table table) {
+	public PropertyEditor(TabbedPropertySheetPage page, 
+			  			  AbstractPropertiesSection<?> section, Table table) {
 		super();
 		this.section = section;
+		statusLineManager = 
+			page.getSite().getActionBars().getStatusLineManager();
 		// create the editor for the table cells
 		tableEditor = new TableEditor(table);
 		tableEditor.horizontalAlignment = SWT.LEFT;
 		tableEditor.minimumWidth = 50;
 		// add the mouse listener
 		table.addMouseListener(this);
+	}
+	
+	private void handleCellEdit(EAttribute attribute, String oldValue, 
+								String newValue) {
+		
+		// nothing to do if attribute's value did not change
+		if (newValue.equals(oldValue)) {
+			return; 
+		}
+		
+		// validate the attribute's type on the new value, set the error message
+		// if needed and reject the cell edit - trim the value before doing
+		// anything else
+		String trimmedValue = newValue.trim();
+		Object oNewValue = null;
+		if (!trimmedValue.equals("")) {
+			try {
+				if (attribute.getEType().getName().equals("EString")) {
+					oNewValue = trimmedValue;
+				} else if (attribute.getEType().getName().equals("EBoolean")) {
+					oNewValue = Boolean.valueOf(trimmedValue);
+				} else if (attribute.getEType().getName().equals("EShort")) {
+					oNewValue = Short.valueOf(trimmedValue);
+				}
+			} catch (Throwable t) {
+				String message = 
+					t.getClass().getSimpleName() + ": " + t.getMessage();
+				statusLineManager.setErrorMessage(message);
+				return;
+			}
+		} else if (!attribute.getEType().getName().equals("EString")) {
+			// mandatory EString properties will have to be checked in the
+			// section itself
+			String message = 
+				"'" + section.getLabel(attribute) + "' is a mandatory property";
+			statusLineManager.setErrorMessage(message);
+			return;
+		}
+		
+		// we need an edit handler
+		IEditHandler handler = section.getEditHandler(attribute, oNewValue);
+		
+		// if the edit handler has a message, set it in the status line
+		String message = handler.getMessage();
+		if (message != null) {
+			if (handler.isValid()) {
+				statusLineManager.setMessage(message);
+			} else {
+				statusLineManager.setErrorMessage("Validation failed for '" + 
+												  section.getLabel(attribute) + 
+												  "' :  " + message);
+			}
+		}
+		
+		// set the new attribute value with the command provided by the edit 
+		// handler, provided the new value is valid
+		if (handler.isValid()) {
+			Command command = handler.getEditCommand();
+			Assert.isNotNull(command, "no edit command provided to set " +
+							 "attribute " + attribute.getName());			
+			commandStack.execute(command);
+		}
 	}
 	
 	public void mouseUp(MouseEvent e) {					
@@ -62,9 +131,9 @@ public class PropertyEditor extends MouseAdapter {
 			return;
 		}
 		
-		// get the selected feature and its current (old) value
+		// get the selected  and its current (old) value
 		int i = table.getSelectionIndex();
-		final EStructuralFeature feature = section.getFeatures().get(i);
+		final EAttribute attribute = section.getAttributes().get(i);
 		final String oldValue = item.getText(1);		
 		
 		// exit this method if the user clicked somewhere else than in 
@@ -73,14 +142,14 @@ public class PropertyEditor extends MouseAdapter {
 			return;
 		}
 		
-		// if the feature is not editable we're also done
-		if (section.getEditableObject(feature) == null) {
+		// if the  is not editable we're also done
+		if (section.getEditableObject(attribute) == null) {
 			return;
 		}
 		
-		// edit the feature value depending on its type
-		if (feature.getEType().getName().equals("EString") ||
-			feature.getEType().getName().equals("EShort")) {
+		// edit the  value depending on its type
+		if (attribute.getEType().getName().equals("EString") ||
+			attribute.getEType().getName().equals("EShort")) {
 			
 			// the cell editor can use all available horizontal space
 			tableEditor.grabHorizontal = true;
@@ -90,47 +159,18 @@ public class PropertyEditor extends MouseAdapter {
 			text.setText(item.getText(1));
 			text.selectAll();
 			
-			// hookup a key listener to set the feature's value, if 
-			// changed, when enter is pressed, and dispose of the 
-			// editor control when escape is pressed:
+			// hookup a key listener to set the 's value, if changed, when enter 
+			// is pressed, and dispose of the editor control when escape is 
+			// pressed:
 			text.addKeyListener(new KeyAdapter() {
-				public void keyPressed(KeyEvent e) {
-					
-					// this method is only needed for features with a
-					// numeric type							
-					if (!feature.getEType().getName().equals("EShort")) {
-						return;
-					}
-					
-					// make sure that only digits can be entered
-					if (!(e.keyCode >= SWT.KEYPAD_0 && e.keyCode <= SWT.KEYPAD_9 ||
-						  e.keyCode == SWT.ARROW_LEFT ||
-						  e.keyCode == SWT.ARROW_RIGHT ||
-						  e.keyCode == SWT.HOME ||
-						  e.keyCode == SWT.END ||
-						  e.keyCode == SWT.DEL ||
-						  e.keyCode == '\b')) {
-						
-						e.doit = false;
-					}
-					
-				}						
 				public void keyReleased(KeyEvent e) {
 					if (e.keyCode == 13 || 
 						e.keyCode == 16777296) { // enter-keys								
 						
 						String newValue = text.getText();
 						text.dispose();
-						
-						if (newValue.equals(oldValue)) {
-							return; // feature value not changed
-						}
-						
-						// set the new feature value with the proper 
-						// command
-						Command command =
-							section.getEditCommand(feature, newValue);
-						commandStack.execute(command);
+												
+						handleCellEdit(attribute, oldValue, newValue);
 						
 					} else if (e.keyCode == SWT.ESC) {
 						text.dispose();						
@@ -138,7 +178,7 @@ public class PropertyEditor extends MouseAdapter {
 				}					
 			});			
 			
-			// hookup a focus listener to set the feature value, if 
+			// hookup a focus listener to set the  value, if 
 			// changed, when the editor control loses focus
 			text.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
@@ -146,11 +186,7 @@ public class PropertyEditor extends MouseAdapter {
 					String newValue = text.getText();
 					text.dispose();
 					
-					if (!newValue.equals(oldValue)) {
-						Command command =
-							section.getEditCommand(feature, newValue);
-						commandStack.execute(command);
-					}
+					handleCellEdit(attribute, oldValue, newValue);
 					
 				}					
 			});
@@ -160,9 +196,9 @@ public class PropertyEditor extends MouseAdapter {
 			text.setFocus();
 			tableEditor.setEditor(text, item, 1);				
 			
-		} else if (feature.getEType().getName().equals("EBoolean")) { 
+		} else if (attribute.getEType().getName().equals("EBoolean")) { 
 			
-			// the feature is of type boolean; we don't need an 
+			// the  is of type boolean; we don't need an 
 			// endlessly wide combo box
 			tableEditor.grabHorizontal = false;
 			
@@ -181,17 +217,11 @@ public class PropertyEditor extends MouseAdapter {
 			// hookup the selection listener
 			combo.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
+					
 					boolean newValue = combo.getSelectionIndex() == 1;
 					combo.dispose();
-					boolean bOldValue = 
-						Boolean.valueOf(oldValue).booleanValue(); 
-					if (newValue != bOldValue) {								
-						String newStringValue = 
-							String.valueOf(newValue);
-						Command command =
-							section.getEditCommand(feature, newStringValue);
-						commandStack.execute(command);
-					}
+					
+					handleCellEdit(attribute, oldValue, String.valueOf(newValue));
 				}
 			});
 			
@@ -204,18 +234,11 @@ public class PropertyEditor extends MouseAdapter {
 					if (e.keyCode == 13 || 
 						e.keyCode == 16777296) { // enter-keys								
 						
-						boolean newValue = 
-							combo.getSelectionIndex() == 1;
+						boolean newValue = combo.getSelectionIndex() == 1;
 						combo.dispose();
-						boolean bOldValue = 
-							Boolean.valueOf(oldValue).booleanValue();
-						if (newValue != bOldValue) {
-							String newStringValue = 
-								String.valueOf(newValue);
-							Command command =
-								section.getEditCommand(feature, newStringValue);
-							commandStack.execute(command);
-						}
+						
+						handleCellEdit(attribute, oldValue, 
+									   String.valueOf(newValue));
 					} else if (e.keyCode == SWT.ESC) {
 						combo.dispose();
 					}
@@ -226,17 +249,11 @@ public class PropertyEditor extends MouseAdapter {
 			// changed, when the editor control loses focus
 			combo.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
+					
 					boolean newValue = combo.getSelectionIndex() == 1;
 					combo.dispose();
-					boolean bOldValue = 
-						Boolean.valueOf(oldValue).booleanValue();
-					if (newValue != bOldValue) {
-						String newStringValue = 
-							String.valueOf(newValue);
-						Command command =
-							section.getEditCommand(feature, newStringValue);
-						commandStack.execute(command);
-					}
+					
+					handleCellEdit(attribute, oldValue, String.valueOf(newValue));
 				}					
 			});
 			
@@ -247,9 +264,9 @@ public class PropertyEditor extends MouseAdapter {
 			
 		} else {
 			
-			// we (currently) don't support the feature's type
-			throw new Error("unsupported feature type: " + 
-						    feature.getEType().getName());
+			// we (currently) don't support the 's type
+			throw new Error("unsupported  type: " + 
+						    attribute.getEType().getName());
 			
 		}
 	}

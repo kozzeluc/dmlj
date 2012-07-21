@@ -1,6 +1,6 @@
 package org.lh.dmlj.schema.editor.property;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -12,9 +12,9 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  * AbstractPropertiesSection<T>.<br><br>  
  * An instance of this class hooks itself as a selection listener to the 
  * property table of the section and will show the description, if any, for the 
- * selected property (feature).  The descriptions are provided by 
+ * selected property (attribute).  The descriptions are provided by 
  * implementations of AbstractPropertiesSection<T> and made available through 
- * the getDescription(EStructuralFeature feature) method. 
+ * the getDescription(EAttribute attribute) method. 
  */
 public class DescriptionManager extends SelectionAdapter {
 
@@ -61,8 +61,8 @@ public class DescriptionManager extends SelectionAdapter {
 		int i = table.getSelectionIndex();
 		
 		// set the property description if available
-		EStructuralFeature feature = section.getFeatures().get(i);
-		String description = section.getDescription(feature);
+		EAttribute attriibute = section.getAttributes().get(i);
+		String description = section.getDescription(attriibute);
 		if (description != null) {
 			setMessage(description);
 		}
