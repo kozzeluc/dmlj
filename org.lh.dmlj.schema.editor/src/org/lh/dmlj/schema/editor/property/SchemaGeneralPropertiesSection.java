@@ -1,6 +1,10 @@
 package org.lh.dmlj.schema.editor.property;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -14,6 +18,9 @@ import org.lh.dmlj.schema.Set;
 public class SchemaGeneralPropertiesSection 
 	extends AbstractSchemaPropertiesSection {
 
+	private static final DateFormat MEMO_DATE_FORMAT = 
+		new SimpleDateFormat("MM/dd/yy");
+	
 	public SchemaGeneralPropertiesSection() {
 		super();
 	}
@@ -40,7 +47,8 @@ public class SchemaGeneralPropertiesSection
 	protected EObject getEditableObject(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchema_Name() ||
 			attribute == SchemaPackage.eINSTANCE.getSchema_Version() ||
-			attribute == SchemaPackage.eINSTANCE.getSchema_Description()) {
+			attribute == SchemaPackage.eINSTANCE.getSchema_Description() ||
+			attribute == SchemaPackage.eINSTANCE.getSchema_MemoDate()) {
 			
 			return target;
 		}
@@ -115,6 +123,21 @@ public class SchemaGeneralPropertiesSection
 			} else {
 				return super.getEditHandler(attribute, null);
 			}
+		} else if (attribute == SchemaPackage.eINSTANCE.getSchema_MemoDate()) {
+			// get the new memo date (format: mm/dd/yy)
+			String newMemoDate = (String) newValue;
+			String message = 
+				"Unparsable date: \"" + newMemoDate + "\" - please enter a " +
+				"valid date in the format \"mm/dd/yy\"";
+			try {
+				Date date = MEMO_DATE_FORMAT.parse(newMemoDate);
+				if (!MEMO_DATE_FORMAT.format(date).equals(newMemoDate)) {
+					return new ErrorEditHandler(message);
+				}
+			} catch (ParseException e) {
+				return new ErrorEditHandler(message);
+			}
+			return super.getEditHandler(attribute, newMemoDate);
 		}
 		return super.getEditHandler(attribute, newValue);
 	}
