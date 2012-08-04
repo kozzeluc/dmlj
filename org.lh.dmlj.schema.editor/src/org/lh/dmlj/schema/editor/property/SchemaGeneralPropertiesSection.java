@@ -26,24 +26,6 @@ public class SchemaGeneralPropertiesSection
 	}
 	
 	@Override
-	protected String getDescription(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getSchema_Name()) {
-			return "Identifies the schema";
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchema_Version()) {
-			return "Qualifies the schema with a version number, which " +
-				   "distinguishes this schema from others that have the same " +
-				   "name";
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchema_Description()) {
-			return "Optionally specifies a name that is more descriptive " +
-				   "than the 8-character schema name required by CA IDMS/DB, " +
-				   "but can be used to store any type of information";
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchema_MemoDate()) {
-			return "Specifies any date the user wishes to supply";
-		}
-		return super.getDescription(attribute);
-	}
-	
-	@Override
 	protected EObject getEditableObject(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchema_Name() ||
 			attribute == SchemaPackage.eINSTANCE.getSchema_Version() ||
@@ -128,9 +110,13 @@ public class SchemaGeneralPropertiesSection
 			String newMemoDate = (String) newValue;
 			if (newMemoDate != null) {
 				String message = 
-					"Unparsable date: \"" + newMemoDate + "\" - please enter a " +
-					"valid date in the format \"mm/dd/yy\"";
+					"Unparsable date: \"" + newMemoDate + "\" - please enter " +
+					"a valid date in the format \"mm/dd/yy\"";
 				try {
+					// Any yy (year) specified >= 33 will be interpreted as 19yy
+					// whereas any yy specified < 33 will be interpreted as 
+					// 20yy, so values for the memo date attribute that refer to 
+					// 29 February may fail as of 2033...
 					Date date = MEMO_DATE_FORMAT.parse(newMemoDate);
 					if (!MEMO_DATE_FORMAT.format(date).equals(newMemoDate)) {
 						return new ErrorEditHandler(message);
@@ -147,26 +133,12 @@ public class SchemaGeneralPropertiesSection
 	
 	@Override
 	protected List<EAttribute> getAttributes() {
-		List<EAttribute> attributes = new ArrayList<>();
+		List<EAttribute> attributes = new ArrayList<>();	
 		attributes.add(SchemaPackage.eINSTANCE.getSchema_Name());
 		attributes.add(SchemaPackage.eINSTANCE.getSchema_Version());
 		attributes.add(SchemaPackage.eINSTANCE.getSchema_Description());
 		attributes.add(SchemaPackage.eINSTANCE.getSchema_MemoDate());
 		return attributes;
 	}
-	
-	@Override
-	protected String getLabel(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getSchema_Name()) {
-			return "Name";
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchema_Version()) {
-			return "Version";
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchema_Description()) {
-			return "Description";
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchema_MemoDate()) {
-			return "Memo date";
-		}
-		return super.getLabel(attribute);
-	}	
 
 }

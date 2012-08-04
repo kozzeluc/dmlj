@@ -114,17 +114,17 @@ public class NewSchemaPage3 extends WizardPage {
 				s_010a = dictionary.find(s_010a);
 			}		
 			
-			// take care of all other schemas, ignoring the "NON IDMS" schema...
+			// take care of all other schemas, ignoring the "NON IDMS" schema
+			// and schemas that are in error...
 			Ooak_012 ooak_012 = 
 				dictionary.find(Ooak_012.class, new CalcKey_Ooak_012("OOAK"));
 			for (S_010 s_010 : 
 				 dictionary.<S_010>walk(ooak_012, "OOAK-S", NEXT)) {
 				
 				if (!s_010.getSNam_010().equals("NON IDMS") &&
-					!s_010.getSNam_010().equals("NON IDMS")) {
+					!s_010.getSNam_010().equals("NON IDMS") &&
+					s_010.getErr_010() == 0) {
 					
-					// skip schemas "NON IDMS" and "IDMSNTWK"; we've dealt with the
-					// IDMSNTWK schemas before...
 					TableEntry tableEntry = 
 						new TableEntry(s_010.getSNam_010(), s_010.getSSer_010(), 
 									   s_010.getDescr_010());

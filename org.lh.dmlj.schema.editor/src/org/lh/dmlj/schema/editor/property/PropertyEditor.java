@@ -1,6 +1,5 @@
 package org.lh.dmlj.schema.editor.property;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
@@ -68,6 +67,10 @@ public class PropertyEditor extends MouseAdapter {
 					oNewValue = Boolean.valueOf(trimmedValue);
 				} else if (attribute.getEType().getName().equals("EShort")) {
 					oNewValue = Short.valueOf(trimmedValue);
+				} else if (attribute.getEType()						
+									.getName().equals("EShortObject")) {
+					
+					oNewValue = Short.valueOf(trimmedValue);
 				}
 			} catch (Throwable t) {
 				String message = 
@@ -75,7 +78,9 @@ public class PropertyEditor extends MouseAdapter {
 				statusLineManager.setErrorMessage(message);
 				return;
 			}
-		} else if (!attribute.getEType().getName().equals("EString")) {
+		} else if (!attribute.getEType().getName().equals("EString") &&
+				   !attribute.getEType().getName().equals("EShortObject")) {
+			
 			// mandatory EString properties will have to be checked in the
 			// section itself
 			String message = 
@@ -100,11 +105,9 @@ public class PropertyEditor extends MouseAdapter {
 		}
 		
 		// set the new attribute value with the command provided by the edit 
-		// handler, provided the new value is valid
-		if (handler.isValid()) {
-			Command command = handler.getEditCommand();
-			Assert.isNotNull(command, "no edit command provided to set " +
-							 "attribute " + attribute.getName());			
+		// handler, provided the new value is valid and has changed
+		Command command = handler.getEditCommand();
+		if (handler.isValid() && command != null) {			
 			commandStack.execute(command);
 		}
 	}
@@ -142,14 +145,15 @@ public class PropertyEditor extends MouseAdapter {
 			return;
 		}
 		
-		// if the  is not editable we're also done
+		// if the attribute is not editable we're also done
 		if (section.getEditableObject(attribute) == null) {
 			return;
 		}
 		
-		// edit the  value depending on its type
+		// edit the attribute value depending on its type
 		if (attribute.getEType().getName().equals("EString") ||
-			attribute.getEType().getName().equals("EShort")) {
+			attribute.getEType().getName().equals("EShort") ||
+			attribute.getEType().getName().equals("EShortObject")) {
 			
 			// the cell editor can use all available horizontal space
 			tableEditor.grabHorizontal = true;
@@ -159,9 +163,9 @@ public class PropertyEditor extends MouseAdapter {
 			text.setText(item.getText(1));
 			text.selectAll();
 			
-			// hookup a key listener to set the 's value, if changed, when enter 
-			// is pressed, and dispose of the editor control when escape is 
-			// pressed:
+			// hookup a key listener to set the attribute value, if changed, 
+			// when enter is pressed, and dispose of the editor control when 
+			// escape is pressed:
 			text.addKeyListener(new KeyAdapter() {
 				public void keyReleased(KeyEvent e) {
 					if (e.keyCode == 13 || 
@@ -178,7 +182,7 @@ public class PropertyEditor extends MouseAdapter {
 				}					
 			});			
 			
-			// hookup a focus listener to set the  value, if 
+			// hookup a focus listener to set the attribute value, if 
 			// changed, when the editor control loses focus
 			text.addFocusListener(new FocusAdapter() {
 				public void focusLost(FocusEvent e) {
@@ -191,8 +195,7 @@ public class PropertyEditor extends MouseAdapter {
 				}					
 			});
 			
-			// start editing the cell in which the user clicked the
-			// mouse
+			// start editing the cell in which the user clicked the mouse
 			text.setFocus();
 			tableEditor.setEditor(text, item, 1);				
 			

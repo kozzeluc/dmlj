@@ -90,18 +90,18 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 
 	@Override
 	public final void notifyChanged(Notification notification) {
+		refreshVisuals();
 		int featureID = notification.getFeatureID(DiagramNode.class);
 		if (featureID == SchemaPackage.DIAGRAM_LOCATION__X ||
 			featureID == SchemaPackage.DIAGRAM_LOCATION__Y) {
 			
-			refreshVisuals();
 			// allow connections to be refreshed as well since the bendpoint
 			// coordinates are stored as relative to the owner figure and moving
 			// the owner figure does not automatically trigger a refresh of any
 			// involved connection's visuals...
 			refreshConnections();
 		}
-	}
+	}	
 	
 	protected void refreshConnections() {
 	}

@@ -2,6 +2,7 @@ package org.lh.dmlj.schema.editor.property;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.MissingResourceException;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EAttribute;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 
 public abstract class AbstractPropertiesSection<T extends EObject>
@@ -94,7 +96,9 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	protected abstract List<EAttribute> getAttributes();
 
 	protected String getDescription(EAttribute attribute) {
-		return null;
+		String key = "description." + attribute.getContainerClass().getName() + 
+					 "." + attribute.getName();
+		return getPluginProperty(key);	
 	}
 
 	/**
@@ -134,9 +138,27 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 									   newValue);
 	};
 	
-	protected String getLabel(EAttribute attribute) {
-		return attribute.getName();
+	protected String getLabel(EAttribute attribute) {		
+		String key = "label." + attribute.getContainerClass().getName() + "." +
+					 attribute.getName();
+		
+		String label = getPluginProperty(key);		
+		if (label != null) {
+			return label;
+		} else {
+			return attribute.getName();
+		}
 	}	
+	
+	protected String getPluginProperty(String key) {
+		try {
+			return Plugin.getDefault()
+						 .getPluginProperties()
+						 .getString(key);
+		} catch (MissingResourceException e) {
+			return null;
+		}
+	}
 	
 	protected abstract T getTarget(Object object);
 

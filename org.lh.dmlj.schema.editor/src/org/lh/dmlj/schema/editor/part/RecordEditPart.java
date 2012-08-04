@@ -34,8 +34,8 @@ public class RecordEditPart
 	
 	public RecordEditPart(SchemaRecord record) {
 		super(record);		
-	}	
-
+	}
+	
 	@Override
 	protected void createEditPolicies() {
 		RecordFigure cFigure = (RecordFigure) getFigure();

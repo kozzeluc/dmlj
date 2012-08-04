@@ -13,8 +13,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
 import java.util.zip.ZipFile;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -46,6 +49,8 @@ public class Plugin extends AbstractUIPlugin {
 	
 	private static final String 	JAVADOC_LEVEL_NAME = "Javadoc_IDMSNTWK";
 	private static final String 	JAVADOC_LEVEL_VALUE = "r16SP2";
+	
+	private final static String 	PLUGIN_PROPERTIES = "plugin.properties";
 
 	// The shared instance
 	private static Plugin 			plugin;
@@ -60,6 +65,8 @@ public class Plugin extends AbstractUIPlugin {
 	private Font 					syntaxFont = 
 		new Font(Display.getCurrent(), "Courier New", 10, SWT.NORMAL);
 	private File 					tmpFolder;
+	
+	private PropertyResourceBundle pluginProperties;
 	
 	private static boolean copy(InputStream source, File target) {
 		try {
@@ -235,6 +242,10 @@ public class Plugin extends AbstractUIPlugin {
 		return image;
 	}	
 	
+	public PropertyResourceBundle getPluginProperties() {
+		return pluginProperties;
+	}
+
 	/**
 	 * Creates a RecordInfoValueObject for the given record, provided that a
 	 * record node exists in the database.  The RecordInfoValueObject will
@@ -316,6 +327,16 @@ public class Plugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;		
 				
+		try {
+			InputStream in = 
+				FileLocator.openStream(this.getBundle(), 
+									   new Path(PLUGIN_PROPERTIES), false);
+			pluginProperties = new PropertyResourceBundle(in);
+			in.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		
 		// Locate the temporary files folder in the workspace.  We should 
 		// probably put our temporary files somewhere else, since the folder 
 		// returned by the call to the plug-in's getStateLocation() method 

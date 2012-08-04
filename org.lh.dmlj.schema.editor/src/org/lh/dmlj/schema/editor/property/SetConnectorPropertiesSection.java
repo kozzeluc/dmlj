@@ -8,7 +8,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.SetStringAttributeCommand;
+import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
 
 public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection {
 
@@ -52,9 +52,9 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 		String value = (String) newValue;
 		String label = getLabel(attribute);
 		Command[] command = new Command[2];
-		command[0] = new SetStringAttributeCommand(connector[0], attribute, 
+		command[0] = new SetObjectAttributeCommand(connector[0], attribute, 
 												   value, label);
-		command[1] = new SetStringAttributeCommand(connector[1], attribute, 
+		command[1] = new SetObjectAttributeCommand(connector[1], attribute, 
 												   value, label);
 		
 		// chain the 2 commands and wrap the result in an IEditHandler
