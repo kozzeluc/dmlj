@@ -12,11 +12,26 @@ public class SetObjectAttributeCommand extends Command {
 	
 	private Object	   oldValue;
 
-	public SetObjectAttributeCommand(EObject object, EAttribute attribute, 
-							 		 Object value, String label) {
+	private static String getLabel(EAttribute attribute, Object value,
+								   String attributeLabel) {
 		
-		super(value != null ? "Set '" + label + "' to '" + value + "'" :
-			  "Remove '" + label + "'");
+		if (value != null) {
+			if (attribute.getEType().getInstanceClass().isEnum()) {
+				String sValue = value.toString();
+				return "Set '" + attributeLabel + "' to '" + 
+					   sValue.replaceAll("_", " ") + "'";
+			} else {
+				return "Set '" + attributeLabel + "' to '" + value + "'";
+			}
+		} else {
+			return "Remove '" + attributeLabel + "'";
+		}
+	}
+	
+	public SetObjectAttributeCommand(EObject object, EAttribute attribute, 
+							 		 Object value, String attributeLabel) {
+		
+		super(getLabel(attribute, value, attributeLabel));
 		this.object = object;
 		this.attribute = attribute;
 		this.value = value;

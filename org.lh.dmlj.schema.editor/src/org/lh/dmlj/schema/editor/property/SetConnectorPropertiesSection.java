@@ -17,12 +17,20 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 	}
 	
 	@Override
-	protected String getDescription(EAttribute attribute) {
+	protected EObject getAttributeOwner(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getConnector_Label()) {
-			return "A text to be shown in this set's connectors";
+			return target.getConnectionParts().get(0).getConnector();
+		} else {
+			return super.getAttributeOwner(attribute);
 		}
-		return super.getDescription(attribute);
 	}
+
+	@Override
+	protected List<EAttribute> getAttributes() {
+		List<EAttribute> attributes = new ArrayList<>();
+		attributes.add(SchemaPackage.eINSTANCE.getConnector_Label());
+		return attributes;
+	}	
 	
 	@Override
 	protected EObject getEditableObject(EAttribute attribute) {
@@ -73,29 +81,6 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 				return true;
 			}
 		};
-	}
-	
-	@Override
-	protected List<EAttribute> getAttributes() {
-		List<EAttribute> attributes = new ArrayList<>();
-		attributes.add(SchemaPackage.eINSTANCE.getConnector_Label());
-		return attributes;
-	}
-	
-	@Override
-	protected String getLabel(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getConnector_Label()) {
-			return "Label";
-		}
-		return super.getLabel(attribute);
-	}
-	
-	@Override
-	protected String getValue(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getConnector_Label()) {
-			return target.getConnectionParts().get(0).getConnector().getLabel();
-		}
-		return super.getValue(attribute);
 	}	
 
 }

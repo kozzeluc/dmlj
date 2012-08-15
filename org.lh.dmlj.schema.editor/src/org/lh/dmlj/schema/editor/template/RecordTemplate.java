@@ -21,56 +21,59 @@ public class RecordTemplate
   protected final String TEXT_5 = "         ";
   protected final String TEXT_6 = NL + "         LOCATION MODE IS VIA ";
   protected final String TEXT_7 = " SET";
-  protected final String TEXT_8 = NL + "         LOCATION MODE IS DIRECT";
-  protected final String TEXT_9 = NL + "         MINIMUM ROOT LENGTH IS ";
-  protected final String TEXT_10 = " CHARACTERS         ";
-  protected final String TEXT_11 = NL + "         MINIMUM FRAGMENT LENGTH IS ";
-  protected final String TEXT_12 = " CHARACTERS         ";
-  protected final String TEXT_13 = NL + "         CALL ";
-  protected final String TEXT_14 = " ";
-  protected final String TEXT_15 = " ";
-  protected final String TEXT_16 = NL + "         WITHIN AREA ";
-  protected final String TEXT_17 = " SUBAREA ";
-  protected final String TEXT_18 = NL + "         WITHIN AREA ";
-  protected final String TEXT_19 = " OFFSET ";
-  protected final String TEXT_20 = " FOR ";
-  protected final String TEXT_21 = " ";
-  protected final String TEXT_22 = NL + "         WITHIN AREA ";
-  protected final String TEXT_23 = "         " + NL + "*+       OWNER OF SET ";
-  protected final String TEXT_24 = NL + "*+           NEXT DBKEY POSITION IS ";
-  protected final String TEXT_25 = NL + "*+           PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_26 = NL + "*+       MEMBER OF SET ";
+  protected final String TEXT_8 = NL + "             DISPLACEMENT USING ";
+  protected final String TEXT_9 = NL + "             DISPLACEMENT ";
+  protected final String TEXT_10 = " PAGES";
+  protected final String TEXT_11 = NL + "         LOCATION MODE IS DIRECT";
+  protected final String TEXT_12 = NL + "         MINIMUM ROOT LENGTH IS ";
+  protected final String TEXT_13 = " CHARACTERS         ";
+  protected final String TEXT_14 = NL + "         MINIMUM FRAGMENT LENGTH IS ";
+  protected final String TEXT_15 = " CHARACTERS         ";
+  protected final String TEXT_16 = NL + "         CALL ";
+  protected final String TEXT_17 = " ";
+  protected final String TEXT_18 = " ";
+  protected final String TEXT_19 = NL + "         WITHIN AREA ";
+  protected final String TEXT_20 = " SUBAREA ";
+  protected final String TEXT_21 = NL + "         WITHIN AREA ";
+  protected final String TEXT_22 = " OFFSET ";
+  protected final String TEXT_23 = " FOR ";
+  protected final String TEXT_24 = " ";
+  protected final String TEXT_25 = NL + "         WITHIN AREA ";
+  protected final String TEXT_26 = "         " + NL + "*+       OWNER OF SET ";
   protected final String TEXT_27 = NL + "*+           NEXT DBKEY POSITION IS ";
   protected final String TEXT_28 = NL + "*+           PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_29 = NL + "*+           INDEX DBKEY POSITION IS ";
-  protected final String TEXT_30 = NL + "*+           OWNER DBKEY POSITION IS ";
-  protected final String TEXT_31 = NL + "         .";
-  protected final String TEXT_32 = NL;
-  protected final String TEXT_33 = " ";
-  protected final String TEXT_34 = NL;
-  protected final String TEXT_35 = "    REDEFINES ";
-  protected final String TEXT_36 = NL;
-  protected final String TEXT_37 = "    PICTURE IS  ";
-  protected final String TEXT_38 = NL;
-  protected final String TEXT_39 = "    USAGE IS ";
-  protected final String TEXT_40 = " ";
+  protected final String TEXT_29 = NL + "*+       MEMBER OF SET ";
+  protected final String TEXT_30 = NL + "*+           NEXT DBKEY POSITION IS ";
+  protected final String TEXT_31 = NL + "*+           PRIOR DBKEY POSITION IS ";
+  protected final String TEXT_32 = NL + "*+           INDEX DBKEY POSITION IS ";
+  protected final String TEXT_33 = NL + "*+           OWNER DBKEY POSITION IS ";
+  protected final String TEXT_34 = NL + "         .";
+  protected final String TEXT_35 = NL;
+  protected final String TEXT_36 = " ";
+  protected final String TEXT_37 = NL;
+  protected final String TEXT_38 = "    REDEFINES ";
+  protected final String TEXT_39 = NL;
+  protected final String TEXT_40 = "    PICTURE IS  ";
   protected final String TEXT_41 = NL;
-  protected final String TEXT_42 = "    ELEMENT LENGTH IS ";
-  protected final String TEXT_43 = NL;
-  protected final String TEXT_44 = "    BIT LENGTH IS ";
-  protected final String TEXT_45 = "    ";
+  protected final String TEXT_42 = "    USAGE IS ";
+  protected final String TEXT_43 = " ";
+  protected final String TEXT_44 = NL;
+  protected final String TEXT_45 = "    ELEMENT LENGTH IS ";
   protected final String TEXT_46 = NL;
-  protected final String TEXT_47 = "    POSITION IS ";
-  protected final String TEXT_48 = NL;
-  protected final String TEXT_49 = "    OCCURS 0 TO ";
-  protected final String TEXT_50 = " TIMES DEPENDING ON ";
+  protected final String TEXT_47 = "    BIT LENGTH IS ";
+  protected final String TEXT_48 = "    ";
+  protected final String TEXT_49 = NL;
+  protected final String TEXT_50 = "    POSITION IS ";
   protected final String TEXT_51 = NL;
-  protected final String TEXT_52 = "    OCCURS ";
-  protected final String TEXT_53 = " TIMES";
+  protected final String TEXT_52 = "    OCCURS 0 TO ";
+  protected final String TEXT_53 = " TIMES DEPENDING ON ";
   protected final String TEXT_54 = NL;
-  protected final String TEXT_55 = "    VALUE IS ( ? )";
-  protected final String TEXT_56 = NL;
-  protected final String TEXT_57 = "    .         ";
+  protected final String TEXT_55 = "    OCCURS ";
+  protected final String TEXT_56 = " TIMES";
+  protected final String TEXT_57 = NL;
+  protected final String TEXT_58 = "    VALUE IS ( ? )";
+  protected final String TEXT_59 = NL;
+  protected final String TEXT_60 = "    .         ";
 
   public String generate(Object argument)
   {
@@ -142,32 +145,48 @@ if (record.getLocationMode() == LocationMode.CALC) {
     stringBuffer.append( setName );
     stringBuffer.append(TEXT_7);
      
-} else {
+    if (record.getViaSpecification().getSymbolicDisplacementName() != null) {
+         String symbolicName = 
+             record.getViaSpecification().getSymbolicDisplacementName();
 
     stringBuffer.append(TEXT_8);
+    stringBuffer.append( symbolicName );
+                 
+    } else if (record.getViaSpecification().getDisplacementPageCount() != null) {
+         short pages = 
+             record.getViaSpecification().getDisplacementPageCount().shortValue();
+
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append( pages );
+    stringBuffer.append(TEXT_10);
+                 
+    }
+} else {
+
+    stringBuffer.append(TEXT_11);
     
 }
 if (record.getMinimumRootLength() != null) {
 
-    stringBuffer.append(TEXT_9);
+    stringBuffer.append(TEXT_12);
     stringBuffer.append( record.getMinimumRootLength() );
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_13);
     
 }
 if (record.getMinimumFragmentLength() != null) {
 
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_14);
     stringBuffer.append( record.getMinimumFragmentLength() );
-    stringBuffer.append(TEXT_12);
+    stringBuffer.append(TEXT_15);
     
 }
 for (RecordProcedureCallSpecification procedureCall : record.getProcedures()) {
 
-    stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_16);
     stringBuffer.append( procedureCall.getProcedure().getName() );
-    stringBuffer.append(TEXT_14);
+    stringBuffer.append(TEXT_17);
     stringBuffer.append( procedureCall.getCallTime().toString() );
-    stringBuffer.append(TEXT_15);
+    stringBuffer.append(TEXT_18);
     stringBuffer.append( procedureCall.getVerb().toString() );
     	
 }
@@ -178,9 +197,9 @@ OffsetExpression offsetExpression =
     record.getAreaSpecification().getOffsetExpression();
 if (symbolicSubareaName != null) {
 
-    stringBuffer.append(TEXT_16);
+    stringBuffer.append(TEXT_19);
     stringBuffer.append( areaName );
-    stringBuffer.append(TEXT_17);
+    stringBuffer.append(TEXT_20);
     stringBuffer.append( symbolicSubareaName );
     
 } else if (offsetExpression != null) { 
@@ -201,17 +220,17 @@ if (symbolicSubareaName != null) {
         q = "100 PERCENT";
     }
 
-    stringBuffer.append(TEXT_18);
-    stringBuffer.append( areaName );
-    stringBuffer.append(TEXT_19);
-    stringBuffer.append( p );
-    stringBuffer.append(TEXT_20);
-    stringBuffer.append( q );
     stringBuffer.append(TEXT_21);
+    stringBuffer.append( areaName );
+    stringBuffer.append(TEXT_22);
+    stringBuffer.append( p );
+    stringBuffer.append(TEXT_23);
+    stringBuffer.append( q );
+    stringBuffer.append(TEXT_24);
     
 } else {
 
-    stringBuffer.append(TEXT_22);
+    stringBuffer.append(TEXT_25);
     stringBuffer.append( areaName );
     
 }
@@ -224,14 +243,14 @@ for (OwnerRole role : record.getOwnerRoles()) {
         setName = role.getSet().getName();
     }
 
-    stringBuffer.append(TEXT_23);
+    stringBuffer.append(TEXT_26);
     stringBuffer.append( setName );
-    stringBuffer.append(TEXT_24);
+    stringBuffer.append(TEXT_27);
     stringBuffer.append( role.getNextDbkeyPosition() );
     
     if (role.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_25);
+    stringBuffer.append(TEXT_28);
     stringBuffer.append( role.getPriorDbkeyPosition() );
     
     }
@@ -245,36 +264,36 @@ for (MemberRole role : record.getMemberRoles()) {
         setName = role.getSet().getName();
     }
 
-    stringBuffer.append(TEXT_26);
+    stringBuffer.append(TEXT_29);
     stringBuffer.append( setName );
     
     if (role.getNextDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_27);
+    stringBuffer.append(TEXT_30);
     stringBuffer.append( role.getNextDbkeyPosition() );
     
     }
     if (role.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_28);
+    stringBuffer.append(TEXT_31);
     stringBuffer.append( role.getPriorDbkeyPosition() );
     
     }
     if (role.getIndexDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_29);
+    stringBuffer.append(TEXT_32);
     stringBuffer.append( role.getIndexDbkeyPosition() );
     
     }
     if (role.getOwnerDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_30);
+    stringBuffer.append(TEXT_33);
     stringBuffer.append( role.getOwnerDbkeyPosition() );
     
     }
 }
 
-    stringBuffer.append(TEXT_31);
+    stringBuffer.append(TEXT_34);
     
 for (Element element : record.getElements()) {
     String left;
@@ -294,41 +313,41 @@ for (Element element : record.getElements()) {
         level = String.valueOf(element.getLevel());
     }
 
-    stringBuffer.append(TEXT_32);
+    stringBuffer.append(TEXT_35);
     stringBuffer.append( left );
     stringBuffer.append( level );
-    stringBuffer.append(TEXT_33);
+    stringBuffer.append(TEXT_36);
     stringBuffer.append( element.getName() );
     
     if (element.getRedefines() != null) {
 
-    stringBuffer.append(TEXT_34);
+    stringBuffer.append(TEXT_37);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_35);
+    stringBuffer.append(TEXT_38);
     stringBuffer.append( element.getRedefines().getName() );
     
     }
     if (element.getPicture() != null) {
 
-    stringBuffer.append(TEXT_36);
+    stringBuffer.append(TEXT_39);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_37);
+    stringBuffer.append(TEXT_40);
     stringBuffer.append( element.getPicture() );
     
     }
 
-    stringBuffer.append(TEXT_38);
+    stringBuffer.append(TEXT_41);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_39);
+    stringBuffer.append(TEXT_42);
     stringBuffer.append( Util.getUsageShortform(element.getUsage()) );
-    stringBuffer.append(TEXT_40);
+    stringBuffer.append(TEXT_43);
     
     if (element.getUsage() != Usage.CONDITION_NAME &&
         element.getUsage() != Usage.BIT) {
 
-    stringBuffer.append(TEXT_41);
+    stringBuffer.append(TEXT_44);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_42);
+    stringBuffer.append(TEXT_45);
     stringBuffer.append( element.getLength() );
     
     }
@@ -346,52 +365,52 @@ for (Element element : record.getElements()) {
             mask = "";
         }
 
-    stringBuffer.append(TEXT_43);
+    stringBuffer.append(TEXT_46);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_44);
+    stringBuffer.append(TEXT_47);
     stringBuffer.append( bitLength );
-    stringBuffer.append(TEXT_45);
+    stringBuffer.append(TEXT_48);
     stringBuffer.append( mask );
     
     }
 
-    stringBuffer.append(TEXT_46);
+    stringBuffer.append(TEXT_49);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_47);
+    stringBuffer.append(TEXT_50);
     stringBuffer.append( element.getOffset() + 1 );
     
     if (element.getOccursSpecification() != null) {
         OccursSpecification occurs = element.getOccursSpecification();
         if (occurs.getDependingOn() != null) {
 
-    stringBuffer.append(TEXT_48);
-    stringBuffer.append( left );
-    stringBuffer.append(TEXT_49);
-    stringBuffer.append( occurs.getCount() );
-    stringBuffer.append(TEXT_50);
-    stringBuffer.append( occurs.getDependingOn().getName() );
-      
-        } else {
-
     stringBuffer.append(TEXT_51);
     stringBuffer.append( left );
     stringBuffer.append(TEXT_52);
     stringBuffer.append( occurs.getCount() );
     stringBuffer.append(TEXT_53);
+    stringBuffer.append( occurs.getDependingOn().getName() );
+      
+        } else {
+
+    stringBuffer.append(TEXT_54);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_55);
+    stringBuffer.append( occurs.getCount() );
+    stringBuffer.append(TEXT_56);
     
         }
     }
     if (element.getUsage() == Usage.CONDITION_NAME) {
 
-    stringBuffer.append(TEXT_54);
+    stringBuffer.append(TEXT_57);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_55);
+    stringBuffer.append(TEXT_58);
     
     }
 
-    stringBuffer.append(TEXT_56);
+    stringBuffer.append(TEXT_59);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_57);
+    stringBuffer.append(TEXT_60);
     
 }
 

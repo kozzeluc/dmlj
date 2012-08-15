@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.MissingResourceException;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -93,6 +95,19 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		removeModelChangeListeners();
 	};
 	
+	/**
+	 * Subclasses should override this method if an attribute that does not
+	 * belong to the target object is shown in the section.  In doing so,
+	 * overriding the getValue(EAttribute) method might become unnecessary
+	 * because the AbstractProperties class can directly retrieve the attribute
+	 * value.
+	 * @param attribute the attribute to be checked
+	 * @return the EObject instance that owns the attribute; should never be null
+	 */
+	protected EObject getAttributeOwner(EAttribute attribute) {
+		return target;
+	}
+
 	protected abstract List<EAttribute> getAttributes();
 
 	protected String getDescription(EAttribute attribute) {
@@ -132,12 +147,43 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	 *         contains the command to set the attribute's value
 	 */
 	protected IEditHandler getEditHandler(EAttribute attribute, 
-										  Object newValue) {
+										  Object newValue) {		
 		
-		return new StandardEditHandler(target, attribute, getLabel(attribute), 
-									   newValue);
+		return getEditHandler(attribute, newValue, null);
 	};
 	
+	protected final IEditHandler getEditHandler(EAttribute attribute, 
+			  							  	    Object newValue, 
+			  							  	    String message) {
+
+		EObject attributeOwner = getAttributeOwner(attribute);
+		return new StandardEditHandler(attributeOwner, attribute, 
+									   getLabel(attribute), newValue, message);
+	};
+		
+	/**
+	 * Subclasses should override this method if a filter is needed for 
+	 * filtering the items in a combo created for editing enum attributes.  The
+	 * default behaviour is to not filter enum elements (i.e. show all of them
+	 * in the combo).
+	 * @param attribute the EAttribute for which a combo is created
+	 * @return the filter to use or null if all enum elements are to be listed
+	 *         in the combo
+	 */
+	protected IEnumFilter<? extends Enum<?>> getEnumFilter(EAttribute attribute) {
+		return null;
+	}
+	
+	/**
+	 * This method can be called multiple times, it is probably better to cache
+	 * the hyperlink handlers only once...
+	 * @param attribute
+	 * @return
+	 */
+	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+		return null;
+	}
+
 	protected String getLabel(EAttribute attribute) {		
 		String key = "label." + attribute.getContainerClass().getName() + "." +
 					 attribute.getName();
@@ -162,10 +208,25 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	
 	protected abstract T getTarget(Object object);
 
+	/**
+	 * Subclasses should only override this method in the case the value of the
+	 * attribute is to be changed before shown - see method 
+	 * getAttributeOwner(EAttribute).
+	 * @param attribute the attribute for which the value is to be shown
+	 * @return the value of the attribute to be shown in the section
+	 */
 	protected String getValue(EAttribute attribute) {
-		Object value = target.eGet(attribute);
+		EObject attributeOwner = getAttributeOwner(attribute);
+		Assert.isNotNull(attributeOwner, "attribute owner is null: " +
+					     attribute.getName());
+		Object value = attributeOwner.eGet(attribute);
 		if (value != null) {
-			return value.toString();
+			// if the attribute is an enum, replace all underscores by spaces			
+			if (value instanceof Enumerator) {
+				return value.toString().replaceAll("_", " ");
+			} else {
+				return value.toString();
+			}
 		} else {
 			return "";
 		}
@@ -212,7 +273,15 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 			
 			String value = getValue(attribute);	
 			if (value != null) {
-				item.setText(1, value);
+				// we provide hyperlinks that allow dialog boxes to be shown or 
+				// other cool things to happen in order to allow for more 
+				// sophisticated model manipulation; if a hyperlink is to be
+				// provided, make sure the user notices that by setting the 				
+				// cell's foreground color to blue...
+				if (getHyperlinkHandler(attribute) != null) {
+					item.setForeground(1, ColorConstants.blue);
+				}				
+				item.setText(1, value);				
 			} else {
 				item.setText(1, "");
 			}

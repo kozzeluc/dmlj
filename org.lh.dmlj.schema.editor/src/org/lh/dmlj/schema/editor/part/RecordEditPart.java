@@ -67,8 +67,13 @@ public class RecordEditPart
 	
 	@Override
 	protected EObject[] getModelObjects() {
-		return new EObject[] {getModel(), 
-							  getModel().getDiagramLocation()};
+		List<EObject> modelObjects = new ArrayList<>();
+		modelObjects.add(getModel());
+		modelObjects.add(getModel().getDiagramLocation());
+		if (getModel().getLocationMode() == LocationMode.CALC) {
+			modelObjects.add(getModel().getCalcKey());
+		}
+		return modelObjects.toArray(new EObject[] {});
 	}	
 
 	@Override

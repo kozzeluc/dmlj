@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
 
 public class SetMemberPropertiesSection extends AbstractSetPropertiesSection {
@@ -14,39 +17,14 @@ public class SetMemberPropertiesSection extends AbstractSetPropertiesSection {
 	}	
 	
 	@Override
-	protected String getDescription(EAttribute attribute) {
+	protected EObject getAttributeOwner(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
-			return "Identifies a record type that is to participate as a " +
-				   "member of the set";			
+			return target.getRecord();
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
-			return "Identifies the area in which occurrences of the member " +
-				   "record type will be located";
-		} else if (attribute == SchemaPackage.eINSTANCE
-				  						   .getMemberRole_NextDbkeyPosition()) {
-			return "The sequential position of the next set pointer within " +
-				   "the member record's prefix";
-		} else if (attribute == SchemaPackage.eINSTANCE
-				  						   .getMemberRole_PriorDbkeyPosition()) {
-			return "The sequential position of the prior set pointer within " +
-				   "the member record's prefix";
-		} else if (attribute == SchemaPackage.eINSTANCE
-				   						   .getMemberRole_IndexDbkeyPosition()) {
-			return "The sequential position of the index set pointer within " +
-				   "the member record's prefix";
-		} else if (attribute == SchemaPackage.eINSTANCE
-				   						   .getMemberRole_OwnerDbkeyPosition()) {
-			return "The relative position in the member record's prefix to " +
-				   "be used for storing the database key of the owner record " +
-				   "of the set";
-		} else if (attribute == SchemaPackage.eINSTANCE
-				   						   .getMemberRole_MembershipOption()) {
-			return "Specifies if occurrences of the member record type can " +
-				   "be disconnected from the set other than through an ERASE " +
-				   "function AND if they are connected implicitly to the set " +
-				   "as part of the STORE function or only when the CONNECT " +
-				   "function is issued";
+			return target.getRecord().getAreaSpecification().getArea();
+		} else {		
+			return super.getAttributeOwner(attribute);
 		}
-		return super.getDescription(attribute);
 	}
 	
 	@Override
@@ -57,67 +35,94 @@ public class SetMemberPropertiesSection extends AbstractSetPropertiesSection {
 		if (set.getMode() == SetMode.CHAINED) {
 			// chained set
 			attributes.add(SchemaPackage.eINSTANCE
-									  .getMemberRole_NextDbkeyPosition());
-			if (target.getPriorDbkeyPosition() != null) {
-				attributes.add(SchemaPackage.eINSTANCE
-										  .getMemberRole_PriorDbkeyPosition());
-			}
-		} else {
-			// indexed set
-			if (target.getIndexDbkeyPosition() != null) {
-				attributes.add(SchemaPackage.eINSTANCE
-										  .getMemberRole_IndexDbkeyPosition());
-			}			
-		}
-		if (target.getOwnerDbkeyPosition() != null) {
+									    .getMemberRole_NextDbkeyPosition());			
 			attributes.add(SchemaPackage.eINSTANCE
-									  .getMemberRole_OwnerDbkeyPosition());
+										.getMemberRole_PriorDbkeyPosition());
+		} else {
+			// indexed set			
+			attributes.add(SchemaPackage.eINSTANCE
+									    .getMemberRole_IndexDbkeyPosition());
+		}
+		if (set.getSystemOwner() == null) {
+			attributes.add(SchemaPackage.eINSTANCE
+									    .getMemberRole_OwnerDbkeyPosition());
 		}
 		attributes.add(SchemaPackage.eINSTANCE.getMemberRole_MembershipOption());		
 		return attributes;
 	}
 	
 	@Override
-	protected String getLabel(EAttribute attribute) {
+	protected String getDescription(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
-			return "Name";
+			return getPluginProperty("description.member.set.properties.record");
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
-			return "Area";
-		} else if (attribute == SchemaPackage.eINSTANCE
-										   .getMemberRole_NextDbkeyPosition()) {
-			return "Next dbkey position";
-		} else if (attribute == SchemaPackage.eINSTANCE
-										   .getMemberRole_PriorDbkeyPosition()) {
-			return "Prior dbkey position";
-		} else if (attribute == SchemaPackage.eINSTANCE
-										   .getMemberRole_IndexDbkeyPosition()) {
-			return "Index dbkey position";
-		} else if (attribute == SchemaPackage.eINSTANCE
-										   .getMemberRole_OwnerDbkeyPosition()) {
-			return "Owner dbkey position";
-		} else if (attribute == SchemaPackage.eINSTANCE
-										   .getMemberRole_MembershipOption()) {
-			return "Membership";
+			return getPluginProperty("description.member.set.properties.area");
+		} else {
+			return super.getDescription(attribute);
 		}
-		return super.getLabel(attribute);
+	}
+
+	@Override
+	protected EObject getEditableObject(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE
+									  .getMemberRole_MembershipOption()) {
+			// in the case of system owned indexed sets without index pointers,
+			// the membership option MUST be MANDATORY AUTOMATIC, so we will not
+			// allow editing in that case
+			if (set.getMode() == SetMode.INDEXED &&
+				set.getSystemOwner() != null &&
+				set.getMembers().get(0).getIndexDbkeyPosition() == null) {
+				
+				return super.getEditableObject(attribute);
+			} else {
+				return target;
+			}
+		} else {
+			return super.getEditableObject(attribute);
+		}
+	}	
+	
+	@Override
+	protected IEditHandler getEditHandler(EAttribute attribute, Object newValue) {
+		if (attribute == SchemaPackage.eINSTANCE
+				  					  .getMemberRole_MembershipOption()) {
+						
+			if (newValue == SetMembershipOption.MANDATORY_MANUAL ||
+				newValue == SetMembershipOption.OPTIONAL_MANUAL &&
+				target.getRecord().getLocationMode() == LocationMode.VIA &&
+				target.getRecord().getViaSpecification().getSet() == set) {
+				
+				String message = 
+					"specifying the MANUAL connect option for a set if the " +
+					"member record is stored VIA a set is NOT recommended " +
+					"since this option may result in the target page for the " +
+					"member record being determined from a page that does " +
+					"not hold the owner record";
+				return super.getEditHandler(attribute, newValue, message);
+			}
+		}
+		return super.getEditHandler(attribute, newValue);
+	}
+	
+	@Override
+	protected String getLabel(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {			
+			return getPluginProperty("label.member.set.properties.area");	
+		} else {
+			return super.getLabel(attribute);
+		}
 	}
 	
 	@Override
 	protected String getValue(EAttribute attribute) {		
-		if (attribute == SchemaPackage.eINSTANCE.getMemberRole_Record()) {			
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {			
+			// remove the trailing underscore from the record name if we're 
+			// dealing with a DDLCATLOD member record
 			StringBuilder p = new StringBuilder(target.getRecord().getName());
 			if (p.charAt(p.length() - 1) == '_') {
 				p.setLength(p.length() - 1);
 			}
 			return p.toString();	
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
-			return target.getRecord()
-						 .getAreaSpecification()
-						 .getArea()
-						 .getName();
-		} else if (attribute == SchemaPackage.eINSTANCE
-										   .getMemberRole_MembershipOption()) {
-			return target.getMembershipOption().toString().replaceAll("_", " ");
 		}
 		return super.getValue(attribute);
 	}

@@ -1,6 +1,7 @@
 package org.lh.dmlj.schema.editor.property;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommand;
@@ -19,12 +20,21 @@ public class StandardEditHandler implements IEditHandler {
 	
 	StandardEditHandler(EObject target, EAttribute attribute, String label, 
 						Object newValue) {
+		
+		this(target, attribute, label, newValue, null);
+	}
+	
+	StandardEditHandler(EObject target, EAttribute attribute, String label, 
+						Object newValue, String message) {
 		super();
+		
+		this.message = message;
 		
 		// we need to make sure that newValue is different from the old 
 		// attribute value in target because there's no use in executing a 
 		// command that changes nothing to the model but marks the schema editor 
 		// as dirty
+		EClassifier classifier = attribute.getEType();
 		boolean valueChanged = true;
 		Object oldValue = target.eGet(attribute);
 		if (attribute.getEType().getName().equals("EString") ||
@@ -42,9 +52,11 @@ public class StandardEditHandler implements IEditHandler {
 			boolean newB = ((Boolean) newValue).booleanValue();
 			valueChanged = oldB != newB;
 		} else if (attribute.getEType().getName().equals("EShort")) {
-			short oldB = ((Short) oldValue).shortValue();
-			short newB = ((Short) newValue).shortValue();
-			valueChanged = oldB != newB;
+			short oldS = ((Short) oldValue).shortValue();
+			short newS = ((Short) newValue).shortValue();
+			valueChanged = oldS != newS;
+		} else if (classifier.getInstanceClass().getSuperclass() == Enum.class) {
+			valueChanged = !oldValue.equals(newValue);
 		}
 		
 		// only if the value has changed (or we are dealing with an unsupported
@@ -63,6 +75,9 @@ public class StandardEditHandler implements IEditHandler {
 				short i = ((Short)newValue).shortValue();
 				command = 
 					new SetShortAttributeCommand(target, attribute, i, label);
+			} else if (classifier.getInstanceClass().isEnum()) {
+				command = new SetObjectAttributeCommand(target, attribute, 
+				  									    newValue, label);
 			} else {
 				message = "unsupported type: " + attribute.getEType().getName();
 			}
@@ -81,7 +96,7 @@ public class StandardEditHandler implements IEditHandler {
 
 	@Override
 	public boolean isValid() {
-		return message == null;
+		return command != null;
 	}
 
 }

@@ -15,19 +15,6 @@ public class SchemaDiagramPropertiesSection
 	}
 
 	@Override
-	protected EObject getEditableObject(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getDiagramData_ShowRulers() ||
-			attribute == SchemaPackage.eINSTANCE.getDiagramData_ShowGrid() ||
-			attribute == SchemaPackage.eINSTANCE.getDiagramData_SnapToGuides() ||
-			attribute == SchemaPackage.eINSTANCE.getDiagramData_SnapToGrid() ||
-			attribute == SchemaPackage.eINSTANCE.getDiagramData_SnapToGeometry()) {
-				
-			return target;
-		}
-		return super.getEditableObject(attribute);
-	}
-
-	@Override
 	protected List<EAttribute> getAttributes() {
 		List<EAttribute> attributes = new ArrayList<>();
 		attributes.add(SchemaPackage.eINSTANCE.getDiagramData_ShowRulers());
@@ -40,6 +27,19 @@ public class SchemaDiagramPropertiesSection
 		}
 		attributes.add(SchemaPackage.eINSTANCE.getDiagramData_SnapToGeometry());
 		return attributes;
+	}
+
+	@Override
+	protected EObject getEditableObject(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getDiagramData_ShowRulers() ||
+			attribute == SchemaPackage.eINSTANCE.getDiagramData_ShowGrid() ||
+			attribute == SchemaPackage.eINSTANCE.getDiagramData_SnapToGuides() ||
+			attribute == SchemaPackage.eINSTANCE.getDiagramData_SnapToGrid() ||
+			attribute == SchemaPackage.eINSTANCE.getDiagramData_SnapToGeometry()) {
+				
+			return target;
+		}
+		return super.getEditableObject(attribute);
 	}	
 	
 }

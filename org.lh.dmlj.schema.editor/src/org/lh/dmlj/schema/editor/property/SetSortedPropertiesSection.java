@@ -4,7 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SetMode;
 
 public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 
@@ -17,17 +20,14 @@ public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 	}	
 	
 	@Override
-	protected String getDescription(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
-			return "Identifies the member record element(s) on whose values " +
-				   "the set is to be sorted (that is, the sort control " +
-				   "element)";			
-		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
-			return "Specifies how CA IDMS/DB handles a record occurrence " +
-				   "whose sort key duplicates an existing occurrence's sort " +
-				   "key";
+	protected EObject getAttributeOwner(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary() ||
+			attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+			
+			return target.getSortKey();
+		} else {
+			return super.getAttributeOwner(attribute);
 		}
-		return super.getDescription(attribute);
 	}
 	
 	@Override
@@ -36,27 +36,42 @@ public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 	}
 	
 	@Override
-	protected String getLabel(EAttribute attribute) {
+	protected String getDescription(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
-			return "Key element(s)";
+			String key = "description.member.set.sorted.elementSummary";
+			return getPluginProperty(key);			
 		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
-			return "Duplicates";
-		} return super.getLabel(attribute);
-	}
+			String key = "description.member.set.sorted.duplicatesOption";
+			return getPluginProperty(key);			
+		} else {
+			return super.getDescription(attribute);
+		}
+	}	
 	
 	@Override
-	protected String getValue(EAttribute attribute) {		
-		
-		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
-			return target.getSortKey().getElementSummary();
-		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
-			return target.getSortKey()
-						 .getDuplicatesOption()
-						 .toString()
-						 .replaceAll("_", " ");
+	protected EObject getEditableObject(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+			return target.getSortKey();
+		} else {
+			return super.getEditableObject(attribute);
 		}
-		
-		return super.getValue(attribute);
+	}	
+	
+	@Override
+	protected IEnumFilter<? extends Enum<?>> getEnumFilter(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+			// by DBkey: For MODE IS INDEX sets only
+			return new IEnumFilter<DuplicatesOption>() {
+				@Override
+				public boolean include(EAttribute attribute, DuplicatesOption duplicatesOption) {
+					
+					return duplicatesOption != DuplicatesOption.BY_DBKEY ||
+						   set.getMode() == SetMode.INDEXED;
+				}
+			};
+		} else {
+			return super.getEnumFilter(attribute);
+		}
 	}
 
 }

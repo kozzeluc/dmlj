@@ -14,6 +14,8 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.editor.common.NamingConventions;
+import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class SchemaGeneralPropertiesSection 
 	extends AbstractSchemaPropertiesSection {
@@ -25,6 +27,16 @@ public class SchemaGeneralPropertiesSection
 		super();
 	}
 	
+	@Override
+	protected List<EAttribute> getAttributes() {
+		List<EAttribute> attributes = new ArrayList<>();	
+		attributes.add(SchemaPackage.eINSTANCE.getSchema_Name());
+		attributes.add(SchemaPackage.eINSTANCE.getSchema_Version());
+		attributes.add(SchemaPackage.eINSTANCE.getSchema_Description());
+		attributes.add(SchemaPackage.eINSTANCE.getSchema_MemoDate());
+		return attributes;
+	}
+
 	@Override
 	protected EObject getEditableObject(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchema_Name() ||
@@ -45,11 +57,11 @@ public class SchemaGeneralPropertiesSection
 			// newSchemaName must be a 1- to 8-character value; it must not be 
 			// the same (case insensitive) as any components or synonyms within 
 			// the schema
-			if (newSchemaName == null || newSchemaName.length() < 1 || 
-				newSchemaName.length() > 8) {
-				
-				String message = "must be a 1- to 8-character value";
-				return new ErrorEditHandler(message);
+			ValidationResult validationResult = 
+				NamingConventions.validate(newSchemaName, 
+										   NamingConventions.Type.SCHEMA_NAME);
+			if (validationResult.getStatus() == ValidationResult.Status.ERROR) {
+				return new ErrorEditHandler(validationResult.getMessage());
 			}
 			for (SchemaArea area : target.getAreas()){
 				if (area.getName().equalsIgnoreCase(newSchemaName)) {
@@ -128,17 +140,6 @@ public class SchemaGeneralPropertiesSection
 			return super.getEditHandler(attribute, newMemoDate);
 		}
 		return super.getEditHandler(attribute, newValue);
-	}
-	
-	
-	@Override
-	protected List<EAttribute> getAttributes() {
-		List<EAttribute> attributes = new ArrayList<>();	
-		attributes.add(SchemaPackage.eINSTANCE.getSchema_Name());
-		attributes.add(SchemaPackage.eINSTANCE.getSchema_Version());
-		attributes.add(SchemaPackage.eINSTANCE.getSchema_Description());
-		attributes.add(SchemaPackage.eINSTANCE.getSchema_MemoDate());
-		return attributes;
 	}
 
 }

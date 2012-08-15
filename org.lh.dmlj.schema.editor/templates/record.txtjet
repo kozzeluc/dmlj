@@ -61,6 +61,19 @@ if (record.getLocationMode() == LocationMode.CALC) {
 %>
          LOCATION MODE IS VIA <%= setName %> SET
 <% 
+    if (record.getViaSpecification().getSymbolicDisplacementName() != null) {
+         String symbolicName = 
+             record.getViaSpecification().getSymbolicDisplacementName();
+%>
+             DISPLACEMENT USING <%= symbolicName %>
+<%             
+    } else if (record.getViaSpecification().getDisplacementPageCount() != null) {
+         short pages = 
+             record.getViaSpecification().getDisplacementPageCount().shortValue();
+%>
+             DISPLACEMENT <%= pages %> PAGES
+<%             
+    }
 } else {
 %>
          LOCATION MODE IS DIRECT

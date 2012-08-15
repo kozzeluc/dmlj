@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
 import org.lh.dmlj.schema.SchemaPackage;
 
 public class RecordCalcPropertiesSection 
@@ -18,18 +19,14 @@ public class RecordCalcPropertiesSection
 	}	
 	
 	@Override
-	protected String getDescription(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
-			return "Specifies the record element(s) whose value(s) will be " +
-				   "used to calculate the page to store an occurrence of the " +
-				   "record";
-		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
-			return "Specifies whether occurrences of a record type with " +
-				   "duplicate CALC key values are allowed and, if allowed, " +
-				   "how they are logically positioned relative to the " +
-				   "duplicate record already stored";
+	protected EObject getAttributeOwner(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary() ||
+			attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+			
+			return target.getCalcKey();
+		} else {
+			return super.getAttributeOwner(attribute);
 		}
-		return super.getDescription(attribute);
 	}
 	
 	@Override
@@ -38,26 +35,23 @@ public class RecordCalcPropertiesSection
 	}
 	
 	@Override
-	protected String getLabel(EAttribute attribute) {
+	protected String getDescription(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
-			return "Key element(s)";
+			return getPluginProperty("description.calc.record.properties.elementSummary");
 		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
-			return "Duplicates";
+			return getPluginProperty("description.calc.record.properties.duplicatesOption");
+		} else {
+			return super.getDescription(attribute);
 		}
-		return super.getLabel(attribute);
 	}	
-	
-	@Override
-	protected String getValue(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {			
-			return target.getCalcKey().getElementSummary();
-		} else if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
-			return target.getCalcKey()
-						 .getDuplicatesOption()
-						 .toString()
-						 .replaceAll("_", " ");
-		}
-		return super.getValue(attribute);
-	}
 
+	@Override
+	protected EObject getEditableObject(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+			return target.getCalcKey();
+		} else {
+			return super.getEditableObject(attribute);
+		}		
+	}
+	
 }

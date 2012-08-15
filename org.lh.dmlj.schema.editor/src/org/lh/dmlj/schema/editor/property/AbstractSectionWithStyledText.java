@@ -1,8 +1,16 @@
 package org.lh.dmlj.schema.editor.property;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -24,14 +32,36 @@ import org.lh.dmlj.schema.editor.SchemaEditor;
  * their information in a single styled text control.  Subclasses must supply  
  * the valid edit part model object types during construction and can override
  * the getFont method if they want another font than the standard 'syntax' font
- * to be used.
+ * to be used.  They can also override the getObjectsToMonitor() method so that
+ * the StyledText content remains synchronized with the model.
  */
 public abstract class AbstractSectionWithStyledText 
 	extends AbstractPropertySection {
 	
-	private Object		editPartModelObject;
-	private StyledText	styledText;
-	private Class<?>[]	validEditPartModelObjectTypes;	
+	private List<EObject> monitoredObjects = new ArrayList<>();
+	private StyledText	  styledText;
+	protected EObject	  target;
+	private Class<?>[]	  validEditPartModelObjectTypes;
+	
+	private Adapter		  modelChangeListener = new Adapter() {
+		@Override
+		public void notifyChanged(Notification notification) {
+			if (notification.getEventType() != Notification.REMOVING_ADAPTER) {
+				refresh();
+			}
+		}
+		@Override
+		public Notifier getTarget() {
+			return null;
+		}
+		@Override
+		public void setTarget(Notifier newTarget) {					
+		}
+		@Override
+		public boolean isAdapterForType(Object type) {
+			return false;
+		}
+	};
 		
 	protected AbstractSectionWithStyledText(Class<?>[] validEditPartModelObjectTypes) {
 		super();
@@ -64,8 +94,24 @@ public abstract class AbstractSectionWithStyledText
         
 	}
 	
+	@Override
+	public void dispose() {
+		// We need to remove the model change listener from all monitored 
+		// objects
+		removeModelChangeListeners();
+	};
+	
 	protected Font getFont() {
 		return Plugin.getDefault().getSyntaxFont();
+	}
+
+	/**
+	 * Subclasses must override this method and indicate which model objects are
+	 * used to generate the StyledText content.
+	 * @return a list of the EObjects to monitor for changes
+	 */
+	protected Collection<? extends EObject> getObjectsToMonitor() {
+		return Collections.emptyList();
 	}
 
 	protected abstract String getValue(Object editPartModelObject);
@@ -81,7 +127,14 @@ public abstract class AbstractSectionWithStyledText
 	
 	@Override
 	public final void refresh() {
-		styledText.setText(getValue(editPartModelObject));			
+		styledText.setText(getValue(target));
+	}
+	
+	private void removeModelChangeListeners() {
+		for (EObject object : monitoredObjects) {
+			object.eAdapters().remove(modelChangeListener);
+		}
+		monitoredObjects.clear();
 	}
 
 	@Override
@@ -95,12 +148,21 @@ public abstract class AbstractSectionWithStyledText
         			  "not a IStructuredSelection");
         Object input = ((IStructuredSelection) selection).getFirstElement();        
         
+        removeModelChangeListeners();
+        
         Assert.isTrue(input instanceof EditPart, "not an EditPart");
-        editPartModelObject = ((EditPart) input).getModel();
-        Assert.isTrue(isValidType(editPartModelObject), 
+        target = (EObject) ((EditPart) input).getModel();
+        Assert.isTrue(isValidType(target), 
   			  		  "not a " + Arrays.asList(validEditPartModelObjectTypes) +
-  			  		  " but a " + editPartModelObject.getClass().getName());
-                
+  			  		  " but a " + target.getClass().getName());
+        
+        // we need to react to model changes too; although the user cannot edit
+        // the StyledText directly, model changes can occur if the user undoes
+        // or redoes a command...
+        monitoredObjects.addAll(getObjectsToMonitor());
+        for (EObject object : monitoredObjects) {
+        	object.eAdapters().add(modelChangeListener);
+        }
 	}	
 	
 }

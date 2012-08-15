@@ -10,6 +10,9 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.StorageMode;
+import org.lh.dmlj.schema.editor.common.NamingConventions;
+import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class RecordGeneralPropertiesSection 
 	extends AbstractRecordPropertiesSection {
@@ -24,6 +27,15 @@ public class RecordGeneralPropertiesSection
 	public RecordGeneralPropertiesSection() {
 		super();
 	}	
+	
+	@Override
+	protected EObject getAttributeOwner(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
+			return target.getAreaSpecification().getArea();
+		} else {
+			return super.getAttributeOwner(attribute);
+		}
+	}
 	
 	@Override
 	protected List<EAttribute> getAttributes() {		
@@ -42,7 +54,8 @@ public class RecordGeneralPropertiesSection
 	@Override
 	protected EObject getEditableObject(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name() ||
-			attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Id()) {
+			attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Id() ||
+			attribute == SchemaPackage.eINSTANCE.getSchemaRecord_StorageMode()) {
 			
 			return target;
 		} else {
@@ -55,44 +68,17 @@ public class RecordGeneralPropertiesSection
 										  Object newValue) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
 			// get the new record name
-			String newRecordName = (String) newValue;
-			// newRecordName must be a 1- to 16-character name. The first 
-			// character must be A through Z (alphabetic), #, $, or @ 
-			// (international symbols). The remaining characters can be 
-			// alphabetic or international symbols, 0 through 9, or the hyphen 
-			// (except as the last character or following another hyphen).
+			String newRecordName = 
+				newValue != null ? ((String) newValue).toUpperCase() : null;
+			// validate the record name
+			ValidationResult validationResult = 
+				NamingConventions.validate(newRecordName, 
+										   NamingConventions.Type.RECORD_NAME);			
+			if (validationResult.getStatus() == ValidationResult.Status.ERROR) {				
+				return new ErrorEditHandler(validationResult.getMessage());
+			}
 			// newRecordName must not be the same as the schema name or the name 
 			// of any other component (including synonyms) within the schema.
-			if (newRecordName == null || newRecordName.length() < 1 || 
-				newRecordName.length() > 16) {
-					
-				String message = "must be a 1- to 16-character value";
-				return new ErrorEditHandler(message);
-			}
-			String firstChar = newRecordName.substring(0, 1).toLowerCase();
-			if ("abcdefghijklmnopqrstuvwxyz#$@".indexOf(firstChar) == -1) {
-				String message = "first character must be A through Z " +
-								 "(alphabetic), #, $, or @";
-				return new ErrorEditHandler(message);
-			}
-			for (int i = 1; i < newRecordName.length(); i++) {
-				String remainingChar = 
-					newRecordName.substring(i, i + 1).toLowerCase();
-				if ("abcdefghijklmnopqrstuvwxyz0123456789#$@-".indexOf(remainingChar) == -1) {
-					String message = 
-						"remaining characters can only be alphabetic or " +
-						"international symbols (#, $, or @), 0 through 9, or " +
-						"the hyphen";
-					return new ErrorEditHandler(message);
-				}
-			}
-			if (newRecordName.endsWith("-") || 
-				newRecordName.indexOf("--") > -1) {
-				
-				String message = "the hyphen can not be the last character " +
-								 "or follow another hyphen";
-				return new ErrorEditHandler(message);
-			}
 			if (newRecordName.equalsIgnoreCase(target.getSchema().getName())) {
 				String message = "same as schema name";
 				return new ErrorEditHandler(message);
@@ -125,9 +111,8 @@ public class RecordGeneralPropertiesSection
 					return new ErrorEditHandler(message);
 				}
 			}
-			// convert the new schema name to uppercase before passing it to the 
-			// set attribute command
-			return super.getEditHandler(attribute, newRecordName.toUpperCase());
+			// pass the new record name to the set attribute command
+			return super.getEditHandler(attribute, newRecordName);
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Id()) {			
 			// get the new record id
 			short newRecordId = ((Short) newValue).shortValue();			
@@ -149,10 +134,38 @@ public class RecordGeneralPropertiesSection
 				}
 			}
 			return super.getEditHandler(attribute, newRecordId);			
+		} else if (attribute == SchemaPackage.eINSTANCE
+											 .getSchemaRecord_StorageMode()) {
+			
+			StorageMode oldValue = target.getStorageMode();
+			if ((oldValue == StorageMode.FIXED || 
+				 oldValue == StorageMode.VARIABLE) &&
+				(newValue == StorageMode.FIXED_COMPRESSED ||
+				 newValue == StorageMode.VARIABLE_COMPRESSED) ||
+				(oldValue == StorageMode.FIXED_COMPRESSED || 
+				 oldValue == StorageMode.VARIABLE_COMPRESSED) &&
+				(newValue == StorageMode.FIXED ||
+				 newValue == StorageMode.VARIABLE)) {
+				
+				String message = 
+					"no modifications were made to the procedures called";
+				return super.getEditHandler(attribute, newValue, message);				
+			}
+		}
+		return super.getEditHandler(attribute, newValue);		
+	}
+	
+	@Override
+	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()) {
+			return new IHyperlinkHandler() {
+				
+			};
 		} else {
-			return super.getEditHandler(attribute, newValue);
+			return super.getHyperlinkHandler(attribute);
 		}
 	}
+	
 	
 	@Override
 	protected String getLabel(EAttribute attribute) {
@@ -166,14 +179,13 @@ public class RecordGeneralPropertiesSection
 	@Override
 	protected String getValue(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
-			StringBuilder p = 
-				new StringBuilder(target.getName());
+			// remove the trailing underscore from the record name if we're 
+			// dealing with a DDLCATLOD record
+			StringBuilder p = new StringBuilder(target.getName());
 			if (p.charAt(p.length() - 1) == '_') {
 				p.setLength(p.length() - 1);
 			}
 			return p.toString();
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
-			return target.getAreaSpecification().getArea().getName();
 		} else {
 			return super.getValue(attribute);
 		}

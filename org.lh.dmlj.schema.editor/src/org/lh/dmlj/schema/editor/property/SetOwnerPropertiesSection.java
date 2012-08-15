@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
 import org.lh.dmlj.schema.SchemaPackage;
 
 public class SetOwnerPropertiesSection extends AbstractSetPropertiesSection {
@@ -15,24 +16,48 @@ public class SetOwnerPropertiesSection extends AbstractSetPropertiesSection {
 	@Override
 	protected String getDescription(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
+			String key;
 			if (set.getSystemOwner() != null) {
-				return "Specifies that the indexed set is owned by an " +
-					   "internal owner record (SR7 system record)";
+				key = "description.owner.set.properties.system.owner";
 			} else {
-				return "Identifies the record type that owns the set";
+				key = "description.owner.set.properties.record";
 			}
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
-			return "Specifies the area in which the (system) owner (record) " +
-				   "and, in the case of an indexed set, the index structure " +
-				   "is to reside";
-		} else if (attribute == SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition()) {
-			return "Represents the sequential position of the NEXT set " +
-				   "pointer within the owner record's prefix";
-		} else if (attribute == SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition()) {
-			return "Represents the sequential position of the PRIOR set " +
-				   "pointer within the owner record's prefix";
+			return getPluginProperty(key);
+		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {			
+			return getPluginProperty("description.owner.set.properties.area");
+		} else {
+			return super.getDescription(attribute);
 		}
-		return super.getDescription(attribute);
+	}
+	
+	@Override
+	protected EObject getAttributeOwner(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
+			// we need to override the getValue(EAttribute) method for this 
+			// attribute as well, in order to deal with system owned sets
+			return target.getSet().getOwner().getRecord();
+		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
+			if (set.getSystemOwner() == null) {
+				// user owned set
+				return set.getOwner()
+						  .getRecord()
+						  .getAreaSpecification()
+						  .getArea();
+			} else {
+				// system owned indexed set
+				return set.getSystemOwner()
+						  .getAreaSpecification()
+						  .getArea();
+			}
+		} else if (attribute == SchemaPackage.eINSTANCE
+											 .getOwnerRole_NextDbkeyPosition() ||
+				   attribute == SchemaPackage.eINSTANCE
+				   							 .getOwnerRole_PriorDbkeyPosition()) {
+			
+			return set.getOwner();
+		} else {		
+			return super.getAttributeOwner(attribute);
+		}
 	}
 	
 	@Override
@@ -41,41 +66,28 @@ public class SetOwnerPropertiesSection extends AbstractSetPropertiesSection {
 		attributes.add(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		attributes.add(SchemaPackage.eINSTANCE.getSchemaArea_Name());
 		if (set.getSystemOwner() == null) {		
-			attributes.add(SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition());
-			if (set.getOwner().getPriorDbkeyPosition() != null) {
-				attributes.add(SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition());
-			}
+			attributes.add(SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition());			
+			attributes.add(SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition());			
 		}		
 		return attributes;
 	}
 	
 	@Override
 	protected String getLabel(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
-			return "Name";
-		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
-			return "Area";
-		} else if (attribute == SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition()) {
-			return "Next dbkey position";
-		} else if (attribute == SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition()) {
-			return "Prior dbkey position";
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
+			return getPluginProperty("label.owner.set.properties.area");
 		}
 		return super.getLabel(attribute);
 	}
 	
 	@Override
-	protected String getValue(EAttribute attribute) {		
-		if (set.getSystemOwner() != null) {
-			if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {			
-				return "SYSTEM";
-			} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
-				return set.getSystemOwner()
-						  .getAreaSpecification()
-						  .getArea()
-						  .getName();
-			}			
-		} else {			
-			if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {											
+	protected String getValue(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
+			if (set.getSystemOwner() != null) {
+				return "SYSTEM";				
+			} else {
+				// remove the trailing underscore from the record name if we're 
+				// dealing with a DDLCATLOD owner record
 				StringBuilder p = new StringBuilder(target.getSet()
 														  .getOwner()
 														  .getRecord()
@@ -83,25 +95,11 @@ public class SetOwnerPropertiesSection extends AbstractSetPropertiesSection {
 				if (p.charAt(p.length() - 1) == '_') {
 					p.setLength(p.length() - 1);
 				}
-				return p.toString();							
-			} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
-				return set.getOwner()
-						  .getRecord()
-						  .getAreaSpecification()
-						  .getArea()
-						  .getName();
-			} else if (attribute == SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition()) {
-				return String.valueOf(set.getOwner().getNextDbkeyPosition());
-			} else if (attribute == SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition()) {
-				if (set.getOwner().getPriorDbkeyPosition() != null) {
-					return set.getOwner().getPriorDbkeyPosition().toString();
-				} else {
-					return "";
-				}
+				return p.toString();			
 			}			
-		}		
-		
-		return super.getValue(attribute);
+		} else {				
+			return super.getValue(attribute);
+		}
 	}
 
 }

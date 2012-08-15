@@ -1,5 +1,11 @@
 package org.lh.dmlj.schema.editor.property;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.eclipse.emf.ecore.EObject;
+import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.template.RecordTemplate;
 
@@ -67,5 +73,20 @@ public class RecordSyntaxSection extends AbstractSyntaxSection {
 			}			
 		};
 	}*/
+	
+	@Override
+	protected Collection<? extends EObject> getObjectsToMonitor() {
+		List<EObject> objects = new ArrayList<>();
+		SchemaRecord record = (SchemaRecord)target;
+		objects.add(record);
+		if (record.getLocationMode() == LocationMode.CALC) {
+			objects.add(record.getCalcKey());
+		} else if (record.getLocationMode() == LocationMode.VIA) {
+			objects.add(record.getViaSpecification());
+		}
+		// the list of objects to monitor is, most likely, not yet complete, so
+		// this is a work item for the future
+		return objects;
+	}	
 	
 }
