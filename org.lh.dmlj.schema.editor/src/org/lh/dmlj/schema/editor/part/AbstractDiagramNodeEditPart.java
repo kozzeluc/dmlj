@@ -38,6 +38,11 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		}
 	}
 	
+	/**
+	 * To be implemented by subclasses
+	 * @return a fixed list with the model objects upon which the figure data
+	 *         are dependent
+	 */
 	protected abstract EObject[] getModelObjects();
 
 	@Override

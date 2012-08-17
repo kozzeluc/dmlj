@@ -28,14 +28,15 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 
 public abstract class AbstractPropertiesSection<T extends EObject>
-	extends AbstractPropertySection {		
+	extends AbstractPropertySection implements ICommandStackProvider {		
 
 	private List<EAttribute> 		 attributes = new ArrayList<>();
+	private CommandStack 			 commandStack;
 	private DescriptionManager	     descriptionManager;
 	private List<EAttribute> 		 editableAttributes = new ArrayList<>();
-	private List<EObject>  			 editableObjects = new ArrayList<>();
 	private ModelChangeListener	     modelChangeListener = 
 		new ModelChangeListener(this);
+	private List<EObject>  			 monitoredObjects = new ArrayList<>();
 	private PropertyEditor			 propertyEditor;
 	private Table			   	     table;
 	protected T	   			   	     target;
@@ -110,6 +111,10 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 
 	protected abstract List<EAttribute> getAttributes();
 
+	public final CommandStack getCommandStack() {
+		return commandStack;
+	}
+
 	protected String getDescription(EAttribute attribute) {
 		String key = "description." + attribute.getContainerClass().getName() + 
 					 "." + attribute.getName();
@@ -175,10 +180,11 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	}
 	
 	/**
-	 * This method can be called multiple times, it is probably better to cache
-	 * the hyperlink handlers only once...
+	 * Subclasses should override this method if a hyperlink has to be created
+	 * when the mouse pointer above the attribute value.  
+	 * This method is called multiple times.
 	 * @param attribute
-	 * @return
+	 * @return 
 	 */
 	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
 		return null;
@@ -249,16 +255,28 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		// and make sure we are notified of changes to the model
 		editableAttributes.clear();
 		removeModelChangeListeners();
-		editableObjects.clear();
+		monitoredObjects.clear();
 		for (EAttribute attribute : attributes) {
 			EObject editableObject = getEditableObject(attribute);
+			IHyperlinkHandler hyperlinkHandler = getHyperlinkHandler(attribute);
 			if (editableObject != null) {
-				// attribute is editable because an editable object is provided
+				// attribute is directly editable because an editable object is 
+				// provided
 				editableAttributes.add(attribute);								
-				if (!editableObjects.contains(editableObject)) {
+				if (!monitoredObjects.contains(editableObject)) {
 					// just keep 1 reference to the editable object
-					editableObjects.add(editableObject);
+					monitoredObjects.add(editableObject);
 					editableObject.eAdapters().add(modelChangeListener);
+				}
+			} else if (hyperlinkHandler != null) {
+				// the attribute (and possibly others) are editable via a
+				// hyperlink
+				EObject hyperlinkObject = hyperlinkHandler.getModelObject();
+				if (hyperlinkObject != null && 
+					!monitoredObjects.contains(hyperlinkObject)) {
+				
+					monitoredObjects.add(hyperlinkObject);
+					hyperlinkObject.eAdapters().add(modelChangeListener);
 				}
 			}
 		}
@@ -300,9 +318,11 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	}
 
 	private void removeModelChangeListeners() {
-		for (EObject object : editableObjects) {
+		// remove the model change listener from the objects that have at least
+		// 1 attribute that is directly or indirectly editable
+		for (EObject object : monitoredObjects) {
 			object.eAdapters().remove(modelChangeListener);
-		}
+		}		
 	}
 
 	@Override
@@ -320,7 +340,7 @@ public abstract class AbstractPropertiesSection<T extends EObject>
         target = getTarget(modelObject);
         
         // we need the editor's command stack to change the model data
-        CommandStack commandStack = ((SchemaEditor) part).getCommandStack();
+        commandStack = ((SchemaEditor) part).getCommandStack();
         propertyEditor.setCommandStack(commandStack);
 
 	} 	

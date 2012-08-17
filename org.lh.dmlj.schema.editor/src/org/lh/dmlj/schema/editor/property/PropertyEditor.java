@@ -150,8 +150,8 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 	}	
 	
 	private void hyperlinkActivated(EAttribute attribute) {
-		System.out.println("hyperlink activated for attribute " + 
-						   attribute.getName());		
+		IHyperlinkHandler handler = section.getHyperlinkHandler(attribute);
+		handler.hyperlinkActivated(attribute);
 	}
 
 	@Override
@@ -215,7 +215,7 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		// create a new table editor control and underline the current table
 		// cell's content; make sure the user gets the right mouse pointer		
 		final StyledText styledText = new StyledText(table, SWT.READ_ONLY);
-		styledText.setTopMargin(2);
+		//styledText.setTopMargin(2); // we sometimes need this and sometimes not
 		styledText.setIndent(5);
 		styledText.setText(item.getText(1));
 		StyleRange styleRange = 

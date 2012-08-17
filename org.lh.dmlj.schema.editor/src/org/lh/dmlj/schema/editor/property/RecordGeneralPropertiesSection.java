@@ -24,6 +24,9 @@ public class RecordGeneralPropertiesSection
 		 SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode(),
 		 SchemaPackage.eINSTANCE.getSchemaArea_Name()};
 
+	private IHyperlinkHandler locationModeHandler = 
+		new LocationModeHandler(this, this);
+	
 	public RecordGeneralPropertiesSection() {
 		super();
 	}	
@@ -158,14 +161,11 @@ public class RecordGeneralPropertiesSection
 	@Override
 	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()) {
-			return new IHyperlinkHandler() {
-				
-			};
+			return locationModeHandler;
 		} else {
 			return super.getHyperlinkHandler(attribute);
 		}
-	}
-	
+	}	
 	
 	@Override
 	protected String getLabel(EAttribute attribute) {
@@ -175,7 +175,7 @@ public class RecordGeneralPropertiesSection
 			return super.getLabel(attribute);
 		}
 	}
-	
+
 	@Override
 	protected String getValue(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {

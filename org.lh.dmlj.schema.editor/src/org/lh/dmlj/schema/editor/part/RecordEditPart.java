@@ -69,10 +69,7 @@ public class RecordEditPart
 	protected EObject[] getModelObjects() {
 		List<EObject> modelObjects = new ArrayList<>();
 		modelObjects.add(getModel());
-		modelObjects.add(getModel().getDiagramLocation());
-		if (getModel().getLocationMode() == LocationMode.CALC) {
-			modelObjects.add(getModel().getCalcKey());
-		}
+		modelObjects.add(getModel().getDiagramLocation());		
 		return modelObjects.toArray(new EObject[] {});
 	}	
 
@@ -179,21 +176,23 @@ public class RecordEditPart
 			figure.setDuplicatesOption(duplicatesOption);
 		} else if (record.getLocationMode() == LocationMode.VIA) {
 			String setName;
-			if (record.getViaSpecification().getSetName().endsWith("_")) {
+			if (record.getViaSpecification().getSet().getName().endsWith("_")) {
 				// we need to manipulate the via set name in the case of some 
 				// dictionary records (DDLCATLOD area, which has the same 
 				// structure as DDLDCLOD)...
 				setName = record.getViaSpecification()
-								.getSetName()
+								.getSet().getName()
 								.substring(0, record.getViaSpecification()
-													.getSetName()
+													.getSet().getName()
 													.length() - 1);
 			} else {
-				setName = record.getViaSpecification().getSetName();
+				setName = record.getViaSpecification().getSet().getName();
 			}
 			figure.setLocationModeDetails(setName);
+			figure.setDuplicatesOption("");
 		} else {
 			figure.setLocationModeDetails("");
+			figure.setDuplicatesOption("");
 		}
 		figure.setAreaName(record.getAreaSpecification().getArea().getName());
 	}	

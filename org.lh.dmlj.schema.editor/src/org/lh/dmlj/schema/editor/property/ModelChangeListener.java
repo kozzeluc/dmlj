@@ -35,12 +35,14 @@ public class ModelChangeListener implements Adapter {
 	public void notifyChanged(Notification notification) {			
 		if (notification.getEventType() == Notification.SET &&
 			notification.getFeature() instanceof EAttribute &&
-			section.getEditableObject((EAttribute) notification.getFeature()) != null) {				
+			(section.getEditableObject((EAttribute) notification.getFeature()) != null ||
+			 section.getHyperlinkHandler((EAttribute) notification.getFeature()) != null)) {				
 			
-			// because changing 1 property might cause the need to hide or show 
-			// others, it's best to refresh the whole section; mind that the
-			// property being edited will no longer be selected and thus its 
-			// description will no longer be shown
+			// because changing 1 property (or, via a hyperlink several 
+			// properties) might cause the need to hide or show others, it's 
+			// best to refresh the whole section; mind that the property being 
+			// edited will no longer be selected and thus its description will 
+			// no longer be shown
 			section.refresh();
 			
 		}

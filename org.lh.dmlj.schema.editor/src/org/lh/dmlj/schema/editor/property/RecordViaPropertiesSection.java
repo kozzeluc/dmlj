@@ -110,7 +110,7 @@ public class RecordViaPropertiesSection
 			// remove the trailing underscore from the via set name if we're 
 			// dealing with a DDLCATLOD record
 			StringBuilder p = 
-				new StringBuilder(target.getViaSpecification().getSetName());
+				new StringBuilder(target.getViaSpecification().getSet().getName());
 			if (p.charAt(p.length() - 1) == '_') {
 				p.setLength(p.length() - 1);
 			}
