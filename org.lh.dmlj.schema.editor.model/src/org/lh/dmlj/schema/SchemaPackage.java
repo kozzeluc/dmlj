@@ -1879,22 +1879,13 @@ public interface SchemaPackage extends EPackage {
 	int VIA_SPECIFICATION__SET = 2;
 
 	/**
-	 * The feature id for the '<em><b>Set Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIA_SPECIFICATION__SET_NAME = 3;
-
-	/**
 	 * The feature id for the '<em><b>Symbolic Displacement Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME = 4;
+	int VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME = 3;
 
 	/**
 	 * The number of structural features of the '<em>Via Specification</em>' class.
@@ -1903,7 +1894,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIA_SPECIFICATION_FEATURE_COUNT = 5;
+	int VIA_SPECIFICATION_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetOrder <em>Set Order</em>}' enum.
@@ -3025,17 +3016,6 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getViaSpecification();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.ViaSpecification#getSetName <em>Set Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Set Name</em>'.
-	 * @see org.lh.dmlj.schema.ViaSpecification#getSetName()
-	 * @see #getViaSpecification()
-	 * @generated
-	 */
-	EAttribute getViaSpecification_SetName();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.ViaSpecification#getSymbolicDisplacementName <em>Symbolic Displacement Name</em>}'.
@@ -4807,14 +4787,6 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EClass VIA_SPECIFICATION = eINSTANCE.getViaSpecification();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute VIA_SPECIFICATION__SET_NAME = eINSTANCE.getViaSpecification_SetName();
 
 		/**
 		 * The meta object literal for the '<em><b>Symbolic Displacement Name</b></em>' attribute feature.

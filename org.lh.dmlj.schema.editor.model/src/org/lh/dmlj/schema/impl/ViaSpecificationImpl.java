@@ -30,7 +30,6 @@ import org.lh.dmlj.schema.ViaSpecification;
  *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getDisplacementPageCount <em>Displacement Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getSet <em>Set</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getSetName <em>Set Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getSymbolicDisplacementName <em>Symbolic Displacement Name</em>}</li>
  * </ul>
  * </p>
@@ -65,24 +64,6 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * @ordered
 	 */
 	protected Set set;
-	/**
-	 * The default value of the '{@link #getSetName() <em>Set Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSetName()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String SET_NAME_EDEFAULT = null;
-	/**
-	 * The cached value of the '{@link #getSetName() <em>Set Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSetName()
-	 * @generated
-	 * @ordered
-	 */
-	protected String setName = SET_NAME_EDEFAULT;
 	/**
 	 * The default value of the '{@link #getSymbolicDisplacementName() <em>Symbolic Displacement Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -119,27 +100,6 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.VIA_SPECIFICATION;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getSetName() {
-		return setName;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setSetName(String newSetName) {
-		String oldSetName = setName;
-		setName = newSetName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.VIA_SPECIFICATION__SET_NAME, oldSetName, setName));
 	}
 
 	/**
@@ -329,8 +289,6 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 			case SchemaPackage.VIA_SPECIFICATION__SET:
 				if (resolve) return getSet();
 				return basicGetSet();
-			case SchemaPackage.VIA_SPECIFICATION__SET_NAME:
-				return getSetName();
 			case SchemaPackage.VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME:
 				return getSymbolicDisplacementName();
 		}
@@ -353,9 +311,6 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 				return;
 			case SchemaPackage.VIA_SPECIFICATION__SET:
 				setSet((Set)newValue);
-				return;
-			case SchemaPackage.VIA_SPECIFICATION__SET_NAME:
-				setSetName((String)newValue);
 				return;
 			case SchemaPackage.VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME:
 				setSymbolicDisplacementName((String)newValue);
@@ -381,9 +336,6 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 			case SchemaPackage.VIA_SPECIFICATION__SET:
 				setSet((Set)null);
 				return;
-			case SchemaPackage.VIA_SPECIFICATION__SET_NAME:
-				setSetName(SET_NAME_EDEFAULT);
-				return;
 			case SchemaPackage.VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME:
 				setSymbolicDisplacementName(SYMBOLIC_DISPLACEMENT_NAME_EDEFAULT);
 				return;
@@ -405,8 +357,6 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 				return getRecord() != null;
 			case SchemaPackage.VIA_SPECIFICATION__SET:
 				return set != null;
-			case SchemaPackage.VIA_SPECIFICATION__SET_NAME:
-				return SET_NAME_EDEFAULT == null ? setName != null : !SET_NAME_EDEFAULT.equals(setName);
 			case SchemaPackage.VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME:
 				return SYMBOLIC_DISPLACEMENT_NAME_EDEFAULT == null ? symbolicDisplacementName != null : !SYMBOLIC_DISPLACEMENT_NAME_EDEFAULT.equals(symbolicDisplacementName);
 		}
@@ -425,8 +375,6 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (displacementPageCount: ");
 		result.append(displacementPageCount);
-		result.append(", setName: ");
-		result.append(setName);
 		result.append(", symbolicDisplacementName: ");
 		result.append(symbolicDisplacementName);
 		result.append(')');

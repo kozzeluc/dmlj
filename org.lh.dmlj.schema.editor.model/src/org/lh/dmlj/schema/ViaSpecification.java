@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getDisplacementPageCount <em>Displacement Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getSet <em>Set</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getSetName <em>Set Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ViaSpecification#getSymbolicDisplacementName <em>Symbolic Displacement Name</em>}</li>
  * </ul>
  * </p>
@@ -29,32 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface ViaSpecification extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Set Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Set Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Set Name</em>' attribute.
-	 * @see #setSetName(String)
-	 * @see org.lh.dmlj.schema.SchemaPackage#getViaSpecification_SetName()
-	 * @model
-	 * @generated
-	 */
-	String getSetName();
-
-	/**
-	 * Sets the value of the '{@link org.lh.dmlj.schema.ViaSpecification#getSetName <em>Set Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Set Name</em>' attribute.
-	 * @see #getSetName()
-	 * @generated
-	 */
-	void setSetName(String value);
-
 	/**
 	 * Returns the value of the '<em><b>Symbolic Displacement Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

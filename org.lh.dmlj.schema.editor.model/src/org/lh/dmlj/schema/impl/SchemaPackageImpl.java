@@ -1229,17 +1229,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getViaSpecification_SetName() {
-		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getViaSpecification_SymbolicDisplacementName() {
-		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2302,7 +2293,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(viaSpecificationEClass, VIA_SPECIFICATION__DISPLACEMENT_PAGE_COUNT);
 		createEReference(viaSpecificationEClass, VIA_SPECIFICATION__RECORD);
 		createEReference(viaSpecificationEClass, VIA_SPECIFICATION__SET);
-		createEAttribute(viaSpecificationEClass, VIA_SPECIFICATION__SET_NAME);
 		createEAttribute(viaSpecificationEClass, VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME);
 
 		// Create enums
@@ -2581,7 +2571,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getViaSpecification_DisplacementPageCount(), ecorePackage.getEShortObject(), "displacementPageCount", null, 0, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getViaSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_ViaSpecification(), "record", null, 1, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getViaSpecification_Set(), this.getSet(), this.getSet_ViaMembers(), "set", null, 1, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getViaSpecification_SetName(), ecorePackage.getEString(), "setName", null, 0, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getViaSpecification_SymbolicDisplacementName(), ecorePackage.getEString(), "symbolicDisplacementName", null, 0, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals

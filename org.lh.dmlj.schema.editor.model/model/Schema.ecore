@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="schema"
-    nsURI="http://org.lh.dmlj.schema/schema.ecore" nsPrefix="org.lh.dmlj.schema">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="schema" nsURI="http://org.lh.dmlj.schema/schema.ecore" nsPrefix="org.lh.dmlj.schema">
   <eClassifiers xsi:type="ecore:EEnum" name="AreaProcedureCallFunction">
     <eLiterals name="EVERY_DML_FUNCTION" value="-1"/>
     <eLiterals name="READY_EXCLUSIVE"/>
@@ -412,7 +410,6 @@
         eType="#//SchemaRecord" eOpposite="#//SchemaRecord/viaSpecification"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//Set"
         eOpposite="#//Set/viaMembers"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="setName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="symbolicDisplacementName"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
