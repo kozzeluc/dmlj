@@ -149,29 +149,10 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		}
 	}	
 	
-	private void hyperlinkActivated(EAttribute attribute) {
-		
+	private void hyperlinkActivated(EAttribute attribute) {		
 		// call the hyperlink handler code
 		IHyperlinkHandler handler = section.getHyperlinkHandler(attribute);
-		boolean modelChanged = handler.hyperlinkActivated(attribute);
-				
-		if (!modelChanged) {
-			// no model changes, get out
-			return;
-		}
-		
-		// some tabs may have to show up or disappear after the model has 
-		// changed
-		/*for (IConfigurationElement element : Platform.getExtensionRegistry().
-		  getConfigurationElementsFor("org.eclipse.ui.views.properties.tabbed.propertySections")) {
-			
-			for (IConfigurationElement child : element.getChildren()) {
-						
-				System.out.println(child.getName());
-			}
-		}*/
-		// TODO: fix the above problem
-				
+		handler.hyperlinkActivated(attribute);		
 	}
 
 	@Override

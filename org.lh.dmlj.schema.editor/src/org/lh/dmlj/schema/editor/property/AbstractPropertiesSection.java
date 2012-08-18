@@ -11,8 +11,11 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.gef.commands.CommandStackEvent;
+import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -28,18 +31,17 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 
 public abstract class AbstractPropertiesSection<T extends EObject>
-	extends AbstractPropertySection implements ICommandStackProvider {		
+	extends AbstractPropertySection 
+	implements CommandStackEventListener, ICommandStackProvider {		
 
 	private List<EAttribute> 		 attributes = new ArrayList<>();
 	private CommandStack 			 commandStack;
 	private DescriptionManager	     descriptionManager;
-	private List<EAttribute> 		 editableAttributes = new ArrayList<>();
-	private ModelChangeListener	     modelChangeListener = 
-		new ModelChangeListener(this);
-	private List<EObject>  			 monitoredObjects = new ArrayList<>();
+	private TabbedPropertySheetPage  page;
 	private PropertyEditor			 propertyEditor;
+	private ISelection 			     selection;
 	private Table			   	     table;
-	protected T	   			   	     target;
+	protected T	   			   	     target;	
 	
 	public AbstractPropertiesSection() {
 		super();
@@ -51,6 +53,8 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	
 		super.createControls(parent, page);
 	
+		this.page = page;
+		
 		// create the container to hold the table
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setBackground(Display.getCurrent()
@@ -89,11 +93,11 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	
 	@Override
 	public void dispose() {
-		// We need to remove the model change listener from all editable objects
-		// in order to prevent "Widget is disposed" SWTExceptions when typing a
-		// new value in a cell and then selecting another edit part (i.e. 
-		// without pressing the enter or 1 of the tab keys).
-		removeModelChangeListeners();
+		// remove us as a command stack event listener if we have a command
+		// stack
+		if (commandStack != null) {
+			commandStack.removeCommandStackEventListener(this);
+		}		
 	};
 	
 	/**
@@ -202,6 +206,10 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		}
 	}		
 	
+	TabbedPropertySheetPage getPage() {
+		return page;
+	}
+	
 	protected String getPluginProperty(String key) {
 		try {
 			return Plugin.getDefault()
@@ -251,35 +259,17 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		attributes.clear();
 		attributes.addAll(getAttributes());
 		
-		// create the list of attributes for which we have to provide editing 
-		// and make sure we are notified of changes to the model
-		editableAttributes.clear();
-		removeModelChangeListeners();
-		monitoredObjects.clear();
+		// create the list of attributes for which we have to provide direct 
+		// editing 
+		/*editableAttributes.clear();				
 		for (EAttribute attribute : attributes) {
 			EObject editableObject = getEditableObject(attribute);
-			IHyperlinkHandler hyperlinkHandler = getHyperlinkHandler(attribute);
 			if (editableObject != null) {
 				// attribute is directly editable because an editable object is 
 				// provided
-				editableAttributes.add(attribute);								
-				if (!monitoredObjects.contains(editableObject)) {
-					// just keep 1 reference to the editable object
-					monitoredObjects.add(editableObject);
-					editableObject.eAdapters().add(modelChangeListener);
-				}
-			} else if (hyperlinkHandler != null) {
-				// the attribute (and possibly others) are editable via a
-				// hyperlink
-				EObject hyperlinkObject = hyperlinkHandler.getModelObject();
-				if (hyperlinkObject != null && 
-					!monitoredObjects.contains(hyperlinkObject)) {
-				
-					monitoredObjects.add(hyperlinkObject);
-					hyperlinkObject.eAdapters().add(modelChangeListener);
-				}
+				editableAttributes.add(attribute);												
 			}
-		}
+		}*/
 		
 		// add the (relevant) properties to the table		
 		for (EAttribute attribute : attributes) {
@@ -315,34 +305,49 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 			parent.layout();                                          
 		}
 	
-	}
-
-	private void removeModelChangeListeners() {
-		// remove the model change listener from the objects that have at least
-		// 1 attribute that is directly or indirectly editable
-		for (EObject object : monitoredObjects) {
-			object.eAdapters().remove(modelChangeListener);
-		}		
-	}
+	}	
 
 	@Override
 	public final void setInput(IWorkbenchPart part, ISelection selection) {
-
+	
+		// remove us as a command stack event listener if we have a command
+		// stack
+		if (commandStack != null) {
+			commandStack.removeCommandStackEventListener(this);
+		}
+		
 		super.setInput(part, selection);
-
+		this.selection = selection;
+	
 		// we can only work with SchemaEditor instances
 		Assert.isTrue(part instanceof SchemaEditor, "not a SchemaEditor");
 		Assert.isTrue(selection instanceof IStructuredSelection,
-        			  "not a IStructuredSelection");
-        Object input = ((IStructuredSelection) selection).getFirstElement();        
+	    			  "not a IStructuredSelection");
+	    Object input = ((IStructuredSelection) selection).getFirstElement();        
+	
+	    Object modelObject = ((EditPart) input).getModel();
+	    target = getTarget(modelObject);
+	    
+	    // we need the editor's command stack to change the model data
+	    commandStack = ((SchemaEditor) part).getCommandStack();
+	    propertyEditor.setCommandStack(commandStack);
+	    commandStack.addCommandStackEventListener(this);
+	
+	}
 
-        Object modelObject = ((EditPart) input).getModel();
-        target = getTarget(modelObject);
-        
-        // we need the editor's command stack to change the model data
-        commandStack = ((SchemaEditor) part).getCommandStack();
-        propertyEditor.setCommandStack(commandStack);
-
+	@Override
+	public void stackChanged(CommandStackEvent event) {
+		// by listening for command stack events we are able to refresh the
+		// whole property sheet page; this seems to be the most practical
+		// approach in keeping all tabs and sections in sync with the model
+		if (event.isPostChangeEvent() &&
+			(event.getDetail() == CommandStack.POST_EXECUTE ||
+			 event.getDetail() == CommandStack.POST_REDO ||
+			 event.getDetail() == CommandStack.POST_UNDO)) {
+							
+			page.selectionChanged(getPart(), new StructuredSelection());
+			page.selectionChanged(getPart(), selection);							
+		}
 	} 	
 
 }
