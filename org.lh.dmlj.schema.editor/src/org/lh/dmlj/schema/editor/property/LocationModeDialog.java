@@ -51,7 +51,6 @@ public class LocationModeDialog extends Dialog {
 	private Combo 		 			comboViaSet;	
 	private List 		 			listAvailableElements;
 	private List 		 			listCalcElements;
-	private boolean 				lockLocationMode = false;
 	private SchemaRecord 			record;
 	private Text   		 			textDisplacementPages;
 	private Text 		 			textSymbolicDisplacement;
@@ -74,13 +73,7 @@ public class LocationModeDialog extends Dialog {
 	public LocationModeDialog(Shell parentShell, SchemaRecord record) {
 		super(parentShell);
 		this.record = record;
-	}
-	
-	public LocationModeDialog(Shell parentShell, SchemaRecord record,
-							  boolean lockLocationMode) {
-		this(parentShell, record);
-		this.lockLocationMode = lockLocationMode;
-	}
+	}	
 	
 	protected void addCalcElements() {
 		
@@ -166,7 +159,7 @@ public class LocationModeDialog extends Dialog {
 		
 		btnMoveCalcElementUp = new Button(container, SWT.NONE);
 		GridData gd_btnMoveCalcElementUp = new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1);
-		gd_btnMoveCalcElementUp.widthHint = 35;
+		gd_btnMoveCalcElementUp.widthHint = 40;
 		btnMoveCalcElementUp.setLayoutData(gd_btnMoveCalcElementUp);
 		btnMoveCalcElementUp.setText("Up");
 		
@@ -175,7 +168,7 @@ public class LocationModeDialog extends Dialog {
 		
 		btnMoveCalcElementDown = new Button(container, SWT.NONE);
 		GridData gd_btnMoveCalcElementDown = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnMoveCalcElementDown.widthHint = 35;
+		gd_btnMoveCalcElementDown.widthHint = 40;
 		btnMoveCalcElementDown.setLayoutData(gd_btnMoveCalcElementDown);
 		btnMoveCalcElementDown.setText("Down");
 		
@@ -590,7 +583,7 @@ public class LocationModeDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(475, 400);
+		return new Point(475, 425);
 	}
 
 	private void initialize() {
@@ -622,7 +615,15 @@ public class LocationModeDialog extends Dialog {
 					listAvailableElements.add(element.getName());
 				}				
 			}
-		}		
+		}
+		
+		// disable the CALC radio button if the record is not CALC and the list
+		// of available elements is empty
+		if (record.getLocationMode() != LocationMode.CALC &&
+			availableElements.isEmpty()) {
+			
+			btnCalc.setEnabled(false);
+		}
 		
 		// fill the combo containing the CALC key duplicates option values
 		comboCalcDuplicatesOption.add(DuplicatesOption.FIRST

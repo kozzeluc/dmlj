@@ -62,7 +62,7 @@ public class MakeRecordDirectCommand extends Command {
 			oldNaturalSequence = record.getCalcKey().isNaturalSequence();
 		} else {
 			// the record should be VIA, save the old via specification
-			oldViaSetName = record.getViaSpecification().getSetName();
+			oldViaSetName = record.getViaSpecification().getSet().getName();
 			oldSymbolicDisplacementName = record.getViaSpecification()
 					  						    .getSymbolicDisplacementName();
 			oldDisplacementPageCount = record.getViaSpecification()
@@ -135,8 +135,7 @@ public class MakeRecordDirectCommand extends Command {
 			// tool(s) but is actually a quite ugly constuct, so we should get 
 			// rid of it some day
 			ViaSpecification viaSpecification = 
-				SchemaFactory.eINSTANCE.createViaSpecification();
-			viaSpecification.setSetName(oldViaSetName);
+				SchemaFactory.eINSTANCE.createViaSpecification();			
 			if (oldSymbolicDisplacementName != null) {
 				viaSpecification.setSymbolicDisplacementName(oldSymbolicDisplacementName);
 			} else if (oldDisplacementPageCount != null) {

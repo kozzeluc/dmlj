@@ -18,7 +18,7 @@ public class RecordViaPropertiesSection
 	
 	@Override
 	protected EObject getAttributeOwner(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getViaSpecification_SetName() ||
+		if (attribute == SchemaPackage.eINSTANCE.getSet_Name() ||
 			attribute == SchemaPackage.eINSTANCE
 									  .getViaSpecification_SymbolicDisplacementName() ||
 			attribute == SchemaPackage.eINSTANCE
@@ -33,12 +33,22 @@ public class RecordViaPropertiesSection
 	@Override
 	protected List<EAttribute> getAttributes() {
 		List<EAttribute> attributes = new ArrayList<>();
-		attributes.add(SchemaPackage.eINSTANCE.getViaSpecification_SetName());
+		attributes.add(SchemaPackage.eINSTANCE.getSet_Name());
 		attributes.add(SchemaPackage.eINSTANCE
 									.getViaSpecification_SymbolicDisplacementName());				
 		attributes.add(SchemaPackage.eINSTANCE
 							        .getViaSpecification_DisplacementPageCount());		
 		return attributes;
+	}
+	
+	@Override
+	protected String getDescription(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {
+			String key = "description.via.record.properties.set";
+			return getPluginProperty(key);
+		} else {
+			return super.getDescription(attribute);
+		}
 	}
 	
 	@Override
@@ -105,8 +115,18 @@ public class RecordViaPropertiesSection
 	}
 	
 	@Override
+	protected String getLabel(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {
+			String key = "label.via.record.properties.set";
+			return getPluginProperty(key);
+		} else {
+			return super.getLabel(attribute);
+		}
+	}
+	
+	@Override
 	protected String getValue(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getViaSpecification_SetName()) {			
+		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {			
 			// remove the trailing underscore from the via set name if we're 
 			// dealing with a DDLCATLOD record
 			StringBuilder p = 

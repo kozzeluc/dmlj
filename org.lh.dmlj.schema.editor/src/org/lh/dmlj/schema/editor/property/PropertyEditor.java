@@ -150,8 +150,28 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 	}	
 	
 	private void hyperlinkActivated(EAttribute attribute) {
+		
+		// call the hyperlink handler code
 		IHyperlinkHandler handler = section.getHyperlinkHandler(attribute);
-		handler.hyperlinkActivated(attribute);
+		boolean modelChanged = handler.hyperlinkActivated(attribute);
+				
+		if (!modelChanged) {
+			// no model changes, get out
+			return;
+		}
+		
+		// some tabs may have to show up or disappear after the model has 
+		// changed
+		/*for (IConfigurationElement element : Platform.getExtensionRegistry().
+		  getConfigurationElementsFor("org.eclipse.ui.views.properties.tabbed.propertySections")) {
+			
+			for (IConfigurationElement child : element.getChildren()) {
+						
+				System.out.println(child.getName());
+			}
+		}*/
+		// TODO: fix the above problem
+				
 	}
 
 	@Override
@@ -215,7 +235,6 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		// create a new table editor control and underline the current table
 		// cell's content; make sure the user gets the right mouse pointer		
 		final StyledText styledText = new StyledText(table, SWT.READ_ONLY);
-		//styledText.setTopMargin(2); // we sometimes need this and sometimes not
 		styledText.setIndent(5);
 		styledText.setText(item.getText(1));
 		StyleRange styleRange = 
@@ -224,7 +243,14 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		styleRange.underline = true;
 		styledText.setStyleRange(styleRange);
 		styledText.setCursor(new Cursor(table.getDisplay(), SWT.CURSOR_HAND));
+		
+		// set the editor control's top margin so that the text doesn't shift
+		// up or down in it's cell when being underlined
 		styledText.pack();
+		int topMargin = table.getItemHeight() - 
+						styledText.getBounds().height - 
+						2; // this seems to be fine for Windows XP and 7
+		styledText.setTopMargin(topMargin);
 		
 		// make sure the hyperlink control is only as wide as needed
 		tableEditor.minimumWidth = dimension.width + 5;

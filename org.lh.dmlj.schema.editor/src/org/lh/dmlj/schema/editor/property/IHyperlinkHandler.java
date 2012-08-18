@@ -7,6 +7,12 @@ public interface IHyperlinkHandler {
 
 	EObject getModelObject();
 	
-	void hyperlinkActivated(EAttribute attribute);
+	/**
+	 * Deals with pressing a hyperlink in a property sheet's cell.
+	 * @param attribute the hyperlink's attribute
+	 * @return true if the pressing the hyperlink caused changes to the model,
+	 *         false if not
+	 */
+	boolean hyperlinkActivated(EAttribute attribute);
 	
 }

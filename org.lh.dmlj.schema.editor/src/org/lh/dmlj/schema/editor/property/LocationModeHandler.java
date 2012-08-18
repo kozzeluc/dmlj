@@ -25,7 +25,7 @@ public class LocationModeHandler implements IHyperlinkHandler {
 	}
 
 	@Override
-	public void hyperlinkActivated(EAttribute attribute) {		
+	public boolean hyperlinkActivated(EAttribute attribute) {		
 		
 		// create and open the dialog for maintaining a record's location mode 
 		// data; if the user presses the cancel button, get out
@@ -34,7 +34,7 @@ public class LocationModeHandler implements IHyperlinkHandler {
 								   recordProvider.getRecord());
 		if (dialog.open() == IDialogConstants.CANCEL_ID) {
 			// cancel button pressed
-			return;
+			return false;
 		}
 		
 		// the fact that the user was able to press the OK button means that
@@ -47,7 +47,9 @@ public class LocationModeHandler implements IHyperlinkHandler {
 		Command makeRecordDirectCommand = 
 			new MakeRecordDirectCommand(recordProvider.getRecord());
 		
-		commandStackProvider.getCommandStack().execute(makeRecordDirectCommand);		
+		commandStackProvider.getCommandStack().execute(makeRecordDirectCommand);
+		
+		return true;
 		
 	}
 

@@ -83,7 +83,7 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		descriptionManager = new DescriptionManager(page, this, table);		
 		
 		// add the property editor
-		propertyEditor = new PropertyEditor(page, this, table);
+		propertyEditor = new PropertyEditor(page, this, table);		
 	
 	}
 	
@@ -200,7 +200,7 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		} else {
 			return attribute.getName();
 		}
-	}	
+	}		
 	
 	protected String getPluginProperty(String key) {
 		try {

@@ -135,7 +135,9 @@ public class SchemaImportTool {
 	private IDatabase dictionary;
 	private boolean[] options;    
 	private String 	  schemaName;
-    private int 	  schemaVersion;    
+    private int 	  schemaVersion;  
+    
+    private Map<String, List<SchemaRecord>> viaSetMembers = new HashMap<>();
     
     public SchemaImportTool(IDatabase dictionary, String schemaName, 
 			 				int schemaVersion, boolean[] options, 
@@ -540,9 +542,11 @@ public class SchemaImportTool {
 		member.getMemberRoles().add(memberRole);
 
 		ViaSpecification viaSpecification = member.getViaSpecification();
-		if (viaSpecification != null && 
-			viaSpecification.getSetName().equals(set.getName())) {
+		if (viaSpecification != null &&
+			viaSetMembers.containsKey(set.getName()) &&
+			viaSetMembers.get(set.getName()).contains(member)) {			
 
+			// the member record is stored via the set
 			viaSpecification.setSet(set);
 		}
 
@@ -630,8 +634,10 @@ public class SchemaImportTool {
 
 		ViaSpecification viaSpecification = member.getViaSpecification();
 		if (viaSpecification != null && 
-			viaSpecification.getSetName().equals(set.getName())) {
+			viaSetMembers.containsKey(set.getName()) &&
+			viaSetMembers.get(set.getName()).contains(member)) {
 
+			// the member record is stored via the set
 			viaSpecification.setSet(set);
 		}
 		
@@ -681,7 +687,8 @@ public class SchemaImportTool {
 	
 		ViaSpecification viaSpecification = member.getViaSpecification();
 		if (viaSpecification != null && 
-			viaSpecification.getSetName().equals(set.getName())) {
+			viaSetMembers.containsKey(set.getName()) &&
+			viaSetMembers.get(set.getName()).contains(member)) {
 	
 			viaSpecification.setSet(set);
 		}
@@ -770,15 +777,25 @@ public class SchemaImportTool {
 			ViaSpecification viaSpecification = 
 				SchemaFactory.eINSTANCE.createViaSpecification();
 						
+			boolean viaSetStored = false;
 			for (Constraint_1029 constraint_1029 :
 				 catalog.<Constraint_1029>walk(table_1050, "REFERENCING-TABLE", 
 						 					   NEXT)) {
 				
 				if (constraint_1029.getCluster_1029().equals("Y")) {
-					viaSpecification.setSetName(constraint_1029.getName_1029());
+					String setName = constraint_1029.getName_1029();
+					List<SchemaRecord> viaRecordsForSet;
+					if (viaSetMembers.containsKey(setName)) {
+						viaRecordsForSet = viaSetMembers.get(setName);
+					} else {
+						viaRecordsForSet = new ArrayList<>();
+						viaSetMembers.put(setName, viaRecordsForSet);
+					}
+					viaRecordsForSet.add(record);
+					viaSetStored = true;
 				}
 			}
-			if (viaSpecification.getSetName() == null) {
+			if (!viaSetStored) {
 				throw new RuntimeException("could not derive via set for " +
 										   "table: " + 
 										   table_1050.getName_1050());
@@ -938,8 +955,10 @@ public class SchemaImportTool {
 		
 		ViaSpecification viaSpecification = member.getViaSpecification();
 		if (viaSpecification != null && 
-			viaSpecification.getSetName().equals(set.getName())) {
+			viaSetMembers.containsKey(set.getName()) &&
+			viaSetMembers.get(set.getName()).contains(member)) {
 			
+			// the member record is stored via the set
 			viaSpecification.setSet(set);
 		}
 
@@ -1297,8 +1316,10 @@ public class SchemaImportTool {
 		
 		ViaSpecification viaSpecification = member.getViaSpecification();
 		if (viaSpecification != null && 
-			viaSpecification.getSetName().equals(set.getName())) {
+			viaSetMembers.containsKey(set.getName()) &&
+			viaSetMembers.get(set.getName()).contains(member)) {
 			
+			// the member record is stored via the set
 			viaSpecification.setSet(set);
 		}
 
@@ -1360,16 +1381,21 @@ public class SchemaImportTool {
 
 				if (smr_052.getVia_052() == 1) {
 					// the reference to the Set will be set when the Set is
-					// created; the setName attribute in the ViaSpecification 
-					// was introduced to enable this construction without the
-					// need for some kind of temporary (external) map...
+					// created, so temporarily put away the record
 					String setName;
 					if (suffix != null) {
 						setName = smr_052.getSetNam_052() + suffix;
 					} else {
 						setName = smr_052.getSetNam_052();
 					}
-					viaSpecification.setSetName(setName);					
+					List<SchemaRecord> viaRecordsForSet;
+					if (viaSetMembers.containsKey(setName)) {
+						viaRecordsForSet = viaSetMembers.get(setName);
+					} else {
+						viaRecordsForSet = new ArrayList<>();
+						viaSetMembers.put(setName, viaRecordsForSet);
+					}
+					viaRecordsForSet.add(record);					
 				}
 			}
 			record.setViaSpecification(viaSpecification);
