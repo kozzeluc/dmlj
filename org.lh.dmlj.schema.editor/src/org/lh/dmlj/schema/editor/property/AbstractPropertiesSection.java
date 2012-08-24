@@ -31,8 +31,7 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 
 public abstract class AbstractPropertiesSection<T extends EObject>
-	extends AbstractPropertySection 
-	implements CommandStackEventListener, ICommandStackProvider {		
+	extends AbstractPropertySection implements CommandStackEventListener {		
 
 	private List<EAttribute> 		 attributes = new ArrayList<>();
 	private CommandStack 			 commandStack;
@@ -97,7 +96,10 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		// stack
 		if (commandStack != null) {
 			commandStack.removeCommandStackEventListener(this);
-		}		
+		}
+		if (propertyEditor != null) {
+			propertyEditor.dispose();
+		}
 	};
 	
 	/**
@@ -113,11 +115,7 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		return target;
 	}
 
-	protected abstract List<EAttribute> getAttributes();
-
-	public final CommandStack getCommandStack() {
-		return commandStack;
-	}
+	protected abstract List<EAttribute> getAttributes();	
 
 	protected String getDescription(EAttribute attribute) {
 		String key = "description." + attribute.getContainerClass().getName() + 
@@ -314,6 +312,7 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		// stack
 		if (commandStack != null) {
 			commandStack.removeCommandStackEventListener(this);
+			commandStack = null;
 		}
 		
 		super.setInput(part, selection);
@@ -345,8 +344,17 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 			 event.getDetail() == CommandStack.POST_REDO ||
 			 event.getDetail() == CommandStack.POST_UNDO)) {
 							
-			page.selectionChanged(getPart(), new StructuredSelection());
-			page.selectionChanged(getPart(), selection);							
+			// we need to execute this asynchronously to avoid Widget' is 
+			// disposed' errors (don't ask why ;-)):
+			Display.getCurrent().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					// (simulate a) clear (of) the current selection
+					page.selectionChanged(getPart(), new StructuredSelection());
+					// set the selection again
+					page.selectionChanged(getPart(), selection);					
+				}				
+			});
 		}
 	} 	
 

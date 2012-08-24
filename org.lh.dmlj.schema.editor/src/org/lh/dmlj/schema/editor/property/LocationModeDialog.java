@@ -48,12 +48,17 @@ public class LocationModeDialog extends Dialog {
 	private Button 		 			btnVia;
 	private java.util.List<Element> calcElements = new ArrayList<>();
 	private Combo 		 			comboCalcDuplicatesOption;
-	private Combo 		 			comboViaSet;	
+	private Combo 		 			comboViaSet;
+	private Short					displacementPageCount;
+	private DuplicatesOption		duplicatesOption;
 	private List 		 			listAvailableElements;
 	private List 		 			listCalcElements;
+	private LocationMode			locationMode;
 	private SchemaRecord 			record;
+	private String 					symbolicDisplacementName;
 	private Text   		 			textDisplacementPages;
 	private Text 		 			textSymbolicDisplacement;
+	private String				    viaSetName;
 	
 	private static boolean isOccursInvolved(Element element) {		
 		for (Element current = element; current != null;
@@ -127,6 +132,7 @@ public class LocationModeDialog extends Dialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 5;
@@ -560,9 +566,49 @@ public class LocationModeDialog extends Dialog {
 		}
 		okButton.setEnabled(enabled);
 		
+		if (!enabled) {
+			return;
+		}
+		
+		// make sure we've got all information available should the user press
+		// the OK button
+		duplicatesOption = null;
+		viaSetName = null;
+		symbolicDisplacementName = null;
+		displacementPageCount = null;
+		if (btnCalc.getSelection()) {
+			locationMode = LocationMode.CALC;
+			if (comboCalcDuplicatesOption.getSelectionIndex() > -1) {
+				for (DuplicatesOption aDuplicatesOption : DuplicatesOption.VALUES) {
+					if (aDuplicatesOption.toString()
+										 .replaceAll("_", " ")
+										 .equals(comboCalcDuplicatesOption.getText())) {
+						
+						duplicatesOption = aDuplicatesOption;
+						break;
+					}
+				}
+			}
+		} else if (btnDirect.getSelection()) {
+			locationMode = LocationMode.DIRECT;
+		} else {
+			locationMode = LocationMode.VIA;
+			viaSetName = comboViaSet.getText();
+			if (btnSymbolicDisplacement.getSelection()) {
+				symbolicDisplacementName = 
+					textSymbolicDisplacement.getText().trim();
+			} else if (btnDisplacementPages.getSelection()) {
+				displacementPageCount = 
+					Short.valueOf(textDisplacementPages.getText().trim());
+			}
+		}		
 		
 	}
 
+	java.util.List<Element> getCalcKeyElements() {
+		return new ArrayList<>(calcElements);
+	}
+	
 	private int getComputedCalcKeyLength() {
 		// compute the length of the CALC key given the CALC key elements in the
 		// right list and all selected elements in the left list
@@ -577,6 +623,14 @@ public class LocationModeDialog extends Dialog {
 		}
 		return i;
 	}
+	
+	Short getDisplacementPageCount() {
+		return displacementPageCount;
+	}
+
+	DuplicatesOption getDuplicatesOption() {
+		return duplicatesOption;
+	}
 
 	/**
 	 * Return the initial size of the dialog.
@@ -584,6 +638,18 @@ public class LocationModeDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(475, 425);
+	}
+	
+	LocationMode getLocationMode() {
+		return locationMode;
+	}
+
+	String getSymbolicDisplacementName() {
+		return symbolicDisplacementName;
+	}
+
+	String getViaSetName() {
+		return viaSetName;
 	}
 
 	private void initialize() {

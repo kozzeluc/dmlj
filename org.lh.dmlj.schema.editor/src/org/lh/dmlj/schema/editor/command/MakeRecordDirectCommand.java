@@ -3,42 +3,34 @@ package org.lh.dmlj.schema.editor.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
-import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.LocationMode;
-import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.SortSequence;
-import org.lh.dmlj.schema.ViaSpecification;
 
 /**
  * A command that will change the record's location mode to DIRECT.  This 
  * command can only be used for CALC and VIA records and will definitely run 
  * into trouble when executed for a record that is already defined as DIRECT.
  */
-public class MakeRecordDirectCommand extends Command {
-
-	private SchemaRecord 	 	  record;
+public class MakeRecordDirectCommand extends AbstractChangeLocationModeCommand {
 	
-	private LocationMode     	  oldLocationMode;
+	private LocationMode     oldLocationMode;
 	
-	private int				 	  oldCalcKeyIndex;
-	private List<Element>	 	  oldCalcKeyElements = new ArrayList<>();
-	private int[] 				  oldElementIndexes;
-	private DuplicatesOption 	  oldDuplicatesOption;
-	private boolean			 	  oldNaturalSequence;
+	private int				 oldCalcKeyIndex;
+	private List<Element>	 oldCalcKeyElements = new ArrayList<>();
+	private int[] 			 oldElementIndexes;
+	private DuplicatesOption oldDuplicatesOption;
+	private boolean			 oldNaturalSequence;
 	
-	private String			 	  oldViaSetName;
-	private String			 	  oldSymbolicDisplacementName;
-	private Short			 	  oldDisplacementPageCount;		
+	private String			 oldViaSetName;
+	private String			 oldSymbolicDisplacementName;
+	private Short			 oldDisplacementPageCount;
+	private int				 oldViaSpecificationIndex;
 	
 	public MakeRecordDirectCommand(SchemaRecord record) {
-		super("Set 'Location mode' to 'DIRECT'");
-		this.record = record;
+		super("Set 'Location mode' to 'DIRECT'", record);		
 	}
 	
 	@Override
@@ -67,6 +59,11 @@ public class MakeRecordDirectCommand extends Command {
 					  						    .getSymbolicDisplacementName();
 			oldDisplacementPageCount = record.getViaSpecification()
 											 .getDisplacementPageCount();
+			oldViaSpecificationIndex = 
+				record.getViaSpecification()
+					  .getSet()
+					  .getViaMembers()
+					  .indexOf(record.getViaSpecification());
 		}
 		
 		// make the change
@@ -85,20 +82,10 @@ public class MakeRecordDirectCommand extends Command {
 		// remove the CALC key in the case of a CALC record, remove the VIA
 		// specification for a VIA record
 		if (oldLocationMode == LocationMode.CALC) {
-			// clear the record's CALC key
-			Key calcKey = record.getCalcKey();
-			record.setCalcKey(null);
-			// remove the CALC key from the record's key list
-			record.getKeys().remove(calcKey);
-			// remove the references from the CALC elements to the CALC key
-			for (KeyElement keyElement : calcKey.getElements()) {
-				keyElement.setElement(null);
-			}
+			removeCalcKey();
 		} else {
 			// remove the VIA specification from the record AND set
-			ViaSpecification viaSpecification = record.getViaSpecification(); 
-			record.setViaSpecification(null);			
-			viaSpecification.setSet(null);			
+			removeViaSpecification();			
 		}		
 		
 	}
@@ -109,47 +96,20 @@ public class MakeRecordDirectCommand extends Command {
 		// reconstruct the CALC key in the case of a CALC record, and the VIA
 		// specification in the case of a VIA record
 		if (oldLocationMode == LocationMode.CALC) {
-			// create a new CalcKey and add the CALC key elements to it
-			Key calcKey = SchemaFactory.eINSTANCE.createKey();
-			int i = 0;
-			for (Element element : oldCalcKeyElements) {
-				KeyElement keyElement = 
-					SchemaFactory.eINSTANCE.createKeyElement();
-				keyElement.setSortSequence(SortSequence.ASCENDING);
-				int j = oldElementIndexes[i++]; 	  // retain the original key 
-				element.getKeyElements().add(j, keyElement);  // element indexes
-				keyElement.setKey(calcKey);
-			}
-			calcKey.setDuplicatesOption(oldDuplicatesOption);
-			calcKey.setNaturalSequence(oldNaturalSequence);
-			// insert the CALC key in the record's key list at its original
-			// location
-			record.getKeys().add(oldCalcKeyIndex, calcKey);
-			// set the record's CALC key
-			record.setCalcKey(calcKey);
+			createCalcKey(oldCalcKeyElements, oldElementIndexes, 
+						  oldDuplicatesOption, oldNaturalSequence, 
+						  oldCalcKeyIndex);
 		} else {
-			// reconstruct the VIA specification; there is a setName attribute
-			// in ViaSpecification, which seems a little strange and that should
-			// always match the name attribute in the ViaSpecification's set
-			// reference - this attribute has its use in the schema import 
-			// tool(s) but is actually a quite ugly constuct, so we should get 
-			// rid of it some day
-			ViaSpecification viaSpecification = 
-				SchemaFactory.eINSTANCE.createViaSpecification();			
-			if (oldSymbolicDisplacementName != null) {
-				viaSpecification.setSymbolicDisplacementName(oldSymbolicDisplacementName);
-			} else if (oldDisplacementPageCount != null) {
-				viaSpecification.setDisplacementPageCount(oldDisplacementPageCount);
-			}
-			Set set = record.getSchema().getSet(oldViaSetName);
-			viaSpecification.setSet(set);
-			record.setViaSpecification(viaSpecification);									
+			createViaSpecification(oldViaSetName, oldSymbolicDisplacementName, 
+								   oldDisplacementPageCount, 
+								   oldViaSpecificationIndex);
 		}
 		
 		// restore the record's location mode; we do this last because
 		// everything necessary is in place and edit parts can listen for 
 		// changes in the appropriate objects
-		record.setLocationMode(oldLocationMode);		
+		record.setLocationMode(oldLocationMode);
+		
 	}
 	
 }

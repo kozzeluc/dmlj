@@ -1,5 +1,8 @@
 package org.lh.dmlj.schema.editor.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -19,7 +22,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode> 
 	extends AbstractGraphicalEditPart implements Adapter, NodeEditPart {
 	
-	private EObject[] modelObjects;
+	private List<EObject> modelObjects = new ArrayList<>();
 
 	protected AbstractDiagramNodeEditPart(T diagramElement) {
 		super();
@@ -29,12 +32,17 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	@Override
 	public final void activate() {
 		super.activate();
-		EObject[] tmpModelObjects = getModelObjects();
-		modelObjects = new EObject[tmpModelObjects.length];
-		System.arraycopy(tmpModelObjects, 0, modelObjects, 0, 
-						 modelObjects.length);
-		for (int i = 0; i < modelObjects.length; i++) {
-			modelObjects[i].eAdapters().add(this);
+		modelObjects.clear();
+		for (EObject modelObject : getModelObjects()) {
+			modelObject.eAdapters().add(this);
+			modelObjects.add(modelObject);
+		}
+	}
+	
+	protected void addModelObject(EObject modelObject) {
+		if (!modelObjects.contains(modelObject)) {
+			modelObject.eAdapters().add(this);
+			modelObjects.add(modelObject);
 		}
 	}
 	
@@ -51,8 +59,8 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 
 	@Override
 	public final void deactivate() {
-		for (int i = modelObjects.length - 1; i >= 0; i--) {
-			modelObjects[i].eAdapters().remove(this);
+		for (EObject modelObject : modelObjects) {
+			modelObject.eAdapters().remove(this);
 		}
 		super.deactivate();
 	}
@@ -95,7 +103,11 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 
 	@Override
 	public final void notifyChanged(Notification notification) {
+		
+		adjustModelObjects(notification, new ArrayList<>(modelObjects));
+		
 		refreshVisuals();
+		
 		int featureID = notification.getFeatureID(DiagramNode.class);
 		if (featureID == SchemaPackage.DIAGRAM_LOCATION__X ||
 			featureID == SchemaPackage.DIAGRAM_LOCATION__Y) {
@@ -106,8 +118,13 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 			// involved connection's visuals...
 			refreshConnections();
 		}
+		
 	}	
 	
+	protected void adjustModelObjects(Notification notification,
+									  List<EObject> modelObjects) {				
+	}
+
 	protected void refreshConnections() {
 	}
 
@@ -121,6 +138,13 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,
 															  getFigure(), 
 															  bounds);
+	}
+	
+	protected void removeModelObject(EObject modelObject) {
+		if (modelObjects.contains(modelObject)) {
+			modelObject.eAdapters().remove(this);
+			modelObjects.remove(modelObject);
+		}
 	}
 
 	protected abstract void setFigureData();

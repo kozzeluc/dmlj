@@ -12,6 +12,9 @@ import org.lh.dmlj.schema.editor.common.ValidationResult;
 public class RecordViaPropertiesSection 
 	extends AbstractRecordPropertiesSection {	
 
+	private IHyperlinkHandler locationModeHandler = 
+		new LocationModeHandler(this);	
+	
 	public RecordViaPropertiesSection() {
 		super();
 	}	
@@ -113,6 +116,15 @@ public class RecordViaPropertiesSection
 		} 
 		return super.getEditHandler(attribute, newValue);		
 	}
+	
+	@Override
+	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {
+			return locationModeHandler;
+		} else {
+			return super.getHyperlinkHandler(attribute);
+		}
+	}	
 	
 	@Override
 	protected String getLabel(EAttribute attribute) {

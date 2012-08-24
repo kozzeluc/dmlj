@@ -74,6 +74,15 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		table.addMouseMoveListener(this);
 	}
 	
+	public void dispose() {
+		if (tableEditor.getEditor() != null && 
+			!tableEditor.getEditor().isDisposed()) {
+			
+			tableEditor.getEditor().dispose();
+		}
+		tableEditor.dispose();
+	}
+	
 	private void handleCellEdit(EAttribute attribute, String oldValue, 
 								String newValue) {
 		
@@ -150,9 +159,13 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 	}	
 	
 	private void hyperlinkActivated(EAttribute attribute) {		
-		// call the hyperlink handler code
+
+		// call the hyperlink handler code to get the Command
 		IHyperlinkHandler handler = section.getHyperlinkHandler(attribute);
-		handler.hyperlinkActivated(attribute);		
+		Command command = handler.hyperlinkActivated(attribute);
+		
+		// execute the Command on the command stack if not null
+		commandStack.execute(command);
 	}
 
 	@Override
@@ -431,7 +444,7 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 						sNewValue = combo.getItem(combo.getSelectionIndex());
 					}
 					
-					combo.dispose();
+					combo.dispose();					
 					
 					handleCellEdit(attribute, oldValue, sNewValue);
 				}					

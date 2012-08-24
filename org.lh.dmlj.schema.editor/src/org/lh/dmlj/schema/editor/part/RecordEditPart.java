@@ -7,6 +7,7 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
@@ -17,6 +18,7 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
@@ -34,6 +36,31 @@ public class RecordEditPart
 	
 	public RecordEditPart(SchemaRecord record) {
 		super(record);		
+	}
+	
+	@Override
+	protected void adjustModelObjects(Notification notification,
+			 						  List<EObject> modelObjects) {
+				
+		if (notification.getFeature() == SchemaPackage.eINSTANCE
+				 									  .getSchemaRecord_CalcKey() ||
+			notification.getFeature() == SchemaPackage.eINSTANCE
+					 								  .getSchemaRecord_ViaSpecification()) {			
+			
+			EObject oldValue = (EObject) notification.getOldValue();
+			EObject newValue = (EObject) notification.getNewValue();
+			
+			if (oldValue == null && newValue != null) {
+				addModelObject(newValue);
+			} else if (oldValue != null && newValue == null) {
+				removeModelObject(oldValue);
+			} else {
+				throw new RuntimeException("logic error: " + 
+										   notification.toString());
+			}
+			
+		}
+		
 	}
 	
 	@Override
@@ -69,7 +96,12 @@ public class RecordEditPart
 	protected EObject[] getModelObjects() {
 		List<EObject> modelObjects = new ArrayList<>();
 		modelObjects.add(getModel());
-		modelObjects.add(getModel().getDiagramLocation());		
+		modelObjects.add(getModel().getDiagramLocation());
+		if (getModel().getLocationMode() == LocationMode.CALC) {
+			modelObjects.add(getModel().getCalcKey());
+		} else if (getModel().getLocationMode() == LocationMode.VIA) {
+			modelObjects.add(getModel().getViaSpecification().getSet());
+		}
 		return modelObjects.toArray(new EObject[] {});
 	}	
 
@@ -171,22 +203,29 @@ public class RecordEditPart
 			String calcKey = Tools.getCalcKey(record.getCalcKey());
 			figure.setLocationModeDetails(calcKey);
 			String duplicatesOption = 
-				Tools.getDuplicatesOption(record.getCalcKey()
-												.getDuplicatesOption());
+				Tools.getDuplicatesOption(record.getCalcKey());
 			figure.setDuplicatesOption(duplicatesOption);
 		} else if (record.getLocationMode() == LocationMode.VIA) {
 			String setName;
-			if (record.getViaSpecification().getSet().getName().endsWith("_")) {
-				// we need to manipulate the via set name in the case of some 
-				// dictionary records (DDLCATLOD area, which has the same 
-				// structure as DDLDCLOD)...
-				setName = record.getViaSpecification()
-								.getSet().getName()
-								.substring(0, record.getViaSpecification()
-													.getSet().getName()
-													.length() - 1);
+			// the via specification will be null if we are changing the VIA set
+			if (record.getViaSpecification() != null) {
+				if (record.getViaSpecification() != null &&
+					record.getViaSpecification().getSet().getName()
+														 .endsWith("_")) {
+					
+					// we need to manipulate the via set name in the case of 
+					// some dictionary records (DDLCATLOD area, which has the  
+					// same structure as DDLDCLOD)...
+					setName = record.getViaSpecification()
+									.getSet().getName()
+									.substring(0, record.getViaSpecification()
+														.getSet().getName()
+														.length() - 1);
+				} else {
+					setName = record.getViaSpecification().getSet().getName();
+				}
 			} else {
-				setName = record.getViaSpecification().getSet().getName();
+				setName = "?";
 			}
 			figure.setLocationModeDetails(setName);
 			figure.setDuplicatesOption("");

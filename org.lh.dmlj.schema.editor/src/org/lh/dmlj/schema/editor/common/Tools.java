@@ -13,7 +13,10 @@ import org.lh.dmlj.schema.StorageMode;
 public abstract class Tools {
 	
 	public static String getCalcKey(Key calcKey) {
-		StringBuilder p = new StringBuilder();
+		if (calcKey == null) {
+			return "";
+		}
+		StringBuilder p = new StringBuilder();		
 		for (KeyElement keyElement :calcKey.getElements()) {
 			if (p.length() > 0) {
 				p.append(", ");
@@ -23,7 +26,11 @@ public abstract class Tools {
 		return p.toString();
 	}
 
-	public static String getDuplicatesOption(DuplicatesOption duplicatesOption) {
+	public static String getDuplicatesOption(Key calcKey) {
+		if (calcKey == null) {
+			return "";
+		}
+		DuplicatesOption duplicatesOption = calcKey.getDuplicatesOption();
 		if (duplicatesOption == DuplicatesOption.NOT_ALLOWED) {
 			return "DN";
 		} else if (duplicatesOption == DuplicatesOption.FIRST) {
@@ -113,8 +120,7 @@ public abstract class Tools {
 			p.append(keyElement.getElement().getName());
 		}
 		p.append(") ");		
-		p.append(getDuplicatesOption(memberRole.getSortKey()
-											   .getDuplicatesOption()));
+		p.append(getDuplicatesOption(memberRole.getSortKey()));
 		return p.toString();
 	}
 

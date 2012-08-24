@@ -14,8 +14,8 @@ public class RecordCalcPropertiesSection
 		{SchemaPackage.eINSTANCE.getKey_ElementSummary(),
 		 SchemaPackage.eINSTANCE.getKey_DuplicatesOption()};
 	
-	private IHyperlinkHandler locationModeHandler = 
-		new LocationModeHandler(this, this);	
+	private IHyperlinkHandler 		  locationModeHandler = 
+		new LocationModeHandler(this);	
 
 	public RecordCalcPropertiesSection() {
 		super();
@@ -49,8 +49,17 @@ public class RecordCalcPropertiesSection
 	}	
 	
 	@Override
-	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+	protected EObject getEditableObject(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+			return target.getCalcKey();
+		} else {
+			return super.getEditableObject(attribute);
+		}
+	}
+	
+	@Override
+	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
 			return locationModeHandler;
 		} else {
 			return super.getHyperlinkHandler(attribute);

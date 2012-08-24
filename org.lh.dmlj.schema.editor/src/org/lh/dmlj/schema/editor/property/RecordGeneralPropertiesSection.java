@@ -25,7 +25,7 @@ public class RecordGeneralPropertiesSection
 		 SchemaPackage.eINSTANCE.getSchemaArea_Name()};
 
 	private IHyperlinkHandler locationModeHandler = 
-		new LocationModeHandler(this, this);
+		new LocationModeHandler(this);
 	
 	public RecordGeneralPropertiesSection() {
 		super();
