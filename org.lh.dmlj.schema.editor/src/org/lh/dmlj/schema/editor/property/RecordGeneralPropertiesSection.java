@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -12,10 +13,12 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class RecordGeneralPropertiesSection 
-	extends AbstractRecordPropertiesSection {
+	extends AbstractRecordPropertiesSection 
+	implements IAreaSpecificationProvider {
 
 	private static final EAttribute[] ATTRIBUTES = 
 		{SchemaPackage.eINSTANCE.getSchemaRecord_Name(),
@@ -24,6 +27,8 @@ public class RecordGeneralPropertiesSection
 		 SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode(),
 		 SchemaPackage.eINSTANCE.getSchemaArea_Name()};
 
+	private IHyperlinkHandler areaHandler = new AreaHandler(this);
+	
 	private IHyperlinkHandler locationModeHandler = 
 		new LocationModeHandler(this);
 	
@@ -31,6 +36,11 @@ public class RecordGeneralPropertiesSection
 		super();
 	}	
 	
+	@Override
+	public AreaSpecification getAreaSpecification() {
+		return target.getAreaSpecification();
+	}
+
 	@Override
 	protected EObject getAttributeOwner(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
@@ -162,6 +172,8 @@ public class RecordGeneralPropertiesSection
 	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()) {
 			return locationModeHandler;
+		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
+			return areaHandler;
 		} else {
 			return super.getHyperlinkHandler(attribute);
 		}
@@ -181,11 +193,7 @@ public class RecordGeneralPropertiesSection
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
 			// remove the trailing underscore from the record name if we're 
 			// dealing with a DDLCATLOD record
-			StringBuilder p = new StringBuilder(target.getName());
-			if (p.charAt(p.length() - 1) == '_') {
-				p.setLength(p.length() - 1);
-			}
-			return p.toString();
+			return Tools.removeTrailingUnderscore(target.getName());			
 		} else {
 			return super.getValue(attribute);
 		}

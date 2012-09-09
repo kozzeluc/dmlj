@@ -5,17 +5,28 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
+import org.lh.dmlj.schema.editor.common.Tools;
 
-public class SetMemberPropertiesSection extends AbstractSetPropertiesSection {
+public class SetMemberPropertiesSection 
+	extends AbstractSetPropertiesSection 
+	implements IAreaSpecificationProvider {
 
+	private IHyperlinkHandler areaHandler = new AreaHandler(this);	
+	
 	public SetMemberPropertiesSection() {
 		super();	
 	}	
 	
+	@Override
+	public AreaSpecification getAreaSpecification() {		
+		return target.getRecord().getAreaSpecification();
+	}
+
 	@Override
 	protected EObject getAttributeOwner(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
@@ -105,6 +116,15 @@ public class SetMemberPropertiesSection extends AbstractSetPropertiesSection {
 	}
 	
 	@Override
+	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
+			return areaHandler;
+		} else {
+			return super.getHyperlinkHandler(attribute);
+		}
+	}		
+	
+	@Override
 	protected String getLabel(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {			
 			return getPluginProperty("label.member.set.properties.area");	
@@ -118,11 +138,7 @@ public class SetMemberPropertiesSection extends AbstractSetPropertiesSection {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {			
 			// remove the trailing underscore from the record name if we're 
 			// dealing with a DDLCATLOD member record
-			StringBuilder p = new StringBuilder(target.getRecord().getName());
-			if (p.charAt(p.length() - 1) == '_') {
-				p.setLength(p.length() - 1);
-			}
-			return p.toString();	
+			return Tools.removeTrailingUnderscore(target.getRecord().getName());
 		}
 		return super.getValue(attribute);
 	}

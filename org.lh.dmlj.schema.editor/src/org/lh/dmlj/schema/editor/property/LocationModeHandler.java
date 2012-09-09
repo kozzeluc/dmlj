@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.MissingResourceException;
 
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
@@ -28,12 +27,7 @@ public class LocationModeHandler implements IHyperlinkHandler {
 	LocationModeHandler(IRecordProvider recordProvider) {
 		super();
 		this.recordProvider = recordProvider;		
-	}
-	
-	@Override
-	public EObject getModelObject() {
-		return recordProvider.getRecord();
-	}
+	}	
 
 	@Override
 	public Command hyperlinkActivated(EAttribute attribute) {		

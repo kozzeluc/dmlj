@@ -11,6 +11,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class SetGeneralPropertiesSection extends AbstractSetPropertiesSection {
@@ -108,11 +109,7 @@ public class SetGeneralPropertiesSection extends AbstractSetPropertiesSection {
 		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {	
 			// remove the trailing underscore from the set name if we're dealing 
 			// with a DDLCATLOD set
-			StringBuilder p = new StringBuilder(set.getName());
-			if (p.charAt(p.length() - 1) == '_') {
-				p.setLength(p.length() - 1);
-			}
-			return p.toString();
+			return Tools.removeTrailingUnderscore(set.getName());			
 		} else {
 			return super.getValue(attribute);
 		}

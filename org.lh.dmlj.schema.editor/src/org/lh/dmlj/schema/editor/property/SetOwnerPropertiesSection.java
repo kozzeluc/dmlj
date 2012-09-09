@@ -5,14 +5,29 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.common.Tools;
 
-public class SetOwnerPropertiesSection extends AbstractSetPropertiesSection {
+public class SetOwnerPropertiesSection 
+	extends AbstractSetPropertiesSection 
+	implements IAreaSpecificationProvider {
 
+	private IHyperlinkHandler areaHandler = new AreaHandler(this);	
+	
 	public SetOwnerPropertiesSection() {
 		super();	
 	}	
 	
+	@Override
+	public AreaSpecification getAreaSpecification() {
+		if (set.getSystemOwner() != null) {
+			return set.getSystemOwner().getAreaSpecification();
+		} else {
+			return set.getOwner().getRecord().getAreaSpecification();
+		}
+	}
+
 	@Override
 	protected String getDescription(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
@@ -73,6 +88,15 @@ public class SetOwnerPropertiesSection extends AbstractSetPropertiesSection {
 	}
 	
 	@Override
+	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
+			return areaHandler;
+		} else {
+			return super.getHyperlinkHandler(attribute);
+		}
+	}	
+	
+	@Override
 	protected String getLabel(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
 			return getPluginProperty("label.owner.set.properties.area");
@@ -88,14 +112,10 @@ public class SetOwnerPropertiesSection extends AbstractSetPropertiesSection {
 			} else {
 				// remove the trailing underscore from the record name if we're 
 				// dealing with a DDLCATLOD owner record
-				StringBuilder p = new StringBuilder(target.getSet()
-														  .getOwner()
-														  .getRecord()
-														  .getName());
-				if (p.charAt(p.length() - 1) == '_') {
-					p.setLength(p.length() - 1);
-				}
-				return p.toString();			
+				return Tools.removeTrailingUnderscore(target.getSet()
+						  									.getOwner()
+						  									.getRecord()
+						  									.getName());
 			}			
 		} else {				
 			return super.getValue(attribute);

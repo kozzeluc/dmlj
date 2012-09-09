@@ -185,6 +185,7 @@ public class SchemaImportTool {
 			short pageCountPercent = srcd_113.getPageCountPercent_113();
 			int pageCount = srcd_113.getPageCount_113();
 			String subarea = srcd_113.getSubarea_113();				
+			// unsure if the next condition is correct:
 			if ((pageOffsetPercent != -1 || pageOffset != -1) &&
 				!(pageOffsetPercent == 0 && pageCountPercent == 100)) {
 		
@@ -229,7 +230,7 @@ public class SchemaImportTool {
 		short pageCountPercent = sor_046.getPageCountPercent_046();
 		int pageCount = sor_046.getPageCount_046();
 		String subarea = sor_046.getSubarea_046();				
-		//
+		// unsure if the next condition is correct:
 		if ((pageOffsetPercent != -1 || pageOffset != -1) &&
 			!(pageOffsetPercent == 0 && pageCountPercent == 100)) {
 

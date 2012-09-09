@@ -1,12 +1,9 @@
 package org.lh.dmlj.schema.editor.property;
 
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 
-public interface IHyperlinkHandler {
-
-	EObject getModelObject();
+public interface IHyperlinkHandler {	
 	
 	/**
 	 * Assembles the Command to change the model when the hyperlink is activated

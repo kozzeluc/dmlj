@@ -13,8 +13,8 @@ public abstract class NamingConventions {
 	private static final String POUND_SIGN = "#";
 	private static final String UNDERSCORE = "_";
 
-	public static enum Type {RECORD_NAME, SCHEMA_NAME, SET_NAME,
-						     SYMBOLIC_DISPLACEMENT};	
+	public static enum Type {LOGICAL_AREA_NAME, PHYSICAL_AREA_NAME, RECORD_NAME, 
+						     SCHEMA_NAME, SET_NAME, SYMBOLIC_DISPLACEMENT};	
 		
 	static boolean checkValidCharacters(String name, 
 												String validCharacters) {
@@ -27,7 +27,11 @@ public abstract class NamingConventions {
 	}
 	
 	public static ValidationResult validate(String name, Type type) {
-		if (type == Type.RECORD_NAME) {
+		if (type == Type.LOGICAL_AREA_NAME) {
+			return validateLogicalAreaName(name);
+		} else if (type == Type.PHYSICAL_AREA_NAME) {
+			return validatePhysicalDdlEntityName(name, type);
+		} else if (type == Type.RECORD_NAME) {
 			return validateRecordName(name);
 		} else if (type == Type.SCHEMA_NAME) {
 			return validateSchemaName(name);
@@ -40,6 +44,20 @@ public abstract class NamingConventions {
 		}
 	}
 	
+	private static ValidationResult validateLogicalAreaName(String name) {
+		
+		// The number of characters is limited to 16, check that first
+		if (name == null || name.length() < 1 || name.length() > 16) {
+			String message = "number of characters is limited to 16";
+			return new ValidationResult(ValidationResult.Status.ERROR, message);
+		}
+		
+		// the rest of the validation work is the same as for physical DDL 
+		// entities
+		return validatePhysicalDdlEntityName(name, Type.PHYSICAL_AREA_NAME);
+		
+	}
+
 	/**
 	 * Validates a physical DDL entity name.
 	 * @param name the name to be validated

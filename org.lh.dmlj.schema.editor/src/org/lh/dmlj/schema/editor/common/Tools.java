@@ -148,4 +148,21 @@ public abstract class Tools {
 		}
 	}
 	
+	/**
+	 * Removes the trailing underscore from the given name (DDLCATLOD related
+	 * records and sets).  The given name does not necessarily have a trailing
+	 * underscore.
+	 * @param name
+	 * @return
+	 */
+	public static String removeTrailingUnderscore(String name) {
+		// remove the trailing underscore from the given name (DDLCATLOD related
+		// records and sets)
+		StringBuilder p = new StringBuilder(name);
+		if (p.charAt(p.length() - 1) == '_') {
+			p.setLength(p.length() - 1);
+		}
+		return p.toString();
+	}
+	
 }

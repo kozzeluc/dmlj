@@ -3,6 +3,7 @@ package org.lh.dmlj.schema.editor.part;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -14,6 +15,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ReconnectRequest;
+import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
@@ -59,6 +61,19 @@ public class RecordEditPart
 										   notification.toString());
 			}
 			
+		} else if (notification.getFeature() == SchemaPackage.eINSTANCE
+				  											 .getSchemaRecord_AreaSpecification()) {
+		
+			Assert.isTrue(notification.getOldValue() != null &&
+						  notification.getNewValue() != null, 
+						  "logic error: notification.getOldValue() == null || " +
+						  "notification.getNewValue() == null");
+			AreaSpecification oldValue = 
+				(AreaSpecification) notification.getOldValue();
+			AreaSpecification newValue = 
+				(AreaSpecification) notification.getNewValue();
+			removeModelObject(oldValue.getArea());
+			addModelObject(newValue.getArea());
 		}
 		
 	}
@@ -102,6 +117,7 @@ public class RecordEditPart
 		} else if (getModel().getLocationMode() == LocationMode.VIA) {
 			modelObjects.add(getModel().getViaSpecification().getSet());
 		}
+		modelObjects.add(getModel().getAreaSpecification().getArea());
 		return modelObjects.toArray(new EObject[] {});
 	}	
 

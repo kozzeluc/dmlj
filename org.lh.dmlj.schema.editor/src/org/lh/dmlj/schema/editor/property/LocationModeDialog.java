@@ -110,7 +110,8 @@ public class LocationModeDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-	    shell.setText("Set location mode for " + record.getName());	    
+	    shell.setText("Edit location mode specification for " + 
+	    			  record.getName());	    
 	}	
 	
 	/**
@@ -637,7 +638,7 @@ public class LocationModeDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(475, 425);
+		return new Point(485, 425);
 	}
 	
 	LocationMode getLocationMode() {

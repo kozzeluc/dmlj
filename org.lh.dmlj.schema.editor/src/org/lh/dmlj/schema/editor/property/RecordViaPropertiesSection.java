@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class RecordViaPropertiesSection 
@@ -141,12 +142,9 @@ public class RecordViaPropertiesSection
 		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {			
 			// remove the trailing underscore from the via set name if we're 
 			// dealing with a DDLCATLOD record
-			StringBuilder p = 
-				new StringBuilder(target.getViaSpecification().getSet().getName());
-			if (p.charAt(p.length() - 1) == '_') {
-				p.setLength(p.length() - 1);
-			}
-			return p.toString();
+			return Tools.removeTrailingUnderscore(target.getViaSpecification()
+													    .getSet()
+													    .getName());			
 		} else {
 			return super.getValue(attribute);
 		}
