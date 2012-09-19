@@ -4,6 +4,8 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
@@ -53,7 +55,59 @@ public abstract class Tools {
 		} else {
 			return "OM";
 		}
-	}	
+	}
+	
+	public static short getFirstAvailablePointerPosition(SchemaRecord record) {
+		
+		short highestPointerPosition = 0;
+		
+		for (OwnerRole ownerRole : record.getOwnerRoles()) {
+			if (ownerRole.getNextDbkeyPosition() > highestPointerPosition) {
+				highestPointerPosition = ownerRole.getNextDbkeyPosition();
+			}
+			if (ownerRole.getPriorDbkeyPosition() != null &&
+				ownerRole.getPriorDbkeyPosition()
+						 .shortValue() > highestPointerPosition) {
+				
+				highestPointerPosition = 
+					ownerRole.getPriorDbkeyPosition().shortValue();
+			}			
+		}
+		
+		for (MemberRole memberRole : record.getMemberRoles()) {
+			if (memberRole.getNextDbkeyPosition() != null &&
+				memberRole.getNextDbkeyPosition()
+						  .shortValue() > highestPointerPosition) {
+				
+				highestPointerPosition = 
+					memberRole.getNextDbkeyPosition().shortValue();
+			}
+			if (memberRole.getPriorDbkeyPosition() != null &&
+				memberRole.getPriorDbkeyPosition()
+						  .shortValue() > highestPointerPosition) {
+				
+				highestPointerPosition = 
+					memberRole.getPriorDbkeyPosition().shortValue();
+			}
+			if (memberRole.getOwnerDbkeyPosition() != null &&
+				memberRole.getOwnerDbkeyPosition()
+						  .shortValue() > highestPointerPosition) {
+				
+				highestPointerPosition = 
+					memberRole.getOwnerDbkeyPosition().shortValue();
+			}
+			if (memberRole.getIndexDbkeyPosition() != null &&
+				memberRole.getIndexDbkeyPosition()
+						  .shortValue() > highestPointerPosition) {
+				
+				highestPointerPosition = 
+					memberRole.getIndexDbkeyPosition().shortValue();
+			}
+		}
+		
+		return (short) (highestPointerPosition + 1);
+		
+	}
 	
 	public static String getPointers(MemberRole memberRole) {
 		StringBuilder p = new StringBuilder();

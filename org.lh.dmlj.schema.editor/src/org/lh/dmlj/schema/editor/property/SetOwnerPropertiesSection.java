@@ -6,14 +6,18 @@ import java.util.List;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.lh.dmlj.schema.AreaSpecification;
+import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.editor.common.Tools;
 
 public class SetOwnerPropertiesSection 
 	extends AbstractSetPropertiesSection 
-	implements IAreaSpecificationProvider {
+	implements IAreaSpecificationProvider, IMemberRoleProvider {
 
-	private IHyperlinkHandler areaHandler = new AreaHandler(this);	
+	private IHyperlinkHandler areaHandler = new AreaHandler(this);
+	private IHyperlinkHandler chainedSetPointersHandler = 
+		new ChainedSetPointersHandler(this);
 	
 	public SetOwnerPropertiesSection() {
 		super();	
@@ -91,6 +95,11 @@ public class SetOwnerPropertiesSection
 	protected IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
 			return areaHandler;
+		} else if (set.getMode() == SetMode.CHAINED &&
+				   (attribute == SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition() ||
+					attribute == SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition())) {
+			
+			return chainedSetPointersHandler;
 		} else {
 			return super.getHyperlinkHandler(attribute);
 		}
@@ -104,6 +113,11 @@ public class SetOwnerPropertiesSection
 		return super.getLabel(attribute);
 	}
 	
+	@Override
+	public MemberRole getMemberRole() {
+		return target;
+	}
+
 	@Override
 	protected String getValue(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {

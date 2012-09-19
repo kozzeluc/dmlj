@@ -89,6 +89,12 @@
                label="Connectors">
          </propertyTab>
          <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabVia"
+               category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabPrefix"
+               label="Prefix">
+         </propertyTab>
+         <propertyTab
                afterTab="org.lh.dmlj.schema.editor.propertyTabSortedSet"
                category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabSyntax"
@@ -166,6 +172,14 @@
                class="org.lh.dmlj.schema.editor.property.RecordSyntaxSection"
                id="org.lh.dmlj.schema.editor.propertySectionRecordSyntax"
                tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
+            <input
+                  type="org.lh.dmlj.schema.SchemaRecord">
+            </input>
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.RecordPrefixPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordPrefix"
+               tab="org.lh.dmlj.schema.editor.propertyTabPrefix">
             <input
                   type="org.lh.dmlj.schema.SchemaRecord">
             </input>

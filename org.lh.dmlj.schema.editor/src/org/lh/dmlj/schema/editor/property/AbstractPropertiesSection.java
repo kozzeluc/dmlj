@@ -202,11 +202,7 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		} else {
 			return attribute.getName();
 		}
-	}		
-	
-	TabbedPropertySheetPage getPage() {
-		return page;
-	}
+	}	
 	
 	protected String getPluginProperty(String key) {
 		try {

@@ -6,6 +6,7 @@ import java.util.MissingResourceException;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.AreaSpecification;
@@ -134,12 +135,15 @@ public class AreaHandler implements IHyperlinkHandler {
 			if (commands.isEmpty()) {
 				throw new RuntimeException("logic error: no commands created");				
 			} else if (commands.size() > 1) {
-				for (int i = 1; i < commands.size(); i++) {
-					commands.get(0).chain(commands.get(i));
+				CompoundCommand cc = new CompoundCommand();
+				cc.setLabel("Change area specification");
+				for (Command command : commands) {
+					cc.add(command);
 				}
-				commands.get(0).setLabel("Change area specification");
+				return cc;
+			} else {
+				return commands.get(0);
 			}
-			return commands.get(0);
 			
 		} else {
 			
