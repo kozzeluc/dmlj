@@ -28,9 +28,9 @@ public class ChainedSetPointersHandler
 		// we need the MemberRole		
 		MemberRole memberRole = memberRoleProvider.getMemberRole();
 		
-		// create and open the dialog for maintaining a set's pointer settings; 
-		// if the user presses the cancel button, get out and return a null 
-		// Command		
+		// create and open the dialog for maintaining a chained set's pointer 
+		// settings; if the user presses the cancel button, get out and return a 
+		// null Command		
 		ChainedSetPointersDialog dialog = 
 			new ChainedSetPointersDialog(Display.getCurrent().getActiveShell(),
 										 memberRole);
@@ -124,22 +124,23 @@ public class ChainedSetPointersHandler
 			}
 		}
 		
-		// create a compound command; there should always be at least 1 command
-		// to add to it
+		// create a compound command if needed; there should always be at least 
+		// 1 command to add to it
 		if (commands.isEmpty()) {
 			throw new RuntimeException("logic error: no commands created");				
-		}			
-		String label = 
+		} else if (commands.size() > 1) {			
+			String label = 
 				"Change pointers for set '" + 
 				Tools.removeTrailingUnderscore(memberRole.getSet().getName()) + 
 				"'";			
-		CompoundCommand cc = new CompoundCommand(label);
-		for (int i = 1; i < commands.size(); i++) {
-			cc.add(commands.get(i));
+			CompoundCommand cc = new CompoundCommand(label);
+			for (Command command : commands) {
+				cc.add(command);
+			}
+			return cc;
+		} else {
+			return commands.get(0);
 		}		
-		
-		// return the compound command		
-		return cc;
 		
 	}
 

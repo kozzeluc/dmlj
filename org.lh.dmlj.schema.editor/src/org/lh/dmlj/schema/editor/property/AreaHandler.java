@@ -135,8 +135,8 @@ public class AreaHandler implements IHyperlinkHandler {
 			if (commands.isEmpty()) {
 				throw new RuntimeException("logic error: no commands created");				
 			} else if (commands.size() > 1) {
-				CompoundCommand cc = new CompoundCommand();
-				cc.setLabel("Change area specification");
+				CompoundCommand cc = 
+					new CompoundCommand("Change area specification");				
 				for (Command command : commands) {
 					cc.add(command);
 				}

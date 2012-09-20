@@ -39,6 +39,7 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 	private TabbedPropertySheetPage  page;
 	private PropertyEditor			 propertyEditor;
 	private ISelection 			     selection;
+	private ISelection 			     selectionCopy;
 	private Table			   	     table;
 	protected T	   			   	     target;	
 	
@@ -335,7 +336,16 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 		// by listening for command stack events we are able to refresh the
 		// whole property sheet page; this seems to be the most practical
 		// approach in keeping all tabs and sections in sync with the model
-		if (event.isPostChangeEvent() &&
+		if (event.isPreChangeEvent() &&
+			(event.getDetail() == CommandStack.PRE_EXECUTE ||
+			 event.getDetail() == CommandStack.PRE_REDO ||
+			 event.getDetail() == CommandStack.PRE_UNDO)) {
+				
+			// for some awkard reason, the setInput method is sometimes called 
+			// somewhere between the event's pre- and post processing with a 
+			// different selection, so we set aside the current selection here
+			selectionCopy = selection;
+		} else if (event.isPostChangeEvent() &&
 			(event.getDetail() == CommandStack.POST_EXECUTE ||
 			 event.getDetail() == CommandStack.POST_REDO ||
 			 event.getDetail() == CommandStack.POST_UNDO)) {
@@ -347,8 +357,8 @@ public abstract class AbstractPropertiesSection<T extends EObject>
 				public void run() {
 					// (simulate a) clear (of) the current selection
 					page.selectionChanged(getPart(), new StructuredSelection());
-					// set the selection again
-					page.selectionChanged(getPart(), selection);					
+					// set the (original) selection again
+					page.selectionChanged(getPart(), selectionCopy);					
 				}				
 			});
 		}

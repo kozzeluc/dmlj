@@ -247,9 +247,9 @@ public class RecordPrefixPropertiesSection
 			 event.getDetail() == CommandStack.PRE_REDO ||
 			 event.getDetail() == CommandStack.PRE_UNDO)) {
 			
-			// for some awkard reason, the setInput method is called somewhere
-			// between the event's pre- and post processing, so we set aside the
-			// current selection here
+			// for some awkard reason, the setInput method is sometimes called 
+			// somewhere between the event's pre- and post processing with a 
+			// different selection, so we set aside the current selection here
 			selectionCopy = selection;
 		} else if (event.isPostChangeEvent() &&
 			       (event.getDetail() == CommandStack.POST_EXECUTE ||

@@ -47,7 +47,7 @@ public class NewSchemaPage5 extends WizardPage {
 	private Text 					text;
 
 	protected NewSchemaPage5() {
-		super("page5", "Schema", null);		
+		super("page5", "CA IDMS Schema", null);		
 		setMessage("Select a file containing the catalog (DDLCAT area)");		
 	}
 	

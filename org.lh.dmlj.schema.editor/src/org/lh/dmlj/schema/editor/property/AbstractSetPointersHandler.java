@@ -33,7 +33,7 @@ public abstract class AbstractSetPointersHandler {
 		"label.org.lh.dmlj.schema.OwnerRole.priorDbkeyPosition";	
 	
 	protected static EAttribute MEMBER_INDEX_POINTER_POSITION = 
-		SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition();
+		SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition();
 	protected static EAttribute MEMBER_NEXT_POINTER_POSITION = 
 		SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition();
 	protected static EAttribute MEMBER_OWNER_POINTER_POSITION = 

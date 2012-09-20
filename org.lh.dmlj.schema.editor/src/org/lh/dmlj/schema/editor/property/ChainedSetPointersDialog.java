@@ -23,9 +23,9 @@ public class ChainedSetPointersDialog extends Dialog {
 	private Button 	   btnOwnerPointersAllMembers;
 	private Button     btnOwnerPointersCurrentMember;
 	private Button 	   btnPriorPointers;
-	private boolean    ownerPointers;
-	private boolean    ownerPointerManipulationForAllMembers;
 	private MemberRole memberRole;
+	private boolean    ownerPointerManipulationForAllMembers;
+	private boolean    ownerPointers;
 	private boolean    priorPointers;
 	
 	
@@ -90,9 +90,9 @@ public class ChainedSetPointersDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-				true);
+					 true);
 		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.CANCEL_LABEL, false);
+					 IDialogConstants.CANCEL_LABEL, false);
 		enableAndDisable();
 	}
 
@@ -186,7 +186,7 @@ public class ChainedSetPointersDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(400, 250);
+		return new Point(375, 250);
 	}
 	
 	private void initialize() {

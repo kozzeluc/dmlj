@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="import" name="Schema Import Tools" schema="schema/import.exsd"/>
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -13,13 +14,31 @@
       </editor>
    </extension>
    <extension
-         point="org.eclipse.ui.newWizards">
+         point="org.eclipse.ui.importWizards">
+      <category
+            id="org.lh.dmlj.schema.editor.category"
+            name="CA IDMS Schema Editor">
+      </category>
       <wizard
-            category="org.lh.dmlj.eclipse.newWizards.category"
+            category="org.lh.dmlj.schema.editor.category"
+            class="org.lh.dmlj.schema.editor.importtool.impl.ImportWizard"
+            icon="icons/schema.gif"
+            id="org.lh.dmlj.schema.editor.wizard.import"
+            name="CA IDMS Schema">
+      </wizard>
+   </extension>   
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.lh.dmlj.schema.editor.category"
+            name="CA IDMS Schema Editor">
+      </category>
+      <wizard
+            category="org.lh.dmlj.schema.editor.category"
             class="org.lh.dmlj.schema.editor.wizard.NewSchemaWizard"
             icon="icons/schema.gif"
             id="org.lh.dmlj.schema.editor.wizard.new"
-            name="Schema (Extended)">
+            name="CA IDMS Schema">
       </wizard>
    </extension>
    <extension

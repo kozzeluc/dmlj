@@ -18,6 +18,8 @@ public class SetOwnerPropertiesSection
 	private IHyperlinkHandler areaHandler = new AreaHandler(this);
 	private IHyperlinkHandler chainedSetPointersHandler = 
 		new ChainedSetPointersHandler(this);
+	private IHyperlinkHandler indexedSetPointersHandler = 
+		new IndexedSetPointersHandler(this);
 	
 	public SetOwnerPropertiesSection() {
 		super();	
@@ -100,6 +102,11 @@ public class SetOwnerPropertiesSection
 					attribute == SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition())) {
 			
 			return chainedSetPointersHandler;
+		} else if (set.getMode() == SetMode.INDEXED &&
+				   (attribute == SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition() ||
+					attribute == SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition())) {
+			
+			return indexedSetPointersHandler;
 		} else {
 			return super.getHyperlinkHandler(attribute);
 		}
@@ -131,6 +138,12 @@ public class SetOwnerPropertiesSection
 						  									.getRecord()
 						  									.getName());
 			}			
+		} else if (attribute == SchemaPackage.eINSTANCE
+				 							 .getOwnerRole_PriorDbkeyPosition() &&
+				   target.getSet().getOwner().getPriorDbkeyPosition() == null) {
+			
+			
+			return "OMITTED";			
 		} else {				
 			return super.getValue(attribute);
 		}

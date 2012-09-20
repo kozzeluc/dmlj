@@ -19,7 +19,9 @@ public class SetMemberPropertiesSection
 
 	private IHyperlinkHandler areaHandler = new AreaHandler(this);	
 	private IHyperlinkHandler chainedSetPointersHandler = 
-		new ChainedSetPointersHandler(this);	
+		new ChainedSetPointersHandler(this);
+	private IHyperlinkHandler indexedSetPointersHandler = 
+		new IndexedSetPointersHandler(this);
 	
 	public SetMemberPropertiesSection() {
 		super();	
@@ -131,6 +133,13 @@ public class SetMemberPropertiesSection
 				   set.getMode() == SetMode.CHAINED) {
 			
 			return chainedSetPointersHandler;			
+		} else if (attribute == SchemaPackage.eINSTANCE
+			     							 .getMemberRole_IndexDbkeyPosition() ||
+			       attribute == SchemaPackage.eINSTANCE
+			     						     .getMemberRole_OwnerDbkeyPosition() &&
+			       set.getMode() == SetMode.INDEXED) {
+
+			return indexedSetPointersHandler;			
 		} else {
 			return super.getHyperlinkHandler(attribute);
 		}
@@ -156,6 +165,19 @@ public class SetMemberPropertiesSection
 			// remove the trailing underscore from the record name if we're 
 			// dealing with a DDLCATLOD member record
 			return Tools.removeTrailingUnderscore(target.getRecord().getName());
+		} else if (attribute == SchemaPackage.eINSTANCE
+				 							 .getMemberRole_IndexDbkeyPosition() &&
+				   target.getIndexDbkeyPosition() == null ||
+				   attribute == SchemaPackage.eINSTANCE
+					 						 .getMemberRole_OwnerDbkeyPosition() &&
+				   target.getOwnerDbkeyPosition() == null  ||
+				   attribute == SchemaPackage.eINSTANCE
+					 						 .getMemberRole_PriorDbkeyPosition() &&
+				   target.getPriorDbkeyPosition() == null) {
+			
+			// (when requested to return the value for the next pointer 
+			// position, that position will always be available)
+			return "OMITTED";
 		}
 		return super.getValue(attribute);
 	}

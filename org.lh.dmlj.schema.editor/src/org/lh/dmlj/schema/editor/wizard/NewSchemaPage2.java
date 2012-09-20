@@ -49,7 +49,7 @@ public class NewSchemaPage2 extends WizardPage {
 	private Text 						  text;
 
 	protected NewSchemaPage2() {
-		super("page2", "Schema", null);		
+		super("page2", "CA IDMS Schema", null);		
 		setMessage("Select a file containing the dictionary (DDLDML area)");		
 	}
 	

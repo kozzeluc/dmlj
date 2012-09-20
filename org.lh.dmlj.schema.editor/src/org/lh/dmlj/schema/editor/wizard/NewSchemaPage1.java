@@ -11,8 +11,8 @@ public class NewSchemaPage1 extends WizardNewFileCreationPage {
 	
 	public NewSchemaPage1(IStructuredSelection selection) {
 		super("page1", selection);	
-		setTitle("Schema");
-		setDescription("Create a new schema");
+		setTitle("CA IDMS Schema");
+		setDescription("Create a new CA IDMS schema");
 		setFileName("My.schema");
 	}	
 	

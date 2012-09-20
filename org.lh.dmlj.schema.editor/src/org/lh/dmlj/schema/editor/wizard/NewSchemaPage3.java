@@ -27,7 +27,7 @@ public class NewSchemaPage3 extends WizardPage {
 	private Table table;
 
 	protected NewSchemaPage3() {
-		super("page3", "Schema", null);		
+		super("page3", "CA IDMS Schema", null);		
 		setMessage("Select a schema from the dictionary");		
 	}
 

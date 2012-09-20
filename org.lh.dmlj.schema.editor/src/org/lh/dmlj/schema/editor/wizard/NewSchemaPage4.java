@@ -15,7 +15,7 @@ public class NewSchemaPage4 extends WizardPage {
 	private Button checkButton3;	
 	
 	protected NewSchemaPage4() {
-		super("page4", "Schema", null);		
+		super("page4", "CA IDMS Schema", null);		
 		setMessage("Set options for IDMSNTWK version 1");		
 	}
 
