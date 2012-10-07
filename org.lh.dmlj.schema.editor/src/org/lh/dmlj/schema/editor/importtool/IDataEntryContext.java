@@ -3,8 +3,11 @@ package org.lh.dmlj.schema.editor.importtool;
 import java.util.List;
 
 public interface IDataEntryContext {
-
-	public static final String ATTRIBUTE_OUTPUT_FILE = "outputFile";
+	
+	public static final String SCHEMA_NAME = "schemaName";
+	public static final String SCHEMA_VERSION = "schemaVersion";	
+	
+	void clear();
 	
 	void clearAttribute(String name);
 	

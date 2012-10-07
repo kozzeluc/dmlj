@@ -1,16 +1,54 @@
 package org.lh.dmlj.schema.editor.importtool.impl;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
+
 public class DataEntryPageDescriptor {
 
-	private String id;
-	private String implementingClass;
-	private String name;
-	private String message;		
+	private IConfigurationElement configElement;
+	private AbstractDataEntryPage dataEntryPage;
+	private String 				  id;
+	private String 				  implementingClass;
+	private String 				  name;
+	private String 				  message;		
 
-	public DataEntryPageDescriptor() {
+	public DataEntryPageDescriptor(IConfigurationElement configElement) {
 		super();
+		Assert.isTrue(configElement.getName()
+								   .equals(ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE), 
+					  "wrong IConfigurationElement: " + configElement.getName());
+		this.configElement = configElement;
+		id = Util.getAttribute(configElement, 
+							   ExtensionPointConstants.ATTRIBUTE_ID, null);
+		name = Util.getAttribute(configElement, 
+								 ExtensionPointConstants.ATTRIBUTE_NAME, null);
+		implementingClass = 
+			Util.getAttribute(configElement, 
+							  ExtensionPointConstants.ATTRIBUTE_CLASS, null);
+		message = Util.getAttribute(configElement, 
+									ExtensionPointConstants.ATTRIBUTE_MESSAGE, 
+									"[no message available]");
 	}
 	
+	AbstractDataEntryPage createDataEntryPage() {
+		
+		if (dataEntryPage != null) {
+			return dataEntryPage;
+		}
+		try {
+			String propertyName = ExtensionPointConstants.ATTRIBUTE_CLASS;
+			Object executableExtension =
+				configElement.createExecutableExtension(propertyName);
+			dataEntryPage = (AbstractDataEntryPage) executableExtension;			
+			return dataEntryPage;
+		} catch (CoreException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -27,30 +65,19 @@ public class DataEntryPageDescriptor {
 		return message;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public void setImplementingClass(String implementingClass) {
-		this.implementingClass = implementingClass;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder p = new StringBuilder();
-		p.append("DataEntryPageDescriptor:");			
-		p.append(" id=" + id);
-		p.append(" name=" + name);
-		p.append(" message=" + message);
-		p.append(" class=" + implementingClass);		
+		p.append(ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE);
+		p.append(": ");
+		p.append(ExtensionPointConstants.ATTRIBUTE_ID + "=" + id);
+		p.append(" ");
+		p.append(ExtensionPointConstants.ATTRIBUTE_NAME + "=" + name);
+		p.append(" "); 
+		p.append(ExtensionPointConstants.ATTRIBUTE_MESSAGE + "=" + message);
+		p.append(" ");
+		p.append(ExtensionPointConstants.ATTRIBUTE_CLASS + "=" + 
+				 implementingClass);		
 		return p.toString();
 	}	
 	

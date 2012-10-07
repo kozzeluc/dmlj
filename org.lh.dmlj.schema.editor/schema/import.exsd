@@ -6,7 +6,7 @@
          <meta.schema plugin="org.lh.dmlj.schema.editor" id="import" name="Schema Import Tools"/>
       </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         Describes a list of CA IDMS/DB Schema import tools and record layout managers to be offered in the Import CA IDMS/DB Schema wizard.
       </documentation>
    </annotation>
 
@@ -15,11 +15,14 @@
          <appinfo>
             <meta.element />
          </appinfo>
+         <documentation>
+            An extension point that allows contributers to provide CA IDMS/DB Schema 1 or more import tools and/or layout managers.
+         </documentation>
       </annotation>
       <complexType>
          <sequence>
-            <element ref="dataEntryPage" minOccurs="1" maxOccurs="unbounded"/>
-            <element ref="importTool"/>
+            <element ref="importTools" minOccurs="0" maxOccurs="1"/>
+            <element ref="recordLayoutManagers" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -49,35 +52,40 @@
    </element>
 
    <element name="dataEntryPage">
+      <annotation>
+         <documentation>
+            A wizard page that allows the collection of all data needed by the import tool.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The unique id for the data entry page.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The name for the wizard page; should not start with an underscore.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="message" type="string">
             <annotation>
                <documentation>
-                  
+                  The message to be shown in the wizard page; the message should describe the purpose of the wizard page.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The fully qualified name of the class that extends org.eclipse.swt.widgets.Composite and implements org.lh.dmlj.schema.editor.importtool.IDataEntryPage.  The class should have a constructor that takes a Composite as its single argument.
+                  The fully qualified name of the class that implements org.lh.dmlj.schema.editor.importtool.IDataEntryPage; the class must extend org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage and should have a default constructor.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.swt.widgets.Composite:org.lh.dmlj.schema.editor.importtool.IDataEntryPage"/>
+                  <meta.attribute kind="java" basedOn="org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage:"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -85,18 +93,26 @@
    </element>
 
    <element name="importTool">
+      <annotation>
+         <documentation>
+            An import tool that produces an instance of org.lh.dmlj.schema.Schema (without any instances of org.lh.dmlj.schema.DiagramData).
+         </documentation>
+      </annotation>
       <complexType>
+         <sequence>
+            <element ref="dataEntryPage" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The unique id for the import tool.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The name for the import tool.
                </documentation>
             </annotation>
          </attribute>
@@ -110,10 +126,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The fully qualified name of the class that implements org.lh.dmlj.schema.editor.importtool.ISchemaImportTool
+                  The fully qualified name of the class that extends org.lh.dmlj.schema.editor.importtool.AbstractSchemaImportTool.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.lh.dmlj.schema.editor.importtool.ISchemaImportTool"/>
+                  <meta.attribute kind="java" basedOn="org.lh.dmlj.schema.editor.importtool.AbstractSchemaImportTool:"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -121,6 +137,138 @@
             <annotation>
                <documentation>
                   A description for the import tool that will be displayed in the import tool selection page of the import wizard when the user selects the import tool in the combo.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="parameters" type="string">
+            <annotation>
+               <documentation>
+                  A .properties file that configures the import tool.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="importTools">
+      <annotation>
+         <documentation>
+            The set of import tools offered by the extension.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="importTool" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="recordLayoutManagers">
+      <annotation>
+         <documentation>
+            The set of recod layout managers offered by the extension.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="recordLayoutManager" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="recordLayoutManager">
+      <annotation>
+         <documentation>
+            The definition and description of a class capable of adding all record related diagram location data to the imported schema.  A record layout manager is only responsible for arranging the records in the diagram; the import wizard will arrange the system owners and set labels.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="validFor" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The unique id for the record layout manager.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name for the record layout manager; will be used in the combo on the record layout manager selection page of the import wizard.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of the class that extends org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A description for the record layout manager; will be displayed in the record layout manager selection page of the import wizard when the user selects the record layout manager&apos;s name in the combo.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="image" type="string">
+            <annotation>
+               <documentation>
+                  An image that illustrates the diagram after all items have been arranged.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="parameters" type="string">
+            <annotation>
+               <documentation>
+                  A .properties file that configures the layout manager.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="validFor">
+      <annotation>
+         <documentation>
+            Denotes 1 or more schemas for which a record layout manager is valid.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="schemaName" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of the schema(s) for which the record layout manager is valid (case insensitive).  A schema name mask is NOT supported.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="schemaVersions" type="string">
+            <annotation>
+               <documentation>
+                  A single version number, a range or comma-separated list of version numbers of the schema(s) for which the record layout manager is valid, for example :
+&lt;ul&gt;
+&lt;li&gt;1&lt;/li&gt;
+&lt;li&gt;1-100&lt;/li&gt;
+&lt;li&gt;1,2,3&lt;/li&gt;
+ &lt;/ul&gt;
                </documentation>
             </annotation>
          </attribute>
@@ -132,7 +280,7 @@
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         1.0.0
       </documentation>
    </annotation>
 
@@ -145,23 +293,7 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="apiinfo"/>
-      </appinfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="implementation"/>
-      </appinfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
 
 
 </schema>

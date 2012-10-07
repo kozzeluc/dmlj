@@ -19,7 +19,7 @@ public class ImportToolSelectionPage extends WizardPage {
 	private List<ImportToolDescriptor> importToolDescriptors;	
 
 	protected ImportToolSelectionPage(List<ImportToolDescriptor> importToolDescriptors) {
-		super("page2", "CA IDMS Schema", null);
+		super("_importToolSelectionPAge", "CA IDMS/DB Schema", null);
 		this.importToolDescriptors = importToolDescriptors;
 		setMessage("Select the (data) source");
 	}
@@ -42,8 +42,10 @@ public class ImportToolSelectionPage extends WizardPage {
 		lblDescription.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		lblDescription.setText("Description :");
 		
-		final Text text = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
-		text.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 1));
+		final Text text = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
+		gd_text.widthHint = 300;
+		text.setLayoutData(gd_text);
 		
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -66,7 +68,7 @@ public class ImportToolSelectionPage extends WizardPage {
 		} else {
 			combo.setEnabled(false);
 			setErrorMessage("No import tools installed - cannot import a " +
-					 		"CA IDMS schema");
+					 		"CA IDMS/DB schema");
 			text.setText("Please install at least 1 plug-in that provides " +
 						 "the required schema import functionality.");
 		}

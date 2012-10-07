@@ -2,8 +2,8 @@ package org.lh.dmlj.schema.editor.importtool;
 
 public interface IDataEntryPageController {
 
-	void setErrorMessage(IDataEntryPage page, String message);
+	void setErrorMessage(String message);
 	
-	void setPageComplete(IDataEntryPage page, boolean pageComplete);	
+	void setPageComplete(boolean pageComplete);	
 	
 }

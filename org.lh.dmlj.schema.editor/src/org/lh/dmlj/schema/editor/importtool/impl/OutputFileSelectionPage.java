@@ -7,20 +7,20 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
-public class OutputFileSelectionPage extends WizardNewFileCreationPage {	
+public class OutputFileSelectionPage extends WizardNewFileCreationPage {		
 	
-	private IDataEntryContext context;	
+	private static final String DESCRIPTION_PREFIX = 
+		"Import a CA IDMS/DB schema";
 	
 	public OutputFileSelectionPage(IStructuredSelection selection) {
-		super("page1", selection);	
-		setTitle("CA IDMS Schema");
+		super("_outputFileSelectionPage", selection);	
+		setTitle("CA IDMS/DB Schema");
 		
 		setFileName("My.schema");
 	}	
 	
-	private File getSchemaFile() {
+	public File getOutputFile() {
 		try {
 			return ResourcesPlugin.getWorkspace()
 			  					  .getRoot()
@@ -35,24 +35,19 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 	@Override
 	public IWizardPage getPreviousPage() {
 		return null;
-	}	
-	
-	public void setContext(IDataEntryContext context) {
-		this.context = context;
-	}
+	}		
 	
 	public void setImportToolDescriptor(ImportToolDescriptor importToolDescriptor)  {
 		String description = 
 			importToolDescriptor != null && 
 			!importToolDescriptor.getSource().trim().equals("") ?
-			"Import a CA IDMS schema from " + importToolDescriptor.getSource() :
-			"Import a CA IDMS schema";
+			DESCRIPTION_PREFIX + " from " + importToolDescriptor.getSource() :
+			DESCRIPTION_PREFIX;
 		setDescription(description);
 	}
 	
 	@Override
 	protected boolean validatePage() {
-		context.clearAttribute(IDataEntryContext.ATTRIBUTE_OUTPUT_FILE);
 		setErrorMessage(null);
 		if (super.validatePage()) {
 			String extension = new Path(getFileName()).getFileExtension();
@@ -60,9 +55,7 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 	        	setErrorMessage("The file extension must be .schema");
 	        	return false;
 	        }
-	        context.setAttribute(IDataEntryContext.ATTRIBUTE_OUTPUT_FILE,
-	        					 getSchemaFile());
-	        return true;
+	       return true;
 	    }
 	    return false;
 	}

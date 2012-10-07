@@ -8,14 +8,19 @@ import java.util.Map;
 
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
-public class DataEntryContextImpl implements IDataEntryContext {
+public class DataEntryContext implements IDataEntryContext {
 
 	private Map<String, Object> map = new HashMap<>();
 	
-	public DataEntryContextImpl() {
+	public DataEntryContext() {
 		super();
 	}
 	
+	@Override
+	public void clear() {
+		map.clear();		
+	}
+
 	@Override
 	public void clearAttribute(String key) {		
 		if (map.containsKey(key)) {

@@ -1572,7 +1572,7 @@ public class SchemaImportTool {
 			InputStream in = 
 				cl.getResourceAsStream("/resources/" + schema.getName() +
 									   " version " + schema.getVersion() +
-									   " (Record Locations).txt");
+									   " (Record Locations).properties");
 			if (in == null) {
 				// We get this when we run the schema import tool in a normal 
 				// (i.e. non plug-in) environment, outside the new (extended)

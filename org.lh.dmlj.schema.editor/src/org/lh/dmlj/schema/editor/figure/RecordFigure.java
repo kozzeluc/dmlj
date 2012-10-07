@@ -18,8 +18,8 @@ import org.lh.dmlj.schema.editor.Plugin;
 
 public class RecordFigure extends Figure {
 	
-	private static final int UNSCALED_WIDTH = 130;
-	private static final int UNSCALED_HEIGHT = 53;
+	public static final int UNSCALED_WIDTH = 130;
+	public static final int UNSCALED_HEIGHT = 53;
 	
 	private static final DecimalFormat recordIdFormatter = 
 		new DecimalFormat("000");

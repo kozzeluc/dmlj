@@ -17,28 +17,28 @@
          point="org.eclipse.ui.importWizards">
       <category
             id="org.lh.dmlj.schema.editor.category"
-            name="CA IDMS Schema Editor">
+            name="CA IDMS/DB Schema Editor">
       </category>
       <wizard
             category="org.lh.dmlj.schema.editor.category"
             class="org.lh.dmlj.schema.editor.importtool.impl.ImportWizard"
             icon="icons/schema.gif"
             id="org.lh.dmlj.schema.editor.wizard.import"
-            name="CA IDMS Schema">
+            name="CA IDMS/DB Schema">
       </wizard>
    </extension>   
    <extension
          point="org.eclipse.ui.newWizards">
       <category
             id="org.lh.dmlj.schema.editor.category"
-            name="CA IDMS Schema Editor">
+            name="CA IDMS/DB Schema Editor">
       </category>
       <wizard
             category="org.lh.dmlj.schema.editor.category"
             class="org.lh.dmlj.schema.editor.wizard.NewSchemaWizard"
             icon="icons/schema.gif"
             id="org.lh.dmlj.schema.editor.wizard.new"
-            name="CA IDMS Schema">
+            name="CA IDMS/DB Schema">
       </wizard>
    </extension>
    <extension
@@ -254,6 +254,42 @@
             </input>
          </propertySection>
       </propertySections>
+   </extension>
+   <extension
+         point="org.lh.dmlj.schema.editor.import">
+      <recordLayoutManagers>
+         <recordLayoutManager
+               class="org.lh.dmlj.schema.editor.importtool.PopularSchemaLayoutManager"
+               description="Manages the layout of all records in schema EMPSCHM version 100."
+               id="org.lh.dmlj.schema.editor.layoutManager3"
+               image="icons/record_lm_empschm_v100.gif"
+               name="EMPSCHM version 100"
+               parameters="resources/EMPSCHM version 100 (Record Locations).properties">
+            <validFor
+                  schemaName="EMPSCHM"
+                  schemaVersions="100">
+            </validFor>
+         </recordLayoutManager>
+         <recordLayoutManager
+               class="org.lh.dmlj.schema.editor.importtool.PopularSchemaLayoutManager"
+               description="Manages the layout of all records in schema IDMSNTWK version 1."
+               id="org.lh.dmlj.schema.editor.layoutManager2"
+               image="icons/record_lm_idmsntwk_v1.gif"
+               name="IDMSNTWK version 1"
+               parameters="resources/IDMSNTWK version 1 (Record Locations).properties">
+            <validFor
+                  schemaName="IDMSNTWK"
+                  schemaVersions="1">
+            </validFor>
+         </recordLayoutManager>
+         <recordLayoutManager
+               class="org.lh.dmlj.schema.editor.importtool.impl.StandardRecordLayoutManager"
+               description="Manages the layout of all records in any schema and tries to create an equal number of rows and columns in the diagram."
+               id="org.lh.dmlj.schema.editor.importtool.layoutManager1"
+               image="icons/record_lm_standard.gif"
+               name="Standard">
+         </recordLayoutManager>
+      </recordLayoutManagers>
    </extension>
 
 </plugin>
