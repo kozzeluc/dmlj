@@ -354,26 +354,7 @@ public class Plugin extends AbstractUIPlugin {
 		// we need to place some files in the temporary files folder - we need
 		// those files to create IDatabase instances denoting dictionaries; we
 		// need the plug-in's classloader for this...
-		ClassLoader cl = Plugin.class.getClassLoader(); 		
-		
-		// copy the IDMSNTWK mapping file to the temporary files folder...
-		InputStream source = 
-			cl.getResourceAsStream("/resources/org.lh.dmlj.idmsntwk.mapping");
-		File target = new File(tmpFolder, "org.lh.dmlj.idmsntwk.mapping");
-		if (!copy(source, target)) {
-			throw new Error("cannot copy " + target.getName() + 
-						    " to the temporary files folder");
-		}
-		
-		// copy the IDMSNTWK (old-style) schema file to the temporary files 
-		// folder...
-		source = 
-			cl.getResourceAsStream("/resources/IDMSNTWK version 1.xml");
-		target = new File(tmpFolder, "IDMSNTWK version 1.xml");
-		if (!copy(source, target)) {
-			throw new Error("cannot copy " + target.getName() + 
-						    " to the temporary files folder");
-		}
+		ClassLoader cl = Plugin.class.getClassLoader();		
 		
 		// Determine the Neo4j database path and create and populate the 
 		// database if needed.  The Neo4j database is used in the property 
@@ -420,10 +401,11 @@ public class Plugin extends AbstractUIPlugin {
 			} 
 			
 			// copy the Javadoc .zip file to the temporary files folder
-			source = cl.getResourceAsStream("/resources/" + JAVADOC_LEVEL_NAME + 
-									   		"_" + JAVADOC_LEVEL_VALUE + ".zip");		
-			target = new File(tmpFolder, JAVADOC_LEVEL_NAME + "_" + 
-							  JAVADOC_LEVEL_VALUE + ".zip");
+			InputStream source = 
+				cl.getResourceAsStream("/resources/" + JAVADOC_LEVEL_NAME + 
+							   		   "_" + JAVADOC_LEVEL_VALUE + ".zip");		
+			File target = new File(tmpFolder, JAVADOC_LEVEL_NAME + "_" + 
+							  	   JAVADOC_LEVEL_VALUE + ".zip");
 			final File fTarget = target;
 			if (!copy(source, target)) {
 				throw new Error("cannot copy " + target.getName() + 
