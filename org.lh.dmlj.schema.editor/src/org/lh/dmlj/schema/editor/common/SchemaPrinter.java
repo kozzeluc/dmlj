@@ -20,9 +20,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.IndexedSetModeSpecification;
@@ -184,10 +186,14 @@ public class SchemaPrinter {
 			}
 		} else if (eObject instanceof ConnectionPart) {
 			ConnectionPart connectionPart = (ConnectionPart) eObject;
+			int i = connectionPart.getMemberRole()
+								  .getConnectionParts()
+								  .indexOf(connectionPart);
 			return _interface + " set=" + 
 				   connectionPart.getMemberRole().getSet().getName() + 
 				   " record=" + 
-				   connectionPart.getMemberRole().getRecord().getName();
+				   connectionPart.getMemberRole().getRecord().getName() + " (" + 
+				   i + ")";
 		} else if (eObject instanceof KeyElement) {
 			KeyElement keyElement = (KeyElement) eObject;
 			String p = keyElement.getKey().isCalcKey() ? "CALC key" : 
@@ -213,6 +219,27 @@ public class SchemaPrinter {
 				   recordProcedureCallSpecification.getProcedure().getName() + 
 				   " (" + recordProcedureCallSpecification.getCallTime() + " " + 
 				   recordProcedureCallSpecification.getVerb() + ")";
+		} else if (eObject instanceof AreaProcedureCallSpecification) {
+			AreaProcedureCallSpecification areaProcedureCallSpecification = 
+				(AreaProcedureCallSpecification) eObject;
+			return _interface + " area=" + 
+				   areaProcedureCallSpecification.getArea().getName() + 
+				   " procedure=" + 
+				   areaProcedureCallSpecification.getProcedure().getName() + 
+				   " (" + areaProcedureCallSpecification.getCallTime() + " " + 
+				   areaProcedureCallSpecification.getFunction() + ")";
+		} else if (eObject instanceof Connector) {
+			Connector connector = (Connector) eObject;
+			int i = 
+				connector.getConnectionPart()
+						 .getMemberRole()
+						 .getConnectionParts()
+						 .indexOf(connector.getConnectionPart());
+			return _interface + " set=" + 
+				   connector.getConnectionPart().getMemberRole().getSet().getName() +
+				   " record=" + 
+				   connector.getConnectionPart().getMemberRole().getRecord().getName() +
+				   " (" + i + ")";
 		} else {
 			int i = 0;
 			if (seqNoMap.containsKey(_interface)) {

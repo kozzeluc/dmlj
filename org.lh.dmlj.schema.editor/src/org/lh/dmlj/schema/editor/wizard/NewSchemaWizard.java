@@ -16,7 +16,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -28,19 +27,16 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
+import org.lh.dmlj.schema.DiagramData;
+import org.lh.dmlj.schema.Ruler;
+import org.lh.dmlj.schema.RulerType;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.editor.tool.SchemaImportTool;
-
-import dmlj.core.IDatabase;
+import org.lh.dmlj.schema.SchemaFactory;
 
 
 public class NewSchemaWizard extends Wizard implements INewWizard {
 
-	private NewSchemaPage1 		 page1;
-	private NewSchemaPage2 		 page2;
-	private NewSchemaPage3 		 page3;
-	private NewSchemaPage4 		 page4;	
-	private NewSchemaPage5 		 page5;	
+	private NewSchemaPage 		 page;
 	private IStructuredSelection selection;
 	
 	public NewSchemaWizard() {
@@ -50,54 +46,14 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 	
 	@Override
 	public void addPages() {
-		page1 = new NewSchemaPage1(selection);		
-		addPage(page1);
-		page2 = new NewSchemaPage2();		
-		addPage(page2);
-		page3 = new NewSchemaPage3();		
-		addPage(page3);
-		page4 = new NewSchemaPage4();								
-		addPage(page4);
-		page5 = new NewSchemaPage5();		
-		addPage(page5);		
+		page = new NewSchemaPage(selection);		
+		addPage(page);		
 	}	
 	
 	@Override
 	public boolean canFinish() {		
-		return page1.getSchemaFile() != null &&
-			   page2.getDictionary() != null &&
-			   page3.getSchemaName() != null &&
-			   (!page3.getSchemaName().equals("IDMSNTWK") ||
-			    page3.getSchemaVersion().intValue() != 1 ||
-			    !page4.getOptions()[2] ||
-			    page5.getCatalog() != null);
-	}
-	
-	@Override
-	public IWizardPage getNextPage(IWizardPage page) {				
-		if (page == page1) {
-			return page2;
-		} else if (page == page2) {
-			page3.setDictionary(page2.getDictionary());			
-			return page3;
-		} else if (page == page3) {
-			// some pages apply only to IDMSNTWK version 1
-			String schemaName = page3.getSchemaName();
-			Integer schemaVersion = page3.getSchemaVersion();
-			if (schemaName != null && schemaVersion != null &&
-				schemaName.equals("IDMSNTWK") && 
-				schemaVersion.intValue() == 1) {
-																
-				return page4;
-			}
-		} else if (page == page4) {
-			boolean[] options = page4.getOptions();
-			if (options[2]) {
-				return page5;
-			}
-		}
-		return null;
-	}
+		return page.getSchemaFile() != null;
+	}	
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {		
@@ -108,28 +64,9 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {		
     			
 		// gather all information from the wizard pages...				
-		File targetFile = page1.getSchemaFile();
-		final IDatabase dictionary = page2.getDictionary();
-		final String schemaName = page3.getSchemaName();
-		final int schemaVersion = page3.getSchemaVersion();
-		final boolean[] options;
-		final IDatabase catalog;
-		if (schemaName.equals("IDMSNTWK") && schemaVersion == 1) {
-			options = page4.getOptions();
-			if (options[2]) {
-				catalog = page5.getCatalog();
-			} else {
-				catalog = null;
-			}
-		} else {
-			options = new boolean[page4.getOptions().length];
-			for (int i = 0; i < options.length; i++) {
-				options[i] = false;
-			}
-			catalog = null;
-		}		
+		File targetFile = page.getSchemaFile();						
 						    	    	
-		// create the the schema and persist it to the file specified by the 
+		// create the schema and persist it to the file specified by the 
     	// user; do the work within an operation.		
 		IPath fullPath = new Path(targetFile.getAbsolutePath());
 		IPath workspacePath = 
@@ -148,12 +85,28 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 				protected void execute(IProgressMonitor progressMonitor) {
 					try {
 												
-						// create the schema
-						SchemaImportTool schemaImportTool =
-							new SchemaImportTool(dictionary, schemaName, 
-												 schemaVersion, options, 
-												 catalog);						
-						Schema schema = schemaImportTool.run();
+						// create the schema and set its name and version
+						Schema schema = SchemaFactory.eINSTANCE.createSchema();
+						schema.setName("NEWSCHEM");
+						schema.setVersion((short) 1);
+						
+						// diagram data with rulers (todo: set these attributes 
+						// according to the editor's preferences)...
+						DiagramData diagramData = 
+							SchemaFactory.eINSTANCE.createDiagramData();
+						schema.setDiagramData(diagramData);
+						Ruler verticalRuler = 
+							SchemaFactory.eINSTANCE.createRuler();
+						verticalRuler.setType(RulerType.VERTICAL);
+						diagramData.setVerticalRuler(verticalRuler);
+						diagramData.getRulers()
+								   .add(verticalRuler); // ruler container
+						Ruler horizontalRuler = 
+							SchemaFactory.eINSTANCE.createRuler();
+						horizontalRuler.setType(RulerType.HORIZONTAL);
+						diagramData.setHorizontalRuler(horizontalRuler);
+						diagramData.getRulers()
+								   .add(horizontalRuler); // ruler container						
 						
 						// Create a resource set
 						//
@@ -182,14 +135,7 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 						progressMonitor.done();
 					}
 				}
-			};
-			
-		// close dictionary and catalog (ignoring any errors)
-		try {
-			dictionary.close();
-			catalog.close(); 	// possibly null, so possible NPE
-		} catch (Throwable t) {			
-		}
+			};		
 			
 		try {
 			getContainer().run(false, false, operation);

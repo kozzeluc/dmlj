@@ -7,9 +7,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 
-public class NewSchemaPage1 extends WizardNewFileCreationPage {	
+public class NewSchemaPage extends WizardNewFileCreationPage {	
 	
-	public NewSchemaPage1(IStructuredSelection selection) {
+	public NewSchemaPage(IStructuredSelection selection) {
 		super("page1", selection);	
 		setTitle("CA IDMS Schema");
 		setDescription("Create a new CA IDMS schema");
