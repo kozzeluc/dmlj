@@ -7,17 +7,20 @@
 package org.lh.dmlj.schema.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SchemaRecord;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,6 +31,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getCallTime <em>Call Time</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getProcedure <em>Procedure</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getVerb <em>Verb</em>}</li>
  * </ul>
  * </p>
@@ -143,6 +147,47 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public SchemaRecord getRecord() {
+		if (eContainerFeatureID() != SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD) return null;
+		return (SchemaRecord)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetRecord(SchemaRecord newRecord, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newRecord, SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRecord(SchemaRecord newRecord) {
+		if (newRecord != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD && newRecord != null)) {
+			if (EcoreUtil.isAncestor(this, newRecord))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newRecord != null)
+				msgs = ((InternalEObject)newRecord).eInverseAdd(this, SchemaPackage.SCHEMA_RECORD__PROCEDURES, SchemaRecord.class, msgs);
+			msgs = basicSetRecord(newRecord, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD, newRecord, newRecord));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ProcedureCallTime getCallTime() {
 		return callTime;
 	}
@@ -186,6 +231,50 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetRecord((SchemaRecord)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD:
+				return basicSetRecord(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD:
+				return eInternalContainer().eInverseRemove(this, SchemaPackage.SCHEMA_RECORD__PROCEDURES, SchemaRecord.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
@@ -193,6 +282,8 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE:
 				if (resolve) return getProcedure();
 				return basicGetProcedure();
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD:
+				return getRecord();
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
 				return getVerb();
 		}
@@ -212,6 +303,9 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 				return;
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE:
 				setProcedure((Procedure)newValue);
+				return;
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD:
+				setRecord((SchemaRecord)newValue);
 				return;
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
 				setVerb((RecordProcedureCallVerb)newValue);
@@ -234,6 +328,9 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE:
 				setProcedure((Procedure)null);
 				return;
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD:
+				setRecord((SchemaRecord)null);
+				return;
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
 				setVerb(VERB_EDEFAULT);
 				return;
@@ -253,6 +350,8 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 				return callTime != CALL_TIME_EDEFAULT;
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE:
 				return procedure != null;
+			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD:
+				return getRecord() != null;
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__VERB:
 				return verb != VERB_EDEFAULT;
 		}

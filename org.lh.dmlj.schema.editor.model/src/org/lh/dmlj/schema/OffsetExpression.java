@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.OffsetExpression#getAreaSpecification <em>Area Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OffsetExpression#getOffsetPageCount <em>Offset Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OffsetExpression#getOffsetPercent <em>Offset Percent</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OffsetExpression#getPageCount <em>Page Count</em>}</li>
@@ -28,6 +29,34 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface OffsetExpression extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Area Specification</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.AreaSpecification#getOffsetExpression <em>Offset Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Area Specification</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Area Specification</em>' container reference.
+	 * @see #setAreaSpecification(AreaSpecification)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getOffsetExpression_AreaSpecification()
+	 * @see org.lh.dmlj.schema.AreaSpecification#getOffsetExpression
+	 * @model opposite="offsetExpression" required="true" transient="false"
+	 * @generated
+	 */
+	AreaSpecification getAreaSpecification();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.OffsetExpression#getAreaSpecification <em>Area Specification</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Area Specification</em>' container reference.
+	 * @see #getAreaSpecification()
+	 * @generated
+	 */
+	void setAreaSpecification(AreaSpecification value);
+
 	/**
 	 * Returns the value of the '<em><b>Offset Page Count</b></em>' attribute.
 	 * <!-- begin-user-doc -->

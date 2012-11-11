@@ -621,9 +621,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 		if (newOccursSpecification != occursSpecification) {
 			NotificationChain msgs = null;
 			if (occursSpecification != null)
-				msgs = ((InternalEObject)occursSpecification).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.ELEMENT__OCCURS_SPECIFICATION, null, msgs);
+				msgs = ((InternalEObject)occursSpecification).eInverseRemove(this, SchemaPackage.OCCURS_SPECIFICATION__ELEMENT, OccursSpecification.class, msgs);
 			if (newOccursSpecification != null)
-				msgs = ((InternalEObject)newOccursSpecification).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.ELEMENT__OCCURS_SPECIFICATION, null, msgs);
+				msgs = ((InternalEObject)newOccursSpecification).eInverseAdd(this, SchemaPackage.OCCURS_SPECIFICATION__ELEMENT, OccursSpecification.class, msgs);
 			msgs = basicSetOccursSpecification(newOccursSpecification, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
@@ -644,6 +644,10 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getChildren()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getKeyElements()).basicAdd(otherEnd, msgs);
+			case SchemaPackage.ELEMENT__OCCURS_SPECIFICATION:
+				if (occursSpecification != null)
+					msgs = ((InternalEObject)occursSpecification).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.ELEMENT__OCCURS_SPECIFICATION, null, msgs);
+				return basicSetOccursSpecification((OccursSpecification)otherEnd, msgs);
 			case SchemaPackage.ELEMENT__PARENT:
 				if (parent != null)
 					msgs = ((InternalEObject)parent).eInverseRemove(this, SchemaPackage.ELEMENT__CHILDREN, Element.class, msgs);

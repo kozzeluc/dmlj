@@ -888,13 +888,22 @@ public interface SchemaPackage extends EPackage {
 	int INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT = 1;
 
 	/**
+	 * The feature id for the '<em><b>Set</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEXED_SET_MODE_SPECIFICATION__SET = 2;
+
+	/**
 	 * The feature id for the '<em><b>Symbolic Index Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME = 2;
+	int INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME = 3;
 
 	/**
 	 * The number of structural features of the '<em>Indexed Set Mode Specification</em>' class.
@@ -903,7 +912,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int INDEXED_SET_MODE_SPECIFICATION_FEATURE_COUNT = 3;
+	int INDEXED_SET_MODE_SPECIFICATION_FEATURE_COUNT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Calc Key</b></em>' attribute.
@@ -1167,13 +1176,31 @@ public interface SchemaPackage extends EPackage {
 	int OCCURS_SPECIFICATION__DEPENDING_ON = 1;
 
 	/**
+	 * The feature id for the '<em><b>Element</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OCCURS_SPECIFICATION__ELEMENT = 2;
+
+	/**
 	 * The number of structural features of the '<em>Occurs Specification</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int OCCURS_SPECIFICATION_FEATURE_COUNT = 2;
+	int OCCURS_SPECIFICATION_FEATURE_COUNT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Area Specification</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OFFSET_EXPRESSION__AREA_SPECIFICATION = 0;
 
 	/**
 	 * The feature id for the '<em><b>Offset Page Count</b></em>' attribute.
@@ -1182,7 +1209,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OFFSET_EXPRESSION__OFFSET_PAGE_COUNT = 0;
+	int OFFSET_EXPRESSION__OFFSET_PAGE_COUNT = 1;
 
 	/**
 	 * The feature id for the '<em><b>Offset Percent</b></em>' attribute.
@@ -1191,7 +1218,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OFFSET_EXPRESSION__OFFSET_PERCENT = 1;
+	int OFFSET_EXPRESSION__OFFSET_PERCENT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Page Count</b></em>' attribute.
@@ -1200,7 +1227,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OFFSET_EXPRESSION__PAGE_COUNT = 2;
+	int OFFSET_EXPRESSION__PAGE_COUNT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Percent</b></em>' attribute.
@@ -1209,7 +1236,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OFFSET_EXPRESSION__PERCENT = 3;
+	int OFFSET_EXPRESSION__PERCENT = 4;
 
 	/**
 	 * The number of structural features of the '<em>Offset Expression</em>' class.
@@ -1218,7 +1245,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OFFSET_EXPRESSION_FEATURE_COUNT = 4;
+	int OFFSET_EXPRESSION_FEATURE_COUNT = 5;
 
 	/**
 	 * The feature id for the '<em><b>Next Dbkey Position</b></em>' attribute.
@@ -1302,13 +1329,22 @@ public interface SchemaPackage extends EPackage {
 	int RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = 1;
 
 	/**
+	 * The feature id for the '<em><b>Record</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD = 2;
+
+	/**
 	 * The feature id for the '<em><b>Verb</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION__VERB = 2;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION__VERB = 3;
 
 	/**
 	 * The number of structural features of the '<em>Record Procedure Call Specification</em>' class.
@@ -1317,7 +1353,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = 3;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RulerImpl <em>Ruler</em>}' class.
@@ -3603,6 +3639,17 @@ public interface SchemaPackage extends EPackage {
 	EClass getOffsetExpression();
 
 	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.OffsetExpression#getAreaSpecification <em>Area Specification</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Area Specification</em>'.
+	 * @see org.lh.dmlj.schema.OffsetExpression#getAreaSpecification()
+	 * @see #getOffsetExpression()
+	 * @generated
+	 */
+	EReference getOffsetExpression_AreaSpecification();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.OffsetExpression#getOffsetPageCount <em>Offset Page Count</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3733,6 +3780,17 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getIndexedSetModeSpecification_KeyCount();
 
 	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getSet <em>Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Set</em>'.
+	 * @see org.lh.dmlj.schema.IndexedSetModeSpecification#getSet()
+	 * @see #getIndexedSetModeSpecification()
+	 * @generated
+	 */
+	EReference getIndexedSetModeSpecification_Set();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getDisplacementPageCount <em>Displacement Page Count</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3808,6 +3866,17 @@ public interface SchemaPackage extends EPackage {
 	EReference getRecordProcedureCallSpecification_Procedure();
 
 	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getRecord <em>Record</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Record</em>'.
+	 * @see org.lh.dmlj.schema.RecordProcedureCallSpecification#getRecord()
+	 * @see #getRecordProcedureCallSpecification()
+	 * @generated
+	 */
+	EReference getRecordProcedureCallSpecification_Record();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getCallTime <em>Call Time</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3881,6 +3950,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getOccursSpecification_DependingOn();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.OccursSpecification#getElement <em>Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Element</em>'.
+	 * @see org.lh.dmlj.schema.OccursSpecification#getElement()
+	 * @see #getOccursSpecification()
+	 * @generated
+	 */
+	EReference getOccursSpecification_Element();
 
 	/**
 	 * Returns the meta object for enum '{@link org.lh.dmlj.schema.SetOrder <em>Set Order</em>}'.
@@ -5239,6 +5319,14 @@ public interface SchemaPackage extends EPackage {
 		EClass OFFSET_EXPRESSION = eINSTANCE.getOffsetExpression();
 
 		/**
+		 * The meta object literal for the '<em><b>Area Specification</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference OFFSET_EXPRESSION__AREA_SPECIFICATION = eINSTANCE.getOffsetExpression_AreaSpecification();
+
+		/**
 		 * The meta object literal for the '<em><b>Offset Page Count</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5339,6 +5427,14 @@ public interface SchemaPackage extends EPackage {
 		EAttribute INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT = eINSTANCE.getIndexedSetModeSpecification_KeyCount();
 
 		/**
+		 * The meta object literal for the '<em><b>Set</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INDEXED_SET_MODE_SPECIFICATION__SET = eINSTANCE.getIndexedSetModeSpecification_Set();
+
+		/**
 		 * The meta object literal for the '<em><b>Displacement Page Count</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5399,6 +5495,14 @@ public interface SchemaPackage extends EPackage {
 		EReference RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = eINSTANCE.getRecordProcedureCallSpecification_Procedure();
 
 		/**
+		 * The meta object literal for the '<em><b>Record</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD = eINSTANCE.getRecordProcedureCallSpecification_Record();
+
+		/**
 		 * The meta object literal for the '<em><b>Call Time</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5457,6 +5561,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference OCCURS_SPECIFICATION__DEPENDING_ON = eINSTANCE.getOccursSpecification_DependingOn();
+
+		/**
+		 * The meta object literal for the '<em><b>Element</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference OCCURS_SPECIFICATION__ELEMENT = eINSTANCE.getOccursSpecification_Element();
 
 		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.SetOrder <em>Set Order</em>}' enum.

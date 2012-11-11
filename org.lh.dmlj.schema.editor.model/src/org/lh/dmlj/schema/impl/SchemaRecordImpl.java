@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
@@ -728,7 +727,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 */
 	public EList<RecordProcedureCallSpecification> getProcedures() {
 		if (procedures == null) {
-			procedures = new EObjectContainmentEList<RecordProcedureCallSpecification>(RecordProcedureCallSpecification.class, this, SchemaPackage.SCHEMA_RECORD__PROCEDURES);
+			procedures = new EObjectContainmentWithInverseEList<RecordProcedureCallSpecification>(RecordProcedureCallSpecification.class, this, SchemaPackage.SCHEMA_RECORD__PROCEDURES, SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD);
 		}
 		return procedures;
 	}
@@ -891,6 +890,8 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getMemberRoles()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.SCHEMA_RECORD__OWNER_ROLES:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getOwnerRoles()).basicAdd(otherEnd, msgs);
+			case SchemaPackage.SCHEMA_RECORD__PROCEDURES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getProcedures()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.SCHEMA_RECORD__SCHEMA:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);

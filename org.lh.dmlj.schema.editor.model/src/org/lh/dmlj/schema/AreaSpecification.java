@@ -85,6 +85,7 @@ public interface AreaSpecification extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Offset Expression</b></em>' containment reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.OffsetExpression#getAreaSpecification <em>Area Specification</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Offset Expression</em>' containment reference isn't clear,
@@ -94,7 +95,8 @@ public interface AreaSpecification extends EObject {
 	 * @return the value of the '<em>Offset Expression</em>' containment reference.
 	 * @see #setOffsetExpression(OffsetExpression)
 	 * @see org.lh.dmlj.schema.SchemaPackage#getAreaSpecification_OffsetExpression()
-	 * @model containment="true"
+	 * @see org.lh.dmlj.schema.OffsetExpression#getAreaSpecification
+	 * @model opposite="areaSpecification" containment="true"
 	 * @generated
 	 */
 	OffsetExpression getOffsetExpression();

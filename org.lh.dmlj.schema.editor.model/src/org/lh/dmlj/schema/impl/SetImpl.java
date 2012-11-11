@@ -396,6 +396,10 @@ public class SetImpl extends EObjectImpl implements Set {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
+				if (indexedSetModeSpecification != null)
+					msgs = ((InternalEObject)indexedSetModeSpecification).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION, null, msgs);
+				return basicSetIndexedSetModeSpecification((IndexedSetModeSpecification)otherEnd, msgs);
 			case SchemaPackage.SET__MEMBERS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getMembers()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.SET__OWNER:
@@ -648,9 +652,9 @@ public class SetImpl extends EObjectImpl implements Set {
 		if (newIndexedSetModeSpecification != indexedSetModeSpecification) {
 			NotificationChain msgs = null;
 			if (indexedSetModeSpecification != null)
-				msgs = ((InternalEObject)indexedSetModeSpecification).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION, null, msgs);
+				msgs = ((InternalEObject)indexedSetModeSpecification).eInverseRemove(this, SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET, IndexedSetModeSpecification.class, msgs);
 			if (newIndexedSetModeSpecification != null)
-				msgs = ((InternalEObject)newIndexedSetModeSpecification).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION, null, msgs);
+				msgs = ((InternalEObject)newIndexedSetModeSpecification).eInverseAdd(this, SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET, IndexedSetModeSpecification.class, msgs);
 			msgs = basicSetIndexedSetModeSpecification(newIndexedSetModeSpecification, msgs);
 			if (msgs != null) msgs.dispatch();
 		}

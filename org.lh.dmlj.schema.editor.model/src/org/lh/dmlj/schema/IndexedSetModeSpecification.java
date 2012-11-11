@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getDisplacementPageCount <em>Displacement Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getKeyCount <em>Key Count</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getSymbolicIndexName <em>Symbolic Index Name</em>}</li>
  * </ul>
  * </p>
@@ -78,6 +79,34 @@ public interface IndexedSetModeSpecification extends EObject {
 	 * @generated
 	 */
 	void setKeyCount(Short value);
+
+	/**
+	 * Returns the value of the '<em><b>Set</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Set#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Set</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Set</em>' container reference.
+	 * @see #setSet(Set)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getIndexedSetModeSpecification_Set()
+	 * @see org.lh.dmlj.schema.Set#getIndexedSetModeSpecification
+	 * @model opposite="indexedSetModeSpecification" required="true" transient="false"
+	 * @generated
+	 */
+	Set getSet();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getSet <em>Set</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Set</em>' container reference.
+	 * @see #getSet()
+	 * @generated
+	 */
+	void setSet(Set value);
 
 	/**
 	 * Returns the value of the '<em><b>Displacement Page Count</b></em>' attribute.

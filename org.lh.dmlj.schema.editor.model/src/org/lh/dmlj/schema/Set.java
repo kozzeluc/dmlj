@@ -240,6 +240,7 @@ public interface Set extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Indexed Set Mode Specification</b></em>' containment reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getSet <em>Set</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Indexed Set Mode Specification</em>' containment reference isn't clear,
@@ -249,7 +250,8 @@ public interface Set extends EObject {
 	 * @return the value of the '<em>Indexed Set Mode Specification</em>' containment reference.
 	 * @see #setIndexedSetModeSpecification(IndexedSetModeSpecification)
 	 * @see org.lh.dmlj.schema.SchemaPackage#getSet_IndexedSetModeSpecification()
-	 * @model containment="true"
+	 * @see org.lh.dmlj.schema.IndexedSetModeSpecification#getSet
+	 * @model opposite="set" containment="true"
 	 * @generated
 	 */
 	IndexedSetModeSpecification getIndexedSetModeSpecification();

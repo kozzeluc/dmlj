@@ -7,11 +7,15 @@
 package org.lh.dmlj.schema.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.SchemaPackage;
 
@@ -22,6 +26,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl#getAreaSpecification <em>Area Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl#getOffsetPageCount <em>Offset Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl#getOffsetPercent <em>Offset Percent</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl#getPageCount <em>Page Count</em>}</li>
@@ -129,6 +134,47 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public AreaSpecification getAreaSpecification() {
+		if (eContainerFeatureID() != SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION) return null;
+		return (AreaSpecification)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetAreaSpecification(AreaSpecification newAreaSpecification, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newAreaSpecification, SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setAreaSpecification(AreaSpecification newAreaSpecification) {
+		if (newAreaSpecification != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION && newAreaSpecification != null)) {
+			if (EcoreUtil.isAncestor(this, newAreaSpecification))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newAreaSpecification != null)
+				msgs = ((InternalEObject)newAreaSpecification).eInverseAdd(this, SchemaPackage.AREA_SPECIFICATION__OFFSET_EXPRESSION, AreaSpecification.class, msgs);
+			msgs = basicSetAreaSpecification(newAreaSpecification, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION, newAreaSpecification, newAreaSpecification));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Integer getOffsetPageCount() {
 		return offsetPageCount;
 	}
@@ -214,8 +260,54 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetAreaSpecification((AreaSpecification)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION:
+				return basicSetAreaSpecification(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION:
+				return eInternalContainer().eInverseRemove(this, SchemaPackage.AREA_SPECIFICATION__OFFSET_EXPRESSION, AreaSpecification.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION:
+				return getAreaSpecification();
 			case SchemaPackage.OFFSET_EXPRESSION__OFFSET_PAGE_COUNT:
 				return getOffsetPageCount();
 			case SchemaPackage.OFFSET_EXPRESSION__OFFSET_PERCENT:
@@ -236,6 +328,9 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION:
+				setAreaSpecification((AreaSpecification)newValue);
+				return;
 			case SchemaPackage.OFFSET_EXPRESSION__OFFSET_PAGE_COUNT:
 				setOffsetPageCount((Integer)newValue);
 				return;
@@ -260,6 +355,9 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION:
+				setAreaSpecification((AreaSpecification)null);
+				return;
 			case SchemaPackage.OFFSET_EXPRESSION__OFFSET_PAGE_COUNT:
 				setOffsetPageCount(OFFSET_PAGE_COUNT_EDEFAULT);
 				return;
@@ -284,6 +382,8 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION:
+				return getAreaSpecification() != null;
 			case SchemaPackage.OFFSET_EXPRESSION__OFFSET_PAGE_COUNT:
 				return OFFSET_PAGE_COUNT_EDEFAULT == null ? offsetPageCount != null : !OFFSET_PAGE_COUNT_EDEFAULT.equals(offsetPageCount);
 			case SchemaPackage.OFFSET_EXPRESSION__OFFSET_PERCENT:

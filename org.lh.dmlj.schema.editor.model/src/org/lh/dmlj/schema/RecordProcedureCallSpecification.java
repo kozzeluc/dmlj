@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getCallTime <em>Call Time</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getProcedure <em>Procedure</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getVerb <em>Verb</em>}</li>
  * </ul>
  * </p>
@@ -52,6 +53,34 @@ public interface RecordProcedureCallSpecification extends EObject {
 	 * @generated
 	 */
 	void setProcedure(Procedure value);
+
+	/**
+	 * Returns the value of the '<em><b>Record</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.SchemaRecord#getProcedures <em>Procedures</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Record</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Record</em>' container reference.
+	 * @see #setRecord(SchemaRecord)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getRecordProcedureCallSpecification_Record()
+	 * @see org.lh.dmlj.schema.SchemaRecord#getProcedures
+	 * @model opposite="procedures" required="true" transient="false"
+	 * @generated
+	 */
+	SchemaRecord getRecord();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getRecord <em>Record</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Record</em>' container reference.
+	 * @see #getRecord()
+	 * @generated
+	 */
+	void setRecord(SchemaRecord value);
 
 	/**
 	 * Returns the value of the '<em><b>Call Time</b></em>' attribute.

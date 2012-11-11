@@ -1715,8 +1715,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getOffsetExpression_OffsetPageCount() {
-		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(0);
+	public EReference getOffsetExpression_AreaSpecification() {
+		return (EReference)offsetExpressionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1724,7 +1724,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getOffsetExpression_OffsetPercent() {
+	public EAttribute getOffsetExpression_OffsetPageCount() {
 		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1733,7 +1733,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getOffsetExpression_PageCount() {
+	public EAttribute getOffsetExpression_OffsetPercent() {
 		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1742,8 +1742,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getOffsetExpression_Percent() {
+	public EAttribute getOffsetExpression_PageCount() {
 		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getOffsetExpression_Percent() {
+		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1806,7 +1815,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getIndexedSetModeSpecification_SymbolicIndexName() {
-		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1816,6 +1825,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 */
 	public EAttribute getIndexedSetModeSpecification_KeyCount() {
 		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIndexedSetModeSpecification_Set() {
+		return (EReference)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1886,6 +1904,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getRecordProcedureCallSpecification_Record() {
+		return (EReference)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getRecordProcedureCallSpecification_CallTime() {
 		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1896,7 +1923,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getRecordProcedureCallSpecification_Verb() {
-		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1942,6 +1969,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 */
 	public EReference getOccursSpecification_DependingOn() {
 		return (EReference)occursSpecificationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOccursSpecification_Element() {
+		return (EReference)occursSpecificationEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2170,6 +2206,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		indexedSetModeSpecificationEClass = createEClass(INDEXED_SET_MODE_SPECIFICATION);
 		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__DISPLACEMENT_PAGE_COUNT);
 		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT);
+		createEReference(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__SET);
 		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME);
 
 		keyEClass = createEClass(KEY);
@@ -2204,8 +2241,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		occursSpecificationEClass = createEClass(OCCURS_SPECIFICATION);
 		createEAttribute(occursSpecificationEClass, OCCURS_SPECIFICATION__COUNT);
 		createEReference(occursSpecificationEClass, OCCURS_SPECIFICATION__DEPENDING_ON);
+		createEReference(occursSpecificationEClass, OCCURS_SPECIFICATION__ELEMENT);
 
 		offsetExpressionEClass = createEClass(OFFSET_EXPRESSION);
+		createEReference(offsetExpressionEClass, OFFSET_EXPRESSION__AREA_SPECIFICATION);
 		createEAttribute(offsetExpressionEClass, OFFSET_EXPRESSION__OFFSET_PAGE_COUNT);
 		createEAttribute(offsetExpressionEClass, OFFSET_EXPRESSION__OFFSET_PERCENT);
 		createEAttribute(offsetExpressionEClass, OFFSET_EXPRESSION__PAGE_COUNT);
@@ -2223,6 +2262,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		recordProcedureCallSpecificationEClass = createEClass(RECORD_PROCEDURE_CALL_SPECIFICATION);
 		createEAttribute(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME);
 		createEReference(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE);
+		createEReference(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD);
 		createEAttribute(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__VERB);
 
 		roleEClass = createEClass(ROLE);
@@ -2356,7 +2396,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEClass(areaSpecificationEClass, AreaSpecification.class, "AreaSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAreaSpecification_SymbolicSubareaName(), ecorePackage.getEString(), "symbolicSubareaName", null, 0, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAreaSpecification_Area(), this.getSchemaArea(), this.getSchemaArea_AreaSpecifications(), "area", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAreaSpecification_OffsetExpression(), this.getOffsetExpression(), null, "offsetExpression", null, 0, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAreaSpecification_OffsetExpression(), this.getOffsetExpression(), this.getOffsetExpression_AreaSpecification(), "offsetExpression", null, 0, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAreaSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_AreaSpecification(), "record", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAreaSpecification_SystemOwner(), this.getSystemOwner(), this.getSystemOwner_AreaSpecification(), "systemOwner", null, 1, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2406,7 +2446,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getElement_Level(), ecorePackage.getEShort(), "level", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getElement_Nullable(), ecorePackage.getEBoolean(), "nullable", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getElement_OccursSpecification(), this.getOccursSpecification(), null, "occursSpecification", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getElement_OccursSpecification(), this.getOccursSpecification(), this.getOccursSpecification_Element(), "occursSpecification", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getElement_Offset(), ecorePackage.getEShort(), "offset", null, 0, 1, Element.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Parent(), this.getElement(), this.getElement_Children(), "parent", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getElement_Picture(), ecorePackage.getEString(), "picture", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2420,6 +2460,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEClass(indexedSetModeSpecificationEClass, IndexedSetModeSpecification.class, "IndexedSetModeSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIndexedSetModeSpecification_DisplacementPageCount(), ecorePackage.getEShortObject(), "displacementPageCount", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIndexedSetModeSpecification_KeyCount(), ecorePackage.getEShortObject(), "keyCount", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIndexedSetModeSpecification_Set(), this.getSet(), this.getSet_IndexedSetModeSpecification(), "set", null, 1, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIndexedSetModeSpecification_SymbolicIndexName(), ecorePackage.getEString(), "symbolicIndexName", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(keyEClass, Key.class, "Key", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2454,8 +2495,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEClass(occursSpecificationEClass, OccursSpecification.class, "OccursSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getOccursSpecification_Count(), ecorePackage.getEShort(), "count", null, 0, 1, OccursSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getOccursSpecification_DependingOn(), this.getElement(), null, "dependingOn", null, 0, 1, OccursSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getOccursSpecification_Element(), this.getElement(), this.getElement_OccursSpecification(), "element", null, 1, 1, OccursSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(offsetExpressionEClass, OffsetExpression.class, "OffsetExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getOffsetExpression_AreaSpecification(), this.getAreaSpecification(), this.getAreaSpecification_OffsetExpression(), "areaSpecification", null, 1, 1, OffsetExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getOffsetExpression_OffsetPageCount(), ecorePackage.getEIntegerObject(), "offsetPageCount", null, 0, 1, OffsetExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getOffsetExpression_OffsetPercent(), ecorePackage.getEShortObject(), "offsetPercent", null, 0, 1, OffsetExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getOffsetExpression_PageCount(), ecorePackage.getEIntegerObject(), "pageCount", null, 0, 1, OffsetExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2473,6 +2516,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEClass(recordProcedureCallSpecificationEClass, RecordProcedureCallSpecification.class, "RecordProcedureCallSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getRecordProcedureCallSpecification_CallTime(), this.getProcedureCallTime(), "callTime", null, 0, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRecordProcedureCallSpecification_Procedure(), this.getProcedure(), null, "procedure", null, 1, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRecordProcedureCallSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_Procedures(), "record", null, 1, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRecordProcedureCallSpecification_Verb(), this.getRecordProcedureCallVerb(), "verb", null, 0, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(roleEClass, Role.class, "Role", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2540,7 +2584,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getSchemaRecord_Keys(), this.getKey(), this.getKey_Record(), "keys", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_MemberRoles(), this.getMemberRole(), this.getMemberRole_Record(), "memberRoles", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_OwnerRoles(), this.getOwnerRole(), this.getOwnerRole_Record(), "ownerRoles", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getSchemaRecord_Procedures(), this.getRecordProcedureCallSpecification(), null, "procedures", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_Procedures(), this.getRecordProcedureCallSpecification(), this.getRecordProcedureCallSpecification_Record(), "procedures", null, 0, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_Roles(), this.getRole(), null, "roles", null, 0, -1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_RootElements(), this.getElement(), null, "rootElements", null, 1, -1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_Schema(), this.getSchema(), this.getSchema_Records(), "schema", null, 1, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2553,7 +2597,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEParameter(op, ecorePackage.getEString(), "setName", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(setEClass, Set.class, "Set", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSet_IndexedSetModeSpecification(), this.getIndexedSetModeSpecification(), null, "indexedSetModeSpecification", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSet_IndexedSetModeSpecification(), this.getIndexedSetModeSpecification(), this.getIndexedSetModeSpecification_Set(), "indexedSetModeSpecification", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_Members(), this.getMemberRole(), this.getMemberRole_Set(), "members", null, 1, -1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSet_Mode(), this.getSetMode(), "mode", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSet_Name(), ecorePackage.getEString(), "name", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

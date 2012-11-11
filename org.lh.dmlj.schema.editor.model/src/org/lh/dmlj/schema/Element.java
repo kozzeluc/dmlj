@@ -294,6 +294,7 @@ public interface Element extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Occurs Specification</b></em>' containment reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.OccursSpecification#getElement <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Occurs Specification</em>' containment reference isn't clear,
@@ -303,7 +304,8 @@ public interface Element extends EObject {
 	 * @return the value of the '<em>Occurs Specification</em>' containment reference.
 	 * @see #setOccursSpecification(OccursSpecification)
 	 * @see org.lh.dmlj.schema.SchemaPackage#getElement_OccursSpecification()
-	 * @model containment="true"
+	 * @see org.lh.dmlj.schema.OccursSpecification#getElement
+	 * @model opposite="element" containment="true"
 	 * @generated
 	 */
 	OccursSpecification getOccursSpecification();

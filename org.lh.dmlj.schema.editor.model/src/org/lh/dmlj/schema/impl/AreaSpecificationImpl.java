@@ -200,9 +200,9 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 		if (newOffsetExpression != offsetExpression) {
 			NotificationChain msgs = null;
 			if (offsetExpression != null)
-				msgs = ((InternalEObject)offsetExpression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.AREA_SPECIFICATION__OFFSET_EXPRESSION, null, msgs);
+				msgs = ((InternalEObject)offsetExpression).eInverseRemove(this, SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION, OffsetExpression.class, msgs);
 			if (newOffsetExpression != null)
-				msgs = ((InternalEObject)newOffsetExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.AREA_SPECIFICATION__OFFSET_EXPRESSION, null, msgs);
+				msgs = ((InternalEObject)newOffsetExpression).eInverseAdd(this, SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION, OffsetExpression.class, msgs);
 			msgs = basicSetOffsetExpression(newOffsetExpression, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
@@ -342,6 +342,10 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetArea((SchemaArea)otherEnd, msgs);
+			case SchemaPackage.AREA_SPECIFICATION__OFFSET_EXPRESSION:
+				if (offsetExpression != null)
+					msgs = ((InternalEObject)offsetExpression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.AREA_SPECIFICATION__OFFSET_EXPRESSION, null, msgs);
+				return basicSetOffsetExpression((OffsetExpression)otherEnd, msgs);
 			case SchemaPackage.AREA_SPECIFICATION__RECORD:
 				if (record != null)
 					msgs = ((InternalEObject)record).eInverseRemove(this, SchemaPackage.SCHEMA_RECORD__AREA_SPECIFICATION, SchemaRecord.class, msgs);

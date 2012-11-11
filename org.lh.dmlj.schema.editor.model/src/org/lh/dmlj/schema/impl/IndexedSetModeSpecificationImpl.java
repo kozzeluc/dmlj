@@ -7,13 +7,17 @@
 package org.lh.dmlj.schema.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.lh.dmlj.schema.IndexedSetModeSpecification;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.Set;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,6 +28,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl#getDisplacementPageCount <em>Displacement Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl#getKeyCount <em>Key Count</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl#getSymbolicIndexName <em>Symbolic Index Name</em>}</li>
  * </ul>
  * </p>
@@ -131,6 +136,50 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetSet((Set)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET:
+				return basicSetSet(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET:
+				return eInternalContainer().eInverseRemove(this, SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION, Set.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Short getKeyCount() {
 		return keyCount;
 	}
@@ -145,6 +194,47 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 		keyCount = newKeyCount;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT, oldKeyCount, keyCount));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Set getSet() {
+		if (eContainerFeatureID() != SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET) return null;
+		return (Set)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetSet(Set newSet, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newSet, SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSet(Set newSet) {
+		if (newSet != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET && newSet != null)) {
+			if (EcoreUtil.isAncestor(this, newSet))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newSet != null)
+				msgs = ((InternalEObject)newSet).eInverseAdd(this, SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION, Set.class, msgs);
+			msgs = basicSetSet(newSet, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET, newSet, newSet));
 	}
 
 	/**
@@ -180,6 +270,8 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 				return getDisplacementPageCount();
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT:
 				return getKeyCount();
+			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET:
+				return getSet();
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME:
 				return getSymbolicIndexName();
 		}
@@ -199,6 +291,9 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 				return;
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT:
 				setKeyCount((Short)newValue);
+				return;
+			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET:
+				setSet((Set)newValue);
 				return;
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME:
 				setSymbolicIndexName((String)newValue);
@@ -221,6 +316,9 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT:
 				setKeyCount(KEY_COUNT_EDEFAULT);
 				return;
+			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET:
+				setSet((Set)null);
+				return;
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME:
 				setSymbolicIndexName(SYMBOLIC_INDEX_NAME_EDEFAULT);
 				return;
@@ -240,6 +338,8 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 				return DISPLACEMENT_PAGE_COUNT_EDEFAULT == null ? displacementPageCount != null : !DISPLACEMENT_PAGE_COUNT_EDEFAULT.equals(displacementPageCount);
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__KEY_COUNT:
 				return KEY_COUNT_EDEFAULT == null ? keyCount != null : !KEY_COUNT_EDEFAULT.equals(keyCount);
+			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET:
+				return getSet() != null;
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME:
 				return SYMBOLIC_INDEX_NAME_EDEFAULT == null ? symbolicIndexName != null : !SYMBOLIC_INDEX_NAME_EDEFAULT.equals(symbolicIndexName);
 		}

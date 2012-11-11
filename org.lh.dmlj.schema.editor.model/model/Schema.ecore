@@ -30,7 +30,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="area" lowerBound="1" eType="#//SchemaArea"
         eOpposite="#//SchemaArea/areaSpecifications"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offsetExpression" eType="#//OffsetExpression"
-        containment="true"/>
+        containment="true" eOpposite="#//OffsetExpression/areaSpecification"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="record" lowerBound="1"
         eType="#//SchemaRecord" eOpposite="#//SchemaRecord/areaSpecification"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="systemOwner" lowerBound="1"
@@ -111,7 +111,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nullable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="occursSpecification" eType="#//OccursSpecification"
-        containment="true"/>
+        containment="true" eOpposite="#//OccursSpecification/element"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="offset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
         changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Element"
@@ -129,6 +129,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displacementPageCount"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//Set"
+        eOpposite="#//Set/indexedSetModeSpecification"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="symbolicIndexName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Key">
@@ -187,8 +189,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="OccursSpecification">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependingOn" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" lowerBound="1"
+        eType="#//Element" eOpposite="#//Element/occursSpecification"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OffsetExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="areaSpecification" lowerBound="1"
+        eType="#//AreaSpecification" eOpposite="#//AreaSpecification/offsetExpression"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="offsetPageCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="offsetPercent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
@@ -214,6 +220,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="callTime" eType="#//ProcedureCallTime"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" lowerBound="1"
         eType="#//Procedure"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="record" lowerBound="1"
+        eType="#//SchemaRecord" eOpposite="#//SchemaRecord/procedures"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="verb" eType="#//RecordProcedureCallVerb"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RecordProcedureCallVerb">
@@ -327,7 +335,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="ownerRoles" upperBound="-1"
         eType="#//OwnerRole" derived="true" eOpposite="#//OwnerRole/record"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedures" upperBound="-1"
-        eType="#//RecordProcedureCallSpecification" containment="true"/>
+        eType="#//RecordProcedureCallSpecification" containment="true" eOpposite="#//RecordProcedureCallSpecification/record"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1"
         eType="#//Role" changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootElements" lowerBound="1"
@@ -339,7 +347,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Set">
     <eStructuralFeatures xsi:type="ecore:EReference" name="indexedSetModeSpecification"
-        eType="#//IndexedSetModeSpecification" containment="true"/>
+        eType="#//IndexedSetModeSpecification" containment="true" eOpposite="#//IndexedSetModeSpecification/set"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="members" lowerBound="1"
         upperBound="-1" eType="#//MemberRole" containment="true" eOpposite="#//MemberRole/set"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode" eType="#//SetMode"/>

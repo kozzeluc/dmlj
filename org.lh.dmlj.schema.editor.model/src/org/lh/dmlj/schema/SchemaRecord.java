@@ -406,6 +406,7 @@ public interface SchemaRecord extends DiagramNode {
 	/**
 	 * Returns the value of the '<em><b>Procedures</b></em>' containment reference list.
 	 * The list contents are of type {@link org.lh.dmlj.schema.RecordProcedureCallSpecification}.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getRecord <em>Record</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Procedures</em>' containment reference list isn't clear,
@@ -414,7 +415,8 @@ public interface SchemaRecord extends DiagramNode {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Procedures</em>' containment reference list.
 	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_Procedures()
-	 * @model containment="true"
+	 * @see org.lh.dmlj.schema.RecordProcedureCallSpecification#getRecord
+	 * @model opposite="record" containment="true"
 	 * @generated
 	 */
 	EList<RecordProcedureCallSpecification> getProcedures();
