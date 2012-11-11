@@ -1525,6 +1525,23 @@ public class SchemaImportTool {
 		
 		// records (catalog; without diagram data)...
 		if (isIdmsntwk(schema) && option[OPTION_COMPLETE_CATALOG]) {			
+			
+			// generate catalog related records...
+			Schema_1045 schema_1045 =
+				catalog.find(Schema_1045.class, 
+							 new CalcKey_Schema_1045("SYSTEM"));
+			for (Table_1050 table_1050 :
+				 catalog.<Table_1050>walk(schema_1045, "SCHEMA-TABLE", NEXT)) {
+				
+				String recordName = 
+					table_1050.getName_1050().replace("_", "-") + "-" + 
+					table_1050.getTableid_1050();
+				// avoid duplicate records at all time...
+				if (schema.getRecord(recordName) == null) {
+					processCatalogRecord(schema, catalog, table_1050);
+				}
+			}
+			
 			// clone the DDLDCLOD records to the DDLCATLOD area...
 			SchemaArea area = schema.getArea("DDLCATLOD");
 			if (area == null) {
@@ -1546,21 +1563,7 @@ public class SchemaImportTool {
 					}
 				}
 			}
-			// generate catalog related records...
-			Schema_1045 schema_1045 =
-				catalog.find(Schema_1045.class, 
-							 new CalcKey_Schema_1045("SYSTEM"));
-			for (Table_1050 table_1050 :
-				 catalog.<Table_1050>walk(schema_1045, "SCHEMA-TABLE", NEXT)) {
-				
-				String recordName = 
-					table_1050.getName_1050().replace("_", "-") + "-" + 
-					table_1050.getTableid_1050();
-				// avoid duplicate records at all time...
-				if (schema.getRecord(recordName) == null) {
-					processCatalogRecord(schema, catalog, table_1050);
-				}
-			}
+			
 		}	
 		
 		  
@@ -1660,40 +1663,6 @@ public class SchemaImportTool {
 		
 		// sets (catalog)...
 		if (isIdmsntwk(schema) && option[OPTION_COMPLETE_CATALOG]) {
-			// clone the DDLDCLOD sets to the DDLCATLOD area; there are no 
-			// references to other areas...
-			for (Sor_046 sor_046 : dictionary.<Sor_046>walk(s_010, "S-SOR", NEXT)) {
-				Srcd_113 srcd_113 = dictionary.find(sor_046, "SRCD-SOR", OWNER);
-				if (srcd_113.getSrId_113() != 1) { // ignore all CALC sets
-					Sam_056 sam_056 = dictionary.find(srcd_113, "SRCD-SAM", FIRST);
-					if (sam_056.getSaNam_056().equals("DDLDCLOD")) {
-						short mode = sor_046.getSetMode_046();
-						if (mode == MODE_CHAINED[0] || 
-							mode == MODE_CHAINED[1]) {
-							
-							processChainedSet(schema, dictionary, sor_046, 
-											  option, "_");
-						} else if (mode == MODE_INDEXED) {
-							if (sor_046.getSorId_046() == 7) {		
-								processSystemOwnedIndexedSet(schema, dictionary, 
-															 sor_046, option, 
-															 "_");
-							} else {								
-								processUserOwnedIndexedSet(schema, dictionary, 
-														   sor_046, option, 
-														   "_");
-							}
-						} else {
-							// cannot happen...
-							String p = 
-								"unsupported set type: set=" + 
-								sor_046.getSetNam_046() + ", mode=" + mode + 
-								", owner=SR" + sor_046.getSorId_046();
-							throw new RuntimeException(p);
-						}						
-					}
-				}
-			}
 			// generate catalog related sets...
 			Schema_1045 schema_1045 =
 				catalog.find(Schema_1045.class, 
@@ -1744,6 +1713,41 @@ public class SchemaImportTool {
 			for (String key : keys) {
 				Index_1041 index_1041 = map.get(key);			
 				processCatalogIndex(schema, catalog, index_1041);
+			}
+			
+			// clone the DDLDCLOD sets to the DDLCATLOD area; there are no 
+			// references to other areas...
+			for (Sor_046 sor_046 : dictionary.<Sor_046>walk(s_010, "S-SOR", NEXT)) {
+				Srcd_113 srcd_113 = dictionary.find(sor_046, "SRCD-SOR", OWNER);
+				if (srcd_113.getSrId_113() != 1) { // ignore all CALC sets
+					Sam_056 sam_056 = dictionary.find(srcd_113, "SRCD-SAM", FIRST);
+					if (sam_056.getSaNam_056().equals("DDLDCLOD")) {
+						short mode = sor_046.getSetMode_046();
+						if (mode == MODE_CHAINED[0] || 
+							mode == MODE_CHAINED[1]) {
+							
+							processChainedSet(schema, dictionary, sor_046, 
+											  option, "_");
+						} else if (mode == MODE_INDEXED) {
+							if (sor_046.getSorId_046() == 7) {		
+								processSystemOwnedIndexedSet(schema, dictionary, 
+															 sor_046, option, 
+															 "_");
+							} else {								
+								processUserOwnedIndexedSet(schema, dictionary, 
+														   sor_046, option, 
+														   "_");
+							}
+						} else {
+							// cannot happen...
+							String p = 
+								"unsupported set type: set=" + 
+								sor_046.getSetNam_046() + ", mode=" + mode + 
+								", owner=SR" + sor_046.getSorId_046();
+							throw new RuntimeException(p);
+						}						
+					}
+				}
 			}
 		}
 		

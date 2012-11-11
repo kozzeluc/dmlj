@@ -35,17 +35,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.lh.dmlj.schema.DiagramData;
-import org.lh.dmlj.schema.Ruler;
-import org.lh.dmlj.schema.RulerType;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
-import org.lh.dmlj.schema.editor.importtool.AbstractSchemaImportTool;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryPageController;
+import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 import org.lh.dmlj.schema.editor.importtool.annotation.Context;
 import org.lh.dmlj.schema.editor.importtool.annotation.Controller;
 
@@ -297,37 +293,18 @@ public class ImportWizard extends Wizard implements IImportWizard {
 	}
 
 	@Override
-	public boolean performFinish() {	
+	public boolean performFinish() {		
 		
-		// get a hold of the import tool, instantiate a Schema and inject it 
-		// into the tool and set the tool's (optional) parameters
-		final AbstractSchemaImportTool importTool = 
+		// get a hold of the import tool and the parameters configured for it
+		// in the defining extension
+		ISchemaImportTool importTool = 
 			activeImportToolDescriptor.getSchemaImportTool();
-		final Schema schema = SchemaFactory.eINSTANCE.createSchema();
-		String schemaName = context.getAttribute(IDataEntryContext.SCHEMA_NAME);
-		schema.setName(schemaName);
-		Short schemaVersion = 
-			context.getAttribute(IDataEntryContext.SCHEMA_VERSION);
-		schema.setVersion(schemaVersion.shortValue());
-		inject(AbstractSchemaImportTool.class, importTool, 
-			   org.lh.dmlj.schema.editor.importtool.annotation.Schema.class, 
-			   schema);
+		Properties importToolParms = 
+			activeImportToolDescriptor.getParameters();	
 		
-		// diagram data with rulers (todo: set these attributes according to 
-		// the editor's preferences)...
-		DiagramData diagramData = SchemaFactory.eINSTANCE.createDiagramData();
-		schema.setDiagramData(diagramData);
-		Ruler verticalRuler = SchemaFactory.eINSTANCE.createRuler();
-		verticalRuler.setType(RulerType.VERTICAL);
-		diagramData.setVerticalRuler(verticalRuler);
-		diagramData.getRulers().add(verticalRuler); // ruler container
-		Ruler horizontalRuler = SchemaFactory.eINSTANCE.createRuler();
-		horizontalRuler.setType(RulerType.HORIZONTAL);
-		diagramData.setHorizontalRuler(horizontalRuler);
-		diagramData.getRulers().add(horizontalRuler); // ruler container		
-		
-		final Properties importToolParameters = 
-			activeImportToolDescriptor.getParameters();
+		// create the import tool proxy
+		final SchemaImportToolProxy proxy = 
+			new SchemaImportToolProxy(importTool, context, importToolParms);					
 		
 		// get a hold of the record layout manager and its (optional) parameters
 		final AbstractRecordLayoutManager recordLayoutManager = 
@@ -337,7 +314,7 @@ public class ImportWizard extends Wizard implements IImportWizard {
 			layoutManagerSelectionPage.getLayoutManagerDescriptor()
 									  .getParameters();		
 		
-		// create the schema and persist it to the file specified by the user;
+		// populate the schema and persist it to the file specified by the user;
     	// do the work within an operation.		
 		IPath fullPath = new Path(outputFileSelectionPage.getOutputFile()
 														 .getAbsolutePath());
@@ -358,27 +335,18 @@ public class ImportWizard extends Wizard implements IImportWizard {
 			protected void execute(IProgressMonitor progressMonitor) {
 				try {
 											
-					// populate the schema (todo: pass the import tool something
-					// that will manipulate the names of DDLCATLOD entities; 
-					// this is necessary in the case of IDMSNTWK schemas)
-					importTool.performTask(context, importToolParameters);
-					// todo: validate the schema by invoking the importTool's
-					// @Validator annotated method (if provided)
+					// create the schema and perform validations as we go
+					Schema schema = proxy.invokeImportTool();					
 					
 					// create a layout manager and invoke its layout() method to 
 					// set the diagram location for all records, system owners
-					// and set labels
+					// and set labels - perform validations as we go
 					LayoutManager layoutManager = 
 						new LayoutManager(schema, recordLayoutManager, 
 										  layoutManagerParms);
-					layoutManager.layout();
-					
-					// todo: validate the schema diagam locations by invoking 
-					// the layoutManager's @Validator annotated method (if
-					// provided)
+					layoutManager.layout();					
 					
 					// Create a resource set
-					//
 					ResourceSet resourceSet = new ResourceSetImpl();
 
 					// Get the URI of the model file.
@@ -387,15 +355,12 @@ public class ImportWizard extends Wizard implements IImportWizard {
 						URI.createPlatformResourceURI(modelFile.getFullPath().toString(), true);
 
 					// Create a resource for this file.
-					//
 					Resource resource = resourceSet.createResource(fileURI);
 
-					// Add the initial model object to the contents.
-					//												
+					// Add the initial model object to the contents.												
 					resource.getContents().add(schema);						
 
 					// Save the contents of the resource to the file system.
-					//
 					resource.save(null);					
 					
 				} catch (Exception exception) {

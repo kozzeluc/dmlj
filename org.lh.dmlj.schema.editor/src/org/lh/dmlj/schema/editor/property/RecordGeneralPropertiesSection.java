@@ -130,14 +130,15 @@ public class RecordGeneralPropertiesSection
 			// get the new record id
 			short newRecordId = ((Short) newValue).shortValue();			
 			// newRecordId must be an unsigned integer in the range 10 through 
-			// 9999. Record IDs can be duplicated across areas in the schema, 
-			// however, record IDs must be unique for all records within one 
-			// area					
-			if (newRecordId < 10 || newRecordId > 9999) {
-				String message = 
-					"must be an unsigned integer in the range 10 through 9999";	
-				return new ErrorEditHandler(message);
+			// 9999.				
+			ValidationResult validationResult = 
+				NamingConventions.validate(newRecordId, 
+										   NamingConventions.Type.RECORD_ID);			
+			if (validationResult.getStatus() == ValidationResult.Status.ERROR) {				
+				return new ErrorEditHandler(validationResult.getMessage());
 			}
+			// Record IDs can be duplicated across areas in the schema, however, 
+			// record IDs must be unique for all records within one area	
 			SchemaArea area = target.getAreaSpecification().getArea();
 			for (SchemaRecord record : area.getRecords()) {
 				if (record != target && record.getId() == newRecordId) {

@@ -33,6 +33,7 @@ public abstract class AbstractOffsetExpressionManipulationCommand
 			// at least 1 of the offset expression values is to be set (unless 
 			// they match the defaults)
 			if (offsetPageCount == null || offsetPageCount.intValue() != 0 ||
+				offsetPercent == null || offsetPercent.shortValue() != 0 ||
 				percent == null || percent.intValue() != 100) {
 				
 				// offset expression contains non default values, so go ahead

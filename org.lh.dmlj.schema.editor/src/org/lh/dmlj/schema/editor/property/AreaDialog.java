@@ -501,10 +501,10 @@ public class AreaDialog extends Dialog {
 						b2 = true;
 					}
 				} else {
-					// percent; range: 0-100
+					// percent; range: 1-100
 					short percent = 
 						Short.valueOf(textSize.getText().trim()).shortValue();
-					if (percent > -1 && percent <= 100) {
+					if (percent > 0 && percent <= 100) {
 						b2 = true;
 					}
 				}

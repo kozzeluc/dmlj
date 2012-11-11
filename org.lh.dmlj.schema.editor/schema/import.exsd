@@ -95,7 +95,9 @@
    <element name="importTool">
       <annotation>
          <documentation>
-            An import tool that produces an instance of org.lh.dmlj.schema.Schema (without any instances of org.lh.dmlj.schema.DiagramData).
+            An import tool that delivers the data to populate an instance of org.lh.dmlj.schema.Schema.
+
+Some options specific to the IDMSNTWK version 1 schema have to be provided by the import tool.  An import tool should thus provide a data entry page dedicated to IDMSNTWK version 1 options.
          </documentation>
       </annotation>
       <complexType>
@@ -126,10 +128,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The fully qualified name of the class that extends org.lh.dmlj.schema.editor.importtool.AbstractSchemaImportTool.
+                  The fully qualified name of the class that implements org.lh.dmlj.schema.editor.importtool.ISchemaImportTool.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.lh.dmlj.schema.editor.importtool.AbstractSchemaImportTool:"/>
+                  <meta.attribute kind="java" basedOn=":org.lh.dmlj.schema.editor.importtool.ISchemaImportTool"/>
                </appinfo>
             </annotation>
          </attribute>

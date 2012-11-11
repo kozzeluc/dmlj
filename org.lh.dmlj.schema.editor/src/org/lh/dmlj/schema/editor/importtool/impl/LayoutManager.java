@@ -44,10 +44,10 @@ public class LayoutManager {
 				// deal with the set label...
 				ConnectionLabel connectionLabel = 
 					memberRole.getConnectionLabel();
-				DiagramLocation location = 
+				/*DiagramLocation location = 
 					SchemaFactory.eINSTANCE.createDiagramLocation();
 				schema.getDiagramData().getLocations().add(location);
-				connectionLabel.setDiagramLocation(location);				
+				connectionLabel.setDiagramLocation(location);*/				
 	
 				// we don't provide a source- and targetAnchor nor any
 				// bendpoints for the diagram connection here				

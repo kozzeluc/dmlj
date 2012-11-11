@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
-import org.lh.dmlj.schema.editor.importtool.AbstractSchemaImportTool;
+import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 
 public class ImportToolDescriptor {
 
@@ -22,7 +22,7 @@ public class ImportToolDescriptor {
 		new ArrayList<>();
 	private Properties					  parameters;
 	private String 						  pluginId;
-	private AbstractSchemaImportTool 	  schemaImportTool;
+	private ISchemaImportTool 			  schemaImportTool;
 	private String 						  source;
 	
 	public ImportToolDescriptor(IExtension extension,
@@ -96,7 +96,7 @@ public class ImportToolDescriptor {
 		return pluginId;
 	}
 
-	public AbstractSchemaImportTool getSchemaImportTool() {
+	public ISchemaImportTool getSchemaImportTool() {
 		if (schemaImportTool != null) {
 			return schemaImportTool;
 		}
@@ -104,7 +104,7 @@ public class ImportToolDescriptor {
 			String propertyName = ExtensionPointConstants.ATTRIBUTE_CLASS;
 			Object executableExtension =
 				configElement.createExecutableExtension(propertyName);
-			schemaImportTool = (AbstractSchemaImportTool) executableExtension;
+			schemaImportTool = (ISchemaImportTool) executableExtension;
 			return schemaImportTool;
 		} catch (CoreException e) {
 			e.printStackTrace();
