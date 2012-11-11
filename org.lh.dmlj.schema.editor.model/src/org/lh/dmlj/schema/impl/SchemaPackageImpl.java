@@ -1859,8 +1859,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getAreaProcedureCallSpecification_Area() {
+		return (EReference)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getAreaProcedureCallSpecification_Procedure() {
-		return (EReference)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(2);
+		return (EReference)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1869,7 +1878,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getAreaProcedureCallSpecification_CallTime() {
-		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
+		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1878,7 +1887,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getAreaProcedureCallSpecification_Function() {
-		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2135,6 +2144,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		// Create classes and their features
 		areaProcedureCallSpecificationEClass = createEClass(AREA_PROCEDURE_CALL_SPECIFICATION);
+		createEReference(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__AREA);
 		createEAttribute(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME);
 		createEAttribute(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION);
 		createEReference(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE);
@@ -2389,6 +2399,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(areaProcedureCallSpecificationEClass, AreaProcedureCallSpecification.class, "AreaProcedureCallSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAreaProcedureCallSpecification_Area(), this.getSchemaArea(), this.getSchemaArea_Procedures(), "area", null, 1, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAreaProcedureCallSpecification_CallTime(), this.getProcedureCallTime(), "callTime", null, 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAreaProcedureCallSpecification_Function(), this.getAreaProcedureCallFunction(), "function", "", 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAreaProcedureCallSpecification_Procedure(), this.getProcedure(), null, "procedure", null, 1, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2557,7 +2568,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getSchemaArea_AreaSpecifications(), this.getAreaSpecification(), this.getAreaSpecification_Area(), "areaSpecifications", null, 0, -1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaArea_Indexes(), this.getSystemOwner(), null, "indexes", null, 0, -1, SchemaArea.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaArea_Name(), ecorePackage.getEString(), "name", null, 0, 1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSchemaArea_Procedures(), this.getAreaProcedureCallSpecification(), null, "procedures", null, 0, -1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaArea_Procedures(), this.getAreaProcedureCallSpecification(), this.getAreaProcedureCallSpecification_Area(), "procedures", null, 0, -1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaArea_Records(), this.getSchemaRecord(), null, "records", null, 0, -1, SchemaArea.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaArea_Schema(), this.getSchema(), this.getSchema_Areas(), "schema", null, 1, 1, SchemaArea.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

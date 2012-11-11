@@ -19,6 +19,8 @@
     <eLiterals name="ROLLBACK" value="13"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AreaProcedureCallSpecification">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="area" lowerBound="1" eType="#//SchemaArea"
+        eOpposite="#//SchemaArea/procedures"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="callTime" eType="#//ProcedureCallTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="function" eType="#//AreaProcedureCallFunction"
         defaultValueLiteral=""/>
@@ -292,7 +294,7 @@
         derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedures" upperBound="-1"
-        eType="#//AreaProcedureCallSpecification" containment="true"/>
+        eType="#//AreaProcedureCallSpecification" containment="true" eOpposite="#//AreaProcedureCallSpecification/area"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="records" upperBound="-1"
         eType="#//SchemaRecord" changeable="false" volatile="true" transient="true"
         derived="true"/>

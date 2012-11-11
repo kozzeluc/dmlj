@@ -2327,4 +2327,16 @@
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_1k6DECj-EeKnecBPQplVGg" id="(0.8354978354978355,0.325)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_1k6DESj-EeKnecBPQplVGg" id="(0.2247557003257329,0.759493670886076)"/>
   </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_tTWXICwgEeK_GeWT8nWr7Q" type="3002" source="_bo4M6mhJEeGYNNH4YLenhA" target="_bpeqMGhJEeGYNNH4YLenhA">
+    <children xmi:type="notation:Node" xmi:id="_tTYMUCwgEeK_GeWT8nWr7Q" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_tTYMUSwgEeK_GeWT8nWr7Q" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tTYzYCwgEeK_GeWT8nWr7Q" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_tTYzYSwgEeK_GeWT8nWr7Q" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_tTWXISwgEeK_GeWT8nWr7Q" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_tTWXIiwgEeK_GeWT8nWr7Q" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="Schema.ecore#//AreaProcedureCallSpecification/area"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_tTWXIywgEeK_GeWT8nWr7Q" points="[-1, -18, -1, 438]$[-57, -452, -57, 4]"/>
+  </edges>
 </notation:Diagram>

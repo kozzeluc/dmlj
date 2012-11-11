@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getArea <em>Area</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getCallTime <em>Call Time</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getFunction <em>Function</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getProcedure <em>Procedure</em>}</li>
@@ -27,6 +28,34 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface AreaProcedureCallSpecification extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Area</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.SchemaArea#getProcedures <em>Procedures</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Area</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Area</em>' container reference.
+	 * @see #setArea(SchemaArea)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getAreaProcedureCallSpecification_Area()
+	 * @see org.lh.dmlj.schema.SchemaArea#getProcedures
+	 * @model opposite="procedures" required="true" transient="false"
+	 * @generated
+	 */
+	SchemaArea getArea();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getArea <em>Area</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Area</em>' container reference.
+	 * @see #getArea()
+	 * @generated
+	 */
+	void setArea(SchemaArea value);
+
 	/**
 	 * Returns the value of the '<em><b>Procedure</b></em>' reference.
 	 * <!-- begin-user-doc -->

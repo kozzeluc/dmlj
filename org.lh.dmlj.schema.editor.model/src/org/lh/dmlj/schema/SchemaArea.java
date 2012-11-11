@@ -104,6 +104,7 @@ public interface SchemaArea extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Procedures</b></em>' containment reference list.
 	 * The list contents are of type {@link org.lh.dmlj.schema.AreaProcedureCallSpecification}.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getArea <em>Area</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Procedures</em>' containment reference list isn't clear,
@@ -112,7 +113,8 @@ public interface SchemaArea extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Procedures</em>' containment reference list.
 	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaArea_Procedures()
-	 * @model containment="true"
+	 * @see org.lh.dmlj.schema.AreaProcedureCallSpecification#getArea
+	 * @model opposite="area" containment="true"
 	 * @generated
 	 */
 	EList<AreaProcedureCallSpecification> getProcedures();

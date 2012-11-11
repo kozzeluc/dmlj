@@ -191,13 +191,22 @@ public interface SchemaPackage extends EPackage {
 	int AREA_PROCEDURE_CALL_SPECIFICATION = 0;
 
 	/**
+	 * The feature id for the '<em><b>Area</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AREA_PROCEDURE_CALL_SPECIFICATION__AREA = 0;
+
+	/**
 	 * The feature id for the '<em><b>Call Time</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = 0;
+	int AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = 1;
 
 	/**
 	 * The feature id for the '<em><b>Function</b></em>' attribute.
@@ -206,7 +215,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION = 1;
+	int AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION = 2;
 
 	/**
 	 * The feature id for the '<em><b>Procedure</b></em>' reference.
@@ -215,7 +224,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = 2;
+	int AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = 3;
 
 	/**
 	 * The number of structural features of the '<em>Area Procedure Call Specification</em>' class.
@@ -224,7 +233,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = 3;
+	int AREA_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Symbolic Subarea Name</b></em>' attribute.
@@ -3812,6 +3821,17 @@ public interface SchemaPackage extends EPackage {
 	EClass getAreaProcedureCallSpecification();
 
 	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getArea <em>Area</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Area</em>'.
+	 * @see org.lh.dmlj.schema.AreaProcedureCallSpecification#getArea()
+	 * @see #getAreaProcedureCallSpecification()
+	 * @generated
+	 */
+	EReference getAreaProcedureCallSpecification_Area();
+
+	/**
 	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getProcedure <em>Procedure</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5451,6 +5471,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EClass AREA_PROCEDURE_CALL_SPECIFICATION = eINSTANCE.getAreaProcedureCallSpecification();
+
+		/**
+		 * The meta object literal for the '<em><b>Area</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference AREA_PROCEDURE_CALL_SPECIFICATION__AREA = eINSTANCE.getAreaProcedureCallSpecification_Area();
 
 		/**
 		 * The meta object literal for the '<em><b>Procedure</b></em>' reference feature.

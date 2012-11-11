@@ -194,7 +194,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 */
 	public EList<AreaProcedureCallSpecification> getProcedures() {
 		if (procedures == null) {
-			procedures = new EObjectContainmentEList<AreaProcedureCallSpecification>(AreaProcedureCallSpecification.class, this, SchemaPackage.SCHEMA_AREA__PROCEDURES);
+			procedures = new EObjectContainmentWithInverseEList<AreaProcedureCallSpecification>(AreaProcedureCallSpecification.class, this, SchemaPackage.SCHEMA_AREA__PROCEDURES, SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA);
 		}
 		return procedures;
 	}
@@ -271,6 +271,8 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 		switch (featureID) {
 			case SchemaPackage.SCHEMA_AREA__AREA_SPECIFICATIONS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getAreaSpecifications()).basicAdd(otherEnd, msgs);
+			case SchemaPackage.SCHEMA_AREA__PROCEDURES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getProcedures()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.SCHEMA_AREA__SCHEMA:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);

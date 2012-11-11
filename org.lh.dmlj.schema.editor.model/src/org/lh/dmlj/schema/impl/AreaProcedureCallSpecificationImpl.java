@@ -7,16 +7,19 @@
 package org.lh.dmlj.schema.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallTime;
+import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 
 /**
@@ -26,6 +29,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.AreaProcedureCallSpecificationImpl#getArea <em>Area</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.AreaProcedureCallSpecificationImpl#getCallTime <em>Call Time</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.AreaProcedureCallSpecificationImpl#getFunction <em>Function</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.AreaProcedureCallSpecificationImpl#getProcedure <em>Procedure</em>}</li>
@@ -105,6 +109,47 @@ public class AreaProcedureCallSpecificationImpl extends EObjectImpl implements A
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public SchemaArea getArea() {
+		if (eContainerFeatureID() != SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA) return null;
+		return (SchemaArea)eContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetArea(SchemaArea newArea, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newArea, SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setArea(SchemaArea newArea) {
+		if (newArea != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA && newArea != null)) {
+			if (EcoreUtil.isAncestor(this, newArea))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newArea != null)
+				msgs = ((InternalEObject)newArea).eInverseAdd(this, SchemaPackage.SCHEMA_AREA__PROCEDURES, SchemaArea.class, msgs);
+			msgs = basicSetArea(newArea, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA, newArea, newArea));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Procedure getProcedure() {
 		if (procedure != null && procedure.eIsProxy()) {
 			InternalEObject oldProcedure = (InternalEObject)procedure;
@@ -136,6 +181,50 @@ public class AreaProcedureCallSpecificationImpl extends EObjectImpl implements A
 		procedure = newProcedure;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE, oldProcedure, procedure));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetArea((SchemaArea)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA:
+				return basicSetArea(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA:
+				return eInternalContainer().eInverseRemove(this, SchemaPackage.SCHEMA_AREA__PROCEDURES, SchemaArea.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
 
 	/**
@@ -188,6 +277,8 @@ public class AreaProcedureCallSpecificationImpl extends EObjectImpl implements A
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA:
+				return getArea();
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
 				return getCallTime();
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION:
@@ -207,6 +298,9 @@ public class AreaProcedureCallSpecificationImpl extends EObjectImpl implements A
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA:
+				setArea((SchemaArea)newValue);
+				return;
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
 				setCallTime((ProcedureCallTime)newValue);
 				return;
@@ -228,6 +322,9 @@ public class AreaProcedureCallSpecificationImpl extends EObjectImpl implements A
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA:
+				setArea((SchemaArea)null);
+				return;
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
 				setCallTime(CALL_TIME_EDEFAULT);
 				return;
@@ -249,6 +346,8 @@ public class AreaProcedureCallSpecificationImpl extends EObjectImpl implements A
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA:
+				return getArea() != null;
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME:
 				return callTime != CALL_TIME_EDEFAULT;
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION:
