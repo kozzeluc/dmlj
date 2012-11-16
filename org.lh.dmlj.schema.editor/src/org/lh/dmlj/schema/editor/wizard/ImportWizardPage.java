@@ -1,4 +1,4 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.wizard;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;

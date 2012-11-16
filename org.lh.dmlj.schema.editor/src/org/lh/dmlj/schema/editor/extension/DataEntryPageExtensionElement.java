@@ -1,11 +1,11 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.extension;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 
-public class DataEntryPageDescriptor {
+public class DataEntryPageExtensionElement {
 
 	private IConfigurationElement configElement;
 	private AbstractDataEntryPage dataEntryPage;
@@ -14,7 +14,7 @@ public class DataEntryPageDescriptor {
 	private String 				  name;
 	private String 				  message;		
 
-	public DataEntryPageDescriptor(IConfigurationElement configElement) {
+	public DataEntryPageExtensionElement(IConfigurationElement configElement) {
 		super();
 		Assert.isTrue(configElement.getName()
 								   .equals(ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE), 
@@ -32,7 +32,7 @@ public class DataEntryPageDescriptor {
 									"[no message available]");
 	}
 	
-	AbstractDataEntryPage createDataEntryPage() {
+	public AbstractDataEntryPage createDataEntryPage() {
 		
 		if (dataEntryPage != null) {
 			return dataEntryPage;

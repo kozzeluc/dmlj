@@ -1,4 +1,4 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.common.ImageCache;
+import org.lh.dmlj.schema.editor.extension.LayoutManagerExtensionElement;
 
 public class LayoutManagerSelectionPage extends WizardPage {
 
@@ -29,8 +30,8 @@ public class LayoutManagerSelectionPage extends WizardPage {
 	private Color 						  imageBackground = 
 		Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 	private ImageCache 				 	  imageCache = new ImageCache();
-	private LayoutManagerDescriptor 	  layoutManagerDescriptor;
-	private List<LayoutManagerDescriptor> layoutManagerDescriptors = 
+	private LayoutManagerExtensionElement 	  layoutManagerDescriptor;
+	private List<LayoutManagerExtensionElement> layoutManagerDescriptors = 
 		new ArrayList<>();
 	private Text 					  text;
 	private Label lblExample;
@@ -139,11 +140,11 @@ public class LayoutManagerSelectionPage extends WizardPage {
 				
 	}
 
-	public LayoutManagerDescriptor getLayoutManagerDescriptor() {
+	public LayoutManagerExtensionElement getLayoutManagerDescriptor() {
 		return layoutManagerDescriptor;
 	}	
 	
-	public void setLayoutManagerDescriptors(List<LayoutManagerDescriptor> layoutManagerDescriptors) {
+	public void setLayoutManagerDescriptors(List<LayoutManagerExtensionElement> layoutManagerDescriptors) {
 		
 		this.layoutManagerDescriptors = layoutManagerDescriptors;
 		
@@ -153,7 +154,7 @@ public class LayoutManagerSelectionPage extends WizardPage {
 		
 		combo.removeAll();
 		
-		for (LayoutManagerDescriptor layoutManagerDescriptor : 
+		for (LayoutManagerExtensionElement layoutManagerDescriptor : 
 			 layoutManagerDescriptors) {
 			
 			combo.add(layoutManagerDescriptor.getName());

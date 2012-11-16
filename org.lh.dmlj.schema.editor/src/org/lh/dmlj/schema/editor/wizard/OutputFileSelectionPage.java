@@ -1,4 +1,4 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.wizard;
 
 import java.io.File;
 
@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
+import org.lh.dmlj.schema.editor.extension.ImportToolExtensionElement;
 
 public class OutputFileSelectionPage extends WizardNewFileCreationPage {		
 	
@@ -37,7 +38,7 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 		return null;
 	}		
 	
-	public void setImportToolDescriptor(ImportToolDescriptor importToolDescriptor)  {
+	public void setImportToolDescriptor(ImportToolExtensionElement importToolDescriptor)  {
 		String description = 
 			importToolDescriptor != null && 
 			!importToolDescriptor.getSource().trim().equals("") ?

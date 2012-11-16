@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="import" name="Schema Import Tools" schema="schema/import.exsd"/>
+   <extension-point id="dictguide" name="Dictionary Structure Reference Guide" schema="schema/dictguide.exsd"/>
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -21,7 +22,7 @@
       </category>
       <wizard
             category="org.lh.dmlj.schema.editor.category"
-            class="org.lh.dmlj.schema.editor.importtool.impl.ImportWizard"
+            class="org.lh.dmlj.schema.editor.wizard.ImportWizard"
             icon="icons/schema.gif"
             id="org.lh.dmlj.schema.editor.wizard.import"
             name="CA IDMS/DB Schema">

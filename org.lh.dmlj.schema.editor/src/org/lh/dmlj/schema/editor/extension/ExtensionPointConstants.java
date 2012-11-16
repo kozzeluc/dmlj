@@ -1,4 +1,4 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.extension;
 
 public class ExtensionPointConstants {
 

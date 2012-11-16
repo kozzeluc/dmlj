@@ -1,4 +1,4 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.wizard;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -37,6 +37,11 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.extension.DataEntryPageExtensionElement;
+import org.lh.dmlj.schema.editor.extension.ExtensionPointConstants;
+import org.lh.dmlj.schema.editor.extension.ImportToolExtensionElement;
+import org.lh.dmlj.schema.editor.extension.LayoutManagerExtensionElement;
+import org.lh.dmlj.schema.editor.extension.ValidForExtensionElement;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
@@ -44,17 +49,20 @@ import org.lh.dmlj.schema.editor.importtool.IDataEntryPageController;
 import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 import org.lh.dmlj.schema.editor.importtool.annotation.Context;
 import org.lh.dmlj.schema.editor.importtool.annotation.Controller;
+import org.lh.dmlj.schema.editor.importtool.impl.DataEntryContext;
+import org.lh.dmlj.schema.editor.importtool.impl.LayoutManager;
+import org.lh.dmlj.schema.editor.importtool.impl.SchemaImportToolProxy;
 
 public class ImportWizard extends Wizard implements IImportWizard {
 
-	private ImportToolDescriptor 	   	  activeImportToolDescriptor;	
+	private ImportToolExtensionElement 	   	  activeImportToolDescriptor;	
 	private IDataEntryContext 		  	  context = 
 		new DataEntryContext();
 	private List<AbstractDataEntryPage>   dataEntryPages;	
-	private List<ImportToolDescriptor> 	  importToolDescriptors = 
+	private List<ImportToolExtensionElement> 	  importToolDescriptors = 
 		new ArrayList<>();
 	private ImportToolSelectionPage    	  importToolSelectionPage;	
-	private List<LayoutManagerDescriptor> layoutManagerDescriptors = 
+	private List<LayoutManagerExtensionElement> layoutManagerDescriptors = 
 		new ArrayList<>();
 	private LayoutManagerSelectionPage	  layoutManagerSelectionPage;
 	private OutputFileSelectionPage    	  outputFileSelectionPage;
@@ -82,7 +90,7 @@ public class ImportWizard extends Wizard implements IImportWizard {
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == importToolSelectionPage) {
 			
-			ImportToolDescriptor importToolDescriptor =
+			ImportToolExtensionElement importToolDescriptor =
 				importToolSelectionPage.getImportToolDescriptor();			
 			
 			if (dataEntryPages == null) {
@@ -92,9 +100,9 @@ public class ImportWizard extends Wizard implements IImportWizard {
 				
 				activeImportToolDescriptor =
 					importToolSelectionPage.getImportToolDescriptor();
-				List<DataEntryPageDescriptor> pageDescriptors = 
+				List<DataEntryPageExtensionElement> pageDescriptors = 
 					activeImportToolDescriptor.getPageDescriptors();
-				for (DataEntryPageDescriptor pageDescriptor : pageDescriptors) {
+				for (DataEntryPageExtensionElement pageDescriptor : pageDescriptors) {
 					
 					AbstractDataEntryPage dataEntryPage =
 						pageDescriptor.createDataEntryPage();
@@ -160,9 +168,9 @@ public class ImportWizard extends Wizard implements IImportWizard {
 					nextPage.aboutToShow();
 					return nextPage;
 				} else {
-					List<LayoutManagerDescriptor> suitableLlayoutManagers = 
+					List<LayoutManagerExtensionElement> suitableLlayoutManagers = 
 						new ArrayList<>();
-					for (LayoutManagerDescriptor descriptor :
+					for (LayoutManagerExtensionElement descriptor :
 						 layoutManagerDescriptors) {
 						
 						String schemaName = 
@@ -239,8 +247,8 @@ public class ImportWizard extends Wizard implements IImportWizard {
 						
 						// instantiate an import tool descriptor and add it to 
 						// our list
-						ImportToolDescriptor importToolDescriptor =
-							new ImportToolDescriptor(extension, tool);						
+						ImportToolExtensionElement importToolDescriptor =
+							new ImportToolExtensionElement(extension, tool);						
 						importToolDescriptors.add(importToolDescriptor);
 						
 						// now traverse all data entry pages; these are defined
@@ -250,8 +258,8 @@ public class ImportWizard extends Wizard implements IImportWizard {
 						
 							// instantiate a data entry page and add it to the
 							// import tool descriptor's list of data entry pages
-							DataEntryPageDescriptor dataEntryPageDescriptor = 
-								new DataEntryPageDescriptor(page);
+							DataEntryPageExtensionElement dataEntryPageDescriptor = 
+								new DataEntryPageExtensionElement(page);
 							importToolDescriptor.getPageDescriptors()
 												.add(dataEntryPageDescriptor);						
 						}
@@ -267,8 +275,8 @@ public class ImportWizard extends Wizard implements IImportWizard {
 						
 						// instantiate a layout manager descriptor and add it to 
 						// our list
-						LayoutManagerDescriptor layoutManagerDescriptor =
-							new LayoutManagerDescriptor(extension, tool);						
+						LayoutManagerExtensionElement layoutManagerDescriptor =
+							new LayoutManagerExtensionElement(extension, tool);						
 						layoutManagerDescriptors.add(layoutManagerDescriptor);						
 						
 						// get the schemas to which the layout manager applies;
@@ -277,8 +285,8 @@ public class ImportWizard extends Wizard implements IImportWizard {
 						for (IConfigurationElement validFor : 
 							 tool.getChildren(ExtensionPointConstants.ELEMENT_VALID_FOR)) {
 						
-							ValidForDescriptor validForDescriptor =
-								new ValidForDescriptor(validFor);
+							ValidForExtensionElement validForDescriptor =
+								new ValidForExtensionElement(validFor);
 							layoutManagerDescriptor.getValidForDescriptors()
 												   .add(validForDescriptor);
 						}						

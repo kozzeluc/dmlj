@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.lh.dmlj.schema.editor" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.lh.dmlj.schema.editor" id="dictguide" name="Dictionary Structure Reference Guide"/>
+      </appinfo>
+      <documentation>
+         Describes a list of Dictionary Structure Reference Guides (in .pdf format), to be used in the Info tab of the Properties view, for record and set figures.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+         <documentation>
+            An extension point that allows contributers to provide 1 or more Dictionary Structure Reference Guides (in .pdf format), to be used in the Info tab of the Properties view, for record and set figures.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dictguides">
+      <annotation>
+         <documentation>
+            The set of Dictionary Structure Reference Guides offered by the extension.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="dictguide" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="dictguide">
+      <annotation>
+         <documentation>
+            A Dictionary Structure Reference Guide (in .pdf format) that is to be used in the Info tab of the Properties view, for record and set figures.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The unique id for the Dictionary Structure Reference Guide.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name for the Dictionary Structure Reference Guide.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="pdf" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The Dictionary Structure Reference Guide&apos;s .pdf file.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="release" type="string">
+            <annotation>
+               <documentation>
+                  The CA IDMS/DB release number (major and minor version) for which the Dictionary Structure Reference Guide was published (e.g. 17.0).
+
+If specified, the guide will be the primary choice if the IDMSNTWK version 1 schema&apos;s description attribute is equal to this attribute&apos;s value (i.e. unless other guides have the same value for the &apos;release&apos; attribute, in which case the guide used is unpredictable, so avoid duplicate values for the &apos;release&apos; attribute in your plug-ins).
+
+If not specified, the guide is considered to be a candidate for all IDMSNTWK version 1 schemas.  It is considered good practice to always define (exactly) 1 extension without a value for the &apos;release&apos; attribute.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

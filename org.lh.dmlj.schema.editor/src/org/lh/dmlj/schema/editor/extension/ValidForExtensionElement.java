@@ -1,4 +1,4 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.extension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,13 +8,13 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 
-public class ValidForDescriptor {
+public class ValidForExtensionElement {
 	
 	private IConfigurationElement configElement;
 	private String				  schemaName;
 	private short[]				  schemaVersions;
 
-	public ValidForDescriptor(IConfigurationElement configElement) {
+	public ValidForExtensionElement(IConfigurationElement configElement) {
 		super();
 		Assert.isTrue(configElement.getName()
 				   				   .equals(ExtensionPointConstants.ELEMENT_VALID_FOR), 

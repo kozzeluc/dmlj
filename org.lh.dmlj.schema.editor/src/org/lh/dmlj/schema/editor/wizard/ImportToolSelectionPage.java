@@ -1,4 +1,4 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.wizard;
 
 import java.util.List;
 
@@ -12,13 +12,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.lh.dmlj.schema.editor.extension.ImportToolExtensionElement;
 
 public class ImportToolSelectionPage extends WizardPage {
 	
-	private ImportToolDescriptor 	   importToolDescriptor;
-	private List<ImportToolDescriptor> importToolDescriptors;	
+	private ImportToolExtensionElement 	   importToolDescriptor;
+	private List<ImportToolExtensionElement> importToolDescriptors;	
 
-	protected ImportToolSelectionPage(List<ImportToolDescriptor> importToolDescriptors) {
+	protected ImportToolSelectionPage(List<ImportToolExtensionElement> importToolDescriptors) {
 		super("_importToolSelectionPAge", "CA IDMS/DB Schema", null);
 		this.importToolDescriptors = importToolDescriptors;
 		setMessage("Select the (data) source");
@@ -57,7 +58,7 @@ public class ImportToolSelectionPage extends WizardPage {
 			}
 		});
 						
-		for (ImportToolDescriptor importToolDescriptor : importToolDescriptors) {
+		for (ImportToolExtensionElement importToolDescriptor : importToolDescriptors) {
 			combo.add(importToolDescriptor.getSource());
 		}
 		
@@ -77,7 +78,7 @@ public class ImportToolSelectionPage extends WizardPage {
 			
 	}
 
-	public ImportToolDescriptor getImportToolDescriptor() {
+	public ImportToolExtensionElement getImportToolDescriptor() {
 		return importToolDescriptor;
 	}
 	

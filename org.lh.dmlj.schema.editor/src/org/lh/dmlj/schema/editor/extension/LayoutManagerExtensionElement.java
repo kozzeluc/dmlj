@@ -1,6 +1,5 @@
-package org.lh.dmlj.schema.editor.importtool.impl;
+package org.lh.dmlj.schema.editor.extension;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -13,47 +12,25 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
 
-public class LayoutManagerDescriptor {
+public class LayoutManagerExtensionElement extends AbstractExtensionElement {
 
-	private IConfigurationElement 	 	configElement;
-	private String 					 	description;
-	private String 					 	id;
 	private ImageDescriptor          	imageDescriptor;
 	private String 					 	implementingClass;
 	private AbstractRecordLayoutManager layoutManager;
-	private String 				     	name;	
-	private String 					 	pluginId;
 	private Properties				 	parameters;
-	private List<ValidForDescriptor> 	validForDescriptors = new ArrayList<>();
+	private List<ValidForExtensionElement> 	validForDescriptors = new ArrayList<>();
 	
-	public LayoutManagerDescriptor(IExtension extension,
-								   IConfigurationElement configElement) {
-		super();
+	public LayoutManagerExtensionElement(IExtension extension,
+								   		 IConfigurationElement configElement) {
+		
+		super(extension, configElement);
 		Assert.isTrue(configElement.getName()
 								   .equals(ExtensionPointConstants.ELEMENT_LAYOUT_MANAGER), 
 					  "wrong IConfigurationElement: " + configElement.getName());
-		this.configElement = configElement;
-		pluginId = extension.getNamespaceIdentifier();
-		id = Util.getAttribute(configElement, 
-							   ExtensionPointConstants.ATTRIBUTE_ID, null);
-		name = Util.getAttribute(configElement, 
-								 ExtensionPointConstants.ATTRIBUTE_NAME, null);
 		implementingClass = 
 			Util.getAttribute(configElement, 
-							  ExtensionPointConstants.ATTRIBUTE_CLASS, null);
-		description = 
-			Util.getAttribute(configElement, 
-							  ExtensionPointConstants.ATTRIBUTE_DESCRIPTION, 
-							  null);
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-
-	public String getId() {
-		return id;
-	}
+							  ExtensionPointConstants.ATTRIBUTE_CLASS, null);		
+	}	
 
 	public ImageDescriptor getImageDescriptor() {
 		if (imageDescriptor != null) {
@@ -92,58 +69,33 @@ public class LayoutManagerDescriptor {
 		}
 	}
 
-	public String getName() {
-		return name;
-	}		
-
 	public Properties getParameters() {
-		if (parameters != null) {
-			return parameters;
-		}
-		parameters = new Properties();
-		String propertyName = ExtensionPointConstants.ATTRIBUTE_PARAMETERS;
-		String path = Util.getAttribute(configElement, propertyName, "");
-		if (!path.equals("")) {
-			try {
-				ClassLoader cl = getLayoutManager().getClass().getClassLoader(); 		
-				InputStream in = cl.getResourceAsStream(path);
-				if (in != null) {									
-					parameters.load(in);
-					in.close();
-				}
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}			
+		if (parameters == null) {		
+			parameters = 
+				Util.getResourceAsProperties(extension, configElement, 
+											 ExtensionPointConstants.ATTRIBUTE_PARAMETERS);
 		}
 		return parameters;
 	}
-
-	public String getPluginId() {
-		return pluginId;
-	}	
 	
-	public List<ValidForDescriptor> getValidForDescriptors() {
+	public List<ValidForExtensionElement> getValidForDescriptors() {
 		return validForDescriptors;
 	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}	
 
 	@Override
 	public String toString() {
 		StringBuilder p = new StringBuilder();
 		p.append(ExtensionPointConstants.ELEMENT_LAYOUT_MANAGER);
-		p.append(":  (defining plug-in:" + pluginId + ") ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_ID + "=" + id);
+		p.append(":  (defining plug-in:" + getPluginId() + ") ");
+		p.append(ExtensionPointConstants.ATTRIBUTE_ID + "=" + getId());
 		p.append(" ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_NAME + "=" + name);
+		p.append(ExtensionPointConstants.ATTRIBUTE_NAME + "=" + getName());
 		p.append(" ");		
 		p.append(ExtensionPointConstants.ATTRIBUTE_CLASS + "=" + 
 				 implementingClass);
 		p.append(" ");
 		p.append(ExtensionPointConstants.ATTRIBUTE_DESCRIPTION + "=" + 
-				 description);		
+				 getDescription());		
 		return p.toString();
 	}
 
@@ -151,7 +103,7 @@ public class LayoutManagerDescriptor {
 		if (validForDescriptors.isEmpty()) {
 			return true;
 		}
-		for (ValidForDescriptor validFor : validForDescriptors) {
+		for (ValidForExtensionElement validFor : validForDescriptors) {
 			if (validFor.isValidFor(schemaName, schemaVersion)) {
 				return true;
 			}

@@ -16,7 +16,7 @@
             <meta.element />
          </appinfo>
          <documentation>
-            An extension point that allows contributers to provide CA IDMS/DB Schema 1 or more import tools and/or layout managers.
+            An extension point that allows contributers to provide 1 or more CA IDMS/DB Schema import tools and/or layout managers.
          </documentation>
       </annotation>
       <complexType>
