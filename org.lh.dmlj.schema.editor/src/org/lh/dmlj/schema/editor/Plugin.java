@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,9 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.lh.dmlj.schema.editor.extension.DictguideExtensionElement;
+import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
+import org.lh.dmlj.schema.editor.extension.ExtensionPointConstants;
 import org.lh.dmlj.schema.editor.job.JavadocDatabaseBuildJob;
 import org.lh.dmlj.schema.editor.property.ElementInfoValueObject;
 import org.lh.dmlj.schema.editor.property.RecordInfoValueObject;
@@ -219,6 +223,18 @@ public class Plugin extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Plugin() {
+	}
+
+	public File createTmpFile(String fileExtension) {		
+		File file = 
+			new File(tmpFolder, String.valueOf(new Date().getTime()) + "." + 
+						fileExtension);
+		while (file.exists()) {
+			file = 
+				new File(tmpFolder, String.valueOf(new Date().getTime()) + "." + 
+						 fileExtension);
+		}
+		return file;
 	}
 
 	public Font getFigureFont() {
@@ -452,6 +468,17 @@ public class Plugin extends AbstractUIPlugin {
 			});
 			job.schedule();
 		}
+		
+		// test: dictguide extension point .pdf extraction
+		for (DictguideExtensionElement element :
+			 ExtensionElementFactory.getExtensionElements(ExtensionPointConstants.EXTENSION_POINT_DICTGUIDE_ID, 
+					 									  ExtensionPointConstants.ELEMENT_DICTGUIDES, 
+					 									  ExtensionPointConstants.ELEMENT_DICTGUIDE, 
+					 									  DictguideExtensionElement.class)) {
+
+			System.out.println(element.getPdf().getAbsolutePath());
+		}
+		
 	}
 
 	/*

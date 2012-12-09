@@ -1,5 +1,7 @@
 package org.lh.dmlj.schema.editor.extension;
 
+import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -7,44 +9,45 @@ import java.util.Properties;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
 import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 
 public class ImportToolExtensionElement extends AbstractExtensionElement {
 
-	private String 						  implementingClass;
-	private List<DataEntryPageExtensionElement> pageDescriptors = new ArrayList<>();
-	private Properties					  parameters;
-	private ISchemaImportTool 			  schemaImportTool;
-	private String 						  source;
+	private List<DataEntryPageExtensionElement> dataEntryPageExtensionElements;
+	private Properties					  		parameters;
+	private ISchemaImportTool 			  		schemaImportTool;	
 	
-	public ImportToolExtensionElement(IExtension extension,
-									  IConfigurationElement configElement) {
-		
-		super(extension, configElement);
+	public ImportToolExtensionElement(IConfigurationElement configElement) {	
+		super(configElement);
 		Assert.isTrue(configElement.getName()
 								   .equals(ExtensionPointConstants.ELEMENT_IMPORT_TOOL), 
 					  "wrong IConfigurationElement: " + configElement.getName());		
-		source = 
-			Util.getAttribute(configElement, 
-						      ExtensionPointConstants.ATTRIBUTE_SOURCE, null);
-		implementingClass = 
-			Util.getAttribute(configElement, 
-							  ExtensionPointConstants.ATTRIBUTE_CLASS, null);		
 	}	
 
 	public String getImplementingClass() {
-		return implementingClass;
+		return Util.getAttribute(configElement, 
+				  ExtensionPointConstants.ATTRIBUTE_CLASS, null);
 	}
 
-	public List<DataEntryPageExtensionElement> getPageDescriptors() {
-		return pageDescriptors;
+	public List<DataEntryPageExtensionElement> getDataEntryPageExtensionElements() {
+		if (dataEntryPageExtensionElements == null) {
+			// create the list...
+			dataEntryPageExtensionElements = new ArrayList<>();
+			// ...and collect the data entry pages:			
+			List<DataEntryPageExtensionElement> pages =
+				ExtensionElementFactory.getExtensionElements(configElement, 
+															 ELEMENT_DATA_ENTRY_PAGE, 
+															 DataEntryPageExtensionElement.class);
+			dataEntryPageExtensionElements.addAll(pages);
+						
+		}
+		return dataEntryPageExtensionElements;
 	}
 	
 	public Properties getParameters() {
 		if (parameters == null) {		
 			parameters = 
-				Util.getResourceAsProperties(extension, configElement, 
+				Util.getResourceAsProperties(configElement, 
 											 ExtensionPointConstants.ATTRIBUTE_PARAMETERS);
 		}
 		return parameters;
@@ -67,30 +70,8 @@ public class ImportToolExtensionElement extends AbstractExtensionElement {
 	}
 
 	public String getSource() {
-		return source;
+		return Util.getAttribute(configElement, 
+			      				 ExtensionPointConstants.ATTRIBUTE_SOURCE, null);
 	}
-
-	@Override
-	public String toString() {
-		StringBuilder p = new StringBuilder();
-		p.append(ExtensionPointConstants.ELEMENT_IMPORT_TOOL);
-		p.append(":  (defining plug-in:" + getPluginId() + ") ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_ID + "=" + getId());
-		p.append(" ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_NAME + "=" + getName());
-		p.append(" ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_SOURCE + "=" + source);
-		p.append(" ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_CLASS + "=" + 
-				 implementingClass);
-		p.append(" ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_DESCRIPTION + "=" + 
-				 getDescription());		
-		for (DataEntryPageExtensionElement pageDescriptor : pageDescriptors) {
-			p.append("\n ");
-			p.append(pageDescriptor.toString());
-		}
-		return p.toString();
-	}	
 	
 }

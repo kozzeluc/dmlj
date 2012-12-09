@@ -20,6 +20,9 @@
          </documentation>
       </annotation>
       <complexType>
+         <sequence>
+            <element ref="dictguides"/>
+         </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>

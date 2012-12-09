@@ -25,16 +25,16 @@ import org.lh.dmlj.schema.editor.extension.LayoutManagerExtensionElement;
 
 public class LayoutManagerSelectionPage extends WizardPage {
 
-	private Canvas 						  canvas;
-	private Combo 						  combo;
-	private Color 						  imageBackground = 
+	private Canvas 						  		canvas;
+	private Combo 						  		combo;
+	private LayoutManagerExtensionElement 	    extensionElement;
+	private List<LayoutManagerExtensionElement> extensionElements = 
+	new ArrayList<>();
+	private Color 						  		imageBackground = 
 		Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-	private ImageCache 				 	  imageCache = new ImageCache();
-	private LayoutManagerExtensionElement 	  layoutManagerDescriptor;
-	private List<LayoutManagerExtensionElement> layoutManagerDescriptors = 
-		new ArrayList<>();
-	private Text 					  text;
-	private Label lblExample;
+	private ImageCache 				 	  		imageCache = new ImageCache();
+	private Label 								lblExample;
+	private Text 					  			text;
 	
 	public LayoutManagerSelectionPage() {
 		super("_layoutManagerSelectionPage", "CA IDMS/DB Schema", null);
@@ -83,9 +83,9 @@ public class LayoutManagerSelectionPage extends WizardPage {
 				
 				int i = combo.getSelectionIndex();
 				
-				layoutManagerDescriptor = layoutManagerDescriptors.get(i);
+				extensionElement = extensionElements.get(i);
 				
-				text.setText(layoutManagerDescriptor.getDescription());
+				text.setText(extensionElement.getDescription());
 				text.redraw();				
 			
 				drawImage();
@@ -104,7 +104,7 @@ public class LayoutManagerSelectionPage extends WizardPage {
 			}
 		});
 		
-		setLayoutManagerDescriptors(layoutManagerDescriptors);
+		setExtensionElements(extensionElements);
 			
 	}
 	
@@ -124,8 +124,8 @@ public class LayoutManagerSelectionPage extends WizardPage {
 						 canvas.getBounds().height);
 		// get the image if possible and available
 		Image image = 
-			layoutManagerDescriptor != null ? 
-			imageCache.getImage(layoutManagerDescriptor.getImageDescriptor()) : 
+			extensionElement != null ? 
+			imageCache.getImage(extensionElement.getImageDescriptor()) : 
 			null;
 		// fill the canvas with the image
 		if (image != null) {			
@@ -140,13 +140,13 @@ public class LayoutManagerSelectionPage extends WizardPage {
 				
 	}
 
-	public LayoutManagerExtensionElement getLayoutManagerDescriptor() {
-		return layoutManagerDescriptor;
+	public LayoutManagerExtensionElement getExtensionElement() {
+		return extensionElement;
 	}	
 	
-	public void setLayoutManagerDescriptors(List<LayoutManagerExtensionElement> layoutManagerDescriptors) {
+	public void setExtensionElements(List<LayoutManagerExtensionElement> extensionElements) {
 		
-		this.layoutManagerDescriptors = layoutManagerDescriptors;
+		this.extensionElements = extensionElements;
 		
 		if (combo == null) {
 			return;
@@ -154,16 +154,14 @@ public class LayoutManagerSelectionPage extends WizardPage {
 		
 		combo.removeAll();
 		
-		for (LayoutManagerExtensionElement layoutManagerDescriptor : 
-			 layoutManagerDescriptors) {
-			
-			combo.add(layoutManagerDescriptor.getName());
+		for (LayoutManagerExtensionElement extensionElement : extensionElements) {			
+			combo.add(extensionElement.getName());
 		}
 		
 		if (combo.getItemCount() > 0) {
 			combo.select(0);
-			layoutManagerDescriptor = layoutManagerDescriptors.get(0);
-			text.setText(layoutManagerDescriptor.getDescription());
+			extensionElement = extensionElements.get(0);
+			text.setText(extensionElement.getDescription());
 			drawImage();
 		} else {
 			// we shouldn't get into this situation because our plug-in provides 

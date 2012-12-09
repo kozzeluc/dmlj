@@ -16,12 +16,12 @@ import org.lh.dmlj.schema.editor.extension.ImportToolExtensionElement;
 
 public class ImportToolSelectionPage extends WizardPage {
 	
-	private ImportToolExtensionElement 	   importToolDescriptor;
-	private List<ImportToolExtensionElement> importToolDescriptors;	
+	private ImportToolExtensionElement 	     extensionElement;
+	private List<ImportToolExtensionElement> extensionElements;	
 
-	protected ImportToolSelectionPage(List<ImportToolExtensionElement> importToolDescriptors) {
+	protected ImportToolSelectionPage(List<ImportToolExtensionElement> extensionElements) {
 		super("_importToolSelectionPAge", "CA IDMS/DB Schema", null);
-		this.importToolDescriptors = importToolDescriptors;
+		this.extensionElements = extensionElements;
 		setMessage("Select the (data) source");
 	}
 
@@ -52,20 +52,20 @@ public class ImportToolSelectionPage extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int i = combo.getSelectionIndex();
-				importToolDescriptor = importToolDescriptors.get(i);
-				text.setText(importToolDescriptor.getDescription());
+				extensionElement = extensionElements.get(i);
+				text.setText(extensionElement.getDescription());
 				text.redraw();
 			}
 		});
 						
-		for (ImportToolExtensionElement importToolDescriptor : importToolDescriptors) {
-			combo.add(importToolDescriptor.getSource());
+		for (ImportToolExtensionElement extensionElement : extensionElements) {
+			combo.add(extensionElement.getSource());
 		}
 		
 		if (combo.getItemCount() > 0) {
 			combo.select(0);
-			importToolDescriptor = importToolDescriptors.get(0);
-			text.setText(importToolDescriptor.getDescription());
+			extensionElement = extensionElements.get(0);
+			text.setText(extensionElement.getDescription());
 		} else {
 			combo.setEnabled(false);
 			setErrorMessage("No import tools installed - cannot import a " +
@@ -78,8 +78,8 @@ public class ImportToolSelectionPage extends WizardPage {
 			
 	}
 
-	public ImportToolExtensionElement getImportToolDescriptor() {
-		return importToolDescriptor;
+	public ImportToolExtensionElement getExtensionElement() {
+		return extensionElement;
 	}
 	
 }

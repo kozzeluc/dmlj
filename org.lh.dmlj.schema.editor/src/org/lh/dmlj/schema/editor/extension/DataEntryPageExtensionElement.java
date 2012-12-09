@@ -5,35 +5,18 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 
-public class DataEntryPageExtensionElement {
+public class DataEntryPageExtensionElement extends AbstractExtensionElement {
 
-	private IConfigurationElement configElement;
 	private AbstractDataEntryPage dataEntryPage;
-	private String 				  id;
-	private String 				  implementingClass;
-	private String 				  name;
-	private String 				  message;		
 
 	public DataEntryPageExtensionElement(IConfigurationElement configElement) {
-		super();
+		super(configElement);
 		Assert.isTrue(configElement.getName()
 								   .equals(ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE), 
-					  "wrong IConfigurationElement: " + configElement.getName());
-		this.configElement = configElement;
-		id = Util.getAttribute(configElement, 
-							   ExtensionPointConstants.ATTRIBUTE_ID, null);
-		name = Util.getAttribute(configElement, 
-								 ExtensionPointConstants.ATTRIBUTE_NAME, null);
-		implementingClass = 
-			Util.getAttribute(configElement, 
-							  ExtensionPointConstants.ATTRIBUTE_CLASS, null);
-		message = Util.getAttribute(configElement, 
-									ExtensionPointConstants.ATTRIBUTE_MESSAGE, 
-									"[no message available]");
+					  "wrong IConfigurationElement: " + configElement.getName());		
 	}
 	
 	public AbstractDataEntryPage createDataEntryPage() {
-		
 		if (dataEntryPage != null) {
 			return dataEntryPage;
 		}
@@ -49,36 +32,15 @@ public class DataEntryPageExtensionElement {
 		}
 	}
 
-	public String getId() {
-		return id;
-	}
-
 	public String getImplementingClass() {
-		return implementingClass;
-	}
-
-	public String getName() {
-		return name;
-	}
+		return Util.getAttribute(configElement, 
+				  				 ExtensionPointConstants.ATTRIBUTE_CLASS, null);
+	}	
 
 	public String getMessage() {
-		return message;
+		return Util.getAttribute(configElement, 
+								 ExtensionPointConstants.ATTRIBUTE_MESSAGE, 
+								 "[no message available]");
 	}
-
-	@Override
-	public String toString() {
-		StringBuilder p = new StringBuilder();
-		p.append(ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE);
-		p.append(": ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_ID + "=" + id);
-		p.append(" ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_NAME + "=" + name);
-		p.append(" "); 
-		p.append(ExtensionPointConstants.ATTRIBUTE_MESSAGE + "=" + message);
-		p.append(" ");
-		p.append(ExtensionPointConstants.ATTRIBUTE_CLASS + "=" + 
-				 implementingClass);		
-		return p.toString();
-	}	
 	
 }

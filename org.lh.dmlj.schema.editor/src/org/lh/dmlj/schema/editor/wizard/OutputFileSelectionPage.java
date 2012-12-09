@@ -38,11 +38,11 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 		return null;
 	}		
 	
-	public void setImportToolDescriptor(ImportToolExtensionElement importToolDescriptor)  {
+	public void setImportToolExtensionElement(ImportToolExtensionElement importToolExtensionElement)  {
 		String description = 
-			importToolDescriptor != null && 
-			!importToolDescriptor.getSource().trim().equals("") ?
-			DESCRIPTION_PREFIX + " from " + importToolDescriptor.getSource() :
+			importToolExtensionElement != null && 
+			!importToolExtensionElement.getSource().trim().equals("") ?
+			DESCRIPTION_PREFIX + " from " + importToolExtensionElement.getSource() :
 			DESCRIPTION_PREFIX;
 		setDescription(description);
 	}

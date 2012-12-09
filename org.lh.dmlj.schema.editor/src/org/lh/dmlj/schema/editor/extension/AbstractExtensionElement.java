@@ -5,30 +5,35 @@ import org.eclipse.core.runtime.IExtension;
 
 public abstract class AbstractExtensionElement {
 
-	protected IConfigurationElement configElement;
-	protected IExtension 			extension;	
+	protected final IConfigurationElement configElement;
+	protected final IExtension 			  extension;	
 	
-	public AbstractExtensionElement(IExtension extension,
-									IConfigurationElement configElement) {
-		super();
-		this.extension = extension;
+	public AbstractExtensionElement(IConfigurationElement configElement) {
+		super();		
 		this.configElement = configElement;
+		this.extension = configElement.getDeclaringExtension();
 	}
 
+	public final IConfigurationElement getConfigurationElement() {
+		return configElement;
+	}
+	
 	public final String getDescription() {
 		return Util.getAttribute(configElement, 
 				  				 ExtensionPointConstants.ATTRIBUTE_DESCRIPTION, 
-				  				 null);
+				  				 ""); // not in every extension element
 	}
 
 	public final String getId() {
 		return Util.getAttribute(configElement, 
-				   				 ExtensionPointConstants.ATTRIBUTE_ID, null);
+				   				 ExtensionPointConstants.ATTRIBUTE_ID, 
+				   				 ""); // not in every extension element
 	}
 
 	public final String getName() {
 		return Util.getAttribute(configElement, 
-				 				 ExtensionPointConstants.ATTRIBUTE_NAME, null);
+				 				 ExtensionPointConstants.ATTRIBUTE_NAME, 
+				 				 ""); // not in every extension element
 	}
 
 	public final String getPluginId() {
