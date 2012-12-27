@@ -2,7 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="import" name="Schema Import Tools" schema="schema/import.exsd"/>
-   <extension-point id="dictguide" name="Dictionary Structure Reference Guide" schema="schema/dictguide.exsd"/>
    <extension
          point="org.eclipse.ui.editors">
       <editor

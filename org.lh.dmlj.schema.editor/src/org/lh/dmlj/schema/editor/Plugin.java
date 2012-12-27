@@ -28,9 +28,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.lh.dmlj.schema.editor.extension.DictguideExtensionElement;
-import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
-import org.lh.dmlj.schema.editor.extension.ExtensionPointConstants;
 import org.lh.dmlj.schema.editor.job.JavadocDatabaseBuildJob;
 import org.lh.dmlj.schema.editor.property.ElementInfoValueObject;
 import org.lh.dmlj.schema.editor.property.RecordInfoValueObject;
@@ -467,17 +464,7 @@ public class Plugin extends AbstractUIPlugin {
 				}
 			});
 			job.schedule();
-		}
-		
-		// test: dictguide extension point .pdf extraction
-		for (DictguideExtensionElement element :
-			 ExtensionElementFactory.getExtensionElements(ExtensionPointConstants.EXTENSION_POINT_DICTGUIDE_ID, 
-					 									  ExtensionPointConstants.ELEMENT_DICTGUIDES, 
-					 									  ExtensionPointConstants.ELEMENT_DICTGUIDE, 
-					 									  DictguideExtensionElement.class)) {
-
-			System.out.println(element.getPdf().getAbsolutePath());
-		}
+		}		
 		
 	}
 
