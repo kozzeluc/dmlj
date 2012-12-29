@@ -17,7 +17,6 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 	public OutputFileSelectionPage(IStructuredSelection selection) {
 		super("_outputFileSelectionPage", selection);	
 		setTitle("CA IDMS/DB Schema");
-		
 		setFileName("My.schema");
 	}	
 	

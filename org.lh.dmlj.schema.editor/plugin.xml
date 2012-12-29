@@ -26,6 +26,13 @@
             id="org.lh.dmlj.schema.editor.wizard.import"
             name="CA IDMS/DB Schema">
       </wizard>
+      <wizard
+            category="org.lh.dmlj.schema.editor.category"
+            class="org.lh.dmlj.schema.editor.wizard.DictguidesImportWizard"
+            icon="icons/pdf_icon_16x16.png"
+            id="org.lh.dmlj.schema.editor.wizard.import.dictguides"
+            name="CA IDMS/DB Dictionary Structure and SQL Reference Guides">
+      </wizard>
    </extension>   
    <extension
          point="org.eclipse.ui.newWizards">

@@ -40,10 +40,9 @@ public class RecordInfoTemplate
   protected final String TEXT_24 = NL + "<TD VALIGN=TOP></TD>";
   protected final String TEXT_25 = NL + "</TR>";
   protected final String TEXT_26 = NL + "<TR>" + NL + "<TD COLSPAN=3><HR></TD>" + NL + "</TR>" + NL + "</TABLE>";
-  protected final String TEXT_27 = NL + "<P>(Source: ";
-  protected final String TEXT_28 = " - ";
-  protected final String TEXT_29 = ")</P>";
-  protected final String TEXT_30 = NL + "</BODY>" + NL + "</HTML>";
+  protected final String TEXT_27 = NL + "<P align=\"center\"><SMALL>Source: ";
+  protected final String TEXT_28 = "</SMALL></P>";
+  protected final String TEXT_29 = NL + "</BODY>" + NL + "</HTML>";
 
   public String generate(Object argument)
   {
@@ -136,18 +135,15 @@ if (valueObject2.getDescription() != null) {
 
     stringBuffer.append(TEXT_26);
     
-if (valueObject.getDocumentName() != null &&
-    valueObject.getDocumentId() != null) {
+if (valueObject.getDocumentName() != null) {
 
     stringBuffer.append(TEXT_27);
     stringBuffer.append( valueObject.getDocumentName() );
     stringBuffer.append(TEXT_28);
-    stringBuffer.append( valueObject.getDocumentId() );
-    stringBuffer.append(TEXT_29);
     
 }
 
-    stringBuffer.append(TEXT_30);
+    stringBuffer.append(TEXT_29);
     return stringBuffer.toString();
   }
 }

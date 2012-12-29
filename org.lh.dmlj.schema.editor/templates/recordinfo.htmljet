@@ -83,10 +83,9 @@ if (valueObject2.getDescription() != null) {
 </TR>
 </TABLE>
 <%
-if (valueObject.getDocumentName() != null &&
-    valueObject.getDocumentId() != null) {
+if (valueObject.getDocumentName() != null) {
 %>
-<P>(Source: <%= valueObject.getDocumentName() %> - <%= valueObject.getDocumentId() %>)</P>
+<P align="center"><SMALL>Source: <%= valueObject.getDocumentName() %></SMALL></P>
 <%
 }
 %>

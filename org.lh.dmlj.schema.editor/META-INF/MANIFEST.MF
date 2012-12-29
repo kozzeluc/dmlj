@@ -16,9 +16,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
- neo4j-kernel-1.6.jar,
- neo4j-lucene-index-1.6.jar,
- lucene-core-3.5.0.jar,
- geronimo-jta_1.1_spec-1.1.1.jar
+ tika-app-1.2.jar
 Bundle-Vendor: Luc Hermans
 Export-Package: org.lh.dmlj.schema.editor.importtool

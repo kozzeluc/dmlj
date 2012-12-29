@@ -1,5 +1,7 @@
 package org.lh.dmlj.schema.editor.property;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
@@ -16,8 +18,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
+import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
 import org.lh.dmlj.schema.editor.template.RecordInfoTemplate;
 
 public class RecordInfoSection extends AbstractPropertySection {
@@ -74,8 +76,14 @@ public class RecordInfoSection extends AbstractPropertySection {
 	@Override
 	public final void refresh() {
 		SchemaRecord record = (SchemaRecord) editPartModelObject;
-		RecordInfoValueObject valueObject =
-			Plugin.getDefault().getRecordInfoValueObject(record.getName());
+		RecordInfoValueObject valueObject = null;
+		try {
+			valueObject = 
+				DictguidesRegistry.INSTANCE
+							  	  .getRecordInfoValueObject(record.getName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if (valueObject == null) {
 			browser.setText("");
 			return;
