@@ -19,6 +19,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 public class DictguidesSummaryPage extends WizardPage {
 	private Button  btnSetAsDefault;
+	private boolean calledFromPreferences;
 	private boolean defaultForInfoTab;
 	private String  id;
 	private Label   lblDictrefguideTitle;
@@ -29,8 +30,9 @@ public class DictguidesSummaryPage extends WizardPage {
 	/**
 	 * Create the wizard.
 	 */
-	public DictguidesSummaryPage() {
+	public DictguidesSummaryPage(boolean calledFromPreferences) {
 		super("wizardPage");
+		this.calledFromPreferences = calledFromPreferences;
 		setMessage("Specify a unique id for the reference guide combination");
 		setTitle("CA IDMS/DB Dictionary Structure and SQL Reference Guides");
 		setDescription("Wizard Page description");
@@ -101,6 +103,10 @@ public class DictguidesSummaryPage extends WizardPage {
 		lblRemark = new Label(container, SWT.NONE);
 		lblRemark.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true, 2, 1));
 		lblRemark.setText("Please note :  You can manage reference guide combinations in this plug-in's preferences.");
+		
+		btnSetAsDefault.setEnabled(!calledFromPreferences);
+		btnSetAsDefault.setSelection(!calledFromPreferences);
+		lblRemark.setVisible(!calledFromPreferences);
 		
 		setPageComplete(false);
 		

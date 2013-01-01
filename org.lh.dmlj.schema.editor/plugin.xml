@@ -49,6 +49,14 @@
       </wizard>
    </extension>
    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.lh.dmlj.schema.editor.preference.MainPreferencePage"
+            id="org.lh.dmlj.schema.editor.preference.MainPage"
+            name="CA IDMS/DB Schema Editor">
+      </page>
+   </extension>
+   <extension
          point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
             contributorId="org.lh.dmlj.schema.editor.schemaeditor"

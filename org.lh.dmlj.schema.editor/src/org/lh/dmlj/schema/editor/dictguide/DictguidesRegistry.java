@@ -12,7 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -84,14 +86,15 @@ public class DictguidesRegistry {
 				for (String line = in.readLine(); line != null; 
 					 line = in.readLine()) {
 					
-					String p = line.trim();
-					if (!p.equals("")) {
+					String entry = line.trim();
+					if (!entry.equals("")) {
 						// ignore blank lines
-						if (p.startsWith("*")) {
-							entries.add(p.substring(1));
-							activeId = p.substring(1);
+						if (entry.startsWith("*")) {
+							entries.add(entry.substring(1));
+							// get the active id:
+							activeId = entry.substring(1, line.indexOf(","));
 						} else {
-							entries.add(p);
+							entries.add(entry);
 						}
 					}
 				}
@@ -115,6 +118,21 @@ public class DictguidesRegistry {
 		
 		if (entryExists(id)) {
 			throw new IllegalArgumentException("Id is already in use: " + id);
+		}
+		
+		if (dictionaryStructureTitle.indexOf(",") > -1 ||
+			dictionaryStructureTitle.indexOf("\n") > -1) {
+			
+			String message = 
+				"comma's and new line characters are not allowed in a " +
+				"document title: " + dictionaryStructureTitle;
+			throw new IllegalArgumentException(message);
+		}
+		
+		if (sqlTitle.indexOf(",") > -1) {
+			String message = "comma's and new line characters are not " +
+							 "allowed in a document title: " + sqlTitle;
+			throw new IllegalArgumentException(message);
 		}
 		
 		try {
@@ -220,7 +238,7 @@ public class DictguidesRegistry {
 			throw new RuntimeException(t);
 		}
 		
-		entries.add(id);
+		entries.add(id + "," + dictionaryStructureTitle + "," + sqlTitle);
 		if (defaultForInfoTab) {
 			activeId = id;
 		}
@@ -229,8 +247,47 @@ public class DictguidesRegistry {
 		
 	}
 	
+	public void deleteEntry(String id) {
+		String[] e = entries.toArray(new String[] {});
+		for (int i = 0; i < e.length; i++) {
+			if (e[i].startsWith(id + ",")) {
+				entries.remove(e[i]);
+				break;
+			}
+		}
+		if (id.equals(activeId)) {
+			activeId = null;
+		}
+		File file = new File(folder, id + ".zip");
+		file.delete();
+		persist();
+	}
+
 	public boolean entryExists(String id) {
 		return entries.contains(id);
+	}
+
+	public String getActiveId() {
+		return activeId;
+	}
+
+	public Iterable<String> getAllIds() {
+		List<String> list = new ArrayList<>();
+		for (String entry : entries) {
+			list.add(entry.substring(0, entry.indexOf(",")));
+		}
+		return list;
+	}
+
+	public String getDictionaryStructureTitle(String id) {
+		for (String entry : entries) {
+			String anId = entry.substring(0, entry.indexOf(","));
+			if (anId.equals(id)) {
+				return entry.substring(entry.indexOf(",") + 1, 
+									   entry.lastIndexOf(","));
+			}
+		}
+		return "";
 	}
 
 	public String getDocumentTitle(File pdfFile) throws IOException {
@@ -296,6 +353,16 @@ public class DictguidesRegistry {
 		return recordInfoValueObject;
 	}	
 	
+	public String getSqlTitle(String id) {
+		for (String entry : entries) {
+			String anId = entry.substring(0, entry.indexOf(","));
+			if (anId.equals(id)) {
+				return entry.substring(entry.lastIndexOf(",") + 1);
+			}
+		}
+		return "";
+	}
+
 	public boolean isValid(String id) {
 		for (int i = 0; i < id.length(); i++) {
 			char c = id.charAt(i);
@@ -313,11 +380,11 @@ public class DictguidesRegistry {
 	private void persist() {
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(manifestFile));
-			for (String id : entries) {
-				if (id.equals(activeId)) {
-					out.println("*" + id);
+			for (String entry : entries) {
+				if (entry.startsWith(activeId + ",")) {
+					out.println("*" + entry);
 				} else {
-					out.println(id);
+					out.println(entry);
 				}
 			}
 			out.flush();
@@ -325,6 +392,33 @@ public class DictguidesRegistry {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}		
+	}	
+	
+	public boolean setActiveId(String id) {
+		
+		if (id == null && activeId == null) {
+			return false;
+		}
+		
+		if (id == null) {
+			activeId = null;
+			persist();
+			return true;
+		}
+		
+		if (id.equals(activeId)) {
+			return false;
+		}
+		
+		for (String entry : entries) {
+			if (entry.startsWith(id + ",")) {				
+				activeId = id;
+				persist();
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 }

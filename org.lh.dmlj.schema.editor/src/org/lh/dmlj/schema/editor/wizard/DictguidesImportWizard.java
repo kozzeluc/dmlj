@@ -19,6 +19,7 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 		"description.dicionary.structure";
 	private static final String KEY_DESCRIPTION_SQL = "description.sql";	
 	
+	private boolean 				   calledFromPreferences = false;
 	private DictguidesPdfSelectionPage dictionaryStructurePdfSelectionPage;
 	private File 					   dictionaryStructureFile;
 	private String 					   dictionaryStructureTitle;
@@ -28,9 +29,14 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 	private DictguidesSummaryPage 	   summaryPage;
 	
 	public DictguidesImportWizard() {
-		super();
-		setWindowTitle("Import");
+		new DictguidesImportWizard(false);
 	}
+	
+	public DictguidesImportWizard(boolean calledFromPreferences) {
+		super();
+		this.calledFromPreferences = calledFromPreferences;
+		setWindowTitle("Import");
+	}	
 	
 	@Override
 	public void addPages() {
@@ -62,7 +68,7 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 		addPage(sqlPdfSelectionPage);
 		
 		// create and add the Summary page
-		summaryPage = new DictguidesSummaryPage();
+		summaryPage = new DictguidesSummaryPage(calledFromPreferences);
 		addPage(summaryPage);
 		
 	}
