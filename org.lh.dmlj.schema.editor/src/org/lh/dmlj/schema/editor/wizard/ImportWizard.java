@@ -86,13 +86,23 @@ public class ImportWizard extends Wizard implements IImportWizard {
 	}
 	
 	@Override
+	public boolean canFinish() {
+		if (importWizardPages == null) {
+			// avoid the 'Finish' button to be enabled too soon
+			return false;
+		} else {
+			return super.canFinish();
+		}
+	}
+	
+	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == importToolSelectionPage) {
 			
 			ImportToolExtensionElement importToolExtensionElement =
 				importToolSelectionPage.getExtensionElement();			
 			
-			if (dataEntryPages == null) {
+			if (dataEntryPages == null) {				
 				
 				dataEntryPages = new ArrayList<>();
 				importWizardPages = new ArrayList<>();
@@ -157,7 +167,8 @@ public class ImportWizard extends Wizard implements IImportWizard {
 			importWizardPages.get(0).aboutToShow();
 			return importWizardPages.get(0);
 			
-		} else if (importWizardPages.contains(page)) {
+		} else if (importWizardPages != null &&
+				   importWizardPages.contains(page)) {
 			
 			int i = importWizardPages.indexOf(page);
 			if (i < 0) {

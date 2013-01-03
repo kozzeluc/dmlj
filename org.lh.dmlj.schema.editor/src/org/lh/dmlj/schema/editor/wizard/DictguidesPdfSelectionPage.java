@@ -116,11 +116,14 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fileDialog = new FileDialog(container.getShell());
 				fileDialog.setFileName(textFile.getText());
-				String newValue = fileDialog.open();
-				textFile.setText(newValue);
-				textFile.redraw();
+				String newValue = fileDialog.open();							
 				if (newValue != null) {
+					textFile.setText(newValue);
+					textFile.redraw();
 			        validatePage();			        			
+				} else {
+					textFile.setText("");
+					textFile.redraw();
 				}
 			}
 		});
