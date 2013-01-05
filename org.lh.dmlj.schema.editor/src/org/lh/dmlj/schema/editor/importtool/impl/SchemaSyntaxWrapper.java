@@ -13,7 +13,7 @@ public class SchemaSyntaxWrapper {
 		super();
 	}
 	
-	public List<String> getList() {
+	public List<String> getLines() {
 		return list;
 	}
 	

@@ -41,12 +41,12 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 				if (line.startsWith(trigger)) {					
 					listWrapper = new SchemaSyntaxWrapper();
 					list.add(listWrapper);
-					listWrapper.getList().add("     ADD");
-					listWrapper.getList().add(line);
+					listWrapper.getLines().add("     ADD");
+					listWrapper.getLines().add(line);
 				} else if (line.startsWith("     ADD")) {
 					listWrapper = null;
 				} else if (listWrapper != null) {
-					listWrapper.getList().add(line);
+					listWrapper.getLines().add(line);
 				}
 			}
 			in.close();
@@ -122,18 +122,18 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 			(SchemaSyntaxWrapper) recordOrElementContext;
 		
 		int i = 0;
-		while (!context.getList().get(i).substring(2).trim().equals(".")) {			
+		while (!context.getLines().get(i).substring(2).trim().equals(".")) {			
 			i += 1;
 		}
 		i += 1;
 		
-		if (i >= context.getList().size()) {
+		if (i >= context.getLines().size()) {
 			// the element does not have subordinate elements
 			return Collections.emptyList();
 		}
 		
 		int j = 2;
-		String line = context.getList().get(i); 
+		String line = context.getLines().get(i); 
 		while (line.charAt(j) == ' ') {
 			j += 1;
 		}
@@ -141,7 +141,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		
 		List<SchemaSyntaxWrapper> list = new ArrayList<>();
 		SchemaSyntaxWrapper listWrapper = null;
-		for (String aLine : context.getList()) {
+		for (String aLine : context.getLines()) {
 			if (aLine.startsWith(scanItem)) {
 				listWrapper = new SchemaSyntaxWrapper();
 				list.add(listWrapper);
@@ -159,7 +159,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 				}				
 			} 
 			if (listWrapper != null) {
-				listWrapper.getList().add(aLine);
+				listWrapper.getLines().add(aLine);
 			}
 		}
 	
@@ -255,7 +255,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		// temporary element contexts
 		List<String> allElementNames = new ArrayList<String>();
 		boolean inElementSyntax = false;
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.trim().equals(".")) {
 				inElementSyntax = true;
 			} else if (inElementSyntax) {

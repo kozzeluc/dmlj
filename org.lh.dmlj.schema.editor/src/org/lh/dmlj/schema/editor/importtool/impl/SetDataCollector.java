@@ -20,7 +20,7 @@ public class SetDataCollector
 
 	@Override
 	public Short getDisplacementPageCount(SchemaSyntaxWrapper context) {
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("         MODE IS INDEX ") &&
 				line.indexOf(" BLOCK CONTAINS ") > -1 &&
 				line.indexOf(" KEYS DISPLACEMENT IS ") > -1 &&
@@ -41,7 +41,7 @@ public class SetDataCollector
 		int i = indexOf("                 DUPLICATES ARE ", context, 
 					    memberRecordName);
 		
-		String line = context.getList().get(i);
+		String line = context.getLines().get(i);
 		if (line.substring(32).startsWith("BY DBKEY")) {
 			return DuplicatesOption.BY_DBKEY;
 		} else if (line.substring(32).startsWith("FIRST")) {
@@ -58,7 +58,7 @@ public class SetDataCollector
 
 	@Override
 	public Short getKeyCount(SchemaSyntaxWrapper context) {
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("         MODE IS INDEX ") &&
 				line.indexOf(" BLOCK CONTAINS ") > -1 &&
 				line.indexOf(" KEYS") > -1) {				
@@ -78,7 +78,7 @@ public class SetDataCollector
 			getMemberRecordNames(context).toArray(new String[] {})[0];				
 		int i = indexOf("             INDEX DBKEY POSITION IS ", context, 
 					    memberRecordName);
-		String p = context.getList().get(i).substring(37).trim();
+		String p = context.getLines().get(i).substring(37).trim();
 		if (p.equals("OMITTED")) {
 			return null;
 		} else {
@@ -92,7 +92,7 @@ public class SetDataCollector
 		
 		int i = indexOf("             NEXT DBKEY POSITION IS ", context, 
 			    		memberRecordName);
-		String p = context.getList().get(i).substring(36).trim();
+		String p = context.getLines().get(i).substring(36).trim();
 		return Short.valueOf(p);
 	}
 
@@ -103,7 +103,7 @@ public class SetDataCollector
 		int i = indexOf("             OWNER DBKEY POSITION IS ", context, 
 			    		memberRecordName);
 		if (i > -1) {
-			String p = context.getList().get(i).substring(37).trim();
+			String p = context.getLines().get(i).substring(37).trim();
 			return Short.valueOf(p);
 		} else {
 			return null;
@@ -117,7 +117,7 @@ public class SetDataCollector
 		int i = indexOf("             PRIOR DBKEY POSITION IS ", context, 
 	    				memberRecordName);
 		if (i > -1) {
-			String p = context.getList().get(i).substring(37).trim();
+			String p = context.getLines().get(i).substring(37).trim();
 			return Short.valueOf(p);
 		} else {
 			return null;
@@ -127,7 +127,7 @@ public class SetDataCollector
 	@Override
 	public Collection<String> getMemberRecordNames(SchemaSyntaxWrapper context) {
 		List<String> list = new ArrayList<>();
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("         MEMBER IS ")) {
 				
 				String memberRecordName = line.substring(19).trim();; 
@@ -139,25 +139,25 @@ public class SetDataCollector
 
 	@Override
 	public String getName(SchemaSyntaxWrapper context) {
-		return context.getList().get(1).substring(17).trim();
+		return context.getLines().get(1).substring(17).trim();
 	}
 
 	@Override
 	public short getOwnerNextDbkeyPosition(SchemaSyntaxWrapper context) {
 		
 		int i = 0;
-		while (!context.getList().get(i).startsWith("         OWNER IS ")) {
+		while (!context.getLines().get(i).startsWith("         OWNER IS ")) {
 			i += 1;
 		}
 		i += 1;
 		
-		while (!context.getList().get(i).startsWith("             NEXT DBKEY POSITION IS ") &&
-			   !context.getList().get(i).startsWith("         MEMBER IS ") ) {
+		while (!context.getLines().get(i).startsWith("             NEXT DBKEY POSITION IS ") &&
+			   !context.getLines().get(i).startsWith("         MEMBER IS ") ) {
 			
 			i += 1;
 		}
-		if (context.getList().get(i).startsWith("             NEXT DBKEY POSITION IS ")) {
-			String p = context.getList().get(i).substring(36).trim();
+		if (context.getLines().get(i).startsWith("             NEXT DBKEY POSITION IS ")) {
+			String p = context.getLines().get(i).substring(36).trim();
 			return Short.valueOf(p).shortValue();
 		} else {		
 			return -1;
@@ -169,18 +169,18 @@ public class SetDataCollector
 	public Short getOwnerPriorDbkeyPosition(SchemaSyntaxWrapper context) {
 		
 		int i = 0;
-		while (!context.getList().get(i).startsWith("         OWNER IS ")) {
+		while (!context.getLines().get(i).startsWith("         OWNER IS ")) {
 			i += 1;
 		}
 		i += 1;
 		
-		while (!context.getList().get(i).startsWith("             PRIOR DBKEY POSITION IS ") &&
-			   !context.getList().get(i).startsWith("         MEMBER IS ") ) {
+		while (!context.getLines().get(i).startsWith("             PRIOR DBKEY POSITION IS ") &&
+			   !context.getLines().get(i).startsWith("         MEMBER IS ") ) {
 			
 			i += 1;
 		}
-		if (context.getList().get(i).startsWith("             PRIOR DBKEY POSITION IS ")) {
-			String p = context.getList().get(i).substring(37).trim();
+		if (context.getLines().get(i).startsWith("             PRIOR DBKEY POSITION IS ")) {
+			String p = context.getLines().get(i).substring(37).trim();
 			return Short.valueOf(p);
 		} else {		
 			return null;
@@ -190,7 +190,7 @@ public class SetDataCollector
 
 	@Override
 	public String getOwnerRecordName(SchemaSyntaxWrapper context) {
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("         OWNER IS ") &&
 				!line.startsWith("         OWNER IS SYSTEM")) {
 				
@@ -206,10 +206,10 @@ public class SetDataCollector
 		
 		int i = indexOf(context, memberRecordName) + 1;		                
 		
-		while (i < context.getList().size() &&
-			   !context.getList().get(i).startsWith("         MEMBER IS ")) {
+		while (i < context.getLines().size() &&
+			   !context.getLines().get(i).startsWith("         MEMBER IS ")) {
 			
-			String line = context.getList().get(i);
+			String line = context.getLines().get(i);
 			if (line.startsWith("             MANDATORY AUTOMATIC")) {
 				return SetMembershipOption.MANDATORY_AUTOMATIC;
 			} else if (line.startsWith("             MANDATORY MANUAL")) {
@@ -227,7 +227,7 @@ public class SetDataCollector
 
 	@Override
 	public SetMode getSetMode(SchemaSyntaxWrapper context) {
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("         MODE IS ")) {
 				if (line.substring(17).startsWith("CHAIN")) {
 					return SetMode.CHAINED;
@@ -241,7 +241,7 @@ public class SetDataCollector
 
 	@Override
 	public SetOrder getSetOrder(SchemaSyntaxWrapper context) {
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("         ORDER IS ")) {
 				if (line.substring(18).startsWith("FIRST")) {
 					return SetOrder.FIRST;
@@ -267,10 +267,10 @@ public class SetDataCollector
 		int i = indexOf("             KEY IS (", context, memberRecordName);		
 		do {
 			i += 1;
-			int j = context.getList().get(i).indexOf(" ", 17);
-			String elementName = context.getList().get(i).substring(17, j); 
+			int j = context.getLines().get(i).indexOf(" ", 17);
+			String elementName = context.getLines().get(i).substring(17, j); 
 			list.add(elementName);			
-		} while (!context.getList().get(i).trim().endsWith(" )"));
+		} while (!context.getLines().get(i).trim().endsWith(" )"));
 		
 		return list;
 	}
@@ -282,8 +282,8 @@ public class SetDataCollector
 		
 		String scanItem = "                 " + keyElementName + " ";
 		int i = indexOf(scanItem, context, memberRecordName);
-		int j = context.getList().get(i).indexOf(" ", 17);
-		String p = context.getList().get(i).substring(j + 1).trim();
+		int j = context.getLines().get(i).indexOf(" ", 17);
+		String p = context.getLines().get(i).substring(j + 1).trim();
 		if (p.startsWith("ASCENDING")) {
 			return SortSequence.ASCENDING;
 		} else if (p.startsWith("DESCENDING")) {
@@ -295,7 +295,7 @@ public class SetDataCollector
 
 	@Override
 	public String getSymbolicIndexName(SchemaSyntaxWrapper context) {
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("         MODE IS INDEX USING ")) {				
 				return line.substring(29).trim();
 			}
@@ -305,7 +305,7 @@ public class SetDataCollector
 
 	@Override
 	public String getSystemOwnerAreaName(SchemaSyntaxWrapper context) {
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("             WITHIN AREA ")) {				
 				return line.substring(25).trim();
 			}
@@ -315,32 +315,38 @@ public class SetDataCollector
 
 	@Override
 	public Integer getSystemOwnerOffsetOffsetPageCount(SchemaSyntaxWrapper context) {
+		// TODO figure this out
 		return null;
 	}
 
 	@Override
 	public Short getSystemOwnerOffsetOffsetPercent(SchemaSyntaxWrapper context) {
+		// TODO figure this out
 		return null;
 	}
 
 	@Override
 	public Integer getSystemOwnerOffsetPageCount(SchemaSyntaxWrapper context) {
+		// TODO figure this out
 		return null;
 	}
 
 	@Override
 	public Short getSystemOwnerOffsetPercent(SchemaSyntaxWrapper context) {
+		// TODO figure this out
 		return null;
 	}
 
 	@Override
 	public String getSystemOwnerSymbolicSubareaName(SchemaSyntaxWrapper context) {
+		// TODO figure this out
 		return null;
 	}
 
 	@Override
 	public boolean getSortKeyIsNaturalSequence(SchemaSyntaxWrapper context,
 											   String memberRecordName) {
+		// TODO figure this out
 		return false;
 	}
 
@@ -348,13 +354,13 @@ public class SetDataCollector
 	
 		String scanItem = "         MEMBER IS " + memberRecordName;
 		int i = 0;
-		while (i < context.getList().size() &&
-			   !context.getList().get(i).startsWith(scanItem)) {
+		while (i < context.getLines().size() &&
+			   !context.getLines().get(i).startsWith(scanItem)) {
 			
 			i += 1;
 		}
 		
-		if (i < context.getList().size()) {
+		if (i < context.getLines().size()) {
 			return i;
 		}
 		
@@ -370,10 +376,10 @@ public class SetDataCollector
 				
 		int i = indexOf(context, memberRecordName) + 1;
 		
-		while (i < context.getList().size() &&
-			   !context.getList().get(i).startsWith("         MEMBER IS ")) {
+		while (i < context.getLines().size() &&
+			   !context.getLines().get(i).startsWith("         MEMBER IS ")) {
 			
-			String line = context.getList().get(i);
+			String line = context.getLines().get(i);
 			if (line.startsWith(scanItem)) {
 				return i;
 			}
@@ -386,13 +392,14 @@ public class SetDataCollector
 	
 	@Override
 	public boolean isKeyCompressed(SchemaSyntaxWrapper context) {
+		// TODO figure this out
 		return false;
 	}
 
 	@Override
 	public boolean isSortedByDbkey(SchemaSyntaxWrapper context) {
 		// for indexed sets only; indexed sets always have exactly 1 member
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.trim().equals("DBKEY ASCENDING") ||
 				line.trim().equals("DBKEY DESCENDING")) {				
 				
@@ -404,7 +411,7 @@ public class SetDataCollector
 
 	@Override
 	public boolean isSystemOwned(SchemaSyntaxWrapper context) {
-		for (String line : context.getList()) {
+		for (String line : context.getLines()) {
 			if (line.startsWith("         OWNER IS SYSTEM")) {				
 				return true;
 			}
