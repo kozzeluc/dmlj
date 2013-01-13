@@ -316,7 +316,13 @@
                   class="org.lh.dmlj.schema.editor.importtool.impl.FileSelectionPage"
                   id="org.lh.dmlj.schema.editor.dataEntryPage1"
                   message="Select a file that contains CA IDMS/DB schema syntax"
-                  name="org.lh.dmlj.schema.editor.dataEntryPage1">
+                  name="fileSelectionPage">
+            </dataEntryPage>
+            <dataEntryPage
+                  class="org.lh.dmlj.schema.editor.importtool.impl.OptionsPage"
+                  id="org.lh.dmlj.schema.editor.dataEntryPage2"
+                  message="Set options"
+                  name="optionsPage">
             </dataEntryPage>
          </importTool>
       </importTools>

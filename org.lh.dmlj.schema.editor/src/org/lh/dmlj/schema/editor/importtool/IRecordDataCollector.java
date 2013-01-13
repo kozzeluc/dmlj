@@ -16,8 +16,6 @@ public interface IRecordDataCollector<T> {
 
 	Collection<String> getCalcKeyElementNames(T context);
 
-	boolean getCalcKeyIsNaturalSequence(T context);	
-
 	LocationMode getLocationMode(T context);
 
 	Short getMinimumFragmentLength(T context);

@@ -3,8 +3,8 @@ package org.lh.dmlj.schema.editor.importtool.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
@@ -53,7 +53,13 @@ public class RecordDataCollector
 	public String getAreaName(SchemaSyntaxWrapper context) {
 		for (String line : context.getLines()) {
 			if (line.startsWith("         WITHIN AREA ")) {
-				return line.substring(21).trim();
+				String p = line.substring(21).trim();
+				int i = p.indexOf(" ");
+				if (i > -1) {
+					return p.substring(0, i);
+				} else {
+					return p;
+				}
 			}
 		}
 		return null;
@@ -79,23 +85,46 @@ public class RecordDataCollector
 
 	@Override
 	public Collection<String> getCalcKeyElementNames(SchemaSyntaxWrapper context) {
-		List<String> list = new ArrayList<>();
-		// TODO at the moment, we only deliver the first CALC-key element, so
-		// make sure we can process them all
-		for (String line : context.getLines()) {
-			if (line.startsWith("         LOCATION MODE IS CALC USING ( ")) {
-				String p = line.substring(39).trim();
-				list.add(p.substring(0, p.indexOf(" ")));
-			}
+		List<String> list = new ArrayList<>();		
+		int i = 0;
+		while (!context.getLines()
+					   .get(i)
+					   .startsWith("         LOCATION MODE IS CALC USING ( ")) {
+			
+			i += 1;
 		}
+		while (i < context.getLines().size()) {
+			if (context.getLines().get(i).trim().equals(")")) {
+				// we've processed all elements; no relevant data on this line
+				break;
+			}
+			int j;
+			if (context.getLines()
+					   .get(i)
+					   .startsWith("         LOCATION MODE IS CALC USING ( ")) {
+				
+				// first line
+				j = 39;
+			} else {
+				j = 15;
+			}
+			StringBuilder p = 
+				new StringBuilder(context.getLines().get(i).substring(j).trim());
+			if (p.toString().endsWith(" )")) {
+				p.setLength(p.length() - 2);
+			}
+			StringTokenizer tokenizer = new StringTokenizer(p.toString());
+			while (tokenizer.hasMoreTokens()) {
+				list.add(tokenizer.nextToken());
+			}
+			if (context.getLines().get(i).trim().endsWith(" )")) {
+				// we've processed all elements
+				break;
+			} 
+			i += 1;
+		} 		
 		return list;
-	}
-
-	@Override
-	public boolean getCalcKeyIsNaturalSequence(SchemaSyntaxWrapper context) {
-		// TODO figure this out
-		return false;
-	}
+	}	
 
 	@Override
 	public LocationMode getLocationMode(SchemaSyntaxWrapper context) {
@@ -144,47 +173,145 @@ public class RecordDataCollector
 
 	@Override
 	public Integer getOffsetOffsetPageCount(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		//          WITHIN AREA INS-DEMO-REGION OFFSET 5 PAGES FOR 45 PAGES
+		for (String line : context.getLines()) {
+			if (line.startsWith("         WITHIN AREA ") &&
+				line.indexOf(" OFFSET ") > -1 &&
+				line.indexOf(" PAGES FOR ") > -1) {
+				
+				int i = line.indexOf(" OFFSET ");
+				int j = line.indexOf(" PAGES FOR ");
+				return Integer.valueOf(line.substring(i + 8, j).trim());				
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Short getOffsetOffsetPercent(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		//      WITHIN AREA ALMAI101 OFFSET 5 PERCENT FOR 20 PERCENT
+		for (String line : context.getLines()) {
+			if (line.startsWith("         WITHIN AREA ") &&
+				line.indexOf(" OFFSET ") > -1 &&
+				line.indexOf(" PERCENT FOR ") > -1) {
+				
+				int i = line.indexOf(" OFFSET ");
+				int j = line.indexOf(" PERCENT FOR ", i);
+				return Short.valueOf(line.substring(i + 8, j).trim());				
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getOffsetPageCount(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		//          WITHIN AREA INS-DEMO-REGION OFFSET 5 PAGES FOR 45 PAGES
+		for (String line : context.getLines()) {
+			if (line.startsWith("         WITHIN AREA ") &&
+				line.indexOf(" OFFSET ") > -1 &&
+				line.indexOf(" FOR ") > -1 &&
+				line.trim().endsWith(" PAGES")) {
+				
+				int i = line.indexOf(" FOR ");
+				int j = line.indexOf(" PAGES", i);
+				return Integer.valueOf(line.substring(i + 5, j).trim());				
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Short getOffsetPercent(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		//      WITHIN AREA ALMAI101 OFFSET 5 PERCENT FOR 20 PERCENT
+		for (String line : context.getLines()) {
+			if (line.startsWith("         WITHIN AREA ") &&
+				line.indexOf(" OFFSET ") > -1 &&
+				line.indexOf(" FOR ") > -1 &&
+				line.trim().endsWith(" PERCENT")) {
+				
+				int i = line.indexOf(" FOR ");
+				int j = line.indexOf(" PERCENT", i);
+				return Short.valueOf(line.substring(i + 5, j).trim());				
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Collection<ProcedureCallTime> getProcedureCallTimes(SchemaSyntaxWrapper context, 
 															   String procedureName) {
-		// TODO figure this out		
-		return null;
+		List<ProcedureCallTime> list = new ArrayList<>();
+		
+		for (String line : getProcedureLines(context, procedureName)) {
+			int i = line.indexOf(" " + procedureName + " ") + 
+					procedureName.length() + 2;
+			
+			if (line.substring(i).startsWith("ON ERROR DURING")) {
+				list.add(ProcedureCallTime.ON_ERROR_DURING);
+			} else {
+				int j = line.indexOf(" ", i);
+				String p;
+				if (j > -1) {
+					p = line.substring(i, j);
+				} else {
+					p = line.substring(i);
+				}
+				ProcedureCallTime procedureCallTime = 
+					ProcedureCallTime.valueOf(p);
+				list.add(procedureCallTime);
+			}
+		}
+		
+		return list;
+		
 	}
 
 	@Override
 	public Collection<RecordProcedureCallVerb> getProcedureCallVerbs(SchemaSyntaxWrapper context, 
 																	 String procedureName) {
 		
-		// TODO figure this out		
-		return null;
+		List<RecordProcedureCallVerb> list = new ArrayList<>();
+		
+		for (String line : getProcedureLines(context, procedureName)) {
+			int i = line.indexOf(" " + procedureName + " ") + 
+					procedureName.length() + 2;
+			int j;
+			if (line.substring(i).startsWith("ON ERROR DURING")) {
+				j = i + 15;
+			} else {
+				j = line.indexOf(" ", i);
+			}			
+			if (j > -1) {
+				String p = line.substring(j).trim();
+				if (p.equals("")) {
+					list.add(RecordProcedureCallVerb.EVERY_DML_FUNCTION);									
+				} else {										
+					RecordProcedureCallVerb recordProcedureCallVerb =
+						RecordProcedureCallVerb.valueOf(p);
+					list.add(recordProcedureCallVerb);					
+				}
+			} else {
+				list.add(RecordProcedureCallVerb.EVERY_DML_FUNCTION);
+			}			
+		}
+		
+		return list;
+		
 	}
 
 	@Override
 	public Collection<String> getProceduresCalled(SchemaSyntaxWrapper context) {
-		// TODO figure this out
-		return Collections.emptyList();
+		List<String> list = new ArrayList<>();
+		for (String line : context.getLines()) {
+			if (line.startsWith("         CALL ")) {
+				int i = line.indexOf(" ", 14);
+				String procedureName = line.substring(14, i).trim();
+				if (!list.contains(procedureName)) {
+					list.add(procedureName);
+				}
+			}
+		}
+		return list;
 	}
 
 	@Override
@@ -222,13 +349,30 @@ public class RecordDataCollector
 
 	@Override
 	public String getSymbolicSubareaName(SchemaSyntaxWrapper context) {
-		// TODO figure this out
-		return null;
+		//      WITHIN AREA ALMAI101 SUBAREA AREA1
+		for (String line : context.getLines()) {
+			if (line.indexOf("WITHIN AREA ") > -1 &&
+			    line.indexOf(" SUBAREA ") > -1) {
+			    	
+			    int i = line.indexOf(" SUBAREA ");
+				return line.substring(i + 9).trim();
+			}
+		}
+		return null;		
 	}
 
 	@Override
-	public Short getViaDisplacementPageCount(SchemaSyntaxWrapper recordContext) {
-		// TODO figure this out
+	public Short getViaDisplacementPageCount(SchemaSyntaxWrapper context) {
+		// [...] DISPLACEMENT 5 PAGES
+		for (String line : context.getLines()) {
+			if (line.indexOf("DISPLACEMENT ") > -1 &&
+			    line.trim().endsWith(" PAGES")) {
+			    	
+			    int i = line.indexOf("DISPLACEMENT ");
+			    int j = line.indexOf(" PAGES", i);
+				return Short.valueOf(line.substring(i + 13, j).trim());
+			}
+		}
 		return null;
 	}
 
@@ -243,8 +387,14 @@ public class RecordDataCollector
 	}
 
 	@Override
-	public String getViaSymbolicDisplacementName(SchemaSyntaxWrapper recordContext) {
-		// TODO figure this out
+	public String getViaSymbolicDisplacementName(SchemaSyntaxWrapper context) {
+		// [...] DISPLACEMENT USING DISPL1
+		for (String line : context.getLines()) {
+			if (line.indexOf("DISPLACEMENT USING ") > -1) {
+			    int i = line.indexOf("DISPLACEMENT USING ");
+			    return line.substring(i + 19).trim();
+			}
+		}
 		return null;
 	}	
 

@@ -307,7 +307,13 @@ public class SetDataCollector
 	public String getSystemOwnerAreaName(SchemaSyntaxWrapper context) {
 		for (String line : context.getLines()) {
 			if (line.startsWith("             WITHIN AREA ")) {				
-				return line.substring(25).trim();
+				String p = line.substring(25).trim();
+				int i = p.indexOf(" ");
+				if (i > -1) {
+					return p.substring(0, i);
+				} else {
+					return p;
+				}
 			}
 		}
 		return null;
@@ -315,39 +321,89 @@ public class SetDataCollector
 
 	@Override
 	public Integer getSystemOwnerOffsetOffsetPageCount(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		// [...] WITHIN AREA EMP-DEMO-REGION OFFSET 1 PAGES FOR 4 PAGES
+		for (String line : context.getLines()) {
+			if (line.indexOf("WITHIN AREA ") > -1 &&
+				line.indexOf(" OFFSET ") > -1 &&
+				line.indexOf(" PAGES FOR ") > -1) {
+				
+				int i = line.indexOf(" OFFSET ");
+				int j = line.indexOf(" PAGES FOR ", i);
+				return Integer.valueOf(line.substring(i + 8, j).trim());
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Short getSystemOwnerOffsetOffsetPercent(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		// [...] WITHIN AREA EMP-DEMO-REGION OFFSET 5 PERCENT FOR 4 PAGES
+		for (String line : context.getLines()) {
+			if (line.indexOf("WITHIN AREA ") > -1 &&
+				line.indexOf(" OFFSET ") > -1 &&
+				line.indexOf(" PERCENT FOR ") > -1) {
+				
+				int i = line.indexOf(" OFFSET ");
+				int j = line.indexOf(" PERCENT FOR ", i);
+				return Short.valueOf(line.substring(i + 8, j).trim());
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getSystemOwnerOffsetPageCount(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		// [...] WITHIN AREA EMP-DEMO-REGION OFFSET 5 PERCENT FOR 4 PAGES
+		for (String line : context.getLines()) {
+			if (line.indexOf("WITHIN AREA ") > -1 &&
+				line.indexOf(" OFFSET ") > -1 &&
+				line.indexOf(" FOR ") > -1 &&
+				line.trim().endsWith(" PAGES")) {
+				
+				int i = line.indexOf(" FOR ");
+				int j = line.indexOf(" PAGES", i);
+				return Integer.valueOf(line.substring(i + 5, j).trim());				
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public Short getSystemOwnerOffsetPercent(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		// [...] WITHIN AREA EMP-DEMO-REGION OFFSET 5 PERCENT FOR 5 PERCENT
+		for (String line : context.getLines()) {
+			if (line.indexOf("WITHIN AREA ") > -1 &&
+				line.indexOf(" OFFSET ") > -1 &&
+				line.indexOf(" FOR ") > -1 &&
+				line.trim().endsWith(" PERCENT")) {
+				
+				int i = line.indexOf(" FOR ");
+				int j = line.indexOf(" PERCENT", i);
+				return Short.valueOf(line.substring(i + 5, j).trim());				
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public String getSystemOwnerSymbolicSubareaName(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		// [..] WITHIN AREA ALMAI102 SUBAREA AREA1
+		for (String line : context.getLines()) {
+			if (line.indexOf("WITHIN AREA ") > -1 &&
+			    line.indexOf(" SUBAREA ") > -1) {
+			    	
+			    int i = line.indexOf(" SUBAREA ");
+				return line.substring(i + 9).trim();
+			}
+		}
 		return null;
 	}
 
 	@Override
 	public boolean getSortKeyIsNaturalSequence(SchemaSyntaxWrapper context,
 											   String memberRecordName) {
-		// TODO figure this out
-		return false;
+		String scanItem = "                 NATURAL SEQUENCE";
+		return indexOf(scanItem, context, memberRecordName) > -1;
 	}
 
 	private int indexOf(SchemaSyntaxWrapper context, String memberRecordName) {
@@ -392,7 +448,13 @@ public class SetDataCollector
 	
 	@Override
 	public boolean isKeyCompressed(SchemaSyntaxWrapper context) {
-		// TODO figure this out
+		for (String line : context.getLines()) {
+			if (line.trim().equals("COMPRESSED") ||
+				line.trim().equals("UNCOMPRESSED")) {				
+				
+				return line.trim().equals("COMPRESSED");
+			}
+		}
 		return false;
 	}
 

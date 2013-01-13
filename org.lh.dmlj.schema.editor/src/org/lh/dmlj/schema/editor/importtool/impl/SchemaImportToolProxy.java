@@ -671,10 +671,9 @@ public final class SchemaImportToolProxy {
 		
 			DuplicatesOption duplicatesOption = 
 				dataCollector.getCalcKeyDuplicatesOption(recordContext);
-			boolean naturalSequence = 
-				dataCollector.getCalcKeyIsNaturalSequence(recordContext);
-			Key key = modelFactory.createKey(record, duplicatesOption, 
-											 naturalSequence);
+			// always set the naturalSequence attribute to false; this attribute
+			// is not applicable to CALC keys
+			Key key = modelFactory.createKey(record, duplicatesOption, false);
 			
 			for (String elementName : 
 				 dataCollector.getCalcKeyElementNames(recordContext)) {	
@@ -908,6 +907,11 @@ public final class SchemaImportToolProxy {
 		Short displacementPageCount = 
 			symbolicIndexName != null ? null :
 			dataCollector.getDisplacementPageCount(setContext);
+		if (displacementPageCount != null && 
+			displacementPageCount.shortValue() == 0) {
+			
+			displacementPageCount = null;
+		}
 		modelFactory.createIndexedSetModeSpecification(set, symbolicIndexName,
 													   keyCount,
 													   displacementPageCount);				
@@ -1003,6 +1007,11 @@ public final class SchemaImportToolProxy {
 		Short displacementPageCount = 
 			symbolicIndexName != null ? null :
 			dataCollector.getDisplacementPageCount(setContext);
+		if (displacementPageCount != null && 
+			displacementPageCount.shortValue() == 0) {
+			
+			displacementPageCount = null;
+		}
 		modelFactory.createIndexedSetModeSpecification(set, symbolicIndexName,
 													   keyCount,
 													   displacementPageCount);		

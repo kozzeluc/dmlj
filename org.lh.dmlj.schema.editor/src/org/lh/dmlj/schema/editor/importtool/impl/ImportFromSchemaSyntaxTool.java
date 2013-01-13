@@ -19,10 +19,20 @@ import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 
 	private enum EntityType {AREA, RECORD, SET};
-	
+		
 	private IDataCollectorRegistry dataCollectorRegistry;
+	private IDataEntryContext 	   dataEntryContext;
 	private File 				   file;
 	
+	private static String pad(short number, int length) {
+		StringBuilder p = new StringBuilder();
+		p.append(String.valueOf(number));
+		while (p.length() < length) {
+			p.insert(0, "0");
+		}
+		return p.toString();
+	}
+
 	public ImportFromSchemaSyntaxTool() {
 		super();
 	}
@@ -171,7 +181,8 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 	public void init(IDataEntryContext dataEntryContext, Properties parameters,
 					 IDataCollectorRegistry dataCollectorRegistry) {
 		
-		// we need the IDataCollectorRegistry later
+		// we need the IDataEntryContext and IDataCollectorRegistry later 
+		this.dataEntryContext = dataEntryContext;
 		this.dataCollectorRegistry = dataCollectorRegistry;
 		
 		// get the file from the data entry context
@@ -230,17 +241,17 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 
 	@Override
 	public boolean isOptionAddDDLCATLOD() {
-		return false;
+		return dataEntryContext.getAttribute(ContextAttributeKeys.ADD_DDLCATLOD);
 	}
 
 	@Override
 	public boolean isOptionCompleteLooak_155() {
-		return false;
+		return dataEntryContext.getAttribute(ContextAttributeKeys.ADD_OFFSET_FOR_LOOAK_155);
 	}
 
 	@Override
 	public boolean isOptionCompleteOoak_012() {
-		return false;
+		return dataEntryContext.getAttribute(ContextAttributeKeys.ADD_OFFSET_FOR_OOAK_012);
 	}
 
 	private void setRecordPrefixAndOrSuffix(SchemaSyntaxWrapper context) {		
@@ -271,6 +282,13 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 			}
 		}
 		
+		// if the record is composed of only 1 or more FILLER elements, there is
+		// no way we can detect a prefix and/or suffix and there is no need for
+		// them neither, so get out in that case
+		if (allElementNames.isEmpty()) {
+			return;
+		}
+		
 		// in the case of a CALC record, determine the prefix/suffix using the
 		// first CALC element
 		if (recordDataCollector.getLocationMode(context) == LocationMode.CALC) {
@@ -288,31 +306,15 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 			// the list of all element names, either a prefix or suffix, or both
 			// are defined for the record synonym used; we only support prefixes
 			// ending with a hyphen and suffixes starting with a hypen
-			for (String elementName : allElementNames) {
-				if (elementName.equals(firstCalcElement)) {
-					// no prefix or suffix since we have a perfect match
-					return;
-				}
-				int i = firstCalcElement.indexOf("-" + elementName); 
-				int j = firstCalcElement.indexOf(elementName + "-");
-				if (i > -1) {
-					String prefix = firstCalcElement.substring(0, i + 1);
-					context.getProperties().put("prefix", prefix);
-				}
-				if (j > -1) {
-					j = firstCalcElement.indexOf("-", j);
-					String suffix = firstCalcElement.substring(j);
-					context.getProperties().put("suffix", suffix);
-				}
-				if (i > -1 || j > -1) {
-					// if a prefix and/or suffix could be derived, we're done
-					return;
-				}
+			if (setRecordPrefixAndOrSuffix(context, allElementNames, 
+										   firstCalcElement)) {
+				return;
+			} else {
+				throw new RuntimeException("logic error: cannot derive " +
+										   "prefix/suffix for " + 
+										   recordDataCollector.getName(context) +
+										   " (CALC)");
 			}
-			throw new RuntimeException("logic error: cannot derive prefix/" +
-									   "suffix for " + 
-									   recordDataCollector.getName(context) + 
-									   " (CALC)");
 		}
 		
 		// for DIRECT and VIA records, see if there is at least 1 sorted set
@@ -321,33 +323,124 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		// element name of that set 
 		String firstSortElement = 
 			getFirstSortElement(recordDataCollector.getName(context));
-		if (firstSortElement != null) {
-			for (String elementName : allElementNames) {
-				if (elementName.equals(firstSortElement)) {
-					// no prefix or suffix since we have a perfect match
-					return;
+		if (firstSortElement != null) {	
+			// if the first sort key element name is contained in the list of 
+			// all elements, there is no prefix nor a suffix, so we're done
+			if (allElementNames.contains(firstSortElement)) {
+				return;
+			}
+			if (setRecordPrefixAndOrSuffix(context, allElementNames, 
+									       firstSortElement)) {
+				
+				return;
+			} else {
+				throw new RuntimeException("logic error: cannot derive prefix/" +
+						   				   "suffix for " + 
+						   				   recordDataCollector.getName(context) +
+						   				   " (VIA/DIRECT)");
+			}			
+		}
+		
+		// use the record-id as a suffix if the user selected that option while
+		// also honoring the digit count he/she selected as well (-1 means that 
+		// we don't have to bother about this) IF AND ONLY IF no suffix is 
+		// already there (a suffix is considered to always start with a hyphen)
+		Short digitCount = 
+			dataEntryContext.getAttribute(ContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES);
+		if (digitCount.shortValue() == -1) {
+			return;
+		}
+		// get the record id
+		short recordId = recordDataCollector.getRecordId(context);
+		// see if there is already a suffix present
+		int i = allElementNames.get(0).lastIndexOf("-");
+		boolean addSuffix = false;
+		if (i > -1) {
+			// there seems to be a hyphen present; see if the record id can be
+			// derived from the characters following that hyphen and see if all
+			// element names end with that same character sequence		
+			String p = allElementNames.get(0).substring(i);
+			try {
+				short j = Short.valueOf(p.substring(1));
+				if (j == recordId) {				
+					for (String elementName : allElementNames) {
+						if (!elementName.endsWith(p)) {
+							addSuffix = true;
+							break;
+						}
+					}		
 				}
-				int i = firstSortElement.indexOf("-" + elementName); 
-				int j = firstSortElement.indexOf(elementName + "-");
-				if (i > -1) {
-					String prefix = firstSortElement.substring(0, i + 1);
-					context.getProperties().put("prefix", prefix);
-				}
-				if (j > -1) {
-					j = firstSortElement.indexOf("-", j);
-					String suffix = firstSortElement.substring(j);
-					context.getProperties().put("suffix", suffix);
-				}
-				if (i > -1 || j > -1) {
-					// if a prefix and/or suffix could be derived, we're done
-					return;
+			} catch (NumberFormatException e) {
+				// not a suffix with the record id
+				addSuffix = true;
+			}			
+		} else {
+			// no hyphen so we consider no suffix to be present
+			addSuffix = true;
+		}
+		// get out if a suffix seems to be there already
+		if (!addSuffix) {
+			return;
+		}		
+		// add a suffix containing the record-id
+		
+		String suffix = "-" + pad(recordId, digitCount);		
+		context.getProperties().put("suffix", suffix);		
+		
+	}
+	
+	private boolean setRecordPrefixAndOrSuffix(SchemaSyntaxWrapper context,
+											   List<String> allElementNames,
+											   String modelElementName) {
+		
+		for (String elementName : allElementNames) {
+			if (elementName.equals(modelElementName)) {
+				// no prefix or suffix since we have a perfect match
+				return true;
+			}
+			int i = modelElementName.indexOf("-" + elementName); 
+			int j = modelElementName.indexOf(elementName + "-");
+			String prefix = null;
+			String suffix = null;
+			if (i > -1) {
+				String p = modelElementName.substring(0, i + 1);
+				// only allow for 1 hyphen in the prefix
+				if (p.substring(0, p.length() -1).indexOf("-") == -1) {
+					prefix = p;
 				}
 			}
-			throw new RuntimeException("logic error: cannot derive prefix/" +
-					   				   "suffix for " + 
-					   				   recordDataCollector.getName(context) +
-					   				   " (VIA/DIRECT)");			
+			if (j > -1) {
+				j += elementName.length();
+				String p = modelElementName.substring(j);
+				// only allow for 1 hyphen in the suffix
+				if (p.substring(1).indexOf("-") == -1) {
+					suffix = p;
+				}
+			}
+			if (prefix != null || suffix != null) {
+				// check if we've found the right prefix and/or suffix...
+				StringBuilder p = new StringBuilder();
+				if (prefix != null) {
+					p.append(prefix);
+				}
+				p.append(elementName);
+				if (suffix != null) {
+					p.append(suffix);
+				}
+				if (p.toString().equals(modelElementName)) {
+					// if a prefix and/or suffix could be derived, we need
+					// to store them in the context and we're done
+					if (prefix != null) {
+						context.getProperties().put("prefix", prefix);
+					}
+					if (suffix != null) {
+						context.getProperties().put("suffix", suffix);
+					}
+					return true;
+				}
+			}				
 		}
+		return false;		
 		
 	}
 

@@ -88,11 +88,11 @@ public class AreaDataCollector
 							AreaProcedureCallFunction.valueOf(p);
 						list.add(areaProcedureCallFunction);
 					} else {
-						// TODO see how READY shows up in the syntax and handle 
-						// each of the options
-						String message = "cannot handle <" + line.trim() + 
-										 "> (READY ... not yet supported)";
-						throw new UnsupportedOperationException(message);
+						String q = 
+							p.replaceAll(" ", "_").replaceFirst("_FOR", "");
+						AreaProcedureCallFunction areaProcedureCallFunction =
+							AreaProcedureCallFunction.valueOf(q);
+						list.add(areaProcedureCallFunction);
 					}
 				}
 			} else {
