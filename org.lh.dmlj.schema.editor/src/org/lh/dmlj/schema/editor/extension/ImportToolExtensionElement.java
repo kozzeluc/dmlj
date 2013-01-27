@@ -1,9 +1,9 @@
 package org.lh.dmlj.schema.editor.extension;
 
-import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE;
+import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.ELEMENT_OPTIONS;
+import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.ELEMENT_POST_OPTIONS_PAGES;
+import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.ELEMENT_PRE_OPTIONS_PAGES;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Assert;
@@ -13,9 +13,11 @@ import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 
 public class ImportToolExtensionElement extends AbstractExtensionElement {
 
-	private List<DataEntryPageExtensionElement> dataEntryPageExtensionElements;
-	private Properties					  		parameters;
-	private ISchemaImportTool 			  		schemaImportTool;	
+	private OptionsExtensionElement		     optionsExtensionElement;
+	private Properties					  	 parameters;
+	private PostOptionsPagesExtensionElement postOptionsPagesExtensionElement;
+	private PreOptionsPagesExtensionElement  preOptionsPagesExtensionElement;
+	private ISchemaImportTool 			  	 schemaImportTool;	
 	
 	public ImportToolExtensionElement(IConfigurationElement configElement) {	
 		super(configElement);
@@ -26,22 +28,40 @@ public class ImportToolExtensionElement extends AbstractExtensionElement {
 
 	public String getImplementingClass() {
 		return Util.getAttribute(configElement, 
-				  ExtensionPointConstants.ATTRIBUTE_CLASS, null);
+				  				 ExtensionPointConstants.ATTRIBUTE_CLASS, null);
 	}
 
-	public List<DataEntryPageExtensionElement> getDataEntryPageExtensionElements() {
-		if (dataEntryPageExtensionElements == null) {
-			// create the list...
-			dataEntryPageExtensionElements = new ArrayList<>();
-			// ...and collect the data entry pages:			
-			List<DataEntryPageExtensionElement> pages =
+	public OptionsExtensionElement getOptionsExtensionElement() {
+		if (optionsExtensionElement == null) {
+			optionsExtensionElement =
 				ExtensionElementFactory.getExtensionElements(configElement, 
-															 ELEMENT_DATA_ENTRY_PAGE, 
-															 DataEntryPageExtensionElement.class);
-			dataEntryPageExtensionElements.addAll(pages);
-						
+															 ELEMENT_OPTIONS, 
+															 OptionsExtensionElement.class)
+									   .get(0);			
 		}
-		return dataEntryPageExtensionElements;
+		return optionsExtensionElement;
+	}
+	
+	public PostOptionsPagesExtensionElement getPostOptionsDataEntryPageExtensionElement() {
+		if (postOptionsPagesExtensionElement == null) {			
+			postOptionsPagesExtensionElement =
+				ExtensionElementFactory.getExtensionElements(configElement, 
+															 ELEMENT_POST_OPTIONS_PAGES, 
+															 PostOptionsPagesExtensionElement.class)
+									   .get(0);
+		}
+		return postOptionsPagesExtensionElement;
+	}	
+	
+	public PreOptionsPagesExtensionElement getPreOptionsDataEntryPageExtensionElement() {
+		if (preOptionsPagesExtensionElement == null) {			
+			preOptionsPagesExtensionElement =
+				ExtensionElementFactory.getExtensionElements(configElement, 
+															 ELEMENT_PRE_OPTIONS_PAGES, 
+															 PreOptionsPagesExtensionElement.class)
+									   .get(0);
+		}
+		return preOptionsPagesExtensionElement;
 	}
 	
 	public Properties getParameters() {

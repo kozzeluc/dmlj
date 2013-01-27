@@ -6,20 +6,23 @@ This template will generate a record's DDL syntax.  Currently these issues
 exist :
 
 - The "SHARE STRUCTURE OF RECORD" clause will always show question marks as we 
-  don't have this information available in the model.
+  don't (yet) have this information available in the model.
 - The order in which the "OWNER OF SET" clauses are generated is in most cases  
   the same as the order in the schema compiler's output.
-- The order in which the "MEMBER OF SET" clauses are generated is in many cases
-  different from the order in the schema compiler's output; this is a schema
-  generation issue, we are just following the model here.
+- The order in which the "MEMBER OF SET" clauses are generated is (depending on
+  the import tool used to create the schema) in many cases different from the 
+  order in the schema compiler's output; this is a schema generation issue, we 
+  are just following the model here.
 - The "BIT LENGTH" clause for elements with USAGE IS BIT is not always correct
   (the MASK attribute is always generated as "MASK IS X'FF'"; for group fields
   (elements without a picture), a MASK attribute will NEVER be generated.
 - The "VALUE" clause (e.g. for condition names) will always show a question mark
-  as we don't have this information available in the model.
+  as we don't (yet) have this information available in the model.
 - The "ELEMENT LENGTH" and "POSITION" clauses can show a different value than 
   the schema compiler output; this has to do with the at times weird way the 
   schema compiler handles elements participating in an array ("OCCURS" clause).
+- We will always show the real element (synonym) name whereas the schema 
+  compiler output shows the base element name.
   
 See RecordTemplateTest for a JUnit testcase.
 */
@@ -36,6 +39,7 @@ if (record.getName().endsWith("_")) {
      ADD
      RECORD NAME IS <%= recordName %>
          SHARE STRUCTURE OF RECORD ? VERSION ?
+*+           SYNONYM OF PRIMARY RECORD ? VERSION ?         
          RECORD ID IS <%= record.getId() %>
 <%
 if (record.getLocationMode() == LocationMode.CALC) {
@@ -125,7 +129,7 @@ if (symbolicSubareaName != null) {
 <%
 } else {
 %>
-         WITHIN AREA <%= areaName %>
+         WITHIN AREA <%= areaName %> OFFSET 0 PERCENT FOR 100 PERCENT
 <%
 }
 for (OwnerRole role : record.getOwnerRoles()) {
@@ -170,6 +174,10 @@ for (MemberRole role : record.getMemberRoles()) {
     if (role.getIndexDbkeyPosition() != null) {
 %>
 *+           INDEX DBKEY POSITION IS <%= role.getIndexDbkeyPosition() %>
+<%
+    } else if (role.getSet().getSystemOwner() != null) {
+%>
+*+           INDEX DBKEY POSITION IS OMITTED
 <%
     }
     if (role.getOwnerDbkeyPosition() != null) {

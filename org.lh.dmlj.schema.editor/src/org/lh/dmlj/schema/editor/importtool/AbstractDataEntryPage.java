@@ -2,8 +2,8 @@ package org.lh.dmlj.schema.editor.importtool;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.lh.dmlj.schema.editor.importtool.annotation.Context;
-import org.lh.dmlj.schema.editor.importtool.annotation.Controller;
+import org.lh.dmlj.schema.editor.wizard._import.schema.Context;
+import org.lh.dmlj.schema.editor.wizard._import.schema.Controller;
 
 public abstract class AbstractDataEntryPage {
 

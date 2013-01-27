@@ -1,0 +1,51 @@
+<%@ jet package="org.lh.dmlj.schema.editor.template" imports="org.lh.dmlj.schema.*" class="SchemaTemplate"%>
+<%
+
+/*
+This template will generate a schema's DDL syntax.
+*/
+
+Schema schema = (Schema)argument;
+String description = schema.getDescription();
+String memoDate = schema.getMemoDate();
+%>
+     ADD
+     SCHEMA NAME IS <%= schema.getName() %> VERSION IS <%= schema.getVersion() %>
+<%
+if (description != null) {
+%>
+         SCHEMA DESCRIPTION IS '<%= description %>'
+<%
+}
+if (memoDate != null) {
+%>         
+         MEMO DATE IS <%= memoDate %>
+<%
+}
+%>
+         ASSIGN RECORD IDS FROM 1001
+         PUBLIC ACCESS IS ALLOWED FOR ALL
+         .
+<%
+AreaTemplate areaTemplate = new AreaTemplate();
+for (SchemaArea area : schema.getAreas()) {    
+    String syntax = areaTemplate.generate(area);
+%>
+<%= syntax %>
+<%
+} 
+RecordTemplate recordTemplate = new RecordTemplate();
+for (SchemaRecord record : schema.getRecords()) {    
+    String syntax = recordTemplate.generate(record);
+%>
+<%= syntax %>         
+<%
+}
+SetTemplate setTemplate = new SetTemplate();
+for (Set set : schema.getSets()) {    
+    String syntax = setTemplate.generate(set);
+%>
+<%= syntax %>         
+<%
+}
+%>

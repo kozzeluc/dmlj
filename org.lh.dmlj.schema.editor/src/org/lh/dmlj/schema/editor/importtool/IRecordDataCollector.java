@@ -6,10 +6,9 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
-import org.lh.dmlj.schema.StorageMode;
 
-public interface IRecordDataCollector<T> {
-
+public interface IRecordDataCollector<T> {	
+	
 	String getAreaName(T context);
 
 	DuplicatesOption getCalcKeyDuplicatesOption(T context);
@@ -40,16 +39,14 @@ public interface IRecordDataCollector<T> {
 
 	Collection<String> getProceduresCalled(T context);
 
-	short getRecordId(T context);
-	
-	StorageMode getStorageMode(T context);
+	short getRecordId(T context);	
 
 	String getSymbolicSubareaName(T context);
 	
-	Short getViaDisplacementPageCount(T recordContext);
+	Short getViaDisplacementPageCount(T context);
 
 	String getViaSetName(T context);
 
-	String getViaSymbolicDisplacementName(T recordContext);	
+	String getViaSymbolicDisplacementName(T context);	
 	
 }

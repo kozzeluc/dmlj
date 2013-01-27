@@ -14,6 +14,20 @@
       </editor>
    </extension>
    <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="org.lh.dmlj.schema.editor.category"
+            name="CA IDMS/DB Schema Editor">
+      </category>
+      <wizard
+            category="org.lh.dmlj.schema.editor.category"
+            class="org.lh.dmlj.schema.editor.wizard.export.ExportWizard"
+            icon="icons/text.gif"
+            id="org.lh.dmlj.schema.editor.wizard.export"
+            name="CA IDMS/DB Schema Syntax">
+      </wizard>
+   </extension>
+   <extension
          point="org.eclipse.ui.importWizards">
       <category
             id="org.lh.dmlj.schema.editor.category"
@@ -21,14 +35,14 @@
       </category>
       <wizard
             category="org.lh.dmlj.schema.editor.category"
-            class="org.lh.dmlj.schema.editor.wizard.ImportWizard"
+            class="org.lh.dmlj.schema.editor.wizard._import.schema.SchemaImportWizard"
             icon="icons/schema.gif"
             id="org.lh.dmlj.schema.editor.wizard.import"
-            name="CA IDMS/DB Schema">
+            name="CA IDMS/DB Schema Syntax (or other source)">
       </wizard>
       <wizard
             category="org.lh.dmlj.schema.editor.category"
-            class="org.lh.dmlj.schema.editor.wizard.DictguidesImportWizard"
+            class="org.lh.dmlj.schema.editor.wizard._import.dictguide.DictguidesImportWizard"
             icon="icons/pdf_icon_16x16.png"
             id="org.lh.dmlj.schema.editor.wizard.import.dictguides"
             name="CA IDMS/DB Dictionary Structure and SQL Reference Guides">
@@ -298,7 +312,7 @@
             </validFor>
          </recordLayoutManager>
          <recordLayoutManager
-               class="org.lh.dmlj.schema.editor.importtool.impl.StandardRecordLayoutManager"
+               class="org.lh.dmlj.schema.editor.wizard._import.schema.StandardRecordLayoutManager"
                description="Manages the layout of all records in any schema and tries to create an equal number of rows and columns in the diagram."
                id="org.lh.dmlj.schema.editor.importtool.layoutManager1"
                image="icons/record_lm_standard.gif"
@@ -307,23 +321,35 @@
       </recordLayoutManagers>
       <importTools>
          <importTool
-               class="org.lh.dmlj.schema.editor.importtool.impl.ImportFromSchemaSyntaxTool"
-               description="Imports a CA IDMS/DB schema from a file that contains CA IDMS/DB schema syntax."
+               class="org.lh.dmlj.schema.editor.importtool.syntax.ImportFromSchemaSyntaxTool"
+               description="Imports a CA IDMS/DB schema from a file that contains CA IDMS/DB schema syntax"
                id="org.lh.dmlj.schema.editor.importTool1"
                name="org.lh.dmlj.schema.editor.importTool1"
                source="a file that contains CA IDMS/DB schema syntax">
-            <dataEntryPage
-                  class="org.lh.dmlj.schema.editor.importtool.impl.FileSelectionPage"
-                  id="org.lh.dmlj.schema.editor.dataEntryPage1"
-                  message="Select a file that contains CA IDMS/DB schema syntax"
-                  name="fileSelectionPage">
-            </dataEntryPage>
-            <dataEntryPage
-                  class="org.lh.dmlj.schema.editor.importtool.impl.OptionsPage"
-                  id="org.lh.dmlj.schema.editor.dataEntryPage2"
-                  message="Set options"
-                  name="optionsPage">
-            </dataEntryPage>
+            <preOptionsPages>
+               <dataEntryPage
+                     class="org.lh.dmlj.schema.editor.importtool.syntax.FileSelectionPage"
+                     id="org.lh.dmlj.schema.editor.dataEntryPage1"
+                     message="Select a file that contains CA IDMS/DB schema syntax"
+                     name="fileSelectionPage">
+               </dataEntryPage>
+            </preOptionsPages>
+            <options>
+               <option
+                     checkButtonLabel="Use record-id as suffix if one is not present and cannot be derived automatically (3 digits, e.g. &quot;-013&quot;)"                     
+                     idmsntwkOnly="false"
+                     initialValue="false"
+                     mutuallyExclusiveWith="digitCountForMissingSuffixes_4_digits"
+                     name="digitCountForMissingSuffixes_3_digits">
+               </option>
+               <option
+                     checkButtonLabel="Use record-id as suffix if one is not present and cannot be derived automatically (4 digits, e.g. &quot;-0013&quot;)"
+                     idmsntwkOnly="false"
+                     initialValue="true"
+                     mutuallyExclusiveWith="digitCountForMissingSuffixes_3_digits"
+                     name="digitCountForMissingSuffixes_4_digits">
+               </option></options>
+            <postOptionsPages></postOptionsPages>
          </importTool>
       </importTools>
    </extension>

@@ -15,7 +15,7 @@ public class RecordTemplate
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "     ADD" + NL + "     RECORD NAME IS ";
-  protected final String TEXT_2 = NL + "         SHARE STRUCTURE OF RECORD ? VERSION ?" + NL + "         RECORD ID IS ";
+  protected final String TEXT_2 = NL + "         SHARE STRUCTURE OF RECORD ? VERSION ?" + NL + "*+           SYNONYM OF PRIMARY RECORD ? VERSION ?         " + NL + "         RECORD ID IS ";
   protected final String TEXT_3 = NL + "         LOCATION MODE IS CALC USING ( ";
   protected final String TEXT_4 = " )" + NL + "             DUPLICATES ARE ";
   protected final String TEXT_5 = "         ";
@@ -39,41 +39,43 @@ public class RecordTemplate
   protected final String TEXT_23 = " FOR ";
   protected final String TEXT_24 = " ";
   protected final String TEXT_25 = NL + "         WITHIN AREA ";
-  protected final String TEXT_26 = "         " + NL + "*+       OWNER OF SET ";
-  protected final String TEXT_27 = NL + "*+           NEXT DBKEY POSITION IS ";
-  protected final String TEXT_28 = NL + "*+           PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_29 = NL + "*+       MEMBER OF SET ";
-  protected final String TEXT_30 = NL + "*+           NEXT DBKEY POSITION IS ";
-  protected final String TEXT_31 = NL + "*+           PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_32 = NL + "*+           INDEX DBKEY POSITION IS ";
-  protected final String TEXT_33 = NL + "*+           OWNER DBKEY POSITION IS ";
-  protected final String TEXT_34 = NL + "         .";
-  protected final String TEXT_35 = NL;
-  protected final String TEXT_36 = " ";
+  protected final String TEXT_26 = " OFFSET 0 PERCENT FOR 100 PERCENT";
+  protected final String TEXT_27 = "         " + NL + "*+       OWNER OF SET ";
+  protected final String TEXT_28 = NL + "*+           NEXT DBKEY POSITION IS ";
+  protected final String TEXT_29 = NL + "*+           PRIOR DBKEY POSITION IS ";
+  protected final String TEXT_30 = NL + "*+       MEMBER OF SET ";
+  protected final String TEXT_31 = NL + "*+           NEXT DBKEY POSITION IS ";
+  protected final String TEXT_32 = NL + "*+           PRIOR DBKEY POSITION IS ";
+  protected final String TEXT_33 = NL + "*+           INDEX DBKEY POSITION IS ";
+  protected final String TEXT_34 = NL + "*+           INDEX DBKEY POSITION IS OMITTED";
+  protected final String TEXT_35 = NL + "*+           OWNER DBKEY POSITION IS ";
+  protected final String TEXT_36 = NL + "         .";
   protected final String TEXT_37 = NL;
-  protected final String TEXT_38 = "    REDEFINES ";
+  protected final String TEXT_38 = " ";
   protected final String TEXT_39 = NL;
-  protected final String TEXT_40 = "    PICTURE IS  ";
+  protected final String TEXT_40 = "    REDEFINES ";
   protected final String TEXT_41 = NL;
-  protected final String TEXT_42 = "    USAGE IS ";
-  protected final String TEXT_43 = " ";
-  protected final String TEXT_44 = NL;
-  protected final String TEXT_45 = "    ELEMENT LENGTH IS ";
+  protected final String TEXT_42 = "    PICTURE IS  ";
+  protected final String TEXT_43 = NL;
+  protected final String TEXT_44 = "    USAGE IS ";
+  protected final String TEXT_45 = " ";
   protected final String TEXT_46 = NL;
-  protected final String TEXT_47 = "    BIT LENGTH IS ";
-  protected final String TEXT_48 = "    ";
-  protected final String TEXT_49 = NL;
-  protected final String TEXT_50 = "    POSITION IS ";
+  protected final String TEXT_47 = "    ELEMENT LENGTH IS ";
+  protected final String TEXT_48 = NL;
+  protected final String TEXT_49 = "    BIT LENGTH IS ";
+  protected final String TEXT_50 = "    ";
   protected final String TEXT_51 = NL;
-  protected final String TEXT_52 = "    OCCURS 0 TO ";
-  protected final String TEXT_53 = " TIMES DEPENDING ON ";
-  protected final String TEXT_54 = NL;
-  protected final String TEXT_55 = "    OCCURS ";
-  protected final String TEXT_56 = " TIMES";
-  protected final String TEXT_57 = NL;
-  protected final String TEXT_58 = "    VALUE IS ( ? )";
+  protected final String TEXT_52 = "    POSITION IS ";
+  protected final String TEXT_53 = NL;
+  protected final String TEXT_54 = "    OCCURS 0 TO ";
+  protected final String TEXT_55 = " TIMES DEPENDING ON ";
+  protected final String TEXT_56 = NL;
+  protected final String TEXT_57 = "    OCCURS ";
+  protected final String TEXT_58 = " TIMES";
   protected final String TEXT_59 = NL;
-  protected final String TEXT_60 = "    .         ";
+  protected final String TEXT_60 = "    VALUE IS ( ? )";
+  protected final String TEXT_61 = NL;
+  protected final String TEXT_62 = "    .         ";
 
   public String generate(Object argument)
   {
@@ -85,20 +87,23 @@ This template will generate a record's DDL syntax.  Currently these issues
 exist :
 
 - The "SHARE STRUCTURE OF RECORD" clause will always show question marks as we 
-  don't have this information available in the model.
+  don't (yet) have this information available in the model.
 - The order in which the "OWNER OF SET" clauses are generated is in most cases  
   the same as the order in the schema compiler's output.
-- The order in which the "MEMBER OF SET" clauses are generated is in many cases
-  different from the order in the schema compiler's output; this is a schema
-  generation issue, we are just following the model here.
+- The order in which the "MEMBER OF SET" clauses are generated is (depending on
+  the import tool used to create the schema) in many cases different from the 
+  order in the schema compiler's output; this is a schema generation issue, we 
+  are just following the model here.
 - The "BIT LENGTH" clause for elements with USAGE IS BIT is not always correct
   (the MASK attribute is always generated as "MASK IS X'FF'"; for group fields
   (elements without a picture), a MASK attribute will NEVER be generated.
 - The "VALUE" clause (e.g. for condition names) will always show a question mark
-  as we don't have this information available in the model.
+  as we don't (yet) have this information available in the model.
 - The "ELEMENT LENGTH" and "POSITION" clauses can show a different value than 
   the schema compiler output; this has to do with the at times weird way the 
   schema compiler handles elements participating in an array ("OCCURS" clause).
+- We will always show the real element (synonym) name whereas the schema 
+  compiler output shows the base element name.
   
 See RecordTemplateTest for a JUnit testcase.
 */
@@ -232,6 +237,7 @@ if (symbolicSubareaName != null) {
 
     stringBuffer.append(TEXT_25);
     stringBuffer.append( areaName );
+    stringBuffer.append(TEXT_26);
     
 }
 for (OwnerRole role : record.getOwnerRoles()) {
@@ -243,14 +249,14 @@ for (OwnerRole role : record.getOwnerRoles()) {
         setName = role.getSet().getName();
     }
 
-    stringBuffer.append(TEXT_26);
-    stringBuffer.append( setName );
     stringBuffer.append(TEXT_27);
+    stringBuffer.append( setName );
+    stringBuffer.append(TEXT_28);
     stringBuffer.append( role.getNextDbkeyPosition() );
     
     if (role.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_28);
+    stringBuffer.append(TEXT_29);
     stringBuffer.append( role.getPriorDbkeyPosition() );
     
     }
@@ -264,36 +270,40 @@ for (MemberRole role : record.getMemberRoles()) {
         setName = role.getSet().getName();
     }
 
-    stringBuffer.append(TEXT_29);
+    stringBuffer.append(TEXT_30);
     stringBuffer.append( setName );
     
     if (role.getNextDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_30);
+    stringBuffer.append(TEXT_31);
     stringBuffer.append( role.getNextDbkeyPosition() );
     
     }
     if (role.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_31);
+    stringBuffer.append(TEXT_32);
     stringBuffer.append( role.getPriorDbkeyPosition() );
     
     }
     if (role.getIndexDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_32);
+    stringBuffer.append(TEXT_33);
     stringBuffer.append( role.getIndexDbkeyPosition() );
+    
+    } else if (role.getSet().getSystemOwner() != null) {
+
+    stringBuffer.append(TEXT_34);
     
     }
     if (role.getOwnerDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_33);
+    stringBuffer.append(TEXT_35);
     stringBuffer.append( role.getOwnerDbkeyPosition() );
     
     }
 }
 
-    stringBuffer.append(TEXT_34);
+    stringBuffer.append(TEXT_36);
     
 for (Element element : record.getElements()) {
     String left;
@@ -313,41 +323,41 @@ for (Element element : record.getElements()) {
         level = String.valueOf(element.getLevel());
     }
 
-    stringBuffer.append(TEXT_35);
+    stringBuffer.append(TEXT_37);
     stringBuffer.append( left );
     stringBuffer.append( level );
-    stringBuffer.append(TEXT_36);
+    stringBuffer.append(TEXT_38);
     stringBuffer.append( element.getName() );
     
     if (element.getRedefines() != null) {
 
-    stringBuffer.append(TEXT_37);
+    stringBuffer.append(TEXT_39);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_38);
+    stringBuffer.append(TEXT_40);
     stringBuffer.append( element.getRedefines().getName() );
     
     }
     if (element.getPicture() != null) {
 
-    stringBuffer.append(TEXT_39);
+    stringBuffer.append(TEXT_41);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_40);
+    stringBuffer.append(TEXT_42);
     stringBuffer.append( element.getPicture() );
     
     }
 
-    stringBuffer.append(TEXT_41);
-    stringBuffer.append( left );
-    stringBuffer.append(TEXT_42);
-    stringBuffer.append( Util.getUsageShortform(element.getUsage()) );
     stringBuffer.append(TEXT_43);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_44);
+    stringBuffer.append( Util.getUsageShortform(element.getUsage()) );
+    stringBuffer.append(TEXT_45);
     
     if (element.getUsage() != Usage.CONDITION_NAME &&
         element.getUsage() != Usage.BIT) {
 
-    stringBuffer.append(TEXT_44);
+    stringBuffer.append(TEXT_46);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_45);
+    stringBuffer.append(TEXT_47);
     stringBuffer.append( element.getLength() );
     
     }
@@ -365,52 +375,52 @@ for (Element element : record.getElements()) {
             mask = "";
         }
 
-    stringBuffer.append(TEXT_46);
-    stringBuffer.append( left );
-    stringBuffer.append(TEXT_47);
-    stringBuffer.append( bitLength );
     stringBuffer.append(TEXT_48);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_49);
+    stringBuffer.append( bitLength );
+    stringBuffer.append(TEXT_50);
     stringBuffer.append( mask );
     
     }
 
-    stringBuffer.append(TEXT_49);
+    stringBuffer.append(TEXT_51);
     stringBuffer.append( left );
-    stringBuffer.append(TEXT_50);
+    stringBuffer.append(TEXT_52);
     stringBuffer.append( element.getOffset() + 1 );
     
     if (element.getOccursSpecification() != null) {
         OccursSpecification occurs = element.getOccursSpecification();
         if (occurs.getDependingOn() != null) {
 
-    stringBuffer.append(TEXT_51);
-    stringBuffer.append( left );
-    stringBuffer.append(TEXT_52);
-    stringBuffer.append( occurs.getCount() );
     stringBuffer.append(TEXT_53);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_54);
+    stringBuffer.append( occurs.getCount() );
+    stringBuffer.append(TEXT_55);
     stringBuffer.append( occurs.getDependingOn().getName() );
       
         } else {
 
-    stringBuffer.append(TEXT_54);
-    stringBuffer.append( left );
-    stringBuffer.append(TEXT_55);
-    stringBuffer.append( occurs.getCount() );
     stringBuffer.append(TEXT_56);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_57);
+    stringBuffer.append( occurs.getCount() );
+    stringBuffer.append(TEXT_58);
     
         }
     }
     if (element.getUsage() == Usage.CONDITION_NAME) {
 
-    stringBuffer.append(TEXT_57);
-    stringBuffer.append( left );
-    stringBuffer.append(TEXT_58);
-    
-    }
-
     stringBuffer.append(TEXT_59);
     stringBuffer.append( left );
     stringBuffer.append(TEXT_60);
+    
+    }
+
+    stringBuffer.append(TEXT_61);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_62);
     
 }
 

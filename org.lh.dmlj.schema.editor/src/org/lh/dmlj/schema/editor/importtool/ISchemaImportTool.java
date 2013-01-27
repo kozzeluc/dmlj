@@ -20,10 +20,4 @@ public interface ISchemaImportTool {
 	void init(IDataEntryContext dataEntryContext, Properties parameters,
 			  IDataCollectorRegistry dataCollectorRegistry);	
 	
-	boolean isOptionAddDDLCATLOD();
-	
-	boolean isOptionCompleteLooak_155();
-
-	boolean isOptionCompleteOoak_012();
-	
 }

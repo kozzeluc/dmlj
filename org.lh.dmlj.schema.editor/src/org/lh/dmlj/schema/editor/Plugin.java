@@ -164,6 +164,11 @@ public class Plugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {		
 		
+		// dispose images
+		for (Image image : images.values()) {
+			image.dispose();
+		}
+		
 		// cleanup our temporary file folder...
 		deleteDirectoryContents(tmpFolder);
 		tmpFolder.delete();		

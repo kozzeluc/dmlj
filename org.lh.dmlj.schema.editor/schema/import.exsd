@@ -54,7 +54,7 @@
    <element name="dataEntryPage">
       <annotation>
          <documentation>
-            A wizard page that allows the collection of all data needed by the import tool.
+            A wizard page that allows the collection of data needed by the import tool.
          </documentation>
       </annotation>
       <complexType>
@@ -97,12 +97,14 @@
          <documentation>
             An import tool that delivers the data to populate an instance of org.lh.dmlj.schema.Schema.
 
-Some options specific to the IDMSNTWK version 1 schema have to be provided by the import tool.  An import tool should thus provide a data entry page dedicated to IDMSNTWK version 1 options.
+A number of data entry pages can be configured for each import tool; some of them will be shown preceding the wizard&apos;s Options page while others can optionally follow the Options page.
          </documentation>
       </annotation>
       <complexType>
          <sequence>
-            <element ref="dataEntryPage" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="preOptionsPages"/>
+            <element ref="options"/>
+            <element ref="postOptionsPages"/>
          </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -164,6 +166,80 @@ Some options specific to the IDMSNTWK version 1 schema have to be provided by th
       <complexType>
          <sequence>
             <element ref="importTool" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="option">
+      <annotation>
+         <documentation>
+            An option to show on the wizard&apos;s Options page.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The key to use for the data entry context attribute.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="checkButtonLabel" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The text to display for the option&apos;s check button.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="initialValue" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  The initial value for the option.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="idmsntwkOnly" type="boolean" use="required">
+            <annotation>
+               <documentation>
+                  When set to true, the option is only applicable to IDMSNTWK version 1 schemas.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="mutuallyExclusiveWith" type="string">
+            <annotation>
+               <documentation>
+                  The name of an option to set to false if this option is set to true.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="options">
+      <annotation>
+         <documentation>
+            A set of (extra) options to display for the import tool on the wizard&apos;s Options page.  The relevancy of the pages defined in the &quot;postOptionsPages&quot; may depend on the Options page&apos;s options.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="option" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="postOptionsPages">
+      <complexType>
+         <sequence>
+            <element ref="dataEntryPage" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="preOptionsPages">
+      <complexType>
+         <sequence>
+            <element ref="dataEntryPage" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
       </complexType>
    </element>

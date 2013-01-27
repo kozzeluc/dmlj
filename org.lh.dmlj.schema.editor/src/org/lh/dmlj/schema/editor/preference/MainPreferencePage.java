@@ -20,7 +20,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
-import org.lh.dmlj.schema.editor.wizard.DictguidesImportWizard;
+import org.lh.dmlj.schema.editor.wizard._import.dictguide.DictguidesImportWizard;
 
 public class MainPreferencePage 
 	extends PreferencePage implements IWorkbenchPreferencePage {

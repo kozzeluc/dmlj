@@ -98,7 +98,7 @@ if (set.getOwner() != null) {
 <%
     } else {
 %>
-             WITHIN AREA <%= areaName %>
+             WITHIN AREA <%= areaName %> OFFSET 0 PERCENT FOR 100 PERCENT
 <%
     }
 }
