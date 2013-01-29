@@ -103,6 +103,7 @@
     <eLiterals name="NOT_ALLOWED" value="3"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Element">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
         eType="#//Element" eOpposite="#//Element/parent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="keyElements" upperBound="-1"
@@ -122,6 +123,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//SchemaRecord"
         eOpposite="#//SchemaRecord/elements"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="redefines" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="syntaxName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="usage" eType="#//Usage"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guide">

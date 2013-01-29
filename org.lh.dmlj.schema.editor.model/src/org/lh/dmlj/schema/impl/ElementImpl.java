@@ -34,6 +34,7 @@ import org.lh.dmlj.schema.common.PictureAnalyzer;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getChildren <em>Children</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getKeyElements <em>Key Elements</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getLength <em>Length</em>}</li>
@@ -46,6 +47,7 @@ import org.lh.dmlj.schema.common.PictureAnalyzer;
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getPicture <em>Picture</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getRedefines <em>Redefines</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getSyntaxName <em>Syntax Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getUsage <em>Usage</em>}</li>
  * </ul>
  * </p>
@@ -53,6 +55,24 @@ import org.lh.dmlj.schema.common.PictureAnalyzer;
  * @generated
  */
 public class ElementImpl extends EObjectImpl implements Element {
+	/**
+	 * The default value of the '{@link #getBaseName() <em>Base Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBaseName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String BASE_NAME_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getBaseName() <em>Base Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBaseName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String baseName = BASE_NAME_EDEFAULT;
 	/**
 	 * The cached value of the '{@link #getChildren() <em>Children</em>}' reference list.
 	 * <!-- begin-user-doc -->
@@ -189,6 +209,15 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 */
 	protected Element redefines;
 	/**
+	 * The default value of the '{@link #getSyntaxName() <em>Syntax Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSyntaxName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String SYNTAX_NAME_EDEFAULT = null;
+	/**
 	 * The default value of the '{@link #getUsage() <em>Usage</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -224,6 +253,27 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.ELEMENT;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getBaseName() {
+		return baseName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBaseName(String newBaseName) {
+		String oldBaseName = baseName;
+		baseName = newBaseName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.ELEMENT__BASE_NAME, oldBaseName, baseName));
 	}
 
 	/**
@@ -591,6 +641,19 @@ public class ElementImpl extends EObjectImpl implements Element {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getSyntaxName() {
+		if (getBaseName() != null) {
+			return getBaseName();
+		} else {
+			return getName();
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public OccursSpecification getOccursSpecification() {
@@ -704,6 +767,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.ELEMENT__BASE_NAME:
+				return getBaseName();
 			case SchemaPackage.ELEMENT__CHILDREN:
 				return getChildren();
 			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
@@ -730,6 +795,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case SchemaPackage.ELEMENT__REDEFINES:
 				if (resolve) return getRedefines();
 				return basicGetRedefines();
+			case SchemaPackage.ELEMENT__SYNTAX_NAME:
+				return getSyntaxName();
 			case SchemaPackage.ELEMENT__USAGE:
 				return getUsage();
 		}
@@ -745,6 +812,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.ELEMENT__BASE_NAME:
+				setBaseName((String)newValue);
+				return;
 			case SchemaPackage.ELEMENT__CHILDREN:
 				getChildren().clear();
 				getChildren().addAll((Collection<? extends Element>)newValue);
@@ -792,6 +862,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.ELEMENT__BASE_NAME:
+				setBaseName(BASE_NAME_EDEFAULT);
+				return;
 			case SchemaPackage.ELEMENT__CHILDREN:
 				getChildren().clear();
 				return;
@@ -837,6 +910,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.ELEMENT__BASE_NAME:
+				return BASE_NAME_EDEFAULT == null ? baseName != null : !BASE_NAME_EDEFAULT.equals(baseName);
 			case SchemaPackage.ELEMENT__CHILDREN:
 				return children != null && !children.isEmpty();
 			case SchemaPackage.ELEMENT__KEY_ELEMENTS:
@@ -861,6 +936,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return getRecord() != null;
 			case SchemaPackage.ELEMENT__REDEFINES:
 				return redefines != null;
+			case SchemaPackage.ELEMENT__SYNTAX_NAME:
+				return SYNTAX_NAME_EDEFAULT == null ? getSyntaxName() != null : !SYNTAX_NAME_EDEFAULT.equals(getSyntaxName());
 			case SchemaPackage.ELEMENT__USAGE:
 				return usage != USAGE_EDEFAULT;
 		}
@@ -877,7 +954,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (level: ");
+		result.append(" (baseName: ");
+		result.append(baseName);
+		result.append(", level: ");
 		result.append(level);
 		result.append(", name: ");
 		result.append(name);

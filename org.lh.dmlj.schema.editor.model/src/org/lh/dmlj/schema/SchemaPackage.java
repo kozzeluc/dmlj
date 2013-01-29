@@ -725,13 +725,22 @@ public interface SchemaPackage extends EPackage {
 	int DIAGRAM_LOCATION_FEATURE_COUNT = 3;
 
 	/**
+	 * The feature id for the '<em><b>Base Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__BASE_NAME = 0;
+
+	/**
 	 * The feature id for the '<em><b>Children</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__CHILDREN = 0;
+	int ELEMENT__CHILDREN = 1;
 
 	/**
 	 * The feature id for the '<em><b>Key Elements</b></em>' reference list.
@@ -740,7 +749,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__KEY_ELEMENTS = 1;
+	int ELEMENT__KEY_ELEMENTS = 2;
 
 	/**
 	 * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -749,7 +758,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__LENGTH = 2;
+	int ELEMENT__LENGTH = 3;
 
 	/**
 	 * The feature id for the '<em><b>Level</b></em>' attribute.
@@ -758,7 +767,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__LEVEL = 3;
+	int ELEMENT__LEVEL = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -767,7 +776,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__NAME = 4;
+	int ELEMENT__NAME = 5;
 
 	/**
 	 * The feature id for the '<em><b>Nullable</b></em>' attribute.
@@ -776,7 +785,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__NULLABLE = 5;
+	int ELEMENT__NULLABLE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Occurs Specification</b></em>' containment reference.
@@ -785,7 +794,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__OCCURS_SPECIFICATION = 6;
+	int ELEMENT__OCCURS_SPECIFICATION = 7;
 
 	/**
 	 * The feature id for the '<em><b>Offset</b></em>' attribute.
@@ -794,7 +803,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__OFFSET = 7;
+	int ELEMENT__OFFSET = 8;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' reference.
@@ -803,7 +812,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__PARENT = 8;
+	int ELEMENT__PARENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Picture</b></em>' attribute.
@@ -812,7 +821,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__PICTURE = 9;
+	int ELEMENT__PICTURE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Record</b></em>' container reference.
@@ -821,7 +830,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__RECORD = 10;
+	int ELEMENT__RECORD = 11;
 
 	/**
 	 * The feature id for the '<em><b>Redefines</b></em>' reference.
@@ -830,7 +839,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__REDEFINES = 11;
+	int ELEMENT__REDEFINES = 12;
+
+	/**
+	 * The feature id for the '<em><b>Syntax Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__SYNTAX_NAME = 13;
 
 	/**
 	 * The feature id for the '<em><b>Usage</b></em>' attribute.
@@ -839,7 +857,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__USAGE = 12;
+	int ELEMENT__USAGE = 14;
 
 	/**
 	 * The number of structural features of the '<em>Element</em>' class.
@@ -848,7 +866,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_FEATURE_COUNT = 13;
+	int ELEMENT_FEATURE_COUNT = 15;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.GuideImpl <em>Guide</em>}' class.
@@ -2683,6 +2701,17 @@ public interface SchemaPackage extends EPackage {
 	EClass getElement();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Element#getBaseName <em>Base Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Base Name</em>'.
+	 * @see org.lh.dmlj.schema.Element#getBaseName()
+	 * @see #getElement()
+	 * @generated
+	 */
+	EAttribute getElement_BaseName();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Element#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2823,6 +2852,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getElement_Redefines();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Element#getSyntaxName <em>Syntax Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Syntax Name</em>'.
+	 * @see org.lh.dmlj.schema.Element#getSyntaxName()
+	 * @see #getElement()
+	 * @generated
+	 */
+	EAttribute getElement_SyntaxName();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.Element#getOccursSpecification <em>Occurs Specification</em>}'.
@@ -4599,6 +4639,14 @@ public interface SchemaPackage extends EPackage {
 		EClass ELEMENT = eINSTANCE.getElement();
 
 		/**
+		 * The meta object literal for the '<em><b>Base Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT__BASE_NAME = eINSTANCE.getElement_BaseName();
+
+		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4703,6 +4751,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ELEMENT__REDEFINES = eINSTANCE.getElement_Redefines();
+
+		/**
+		 * The meta object literal for the '<em><b>Syntax Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT__SYNTAX_NAME = eINSTANCE.getElement_SyntaxName();
 
 		/**
 		 * The meta object literal for the '<em><b>Occurs Specification</b></em>' containment reference feature.

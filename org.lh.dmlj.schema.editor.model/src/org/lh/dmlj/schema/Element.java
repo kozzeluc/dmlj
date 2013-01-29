@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.Element#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getChildren <em>Children</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getKeyElements <em>Key Elements</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getLength <em>Length</em>}</li>
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.Element#getPicture <em>Picture</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getRedefines <em>Redefines</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Element#getSyntaxName <em>Syntax Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getUsage <em>Usage</em>}</li>
  * </ul>
  * </p>
@@ -39,6 +41,32 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Element extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Base Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Base Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Base Name</em>' attribute.
+	 * @see #setBaseName(String)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getElement_BaseName()
+	 * @model
+	 * @generated
+	 */
+	String getBaseName();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.Element#getBaseName <em>Base Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Base Name</em>' attribute.
+	 * @see #getBaseName()
+	 * @generated
+	 */
+	void setBaseName(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -291,6 +319,21 @@ public interface Element extends EObject {
 	 * @generated
 	 */
 	void setRedefines(Element value);
+
+	/**
+	 * Returns the value of the '<em><b>Syntax Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Syntax Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Syntax Name</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getElement_SyntaxName()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	String getSyntaxName();
 
 	/**
 	 * Returns the value of the '<em><b>Occurs Specification</b></em>' containment reference.

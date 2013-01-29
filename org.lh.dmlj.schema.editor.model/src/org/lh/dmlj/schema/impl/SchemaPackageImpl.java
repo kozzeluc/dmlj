@@ -914,8 +914,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getElement_BaseName() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getElement_Name() {
-		return (EAttribute)elementEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -924,7 +933,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getElement_Level() {
-		return (EAttribute)elementEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -933,7 +942,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getElement_Usage() {
-		return (EAttribute)elementEClass.getEStructuralFeatures().get(12);
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(14);
 	}
 
 	/**
@@ -960,7 +969,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getElement_Offset() {
-		return (EAttribute)elementEClass.getEStructuralFeatures().get(7);
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -969,7 +978,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getElement_Length() {
-		return (EAttribute)elementEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -978,7 +987,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getElement_Picture() {
-		return (EAttribute)elementEClass.getEStructuralFeatures().get(9);
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -987,7 +996,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getElement_Nullable() {
-		return (EAttribute)elementEClass.getEStructuralFeatures().get(5);
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -996,33 +1005,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getElement_Record() {
-		return (EReference)elementEClass.getEStructuralFeatures().get(10);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getElement_KeyElements() {
-		return (EReference)elementEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getElement_Children() {
-		return (EReference)elementEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getElement_Redefines() {
 		return (EReference)elementEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -1031,8 +1013,44 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getElement_KeyElements() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getElement_Children() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getElement_Redefines() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_SyntaxName() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getElement_OccursSpecification() {
-		return (EReference)elementEClass.getEStructuralFeatures().get(6);
+		return (EReference)elementEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -1041,7 +1059,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getElement_Parent() {
-		return (EReference)elementEClass.getEStructuralFeatures().get(8);
+		return (EReference)elementEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -2196,6 +2214,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(diagramNodeEClass, DIAGRAM_NODE__DIAGRAM_LOCATION);
 
 		elementEClass = createEClass(ELEMENT);
+		createEAttribute(elementEClass, ELEMENT__BASE_NAME);
 		createEReference(elementEClass, ELEMENT__CHILDREN);
 		createEReference(elementEClass, ELEMENT__KEY_ELEMENTS);
 		createEAttribute(elementEClass, ELEMENT__LENGTH);
@@ -2208,6 +2227,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(elementEClass, ELEMENT__PICTURE);
 		createEReference(elementEClass, ELEMENT__RECORD);
 		createEReference(elementEClass, ELEMENT__REDEFINES);
+		createEAttribute(elementEClass, ELEMENT__SYNTAX_NAME);
 		createEAttribute(elementEClass, ELEMENT__USAGE);
 
 		guideEClass = createEClass(GUIDE);
@@ -2451,6 +2471,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getDiagramNode_DiagramLocation(), this.getDiagramLocation(), null, "diagramLocation", null, 1, 1, DiagramNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(elementEClass, Element.class, "Element", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getElement_BaseName(), ecorePackage.getEString(), "baseName", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Children(), this.getElement(), this.getElement_Parent(), "children", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_KeyElements(), this.getKeyElement(), this.getKeyElement_Element(), "keyElements", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getElement_Length(), ecorePackage.getEShort(), "length", null, 0, 1, Element.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
@@ -2463,6 +2484,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getElement_Picture(), ecorePackage.getEString(), "picture", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Record(), this.getSchemaRecord(), this.getSchemaRecord_Elements(), "record", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Redefines(), this.getElement(), null, "redefines", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_SyntaxName(), ecorePackage.getEString(), "syntaxName", null, 0, 1, Element.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getElement_Usage(), this.getUsage(), "usage", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(guideEClass, Guide.class, "Guide", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
