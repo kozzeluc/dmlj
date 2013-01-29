@@ -372,8 +372,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		if (!addSuffix) {
 			return;
 		}		
-		// add a suffix containing the record-id
-		
+		// add a suffix containing the record-id		
 		String suffix = "-" + pad(recordId, digitCount);		
 		context.getProperties().put("suffix", suffix);		
 		

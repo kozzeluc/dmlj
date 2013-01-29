@@ -303,7 +303,8 @@ public final class SchemaImportToolProxy {
 				// create the element
 				Element element = 
 					modelFactory.createElement(record, parent, 
-											   originalElement.getName());	
+											   originalElement.getName(), 
+											   originalElement.getBaseName());	
 				
 				// set some of the element's attributes
 				element.setLevel(originalElement.getLevel());		
@@ -595,11 +596,18 @@ public final class SchemaImportToolProxy {
 			(IElementDataCollector<Object>) dataCollectorRegistry.getElementDataCollector(elementContext.getClass());
 		
 		// get the element name
-		String elementName = dataCollector.getName(elementContext);		
+		String elementName = dataCollector.getName(elementContext);
+		
+		// get the basic element name; make it null if it equals the element name
+		String basicName = dataCollector.getBaseName(elementContext);
+		String p = basicName != null ? basicName.trim().toUpperCase() : null;
+		if (elementName != null && elementName.trim().toUpperCase().equals(p)) {
+			basicName = null;
+		}
 		
 		// create the element
 		Element element = 
-			modelFactory.createElement(record, parent, elementName);	
+			modelFactory.createElement(record, parent, elementName, basicName);	
 		
 		// set some of the element's attributes
 		element.setLevel(dataCollector.getLevel(elementContext));		

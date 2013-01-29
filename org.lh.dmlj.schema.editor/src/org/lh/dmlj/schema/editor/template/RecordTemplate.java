@@ -327,14 +327,14 @@ for (Element element : record.getElements()) {
     stringBuffer.append( left );
     stringBuffer.append( level );
     stringBuffer.append(TEXT_38);
-    stringBuffer.append( element.getName() );
+    stringBuffer.append( element.getSyntaxName() );
     
     if (element.getRedefines() != null) {
 
     stringBuffer.append(TEXT_39);
     stringBuffer.append( left );
     stringBuffer.append(TEXT_40);
-    stringBuffer.append( element.getRedefines().getName() );
+    stringBuffer.append( element.getRedefines().getSyntaxName() );
     
     }
     if (element.getPicture() != null) {

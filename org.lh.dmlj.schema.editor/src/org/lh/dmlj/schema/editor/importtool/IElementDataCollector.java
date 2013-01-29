@@ -3,6 +3,8 @@ package org.lh.dmlj.schema.editor.importtool;
 import org.lh.dmlj.schema.Usage;
 
 public interface IElementDataCollector<T> {
+	
+	String getBaseName(T context);
 
 	String getDependsOnElementName(T context);
 

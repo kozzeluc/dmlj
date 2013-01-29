@@ -139,11 +139,18 @@ class ModelFactory {
 		return areaSpecification;
 	}	
 	
-	Element createElement(SchemaRecord record, Element parent, String name) {		
+	Element createElement(SchemaRecord record, Element parent, String name,
+						  String basicName) {		
 		
-		// validate the element name and convert it to uppercase
+		// validate the element names and convert it to upper case
 		String elementName = 
 			toUppercaseWithValidation(name, NamingConventions.Type.ELEMENT_NAME);
+		String basicElementName = null;
+		if (basicName != null) {
+			basicElementName = 
+				toUppercaseWithValidation(basicName, 
+										  NamingConventions.Type.ELEMENT_NAME);
+		}
 		
 		// make sure the element does not yet exist unless it's a FILLER
 		if (!elementName.equals("FILLER")) {
@@ -154,6 +161,7 @@ class ModelFactory {
 		// create the element
 		Element element = SchemaFactory.eINSTANCE.createElement();
 		element.setName(name);
+		element.setBaseName(basicElementName); // null or different from name
 		record.getElements().add(element);		
 		
 		// if the element is a root element, add it to the record's root element 

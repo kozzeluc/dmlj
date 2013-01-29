@@ -32,6 +32,12 @@ public class ElementDataCollector
 	}
 
 	@Override
+	public String getBaseName(SchemaSyntaxWrapper context) {
+		String p = context.getLines().get(0).trim();
+		return p.substring(p.lastIndexOf(" ") + 1);
+	}
+
+	@Override
 	public String getDependsOnElementName(SchemaSyntaxWrapper context) {
 		for (String line : context.getLines()) {
 			if (line.trim().endsWith(".")) {

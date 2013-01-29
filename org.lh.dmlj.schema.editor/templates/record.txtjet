@@ -207,11 +207,11 @@ for (Element element : record.getElements()) {
         level = String.valueOf(element.getLevel());
     }
 %>
-<%= left %><%= level %> <%= element.getName() %>
+<%= left %><%= level %> <%= element.getSyntaxName() %>
 <%
     if (element.getRedefines() != null) {
 %>
-<%= left %>    REDEFINES <%= element.getRedefines().getName() %>
+<%= left %>    REDEFINES <%= element.getRedefines().getSyntaxName() %>
 <%
     }
     if (element.getPicture() != null) {
