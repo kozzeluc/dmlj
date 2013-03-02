@@ -1,5 +1,10 @@
 package org.lh.dmlj.schema.editor.importtool.syntax;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import org.lh.dmlj.schema.Usage;
 import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;
 
@@ -11,15 +16,24 @@ public class ElementDataCollector
 		
 		if (elementName.equals("FILLER")) {
 			return elementName;
-		}
+		}		
+		
+		boolean containsBaseNamesFlag = 
+			Boolean.valueOf(context.getProperties()
+							   	   .getProperty("containsBaseNamesFlag"))
+				   .booleanValue();			
 		
 		StringBuilder p = new StringBuilder();
-		if (context.getProperties().containsKey("prefix")) {
+		if (context.getProperties().containsKey("prefix") &&
+			containsBaseNamesFlag) {
+			
 			String prefix = context.getProperties().getProperty("prefix");
 			p.append(prefix);
 		}
 		p.append(elementName);
-		if (context.getProperties().containsKey("suffix")) {
+		if (context.getProperties().containsKey("suffix") &&
+			containsBaseNamesFlag) {			
+			
 			String suffix = context.getProperties().getProperty("suffix");
 			p.append(suffix);
 		}		
@@ -34,7 +48,22 @@ public class ElementDataCollector
 	@Override
 	public String getBaseName(SchemaSyntaxWrapper context) {
 		String p = context.getLines().get(0).trim();
-		return p.substring(p.lastIndexOf(" ") + 1);
+		String q = p.substring(p.lastIndexOf(" ") + 1);
+		if (!context.getProperties().containsKey("suffix") || 
+			q.equals("FILLER")) {
+			
+			return q;
+		}
+		String suffix = context.getProperties().getProperty("suffix");
+		boolean containsBaseNamesFlag = 
+			Boolean.valueOf(context.getProperties()
+								   .getProperty("containsBaseNamesFlag"))
+				   .booleanValue();
+		if (suffix == null || containsBaseNamesFlag) {
+			return q;
+		} else {
+			return q.substring(0, q.lastIndexOf(suffix));
+		}
 	}
 
 	@Override
@@ -54,6 +83,60 @@ public class ElementDataCollector
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Collection<String> getIndexElementBaseNames(SchemaSyntaxWrapper context) {
+		List<String> list = new ArrayList<>();		
+		int i = 0;
+		while (i < context.getLines().size() &&
+			   context.getLines().get(i).indexOf("INDEXED BY ( ") < 0) {			
+			
+			i += 1;
+		}
+		if (i >= context.getLines().size()) {
+			return list;
+		}
+		while (i < context.getLines().size()) {
+			if (context.getLines().get(i).trim().equals(")")) {
+				// we've processed all elements; no relevant data on this line
+				break;
+			}
+			int j;
+			if (context.getLines().get(i).indexOf("INDEXED BY ( ") > -1) {
+				// first line
+				j = context.getLines().get(i).indexOf("INDEXED BY ( ") + 13;
+			} else {
+				j = 2;
+				while (context.getLines().get(i).charAt(j) == ' ') {
+					j += 1;
+				}
+			}
+			StringBuilder p = 
+				new StringBuilder(context.getLines().get(i).substring(j).trim());
+			if (p.toString().endsWith(" )")) {
+				p.setLength(p.length() - 2);
+			}
+			StringTokenizer tokenizer = new StringTokenizer(p.toString());
+			while (tokenizer.hasMoreTokens()) {
+				list.add(tokenizer.nextToken());
+			}
+			if (context.getLines().get(i).trim().endsWith(" )")) {
+				// we've processed all elements
+				break;
+			} 
+			i += 1;
+		} 		
+		return list;
+	}
+
+	@Override
+	public Collection<String> getIndexElementNames(SchemaSyntaxWrapper context) {
+		List<String> list = new ArrayList<>();
+		for (String baseName : getIndexElementBaseNames(context)) {
+			list.add(getFullName(baseName, context));
+		}
+		return list;
 	}
 
 	@Override
@@ -155,6 +238,27 @@ public class ElementDataCollector
 					return Usage.COMPUTATIONAL_3;
 				} else {
 					return Usage.valueOf(p.replaceAll("-", "_"));
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public String getValue(SchemaSyntaxWrapper context) {
+		for (String line : context.getLines()) {
+			if (line.trim().endsWith(".")) {
+				// make sure that, in the case of group elements or elements
+				// described with 1 or more condition names, no value of those
+				// subordinate or condition name elements can be assigned to as 
+				// the a value
+				return null;
+			}
+			int i = line.indexOf("VALUE IS ( ");
+			if (i > -1) {
+				int j = line.indexOf(" )", i);
+				if (j > -1) {
+					return line.substring(i + 11, j);
 				}
 			}
 		}

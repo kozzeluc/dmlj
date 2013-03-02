@@ -137,6 +137,12 @@ public class SchemaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SchemaPackage.INDEX_ELEMENT: {
+				IndexElement indexElement = (IndexElement)theEObject;
+				T result = caseIndexElement(indexElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SchemaPackage.KEY: {
 				Key key = (Key)theEObject;
 				T result = caseKey(key);
@@ -583,6 +589,21 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseIndexedSetModeSpecification(IndexedSetModeSpecification object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Index Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Index Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIndexElement(IndexElement object) {
 		return null;
 	}
 

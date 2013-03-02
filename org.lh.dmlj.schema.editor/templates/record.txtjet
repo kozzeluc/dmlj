@@ -1,28 +1,16 @@
-<%@ jet package="org.lh.dmlj.schema.editor.template" imports="org.lh.dmlj.schema.*" class="RecordTemplate"%>
+<%@ jet package="org.lh.dmlj.schema.editor.template" imports="java.util.* org.lh.dmlj.schema.*" class="RecordTemplate"%>
 <%
 
 /*
 This template will generate a record's DDL syntax.  Currently these issues 
 exist :
 
-- The "SHARE STRUCTURE OF RECORD" clause will always show question marks as we 
-  don't (yet) have this information available in the model.
 - The order in which the "OWNER OF SET" clauses are generated is in most cases  
   the same as the order in the schema compiler's output.
 - The order in which the "MEMBER OF SET" clauses are generated is (depending on
   the import tool used to create the schema) in many cases different from the 
   order in the schema compiler's output; this is a schema generation issue, we 
   are just following the model here.
-- The "BIT LENGTH" clause for elements with USAGE IS BIT is not always correct
-  (the MASK attribute is always generated as "MASK IS X'FF'"; for group fields
-  (elements without a picture), a MASK attribute will NEVER be generated.
-- The "VALUE" clause (e.g. for condition names) will always show a question mark
-  as we don't (yet) have this information available in the model.
-- The "ELEMENT LENGTH" and "POSITION" clauses can show a different value than 
-  the schema compiler output; this has to do with the at times weird way the 
-  schema compiler handles elements participating in an array ("OCCURS" clause).
-- We will always show the real element (synonym) name whereas the schema 
-  compiler output shows the base element name.
   
 See RecordTemplateTest for a JUnit testcase.
 */
@@ -38,20 +26,44 @@ if (record.getName().endsWith("_")) {
 %>
      ADD
      RECORD NAME IS <%= recordName %>
-         SHARE STRUCTURE OF RECORD ? VERSION ?
-*+           SYNONYM OF PRIMARY RECORD ? VERSION ?         
+         SHARE STRUCTURE OF RECORD <%= record.getSynonymName() %> VERSION <%=record.getSynonymVersion()%>
+<%
+if (record.getBaseName() != null && 
+    (!record.getBaseName().equals(record.getSynonymName()) ||
+     record.getBaseVersion() != record.getSynonymVersion())) {
+%>
+*+           SYNONYM OF PRIMARY RECORD <%= record.getBaseName() %> VERSION <%=record.getBaseVersion()%>
+<%
+}
+%>         
          RECORD ID IS <%= record.getId() %>
 <%
 if (record.getLocationMode() == LocationMode.CALC) {
     StringBuilder keyElements = new StringBuilder();
+    keyElements.append("         LOCATION MODE IS CALC USING ( ");
     for (KeyElement keyElement : record.getCalcKey().getElements()) {
-        if (keyElements.length() > 0) {
-            keyElements.append(' ');
-        }
-        keyElements.append(keyElement.getElement().getName());
-    }
+        String q = keyElement.getElement().getName();
+        if (keyElements.length() + q.length() > 72) {
 %>
-         LOCATION MODE IS CALC USING ( <%= keyElements.toString() %> )
+<%= keyElements.toString() %>
+<%
+			keyElements = new StringBuilder();
+			keyElements.append("               ");        
+        }         
+        keyElements.append(q);
+        keyElements.append(' ');        
+    }
+    if (keyElements.length() + 1 > 72) {
+%>
+<%= keyElements.toString() %>
+               )
+<%		
+	} else {
+%>
+<%= keyElements.toString() %>)
+<%        	    
+	}
+%>
              DUPLICATES ARE <%= record.getCalcKey().getDuplicatesOption().toString().replaceAll("_", " ") %>         
 <%             
 } else if (record.getLocationMode() == LocationMode.VIA) {
@@ -129,7 +141,7 @@ if (symbolicSubareaName != null) {
 <%
 } else {
 %>
-         WITHIN AREA <%= areaName %> OFFSET 0 PERCENT FOR 100 PERCENT
+         WITHIN AREA <%= areaName %>
 <%
 }
 for (OwnerRole role : record.getOwnerRoles()) {
@@ -150,7 +162,26 @@ for (OwnerRole role : record.getOwnerRoles()) {
 <%
     }
 }
+List<String> setNames = new ArrayList<>();
 for (MemberRole role : record.getMemberRoles()) {
+	setNames.add(role.getSet().getName());
+}
+if (record.getSchema().getName().equals("IDMSNTWK") &&
+    record.getSchema().getVersion() == 1 ||
+    record.getSchema().getName().equals("EMPSCHM") &&
+    record.getSchema().getVersion() == 100) {
+
+    // only sort the "member of" comments for schemas other than IDMSNTWK 
+    // version 1 and EMPSCHM version 100; not sure if we get away with this for
+    // all schemas though    
+	Collections.sort(setNames);
+}
+MemberRole[] memberRoles = new MemberRole[setNames.size()];
+for (MemberRole role : record.getMemberRoles()) {
+	int i = setNames.indexOf(role.getSet().getName());
+	memberRoles[i] = role;
+}
+for (MemberRole role : memberRoles) {
     String setName;
     if (role.getSet().getName().endsWith("_")) {
         setName = 
@@ -189,84 +220,11 @@ for (MemberRole role : record.getMemberRoles()) {
 %>
          .
 <%
+ElementTemplate elementTemplate = new ElementTemplate();
 for (Element element : record.getElements()) {
-    String left;
-    if (element.getLevel() == 88) {
-        left = "*+                   ";
-    } else {
-        StringBuilder p = new StringBuilder("*+   ");
-        for (int i = element.getLevel(); i > 2; i--) {
-            p.append("    ");
-        }
-        left = p.toString();
-    }
-    String level;
-    if (element.getLevel() < 10) {
-        level = "0" + element.getLevel();
-    } else {
-        level = String.valueOf(element.getLevel());
-    }
+    String syntax = elementTemplate.generate(element);
 %>
-<%= left %><%= level %> <%= element.getSyntaxName() %>
-<%
-    if (element.getRedefines() != null) {
-%>
-<%= left %>    REDEFINES <%= element.getRedefines().getSyntaxName() %>
-<%
-    }
-    if (element.getPicture() != null) {
-%>
-<%= left %>    PICTURE IS  <%= element.getPicture() %>
-<%
-    }
-%>
-<%= left %>    USAGE IS <%= Util.getUsageShortform(element.getUsage()) %> 
-<%
-    if (element.getUsage() != Usage.CONDITION_NAME &&
-        element.getUsage() != Usage.BIT) {
-%>
-<%= left %>    ELEMENT LENGTH IS <%= element.getLength() %>
-<%
-    }
-    if (element.getUsage() == Usage.BIT) {
-        String bitLength;        
-        if (element.getLength() == 1) {
-            bitLength = "8 ";
-        } else {
-            bitLength = String.valueOf(element.getLength() * 8);
-        }
-        String mask;
-        if (element.getPicture() != null) {
-            mask = "MASK IS X'FF'";
-        } else {
-            mask = "";
-        }
-%>
-<%= left %>    BIT LENGTH IS <%= bitLength %>    <%= mask %>
-<%
-    }
-%>
-<%= left %>    POSITION IS <%= element.getOffset() + 1 %>
-<%
-    if (element.getOccursSpecification() != null) {
-        OccursSpecification occurs = element.getOccursSpecification();
-        if (occurs.getDependingOn() != null) {
-%>
-<%= left %>    OCCURS 0 TO <%= occurs.getCount() %> TIMES DEPENDING ON <%= occurs.getDependingOn().getName() %>
-<%  
-        } else {
-%>
-<%= left %>    OCCURS <%= occurs.getCount() %> TIMES
-<%
-        }
-    }
-    if (element.getUsage() == Usage.CONDITION_NAME) {
-%>
-<%= left %>    VALUE IS ( ? )
-<%
-    }
-%>
-<%= left %>    .         
-<%
+<%= syntax %>         
+<%    
 }
 %>

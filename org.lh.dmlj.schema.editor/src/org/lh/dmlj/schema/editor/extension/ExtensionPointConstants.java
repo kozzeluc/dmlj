@@ -8,6 +8,7 @@ public class ExtensionPointConstants {
 	public static final String ELEMENT_IMPORT_TOOL = "importTool";
 	public static final String ELEMENT_DATA_ENTRY_PAGE = "dataEntryPage";
 	public static final String ELEMENT_OPTION = "option";
+	public static final String ELEMENT_OPTION_GROUP = "optionGroup";
 	public static final String ELEMENT_OPTIONS = "options";
 	public static final String ELEMENT_PRE_OPTIONS_PAGES = "preOptionsPages";
 	public static final String ELEMENT_POST_OPTIONS_PAGES = "postOptionsPages";
@@ -20,9 +21,11 @@ public class ExtensionPointConstants {
 	public static final String ATTRIBUTE_CLASS = "class";
 	public static final String ATTRIBUTE_DESCRIPTION = "description";
 	public static final String ATTRIBUTE_ID = "id";
+	public static final String ATTRIBUTE_GROUP = "group";
 	public static final String ATTRIBUTE_IDMSNTWK_ONLY = "idmsntwkOnly";
 	public static final String ATTRIBUTE_IMAGE = "image";
 	public static final String ATTRIBUTE_INITIAL_VALUE = "initialValue";
+	public static final String ATTRIBUTE_LABEL = "label";
 	public static final String ATTRIBUTE_MESSAGE = "message";
 	public static final String ATTRIBUTE_MUTUALLY_EXCLUSIVE_WITH = 
 		"mutuallyExclusiveWith";

@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.extension.OptionExtensionElement;
+import org.lh.dmlj.schema.editor.extension.OptionGroupExtensionElement;
 import org.lh.dmlj.schema.editor.extension.OptionsExtensionElement;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
@@ -32,12 +33,21 @@ public class OptionsPage extends AbstractDataEntryPage {
 	
 	private Button 	  				btnDdlcatlod;
 	private Button 	  				btnLooak_155;
-	private Button 	  				btnOoak_012;	
+	private Button 	  				btnOoak_012;
+	private List<Label>		        idmsntwkOptionGroupLabels = new ArrayList<>();
 	private Label     				lblIdmsntwk;
 	private OptionsExtensionElement optionsExtensionElement;
 	private Map<String, Button> 	optionToButtonMap = new HashMap<>();
 	private Text 					textProcedures;				
 	
+	private static String getOptionGroupLabel(String label) {
+		StringBuilder p = new StringBuilder(label);
+		if (p.charAt(p.length() - 1) == ':') {
+			p.setLength(p.length() - 1);
+		}
+		return p.toString().trim() + ":";
+	}
+
 	public OptionsPage(OptionsExtensionElement optionsExtensionElement) {
 		super();
 		this.optionsExtensionElement = optionsExtensionElement;
@@ -61,7 +71,11 @@ public class OptionsPage extends AbstractDataEntryPage {
 		btnOoak_012.setVisible(b);
 		btnLooak_155.setVisible(b);
 		btnDdlcatlod.setVisible(b);
-		// call setVisible for configured IDMSNTWK version 1 options...
+		// call setVisible for configured IDMSNTWK version 1 options and their 
+		// group labels...
+		for (Label label : idmsntwkOptionGroupLabels) {
+			label.setVisible(b);
+		}
 		for (OptionExtensionElement optionExtensionElement :
 			 optionsExtensionElement.getOptionExtensionElements()) {
 			
@@ -77,7 +91,8 @@ public class OptionsPage extends AbstractDataEntryPage {
 	}
 
 	private void createCheckButton(Composite parent,
-								   final OptionExtensionElement optionExtensionElement) {
+								   final OptionExtensionElement optionExtensionElement,
+								   int verticalIndent) {
 		
 		String name = optionExtensionElement.getName().trim();
 		if (optionToButtonMap.containsKey(name)) {
@@ -89,36 +104,40 @@ public class OptionsPage extends AbstractDataEntryPage {
 			return;
 		}
 		
-		final Button checkButton = new Button(parent, SWT.CHECK);
+		final Button checkButton = new Button(parent, SWT.CHECK);		
 		checkButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// if the option is selected, reset the option with 
-				// which this option is mutually exclusive, if such an
-				// option is specified
+				// which this option(s) is mutually exclusive, if specified
 				if (checkButton.getSelection()) {
-					String otherName = 
+					String otherNames = 
 						optionExtensionElement.getMutuallyExclusiveWith();
-					if (otherName != null && !otherName.trim().equals("")) { 
-						if (optionToButtonMap.containsKey(otherName)) {
-							Button otherCheckButton = 
-								optionToButtonMap.get(otherName);
-							if (otherCheckButton.getSelection()) {
-								otherCheckButton.setSelection(false);
+					if (otherNames != null && !otherNames.trim().equals("")) { 
+						StringTokenizer tokenizer = 
+							new StringTokenizer(otherNames, ",");
+						while (tokenizer.hasMoreTokens()) {
+							String otherName = tokenizer.nextToken();
+							if (optionToButtonMap.containsKey(otherName)) {
+								Button otherCheckButton = 
+									optionToButtonMap.get(otherName);
+								if (otherCheckButton.getSelection()) {
+									otherCheckButton.setSelection(false);
+								}
+							} else {
+								// the extension point element refers to an option 
+								// that is not defined
+								String message = 
+									"import tool option '" + 
+									optionExtensionElement.getName() + 
+									"' is mutually exclusive with option " + 
+									otherName + "', but option '" + otherName + 
+									"' is not defined in the import tool " +
+									"(defining plug-in: " + 
+									optionExtensionElement.getPluginId() + 
+									")";
+								System.out.println(message);
 							}
-						} else {
-							// the extension point element refers to an option 
-							// that is not defined
-							String message = 
-								"import tool option '" + 
-								optionExtensionElement.getName() + 
-								"' is mutually exclusive with option " + 
-								otherName + "', but option '" + otherName + 
-								"' is not defined in the import tool " +
-								"(defining plug-in: " + 
-								optionExtensionElement.getPluginId() + 
-								")";
-							System.out.println(message);
 						}
 					}
 				}
@@ -128,6 +147,9 @@ public class OptionsPage extends AbstractDataEntryPage {
 		});
 		GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd.horizontalIndent = 5;
+		if (verticalIndent != 0) {
+			gd.verticalIndent = verticalIndent;
+		}
 		checkButton.setLayoutData(gd);
 		boolean initialValue = optionExtensionElement.getInitialValue();
 		checkButton.setSelection(initialValue);
@@ -152,6 +174,7 @@ public class OptionsPage extends AbstractDataEntryPage {
 		Label lblprocedureNames = new Label(composite, SWT.NONE);
 		GridData gd_lblprocedureNames = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblprocedureNames.horizontalIndent = 5;
+		gd_lblprocedureNames.verticalIndent = 5;
 		lblprocedureNames.setLayoutData(gd_lblprocedureNames);
 		lblprocedureNames.setText("Database procedures used for COMPRESSION (" +
 								  "other than IDMSCOMP; comma-separated list):");		
@@ -173,15 +196,50 @@ public class OptionsPage extends AbstractDataEntryPage {
 		GridData gd_textProcedures = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_textProcedures.horizontalIndent = 5;
 		textProcedures.setLayoutData(gd_textProcedures);
-		// create a check button for each configured option
-		for (final OptionExtensionElement optionExtensionElement :
+		// create a check button for each configured option; deal with the ones
+		// not belonging to a group first and then process the options group by
+		// group		
+		boolean first = true;
+		for (OptionExtensionElement optionExtensionElement :
 			 optionsExtensionElement.getOptionExtensionElements()) {
 			 
+			String optionGroup = optionExtensionElement.getGroup();			
 			// filter out the options that are only applicable for 
 			// IDMSNTWK version 1 schemas
-			if (!optionExtensionElement.getIdmsntwkOnly()) {
-				createCheckButton(composite, optionExtensionElement);
+			if (!optionExtensionElement.getIdmsntwkOnly() &&
+				optionGroup.equals("")) {
+
+				int verticalIndent = 0;
+				if (first) {
+					verticalIndent = 5;
+					first = false;
+				} 
+				createCheckButton(composite, optionExtensionElement, 
+								  verticalIndent);
 			}				
+		}
+		for (OptionGroupExtensionElement optionGroupExtensionElement :
+			 optionsExtensionElement.getOptionGroupExtensionElements()) {
+			
+			boolean labelCreated = false;
+			for (OptionExtensionElement optionExtensionElement :
+				 optionsExtensionElement.getOptionExtensionElements()) {
+								
+				if (!optionExtensionElement.getIdmsntwkOnly() &&
+					optionExtensionElement.getGroup().equals(optionGroupExtensionElement.getName())) {
+					
+					if (!labelCreated) {
+						Label optionGroupLabel = new Label(composite, SWT.NONE);
+						optionGroupLabel.setText(getOptionGroupLabel(optionGroupExtensionElement.getLabel()));
+						GridData gd_optionGroupLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+						gd_optionGroupLabel.horizontalIndent = 5;
+						gd_optionGroupLabel.verticalIndent = 5;
+						optionGroupLabel.setLayoutData(gd_optionGroupLabel);
+						labelCreated = true;
+					}
+					createCheckButton(composite, optionExtensionElement, 0);
+				}
+			}
 		}
 		
 		// spacer to IDMSNTWK version 1 options
@@ -196,6 +254,7 @@ public class OptionsPage extends AbstractDataEntryPage {
 		btnOoak_012 = new Button(composite, SWT.CHECK);
 		GridData gd_btnOoak_012 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
 		gd_btnOoak_012.horizontalIndent = 5;
+		gd_btnOoak_012.verticalIndent = 5;
 		btnOoak_012.setLayoutData(gd_btnOoak_012);
 		btnOoak_012.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -232,15 +291,44 @@ public class OptionsPage extends AbstractDataEntryPage {
 		btnDdlcatlod.setSelection(true);
 		btnDdlcatlod.setText("Add DDLCATLOD records and sets");
 		
-		// create a check button for each configured option
+		// create a check button for each configured option; deal with the ones
+		// not belonging to a group first and then process the options group by
+		// group
 		for (final OptionExtensionElement optionExtensionElement :
 			 optionsExtensionElement.getOptionExtensionElements()) {
 			 
+			String optionGroup = optionExtensionElement.getGroup();						
 			// filter out the general options
-			if (optionExtensionElement.getIdmsntwkOnly()) {
-				createCheckButton(composite, optionExtensionElement);
+			if (optionExtensionElement.getIdmsntwkOnly() &&
+				optionGroup.equals("")) {
+				
+				createCheckButton(composite, optionExtensionElement, 0);
 			}				
 		}
+		for (OptionGroupExtensionElement optionGroupExtensionElement :
+			 optionsExtensionElement.getOptionGroupExtensionElements()) {
+			
+			boolean labelCreated = false;
+			for (OptionExtensionElement optionExtensionElement :
+				 optionsExtensionElement.getOptionExtensionElements()) {
+								
+				if (optionExtensionElement.getIdmsntwkOnly() &&
+					optionExtensionElement.getGroup().equals(optionGroupExtensionElement.getName())) {
+					
+					if (!labelCreated) {
+						Label optionGroupLabel = new Label(composite, SWT.NONE);
+						optionGroupLabel.setText(getOptionGroupLabel(optionGroupExtensionElement.getLabel()));
+						GridData gd_optionGroupLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+						gd_optionGroupLabel.horizontalIndent = 5;
+						gd_optionGroupLabel.verticalIndent = 5;
+						optionGroupLabel.setLayoutData(gd_optionGroupLabel);												
+						idmsntwkOptionGroupLabels.add(optionGroupLabel);
+						labelCreated = true;
+					}
+					createCheckButton(composite, optionExtensionElement, 0);
+				}
+			}
+		}		
 		
 		validatePage();
 		

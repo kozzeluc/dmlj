@@ -71,6 +71,7 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 			case SchemaPackage.ELEMENT: return createElement();
 			case SchemaPackage.GUIDE: return createGuide();
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION: return createIndexedSetModeSpecification();
+			case SchemaPackage.INDEX_ELEMENT: return createIndexElement();
 			case SchemaPackage.KEY: return createKey();
 			case SchemaPackage.KEY_ELEMENT: return createKeyElement();
 			case SchemaPackage.MEMBER_ROLE: return createMemberRole();
@@ -371,6 +372,16 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	public IndexedSetModeSpecification createIndexedSetModeSpecification() {
 		IndexedSetModeSpecificationImpl indexedSetModeSpecification = new IndexedSetModeSpecificationImpl();
 		return indexedSetModeSpecification;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IndexElement createIndexElement() {
+		IndexElementImpl indexElement = new IndexElementImpl();
+		return indexElement;
 	}
 
 	/**

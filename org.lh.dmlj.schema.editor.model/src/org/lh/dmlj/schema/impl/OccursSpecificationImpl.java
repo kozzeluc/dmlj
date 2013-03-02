@@ -6,16 +6,21 @@
  */
 package org.lh.dmlj.schema.impl;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.IndexElement;
 import org.lh.dmlj.schema.OccursSpecification;
 import org.lh.dmlj.schema.SchemaPackage;
 
@@ -29,6 +34,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  *   <li>{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl#getCount <em>Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl#getDependingOn <em>Depending On</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl#getElement <em>Element</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl#getIndexElements <em>Index Elements</em>}</li>
  * </ul>
  * </p>
  *
@@ -62,6 +68,16 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * @ordered
 	 */
 	protected Element dependingOn;
+
+	/**
+	 * The cached value of the '{@link #getIndexElements() <em>Index Elements</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIndexElements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<IndexElement> indexElements;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -187,6 +203,19 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<IndexElement> getIndexElements() {
+		if (indexElements == null) {
+			indexElements = new EObjectContainmentWithInverseEList<IndexElement>(IndexElement.class, this, SchemaPackage.OCCURS_SPECIFICATION__INDEX_ELEMENTS, SchemaPackage.INDEX_ELEMENT__OCCURS_SPECIFICATION);
+		}
+		return indexElements;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -194,6 +223,8 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetElement((Element)otherEnd, msgs);
+			case SchemaPackage.OCCURS_SPECIFICATION__INDEX_ELEMENTS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getIndexElements()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -208,6 +239,8 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 		switch (featureID) {
 			case SchemaPackage.OCCURS_SPECIFICATION__ELEMENT:
 				return basicSetElement(null, msgs);
+			case SchemaPackage.OCCURS_SPECIFICATION__INDEX_ELEMENTS:
+				return ((InternalEList<?>)getIndexElements()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -241,6 +274,8 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 				return basicGetDependingOn();
 			case SchemaPackage.OCCURS_SPECIFICATION__ELEMENT:
 				return getElement();
+			case SchemaPackage.OCCURS_SPECIFICATION__INDEX_ELEMENTS:
+				return getIndexElements();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -250,6 +285,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -261,6 +297,10 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 				return;
 			case SchemaPackage.OCCURS_SPECIFICATION__ELEMENT:
 				setElement((Element)newValue);
+				return;
+			case SchemaPackage.OCCURS_SPECIFICATION__INDEX_ELEMENTS:
+				getIndexElements().clear();
+				getIndexElements().addAll((Collection<? extends IndexElement>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -283,6 +323,9 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 			case SchemaPackage.OCCURS_SPECIFICATION__ELEMENT:
 				setElement((Element)null);
 				return;
+			case SchemaPackage.OCCURS_SPECIFICATION__INDEX_ELEMENTS:
+				getIndexElements().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -301,6 +344,8 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 				return dependingOn != null;
 			case SchemaPackage.OCCURS_SPECIFICATION__ELEMENT:
 				return getElement() != null;
+			case SchemaPackage.OCCURS_SPECIFICATION__INDEX_ELEMENTS:
+				return indexElements != null && !indexElements.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

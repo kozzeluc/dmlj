@@ -206,6 +206,15 @@ public interface SchemaFactory extends EFactory {
 	IndexedSetModeSpecification createIndexedSetModeSpecification();
 
 	/**
+	 * Returns a new object of class '<em>Index Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Index Element</em>'.
+	 * @generated
+	 */
+	IndexElement createIndexElement();
+
+	/**
 	 * Returns a new object of class '<em>Area Procedure Call Specification</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

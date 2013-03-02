@@ -16,6 +16,8 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getBaseName <em>Base Name</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getBaseVersion <em>Base Version</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getControlLength <em>Control Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getDataLength <em>Data Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isFragmented <em>Fragmented</em>}</li>
@@ -36,6 +38,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getRoles <em>Roles</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getRootElements <em>Root Elements</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getSchema <em>Schema</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getSynonymName <em>Synonym Name</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getSynonymVersion <em>Synonym Version</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getViaSpecification <em>Via Specification</em>}</li>
  * </ul>
  * </p>
@@ -45,6 +49,59 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface SchemaRecord extends DiagramNode {
+	/**
+	 * Returns the value of the '<em><b>Base Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Base Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Base Name</em>' attribute.
+	 * @see #setBaseName(String)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_BaseName()
+	 * @model
+	 * @generated
+	 */
+	String getBaseName();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.SchemaRecord#getBaseName <em>Base Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Base Name</em>' attribute.
+	 * @see #getBaseName()
+	 * @generated
+	 */
+	void setBaseName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Base Version</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Base Version</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Base Version</em>' attribute.
+	 * @see #setBaseVersion(short)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_BaseVersion()
+	 * @model default="0"
+	 * @generated
+	 */
+	short getBaseVersion();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.SchemaRecord#getBaseVersion <em>Base Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Base Version</em>' attribute.
+	 * @see #getBaseVersion()
+	 * @generated
+	 */
+	void setBaseVersion(short value);
+
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -322,6 +379,59 @@ public interface SchemaRecord extends DiagramNode {
 	 * @generated
 	 */
 	void setSchema(Schema value);
+
+	/**
+	 * Returns the value of the '<em><b>Synonym Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Synonym Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Synonym Name</em>' attribute.
+	 * @see #setSynonymName(String)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_SynonymName()
+	 * @model
+	 * @generated
+	 */
+	String getSynonymName();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.SchemaRecord#getSynonymName <em>Synonym Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Synonym Name</em>' attribute.
+	 * @see #getSynonymName()
+	 * @generated
+	 */
+	void setSynonymName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Synonym Version</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Synonym Version</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Synonym Version</em>' attribute.
+	 * @see #setSynonymVersion(short)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_SynonymVersion()
+	 * @model default="0"
+	 * @generated
+	 */
+	short getSynonymVersion();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.SchemaRecord#getSynonymVersion <em>Synonym Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Synonym Version</em>' attribute.
+	 * @see #getSynonymVersion()
+	 * @generated
+	 */
+	void setSynonymVersion(short value);
 
 	/**
 	 * Returns the value of the '<em><b>Via Specification</b></em>' containment reference.

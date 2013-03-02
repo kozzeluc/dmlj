@@ -29,24 +29,23 @@ public class SetTemplate
   protected final String TEXT_13 = " FOR ";
   protected final String TEXT_14 = " ";
   protected final String TEXT_15 = NL + "             WITHIN AREA ";
-  protected final String TEXT_16 = " OFFSET 0 PERCENT FOR 100 PERCENT";
-  protected final String TEXT_17 = NL + "         MEMBER IS ";
-  protected final String TEXT_18 = NL + "*+           WITHIN AREA ";
-  protected final String TEXT_19 = NL + "             NEXT DBKEY POSITION IS ";
-  protected final String TEXT_20 = "             " + NL + "             PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_21 = NL + "             INDEX DBKEY POSITION IS ";
-  protected final String TEXT_22 = NL + "             INDEX DBKEY POSITION IS OMITTED";
-  protected final String TEXT_23 = NL + "             LINKED TO OWNER" + NL + "             OWNER DBKEY POSITION IS ";
-  protected final String TEXT_24 = NL + "             ";
-  protected final String TEXT_25 = NL + "             KEY IS (";
-  protected final String TEXT_26 = NL + "                 ";
+  protected final String TEXT_16 = NL + "         MEMBER IS ";
+  protected final String TEXT_17 = NL + "*+           WITHIN AREA ";
+  protected final String TEXT_18 = NL + "             NEXT DBKEY POSITION IS ";
+  protected final String TEXT_19 = "             " + NL + "             PRIOR DBKEY POSITION IS ";
+  protected final String TEXT_20 = NL + "             INDEX DBKEY POSITION IS ";
+  protected final String TEXT_21 = NL + "             INDEX DBKEY POSITION IS OMITTED";
+  protected final String TEXT_22 = NL + "             LINKED TO OWNER" + NL + "             OWNER DBKEY POSITION IS ";
+  protected final String TEXT_23 = NL + "             ";
+  protected final String TEXT_24 = NL + "             KEY IS (";
+  protected final String TEXT_25 = NL + "                 ";
+  protected final String TEXT_26 = " ";
   protected final String TEXT_27 = " ";
-  protected final String TEXT_28 = " ";
-  protected final String TEXT_29 = NL + "                 DUPLICATES ARE ";
-  protected final String TEXT_30 = NL + "                 NATURAL SEQUENCE";
-  protected final String TEXT_31 = NL + "                 COMPRESSED";
-  protected final String TEXT_32 = NL + "                 UNCOMPRESSED";
-  protected final String TEXT_33 = NL + "         .";
+  protected final String TEXT_28 = NL + "                 DUPLICATES ARE ";
+  protected final String TEXT_29 = NL + "                 NATURAL SEQUENCE";
+  protected final String TEXT_30 = NL + "                 COMPRESSED";
+  protected final String TEXT_31 = NL + "                 UNCOMPRESSED";
+  protected final String TEXT_32 = NL + "         .";
 
   public String generate(Object argument)
   {
@@ -73,19 +72,43 @@ if (set.getMode() == SetMode.CHAINED) {
         mode = "CHAIN";
     }
 } else {
+    String id;
+    if (set.getSchema().getName().equals("IDMSNTWK") &&
+        set.getSchema().getVersion() == 1) {
+        
+        if (setName.equals("IX-AREA")) {
+            id = "ID IS 1 ";
+        } else if (setName.equals("IX-BUFFER")) {
+            id = "ID IS 2 ";
+        } else if (setName.equals("IX-DBNAME")) {
+            id = "ID IS 4 ";
+        } else if (setName.equals("IX-DMCL")) {
+            id = "ID IS 5 ";
+        } else if (setName.equals("IX-DMCLSEGMENT")) {
+            id = "ID IS 6 ";
+        } else if (setName.equals("IX-FILE")) {
+            id = "ID IS 7 ";
+        } else if (setName.equals("IX-SEGMENT")) {
+            id = "ID IS 10 ";
+        } else {
+            id = "";
+        }
+    } else {
+        id = "";
+    }
     IndexedSetModeSpecification indexedSetModeSpecification =
         set.getIndexedSetModeSpecification();
     if (indexedSetModeSpecification.getSymbolicIndexName() != null) {
-        mode = "INDEX USING " + 
+        mode = "INDEX " + id + "USING " + 
                indexedSetModeSpecification.getSymbolicIndexName();
     } else if (indexedSetModeSpecification.getDisplacementPageCount() != null &&
                indexedSetModeSpecification.getDisplacementPageCount() != 0) {
-        mode = "INDEX BLOCK CONTAINS " + 
+        mode = "INDEX " + id + "BLOCK CONTAINS " + 
                indexedSetModeSpecification.getKeyCount() + 
                " KEYS DISPLACEMENT IS " + 
                indexedSetModeSpecification.getDisplacementPageCount();
     } else {
-         mode = "INDEX BLOCK CONTAINS " + 
+         mode = "INDEX " + id + "BLOCK CONTAINS " + 
                indexedSetModeSpecification.getKeyCount() + " KEYS";
     }
 }
@@ -167,7 +190,6 @@ if (set.getOwner() != null) {
 
     stringBuffer.append(TEXT_15);
     stringBuffer.append( areaName );
-    stringBuffer.append(TEXT_16);
     
     }
 }
@@ -181,47 +203,47 @@ for (MemberRole memberRole : set.getMembers()) {
         recordName = memberRole.getRecord().getName();
     }
 
-    stringBuffer.append(TEXT_17);
+    stringBuffer.append(TEXT_16);
     stringBuffer.append( recordName );
-    stringBuffer.append(TEXT_18);
+    stringBuffer.append(TEXT_17);
     stringBuffer.append( memberRole.getRecord().getAreaSpecification().getArea().getName() );
     
     if (memberRole.getNextDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_19);
+    stringBuffer.append(TEXT_18);
     stringBuffer.append( memberRole.getNextDbkeyPosition() );
     
     }
     if (memberRole.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_20);
+    stringBuffer.append(TEXT_19);
     stringBuffer.append( memberRole.getPriorDbkeyPosition() );
     
     }
     if (memberRole.getIndexDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_21);
+    stringBuffer.append(TEXT_20);
     stringBuffer.append( memberRole.getIndexDbkeyPosition() );
     
     } else if (set.getSystemOwner() != null) {
 
-    stringBuffer.append(TEXT_22);
+    stringBuffer.append(TEXT_21);
     
     }
     if (memberRole.getOwnerDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_23);
+    stringBuffer.append(TEXT_22);
     stringBuffer.append( memberRole.getOwnerDbkeyPosition() );
     
     }    
 
-    stringBuffer.append(TEXT_24);
+    stringBuffer.append(TEXT_23);
     stringBuffer.append( memberRole.getMembershipOption().toString().replaceAll("_", " ") );
     
     if (set.getOrder() == SetOrder.SORTED) {
         Key key = memberRole.getSortKey();
 
-    stringBuffer.append(TEXT_25);
+    stringBuffer.append(TEXT_24);
     
         for (KeyElement keyElement : key.getElements()) {
             String bracket;
@@ -231,36 +253,36 @@ for (MemberRole memberRole : set.getMembers()) {
                 bracket = "";
             }
 
-    stringBuffer.append(TEXT_26);
+    stringBuffer.append(TEXT_25);
     stringBuffer.append( keyElement.getElement().getName() );
-    stringBuffer.append(TEXT_27);
+    stringBuffer.append(TEXT_26);
     stringBuffer.append( keyElement.getSortSequence() );
-    stringBuffer.append(TEXT_28);
+    stringBuffer.append(TEXT_27);
     stringBuffer.append( bracket );
     
         }
 
-    stringBuffer.append(TEXT_29);
+    stringBuffer.append(TEXT_28);
     stringBuffer.append( key.getDuplicatesOption().toString().replaceAll("_", " ") );
     
         if (key.isNaturalSequence()) {
 
-    stringBuffer.append(TEXT_30);
+    stringBuffer.append(TEXT_29);
     
         }
         if (set.getMode() == SetMode.INDEXED && key.isCompressed()) {
 
-    stringBuffer.append(TEXT_31);
+    stringBuffer.append(TEXT_30);
     
         } else if (set.getMode() == SetMode.INDEXED) {
 
-    stringBuffer.append(TEXT_32);
+    stringBuffer.append(TEXT_31);
     
         }
     }
 }
 
-    stringBuffer.append(TEXT_33);
+    stringBuffer.append(TEXT_32);
     return stringBuffer.toString();
   }
 }

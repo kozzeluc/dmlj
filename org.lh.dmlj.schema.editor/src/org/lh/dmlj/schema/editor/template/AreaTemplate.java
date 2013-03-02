@@ -17,14 +17,17 @@ public class AreaTemplate
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "     ADD" + NL + "     AREA NAME IS ";
   protected final String TEXT_2 = NL + "         ESTIMATED PAGES ARE 0";
-  protected final String TEXT_3 = "         " + NL + "*+       SUBAREA ";
+  protected final String TEXT_3 = NL + "         CALL ";
   protected final String TEXT_4 = " ";
-  protected final String TEXT_5 = "              " + NL + "*+           USED BY ";
-  protected final String TEXT_6 = NL + "*+       SYMBOLIC DISPLACEMENT ";
-  protected final String TEXT_7 = " " + NL + "*+           USED BY RECORD ";
-  protected final String TEXT_8 = NL + "*+       SYMBOLIC INDEX ";
-  protected final String TEXT_9 = "  " + NL + "*+           USED BY SET ";
-  protected final String TEXT_10 = NL + "         .         ";
+  protected final String TEXT_5 = " ";
+  protected final String TEXT_6 = "         " + NL + "*+       SUBAREA ";
+  protected final String TEXT_7 = " ";
+  protected final String TEXT_8 = "              " + NL + "*+           USED BY ";
+  protected final String TEXT_9 = NL + "*+       SYMBOLIC DISPLACEMENT ";
+  protected final String TEXT_10 = " " + NL + "*+           USED BY RECORD ";
+  protected final String TEXT_11 = NL + "*+       SYMBOLIC INDEX ";
+  protected final String TEXT_12 = "  " + NL + "*+           USED BY SET ";
+  protected final String TEXT_13 = NL + "         .         ";
 
   public String generate(Object argument)
   {
@@ -115,46 +118,60 @@ for (AreaSpecification areaSpecification : area.getAreaSpecifications()) {
     stringBuffer.append(TEXT_1);
     stringBuffer.append( area.getName() );
     stringBuffer.append(TEXT_2);
+    
+for (AreaProcedureCallSpecification callSpec : area.getProcedures()) {
+    String p = callSpec.getFunction() == AreaProcedureCallFunction.EVERY_DML_FUNCTION ?
+               "" : callSpec.getFunction().toString();
+
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append( callSpec.getProcedure().getName() );
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append( callSpec.getCallTime().toString().replaceAll("_", " ") );
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append( p );
+    
+}
+
      
 for (String symbolicSA : subareas.keySet()) {
 
-    stringBuffer.append(TEXT_3);
+    stringBuffer.append(TEXT_6);
     stringBuffer.append( symbolicSA );
-    stringBuffer.append(TEXT_4);
+    stringBuffer.append(TEXT_7);
      
     for (String recordOrSystemOwner : subareas.get(symbolicSA)) {
 
-    stringBuffer.append(TEXT_5);
+    stringBuffer.append(TEXT_8);
     stringBuffer.append( recordOrSystemOwner );
     
     }
 }
 for (String symbolicD : displacements.keySet()) {
 
-    stringBuffer.append(TEXT_6);
+    stringBuffer.append(TEXT_9);
     stringBuffer.append( symbolicD );
     
     for (String recordName : displacements.get(symbolicD)) {
 
-    stringBuffer.append(TEXT_7);
+    stringBuffer.append(TEXT_10);
     stringBuffer.append( recordName );
     
 	}
 }
 for (String symbolicI : indexes.keySet()) {
 
-    stringBuffer.append(TEXT_8);
+    stringBuffer.append(TEXT_11);
     stringBuffer.append( symbolicI );
     
     for (String setName : indexes.get(symbolicI)) {
 
-    stringBuffer.append(TEXT_9);
+    stringBuffer.append(TEXT_12);
     stringBuffer.append( setName );
     
 	}
 }
 
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_13);
     return stringBuffer.toString();
   }
 }

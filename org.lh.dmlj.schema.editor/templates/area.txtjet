@@ -85,6 +85,15 @@ for (AreaSpecification areaSpecification : area.getAreaSpecifications()) {
      ADD
      AREA NAME IS <%= area.getName() %>
          ESTIMATED PAGES ARE 0
+<%
+for (AreaProcedureCallSpecification callSpec : area.getProcedures()) {
+    String p = callSpec.getFunction() == AreaProcedureCallFunction.EVERY_DML_FUNCTION ?
+               "" : callSpec.getFunction().toString();
+%>
+         CALL <%= callSpec.getProcedure().getName() %> <%= callSpec.getCallTime().toString().replaceAll("_", " ") %> <%= p %>
+<%
+}
+%>
 <% 
 for (String symbolicSA : subareas.keySet()) {
 %>         

@@ -1,8 +1,10 @@
 package org.lh.dmlj.schema.editor.wizard.export;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.StringReader;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -18,6 +20,14 @@ public class ExportWizard extends Wizard implements IExportWizard {
 	private SchemaSelectionPage 	schemaSelectionPage;
 	private IStructuredSelection 	selection;
 	
+	private static String rtrim(String line) {
+		StringBuilder p = new StringBuilder(line);
+		while (p.length() > 0 && p.charAt(p.length() - 1) == ' ') {
+			p.setLength(p.length() - 1);
+		}
+		return p.toString();
+	}
+
 	public ExportWizard() {
 		super();
 		setWindowTitle("Export");
@@ -58,10 +68,20 @@ public class ExportWizard extends Wizard implements IExportWizard {
 		try {
 			SchemaTemplate template = new SchemaTemplate();
 			String syntax = template.generate(schema);
+			// remove trailing spaces...
 			PrintWriter out = new PrintWriter(new FileWriter(file));
-			out.println(syntax);
+			
+			BufferedReader in = new BufferedReader(new StringReader(syntax));
+			
+			for (String line = in.readLine(); line != null; line = in.readLine()) {
+				out.println(rtrim(line));
+			}
+			
 			out.flush();
-			out.close();		
+			out.close();
+			
+			in.close();
+			
 			return true;
 		} catch (Throwable t) {
 			String title = "Error";

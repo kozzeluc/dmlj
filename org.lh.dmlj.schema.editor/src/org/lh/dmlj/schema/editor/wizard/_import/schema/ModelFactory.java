@@ -140,17 +140,14 @@ class ModelFactory {
 	}	
 	
 	Element createElement(SchemaRecord record, Element parent, String name,
-						  String basicName) {		
+						  String baseName) {		
 		
 		// validate the element names and convert it to upper case
 		String elementName = 
 			toUppercaseWithValidation(name, NamingConventions.Type.ELEMENT_NAME);
-		String basicElementName = null;
-		if (basicName != null) {
-			basicElementName = 
-				toUppercaseWithValidation(basicName, 
-										  NamingConventions.Type.ELEMENT_NAME);
-		}
+		String baseElementName = 
+			toUppercaseWithValidation(baseName, 
+									  NamingConventions.Type.ELEMENT_NAME);
 		
 		// make sure the element does not yet exist unless it's a FILLER
 		if (!elementName.equals("FILLER")) {
@@ -161,7 +158,7 @@ class ModelFactory {
 		// create the element
 		Element element = SchemaFactory.eINSTANCE.createElement();
 		element.setName(name);
-		element.setBaseName(basicElementName); // null or different from name
+		element.setBaseName(baseElementName); // null or different from name
 		record.getElements().add(element);		
 		
 		// if the element is a root element, add it to the record's root element 
@@ -357,11 +354,10 @@ class ModelFactory {
 			return null;
 		}
 		
-		// only create an offset expression if it contains values different
-		// from the defaults (OFFSET 0 PAGES/PERCENT FOR 100 PERCENT)
-		if (offsetPageCount != null && offsetPageCount.intValue() != 0 ||
-			offsetPercent != null && offsetPercent.shortValue() != 0 || 
-			percent != null && percent.shortValue() != 100) {
+		// only create an offset expression when at least 1 of its attributes is
+		// available
+		if (offsetPageCount != null || offsetPercent != null  || 
+			pageCount != null || percent != null ) {
 		
 			// create the offset expression
 			OffsetExpression offsetExpression = 
@@ -376,7 +372,7 @@ class ModelFactory {
 				// area, so we cannot check that.					
 				int i = offsetPageCount.intValue();
 				if (i < 0) {
-					throw new RuntimeException("");
+					throw new RuntimeException("invalid offset page count");
 				}
 				offsetExpression.setOffsetPageCount(offsetPageCount);					
 			} else if (offsetPercent != null) {
@@ -384,7 +380,7 @@ class ModelFactory {
 				// 100.
 				short i = offsetPercent.shortValue();
 				if (i < 0 || i > 100) {
-					throw new RuntimeException("");
+					throw new RuntimeException("invalue offset percent");
 				}
 				offsetExpression.setOffsetPercent(offsetPercent);
 			} else {
@@ -397,14 +393,14 @@ class ModelFactory {
 				// we'll accept any value bigger than zero
 				int i = pageCount.intValue();
 				if (i < 1) {
-					throw new RuntimeException("");
+					throw new RuntimeException("invalid page count");
 				}
 				offsetExpression.setPageCount(pageCount);
 			} else if (percent != null) {
 				// Percent must be an integer in the range 1 through 100.
 				short i = percent.shortValue();
 				if (i < 1 || i > 100) {
-					throw new RuntimeException("");
+					throw new RuntimeException("invalid percent");
 				}
 				offsetExpression.setPercent(percent);				
 			} else {

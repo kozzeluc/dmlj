@@ -31,8 +31,10 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.Element#getPicture <em>Picture</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getRedefines <em>Redefines</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.Element#getSyntaxName <em>Syntax Name</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Element#getSyntaxLength <em>Syntax Length</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Element#getSyntaxPosition <em>Syntax Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getUsage <em>Usage</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Element#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *
@@ -147,6 +149,32 @@ public interface Element extends EObject {
 	 * @generated
 	 */
 	void setUsage(Usage value);
+
+	/**
+	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Value</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Value</em>' attribute.
+	 * @see #setValue(String)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getElement_Value()
+	 * @model
+	 * @generated
+	 */
+	String getValue();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.Element#getValue <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Value</em>' attribute.
+	 * @see #getValue()
+	 * @generated
+	 */
+	void setValue(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Offset</b></em>' attribute.
@@ -321,19 +349,34 @@ public interface Element extends EObject {
 	void setRedefines(Element value);
 
 	/**
-	 * Returns the value of the '<em><b>Syntax Name</b></em>' attribute.
+	 * Returns the value of the '<em><b>Syntax Length</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Syntax Name</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Syntax Length</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Syntax Name</em>' attribute.
-	 * @see org.lh.dmlj.schema.SchemaPackage#getElement_SyntaxName()
+	 * @return the value of the '<em>Syntax Length</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getElement_SyntaxLength()
 	 * @model transient="true" changeable="false" volatile="true" derived="true"
 	 * @generated
 	 */
-	String getSyntaxName();
+	short getSyntaxLength();
+
+	/**
+	 * Returns the value of the '<em><b>Syntax Position</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Syntax Position</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Syntax Position</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getElement_SyntaxPosition()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	short getSyntaxPosition();
 
 	/**
 	 * Returns the value of the '<em><b>Occurs Specification</b></em>' containment reference.

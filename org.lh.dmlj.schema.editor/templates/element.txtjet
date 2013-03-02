@@ -1,0 +1,117 @@
+<%@ jet package="org.lh.dmlj.schema.editor.template" imports="org.lh.dmlj.schema.*" class="ElementTemplate"%>
+<%
+
+/*
+This template will generate an element's DDL syntax.
+*/
+
+Element element = (Element)argument;
+
+String left;
+if (element.getLevel() == 88) {
+    left = "*+                   ";
+} else {
+    StringBuilder p = new StringBuilder("*+   ");
+    for (int i = element.getLevel(); i > 2; i--) {
+        p.append("    ");
+    }
+    if (p.length() > 21) {
+        p.setLength(21);
+    }
+    left = p.toString();
+}
+String level;
+if (element.getLevel() < 10) {
+    level = "0" + element.getLevel();
+} else {
+    level = String.valueOf(element.getLevel());
+}
+%>
+<%= left %><%= level %> <%= element.getBaseName() %>
+<%
+if (element.getRedefines() != null) {
+%>
+<%= left %>    REDEFINES <%= element.getRedefines().getBaseName() %>
+<%
+}
+if (element.getPicture() != null) {
+%>
+<%= left %>    PICTURE IS  <%= element.getPicture() %>
+<%
+}
+%>
+<%= left %>    USAGE IS <%= Util.getUsageShortform(element.getUsage()) %>
+<%
+if (element.getUsage() != Usage.CONDITION_NAME &&
+    element.getUsage() != Usage.BIT) {
+%>
+<%= left %>    ELEMENT LENGTH IS <%= element.getSyntaxLength() %>
+<%
+}
+if (element.getUsage() == Usage.BIT) {
+    String bitLength;        
+    if (element.getLength() == 1) {
+        bitLength = "8 ";
+    } else {
+        bitLength = String.valueOf(element.getLength() * 8);
+    }
+    String mask;
+    if (element.getPicture() != null && element.getLength() == 1) {
+        mask = "MASK IS X'FF'";
+    } else {
+        mask = "";
+    }
+%>
+<%= left %>    BIT LENGTH IS <%= bitLength %>    <%= mask %>
+<%
+}
+%>
+<%= left %>    POSITION IS <%= element.getSyntaxPosition() %>
+<%
+if (element.getOccursSpecification() != null) {
+    OccursSpecification occurs = element.getOccursSpecification();
+    if (occurs.getDependingOn() != null) {
+%>
+<%= left %>    OCCURS 0 TO <%= occurs.getCount() %> TIMES DEPENDING ON <%= occurs.getDependingOn().getName() %>
+<%  
+    } else {
+%>
+<%= left %>    OCCURS <%= occurs.getCount() %> TIMES
+<%
+    }
+	if (!occurs.getIndexElements().isEmpty()) {
+	    StringBuilder indexElements = new StringBuilder();
+	    indexElements.append(left);
+	    indexElements.append("    INDEXED BY ( ");
+	    for (IndexElement indexElement : occurs.getIndexElements()) {
+	        String q = indexElement.getBaseName();
+		    if (indexElements.length() + q.length() > 72) {
+%>
+<%= indexElements.toString() %>
+<%
+				indexElements = new StringBuilder();
+				indexElements.append(left);
+				indexElements.append("    ");        
+		       }         
+		    indexElements.append(q);
+		    indexElements.append(' ');        
+		}
+		if (indexElements.length() + 1 > 72) {
+%>
+<%= indexElements.toString() %>
+		            )
+<%		
+		} else {
+%>
+<%= indexElements.toString() %>)
+<%        	    
+		}
+	}        
+}
+if (element.getValue() != null) {
+%>
+<%= left %>    VALUE IS ( <%= element.getValue() %> )
+<%
+}
+%>
+<%= left %>    .

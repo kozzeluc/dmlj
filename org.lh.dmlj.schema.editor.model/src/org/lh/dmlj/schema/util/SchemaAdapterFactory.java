@@ -116,6 +116,10 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createIndexedSetModeSpecificationAdapter();
 			}
 			@Override
+			public Adapter caseIndexElement(IndexElement object) {
+				return createIndexElementAdapter();
+			}
+			@Override
 			public Adapter caseKey(Key object) {
 				return createKeyAdapter();
 			}
@@ -518,6 +522,20 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIndexedSetModeSpecificationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.IndexElement <em>Index Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.IndexElement
+	 * @generated
+	 */
+	public Adapter createIndexElementAdapter() {
 		return null;
 	}
 

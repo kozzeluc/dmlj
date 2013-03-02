@@ -44,6 +44,8 @@ import org.lh.dmlj.schema.ViaSpecification;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getBaseName <em>Base Name</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getBaseVersion <em>Base Version</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getControlLength <em>Control Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getDataLength <em>Data Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isFragmented <em>Fragmented</em>}</li>
@@ -64,6 +66,8 @@ import org.lh.dmlj.schema.ViaSpecification;
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getRoles <em>Roles</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getRootElements <em>Root Elements</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getSchema <em>Schema</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getSynonymName <em>Synonym Name</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getSynonymVersion <em>Synonym Version</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getViaSpecification <em>Via Specification</em>}</li>
  * </ul>
  * </p>
@@ -71,6 +75,42 @@ import org.lh.dmlj.schema.ViaSpecification;
  * @generated
  */
 public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
+	/**
+	 * The default value of the '{@link #getBaseName() <em>Base Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBaseName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String BASE_NAME_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getBaseName() <em>Base Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBaseName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String baseName = BASE_NAME_EDEFAULT;
+	/**
+	 * The default value of the '{@link #getBaseVersion() <em>Base Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBaseVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final short BASE_VERSION_EDEFAULT = 0;
+	/**
+	 * The cached value of the '{@link #getBaseVersion() <em>Base Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getBaseVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected short baseVersion = BASE_VERSION_EDEFAULT;
 	/**
 	 * The default value of the '{@link #getControlLength() <em>Control Length</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -288,6 +328,42 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 */
 	protected EList<Element> rootElements;
 	/**
+	 * The default value of the '{@link #getSynonymName() <em>Synonym Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSynonymName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String SYNONYM_NAME_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getSynonymName() <em>Synonym Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSynonymName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String synonymName = SYNONYM_NAME_EDEFAULT;
+	/**
+	 * The default value of the '{@link #getSynonymVersion() <em>Synonym Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSynonymVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final short SYNONYM_VERSION_EDEFAULT = 0;
+	/**
+	 * The cached value of the '{@link #getSynonymVersion() <em>Synonym Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSynonymVersion()
+	 * @generated
+	 * @ordered
+	 */
+	protected short synonymVersion = SYNONYM_VERSION_EDEFAULT;
+	/**
 	 * The cached value of the '{@link #getViaSpecification() <em>Via Specification</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -313,6 +389,48 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.SCHEMA_RECORD;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getBaseName() {
+		return baseName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBaseName(String newBaseName) {
+		String oldBaseName = baseName;
+		baseName = newBaseName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SCHEMA_RECORD__BASE_NAME, oldBaseName, baseName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public short getBaseVersion() {
+		return baseVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setBaseVersion(short newBaseVersion) {
+		short oldBaseVersion = baseVersion;
+		baseVersion = newBaseVersion;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SCHEMA_RECORD__BASE_VERSION, oldBaseVersion, baseVersion));
 	}
 
 	/**
@@ -646,6 +764,48 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getSynonymName() {
+		return synonymName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSynonymName(String newSynonymName) {
+		String oldSynonymName = synonymName;
+		synonymName = newSynonymName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SCHEMA_RECORD__SYNONYM_NAME, oldSynonymName, synonymName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public short getSynonymVersion() {
+		return synonymVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSynonymVersion(short newSynonymVersion) {
+		short oldSynonymVersion = synonymVersion;
+		synonymVersion = newSynonymVersion;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SCHEMA_RECORD__SYNONYM_VERSION, oldSynonymVersion, synonymVersion));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ViaSpecification getViaSpecification() {
 		return viaSpecification;
 	}
@@ -954,6 +1114,10 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA_RECORD__BASE_NAME:
+				return getBaseName();
+			case SchemaPackage.SCHEMA_RECORD__BASE_VERSION:
+				return getBaseVersion();
 			case SchemaPackage.SCHEMA_RECORD__CONTROL_LENGTH:
 				return getControlLength();
 			case SchemaPackage.SCHEMA_RECORD__DATA_LENGTH:
@@ -996,6 +1160,10 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return getRootElements();
 			case SchemaPackage.SCHEMA_RECORD__SCHEMA:
 				return getSchema();
+			case SchemaPackage.SCHEMA_RECORD__SYNONYM_NAME:
+				return getSynonymName();
+			case SchemaPackage.SCHEMA_RECORD__SYNONYM_VERSION:
+				return getSynonymVersion();
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				return getViaSpecification();
 		}
@@ -1011,6 +1179,12 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA_RECORD__BASE_NAME:
+				setBaseName((String)newValue);
+				return;
+			case SchemaPackage.SCHEMA_RECORD__BASE_VERSION:
+				setBaseVersion((Short)newValue);
+				return;
 			case SchemaPackage.SCHEMA_RECORD__ID:
 				setId((Short)newValue);
 				return;
@@ -1062,6 +1236,12 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 			case SchemaPackage.SCHEMA_RECORD__SCHEMA:
 				setSchema((Schema)newValue);
 				return;
+			case SchemaPackage.SCHEMA_RECORD__SYNONYM_NAME:
+				setSynonymName((String)newValue);
+				return;
+			case SchemaPackage.SCHEMA_RECORD__SYNONYM_VERSION:
+				setSynonymVersion((Short)newValue);
+				return;
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				setViaSpecification((ViaSpecification)newValue);
 				return;
@@ -1077,6 +1257,12 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA_RECORD__BASE_NAME:
+				setBaseName(BASE_NAME_EDEFAULT);
+				return;
+			case SchemaPackage.SCHEMA_RECORD__BASE_VERSION:
+				setBaseVersion(BASE_VERSION_EDEFAULT);
+				return;
 			case SchemaPackage.SCHEMA_RECORD__ID:
 				setId(ID_EDEFAULT);
 				return;
@@ -1122,6 +1308,12 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 			case SchemaPackage.SCHEMA_RECORD__SCHEMA:
 				setSchema((Schema)null);
 				return;
+			case SchemaPackage.SCHEMA_RECORD__SYNONYM_NAME:
+				setSynonymName(SYNONYM_NAME_EDEFAULT);
+				return;
+			case SchemaPackage.SCHEMA_RECORD__SYNONYM_VERSION:
+				setSynonymVersion(SYNONYM_VERSION_EDEFAULT);
+				return;
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				setViaSpecification((ViaSpecification)null);
 				return;
@@ -1137,6 +1329,10 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA_RECORD__BASE_NAME:
+				return BASE_NAME_EDEFAULT == null ? baseName != null : !BASE_NAME_EDEFAULT.equals(baseName);
+			case SchemaPackage.SCHEMA_RECORD__BASE_VERSION:
+				return baseVersion != BASE_VERSION_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__CONTROL_LENGTH:
 				return getControlLength() != CONTROL_LENGTH_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__DATA_LENGTH:
@@ -1177,6 +1373,10 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return rootElements != null && !rootElements.isEmpty();
 			case SchemaPackage.SCHEMA_RECORD__SCHEMA:
 				return getSchema() != null;
+			case SchemaPackage.SCHEMA_RECORD__SYNONYM_NAME:
+				return SYNONYM_NAME_EDEFAULT == null ? synonymName != null : !SYNONYM_NAME_EDEFAULT.equals(synonymName);
+			case SchemaPackage.SCHEMA_RECORD__SYNONYM_VERSION:
+				return synonymVersion != SYNONYM_VERSION_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				return viaSpecification != null;
 		}
@@ -1193,7 +1393,11 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (id: ");
+		result.append(" (baseName: ");
+		result.append(baseName);
+		result.append(", baseVersion: ");
+		result.append(baseVersion);
+		result.append(", id: ");
 		result.append(id);
 		result.append(", locationMode: ");
 		result.append(locationMode);
@@ -1205,6 +1409,10 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 		result.append(name);
 		result.append(", storageMode: ");
 		result.append(storageMode);
+		result.append(", synonymName: ");
+		result.append(synonymName);
+		result.append(", synonymVersion: ");
+		result.append(synonymVersion);
 		result.append(')');
 		return result.toString();
 	}	

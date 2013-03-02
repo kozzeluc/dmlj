@@ -10,6 +10,10 @@ import org.lh.dmlj.schema.RecordProcedureCallVerb;
 public interface IRecordDataCollector<T> {	
 	
 	String getAreaName(T context);
+	
+	String getBaseName(T context);
+	
+	short getBaseVersion(T context);
 
 	DuplicatesOption getCalcKeyDuplicatesOption(T context);
 
@@ -42,6 +46,10 @@ public interface IRecordDataCollector<T> {
 	short getRecordId(T context);	
 
 	String getSymbolicSubareaName(T context);
+	
+	String getSynonymName(T context);
+	
+	short getSynonymVersion(T context);	
 	
 	Short getViaDisplacementPageCount(T context);
 

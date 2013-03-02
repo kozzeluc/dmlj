@@ -49,6 +49,28 @@ public class RecordDataCollector
 	}
 
 	@Override
+	public String getBaseName(SchemaSyntaxWrapper context) { 
+		for (String line : context.getLines()) {
+			if (line.startsWith("*+           SYNONYM OF PRIMARY RECORD ")) {
+				int i = line.indexOf(" VERSION ");
+				return line.substring(39, i);
+			}
+		}
+		return getSynonymName(context);
+	}
+
+	@Override
+	public short getBaseVersion(SchemaSyntaxWrapper context) {		
+		for (String line : context.getLines()) {
+			if (line.startsWith("*+           SYNONYM OF PRIMARY RECORD ")) {
+				int i = line.indexOf(" VERSION ");
+				return Short.valueOf(line.substring(i + 9).trim()).shortValue();
+			}
+		}		
+		return getSynonymVersion(context);
+	}
+
+	@Override
 	public DuplicatesOption getCalcKeyDuplicatesOption(SchemaSyntaxWrapper context) {
 		for (String line : context.getLines()) {
 			if (line.startsWith("             DUPLICATES ARE ")) {
@@ -320,6 +342,28 @@ public class RecordDataCollector
 		}
 		return null;		
 	}
+	
+	@Override
+	public String getSynonymName(SchemaSyntaxWrapper context) { 
+		for (String line : context.getLines()) {
+			if (line.startsWith("         SHARE STRUCTURE OF RECORD ")) {
+				int i = line.indexOf(" VERSION ");
+				return line.substring(35, i);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public short getSynonymVersion(SchemaSyntaxWrapper context) {		
+		for (String line : context.getLines()) {
+			if (line.startsWith("         SHARE STRUCTURE OF RECORD ")) {
+				int i = line.indexOf(" VERSION ");
+				return Short.valueOf(line.substring(i + 9).trim()).shortValue();
+			}
+		}		
+		return 0;
+	}	
 
 	@Override
 	public Short getViaDisplacementPageCount(SchemaSyntaxWrapper context) {

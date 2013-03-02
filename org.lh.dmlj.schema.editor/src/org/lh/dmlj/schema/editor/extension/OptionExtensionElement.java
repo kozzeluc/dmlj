@@ -13,6 +13,11 @@ public class OptionExtensionElement extends AbstractExtensionElement {
  				 				 ExtensionPointConstants.ATTRIBUTE_CHECK_BUTTON_LABEL, null);
 	}
 	
+	public String getGroup() {
+		return Util.getAttribute(configElement, 
+ 				 				 ExtensionPointConstants.ATTRIBUTE_GROUP, "");
+	}	
+	
 	public boolean getIdmsntwkOnly() {
 		String p = Util.getAttribute(configElement, 
  				 				     ExtensionPointConstants.ATTRIBUTE_IDMSNTWK_ONLY, null);

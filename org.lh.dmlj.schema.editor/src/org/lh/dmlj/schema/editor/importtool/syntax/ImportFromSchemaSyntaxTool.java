@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.editor.importtool.IDataCollectorRegistry;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
@@ -36,6 +38,118 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 
 	public ImportFromSchemaSyntaxTool() {
 		super();
+	}
+
+	private void conditionallyUnsetRecordSuffix(SchemaSyntaxWrapper context) {
+		
+		// if the user has not checked one of the 'add suffix' options, we will
+		// not correct anything
+		short digitCount = -1;
+		if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_3_DIGITS)) {
+			digitCount = 3;
+		} else if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS)) {
+			digitCount = 4;
+		}
+		if (digitCount == -1) {
+			return;
+		}
+		
+		// remove the suffix only when containsBaseNamesFlag is set to true AND
+		// control fields (CALC or sort key) indicate that a suffix was set 
+		// suffix was set while it shouldn't have been
+		boolean containsBaseNamesFlag = 
+			Boolean.valueOf(context.getProperties()
+				   .getProperty("containsBaseNamesFlag"))
+			       .booleanValue();
+		if (!containsBaseNamesFlag) {
+			return;
+		}		
+		
+		// we need the record data collector here since the context contains the
+		// entire record syntax
+		IRecordDataCollector<SchemaSyntaxWrapper> recordDataCollector =
+			dataCollectorRegistry.getRecordDataCollector(SchemaSyntaxWrapper.class);
+		
+		// we don't expect a prefix...
+		String prefix = context.getProperties().getProperty("prefix");
+		if (prefix != null) {
+			throw new RuntimeException("logic error; no prefix expected for " +
+									   recordDataCollector.getName(context));
+		}
+		
+		// ...but do expect a suffix
+		String suffix = context.getProperties().getProperty("suffix");
+		if (suffix == null) {
+			throw new RuntimeException("logic error; suffix expected for " +
+									   recordDataCollector.getName(context));
+		}		
+		
+		// get a list of all FULL element names (the order will not correspond 
+		// with the real order); scan the whole record syntax in stead of 
+		// creating temporary element contexts
+		List<String> allFullElementNames = new ArrayList<String>();
+		boolean inElementSyntax = false;
+		for (String line : context.getLines()) {
+			if (line.trim().equals(".")) {
+				inElementSyntax = true;
+			} else if (inElementSyntax) {
+				String p = line.substring(2).trim();
+				if (p.startsWith("0") && p.charAt(2) == ' ') {
+					// skip level 88 elements
+					String elementName = p.substring(3);
+					if (!elementName.equals("FILLER")) {
+						// skip FILLER elements
+						StringBuilder fullElementName = new StringBuilder();						
+						fullElementName.append(elementName);
+						fullElementName.append(suffix);
+						allFullElementNames.add(fullElementName.toString());
+					}
+				}
+			}
+		}
+		
+		// in the case of a CALC record, see if there is a prefix/suffix 
+		// mismatch using the first CALC element
+		if (recordDataCollector.getLocationMode(context) == LocationMode.CALC) {
+			// the record contained in the context is CALC
+			List<String> calcElementNames =
+				new ArrayList<>(recordDataCollector.getCalcKeyElementNames(context));
+			// all CALC elements contain the prefix and/or suffix
+			String firstCalcElement = calcElementNames.get(0);
+			for (String fullElementName : allFullElementNames) {				
+				if (fullElementName.equals(firstCalcElement)) {
+					return;
+				}
+			}
+			// remove the suffix; we do not expect a prefix
+			context.getProperties().remove("suffix");
+			System.out.println("removed suffix ('" + suffix + "') for " + 
+					           recordDataCollector.getName(context));
+			return;
+		}
+		
+		// for DIRECT and VIA records, see if there is at least 1 sorted set
+		// (other than sorted on dbkey) in which the record participates as a 
+		// member and , see if there is a prefix/suffix mismatch using the first 
+		// sort element name of that set 
+		String firstSortElement = 
+			getFirstSortElement(recordDataCollector.getName(context));
+		if (firstSortElement != null) {	
+			for (String fullElementName : allFullElementNames) {				
+				if (fullElementName.equals(firstSortElement)) {
+					return;
+				}
+			}
+			// remove the suffix; we do not expect a prefix
+			context.getProperties().remove("suffix");
+			System.out.println("removed suffix ('" + suffix + "') for " + 
+			           		   recordDataCollector.getName(context));
+			return;			
+		}		
+		
+		// if we get here, the record is not CALC and is not a member of at
+		// least 1 sorted set; we don't have to fix anything 
+		
 	}
 
 	@Override
@@ -104,7 +218,8 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		List<SchemaSyntaxWrapper> contexts = extractEntities(EntityType.RECORD);
 		// if applicable, set a record prefix and/or suffix in each context
 		for (SchemaSyntaxWrapper context : contexts) {
-			setRecordPrefixAndOrSuffix(context);
+			setRecordPrefixAndOrSuffix(context);			
+			conditionallyUnsetRecordSuffix(context);
 		}
 		return contexts;
 	}
@@ -167,7 +282,13 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 					String suffix = 
 						context.getProperties().getProperty("suffix");
 					listWrapper.getProperties().put("suffix", suffix);
-				}				
+				}
+				if (context.getProperties().containsKey("containsBaseNamesFlag")) {
+					String containsBaseNamesFlag = 
+						context.getProperties().getProperty("containsBaseNamesFlag");
+					listWrapper.getProperties().put("containsBaseNamesFlag", 
+													containsBaseNamesFlag);
+				}
 			} 
 			if (listWrapper != null) {
 				listWrapper.getLines().add(aLine);
@@ -240,12 +361,12 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		
 	}	
 
-	private void setRecordPrefixAndOrSuffix(SchemaSyntaxWrapper context) {		
+	private void setRecordPrefixAndOrSuffix(SchemaSyntaxWrapper context) {				
 		
 		// we need the record data collector here since the context contains the
 		// entire record syntax
 		IRecordDataCollector<SchemaSyntaxWrapper> recordDataCollector =
-			dataCollectorRegistry.getRecordDataCollector(SchemaSyntaxWrapper.class);
+			dataCollectorRegistry.getRecordDataCollector(SchemaSyntaxWrapper.class);						
 		
 		// get a list of all elements (the order will not correspond with the
 		// real order); scan the whole record syntax in stead of creating
@@ -275,106 +396,92 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 			return;
 		}
 		
-		// in the case of a CALC record, determine the prefix/suffix using the
-		// first CALC element
+		String controlElementName = null;
+		
+		// in the case of a CALC record, see if there is a prefix/suffix 
+		// mismatch using the first CALC element
 		if (recordDataCollector.getLocationMode(context) == LocationMode.CALC) {
 			// the record contained in the context is CALC
 			List<String> calcElementNames =
 				new ArrayList<>(recordDataCollector.getCalcKeyElementNames(context));
 			// all CALC elements contain the prefix and/or suffix
 			String firstCalcElement = calcElementNames.get(0);
+			controlElementName = firstCalcElement;
 			// if the first CALC element name is contained in the list of all
-			// elements, there is no prefix nor a suffix, so we're done
-			if (allElementNames.contains(firstCalcElement)) {
-				return;
-			}
+			// elements, there is no prefix/suffix mismatch, but we might be 
+			// able to distill a suffix later if the user requested to do so
+			// - otherwise -
 			// since the name of the first CALC element name is not contained in
 			// the list of all element names, either a prefix or suffix, or both
 			// are defined for the record synonym used; we only support prefixes
-			// ending with a hyphen and suffixes starting with a hypen
-			if (setRecordPrefixAndOrSuffix(context, allElementNames, 
+			// ending with a hyphen and suffixes starting with a hyphen
+			if (!allElementNames.contains(firstCalcElement)) {				
+				if (setRecordPrefixAndOrSuffix(context, allElementNames, 
 										   firstCalcElement)) {
-				return;
-			} else {
-				throw new RuntimeException("logic error: cannot derive " +
-										   "prefix/suffix for " + 
-										   recordDataCollector.getName(context) +
-										   " (CALC)");
+					return;
+				} else {
+					throw new RuntimeException("logic error: cannot derive " +
+										   	   "prefix/suffix for " + 
+										   	   recordDataCollector.getName(context) +
+										   	   " (CALC)");
+				}
 			}
 		}
 		
 		// for DIRECT and VIA records, see if there is at least 1 sorted set
 		// (other than sorted on dbkey) in which the record participates as a 
-		// member and determine the prefix and/or suffix using the first sort 
-		// element name of that set 
+		// member and , see if there is a prefix/suffix mismatch using the first 
+		// sort element name of that set 
 		String firstSortElement = 
 			getFirstSortElement(recordDataCollector.getName(context));
 		if (firstSortElement != null) {	
+			controlElementName = firstSortElement;
 			// if the first sort key element name is contained in the list of 
-			// all elements, there is no prefix nor a suffix, so we're done
-			if (allElementNames.contains(firstSortElement)) {
-				return;
-			}
-			if (setRecordPrefixAndOrSuffix(context, allElementNames, 
-									       firstSortElement)) {
+			// all elements, there is no prefix/suffix mismatch, but we might be 
+			// able to distill a suffix later if the user requested to do so
+			if (!allElementNames.contains(firstSortElement)) {
+				if (setRecordPrefixAndOrSuffix(context, allElementNames, 
+									       	   firstSortElement)) {
 				
-				return;
-			} else {
-				throw new RuntimeException("logic error: cannot derive prefix/" +
-						   				   "suffix for " + 
-						   				   recordDataCollector.getName(context) +
-						   				   " (VIA/DIRECT)");
+					return;
+				} else {
+					throw new RuntimeException("logic error: cannot derive prefix/" +
+						   				   	   "suffix for " + 
+						   				   	   recordDataCollector.getName(context) +
+						   				   	   " (VIA/DIRECT)");
+				}
 			}			
-		}
+		}		
 		
-		// use the record-id as a suffix if the user selected one of the 
+		// no prefix/suffix mismatch or no control fields available - use the 
+		// record-id as a suffix if (and only if) the user selected one of the 
 		// available options, while also honoring the digit count assigned to 
-		// the selected option - we don't have to bother about this) IF AND ONLY 
-		// IF no suffix is already there (a suffix is considered to always start 
-		// with a hyphen)
-		short digitCount;
+		// the selected option
+		short digitCount = -1;
 		if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_3_DIGITS)) {
 			digitCount = 3;
 		} else if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS)) {
 			digitCount = 4;
-		} else {
-			return;
+		} else if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_PROMPT)) {
+			// prompt for digit count
+			PromptForDigitCountDialog dialog = 
+				new PromptForDigitCountDialog(Display.getCurrent().getActiveShell(),
+							      			  context, recordDataCollector,
+							      			  controlElementName);			
+			if (dialog.open() == IDialogConstants.CANCEL_ID) {
+				throw new RuntimeException("Import cancelled.");
+			}
+			digitCount = dialog.getSelectedDigitCount();
 		}
-		// get the record id
-		short recordId = recordDataCollector.getRecordId(context);
-		// see if there is already a suffix present
-		int i = allElementNames.get(0).lastIndexOf("-");
-		boolean addSuffix = false;
-		if (i > -1) {
-			// there seems to be a hyphen present; see if the record id can be
-			// derived from the characters following that hyphen and see if all
-			// element names end with that same character sequence		
-			String p = allElementNames.get(0).substring(i);
-			try {
-				short j = Short.valueOf(p.substring(1));
-				if (j == recordId) {				
-					for (String elementName : allElementNames) {
-						if (!elementName.endsWith(p)) {
-							addSuffix = true;
-							break;
-						}
-					}		
-				}
-			} catch (NumberFormatException e) {
-				// not a suffix with the record id
-				addSuffix = true;
-			}			
-		} else {
-			// no hyphen so we consider no suffix to be present
-			addSuffix = true;
-		}
-		// get out if a suffix seems to be there already
-		if (!addSuffix) {
+		if (digitCount != -1) {
+			// get the record id
+			short recordId = recordDataCollector.getRecordId(context);				
+			// add a suffix containing the record-id		
+			String suffix = "-" + pad(recordId, digitCount);		
+			context.getProperties().put("suffix", suffix);
+			setContainsBaseNamesFlag(context, null, suffix);
 			return;
 		}		
-		// add a suffix containing the record-id		
-		String suffix = "-" + pad(recordId, digitCount);		
-		context.getProperties().put("suffix", suffix);		
 		
 	}
 	
@@ -385,6 +492,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		for (String elementName : allElementNames) {
 			if (elementName.equals(modelElementName)) {
 				// no prefix or suffix since we have a perfect match
+				setContainsBaseNamesFlag(context, null, null);
 				return true;
 			}
 			int i = modelElementName.indexOf("-" + elementName); 
@@ -425,11 +533,65 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 					if (suffix != null) {
 						context.getProperties().put("suffix", suffix);
 					}
+					setContainsBaseNamesFlag(context, prefix, suffix);
 					return true;
 				}
 			}				
 		}
-		return false;		
+		return false; // logic error		
+		
+	}
+
+	private void setContainsBaseNamesFlag(SchemaSyntaxWrapper context,
+										  String prefix, String suffix) {
+		
+		boolean containsBaseNamesFlag = false;
+		
+		List<String> allElementNames = new ArrayList<String>();
+		boolean inElementSyntax = false;
+		for (String line : context.getLines()) {
+			if (line.trim().equals(".")) {
+				inElementSyntax = true;
+			} else if (inElementSyntax) {
+				String p = line.substring(2).trim();
+				if ((p.startsWith("0") || p.startsWith("88")) && 
+					p.charAt(2) == ' ') {					
+					String elementName = p.substring(3);
+					if (!elementName.equals("FILLER")) {
+						// skip FILLER elements
+						allElementNames.add(elementName);
+					}
+				}
+			}
+		}		
+		
+		if (prefix != null && suffix != null) {
+			for (String elementName : allElementNames) {
+				if (!elementName.startsWith(prefix) || 
+					!elementName.endsWith(suffix)) {
+					
+					containsBaseNamesFlag = true;
+					break;
+				}
+			}			
+		} else if (prefix != null) {
+			for (String elementName : allElementNames) {
+				if (!elementName.startsWith(prefix)) {					
+					containsBaseNamesFlag = true;
+					break;
+				}
+			}			
+		} else if (suffix != null) {
+			for (String elementName : allElementNames) {
+				if (!elementName.endsWith(suffix)) {
+					containsBaseNamesFlag = true;
+					break;
+				}
+			}						
+		}		
+		
+		context.getProperties().put("containsBaseNamesFlag",
+									String.valueOf(containsBaseNamesFlag));
 		
 	}
 

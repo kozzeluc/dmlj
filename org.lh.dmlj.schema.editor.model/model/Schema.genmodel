@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.lh.dmlj.schema.editor.model/src"
-    modelPluginID="org.lh.dmlj.schema.editor.model" modelName="Schema" importerID="org.eclipse.emf.importer.cdo"
-    complianceLevel="6.0" copyrightFields="false" editPluginID="org.lh.dmlj.schema.editor.model">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.lh.dmlj.schema.editor.model/src" modelPluginID="org.lh.dmlj.schema.editor.model"
+    modelName="Schema" importerID="org.eclipse.emf.importer.cdo" complianceLevel="7.0"
+    copyrightFields="false" editPluginID="org.lh.dmlj.schema.editor.model">
   <foreignModel>Schema.ecore</foreignModel>
   <genPackages prefix="Schema" basePackage="org.lh.dmlj" disposableProviderFactory="true"
       ecorePackage="Schema.ecore#/">
@@ -103,6 +102,7 @@
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/CONDITION_NAME"/>
     </genEnums>
     <genClasses ecoreClass="Schema.ecore#//AreaProcedureCallSpecification">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//AreaProcedureCallSpecification/area"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//AreaProcedureCallSpecification/callTime"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//AreaProcedureCallSpecification/function"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//AreaProcedureCallSpecification/procedure"/>
@@ -128,7 +128,6 @@
     <genClasses ecoreClass="Schema.ecore#//Connector">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Connector/connectionPart"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Connector/label"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Connector/location"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//DiagramData">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/connectionLabels"/>
@@ -155,6 +154,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramNode/diagramLocation"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Element">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/baseName"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/children"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/keyElements"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/length"/>
@@ -167,6 +167,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/picture"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//Element/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/redefines"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/syntaxLength"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/syntaxName"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/syntaxPosition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/usage"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Guide">
@@ -175,12 +178,20 @@
     <genClasses ecoreClass="Schema.ecore#//IndexedSetModeSpecification">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexedSetModeSpecification/displacementPageCount"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexedSetModeSpecification/keyCount"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//IndexedSetModeSpecification/set"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexedSetModeSpecification/symbolicIndexName"/>
     </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//IndexElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexElement/baseName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexElement/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//IndexElement/occursSpecification"/>
+    </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Key">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/calcKey"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/compressed"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/duplicatesOption"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Key/elements"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/elementSummary"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/length"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Key/memberRole"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/naturalSequence"/>
@@ -207,8 +218,11 @@
     <genClasses ecoreClass="Schema.ecore#//OccursSpecification">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OccursSpecification/count"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//OccursSpecification/dependingOn"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//OccursSpecification/element"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//OccursSpecification/indexElements"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//OffsetExpression">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//OffsetExpression/areaSpecification"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OffsetExpression/offsetPageCount"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OffsetExpression/offsetPercent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//OffsetExpression/pageCount"/>
@@ -226,6 +240,7 @@
     <genClasses ecoreClass="Schema.ecore#//RecordProcedureCallSpecification">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//RecordProcedureCallSpecification/callTime"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//RecordProcedureCallSpecification/procedure"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//RecordProcedureCallSpecification/record"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//RecordProcedureCallSpecification/verb"/>
     </genClasses>
     <genClasses image="false" ecoreClass="Schema.ecore#//Role"/>
@@ -276,6 +291,8 @@
       </genOperations>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//SchemaRecord">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/baseName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/baseVersion"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/controlLength"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/dataLength"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/fragmented"/>
@@ -296,6 +313,8 @@
       <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/roles"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/rootElements"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/schema"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/synonymName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/synonymVersion"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/viaSpecification"/>
       <genOperations ecoreOperation="Schema.ecore#//SchemaRecord/getElement">
         <genParameters ecoreParameter="Schema.ecore#//SchemaRecord/getElement/name"/>
@@ -323,7 +342,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ViaSpecification/displacementPageCount"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//ViaSpecification/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//ViaSpecification/set"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ViaSpecification/setName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ViaSpecification/symbolicDisplacementName"/>
     </genClasses>
   </genPackages>

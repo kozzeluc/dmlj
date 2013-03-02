@@ -157,19 +157,6 @@ A number of data entry pages can be configured for each import tool; some of the
       </complexType>
    </element>
 
-   <element name="importTools">
-      <annotation>
-         <documentation>
-            The set of import tools offered by the extension.
-         </documentation>
-      </annotation>
-      <complexType>
-         <sequence>
-            <element ref="importTool" minOccurs="1" maxOccurs="unbounded"/>
-         </sequence>
-      </complexType>
-   </element>
-
    <element name="option">
       <annotation>
          <documentation>
@@ -191,6 +178,13 @@ A number of data entry pages can be configured for each import tool; some of the
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="group" type="string">
+            <annotation>
+               <documentation>
+                  The name of the group to which this option belongs.  If an undefined group is specified, the option will not show up on the options page.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="initialValue" type="boolean" use="required">
             <annotation>
                <documentation>
@@ -208,7 +202,44 @@ A number of data entry pages can be configured for each import tool; some of the
          <attribute name="mutuallyExclusiveWith" type="string">
             <annotation>
                <documentation>
-                  The name of an option to set to false if this option is set to true.
+                  A comma separated list with the names of options to set to false if this particular option is set to true.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="importTools">
+      <annotation>
+         <documentation>
+            The set of import tools offered by the extension.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="importTool" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="optionGroup">
+      <annotation>
+         <documentation>
+            A group of options to show on the wizard&apos;s Options page.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The option group&apos;s name.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="label" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The option group&apos;s label; this text will be placed above the options belonging to the group.  A colon will be added if missing.
                </documentation>
             </annotation>
          </attribute>
@@ -218,11 +249,12 @@ A number of data entry pages can be configured for each import tool; some of the
    <element name="options">
       <annotation>
          <documentation>
-            A set of (extra) options to display for the import tool on the wizard&apos;s Options page.  The relevancy of the pages defined in the &quot;postOptionsPages&quot; may depend on the Options page&apos;s options.
+            A set of (extra) options to display for the import tool on the wizard&apos;s Options page.  The relevancy of the pages defined in the &quot;postOptionsPages&quot; may depend on the Options page&apos;s options.  Options can be grouped together in so-called groups, which kind of provides a label above one or more related options.
          </documentation>
       </annotation>
       <complexType>
          <sequence>
+            <element ref="optionGroup" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="option" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
       </complexType>

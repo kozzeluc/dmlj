@@ -6,6 +6,7 @@
  */
 package org.lh.dmlj.schema;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -19,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.OccursSpecification#getCount <em>Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OccursSpecification#getDependingOn <em>Depending On</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OccursSpecification#getElement <em>Element</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.OccursSpecification#getIndexElements <em>Index Elements</em>}</li>
  * </ul>
  * </p>
  *
@@ -106,5 +108,23 @@ public interface OccursSpecification extends EObject {
 	 * @generated
 	 */
 	void setElement(Element value);
+
+	/**
+	 * Returns the value of the '<em><b>Index Elements</b></em>' containment reference list.
+	 * The list contents are of type {@link org.lh.dmlj.schema.IndexElement}.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.IndexElement#getOccursSpecification <em>Occurs Specification</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Index Elements</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Index Elements</em>' containment reference list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getOccursSpecification_IndexElements()
+	 * @see org.lh.dmlj.schema.IndexElement#getOccursSpecification
+	 * @model opposite="occursSpecification" containment="true"
+	 * @generated
+	 */
+	EList<IndexElement> getIndexElements();
 
 } // OccursSpecification

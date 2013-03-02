@@ -335,19 +335,33 @@
                </dataEntryPage>
             </preOptionsPages>
             <options>
+               <optionGroup
+                     label="Use record-id as suffix if one is not present and cannot be derived automatically"
+                     name="recordIdSuffixGroup">
+               </optionGroup>
                <option
-                     checkButtonLabel="Use record-id as suffix if one is not present and cannot be derived automatically (3 digits, e.g. &quot;-013&quot;)"                     
+                     checkButtonLabel="3 or 4 digits (e.g. &quot;-013&quot;, &quot;-1013&quot;)"
+                     group="recordIdSuffixGroup"
                      idmsntwkOnly="false"
                      initialValue="false"
-                     mutuallyExclusiveWith="digitCountForMissingSuffixes_4_digits"
+                     mutuallyExclusiveWith="digitCountForMissingSuffixes_4_digits,digitCountForMissingSuffixes_prompt_for_digits"
                      name="digitCountForMissingSuffixes_3_digits">
                </option>
                <option
-                     checkButtonLabel="Use record-id as suffix if one is not present and cannot be derived automatically (4 digits, e.g. &quot;-0013&quot;)"
+                     checkButtonLabel="4 digits (e.g. &quot;-0013&quot;)"
+                     group="recordIdSuffixGroup"
                      idmsntwkOnly="false"
-                     initialValue="true"
-                     mutuallyExclusiveWith="digitCountForMissingSuffixes_3_digits"
+                     initialValue="false"
+                     mutuallyExclusiveWith="digitCountForMissingSuffixes_3_digits,digitCountForMissingSuffixes_prompt_for_digits"
                      name="digitCountForMissingSuffixes_4_digits">
+               </option>
+               <option
+                     checkButtonLabel="Prompt"
+                     group="recordIdSuffixGroup"
+                     idmsntwkOnly="false"
+                     initialValue="false"
+                     mutuallyExclusiveWith="digitCountForMissingSuffixes_3_digits,digitCountForMissingSuffixes_4_digits"
+                     name="digitCountForMissingSuffixes_prompt_for_digits">
                </option></options>
             <postOptionsPages></postOptionsPages>
          </importTool>

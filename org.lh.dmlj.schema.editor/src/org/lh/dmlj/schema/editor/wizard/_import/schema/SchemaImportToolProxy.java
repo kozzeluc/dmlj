@@ -9,6 +9,7 @@ import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.IndexElement;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.LocationMode;
@@ -20,6 +21,7 @@ import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
+import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMembershipOption;
@@ -598,16 +600,12 @@ public final class SchemaImportToolProxy {
 		// get the element name
 		String elementName = dataCollector.getName(elementContext);
 		
-		// get the basic element name; make it null if it equals the element name
-		String basicName = dataCollector.getBaseName(elementContext);
-		String p = basicName != null ? basicName.trim().toUpperCase() : null;
-		if (elementName != null && elementName.trim().toUpperCase().equals(p)) {
-			basicName = null;
-		}
+		// get the base element name
+		String baseName = dataCollector.getBaseName(elementContext);		
 		
 		// create the element
 		Element element = 
-			modelFactory.createElement(record, parent, elementName, basicName);	
+			modelFactory.createElement(record, parent, elementName, baseName);	
 		
 		// set some of the element's attributes
 		element.setLevel(dataCollector.getLevel(elementContext));		
@@ -666,6 +664,29 @@ public final class SchemaImportToolProxy {
 				occursSpecification.setDependingOn(dependsOnElement);
 			}
 			
+			List<String> indexElementBaseNames = new ArrayList<>();
+				indexElementBaseNames.addAll(dataCollector.getIndexElementBaseNames(elementContext));
+			if (!indexElementBaseNames.isEmpty()) {
+				List<String> indexElementNames = new ArrayList<>();
+				indexElementNames.addAll(dataCollector.getIndexElementNames(elementContext));
+				if (indexElementBaseNames.size() != indexElementNames.size()) {
+					throw new RuntimeException("");
+				}
+				for (int i = 0; i < indexElementBaseNames.size(); i++) {
+					IndexElement indexElement = 
+						SchemaFactory.eINSTANCE.createIndexElement();
+					occursSpecification.getIndexElements().add(indexElement);
+					indexElement.setBaseName(indexElementBaseNames.get(i));
+					indexElement.setName(indexElementNames.get(i));					
+				}
+			}
+			
+		}
+		
+		// set the element value, if any
+		String value = dataCollector.getValue(elementContext);
+		if (value != null) {
+			element.setValue(value);
 		}
 		
 		// deal with the element's subordinate elements, if any
@@ -709,6 +730,18 @@ public final class SchemaImportToolProxy {
 		SchemaRecord record = 
 			modelFactory.createRecord(recordName, recordId, StorageMode.FIXED, 
 									  locationMode, viaSetName, areaName);
+		
+		// set the base name and versiontring baseName = dataCollector.getBaseName(recordContext);
+		String baseName = dataCollector.getBaseName(recordContext);
+		short baseVersion = dataCollector.getBaseVersion(recordContext);		
+		record.setBaseName(baseName);
+		record.setBaseVersion(baseVersion);
+		
+		// set the synonym name and version
+		String synonymName = dataCollector.getSynonymName(recordContext);
+		short synonymVersion = dataCollector.getSynonymVersion(recordContext);
+		record.setSynonymName(synonymName);
+		record.setSynonymVersion(synonymVersion);
 		
 		// deal with record procedures
 		for (String procedureName : 

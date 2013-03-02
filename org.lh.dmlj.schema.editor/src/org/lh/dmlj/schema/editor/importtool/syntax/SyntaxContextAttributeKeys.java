@@ -6,5 +6,7 @@ public abstract class SyntaxContextAttributeKeys {
 		"digitCountForMissingSuffixes_3_digits";	
 	public static final String DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS = 
 		"digitCountForMissingSuffixes_4_digits";
+	public static final String DIGIT_COUNT_FOR_MISSING_SUFFIXES_PROMPT = 
+		"digitCountForMissingSuffixes_prompt_for_digits";
 	
 }

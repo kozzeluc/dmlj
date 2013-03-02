@@ -6,6 +6,7 @@
  */
 package org.lh.dmlj.schema.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,8 +48,10 @@ import org.lh.dmlj.schema.common.PictureAnalyzer;
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getPicture <em>Picture</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getRedefines <em>Redefines</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getSyntaxName <em>Syntax Name</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getSyntaxLength <em>Syntax Length</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getSyntaxPosition <em>Syntax Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getUsage <em>Usage</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *
@@ -209,14 +212,23 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 */
 	protected Element redefines;
 	/**
-	 * The default value of the '{@link #getSyntaxName() <em>Syntax Name</em>}' attribute.
+	 * The default value of the '{@link #getSyntaxLength() <em>Syntax Length</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getSyntaxName()
+	 * @see #getSyntaxLength()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String SYNTAX_NAME_EDEFAULT = null;
+	protected static final short SYNTAX_LENGTH_EDEFAULT = 0;
+	/**
+	 * The default value of the '{@link #getSyntaxPosition() <em>Syntax Position</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSyntaxPosition()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final short SYNTAX_POSITION_EDEFAULT = 0;
 	/**
 	 * The default value of the '{@link #getUsage() <em>Usage</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -235,6 +247,25 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * @ordered
 	 */
 	protected Usage usage = USAGE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String VALUE_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected String value = VALUE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -342,6 +373,27 @@ public class ElementImpl extends EObjectImpl implements Element {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setValue(String newValue) {
+		String oldValue = value;
+		value = newValue;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.ELEMENT__VALUE, oldValue, value));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
 	public short getOffset() {		
@@ -442,21 +494,25 @@ public class ElementImpl extends EObjectImpl implements Element {
 				
 				// we now use a modified copy of DMLJ CORE's PictureAnalyzer...
 				int digits = PictureAnalyzer.getDigitCount(getPicture());
-				return (short)((digits + 1) / 2);
-					
+				return (short) (digits / 2 + 1);
+				
 			} else if (getUsage() == Usage.DISPLAY) {				
 				if ((getPicture().toUpperCase().startsWith("X(") ||
-					 getPicture().toUpperCase().startsWith("9(")) &&
+					 getPicture().toUpperCase().startsWith("9(") ||
+					 getPicture().toUpperCase().startsWith("S9(")) &&
 					getPicture().toUpperCase().endsWith(")")) {
 					
+					int i = 
+						getPicture().toUpperCase().startsWith("S9(") ? 3 : 2;
 					String p = 
-						getPicture().substring(2, getPicture().indexOf(")"));
+						getPicture().substring(i, getPicture().indexOf(")"));
 					return Short.valueOf(p);
 				} else if (getPicture().toUpperCase().startsWith("X") &&
 						   getPicture().toUpperCase().endsWith("X")) {
 					
 					return (short)getPicture().length();
 				} else if (getPicture().startsWith("9") &&
+						   !getPicture().startsWith("9(") &&						
 						   getPicture().endsWith("9")) {
 					
 					if (getPicture().toUpperCase().indexOf("V") > -1) {
@@ -465,6 +521,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 						return (short)getPicture().length();
 					}
 				} else if (getPicture().startsWith("S9") &&
+						   !getPicture().startsWith("S9(") &&
 						   getPicture().endsWith("9")) {
 					
 					if (getPicture().toUpperCase().indexOf("V") > -1) {
@@ -472,6 +529,15 @@ public class ElementImpl extends EObjectImpl implements Element {
 					} else {
 						return (short)(getPicture().length() - 1);
 					}
+				} else if (getPicture().startsWith("S9(") &&						   
+						   getPicture().endsWith("9") &&
+						   getPicture().toUpperCase().indexOf("V") > -1) {
+										
+					int i = getPicture().length() -
+							getPicture().toUpperCase().indexOf("V") - 1;
+					String p = 
+						getPicture().substring(3, getPicture().indexOf(")"));
+					return (short) (Short.valueOf(p) + i);					
 				}
 			}
 			throw new UnsupportedOperationException(getName() + " PIC " +
@@ -643,11 +709,50 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
-	public String getSyntaxName() {
-		if (getBaseName() != null) {
-			return getBaseName();
+	public short getSyntaxLength() {
+		short length = getLength();
+		short result = length;
+		if (getOccursSpecification() != null) {
+			result *= getOccursSpecification().getCount();
+		}
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getSyntaxName() {		
+		return getBaseName();		
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public short getSyntaxPosition() {		
+		List<Element> parentElementsWithAnOccurs = new ArrayList<>();
+		Element parent = getParent();
+		while (parent != null) {
+			if (parent.getOccursSpecification() != null) {
+				parentElementsWithAnOccurs.add(parent);
+			}
+			parent = parent.getParent();
+		}
+		if (!parentElementsWithAnOccurs.isEmpty()) {
+			if (parentElementsWithAnOccurs.size() > 1) {
+				// multi-dimensional table		
+				return (short) (getOffset() - parentElementsWithAnOccurs.get(0).getOffset() + 1);
+			} else {
+				// single-dimensional table
+				return (short) (getOffset() + 2 - 
+						    	parentElementsWithAnOccurs.get(0)
+							    						  .getSyntaxPosition());
+			}
 		} else {
-			return getName();
+			return (short) (getOffset() + 1);
 		}
 	}
 
@@ -795,10 +900,14 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case SchemaPackage.ELEMENT__REDEFINES:
 				if (resolve) return getRedefines();
 				return basicGetRedefines();
-			case SchemaPackage.ELEMENT__SYNTAX_NAME:
-				return getSyntaxName();
+			case SchemaPackage.ELEMENT__SYNTAX_LENGTH:
+				return getSyntaxLength();
+			case SchemaPackage.ELEMENT__SYNTAX_POSITION:
+				return getSyntaxPosition();
 			case SchemaPackage.ELEMENT__USAGE:
 				return getUsage();
+			case SchemaPackage.ELEMENT__VALUE:
+				return getValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -850,6 +959,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case SchemaPackage.ELEMENT__USAGE:
 				setUsage((Usage)newValue);
 				return;
+			case SchemaPackage.ELEMENT__VALUE:
+				setValue((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -898,6 +1010,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case SchemaPackage.ELEMENT__USAGE:
 				setUsage(USAGE_EDEFAULT);
 				return;
+			case SchemaPackage.ELEMENT__VALUE:
+				setValue(VALUE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -936,10 +1051,14 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return getRecord() != null;
 			case SchemaPackage.ELEMENT__REDEFINES:
 				return redefines != null;
-			case SchemaPackage.ELEMENT__SYNTAX_NAME:
-				return SYNTAX_NAME_EDEFAULT == null ? getSyntaxName() != null : !SYNTAX_NAME_EDEFAULT.equals(getSyntaxName());
+			case SchemaPackage.ELEMENT__SYNTAX_LENGTH:
+				return getSyntaxLength() != SYNTAX_LENGTH_EDEFAULT;
+			case SchemaPackage.ELEMENT__SYNTAX_POSITION:
+				return getSyntaxPosition() != SYNTAX_POSITION_EDEFAULT;
 			case SchemaPackage.ELEMENT__USAGE:
 				return usage != USAGE_EDEFAULT;
+			case SchemaPackage.ELEMENT__VALUE:
+				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -966,6 +1085,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 		result.append(picture);
 		result.append(", usage: ");
 		result.append(usage);
+		result.append(", value: ");
+		result.append(value);
 		result.append(')');
 		return result.toString();
 	}

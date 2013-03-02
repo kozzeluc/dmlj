@@ -68,7 +68,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchema()
 	 * @generated
 	 */
-	int SCHEMA = 21;
+	int SCHEMA = 22;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaAreaImpl <em>Area</em>}' class.
@@ -78,7 +78,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchemaArea()
 	 * @generated
 	 */
-	int SCHEMA_AREA = 22;
+	int SCHEMA_AREA = 23;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaRecordImpl <em>Record</em>}' class.
@@ -88,7 +88,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchemaRecord()
 	 * @generated
 	 */
-	int SCHEMA_RECORD = 23;
+	int SCHEMA_RECORD = 24;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SetImpl <em>Set</em>}' class.
@@ -98,7 +98,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSet()
 	 * @generated
 	 */
-	int SET = 24;
+	int SET = 25;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ElementImpl <em>Element</em>}' class.
@@ -118,7 +118,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getKeyElement()
 	 * @generated
 	 */
-	int KEY_ELEMENT = 12;
+	int KEY_ELEMENT = 13;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SystemOwnerImpl <em>System Owner</em>}' class.
@@ -128,7 +128,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSystemOwner()
 	 * @generated
 	 */
-	int SYSTEM_OWNER = 25;
+	int SYSTEM_OWNER = 26;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl <em>Via Specification</em>}' class.
@@ -138,7 +138,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getViaSpecification()
 	 * @generated
 	 */
-	int VIA_SPECIFICATION = 26;
+	int VIA_SPECIFICATION = 27;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.KeyImpl <em>Key</em>}' class.
@@ -148,7 +148,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getKey()
 	 * @generated
 	 */
-	int KEY = 11;
+	int KEY = 12;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.AreaSpecificationImpl <em>Area Specification</em>}' class.
@@ -168,7 +168,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOffsetExpression()
 	 * @generated
 	 */
-	int OFFSET_EXPRESSION = 15;
+	int OFFSET_EXPRESSION = 16;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl <em>Indexed Set Mode Specification</em>}' class.
@@ -361,7 +361,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRole()
 	 * @generated
 	 */
-	int ROLE = 19;
+	int ROLE = 20;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl <em>Record Procedure Call Specification</em>}' class.
@@ -371,7 +371,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallSpecification()
 	 * @generated
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION = 18;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION = 19;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ProcedureImpl <em>Procedure</em>}' class.
@@ -381,7 +381,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedure()
 	 * @generated
 	 */
-	int PROCEDURE = 17;
+	int PROCEDURE = 18;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl <em>Occurs Specification</em>}' class.
@@ -391,7 +391,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOccursSpecification()
 	 * @generated
 	 */
-	int OCCURS_SPECIFICATION = 14;
+	int OCCURS_SPECIFICATION = 15;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.MemberRoleImpl <em>Member Role</em>}' class.
@@ -401,7 +401,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getMemberRole()
 	 * @generated
 	 */
-	int MEMBER_ROLE = 13;
+	int MEMBER_ROLE = 14;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.OwnerRoleImpl <em>Owner Role</em>}' class.
@@ -411,7 +411,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOwnerRole()
 	 * @generated
 	 */
-	int OWNER_ROLE = 16;
+	int OWNER_ROLE = 17;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramNodeImpl <em>Diagram Node</em>}' class.
@@ -842,13 +842,22 @@ public interface SchemaPackage extends EPackage {
 	int ELEMENT__REDEFINES = 12;
 
 	/**
-	 * The feature id for the '<em><b>Syntax Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Syntax Length</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__SYNTAX_NAME = 13;
+	int ELEMENT__SYNTAX_LENGTH = 13;
+
+	/**
+	 * The feature id for the '<em><b>Syntax Position</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__SYNTAX_POSITION = 14;
 
 	/**
 	 * The feature id for the '<em><b>Usage</b></em>' attribute.
@@ -857,7 +866,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT__USAGE = 14;
+	int ELEMENT__USAGE = 15;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__VALUE = 16;
 
 	/**
 	 * The number of structural features of the '<em>Element</em>' class.
@@ -866,7 +884,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_FEATURE_COUNT = 15;
+	int ELEMENT_FEATURE_COUNT = 17;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.GuideImpl <em>Guide</em>}' class.
@@ -940,6 +958,52 @@ public interface SchemaPackage extends EPackage {
 	 * @ordered
 	 */
 	int INDEXED_SET_MODE_SPECIFICATION_FEATURE_COUNT = 4;
+
+	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.IndexElementImpl <em>Index Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.IndexElementImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getIndexElement()
+	 * @generated
+	 */
+	int INDEX_ELEMENT = 11;
+
+	/**
+	 * The feature id for the '<em><b>Base Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEX_ELEMENT__BASE_NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEX_ELEMENT__NAME = 1;
+
+	/**
+	 * The feature id for the '<em><b>Occurs Specification</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEX_ELEMENT__OCCURS_SPECIFICATION = 2;
+
+	/**
+	 * The number of structural features of the '<em>Index Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEX_ELEMENT_FEATURE_COUNT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Calc Key</b></em>' attribute.
@@ -1212,13 +1276,22 @@ public interface SchemaPackage extends EPackage {
 	int OCCURS_SPECIFICATION__ELEMENT = 2;
 
 	/**
+	 * The feature id for the '<em><b>Index Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OCCURS_SPECIFICATION__INDEX_ELEMENTS = 3;
+
+	/**
 	 * The number of structural features of the '<em>Occurs Specification</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int OCCURS_SPECIFICATION_FEATURE_COUNT = 3;
+	int OCCURS_SPECIFICATION_FEATURE_COUNT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Area Specification</b></em>' container reference.
@@ -1390,7 +1463,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRuler()
 	 * @generated
 	 */
-	int RULER = 20;
+	int RULER = 21;
 
 	/**
 	 * The feature id for the '<em><b>Guides</b></em>' containment reference list.
@@ -1591,13 +1664,31 @@ public interface SchemaPackage extends EPackage {
 	int SCHEMA_RECORD__DIAGRAM_LOCATION = DIAGRAM_NODE__DIAGRAM_LOCATION;
 
 	/**
+	 * The feature id for the '<em><b>Base Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__BASE_NAME = DIAGRAM_NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Base Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__BASE_VERSION = DIAGRAM_NODE_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Control Length</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__CONTROL_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 0;
+	int SCHEMA_RECORD__CONTROL_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Data Length</b></em>' attribute.
@@ -1606,7 +1697,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__DATA_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 1;
+	int SCHEMA_RECORD__DATA_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Fragmented</b></em>' attribute.
@@ -1615,7 +1706,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__FRAGMENTED = DIAGRAM_NODE_FEATURE_COUNT + 2;
+	int SCHEMA_RECORD__FRAGMENTED = DIAGRAM_NODE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -1624,7 +1715,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__ID = DIAGRAM_NODE_FEATURE_COUNT + 3;
+	int SCHEMA_RECORD__ID = DIAGRAM_NODE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Location Mode</b></em>' attribute.
@@ -1633,7 +1724,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__LOCATION_MODE = DIAGRAM_NODE_FEATURE_COUNT + 4;
+	int SCHEMA_RECORD__LOCATION_MODE = DIAGRAM_NODE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Minimum Fragment Length</b></em>' attribute.
@@ -1642,7 +1733,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__MINIMUM_FRAGMENT_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 5;
+	int SCHEMA_RECORD__MINIMUM_FRAGMENT_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Minimum Root Length</b></em>' attribute.
@@ -1651,7 +1742,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__MINIMUM_ROOT_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 6;
+	int SCHEMA_RECORD__MINIMUM_ROOT_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1660,7 +1751,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__NAME = DIAGRAM_NODE_FEATURE_COUNT + 7;
+	int SCHEMA_RECORD__NAME = DIAGRAM_NODE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Prefix Length</b></em>' attribute.
@@ -1669,7 +1760,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__PREFIX_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 8;
+	int SCHEMA_RECORD__PREFIX_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Storage Mode</b></em>' attribute.
@@ -1678,7 +1769,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__STORAGE_MODE = DIAGRAM_NODE_FEATURE_COUNT + 9;
+	int SCHEMA_RECORD__STORAGE_MODE = DIAGRAM_NODE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Area Specification</b></em>' reference.
@@ -1687,7 +1778,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__AREA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 10;
+	int SCHEMA_RECORD__AREA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Calc Key</b></em>' reference.
@@ -1696,7 +1787,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__CALC_KEY = DIAGRAM_NODE_FEATURE_COUNT + 11;
+	int SCHEMA_RECORD__CALC_KEY = DIAGRAM_NODE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -1705,7 +1796,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__ELEMENTS = DIAGRAM_NODE_FEATURE_COUNT + 12;
+	int SCHEMA_RECORD__ELEMENTS = DIAGRAM_NODE_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Keys</b></em>' containment reference list.
@@ -1714,7 +1805,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__KEYS = DIAGRAM_NODE_FEATURE_COUNT + 13;
+	int SCHEMA_RECORD__KEYS = DIAGRAM_NODE_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Member Roles</b></em>' reference list.
@@ -1723,7 +1814,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__MEMBER_ROLES = DIAGRAM_NODE_FEATURE_COUNT + 14;
+	int SCHEMA_RECORD__MEMBER_ROLES = DIAGRAM_NODE_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Owner Roles</b></em>' reference list.
@@ -1732,7 +1823,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__OWNER_ROLES = DIAGRAM_NODE_FEATURE_COUNT + 15;
+	int SCHEMA_RECORD__OWNER_ROLES = DIAGRAM_NODE_FEATURE_COUNT + 17;
 
 	/**
 	 * The feature id for the '<em><b>Procedures</b></em>' containment reference list.
@@ -1741,7 +1832,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__PROCEDURES = DIAGRAM_NODE_FEATURE_COUNT + 16;
+	int SCHEMA_RECORD__PROCEDURES = DIAGRAM_NODE_FEATURE_COUNT + 18;
 
 	/**
 	 * The feature id for the '<em><b>Roles</b></em>' reference list.
@@ -1750,7 +1841,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__ROLES = DIAGRAM_NODE_FEATURE_COUNT + 17;
+	int SCHEMA_RECORD__ROLES = DIAGRAM_NODE_FEATURE_COUNT + 19;
 
 	/**
 	 * The feature id for the '<em><b>Root Elements</b></em>' reference list.
@@ -1759,7 +1850,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__ROOT_ELEMENTS = DIAGRAM_NODE_FEATURE_COUNT + 18;
+	int SCHEMA_RECORD__ROOT_ELEMENTS = DIAGRAM_NODE_FEATURE_COUNT + 20;
 
 	/**
 	 * The feature id for the '<em><b>Schema</b></em>' container reference.
@@ -1768,7 +1859,25 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__SCHEMA = DIAGRAM_NODE_FEATURE_COUNT + 19;
+	int SCHEMA_RECORD__SCHEMA = DIAGRAM_NODE_FEATURE_COUNT + 21;
+
+	/**
+	 * The feature id for the '<em><b>Synonym Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__SYNONYM_NAME = DIAGRAM_NODE_FEATURE_COUNT + 22;
+
+	/**
+	 * The feature id for the '<em><b>Synonym Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__SYNONYM_VERSION = DIAGRAM_NODE_FEATURE_COUNT + 23;
 
 	/**
 	 * The feature id for the '<em><b>Via Specification</b></em>' containment reference.
@@ -1777,7 +1886,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__VIA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 20;
+	int SCHEMA_RECORD__VIA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 24;
 
 	/**
 	 * The number of structural features of the '<em>Record</em>' class.
@@ -1786,7 +1895,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 21;
+	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 25;
 
 	/**
 	 * The feature id for the '<em><b>Indexed Set Mode Specification</b></em>' containment reference.
@@ -1967,7 +2076,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetOrder()
 	 * @generated
 	 */
-	int SET_ORDER = 36;
+	int SET_ORDER = 37;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.DuplicatesOption <em>Duplicates Option</em>}' enum.
@@ -1977,7 +2086,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDuplicatesOption()
 	 * @generated
 	 */
-	int DUPLICATES_OPTION = 28;
+	int DUPLICATES_OPTION = 29;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.LabelAlignment <em>Label Alignment</em>}' enum.
@@ -1987,7 +2096,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getLabelAlignment()
 	 * @generated
 	 */
-	int LABEL_ALIGNMENT = 29;
+	int LABEL_ALIGNMENT = 30;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.LocationMode <em>Location Mode</em>}' enum.
@@ -1997,7 +2106,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getLocationMode()
 	 * @generated
 	 */
-	int LOCATION_MODE = 30;
+	int LOCATION_MODE = 31;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMode <em>Set Mode</em>}' enum.
@@ -2007,7 +2116,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetMode()
 	 * @generated
 	 */
-	int SET_MODE = 35;
+	int SET_MODE = 36;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.StorageMode <em>Storage Mode</em>}' enum.
@@ -2017,7 +2126,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getStorageMode()
 	 * @generated
 	 */
-	int STORAGE_MODE = 38;
+	int STORAGE_MODE = 39;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.Unit <em>Unit</em>}' enum.
@@ -2027,7 +2136,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getUnit()
 	 * @generated
 	 */
-	int UNIT = 39;
+	int UNIT = 40;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMembershipOption <em>Set Membership Option</em>}' enum.
@@ -2037,7 +2146,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetMembershipOption()
 	 * @generated
 	 */
-	int SET_MEMBERSHIP_OPTION = 34;
+	int SET_MEMBERSHIP_OPTION = 35;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SortSequence <em>Sort Sequence</em>}' enum.
@@ -2047,7 +2156,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSortSequence()
 	 * @generated
 	 */
-	int SORT_SEQUENCE = 37;
+	int SORT_SEQUENCE = 38;
 
 
 	/**
@@ -2058,7 +2167,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedureCallTime()
 	 * @generated
 	 */
-	int PROCEDURE_CALL_TIME = 31;
+	int PROCEDURE_CALL_TIME = 32;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.AreaProcedureCallFunction <em>Area Procedure Call Function</em>}' enum.
@@ -2068,7 +2177,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getAreaProcedureCallFunction()
 	 * @generated
 	 */
-	int AREA_PROCEDURE_CALL_FUNCTION = 27;
+	int AREA_PROCEDURE_CALL_FUNCTION = 28;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.RecordProcedureCallVerb <em>Record Procedure Call Verb</em>}' enum.
@@ -2078,7 +2187,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallVerb()
 	 * @generated
 	 */
-	int RECORD_PROCEDURE_CALL_VERB = 32;
+	int RECORD_PROCEDURE_CALL_VERB = 33;
 
 
 	/**
@@ -2089,7 +2198,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRulerType()
 	 * @generated
 	 */
-	int RULER_TYPE = 33;
+	int RULER_TYPE = 34;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.Usage <em>Usage</em>}' enum.
@@ -2099,7 +2208,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getUsage()
 	 * @generated
 	 */
-	int USAGE = 40;
+	int USAGE = 41;
 
 
 	/**
@@ -2298,6 +2407,28 @@ public interface SchemaPackage extends EPackage {
 	EClass getSchemaRecord();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#getBaseName <em>Base Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Base Name</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#getBaseName()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_BaseName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#getBaseVersion <em>Base Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Base Version</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#getBaseVersion()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_BaseVersion();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2428,6 +2559,28 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getSchemaRecord_Schema();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#getSynonymName <em>Synonym Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Synonym Name</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#getSynonymName()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_SynonymName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#getSynonymVersion <em>Synonym Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Synonym Version</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#getSynonymVersion()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_SynonymVersion();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.SchemaRecord#getViaSpecification <em>Via Specification</em>}'.
@@ -2745,6 +2898,17 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getElement_Usage();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Element#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.lh.dmlj.schema.Element#getValue()
+	 * @see #getElement()
+	 * @generated
+	 */
+	EAttribute getElement_Value();
+
+	/**
 	 * Returns the meta object for class '{@link org.lh.dmlj.schema.Guide <em>Guide</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2854,15 +3018,26 @@ public interface SchemaPackage extends EPackage {
 	EReference getElement_Redefines();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Element#getSyntaxName <em>Syntax Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Element#getSyntaxLength <em>Syntax Length</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Syntax Name</em>'.
-	 * @see org.lh.dmlj.schema.Element#getSyntaxName()
+	 * @return the meta object for the attribute '<em>Syntax Length</em>'.
+	 * @see org.lh.dmlj.schema.Element#getSyntaxLength()
 	 * @see #getElement()
 	 * @generated
 	 */
-	EAttribute getElement_SyntaxName();
+	EAttribute getElement_SyntaxLength();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Element#getSyntaxPosition <em>Syntax Position</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Syntax Position</em>'.
+	 * @see org.lh.dmlj.schema.Element#getSyntaxPosition()
+	 * @see #getElement()
+	 * @generated
+	 */
+	EAttribute getElement_SyntaxPosition();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.Element#getOccursSpecification <em>Occurs Specification</em>}'.
@@ -3818,6 +3993,49 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getIndexedSetModeSpecification_SymbolicIndexName();
 
 	/**
+	 * Returns the meta object for class '{@link org.lh.dmlj.schema.IndexElement <em>Index Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Index Element</em>'.
+	 * @see org.lh.dmlj.schema.IndexElement
+	 * @generated
+	 */
+	EClass getIndexElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.IndexElement#getBaseName <em>Base Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Base Name</em>'.
+	 * @see org.lh.dmlj.schema.IndexElement#getBaseName()
+	 * @see #getIndexElement()
+	 * @generated
+	 */
+	EAttribute getIndexElement_BaseName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.IndexElement#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.lh.dmlj.schema.IndexElement#getName()
+	 * @see #getIndexElement()
+	 * @generated
+	 */
+	EAttribute getIndexElement_Name();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.IndexElement#getOccursSpecification <em>Occurs Specification</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Occurs Specification</em>'.
+	 * @see org.lh.dmlj.schema.IndexElement#getOccursSpecification()
+	 * @see #getIndexElement()
+	 * @generated
+	 */
+	EReference getIndexElement_OccursSpecification();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.IndexedSetModeSpecification#getKeyCount <em>Key Count</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4021,6 +4239,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getOccursSpecification_Element();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.lh.dmlj.schema.OccursSpecification#getIndexElements <em>Index Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Index Elements</em>'.
+	 * @see org.lh.dmlj.schema.OccursSpecification#getIndexElements()
+	 * @see #getOccursSpecification()
+	 * @generated
+	 */
+	EReference getOccursSpecification_IndexElements();
 
 	/**
 	 * Returns the meta object for enum '{@link org.lh.dmlj.schema.SetOrder <em>Set Order</em>}'.
@@ -4335,6 +4564,22 @@ public interface SchemaPackage extends EPackage {
 		EClass SCHEMA_RECORD = eINSTANCE.getSchemaRecord();
 
 		/**
+		 * The meta object literal for the '<em><b>Base Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__BASE_NAME = eINSTANCE.getSchemaRecord_BaseName();
+
+		/**
+		 * The meta object literal for the '<em><b>Base Version</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__BASE_VERSION = eINSTANCE.getSchemaRecord_BaseVersion();
+
+		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4429,6 +4674,22 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SCHEMA_RECORD__SCHEMA = eINSTANCE.getSchemaRecord_Schema();
+
+		/**
+		 * The meta object literal for the '<em><b>Synonym Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__SYNONYM_NAME = eINSTANCE.getSchemaRecord_SynonymName();
+
+		/**
+		 * The meta object literal for the '<em><b>Synonym Version</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__SYNONYM_VERSION = eINSTANCE.getSchemaRecord_SynonymVersion();
 
 		/**
 		 * The meta object literal for the '<em><b>Via Specification</b></em>' containment reference feature.
@@ -4671,6 +4932,14 @@ public interface SchemaPackage extends EPackage {
 		EAttribute ELEMENT__USAGE = eINSTANCE.getElement_Usage();
 
 		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT__VALUE = eINSTANCE.getElement_Value();
+
+		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.GuideImpl <em>Guide</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4753,12 +5022,20 @@ public interface SchemaPackage extends EPackage {
 		EReference ELEMENT__REDEFINES = eINSTANCE.getElement_Redefines();
 
 		/**
-		 * The meta object literal for the '<em><b>Syntax Name</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Syntax Length</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ELEMENT__SYNTAX_NAME = eINSTANCE.getElement_SyntaxName();
+		EAttribute ELEMENT__SYNTAX_LENGTH = eINSTANCE.getElement_SyntaxLength();
+
+		/**
+		 * The meta object literal for the '<em><b>Syntax Position</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT__SYNTAX_POSITION = eINSTANCE.getElement_SyntaxPosition();
 
 		/**
 		 * The meta object literal for the '<em><b>Occurs Specification</b></em>' containment reference feature.
@@ -5495,6 +5772,40 @@ public interface SchemaPackage extends EPackage {
 		EAttribute INDEXED_SET_MODE_SPECIFICATION__SYMBOLIC_INDEX_NAME = eINSTANCE.getIndexedSetModeSpecification_SymbolicIndexName();
 
 		/**
+		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.IndexElementImpl <em>Index Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.lh.dmlj.schema.impl.IndexElementImpl
+		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getIndexElement()
+		 * @generated
+		 */
+		EClass INDEX_ELEMENT = eINSTANCE.getIndexElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Base Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INDEX_ELEMENT__BASE_NAME = eINSTANCE.getIndexElement_BaseName();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute INDEX_ELEMENT__NAME = eINSTANCE.getIndexElement_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Occurs Specification</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INDEX_ELEMENT__OCCURS_SPECIFICATION = eINSTANCE.getIndexElement_OccursSpecification();
+
+		/**
 		 * The meta object literal for the '<em><b>Key Count</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5653,6 +5964,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference OCCURS_SPECIFICATION__ELEMENT = eINSTANCE.getOccursSpecification_Element();
+
+		/**
+		 * The meta object literal for the '<em><b>Index Elements</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference OCCURS_SPECIFICATION__INDEX_ELEMENTS = eINSTANCE.getOccursSpecification_IndexElements();
 
 		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.SetOrder <em>Set Order</em>}' enum.
