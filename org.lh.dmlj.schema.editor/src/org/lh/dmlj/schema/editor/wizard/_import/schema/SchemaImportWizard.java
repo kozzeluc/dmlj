@@ -332,8 +332,10 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		// get a hold of the record layout manager and its (optional) parameters
 		final AbstractRecordLayoutManager recordLayoutManager = 
 			layoutManagerSelectionPage.getExtensionElement().getLayoutManager();
-		final Properties layoutManagerParms = 
-			layoutManagerSelectionPage.getExtensionElement().getParameters();		
+		final Properties configuredLayoutManagerParms = 
+			layoutManagerSelectionPage.getExtensionElement().getConfiguredParameters();
+		final Properties userSpecifiedLayoutManagerParms = 
+			layoutManagerSelectionPage.getUserEnteredParameters();			
 		
 		// populate the schema and persist it to the file specified by the user;
     	// do the work within an operation.		
@@ -364,7 +366,8 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 					// and set labels - perform validations as we go
 					LayoutManager layoutManager = 
 						new LayoutManager(schema, recordLayoutManager, 
-										  layoutManagerParms);
+										  configuredLayoutManagerParms,
+										  userSpecifiedLayoutManagerParms);
 					layoutManager.layout();					
 					
 					// Create a resource set

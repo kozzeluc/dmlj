@@ -13,7 +13,8 @@ public class StandardRecordLayoutManager extends AbstractRecordLayoutManager {
 	}
 
 	@Override
-	public void layout(List<SchemaRecord> records, Properties parms) {
+	public void layout(List<SchemaRecord> records, Properties configuredParms,
+					   Properties userParms) {
 		// since we know how many records the schema contains, compute the
 		// number of columns so that it is about the same as the number of 
 		// rows...

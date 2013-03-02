@@ -15,24 +15,27 @@ import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
 
 public class LayoutManager {
 	
-	private Properties					parms;
+	private Properties					configuredParms;
 	private AbstractRecordLayoutManager recordLayoutManager;
 	private Schema 						schema;	
+	private Properties					userParms;
 
 	public LayoutManager(Schema schema,
 						 AbstractRecordLayoutManager recordLayoutManager,
-						 Properties parms) {
+						 Properties configuredParms, Properties userParms) {
 		super();
 		this.schema = schema;
 		this.recordLayoutManager = recordLayoutManager;
-		this.parms = parms;
+		this.configuredParms = configuredParms;
+		this.userParms = userParms;
 	}
 	
 	public void layout() {
 		if (schema.getRecords().isEmpty()) {
 			return;
 		}				
-		recordLayoutManager.layout(schema.getRecords(), parms);
+		recordLayoutManager.layout(schema.getRecords(), configuredParms,
+								   userParms);
 		layoutConnectionLabelsAndSystemOwners(schema);		
 	}
 	

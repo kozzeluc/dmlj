@@ -27,6 +27,15 @@ public class LayoutManagerExtensionElement extends AbstractExtensionElement {
 					  "wrong IConfigurationElement: " + configElement.getName());
 	}	
 
+	public Properties getConfiguredParameters() {
+		if (parameters == null) {		
+			parameters = 
+				Util.getResourceAsProperties(configElement, 
+											 ExtensionPointConstants.ATTRIBUTE_PARAMETERS);
+		}
+		return parameters;
+	}
+
 	public ImageDescriptor getImageDescriptor() {
 		if (imageDescriptor == null) {
 			imageDescriptor = 
@@ -57,15 +66,6 @@ public class LayoutManagerExtensionElement extends AbstractExtensionElement {
 		}
 	}
 
-	public Properties getParameters() {
-		if (parameters == null) {		
-			parameters = 
-				Util.getResourceAsProperties(configElement, 
-											 ExtensionPointConstants.ATTRIBUTE_PARAMETERS);
-		}
-		return parameters;
-	}
-	
 	public List<ValidForExtensionElement> getValidForExtensionElements() {
 		// get the schemas to which the layout manager applies;
 		// if nothing is configured, then the layout manager is
@@ -83,6 +83,14 @@ public class LayoutManagerExtensionElement extends AbstractExtensionElement {
 		return validForExtensionElements;
 	}
 
+	public boolean isPromptForPropertiesFile() {
+		String promptForPropertiesFile = 
+			Util.getAttribute(configElement, 
+		  			 		  ExtensionPointConstants.ATTRIBUTE_PROMPT_FOR_PROPERTIES_FILE, 
+		  			 		  "false");
+		return Boolean.valueOf(promptForPropertiesFile);	
+	}
+	
 	public boolean isValidFor(String schemaName, short schemaVersion) {
 		if (getValidForExtensionElements().isEmpty()) {
 			return true;

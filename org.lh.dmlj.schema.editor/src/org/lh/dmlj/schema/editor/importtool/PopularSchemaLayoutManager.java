@@ -8,8 +8,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 
-public final class PopularSchemaLayoutManager 
-	extends AbstractRecordLayoutManager {
+public class PopularSchemaLayoutManager extends AbstractRecordLayoutManager {
 	
 	private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";		
 	
@@ -18,7 +17,8 @@ public final class PopularSchemaLayoutManager
 	}
 	
 	@Override
-	public void layout(List<SchemaRecord> records, Properties locations) {				
+	public void layout(List<SchemaRecord> records, 
+					   Properties locations, Properties unused) {				
 		
 		Schema schema = records.get(0).getSchema();
 		

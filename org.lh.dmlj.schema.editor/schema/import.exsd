@@ -346,11 +346,18 @@ A number of data entry pages can be configured for each import tool; some of the
          <attribute name="parameters" type="string">
             <annotation>
                <documentation>
-                  A .properties file that configures the layout manager.
+                  A pre-configured .properties file that configures the layout manager.
                </documentation>
                <appinfo>
                   <meta.attribute kind="resource"/>
                </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="promptForPropertiesFile" type="boolean">
+            <annotation>
+               <documentation>
+                  When set to true, the layout manager selection page requires a .properties file to be specified to configure the layout manager.
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

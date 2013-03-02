@@ -42,7 +42,8 @@ public abstract class AbstractRecordLayoutManager {
 	}
 
 	public abstract void layout(List<SchemaRecord> records, 
-								Properties parameters);
+								Properties configuredParameters,
+								Properties userParameters);
 	
 	protected void setDiagramData(SchemaRecord record, int x, int y) {		
 		DiagramLocation location =

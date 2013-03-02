@@ -290,7 +290,7 @@
          <recordLayoutManager
                class="org.lh.dmlj.schema.editor.importtool.PopularSchemaLayoutManager"
                description="Manages the layout of all records in schema EMPSCHM version 100."
-               id="org.lh.dmlj.schema.editor.layoutManager3"
+               id="org.lh.dmlj.schema.editor.layoutManager1"
                image="icons/record_lm_empschm_v100.gif"
                name="EMPSCHM version 100"
                parameters="resources/EMPSCHM version 100 (Record Locations).properties">
@@ -314,9 +314,17 @@
          <recordLayoutManager
                class="org.lh.dmlj.schema.editor.wizard._import.schema.StandardRecordLayoutManager"
                description="Manages the layout of all records in any schema and tries to create an equal number of rows and columns in the diagram."
-               id="org.lh.dmlj.schema.editor.importtool.layoutManager1"
+               id="org.lh.dmlj.schema.editor.layoutManager3"
                image="icons/record_lm_standard.gif"
                name="Standard">
+         </recordLayoutManager>
+         <recordLayoutManager
+               class="org.lh.dmlj.schema.editor.wizard._import.schema.GridRecordLayoutManager"
+               description="Manages the layout of all records in any schema using a .properties file that specifies the coordinates of each record in a grid.  Coordinates are specified in Excel style (A1, A2, ...)."
+               id="org.lh.dmlj.schema.editor.layoutManager4"
+               image="icons/record_lm_empschm_v100.gif"
+               name="Grid"
+               promptForPropertiesFile="true">
          </recordLayoutManager>
       </recordLayoutManagers>
       <importTools>

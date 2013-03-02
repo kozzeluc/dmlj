@@ -31,8 +31,11 @@ public class ExtensionPointConstants {
 		"mutuallyExclusiveWith";
 	public static final String ATTRIBUTE_NAME = "name";
 	public static final String ATTRIBUTE_PARAMETERS = "parameters";	
+	public static final String ATTRIBUTE_PROMPT_FOR_PROPERTIES_FILE = 
+		"promptForPropertiesFile";
 	public static final String ATTRIBUTE_SCHEMA_NAME = "schemaName";	
 	public static final String ATTRIBUTE_SCHEMA_VERSIONS = "schemaVersions";	
-	public static final String ATTRIBUTE_SOURCE = "source";
+	public static final String ATTRIBUTE_SOURCE = "source";	
+	
 	
 }
