@@ -9,6 +9,7 @@
             contributorClass="org.lh.dmlj.schema.editor.SchemaEditorActionBarContributor"
             default="true"
             extensions="schema"
+            icon="icons/schema.gif"
             id="org.lh.dmlj.schema.editor.schemaeditor"
             name="Schema Editor">
       </editor>
