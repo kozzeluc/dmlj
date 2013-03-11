@@ -30,7 +30,25 @@ public class ElementDataCollector
 			String prefix = context.getProperties().getProperty("prefix");
 			p.append(prefix);
 		}
-		p.append(elementName);
+		if (context.getProperties().containsKey("baseSuffix") &&
+			containsBaseNamesFlag) {
+			
+			// remove the base suffix from the element name and add the 
+			// remaining part to the full element name
+			
+			String baseSuffix = 
+				context.getProperties().getProperty("baseSuffix");
+			int i = elementName.lastIndexOf(baseSuffix);
+			if (i < 0) {
+				throw new RuntimeException("logic error: base suffix (" +
+										   baseSuffix +
+										   ") not in element name (" +
+										   elementName + ")");
+			}
+			p.append(elementName.substring(0, i));
+		} else {
+			p.append(elementName);
+		}
 		if (context.getProperties().containsKey("suffix") &&
 			containsBaseNamesFlag) {			
 			

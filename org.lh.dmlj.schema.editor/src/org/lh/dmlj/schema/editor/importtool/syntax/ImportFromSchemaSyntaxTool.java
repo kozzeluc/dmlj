@@ -56,7 +56,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		
 		// remove the suffix only when containsBaseNamesFlag is set to true AND
 		// control fields (CALC or sort key) indicate that a suffix was set 
-		// suffix was set while it shouldn't have been
+		// while it shouldn't have been
 		boolean containsBaseNamesFlag = 
 			Boolean.valueOf(context.getProperties()
 				   .getProperty("containsBaseNamesFlag"))
@@ -82,7 +82,13 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		if (suffix == null) {
 			throw new RuntimeException("logic error; suffix expected for " +
 									   recordDataCollector.getName(context));
-		}		
+		}	
+		
+		// ...there might even be a base name suffix
+		String baseSuffix = null;
+		if (context.getProperties().containsKey("baseSuffix")) {
+			baseSuffix = context.getProperties().getProperty("baseSuffix");
+		}
 		
 		// get a list of all FULL element names (the order will not correspond 
 		// with the real order); scan the whole record syntax in stead of 
@@ -99,8 +105,19 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 					String elementName = p.substring(3);
 					if (!elementName.equals("FILLER")) {
 						// skip FILLER elements
-						StringBuilder fullElementName = new StringBuilder();						
-						fullElementName.append(elementName);
+						StringBuilder fullElementName = new StringBuilder();
+						if (baseSuffix != null) {
+							int i = elementName.lastIndexOf(baseSuffix);
+							if (i < 0) {
+								throw new RuntimeException("logic error: base suffix (" +
+														   baseSuffix +
+														   ") not in element name (" +
+														   elementName + ")");
+							}
+							fullElementName.append(elementName.substring(0, i));
+						} else {
+							fullElementName.append(elementName);
+						}
 						fullElementName.append(suffix);
 						allFullElementNames.add(fullElementName.toString());
 					}
@@ -289,6 +306,11 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 					listWrapper.getProperties().put("containsBaseNamesFlag", 
 													containsBaseNamesFlag);
 				}
+				if (context.getProperties().containsKey("baseSuffix")) {
+					String baseSuffix = 
+						context.getProperties().getProperty("baseSuffix");
+					listWrapper.getProperties().put("baseSuffix", baseSuffix);
+				}				
 			} 
 			if (listWrapper != null) {
 				listWrapper.getLines().add(aLine);
@@ -538,7 +560,49 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 				}
 			}				
 		}
-		return false; // logic error		
+		
+		// we could not derive a prefix nor suffix and yet we expect one... a 
+		// very last attempt in matching the key element name passed to an 
+		// element in the record is to try to detect a suffix in the base names		
+		String baseSuffix = null;
+		for (String baseElementName : allElementNames) {
+			int i = baseElementName.lastIndexOf("-");
+			if (i < 0) {
+				return false; // no base name suffix: logic error
+			}
+			if (baseSuffix == null) {
+				baseSuffix = baseElementName.substring(i);
+			} else if (!baseElementName.substring(i).equals(baseSuffix)) {
+				return false; // no base name suffix: logic error
+			}
+		}	
+		// set the baseSuffix and containsBaseNamesFlag in the context
+		context.getProperties().put("baseSuffix", baseSuffix);
+		context.getProperties().put("containsBaseNamesFlag",
+									String.valueOf(Boolean.TRUE));
+		// now try to derive the suffix again (forget about a prefix, we will
+		// not supporting that here in order not to make things too complicated)
+		int j = modelElementName.lastIndexOf("-");
+		if (j < 0) {
+			// no suffix
+			return true;
+		}
+		String suffix = modelElementName.substring(j);
+		for (String baseElementName : allElementNames) {
+			int i = baseElementName.lastIndexOf(baseSuffix);
+			String elementName = baseElementName.substring(0, i);
+			if (elementName.equals(modelElementName)) {
+				// no suffix since we have a perfect match				
+				return true;
+			}
+			if (modelElementName.equals(elementName + suffix)) {
+				// we can confirm the suffix; set it in the context
+				context.getProperties().put("suffix", suffix);
+				return true;
+			}
+		}
+		
+		return false; // no suffix: logic error
 		
 	}
 
