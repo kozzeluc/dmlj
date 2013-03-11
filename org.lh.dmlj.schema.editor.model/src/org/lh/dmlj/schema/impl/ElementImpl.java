@@ -564,7 +564,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 				} else if (getPicture().equals("9(01)V99")) {
 					return 3;
 				} else if (getPicture().equals("9(05)V99")) {
-					return 3;
+					return 7;
 				} else if (getPicture().equals("9V9(04)")) {
 					return 5;
 				} else if (getPicture().equals("9V9(10)")) {
