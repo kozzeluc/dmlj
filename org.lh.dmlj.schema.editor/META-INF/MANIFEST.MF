@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.lh.dmlj.schema.editor;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.lh.dmlj.schema.editor.Plugin
 Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.expressions,
  org.eclipse.core.runtime,
  org.eclipse.draw2d,
  org.eclipse.emf.ecore.xmi,

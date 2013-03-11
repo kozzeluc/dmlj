@@ -459,9 +459,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 	public short getLength() {
 		// *********************************************************************
 		// This method does not guarantee to be able to return a length for each
-		// element, so it needs some fine-tuning.  It will throw an 
-		// UnsupportedOperationException in the case where it cannot derive an
-		// element's length.
+		// element, so it needs some fine-tuning (read: it has to be redesigned
+		// from scratch).  It will throw an UnsupportedOperationException in the 
+		// case an element's length cannot be derived.
 		// *********************************************************************
 		if (getUsage() == Usage.COMPUTATIONAL_1) {
 			return 4;
@@ -496,8 +496,16 @@ public class ElementImpl extends EObjectImpl implements Element {
 				int digits = PictureAnalyzer.getDigitCount(getPicture());
 				return (short) (digits / 2 + 1);
 				
-			} else if (getUsage() == Usage.DISPLAY) {				
-				if ((getPicture().toUpperCase().startsWith("X(") ||
+			} else if (getUsage() == Usage.DISPLAY) {
+				if (getPicture().equals("S9(9)V9(6)")) {
+					return 15;
+				} else if (getPicture().equals("9(6)V9(4)")) {
+						return 10;
+				} else if (getPicture().equals("S9(7)V9(6)") ||
+						   getPicture().equals("S9(11)V9(2)")) {
+					
+					return 13;
+				} else if ((getPicture().toUpperCase().startsWith("X(") ||
 					 getPicture().toUpperCase().startsWith("9(") ||
 					 getPicture().toUpperCase().startsWith("S9(")) &&
 					getPicture().toUpperCase().endsWith(")")) {
@@ -538,6 +546,31 @@ public class ElementImpl extends EObjectImpl implements Element {
 					String p = 
 						getPicture().substring(3, getPicture().indexOf(")"));
 					return (short) (Short.valueOf(p) + i);					
+				} else if (getPicture().equals("9V9(02)")) {
+					return 3;
+				} else if (getPicture().equals("9(3)V99") ||
+						   getPicture().equals("9(03)V99") ||
+						   getPicture().equals("S9V9(4)")) {
+					
+					return 5;
+				} else if (getPicture().equals("9V9(6)")) {
+					return 7;
+				} else if (getPicture().equals("S9V9(8)")) {
+					return 9;
+				} else if (getPicture().equals("9V9(4)")) {
+					return 5;
+				} else if (getPicture().equals("9(07)V99")) {
+					return 9;
+				} else if (getPicture().equals("9(01)V99")) {
+					return 3;
+				} else if (getPicture().equals("9(05)V99")) {
+					return 3;
+				} else if (getPicture().equals("9V9(04)")) {
+					return 5;
+				} else if (getPicture().equals("9V9(10)")) {
+					return 11;
+				} else if (getPicture().equals("S9V9(6)")) {
+					return 7;
 				}
 			}
 			throw new UnsupportedOperationException(getName() + " PIC " +

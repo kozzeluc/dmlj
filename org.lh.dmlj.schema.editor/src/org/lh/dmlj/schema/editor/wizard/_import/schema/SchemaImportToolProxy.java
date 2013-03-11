@@ -279,7 +279,9 @@ public final class SchemaImportToolProxy {
 														  originalSpec.getFunction());
 		}
 		
-		// copy the records from those contained in the DDLDCLOD area			
+		// copy the records from those contained in the DDLDCLOD area
+		boolean ignoreNamingConventionsForElements = 
+			isOptionIgnoreNamingConventionsForElements();
 		for (SchemaRecord originalRecord : 
 			 schema.getArea("DDLDCLOD").getRecords()) {
 			
@@ -306,7 +308,8 @@ public final class SchemaImportToolProxy {
 				Element element = 
 					modelFactory.createElement(record, parent, 
 											   originalElement.getName(), 
-											   originalElement.getBaseName());	
+											   originalElement.getBaseName(),
+											   ignoreNamingConventionsForElements);	
 				
 				// set some of the element's attributes
 				element.setLevel(originalElement.getLevel());		
@@ -401,7 +404,8 @@ public final class SchemaImportToolProxy {
 					modelFactory.createKeyElement(key, 
 												  originalKeyElement.getElement()
 												  					.getName(), 
-												  SortSequence.ASCENDING);					
+												  SortSequence.ASCENDING,
+												  ignoreNamingConventionsForElements);					
 				}			
 				
 			}
@@ -590,7 +594,8 @@ public final class SchemaImportToolProxy {
 	}
 
 	private void handleElement(SchemaRecord record, Element parent,
-							   Object elementContext) {
+							   Object elementContext,
+							   boolean ignoreNamingConventions) {
 		
 		// get the data collector
 		@SuppressWarnings("unchecked")
@@ -605,7 +610,8 @@ public final class SchemaImportToolProxy {
 		
 		// create the element
 		Element element = 
-			modelFactory.createElement(record, parent, elementName, baseName);	
+			modelFactory.createElement(record, parent, elementName, baseName,
+									   ignoreNamingConventions);	
 		
 		// set some of the element's attributes
 		element.setLevel(dataCollector.getLevel(elementContext));		
@@ -693,7 +699,8 @@ public final class SchemaImportToolProxy {
 		for (Object childElementContext :  
 			tool.getSubordinateElementContexts(elementContext)) {
 			
-			handleElement(record, element, childElementContext);			
+			handleElement(record, element, childElementContext,
+						  ignoreNamingConventions);			
 		}				
 		
 	}
@@ -775,8 +782,11 @@ public final class SchemaImportToolProxy {
 		}		
 		
 		// add the (validated) elements to the record
+		boolean ignoreNamingConventionsForElements = 
+				isOptionIgnoreNamingConventionsForElements();
 		for (Object elementContext : tool.getRootElementContexts(recordContext)) {					
-			handleElement(record, null, elementContext);									
+			handleElement(record, null, elementContext, 
+						  ignoreNamingConventionsForElements);									
 		}
 		
 		// correct the record's storage mode
@@ -806,7 +816,8 @@ public final class SchemaImportToolProxy {
 				 dataCollector.getCalcKeyElementNames(recordContext)) {	
 				
 				modelFactory.createKeyElement(key, elementName, 
-											  SortSequence.ASCENDING);					
+											  SortSequence.ASCENDING,
+											  ignoreNamingConventionsForElements);					
 			}			
 			
 		}
@@ -933,6 +944,8 @@ public final class SchemaImportToolProxy {
 			
 			// the set is not sorted by dbkey; create a key element for each
 			// element in the sort key
+			boolean ignoreNamingConventionsForElements = 
+				isOptionIgnoreNamingConventionsForElements();
 			for (String elementName : 
 				 dataCollector.getSortKeyElements(setContext, recordName)) {
 								
@@ -941,7 +954,8 @@ public final class SchemaImportToolProxy {
 					dataCollector.getSortSequence(setContext, recordName, 
 													 elementName);
 				// create the key element
-				modelFactory.createKeyElement(key, elementName, sortSequence);
+				modelFactory.createKeyElement(key, elementName, sortSequence,
+											  ignoreNamingConventionsForElements);
 				
 			}
 			
@@ -954,7 +968,8 @@ public final class SchemaImportToolProxy {
 				dataCollector.getSortSequence(setContext, recordName, null);
 			
 			// create the key element
-			modelFactory.createKeyElement(key, null, sortSequence);
+			modelFactory.createKeyElement(key, null, sortSequence,
+										  isOptionIgnoreNamingConventionsForElements());
 									
 		}
 		
@@ -1277,8 +1292,10 @@ public final class SchemaImportToolProxy {
 				// schema performs this check)				
 				if (minimumFragmentLength > record.getDataLength()) {
 					String message = 
-						"minimum fragment length invalid: exceeds 'Data " +
-						"length' (record=" + record.getName();
+						"minimum fragment length (" + minimumFragmentLength +
+						") invalid: exceeds data length (record=" + 
+						record.getName() + "; data length=" + 
+						record.getDataLength() + ")";
 					throw new RuntimeException(message);
 				}
 				
@@ -1321,6 +1338,12 @@ public final class SchemaImportToolProxy {
 
 	private boolean isOptionCompleteOoak_012() {
 		Boolean b = dataEntryContext.getAttribute(GeneralContextAttributeKeys.ADD_OFFSET_FOR_OOAK_012);
+		return b.booleanValue();
+	}
+	
+	private boolean isOptionIgnoreNamingConventionsForElements() {
+		Boolean b = 
+			dataEntryContext.getAttribute(GeneralContextAttributeKeys.IGNORE_NAMING_CONVENTIONS_FOR_ELEMENTS);
 		return b.booleanValue();
 	}
 

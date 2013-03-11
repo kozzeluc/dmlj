@@ -73,21 +73,25 @@ class ModelFactory {
 	}	
 
 	private static String toUppercaseWithValidation(String name,
-													NamingConventions.Type type) {
+													NamingConventions.Type type,
+													boolean ignoreNamingConventions) {
 
 		String p = type.toString().toLowerCase().replaceAll("_", " ");
 
 		// make sure name is not null
 		Assertions.isNotNull(name, p + " is null");
 
-		// convert the name to upper case and check its validity
+		// convert the name to upper case and check its validity if the naming
+		// conventions are not to be ignored
 		String uName = name.trim().toUpperCase();
-		ValidationResult validationResult = NamingConventions.validate(uName,
-				type);
-		if (validationResult.getStatus() != ValidationResult.Status.OK) {
-			String message = "invalid " + p + ": " + uName + " (" + 
-							 validationResult.getMessage() + ")";
-			throw new RuntimeException(message);
+		if (!ignoreNamingConventions) {
+			ValidationResult validationResult = NamingConventions.validate(uName,
+					type);
+			if (validationResult.getStatus() != ValidationResult.Status.OK) {
+				String message = "invalid " + p + ": " + uName + " (" + 
+								 validationResult.getMessage() + ")";
+				throw new RuntimeException(message);
+			}
 		}
 
 		// return name converted to upper case
@@ -105,7 +109,8 @@ class ModelFactory {
 		// convert the name to uppercase and validate it
 		String areaName = 
 			toUppercaseWithValidation(name, 
-									  NamingConventions.Type.LOGICAL_AREA_NAME);
+									  NamingConventions.Type.LOGICAL_AREA_NAME,
+									  false);
 		
 		// make sure the area does not yet exist
 		if (schema.getArea(areaName) != null) {
@@ -140,15 +145,17 @@ class ModelFactory {
 	}	
 	
 	Element createElement(SchemaRecord record, Element parent, String name,
-						  String baseName) {		
+						  String baseName, boolean ignoreNamingConventions) {		
 		
 		// validate the element names and convert it to upper case
 		String elementName = 
-			toUppercaseWithValidation(name, NamingConventions.Type.ELEMENT_NAME);
+			toUppercaseWithValidation(name, NamingConventions.Type.ELEMENT_NAME,
+									  ignoreNamingConventions);
 		String baseElementName = 
 			toUppercaseWithValidation(baseName, 
-									  NamingConventions.Type.ELEMENT_NAME);
-		
+									  NamingConventions.Type.ELEMENT_NAME,
+									  ignoreNamingConventions);
+			
 		// make sure the element does not yet exist unless it's a FILLER
 		if (!elementName.equals("FILLER")) {
 			Assertions.isNull(record.getElement(elementName), 
@@ -187,7 +194,8 @@ class ModelFactory {
 			// validate it
 			String ucSymbolicIndexName = 
 				toUppercaseWithValidation(symbolicIndexName, 
-										  NamingConventions.Type.SYMBOLIC_INDEX_NAME);			
+										  NamingConventions.Type.SYMBOLIC_INDEX_NAME,
+										  false);			
 			
 			// set the symbolic index name
 			indexedSetModeSpecification.setSymbolicIndexName(ucSymbolicIndexName);
@@ -254,7 +262,8 @@ class ModelFactory {
 	}	
 	
 	KeyElement createKeyElement(Key key, String elementName, 
-								SortSequence sortSequence) {
+								SortSequence sortSequence,
+								boolean ignoreNamingConventions) {
 		
 		KeyElement keyElement = SchemaFactory.eINSTANCE.createKeyElement();
 		key.getElements().add(keyElement);
@@ -265,7 +274,8 @@ class ModelFactory {
 			// convert the element name to uppercase and have it validated
 			String keyElementName = 
 				toUppercaseWithValidation(elementName, 
-										  NamingConventions.Type.ELEMENT_NAME);
+										  NamingConventions.Type.ELEMENT_NAME,
+										  ignoreNamingConventions);
 			
 			// No element named FILLER can be used in a key
 			if (keyElementName.equals("FILLER")) {
@@ -346,7 +356,8 @@ class ModelFactory {
 			String ucSymbolicSubareaName = 
 				toUppercaseWithValidation(symbolicSubareaName, 
 										  NamingConventions.Type
-										  				   .SYMBOLIC_DISPLACEMENT);			
+										  				   .SYMBOLIC_DISPLACEMENT,
+										  false);			
 				
 			// set the symbolic subarea name in the area specification
 			areaSpecification.setSymbolicSubareaName(ucSymbolicSubareaName);
@@ -422,7 +433,8 @@ class ModelFactory {
 		
 		String procedureName = 
 			toUppercaseWithValidation(name, 
-									  NamingConventions.Type.PROCEDURE_NAME);
+									  NamingConventions.Type.PROCEDURE_NAME,
+									  false);
 		
 		Procedure procedure = schema.getProcedure(procedureName);
 		if (procedure == null) {			
@@ -495,7 +507,8 @@ class ModelFactory {
 		if (!ddlcatlod) {
 			recordName = 
 				toUppercaseWithValidation(name, 
-									  	  NamingConventions.Type.RECORD_NAME);
+									  	  NamingConventions.Type.RECORD_NAME,
+									  	  false);
 		} else {
 			recordName = name;
 		}
@@ -519,7 +532,8 @@ class ModelFactory {
 		// check the name of the area in which the record is stored 
 		String ucAreaName = 
 			toUppercaseWithValidation(areaName, 
-									  NamingConventions.Type.LOGICAL_AREA_NAME);		
+									  NamingConventions.Type.LOGICAL_AREA_NAME,
+									  false);		
 		
 		// add the record to the area (which must already be there)
 		SchemaArea area = schema.getArea(ucAreaName);
@@ -541,7 +555,8 @@ class ModelFactory {
 			// check the VIA set name and convert it to uppercase
 			String ucViaSetName = 
 				toUppercaseWithValidation(viaSetName, 
-										  NamingConventions.Type.SET_NAME);
+										  NamingConventions.Type.SET_NAME,
+										  false);
 			
 			// create the VIA specification
 			createViaSpecification(record, ucViaSetName);
@@ -589,7 +604,8 @@ class ModelFactory {
 		
 		// have name converted to uppercase and validate it
 		String setName = 
-			toUppercaseWithValidation(name, NamingConventions.Type.SET_NAME);		
+			toUppercaseWithValidation(name, NamingConventions.Type.SET_NAME,
+									  false);		
 		
 		// make sure the set does not yet exist
 		Assertions.isNull(schema.getSet(setName), 
@@ -628,7 +644,8 @@ class ModelFactory {
 		if (!ddlcatlod) {
 			memberRecordName = 
 				toUppercaseWithValidation(recordName, 
-									  	  NamingConventions.Type.RECORD_NAME);
+									  	  NamingConventions.Type.RECORD_NAME,
+									  	  false);
 		} else {
 			memberRecordName = recordName;
 		}		
@@ -712,7 +729,8 @@ class ModelFactory {
 		if (!ddlcatlod) {
 			ownerRecordName = 
 				toUppercaseWithValidation(recordName, 
-									  	  NamingConventions.Type.RECORD_NAME);
+									  	  NamingConventions.Type.RECORD_NAME,
+									  	  false);
 		} else {
 			ownerRecordName = recordName;
 		}
@@ -735,7 +753,8 @@ class ModelFactory {
 		
 		String ucAreaName = 
 			toUppercaseWithValidation(areaName, 
-									  NamingConventions.Type.LOGICAL_AREA_NAME);
+									  NamingConventions.Type.LOGICAL_AREA_NAME,
+									  false);
 		
 		SystemOwner systemOwner = SchemaFactory.eINSTANCE.createSystemOwner();
 		set.setSystemOwner(systemOwner);

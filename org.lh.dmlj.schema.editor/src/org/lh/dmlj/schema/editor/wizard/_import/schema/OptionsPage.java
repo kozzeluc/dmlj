@@ -33,6 +33,7 @@ public class OptionsPage extends AbstractDataEntryPage {
 	
 	private Button 	  				btnDdlcatlod;
 	private Button 	  				btnLooak_155;
+	private Button 	  				btnIgnoreNamConForElements;
 	private Button 	  				btnOoak_012;
 	private List<Label>		        idmsntwkOptionGroupLabels = new ArrayList<>();
 	private Label     				lblIdmsntwk;
@@ -196,10 +197,24 @@ public class OptionsPage extends AbstractDataEntryPage {
 		GridData gd_textProcedures = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_textProcedures.horizontalIndent = 5;
 		textProcedures.setLayoutData(gd_textProcedures);
+		
+		btnIgnoreNamConForElements = new Button(composite, SWT.CHECK);
+		btnIgnoreNamConForElements.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				validatePage();
+			}
+		});
+		GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd.horizontalIndent = 5;
+		gd.verticalIndent = 5;
+		btnIgnoreNamConForElements.setLayoutData(gd);
+		btnIgnoreNamConForElements.setSelection(false);
+		btnIgnoreNamConForElements.setText("Ignore naming conventions for elements");		
+		
 		// create a check button for each configured option; deal with the ones
 		// not belonging to a group first and then process the options group by
 		// group		
-		boolean first = true;
 		for (OptionExtensionElement optionExtensionElement :
 			 optionsExtensionElement.getOptionExtensionElements()) {
 			 
@@ -209,13 +224,7 @@ public class OptionsPage extends AbstractDataEntryPage {
 			if (!optionExtensionElement.getIdmsntwkOnly() &&
 				optionGroup.equals("")) {
 
-				int verticalIndent = 0;
-				if (first) {
-					verticalIndent = 5;
-					first = false;
-				} 
-				createCheckButton(composite, optionExtensionElement, 
-								  verticalIndent);
+				createCheckButton(composite, optionExtensionElement, 0);
 			}				
 		}
 		for (OptionGroupExtensionElement optionGroupExtensionElement :
@@ -369,6 +378,9 @@ public class OptionsPage extends AbstractDataEntryPage {
 			String p = procedureNames.toString();
 			textProcedures.setText(p.substring(1, p.length() - 1));
 		}
+		boolean b = btnIgnoreNamConForElements.getSelection();
+		getContext().setAttribute(GeneralContextAttributeKeys.IGNORE_NAMING_CONVENTIONS_FOR_ELEMENTS, 
+				  	  			  Boolean.valueOf(b));
 		
 		// fixed IDMSNTWK version 1 options
 		getContext().setAttribute(GeneralContextAttributeKeys.ADD_OFFSET_FOR_OOAK_012, 

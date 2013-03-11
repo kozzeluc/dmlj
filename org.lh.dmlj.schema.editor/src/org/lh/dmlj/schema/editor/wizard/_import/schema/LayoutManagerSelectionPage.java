@@ -214,9 +214,11 @@ public class LayoutManagerSelectionPage extends WizardPage {
 		Properties properties = new Properties();
 		try {			
 			File file = new File(textPropertiesFileName.getText());
-			InputStream in = new FileInputStream(file);
-			properties.load(in);
-			in.close();
+			if (file.exists()) {
+				InputStream in = new FileInputStream(file);
+				properties.load(in);
+				in.close();
+			}
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

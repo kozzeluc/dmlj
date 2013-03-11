@@ -3,6 +3,23 @@
 <plugin>
    <extension-point id="import" name="Schema Import Tools" schema="schema/import.exsd"/>
    <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.lh.dmlj.schema.editor.ui.SchemaFileSelectedPropertyTester"
+            id="org.lh.dmlj.schema.editor.ui.propertyTester1"
+            namespace="org.lh.dmlj.schema.editor.ui.properties"
+            properties="SchemaFileSelected"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.lh.dmlj.schema.editor.ui.command.update"
+            name="Update">
+      </command>
+   </extension>
+   <extension
          point="org.eclipse.ui.editors">
       <editor
             class="org.lh.dmlj.schema.editor.SchemaEditor"
@@ -48,6 +65,33 @@
             id="org.lh.dmlj.schema.editor.wizard.import.dictguides"
             name="CA IDMS/DB Dictionary Structure and SQL Reference Guides">
       </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.lh.dmlj.schema.editor.ui.handler.UpdateSchemaHandler"
+            commandId="org.lh.dmlj.schema.editor.ui.command.update">
+         <activeWhen>
+            <or>
+               <test
+                     forcePluginActivation="true"
+                     property="org.lh.dmlj.schema.editor.ui.properties.SchemaFileSelected">
+               </test>
+            </or>
+         </activeWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=import">
+         <command
+               commandId="org.lh.dmlj.schema.editor.ui.command.update"
+               label="Update..."
+               style="push">
+         </command>
+      </menuContribution>
    </extension>   
    <extension
          point="org.eclipse.ui.newWizards">
