@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Schema#getAreas <em>Areas</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Schema#getComments <em>Comments</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getDescription <em>Description</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getDiagramData <em>Diagram Data</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getMemoDate <em>Memo Date</em>}</li>
@@ -156,6 +157,22 @@ public interface Schema extends EObject {
 	 * @generated
 	 */
 	EList<SchemaArea> getAreas();
+
+	/**
+	 * Returns the value of the '<em><b>Comments</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Comments</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Comments</em>' attribute list.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchema_Comments()
+	 * @model derived="true"
+	 * @generated
+	 */
+	EList<String> getComments();
 
 	/**
 	 * Returns the value of the '<em><b>Records</b></em>' containment reference list.

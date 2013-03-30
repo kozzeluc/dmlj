@@ -1511,13 +1511,22 @@ public interface SchemaPackage extends EPackage {
 	int SCHEMA__AREAS = 0;
 
 	/**
+	 * The feature id for the '<em><b>Comments</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA__COMMENTS = 1;
+
+	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__DESCRIPTION = 1;
+	int SCHEMA__DESCRIPTION = 2;
 
 	/**
 	 * The feature id for the '<em><b>Diagram Data</b></em>' containment reference.
@@ -1526,7 +1535,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__DIAGRAM_DATA = 2;
+	int SCHEMA__DIAGRAM_DATA = 3;
 
 	/**
 	 * The feature id for the '<em><b>Memo Date</b></em>' attribute.
@@ -1535,7 +1544,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__MEMO_DATE = 3;
+	int SCHEMA__MEMO_DATE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1544,7 +1553,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__NAME = 4;
+	int SCHEMA__NAME = 5;
 
 	/**
 	 * The feature id for the '<em><b>Procedures</b></em>' containment reference list.
@@ -1553,7 +1562,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__PROCEDURES = 5;
+	int SCHEMA__PROCEDURES = 6;
 
 	/**
 	 * The feature id for the '<em><b>Records</b></em>' containment reference list.
@@ -1562,7 +1571,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__RECORDS = 6;
+	int SCHEMA__RECORDS = 7;
 
 	/**
 	 * The feature id for the '<em><b>Sets</b></em>' containment reference list.
@@ -1571,7 +1580,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__SETS = 7;
+	int SCHEMA__SETS = 8;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -1580,7 +1589,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA__VERSION = 8;
+	int SCHEMA__VERSION = 9;
 
 	/**
 	 * The number of structural features of the '<em>Schema</em>' class.
@@ -1589,7 +1598,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_FEATURE_COUNT = 9;
+	int SCHEMA_FEATURE_COUNT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Area Specifications</b></em>' containment reference list.
@@ -2275,6 +2284,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getSchema_Areas();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.lh.dmlj.schema.Schema#getComments <em>Comments</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Comments</em>'.
+	 * @see org.lh.dmlj.schema.Schema#getComments()
+	 * @see #getSchema()
+	 * @generated
+	 */
+	EAttribute getSchema_Comments();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.lh.dmlj.schema.Schema#getRecords <em>Records</em>}'.
@@ -4462,6 +4482,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SCHEMA__AREAS = eINSTANCE.getSchema_Areas();
+
+		/**
+		 * The meta object literal for the '<em><b>Comments</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA__COMMENTS = eINSTANCE.getSchema_Comments();
 
 		/**
 		 * The meta object literal for the '<em><b>Records</b></em>' containment reference list feature.

@@ -437,7 +437,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getSchema_Name() {
-		return (EAttribute)schemaEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -446,7 +446,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getSchema_Version() {
-		return (EAttribute)schemaEClass.getEStructuralFeatures().get(8);
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -455,7 +455,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getSchema_Description() {
-		return (EAttribute)schemaEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -464,7 +464,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getSchema_MemoDate() {
-		return (EAttribute)schemaEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -481,8 +481,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSchema_Records() {
-		return (EReference)schemaEClass.getEStructuralFeatures().get(6);
+	public EAttribute getSchema_Comments() {
+		return (EAttribute)schemaEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -490,7 +490,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSchema_Sets() {
+	public EReference getSchema_Records() {
 		return (EReference)schemaEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -499,8 +499,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getSchema_Sets() {
+		return (EReference)schemaEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getSchema_DiagramData() {
-		return (EReference)schemaEClass.getEStructuralFeatures().get(2);
+		return (EReference)schemaEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -509,7 +518,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getSchema_Procedures() {
-		return (EReference)schemaEClass.getEStructuralFeatures().get(5);
+		return (EReference)schemaEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -2419,6 +2428,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		schemaEClass = createEClass(SCHEMA);
 		createEReference(schemaEClass, SCHEMA__AREAS);
+		createEAttribute(schemaEClass, SCHEMA__COMMENTS);
 		createEAttribute(schemaEClass, SCHEMA__DESCRIPTION);
 		createEReference(schemaEClass, SCHEMA__DIAGRAM_DATA);
 		createEAttribute(schemaEClass, SCHEMA__MEMO_DATE);
@@ -2688,6 +2698,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		initEClass(schemaEClass, Schema.class, "Schema", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSchema_Areas(), this.getSchemaArea(), this.getSchemaArea_Schema(), "areas", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchema_Comments(), ecorePackage.getEString(), "comments", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_Description(), ecorePackage.getEString(), "description", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchema_DiagramData(), this.getDiagramData(), null, "diagramData", null, 1, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_MemoDate(), ecorePackage.getEString(), "memoDate", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -36,6 +37,7 @@ import org.lh.dmlj.schema.Set;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getAreas <em>Areas</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getComments <em>Comments</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getDiagramData <em>Diagram Data</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getMemoDate <em>Memo Date</em>}</li>
@@ -59,6 +61,15 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * @ordered
 	 */
 	protected EList<SchemaArea> areas;
+	/**
+	 * The cached value of the '{@link #getComments() <em>Comments</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComments()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<String> comments;
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -287,6 +298,18 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<String> getComments() {
+		if (comments == null) {
+			comments = new EDataTypeUniqueEList<String>(String.class, this, SchemaPackage.SCHEMA__COMMENTS);
+		}
+		return comments;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<SchemaRecord> getRecords() {
 		if (records == null) {
 			records = new EObjectContainmentWithInverseEList<SchemaRecord>(SchemaRecord.class, this, SchemaPackage.SCHEMA__RECORDS, SchemaPackage.SCHEMA_RECORD__SCHEMA);
@@ -481,6 +504,8 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 		switch (featureID) {
 			case SchemaPackage.SCHEMA__AREAS:
 				return getAreas();
+			case SchemaPackage.SCHEMA__COMMENTS:
+				return getComments();
 			case SchemaPackage.SCHEMA__DESCRIPTION:
 				return getDescription();
 			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
@@ -513,6 +538,10 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 			case SchemaPackage.SCHEMA__AREAS:
 				getAreas().clear();
 				getAreas().addAll((Collection<? extends SchemaArea>)newValue);
+				return;
+			case SchemaPackage.SCHEMA__COMMENTS:
+				getComments().clear();
+				getComments().addAll((Collection<? extends String>)newValue);
 				return;
 			case SchemaPackage.SCHEMA__DESCRIPTION:
 				setDescription((String)newValue);
@@ -556,6 +585,9 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 			case SchemaPackage.SCHEMA__AREAS:
 				getAreas().clear();
 				return;
+			case SchemaPackage.SCHEMA__COMMENTS:
+				getComments().clear();
+				return;
 			case SchemaPackage.SCHEMA__DESCRIPTION:
 				setDescription(DESCRIPTION_EDEFAULT);
 				return;
@@ -594,6 +626,8 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 		switch (featureID) {
 			case SchemaPackage.SCHEMA__AREAS:
 				return areas != null && !areas.isEmpty();
+			case SchemaPackage.SCHEMA__COMMENTS:
+				return comments != null && !comments.isEmpty();
 			case SchemaPackage.SCHEMA__DESCRIPTION:
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
@@ -624,7 +658,9 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (description: ");
+		result.append(" (comments: ");
+		result.append(comments);
+		result.append(", description: ");
 		result.append(description);
 		result.append(", memoDate: ");
 		result.append(memoDate);
