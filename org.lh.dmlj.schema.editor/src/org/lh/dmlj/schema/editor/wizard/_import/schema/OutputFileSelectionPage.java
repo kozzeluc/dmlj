@@ -14,6 +14,8 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 	private static final String DESCRIPTION_PREFIX = 
 		"Import a CA IDMS/DB schema";
 	
+	private boolean updateMode = true;
+	
 	public OutputFileSelectionPage(IStructuredSelection selection) {
 		super("_outputFileSelectionPage", selection);	
 		setTitle("CA IDMS/DB Schema");
@@ -34,8 +36,26 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 	
 	@Override
 	public IWizardPage getPreviousPage() {
+		// make sure the user cannot return to the import tool selection page; 
+		// once an import tool is selected, it is important that the user cannot 
+		// select another one because we wouldn't be able to replace the data
+		// entry pages (import mode)
 		return null;
-	}		
+	}	
+	
+	@Override
+	public boolean isPageComplete() {
+		if (updateMode) {
+			// this page will never be shown when in update mode, so we must
+			// always return true; if we rely on the super class' 
+			// isPageComplete() method, we might get into a situation where the
+			// wizard's finish button is never enabled, so make sure the page
+			// is always considered to be complete when in update mode
+			return true;
+		} else {
+			return super.isPageComplete();
+		}
+	}
 	
 	public void setImportToolExtensionElement(ImportToolExtensionElement importToolExtensionElement)  {
 		String description = 
@@ -44,6 +64,10 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 			DESCRIPTION_PREFIX + " from " + importToolExtensionElement.getSource() :
 			DESCRIPTION_PREFIX;
 		setDescription(description);
+	}
+	
+	public void setUpdateMode(boolean newValue) {
+		updateMode = newValue;
 	}
 	
 	@Override

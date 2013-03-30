@@ -13,14 +13,14 @@ import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
 
 
-public class LayoutManager {
+public class ImportLayoutManager implements ILayoutManager {
 	
 	private Properties					configuredParms;
 	private AbstractRecordLayoutManager recordLayoutManager;
 	private Schema 						schema;	
 	private Properties					userParms;
 
-	public LayoutManager(Schema schema,
+	public ImportLayoutManager(Schema schema,
 						 AbstractRecordLayoutManager recordLayoutManager,
 						 Properties configuredParms, Properties userParms) {
 		super();
@@ -28,6 +28,11 @@ public class LayoutManager {
 		this.recordLayoutManager = recordLayoutManager;
 		this.configuredParms = configuredParms;
 		this.userParms = userParms;
+	}
+	
+	@Override
+	public Schema getReferenceSchema() {
+		return null;
 	}
 	
 	public void layout() {
@@ -47,10 +52,6 @@ public class LayoutManager {
 				// deal with the set label...
 				ConnectionLabel connectionLabel = 
 					memberRole.getConnectionLabel();
-				/*DiagramLocation location = 
-					SchemaFactory.eINSTANCE.createDiagramLocation();
-				schema.getDiagramData().getLocations().add(location);
-				connectionLabel.setDiagramLocation(location);*/				
 	
 				// we don't provide a source- and targetAnchor nor any
 				// bendpoints for the diagram connection here				
@@ -63,7 +64,9 @@ public class LayoutManager {
 					x = record.getDiagramLocation().getX() + 25 * i - 11;
 					y = record.getDiagramLocation().getY() - 
 						RecordFigure.UNSCALED_HEIGHT + 5;
-					setDiagramData(systemOwner, x, y);					
+					setDiagramData(systemOwner, x, y);
+					// next index will be located to the right of this one:
+					i += 1;
 				}
 				
 			}

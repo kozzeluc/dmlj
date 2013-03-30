@@ -25,6 +25,38 @@ if (memoDate != null) {
 %>
          ASSIGN RECORD IDS FROM 1001
          PUBLIC ACCESS IS ALLOWED FOR ALL
+<%
+boolean first = true;
+for (String line : schema.getComments()) {
+    if (line.length() <= 56) {
+        if (first) {
+            first = false;
+%>
+         COMMENTS
+             '<%= line %>'
+<%
+        } else {
+%>
+       -     '<%= line %>'
+<%
+        } 
+    } else {
+        if (first) {
+            first = false;            
+%>
+         COMMENTS
+             '<%= line.substring(0, 56) %>'
+       +     '<%= line.substring(56) %>'             
+<%
+        } else {
+%>
+       -     '<%= line.substring(0, 56) %>'
+       +     '<%= line.substring(56) %>'       
+<%        
+        }
+    }
+}
+%>         
          .
 <%
 AreaTemplate areaTemplate = new AreaTemplate();

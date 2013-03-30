@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.DuplicatesOption;
@@ -1184,11 +1185,21 @@ public final class SchemaImportToolProxy {
 		// initialize the import tool
 		tool.init(dataEntryContext, importToolParameters, dataCollectorRegistry);
 		
-		// set the schema's description and memo date
+		// set the schema's description, memo date and comments
 		ISchemaDataCollector dataCollector = 
 			dataCollectorRegistry.getSchemaDataCollector();
 		schema.setDescription(dataCollector.getSchemaDescription());
-		schema.setMemoDate(dataCollector.getSchemaMemoDate());		
+		schema.setMemoDate(dataCollector.getSchemaMemoDate());
+		List<String> comments = dataCollector.getComments();
+		if (comments != null && !comments.isEmpty()) {
+			// make sure no comment line exceeds 80 characters
+			for (String line : comments) {				
+				String message = 
+					"comment line exceeds 80 characters: '" + line + "'";
+				Assert.isTrue(line.length() <= 80, message);				
+			}
+			schema.getComments().addAll(comments);
+		}
 		
 		// import areas
 		for (Object areaContext : tool.getAreaContexts()) {			

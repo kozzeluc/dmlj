@@ -333,14 +333,16 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		file = (File) dataEntryContext.getAttribute(GeneralContextAttributeKeys.SCHEMA_SYNTAX_FILE);
 		
 		// create and register the schema data collector; first extract the 
-		// schema's description and memo date
+		// schema's description, memo date and comments
 		String schemaDescription = null;
 		String memoDate = null;
+		List<String> comments = new ArrayList<>();
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(file));
 			// only process the syntax preceding the first period
-			for (String line = in.readLine(); 
-				 line != null && !line.trim().equals("."); 
+			boolean commentsMarkerPassed = false;
+			StringBuilder commentLine = null;
+			for (String line = in.readLine(); line != null && !line.trim().equals("."); 
 				 line = in.readLine()) {
 				
 				if (line.indexOf("SCHEMA DESCRIPTION IS '") > -1) {
@@ -351,14 +353,41 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 				} else if (line.indexOf("MEMO DATE IS ") > -1) {
 					int i = line.indexOf("MEMO DATE IS ");
 					memoDate = line.substring(i + 13);					
+				} else if (line.trim().equals("COMMENTS")) {
+					commentsMarkerPassed = true;
+				} else if (commentsMarkerPassed) {
+					// we're dealing with a comment line (assuming nothing else than comment lines
+					// follow the comment lines in the schema syntax; we might have to come here 
+					// again in the future if something meaningful does appear to exist after the
+					// comment lines
+					if (!line.startsWith("*+")) {
+						int i = line.lastIndexOf("'");
+						if (line.startsWith("             '") ||						
+							line.startsWith("       -     '")) {
+													
+							if (commentLine != null) {
+								comments.add(commentLine.toString());
+							}
+							commentLine = new StringBuilder();						
+						} else if (!line.startsWith("       +     '") || commentLine == null) {					
+							in.close();
+							throw new Error("logic error while parsing schema comments");
+						}
+						// leading and trailing spaces in comment lines are retained
+						commentLine.append(line.substring(14, i));
+					}
 				}
+			}
+			if (commentLine != null) {
+				// make sure we don't forget the last comment line
+				comments.add(commentLine.toString());
 			}
 			in.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		SchemaDataCollector schemaDataCollector = 
-			new SchemaDataCollector(schemaDescription, memoDate);
+			new SchemaDataCollector(schemaDescription, memoDate, comments);
 		dataCollectorRegistry.registerSchemaDataCollector(schemaDataCollector);
 		
 		// create and register the area data collector

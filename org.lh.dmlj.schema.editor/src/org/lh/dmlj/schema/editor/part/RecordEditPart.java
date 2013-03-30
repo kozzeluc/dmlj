@@ -22,6 +22,7 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
@@ -213,7 +214,11 @@ public class RecordEditPart
 		figure.setRecordName(recordName.toString());
 		figure.setRecordId(record.getId());
 		figure.setStorageMode(Tools.getStorageMode(record.getStorageMode()));
-		figure.setRecordLength(record.getDataLength());
+		int dataLength = record.getDataLength();
+		if (record.getStorageMode() != StorageMode.FIXED) {
+			dataLength -= 4; 
+		}
+		figure.setRecordLength(dataLength);
 		figure.setLocationMode(record.getLocationMode().toString());
 		if (record.getLocationMode() == LocationMode.CALC) {
 			String calcKey = Tools.getCalcKey(record.getCalcKey());

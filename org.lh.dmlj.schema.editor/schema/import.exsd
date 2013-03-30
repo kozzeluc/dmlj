@@ -140,7 +140,7 @@ A number of data entry pages can be configured for each import tool; some of the
          <attribute name="description" type="string">
             <annotation>
                <documentation>
-                  A description for the import tool that will be displayed in the import tool selection page of the import wizard when the user selects the import tool in the combo.
+                  A description for the import tool that will be displayed in the import tool selection page of the import wizard when the user selects the import tool in the combo.  It is good practice to provide an import tool description like&quot;Import or update a CA IDMS/DB schema from [...]&quot;.
                </documentation>
             </annotation>
          </attribute>

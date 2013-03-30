@@ -375,7 +375,7 @@
       <importTools>
          <importTool
                class="org.lh.dmlj.schema.editor.importtool.syntax.ImportFromSchemaSyntaxTool"
-               description="Imports a CA IDMS/DB schema from a file that contains CA IDMS/DB schema syntax"
+               description="Import or update a CA IDMS/DB schema from a file that contains CA IDMS/DB schema syntax."
                id="org.lh.dmlj.schema.editor.importTool1"
                name="org.lh.dmlj.schema.editor.importTool1"
                source="a file that contains CA IDMS/DB schema syntax">
