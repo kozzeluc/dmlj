@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lh.dmlj.schema.editor.service">
+   <implementation class="org.lh.dmlj.schema.editor.service.ServiceActivator"/>
+   <reference bind="setPdfExtractorService" cardinality="1..1" interface="org.lh.dmlj.schema.editor.service.api.IPdfExtractorService" name="IPdfExtractorService" policy="static"/>
+</scr:component>
