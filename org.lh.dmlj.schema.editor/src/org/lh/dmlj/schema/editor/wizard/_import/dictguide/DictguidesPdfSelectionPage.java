@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
+import org.lh.dmlj.schema.editor.service.ServicesPlugin;
+import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
 public class DictguidesPdfSelectionPage extends WizardPage {
 	
@@ -146,6 +148,14 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		gd_text.widthHint = 300;
 		textDescription.setLayoutData(gd_text);
 		textDescription.setText(description);
+		
+		IPdfExtractorService pdfExtractorService = 
+			ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
+		btnBrowse.setEnabled(pdfExtractorService != null);
+		
+		if (pdfExtractorService == null) {
+			setErrorMessage("PDF Extractor Service is NOT available");
+		}
 		
 		setPageComplete(false);
 		

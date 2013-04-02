@@ -1,5 +1,6 @@
 package org.lh.dmlj.schema.editor.preference;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -20,6 +21,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
+import org.lh.dmlj.schema.editor.service.ServicesPlugin;
+import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 import org.lh.dmlj.schema.editor.wizard._import.dictguide.DictguidesImportWizard;
 
 public class MainPreferencePage 
@@ -51,11 +54,10 @@ public class MainPreferencePage
 		container.setLayout(layout);
 		
 		Text lblNewLabel = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
-		GridData gd_lblNewLabel = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		GridData gd_lblNewLabel = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
 		gd_lblNewLabel.widthHint = 150;
 		lblNewLabel.setLayoutData(gd_lblNewLabel);
 		lblNewLabel.setText("Reference Guide combination to use in the \"Info\" tab (Properties view) :");
-		new Label(container, SWT.NONE);
 		
 		list = new List(container, SWT.BORDER);
 		GridData gd_list = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 3);
@@ -124,6 +126,22 @@ public class MainPreferencePage
 				setDocumentTitles();
 			}
 		});		
+		
+		IPdfExtractorService pdfExtractorService = 
+				ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
+		btnImport.setEnabled(pdfExtractorService != null);
+		
+		if (pdfExtractorService == null) {
+			Label lblMsg = new Label(container, SWT.NONE);
+			lblMsg.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+			lblMsg.setForeground(ColorConstants.red);
+			GridData gd_lblMsg = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+			gd_lblMsg.horizontalIndent = 10;
+			gd_lblMsg.verticalIndent = 15;
+			lblMsg.setLayoutData(gd_lblMsg);			
+			lblMsg.setText("PDF Extractor Service is NOT available");
+			new Label(container, SWT.NONE);
+		}
 		
 		initialize();
 		

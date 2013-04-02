@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: CA IDMS Schema Diagram Editor
+Bundle-Name: CA IDMS/DB Schema Diagram Editor
 Bundle-SymbolicName: org.lh.dmlj.schema.editor;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.lh.dmlj.schema.editor.Plugin
@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.lh.dmlj.schema.editor.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: .,
- tika-app-1.2.jar
+Bundle-ClassPath: .
 Bundle-Vendor: Luc Hermans
 Export-Package: org.lh.dmlj.schema.editor.importtool
+Import-Package: org.lh.dmlj.schema.editor.service,
+ org.lh.dmlj.schema.editor.service.api

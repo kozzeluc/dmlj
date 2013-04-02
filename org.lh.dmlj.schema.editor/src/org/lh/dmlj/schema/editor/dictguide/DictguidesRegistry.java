@@ -20,9 +20,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.editor.Plugin;
-import org.lh.dmlj.schema.editor.dictguide.helper.PdfContentExtractor;
-import org.lh.dmlj.schema.editor.dictguide.helper.PdfTitleExtractor;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase1Extractor;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase1ExtractorCatalog;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase2Extractor;
@@ -30,6 +29,8 @@ import org.lh.dmlj.schema.editor.dictguide.helper.Phase2ExtractorCatalog;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase3Checker;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase4Formatter;
 import org.lh.dmlj.schema.editor.property.RecordInfoValueObject;
+import org.lh.dmlj.schema.editor.service.ServicesPlugin;
+import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
 public class DictguidesRegistry {
 	
@@ -71,8 +72,7 @@ public class DictguidesRegistry {
 
 	private DictguidesRegistry() {
 		super();
-		folder = new File(Plugin.getDefault().getStateLocation().toFile(), 
-						  "dictguides");
+		folder = new File(Plugin.getDefault().getStateLocation().toFile(), "dictguides");
 		if (!folder.exists()) {
 			if (!folder.mkdir()) {
 				throw new RuntimeException("cannot create dictguides folder");
@@ -81,8 +81,7 @@ public class DictguidesRegistry {
 		manifestFile = new File(folder, "MANIFEST.MF");
 		if (manifestFile.exists()) {
 			try {
-				BufferedReader in = 
-					new BufferedReader(new FileReader(manifestFile));
+				BufferedReader in = new BufferedReader(new FileReader(manifestFile));
 				for (String line = in.readLine(); line != null; 
 					 line = in.readLine()) {
 					
@@ -111,7 +110,7 @@ public class DictguidesRegistry {
 					   	    String sqlTitle,
 					   	    String id,
 					   	    boolean defaultForInfoTab) {
-			
+		
 		if (!isValid(id)) {
 			throw new IllegalArgumentException("id is invalid: " + id);
 		}
@@ -135,6 +134,11 @@ public class DictguidesRegistry {
 			throw new IllegalArgumentException(message);
 		}
 		
+		IPdfExtractorService pdfExtractorService = 
+			ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
+		Assert.isTrue(pdfExtractorService != null, 
+					  "logic error: PDF Extractor Service == null");
+	
 		try {
 			
 			// we need a temporary files folder; we will not cleanup the 
@@ -146,8 +150,7 @@ public class DictguidesRegistry {
 			// Guide; for troubleshooting purposes we will write the contents of
 			// that chapter to our temporary files folder
 			ByteArrayOutputStream out1 = new ByteArrayOutputStream();				
-			PdfContentExtractor.performTask(new FileInputStream(dictionaryStructureFile), 
-											out1);
+			pdfExtractorService.extractContent(new FileInputStream(dictionaryStructureFile), out1);
 			String pdf1Extract = out1.toString();
 			dumpPdfExtract(pdf1Extract, new File(tmpFolder, "pdf1Extract.txt"));
 			
@@ -155,7 +158,7 @@ public class DictguidesRegistry {
 			// will write the contents of that chapter to our temporary files 
 			// folder
 			ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-			PdfContentExtractor.performTask(new FileInputStream(sqlFile), out2);
+			pdfExtractorService.extractContent(new FileInputStream(sqlFile), out2);
 			String pdf2Extract = out2.toString();
 			dumpPdfExtract(pdf2Extract, new File(tmpFolder, "pdf2Extract.txt"));
 			
@@ -291,7 +294,11 @@ public class DictguidesRegistry {
 	}
 
 	public String getDocumentTitle(File pdfFile) throws IOException {
-		return PdfTitleExtractor.performTask(pdfFile);
+		IPdfExtractorService pdfExtractorService = 
+			ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
+		Assert.isTrue(pdfExtractorService != null, 
+					  "logic error: PDF Extractor Service == null");
+		return pdfExtractorService.extractTitle(pdfFile);
 	}
 	
 	/**

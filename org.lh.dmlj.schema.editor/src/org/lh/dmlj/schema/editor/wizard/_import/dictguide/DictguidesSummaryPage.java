@@ -23,9 +23,9 @@ public class DictguidesSummaryPage extends WizardPage {
 	private boolean defaultForInfoTab;
 	private String  id;
 	private Label   lblDictrefguideTitle;
+	private Label   lblRemark;
 	private Label   lblSqlrefguideTitle;	
 	private Text    txtId;
-	private Label lblRemark;
 	
 	/**
 	 * Create the wizard.
@@ -106,7 +106,7 @@ public class DictguidesSummaryPage extends WizardPage {
 		
 		btnSetAsDefault.setEnabled(!calledFromPreferences);
 		btnSetAsDefault.setSelection(!calledFromPreferences);
-		lblRemark.setVisible(!calledFromPreferences);
+		lblRemark.setVisible(!calledFromPreferences);		
 		
 		setPageComplete(false);
 		
