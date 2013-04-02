@@ -5,17 +5,23 @@
       version="1.0.0.qualifier"
       provider-name="Luc Hermans">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://sites.google.com/site/lhdmlj">
+      A free and extensible diagram editor for CA IDMS/DB.
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+      Written for the CA IDMS Community by Luc Hermans (2011-2013).
+CA IDMS/DB, CA IDMS and IDMS are all registered trademarks of
+CA Technologies.
    </copyright>
 
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <url>
+      <update label="CA IDMS/DB Schema Diagram Editor Update Site" url="http://users.skynet.be/luc_h/dmlj"/>
+   </url>
 
    <plugin
          id="org.lh.dmlj.schema.editor"
@@ -26,6 +32,20 @@
 
    <plugin
          id="org.lh.dmlj.schema.editor.model"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.lh.dmlj.schema.editor.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.lh.dmlj.schema.editor.service.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
