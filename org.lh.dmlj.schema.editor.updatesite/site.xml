@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="CA IDMS/DB Schema Diagram Editor Update Site" url="http://users.skynet.be/luc_h/dmlj">
+      This update site hosts a free CA IDMS/DB Schema Diagram Editor.
+   </description>
+   <feature url="features/org.lh.dmlj.schema.editor_1.0.0.201304021112.jar" id="org.lh.dmlj.schema.editor" version="1.0.0.201304021112">
+      <category name="org.lh.dmlj.schema.editor.category"/>
+   </feature>
+   <category-def name="org.lh.dmlj.schema.editor.category" label="CA IDMS/DB Schema Diagram Editor"/>
+</site>
