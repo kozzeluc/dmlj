@@ -26,7 +26,6 @@ import org.lh.dmlj.schema.OccursSpecification;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Usage;
-import org.lh.dmlj.schema.common.PictureAnalyzer;
 
 /**
  * <!-- begin-user-doc -->
@@ -268,6 +267,41 @@ public class ElementImpl extends EObjectImpl implements Element {
 	protected String value = VALUE_EDEFAULT;
 
 	/**
+	 * Calculates the byte count for an element with the given picture, assuming the usage is 
+	 * DISPLAY.
+	 */
+	public static int getPictureBytes(String picture) {
+		StringBuilder p = new StringBuilder(picture);
+		int byteCount = 0;
+		while (p.length() > 0 && p.charAt(0) != ' ') {
+			if (p.toString().startsWith("9(") ||
+					   p.toString().startsWith("X(") ||
+					   p.toString().startsWith("A(") ||
+					   p.toString().startsWith("Z(")) {
+				
+				int i = p.indexOf(")");
+				if (i < 3) {
+					throw new Error("invalid picture: " + picture);
+				}
+				int j;
+				try {
+					j = Integer.valueOf(p.substring(2, i));
+				} catch (NumberFormatException e) {
+					throw new Error("invalid picture: " + picture);
+				}
+				byteCount += j;
+				p.delete(0, i + 1);
+			} else {
+				if (p.charAt(0) != 'S' && p.charAt(0) != 'V') {
+					byteCount += 1;
+				}
+				p.deleteCharAt(0);
+			}
+		}
+		return byteCount;
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -457,12 +491,6 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * @generated NOT
 	 */
 	public short getLength() {
-		// *********************************************************************
-		// This method does not guarantee to be able to return a length for each
-		// element, so it needs some fine-tuning (read: it has to be redesigned
-		// from scratch).  It will throw an UnsupportedOperationException in the 
-		// case an element's length cannot be derived.
-		// *********************************************************************
 		if (getUsage() == Usage.COMPUTATIONAL_1) {
 			return 4;
 		} else if (getUsage() == Usage.CONDITION_NAME) {
@@ -471,110 +499,25 @@ public class ElementImpl extends EObjectImpl implements Element {
 					getChildren().get(0).getLevel() == 88) && 
 				   getPicture() != null) {			
 			
+			int pictureBytes = getPictureBytes(getPicture());
+			
 			if (getUsage() == Usage.BIT) {
-				if (getPicture().toUpperCase().startsWith("X(") &&
-					getPicture().toUpperCase().endsWith(")")) {
-						
-					String p = 
-						getPicture().substring(2, getPicture().indexOf(")"));
-					return (short)(Short.valueOf(p) / 8);
-				}
+				short i = (short) (pictureBytes / 8);
+				return i > 0 ? i : 1;
 			} else if (getUsage() == Usage.COMPUTATIONAL) {
-				if (getPicture().equals("9(2)") ||
-					getPicture().equals("S9(4)") ||
-					getPicture().equals("S9(4) SYNC")) {
-					
+				if (pictureBytes < 5) {
 					return 2;
-				} else if (getPicture().equals("S9(8)") ||
-						   getPicture().equals("S9(8) SYNC")) {
-					
+				} else if (pictureBytes < 10) {					
 					return 4;
+				} else {					
+					return 8;
 				}
-			} else if (getUsage() == Usage.COMPUTATIONAL_3) {
-				
-				// we now use a modified copy of DMLJ CORE's PictureAnalyzer...
-				int digits = PictureAnalyzer.getDigitCount(getPicture());
-				return (short) (digits / 2 + 1);
-				
+			} else if (getUsage() == Usage.COMPUTATIONAL_3) {				
+				return (short) (pictureBytes / 2 + 1);				
 			} else if (getUsage() == Usage.DISPLAY) {
-				if (getPicture().equals("S9(9)V9(6)")) {
-					return 15;
-				} else if (getPicture().equals("9(6)V9(4)")) {
-						return 10;
-				} else if (getPicture().equals("S9(7)V9(6)") ||
-						   getPicture().equals("S9(11)V9(2)")) {
-					
-					return 13;
-				} else if ((getPicture().toUpperCase().startsWith("X(") ||
-					 getPicture().toUpperCase().startsWith("9(") ||
-					 getPicture().toUpperCase().startsWith("S9(")) &&
-					getPicture().toUpperCase().endsWith(")")) {
-					
-					int i = 
-						getPicture().toUpperCase().startsWith("S9(") ? 3 : 2;
-					String p = 
-						getPicture().substring(i, getPicture().indexOf(")"));
-					return Short.valueOf(p);
-				} else if (getPicture().toUpperCase().startsWith("X") &&
-						   getPicture().toUpperCase().endsWith("X")) {
-					
-					return (short)getPicture().length();
-				} else if (getPicture().startsWith("9") &&
-						   !getPicture().startsWith("9(") &&						
-						   getPicture().endsWith("9")) {
-					
-					if (getPicture().toUpperCase().indexOf("V") > -1) {
-						return (short)(getPicture().length() - 1);
-					} else {
-						return (short)getPicture().length();
-					}
-				} else if (getPicture().startsWith("S9") &&
-						   !getPicture().startsWith("S9(") &&
-						   getPicture().endsWith("9")) {
-					
-					if (getPicture().toUpperCase().indexOf("V") > -1) {
-						return (short)(getPicture().length() - 2);
-					} else {
-						return (short)(getPicture().length() - 1);
-					}
-				} else if (getPicture().startsWith("S9(") &&						   
-						   getPicture().endsWith("9") &&
-						   getPicture().toUpperCase().indexOf("V") > -1) {
-										
-					int i = getPicture().length() -
-							getPicture().toUpperCase().indexOf("V") - 1;
-					String p = 
-						getPicture().substring(3, getPicture().indexOf(")"));
-					return (short) (Short.valueOf(p) + i);					
-				} else if (getPicture().equals("9V9(02)")) {
-					return 3;
-				} else if (getPicture().equals("9(3)V99") ||
-						   getPicture().equals("9(03)V99") ||
-						   getPicture().equals("S9V9(4)")) {
-					
-					return 5;
-				} else if (getPicture().equals("9V9(6)")) {
-					return 7;
-				} else if (getPicture().equals("S9V9(8)")) {
-					return 9;
-				} else if (getPicture().equals("9V9(4)")) {
-					return 5;
-				} else if (getPicture().equals("9(07)V99")) {
-					return 9;
-				} else if (getPicture().equals("9(01)V99")) {
-					return 3;
-				} else if (getPicture().equals("9(05)V99")) {
-					return 7;
-				} else if (getPicture().equals("9V9(04)")) {
-					return 5;
-				} else if (getPicture().equals("9V9(10)")) {
-					return 11;
-				} else if (getPicture().equals("S9V9(6)")) {
-					return 7;
-				}
+				return (short) pictureBytes;
 			}
-			throw new UnsupportedOperationException(getName() + " PIC " +
-												    getPicture() + " " + 
+			throw new UnsupportedOperationException(getName() + " PIC " + getPicture() + " " + 
 												    getUsage());
 		} else {
 			short i = 0;
