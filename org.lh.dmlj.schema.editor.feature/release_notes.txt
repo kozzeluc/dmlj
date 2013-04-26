@@ -1,6 +1,17 @@
+Version 1.1.0
+=============
+- A diagram can now be printed.
+- Removal of a schema diagram data's unit property - units have been pulled to the workspace level.
+- Reviewed preferences; besides importing dictionary reference guides, the unit(s) can be set and 
+  print margins (top/bottom/left/right, range 0 to 1 inch) can be specified; margins are stored in
+  pels (logical pixels).
+- The rulers in a diagram editor follow the configured units via a preference store listener.
+
+
 Version 1.0.1
 =============
 - The calculation of element lengths has been drastically improved.
+
 
 Version 1.0.0
 =============
