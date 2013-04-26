@@ -644,22 +644,13 @@ public interface SchemaPackage extends EPackage {
 	int DIAGRAM_DATA__SNAP_TO_GUIDES = 9;
 
 	/**
-	 * The feature id for the '<em><b>Unit</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__UNIT = 10;
-
-	/**
 	 * The feature id for the '<em><b>Vertical Ruler</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DATA__VERTICAL_RULER = 11;
+	int DIAGRAM_DATA__VERTICAL_RULER = 10;
 
 	/**
 	 * The feature id for the '<em><b>Zoom Level</b></em>' attribute.
@@ -668,7 +659,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DATA__ZOOM_LEVEL = 12;
+	int DIAGRAM_DATA__ZOOM_LEVEL = 11;
 
 	/**
 	 * The feature id for the '<em><b>Rulers</b></em>' containment reference list.
@@ -677,7 +668,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DATA__RULERS = 13;
+	int DIAGRAM_DATA__RULERS = 12;
 
 	/**
 	 * The number of structural features of the '<em>Diagram Data</em>' class.
@@ -686,7 +677,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DATA_FEATURE_COUNT = 14;
+	int DIAGRAM_DATA_FEATURE_COUNT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Eyecatcher</b></em>' attribute.
@@ -2138,16 +2129,6 @@ public interface SchemaPackage extends EPackage {
 	int STORAGE_MODE = 39;
 
 	/**
-	 * The meta object id for the '{@link org.lh.dmlj.schema.Unit <em>Unit</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.lh.dmlj.schema.Unit
-	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getUnit()
-	 * @generated
-	 */
-	int UNIT = 40;
-
-	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMembershipOption <em>Set Membership Option</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2217,7 +2198,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getUsage()
 	 * @generated
 	 */
-	int USAGE = 41;
+	int USAGE = 40;
 
 
 	/**
@@ -3526,17 +3507,6 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getDiagramData_SnapToGuides();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.DiagramData#getUnit <em>Unit</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Unit</em>'.
-	 * @see org.lh.dmlj.schema.DiagramData#getUnit()
-	 * @see #getDiagramData()
-	 * @generated
-	 */
-	EAttribute getDiagramData_Unit();
-
-	/**
 	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.DiagramData#getVerticalRuler <em>Vertical Ruler</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4330,16 +4300,6 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getStorageMode();
-
-	/**
-	 * Returns the meta object for enum '{@link org.lh.dmlj.schema.Unit <em>Unit</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Unit</em>'.
-	 * @see org.lh.dmlj.schema.Unit
-	 * @generated
-	 */
-	EEnum getUnit();
 
 	/**
 	 * Returns the meta object for enum '{@link org.lh.dmlj.schema.SetMembershipOption <em>Set Membership Option</em>}'.
@@ -5424,14 +5384,6 @@ public interface SchemaPackage extends EPackage {
 		EAttribute DIAGRAM_DATA__SNAP_TO_GUIDES = eINSTANCE.getDiagramData_SnapToGuides();
 
 		/**
-		 * The meta object literal for the '<em><b>Unit</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DIAGRAM_DATA__UNIT = eINSTANCE.getDiagramData_Unit();
-
-		/**
 		 * The meta object literal for the '<em><b>Vertical Ruler</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6060,16 +6012,6 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum STORAGE_MODE = eINSTANCE.getStorageMode();
-
-		/**
-		 * The meta object literal for the '{@link org.lh.dmlj.schema.Unit <em>Unit</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.lh.dmlj.schema.Unit
-		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getUnit()
-		 * @generated
-		 */
-		EEnum UNIT = eINSTANCE.getUnit();
 
 		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.SetMembershipOption <em>Set Membership Option</em>}' enum.

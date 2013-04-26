@@ -78,8 +78,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="snapToGeometry" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="snapToGrid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="snapToGuides" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" lowerBound="1" eType="#//Unit"
-        defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="verticalRuler" lowerBound="1"
         eType="#//Ruler"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="zoomLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
@@ -418,11 +416,6 @@
         eOpposite="#//AreaSpecification/systemOwner"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//Set"
         eOpposite="#//Set/systemOwner"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="Unit">
-    <eLiterals name="CENTIMETERS" value="1"/>
-    <eLiterals name="INCHES"/>
-    <eLiterals name="PIXELS" value="2"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Usage">
     <eLiterals name="DISPLAY"/>

@@ -1087,17 +1087,6 @@
     <element xmi:type="ecore:EClass" href="Schema.ecore#//Connector"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_VrzIImj-EeGLtpPOx2qXJA" x="1365" y="532" width="81" height="50"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_ZKzV4GkPEeGLtpPOx2qXJA" type="1005">
-    <children xmi:type="notation:Node" xmi:id="_ZKzV42kPEeGLtpPOx2qXJA" type="4010"/>
-    <children xmi:type="notation:Node" xmi:id="_ZKzV5GkPEeGLtpPOx2qXJA" type="5008">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_ZKzV5WkPEeGLtpPOx2qXJA"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_ZKzV5mkPEeGLtpPOx2qXJA"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_ZKzV52kPEeGLtpPOx2qXJA"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_ZKzV4WkPEeGLtpPOx2qXJA" fontColor="4210752" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EEnum" href="Schema.ecore#//Unit"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZKzV4mkPEeGLtpPOx2qXJA" x="2505" y="624"/>
-  </children>
   <children xmi:type="notation:Node" xmi:id="_nEwMIG01EeK2XtP5ne4GHw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_nExaQG01EeK2XtP5ne4GHw" type="4001"/>
     <children xmi:type="notation:Node" xmi:id="_nEyBUG01EeK2XtP5ne4GHw" type="5001">
@@ -1225,7 +1214,6 @@
       <nodeMap xmi:type="notation:NodeEntry" xmi:id="_nXYrAWj8EeGLtpPOx2qXJA" value="Left" key="_bpn0EWhJEeGYNNH4YLenhA"/>
       <nodeMap xmi:type="notation:NodeEntry" xmi:id="_ood4YGj8EeGLtpPOx2qXJA" value="Left" key="_bpxkwGhJEeGYNNH4YLenhA"/>
       <nodeMap xmi:type="notation:NodeEntry" xmi:id="_0KwaYGj9EeGLtpPOx2qXJA" value="Left" key="_HRrS0Gj8EeGLtpPOx2qXJA"/>
-      <nodeMap xmi:type="notation:NodeEntry" xmi:id="_rB_Z4GkPEeGLtpPOx2qXJA" value="Left" key="_ZKzV4GkPEeGLtpPOx2qXJA"/>
     </verticalGuides>
     <verticalGuides xmi:type="notation:Guide" xmi:id="_qBbhUGj6EeGLtpPOx2qXJA" position="1254"/>
     <verticalGuides xmi:type="notation:Guide" xmi:id="_2Vd9EXAREeGaMZO1p5Cb-g" position="2110">

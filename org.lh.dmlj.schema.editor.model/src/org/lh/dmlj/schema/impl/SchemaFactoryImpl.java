@@ -124,8 +124,6 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 				return createSortSequenceFromString(eDataType, initialValue);
 			case SchemaPackage.STORAGE_MODE:
 				return createStorageModeFromString(eDataType, initialValue);
-			case SchemaPackage.UNIT:
-				return createUnitFromString(eDataType, initialValue);
 			case SchemaPackage.USAGE:
 				return createUsageFromString(eDataType, initialValue);
 			default:
@@ -165,8 +163,6 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 				return convertSortSequenceToString(eDataType, instanceValue);
 			case SchemaPackage.STORAGE_MODE:
 				return convertStorageModeToString(eDataType, instanceValue);
-			case SchemaPackage.UNIT:
-				return convertUnitToString(eDataType, instanceValue);
 			case SchemaPackage.USAGE:
 				return convertUsageToString(eDataType, instanceValue);
 			default:
@@ -551,26 +547,6 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	 * @generated
 	 */
 	public String convertStorageModeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Unit createUnitFromString(EDataType eDataType, String initialValue) {
-		Unit result = Unit.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertUnitToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

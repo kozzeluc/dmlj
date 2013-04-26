@@ -30,7 +30,6 @@ import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.Unit;
 
 /**
  * <!-- begin-user-doc -->
@@ -49,7 +48,6 @@ import org.lh.dmlj.schema.Unit;
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#isSnapToGeometry <em>Snap To Geometry</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#isSnapToGrid <em>Snap To Grid</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#isSnapToGuides <em>Snap To Guides</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getUnit <em>Unit</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getVerticalRuler <em>Vertical Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getZoomLevel <em>Zoom Level</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getRulers <em>Rulers</em>}</li>
@@ -208,26 +206,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * @ordered
 	 */
 	protected boolean snapToGuides = SNAP_TO_GUIDES_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getUnit() <em>Unit</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getUnit()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final Unit UNIT_EDEFAULT = Unit.CENTIMETERS;
-
-	/**
-	 * The cached value of the '{@link #getUnit() <em>Unit</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getUnit()
-	 * @generated
-	 * @ordered
-	 */
-	protected Unit unit = UNIT_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getVerticalRuler() <em>Vertical Ruler</em>}' reference.
@@ -532,27 +510,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Unit getUnit() {
-		return unit;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setUnit(Unit newUnit) {
-		Unit oldUnit = unit;
-		unit = newUnit == null ? UNIT_EDEFAULT : newUnit;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.DIAGRAM_DATA__UNIT, oldUnit, unit));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Ruler getVerticalRuler() {
 		if (verticalRuler != null && verticalRuler.eIsProxy()) {
 			InternalEObject oldVerticalRuler = (InternalEObject)verticalRuler;
@@ -637,8 +594,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 				return isSnapToGrid();
 			case SchemaPackage.DIAGRAM_DATA__SNAP_TO_GUIDES:
 				return isSnapToGuides();
-			case SchemaPackage.DIAGRAM_DATA__UNIT:
-				return getUnit();
 			case SchemaPackage.DIAGRAM_DATA__VERTICAL_RULER:
 				if (resolve) return getVerticalRuler();
 				return basicGetVerticalRuler();
@@ -693,9 +648,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 			case SchemaPackage.DIAGRAM_DATA__SNAP_TO_GUIDES:
 				setSnapToGuides((Boolean)newValue);
 				return;
-			case SchemaPackage.DIAGRAM_DATA__UNIT:
-				setUnit((Unit)newValue);
-				return;
 			case SchemaPackage.DIAGRAM_DATA__VERTICAL_RULER:
 				setVerticalRuler((Ruler)newValue);
 				return;
@@ -748,9 +700,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 			case SchemaPackage.DIAGRAM_DATA__SNAP_TO_GUIDES:
 				setSnapToGuides(SNAP_TO_GUIDES_EDEFAULT);
 				return;
-			case SchemaPackage.DIAGRAM_DATA__UNIT:
-				setUnit(UNIT_EDEFAULT);
-				return;
 			case SchemaPackage.DIAGRAM_DATA__VERTICAL_RULER:
 				setVerticalRuler((Ruler)null);
 				return;
@@ -792,8 +741,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 				return snapToGrid != SNAP_TO_GRID_EDEFAULT;
 			case SchemaPackage.DIAGRAM_DATA__SNAP_TO_GUIDES:
 				return snapToGuides != SNAP_TO_GUIDES_EDEFAULT;
-			case SchemaPackage.DIAGRAM_DATA__UNIT:
-				return unit != UNIT_EDEFAULT;
 			case SchemaPackage.DIAGRAM_DATA__VERTICAL_RULER:
 				return verticalRuler != null;
 			case SchemaPackage.DIAGRAM_DATA__ZOOM_LEVEL:
@@ -824,8 +771,6 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 		result.append(snapToGrid);
 		result.append(", snapToGuides: ");
 		result.append(snapToGuides);
-		result.append(", unit: ");
-		result.append(unit);
 		result.append(", zoomLevel: ");
 		result.append(zoomLevel);
 		result.append(')');

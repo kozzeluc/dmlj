@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isSnapToGeometry <em>Snap To Geometry</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isSnapToGrid <em>Snap To Grid</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isSnapToGuides <em>Snap To Guides</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.DiagramData#getUnit <em>Unit</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getVerticalRuler <em>Vertical Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getZoomLevel <em>Zoom Level</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getRulers <em>Rulers</em>}</li>
@@ -305,36 +304,6 @@ public interface DiagramData extends EObject {
 	 * @generated
 	 */
 	void setSnapToGuides(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Unit</b></em>' attribute.
-	 * The default value is <code>""</code>.
-	 * The literals are from the enumeration {@link org.lh.dmlj.schema.Unit}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Unit</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Unit</em>' attribute.
-	 * @see org.lh.dmlj.schema.Unit
-	 * @see #setUnit(Unit)
-	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Unit()
-	 * @model default="" required="true"
-	 * @generated
-	 */
-	Unit getUnit();
-
-	/**
-	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#getUnit <em>Unit</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Unit</em>' attribute.
-	 * @see org.lh.dmlj.schema.Unit
-	 * @see #getUnit()
-	 * @generated
-	 */
-	void setUnit(Unit value);
 
 	/**
 	 * Returns the value of the '<em><b>Vertical Ruler</b></em>' reference.

@@ -56,7 +56,6 @@ import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.Unit;
 import org.lh.dmlj.schema.Usage;
 import org.lh.dmlj.schema.ViaSpecification;
 
@@ -304,13 +303,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	private EEnum storageModeEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EEnum unitEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1445,7 +1437,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getDiagramData_ZoomLevel() {
-		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(12);
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -1454,7 +1446,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getDiagramData_Rulers() {
-		return (EReference)diagramDataEClass.getEStructuralFeatures().get(13);
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -1507,17 +1499,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDiagramData_Unit() {
-		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(10);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getDiagramData_VerticalRuler() {
-		return (EReference)diagramDataEClass.getEStructuralFeatures().get(11);
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -2182,15 +2165,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EEnum getUnit() {
-		return unitEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EEnum getSetMembershipOption() {
 		return setMembershipOptionEEnum;
 	}
@@ -2316,7 +2290,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SNAP_TO_GEOMETRY);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SNAP_TO_GRID);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SNAP_TO_GUIDES);
-		createEAttribute(diagramDataEClass, DIAGRAM_DATA__UNIT);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__VERTICAL_RULER);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__ZOOM_LEVEL);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__RULERS);
@@ -2507,7 +2480,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		setOrderEEnum = createEEnum(SET_ORDER);
 		sortSequenceEEnum = createEEnum(SORT_SEQUENCE);
 		storageModeEEnum = createEEnum(STORAGE_MODE);
-		unitEEnum = createEEnum(UNIT);
 		usageEEnum = createEEnum(USAGE);
 	}
 
@@ -2586,7 +2558,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getDiagramData_SnapToGeometry(), ecorePackage.getEBoolean(), "snapToGeometry", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_SnapToGrid(), ecorePackage.getEBoolean(), "snapToGrid", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_SnapToGuides(), ecorePackage.getEBoolean(), "snapToGuides", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDiagramData_Unit(), this.getUnit(), "unit", "", 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_VerticalRuler(), this.getRuler(), null, "verticalRuler", null, 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_ZoomLevel(), ecorePackage.getEDouble(), "zoomLevel", "1.0d", 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_Rulers(), this.getRuler(), this.getRuler_DiagramData(), "rulers", null, 2, 2, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2871,11 +2842,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEEnumLiteral(storageModeEEnum, StorageMode.FIXED_COMPRESSED);
 		addEEnumLiteral(storageModeEEnum, StorageMode.VARIABLE);
 		addEEnumLiteral(storageModeEEnum, StorageMode.VARIABLE_COMPRESSED);
-
-		initEEnum(unitEEnum, Unit.class, "Unit");
-		addEEnumLiteral(unitEEnum, Unit.CENTIMETERS);
-		addEEnumLiteral(unitEEnum, Unit.INCHES);
-		addEEnumLiteral(unitEEnum, Unit.PIXELS);
 
 		initEEnum(usageEEnum, Usage.class, "Usage");
 		addEEnumLiteral(usageEEnum, Usage.DISPLAY);
