@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -47,8 +48,15 @@ import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.PaletteToolbar;
 import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
+import org.eclipse.gef.print.PrintGraphicalViewerOperation;
 import org.eclipse.gef.requests.SimpleFactory;
 import org.eclipse.gef.rulers.RulerProvider;
+import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.DeleteAction;
+import org.eclipse.gef.ui.actions.PrintAction;
+import org.eclipse.gef.ui.actions.RedoAction;
+import org.eclipse.gef.ui.actions.SelectAllAction;
+import org.eclipse.gef.ui.actions.UndoAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
@@ -60,8 +68,12 @@ import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.printing.PrintDialog;
+import org.eclipse.swt.printing.Printer;
+import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -85,6 +97,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
+import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
 
 public class SchemaEditor 
@@ -284,15 +297,13 @@ public class SchemaEditor
 		
 	    // left (vertical) ruler properties				
 	    verticalRulerProvider = 
-	        new SchemaEditorRulerProvider(schema.getDiagramData()
-	        								    .getVerticalRuler());
+	        new SchemaEditorRulerProvider(schema.getDiagramData().getVerticalRuler(), viewer);
 	    getGraphicalViewer().setProperty(RulerProvider.PROPERTY_VERTICAL_RULER,
 	  				     				 verticalRulerProvider);		
 	    
 	    // top (horizontal) ruler properties
 	    horizontalRulerProvider = 
-	        new SchemaEditorRulerProvider(schema.getDiagramData()
-	        									.getHorizontalRuler());		
+	        new SchemaEditorRulerProvider(schema.getDiagramData().getHorizontalRuler(), viewer);		
 	    getGraphicalViewer().setProperty(RulerProvider.PROPERTY_HORIZONTAL_RULER, 
 					     				 horizontalRulerProvider);
 	    
@@ -413,6 +424,57 @@ public class SchemaEditor
 		schema.getDiagramData().eAdapters().add(modelChangeListener);
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void createActions() {
+		ActionRegistry registry = getActionRegistry();
+		IAction action;
+
+		action = new UndoAction(this);
+		registry.registerAction(action);
+		getStackActions().add(action.getId());
+
+		action = new RedoAction(this);
+		registry.registerAction(action);
+		getStackActions().add(action.getId());
+
+		action = new SelectAllAction(this);
+		registry.registerAction(action);
+
+		action = new DeleteAction((IWorkbenchPart) this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());		
+
+		action = new PrintAction(this) {
+			public void run() {
+				GraphicalViewer viewer;
+				viewer = (GraphicalViewer) getWorkbenchPart().getAdapter(GraphicalViewer.class);
+
+				PrintDialog dialog = new PrintDialog(viewer.getControl().getShell(), SWT.NULL);
+				PrinterData data = dialog.open();
+
+				if (data != null) {
+					// create a print operation
+					PrintGraphicalViewerOperation op = 
+						new PrintGraphicalViewerOperation(new Printer(data), viewer);
+					// set the printmargins; margins are stored in pels (logical pixels; 
+					// 72 pels == 1 inch)
+					IPreferenceStore store = Plugin.getDefault().getPreferenceStore();					
+					int topMargin = (int) (store.getInt(PreferenceConstants.TOP_MARGIN));
+					int leftMargin = (int) (store.getInt(PreferenceConstants.LEFT_MARGIN));
+					int bottomMargin = (int) (store.getInt(PreferenceConstants.BOTTOM_MARGIN));
+					int rightMargin = (int) (store.getInt(PreferenceConstants.RIGHT_MARGIN));						
+					Insets printMargin = 
+						new Insets(topMargin, leftMargin, bottomMargin, rightMargin);
+					op.setPrintMargin(printMargin);					
+					// run the print operation
+					op.run(getWorkbenchPart().getTitle());
+				}
+			}			
+		};
+		registry.registerAction(action);
+	}	
 	
 	@Override
 	protected void createGraphicalViewer(Composite parent) {

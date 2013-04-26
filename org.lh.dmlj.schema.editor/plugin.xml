@@ -13,6 +13,12 @@
       </propertyTester>
    </extension>
    <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.lh.dmlj.schema.editor.preference.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
          point="org.eclipse.ui.commands">
       <command
             id="org.lh.dmlj.schema.editor.ui.command.update"
@@ -111,8 +117,20 @@
          point="org.eclipse.ui.preferencePages">
       <page
             class="org.lh.dmlj.schema.editor.preference.MainPreferencePage"
-            id="org.lh.dmlj.schema.editor.preference.MainPage"
+            id="org.lh.dmlj.schema.editor.preference.MainPreferencePage"
             name="CA IDMS/DB Schema Editor">
+      </page>
+      <page
+            category="org.lh.dmlj.schema.editor.preference.MainPreferencePage"
+            class="org.lh.dmlj.schema.editor.preference.PrintPreferencesPreferencePage"
+            id="org.lh.dmlj.schema.editor.preference.PrintPreferencesPage"
+            name="Printing">
+      </page>
+      <page
+            category="org.lh.dmlj.schema.editor.preference.MainPreferencePage"
+            class="org.lh.dmlj.schema.editor.preference.ReferenceGuidesPreferencePage"
+            id="org.lh.dmlj.schema.editor.preference.ReferenceGuidesPage"
+            name="IDMSNTWK">
       </page>
    </extension>
    <extension

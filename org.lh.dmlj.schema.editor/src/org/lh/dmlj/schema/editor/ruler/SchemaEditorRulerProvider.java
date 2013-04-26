@@ -6,26 +6,35 @@ import java.util.List;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.rulers.RulerChangeListener;
 import org.eclipse.gef.rulers.RulerProvider;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.Unit;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.CreateGuideCommand;
 import org.lh.dmlj.schema.editor.command.DeleteGuideCommand;
 import org.lh.dmlj.schema.editor.command.MoveGuideCommand;
+import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
+import org.lh.dmlj.schema.editor.preference.Unit;
 
-public class SchemaEditorRulerProvider extends RulerProvider {
+public class SchemaEditorRulerProvider 
+	extends RulerProvider implements IPropertyChangeListener {
 	
-	private GuideListener listener;
-	private Ruler 		  ruler;	
+	private GraphicalViewer graphicalViewer;
+	private GuideListener 	listener;
+	private Ruler 		  	ruler;	
 	
-	public SchemaEditorRulerProvider(Ruler ruler) {
+	public SchemaEditorRulerProvider(Ruler ruler, GraphicalViewer graphicalViewer) {
 		super();
 		
 		this.ruler = ruler;
+		this.graphicalViewer = graphicalViewer;
 		
 		// we need a listener so that we can notify our own listeners when a
 		// guide is added, removed or moved - this is necessary to show/hide the
@@ -38,7 +47,11 @@ public class SchemaEditorRulerProvider extends RulerProvider {
 		// ...and to each existing guide
 		for (Guide guide : ruler.getGuides()) {
 			guide.eAdapters().add(listener);
-		}		
+		}
+		
+		// make sure we can track changes in the preferred units 
+		Plugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);		
+		
 	}
 	
 	/**
@@ -48,13 +61,17 @@ public class SchemaEditorRulerProvider extends RulerProvider {
 	public void dispose() {
 		
 				
-		// attach the guide listener from each existing guide...
+		// detach the guide listener from each existing guide...
 		for (Guide guide : ruler.getGuides()) {
 			guide.eAdapters().remove(listener);
 		}
 		
 		// and from the the ruler...
 		ruler.eAdapters().remove(listener);
+		
+		// remove the preference store listener
+		Plugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
+		
 	}
 	
 	@Override
@@ -107,7 +124,8 @@ public class SchemaEditorRulerProvider extends RulerProvider {
 	
 	@Override
 	public int getUnit() {
-		Unit unit = ruler.getDiagramData().getUnit();
+		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		Unit unit = Unit.valueOf(store.getString(PreferenceConstants.UNITS));		
 		if (unit == Unit.CENTIMETERS) {
 			return UNIT_CENTIMETERS;
 		} else if (unit == Unit.INCHES) {
@@ -117,6 +135,19 @@ public class SchemaEditorRulerProvider extends RulerProvider {
 		}		
 	}
 	
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getProperty().equals(PreferenceConstants.UNITS)) {						
+			if (ruler.getDiagramData().isShowRulers()) {
+				// repaint the ruler:
+				graphicalViewer.setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
+										    Boolean.valueOf(false)); // hide it...
+				graphicalViewer.setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
+					    					Boolean.valueOf(true));  // and show it again
+			}
+		}
+	}
+
 	class GuideListener implements Adapter {
 
 		private List<?> listeners;

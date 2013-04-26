@@ -16,6 +16,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.LabelRetargetAction;
+import org.eclipse.ui.actions.RetargetAction;
 
 public class SchemaEditorActionBarContributor extends ActionBarContributor {
 
@@ -36,6 +37,8 @@ public class SchemaEditorActionBarContributor extends ActionBarContributor {
 		
 		//addRetargetAction(new RetargetAction(GEFActionConstants.TOGGLE_GRID_VISIBILITY,
 		//				  					 "Grid", IAction.AS_CHECK_BOX));
+		
+		addRetargetAction(new RetargetAction(ActionFactory.PRINT.getId(), "&Print"));
 	}	
 	
 	@Override
