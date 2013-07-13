@@ -81,6 +81,14 @@ public class FileSelectionPage extends AbstractDataEntryPage {
 			}
 		});
 		btnBrowse.setText("Browse...");		
+		new Label(container, SWT.NONE);
+		
+		Text lblNewLabel = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		GridData gd_lblNewLabel = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gd_lblNewLabel.verticalIndent = 10;
+		gd_lblNewLabel.widthHint = 300;
+		lblNewLabel.setLayoutData(gd_lblNewLabel);
+		lblNewLabel.setText("Please specify a file that was created with the schema compiler's 'PUNch SCHema name is schema-name Version is version-number AS SYNtax.' statement. ");
 		
 		return container;
 	}

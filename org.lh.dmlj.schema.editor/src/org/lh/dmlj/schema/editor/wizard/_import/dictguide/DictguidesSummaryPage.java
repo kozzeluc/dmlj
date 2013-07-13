@@ -55,9 +55,7 @@ public class DictguidesSummaryPage extends WizardPage {
 		txtId.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if (e.keyCode == 13) {
-					validatePage();
-				}
+				validatePage();
 			}
 		});
 		txtId.addFocusListener(new FocusAdapter() {

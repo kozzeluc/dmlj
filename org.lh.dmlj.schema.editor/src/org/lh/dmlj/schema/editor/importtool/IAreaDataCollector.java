@@ -9,11 +9,9 @@ public interface IAreaDataCollector<T> {
 
 	String getName(T context);	
 
-	Collection<ProcedureCallTime> getProcedureCallTimes(T context, 
-										  			    String procedureName);
+	Collection<ProcedureCallTime> getProcedureCallTimes(T context);
 
-	Collection<AreaProcedureCallFunction> getProcedureCallFunctions(T context, 
-												 		      	    String procedureName);
+	Collection<AreaProcedureCallFunction> getProcedureCallFunctions(T context);
 
 	Collection<String> getProceduresCalled(T context);
 	

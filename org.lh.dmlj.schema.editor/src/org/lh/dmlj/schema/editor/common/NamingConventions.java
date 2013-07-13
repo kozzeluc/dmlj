@@ -62,26 +62,26 @@ public abstract class NamingConventions {
 	
 	private static ValidationResult validateElementName(String name) {
 		
-		// name must be a 1- to 32-character name.		
+		// name must be a 1- to 32-character name.							*** ONLY CHECK ***		
 		if (name == null || name.length() < 1 || name.length() > 32) {				
 			String message = "must be a 1- to 32-character value";
 			return new ValidationResult(ValidationResult.Status.ERROR, message);
 		}
 		
 		// The first character must be A through Z (alphabetic), #, $, or @ 
-		// (international symbols).
-		String firstChar = name.substring(0, 1).toUpperCase();
+		// (international symbols).  										*** SUPPRESSED CHECK ***
+		/*String firstChar = name.substring(0, 1).toUpperCase();
 		String validFirstChars = LETTERS + POUND_SIGN + DOLLAR_SIGN + AT_SIGN;
 		if (validFirstChars.indexOf(firstChar) == -1) {
 			String message = "first character must be A through Z " +
 							 "(alphabetic), #, $, or @";
 			return new ValidationResult(ValidationResult.Status.ERROR, message);
-		}
+		}*/
 		
 		// The remaining characters can be alphabetic or international symbols,  
 		// 0 through 9, or the hyphen (except as the last character or following 
-		// another hyphen).
-		String validNextChars = 
+		// another hyphen).													*** SUPPRESSED CHECK ***
+		/*String validNextChars = 
 			LETTERS + DIGITS + POUND_SIGN + DOLLAR_SIGN + AT_SIGN + HYPHEN;
 		for (int i = 1; i < name.length(); i++) {
 			String remainingChar = name.substring(i, i + 1).toUpperCase();
@@ -98,7 +98,7 @@ public abstract class NamingConventions {
 			String message = "the hyphen can not be the last character " +
 							 "or follow another hyphen";
 			return new ValidationResult(ValidationResult.Status.ERROR, message);
-		}
+		}*/
 		
 		// name is valid
 		return new ValidationResult(ValidationResult.Status.OK);

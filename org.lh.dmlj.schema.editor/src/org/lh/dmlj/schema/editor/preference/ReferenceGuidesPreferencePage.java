@@ -39,7 +39,7 @@ public class ReferenceGuidesPreferencePage
 	 */
 	public ReferenceGuidesPreferencePage() {
 		super();
-		setDescription("[description goes here]");
+		setDescription("Reference Guide settings:");
 	}	
 
 	@Override
@@ -72,7 +72,7 @@ public class ReferenceGuidesPreferencePage
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				Shell shell = Display.getCurrent().getShells()[0];
+				Shell shell = Display.getCurrent().getActiveShell();
 				IWizard importWizard = new DictguidesImportWizard(true);
 				final WizardDialog wizardDialog = 						
 					new WizardDialog(shell, importWizard);

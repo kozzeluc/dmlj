@@ -132,6 +132,12 @@
             id="org.lh.dmlj.schema.editor.preference.ReferenceGuidesPage"
             name="IDMSNTWK">
       </page>
+      <page
+            category="org.lh.dmlj.schema.editor.preference.MainPreferencePage"
+            class="org.lh.dmlj.schema.editor.preference.ImportPreferencePage"
+            id="org.lh.dmlj.schema.editor.preference.ImportPage"
+            name="Import">
+      </page>
    </extension>
    <extension
          point="org.eclipse.ui.views.properties.tabbed.propertyContributor">

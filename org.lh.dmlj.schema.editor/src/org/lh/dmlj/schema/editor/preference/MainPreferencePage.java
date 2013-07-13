@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.eclipse.swt.widgets.Label;
 
 public class MainPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -19,13 +20,15 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	private Button btnInches;
 	private Button btnPixels;
 	
+	private Button btnLogDiagnosticMessages;
+	private Label lbldontCheckThis;
 	
 	/**
 	 * @wbp.parser.constructor
 	 */
 	public MainPreferencePage() {
 		super();
-		setDescription("General Settings");
+		setDescription("General Settings:");
 	}
 	
 	@Override
@@ -50,6 +53,18 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		
 		btnPixels = new Button(composite, SWT.RADIO);
 		btnPixels.setText("Pixels");
+		
+		btnLogDiagnosticMessages = new Button(container, SWT.CHECK);
+		GridData gd_btnLogDiagnosticMessages = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gd_btnLogDiagnosticMessages.verticalIndent = 10;
+		btnLogDiagnosticMessages.setLayoutData(gd_btnLogDiagnosticMessages);
+		btnLogDiagnosticMessages.setText("Log diagnostic messages to the workspace log");
+		
+		lbldontCheckThis = new Label(container, SWT.NONE);
+		GridData gd_lbldontCheckThis = new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1);
+		gd_lbldontCheckThis.horizontalIndent = 17;
+		lbldontCheckThis.setLayoutData(gd_lbldontCheckThis);
+		lbldontCheckThis.setText("(don't check this option unless asked)");
 		
 		initializeValues();
 		
@@ -78,6 +93,10 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnInches.setSelection(unit == Unit.INCHES);
 		btnPixels.setSelection(unit == Unit.PIXELS);
 		
+		boolean logDiagnosticMessages = 
+			store.getDefaultBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
+		btnLogDiagnosticMessages.setSelection(logDiagnosticMessages);
+		
 		doChecks();		
 		
 	}	
@@ -90,6 +109,10 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnCentimeters.setSelection(unit == Unit.CENTIMETERS);
 		btnInches.setSelection(unit == Unit.INCHES);
 		btnPixels.setSelection(unit == Unit.PIXELS);
+		
+		boolean logDiagnosticMessages = 
+			store.getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
+		btnLogDiagnosticMessages.setSelection(logDiagnosticMessages);
 		
 		doChecks();
 		
@@ -126,6 +149,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 			unit = Unit.PIXELS;		
 		}
 		store.setValue(PreferenceConstants.UNITS, unit.toString());
+		
+		store.setValue(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, 
+					   Boolean.valueOf(btnLogDiagnosticMessages.getSelection()));
 		
 		return true;
 	}	

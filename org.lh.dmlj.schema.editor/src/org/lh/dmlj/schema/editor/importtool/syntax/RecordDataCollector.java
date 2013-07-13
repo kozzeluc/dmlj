@@ -15,11 +15,10 @@ import org.lh.dmlj.schema.editor.importtool.IRecordDataCollector;
 public class RecordDataCollector 
 	implements IRecordDataCollector<SchemaSyntaxWrapper> {
 
-	private static List<String> getProcedureLines(SchemaSyntaxWrapper context,
-			  									  String procedureName) {
+	private static List<String> getProcedureLines(SchemaSyntaxWrapper context) {
 
 		List<String> list = new ArrayList<>();
-		String scanItem = "         CALL " + procedureName + " ";				
+		String scanItem = "         CALL ";				
 		for (String line : context.getLines()) {
 			if (line.startsWith(scanItem)) {				
 				list.add(line);
@@ -243,13 +242,19 @@ public class RecordDataCollector
 	}
 
 	@Override
-	public Collection<ProcedureCallTime> getProcedureCallTimes(SchemaSyntaxWrapper context, 
-															   String procedureName) {
+	public Collection<ProcedureCallTime> getProcedureCallTimes(SchemaSyntaxWrapper context) {
+		
+		List<String> procedureNames = new ArrayList<>(getProceduresCalled(context));
+		List<String> procedureLines = getProcedureLines(context);
+		
 		List<ProcedureCallTime> list = new ArrayList<>();
 		
-		for (String line : getProcedureLines(context, procedureName)) {
-			int i = line.indexOf(" " + procedureName + " ") + 
-					procedureName.length() + 2;
+		for (int k = 0; k < procedureLines.size(); k++) {
+			
+			String procedureName = procedureNames.get(k);
+			String line = procedureLines.get(k);
+			
+			int i = line.indexOf(" " + procedureName + " ") + procedureName.length() + 2;
 			
 			if (line.substring(i).startsWith("ON ERROR DURING")) {
 				list.add(ProcedureCallTime.ON_ERROR_DURING);
@@ -272,14 +277,19 @@ public class RecordDataCollector
 	}
 
 	@Override
-	public Collection<RecordProcedureCallVerb> getProcedureCallVerbs(SchemaSyntaxWrapper context, 
-																	 String procedureName) {
+	public Collection<RecordProcedureCallVerb> getProcedureCallVerbs(SchemaSyntaxWrapper context) {
+		
+		List<String> procedureNames = new ArrayList<>(getProceduresCalled(context));
+		List<String> procedureLines = getProcedureLines(context);		
 		
 		List<RecordProcedureCallVerb> list = new ArrayList<>();
 		
-		for (String line : getProcedureLines(context, procedureName)) {
-			int i = line.indexOf(" " + procedureName + " ") + 
-					procedureName.length() + 2;
+		for (int k = 0; k < procedureLines.size(); k++) {
+			
+			String procedureName = procedureNames.get(k);
+			String line = procedureLines.get(k);
+		
+			int i = line.indexOf(" " + procedureName + " ") + procedureName.length() + 2;
 			int j;
 			if (line.substring(i).startsWith("ON ERROR DURING")) {
 				j = i + 15;
@@ -297,7 +307,8 @@ public class RecordDataCollector
 				}
 			} else {
 				list.add(RecordProcedureCallVerb.EVERY_DML_FUNCTION);
-			}			
+			}
+			
 		}
 		
 		return list;
@@ -311,9 +322,7 @@ public class RecordDataCollector
 			if (line.startsWith("         CALL ")) {
 				int i = line.indexOf(" ", 14);
 				String procedureName = line.substring(14, i).trim();
-				if (!list.contains(procedureName)) {
-					list.add(procedureName);
-				}
+				list.add(procedureName);
 			}
 		}
 		return list;
@@ -351,6 +360,12 @@ public class RecordDataCollector
 				return line.substring(35, i);
 			}
 		}
+		for (String line : context.getLines()) {
+			if (line.startsWith("*+       USES STRUCTURE OF RECORD ")) {
+				int i = line.indexOf(" VERSION ");
+				return line.substring(34, i);
+			}
+		}
 		return null;
 	}
 
@@ -361,9 +376,15 @@ public class RecordDataCollector
 				int i = line.indexOf(" VERSION ");
 				return Short.valueOf(line.substring(i + 9).trim()).shortValue();
 			}
-		}		
+		}
+		for (String line : context.getLines()) {
+			if (line.startsWith("*+       USES STRUCTURE OF RECORD ")) {
+				int i = line.indexOf(" VERSION ");
+				return Short.valueOf(line.substring(i + 9).trim()).shortValue();
+			}
+		}
 		return 0;
-	}	
+	}
 
 	@Override
 	public Short getViaDisplacementPageCount(SchemaSyntaxWrapper context) {

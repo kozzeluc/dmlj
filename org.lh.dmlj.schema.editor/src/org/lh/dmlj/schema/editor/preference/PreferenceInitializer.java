@@ -16,6 +16,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		// general preferences...
 		store.setDefault(PreferenceConstants.UNITS, Unit.CENTIMETERS.toString());
+		store.setDefault(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, false);
+		
+		// import preferences...
+		store.setDefault(PreferenceConstants.COMPRESSION_PROCEDURES, "IDMSCOMP");
 		
 		// printing preferences; margins are stored in pels (logical pixels; 72 pels == 1 inch)...
 		store.setDefault(PreferenceConstants.TOP_MARGIN, 0);

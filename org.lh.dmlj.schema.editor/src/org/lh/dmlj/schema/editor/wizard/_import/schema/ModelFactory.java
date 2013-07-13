@@ -144,17 +144,13 @@ class ModelFactory {
 		return areaSpecification;
 	}	
 	
-	Element createElement(SchemaRecord record, Element parent, String name,
-						  String baseName, boolean ignoreNamingConventions) {		
+	Element createElement(SchemaRecord record, Element parent, String name, String baseName) {		
 		
 		// validate the element names and convert it to upper case
 		String elementName = 
-			toUppercaseWithValidation(name, NamingConventions.Type.ELEMENT_NAME,
-									  ignoreNamingConventions);
+			toUppercaseWithValidation(name, NamingConventions.Type.ELEMENT_NAME, false);
 		String baseElementName = 
-			toUppercaseWithValidation(baseName, 
-									  NamingConventions.Type.ELEMENT_NAME,
-									  ignoreNamingConventions);
+			toUppercaseWithValidation(baseName, NamingConventions.Type.ELEMENT_NAME, false);
 			
 		// make sure the element does not yet exist unless it's a FILLER
 		if (!elementName.equals("FILLER")) {
@@ -262,8 +258,7 @@ class ModelFactory {
 	}	
 	
 	KeyElement createKeyElement(Key key, String elementName, 
-								SortSequence sortSequence,
-								boolean ignoreNamingConventions) {
+								SortSequence sortSequence) {
 		
 		KeyElement keyElement = SchemaFactory.eINSTANCE.createKeyElement();
 		key.getElements().add(keyElement);
@@ -273,9 +268,7 @@ class ModelFactory {
 			
 			// convert the element name to uppercase and have it validated
 			String keyElementName = 
-				toUppercaseWithValidation(elementName, 
-										  NamingConventions.Type.ELEMENT_NAME,
-										  ignoreNamingConventions);
+				toUppercaseWithValidation(elementName, NamingConventions.Type.ELEMENT_NAME, false);
 			
 			// No element named FILLER can be used in a key
 			if (keyElementName.equals("FILLER")) {

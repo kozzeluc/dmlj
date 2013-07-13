@@ -518,6 +518,7 @@ public abstract class Phase2ExtractorCatalog {
 					!p.endsWith(documentTitlePart) &&
 					!p.startsWith("Column name Column description Data") &&
 					!p.startsWith("Appendix ") &&
+					!p.startsWith("Chapter 15: XML") && 	// the 18.5 manual has a wrong footer
 					!p.endsWith(". SYSTEM Tables and SYSCA Views") && 
 					!p.trim().equals("SYSCA Objects") &&
 					!p.trim().equals("SYSCA Views") &&

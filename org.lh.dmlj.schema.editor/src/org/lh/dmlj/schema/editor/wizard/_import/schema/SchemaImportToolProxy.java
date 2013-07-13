@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.DuplicatesOption;
@@ -32,6 +33,7 @@ import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.ViaSpecification;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.importtool.IAreaDataCollector;
 import org.lh.dmlj.schema.editor.importtool.IDataCollectorRegistry;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
@@ -40,6 +42,7 @@ import org.lh.dmlj.schema.editor.importtool.IRecordDataCollector;
 import org.lh.dmlj.schema.editor.importtool.ISchemaDataCollector;
 import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 import org.lh.dmlj.schema.editor.importtool.ISetDataCollector;
+import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 
 public final class SchemaImportToolProxy {
 	
@@ -61,8 +64,7 @@ public final class SchemaImportToolProxy {
 	// our data collector registry
 	IDataCollectorRegistry dataCollectorRegistry = new DataCollectorRegistry();
 	
-	// the list of procedures that are used to compress records; will always
-	// contain "IDMSCOMP"
+	// the list of procedures that are used to compress records
 	private List<String> compressionProcedures;
 
 	public SchemaImportToolProxy(ISchemaImportTool tool,
@@ -74,18 +76,25 @@ public final class SchemaImportToolProxy {
 		this.dataEntryContext = dataEntryContext;
 		this.importToolParameters = importToolParameters;
 		
-		// create the list of compression procedure names
+		// create the list of compression procedure names (IDMSCOMP is no longer considered by 
+		// default a compression routine unless it is specified as such in the preferences)
 		compressionProcedures = new ArrayList<>();
-		compressionProcedures.add("IDMSCOMP");
 		List<String> contextCompressionProcedures = 
 			dataEntryContext.getAttribute(GeneralContextAttributeKeys.COMPRESSION_PROCEDURE_NAMES);
-		if (contextCompressionProcedures != null &&
-			!contextCompressionProcedures.isEmpty()) {
-			
+		// store the list of compression routines in the plug-in's preference store if it was
+		// modified
+		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		String p = store.getString(PreferenceConstants.COMPRESSION_PROCEDURES);
+		if (!p.equals(contextCompressionProcedures)) {
+			String q = contextCompressionProcedures.toString();
+			store.setValue(PreferenceConstants.COMPRESSION_PROCEDURES, 
+						   q.substring(1, q.length() - 1));
+		}
+		if (contextCompressionProcedures != null && !contextCompressionProcedures.isEmpty()) {
 			for (String procedureName : contextCompressionProcedures) {
-				String p = procedureName.trim().toUpperCase();
-				if (!compressionProcedures.contains(p)) {
-					compressionProcedures.add(p);
+				String q = procedureName.trim().toUpperCase();
+				if (!compressionProcedures.contains(q)) { // this should always be the case !
+					compressionProcedures.add(q);
 				}
 			}
 		}
@@ -135,40 +144,31 @@ public final class SchemaImportToolProxy {
 		// get the area name
 		String areaName = dataCollector.getName(areaContext);
 		
+		Plugin.logDebug("importing area " + areaName + "...");
+		
 		// create the area
 		SchemaArea area = modelFactory.createArea(areaName);
 		
 		// deal with area procedures
-		for (String procedureName : 
-			 dataCollector.getProceduresCalled(areaContext)) {
-								
-			List<ProcedureCallTime> callTimes = 
-				new ArrayList<ProcedureCallTime>();
-			callTimes.addAll(dataCollector.getProcedureCallTimes(areaContext, 
-													     	 	 procedureName));
-			Assertions.isCollectionNotEmpty(callTimes, "callTimes is empty");
-			
-			List<AreaProcedureCallFunction> callFunctions =
-				new ArrayList<AreaProcedureCallFunction>();
-			callFunctions.addAll(dataCollector.getProcedureCallFunctions(areaContext, 
-														 	 	 	 	 procedureName));
-			Assertions.isCollectionNotEmpty(callFunctions, 
-											"callFunctions is empty");
-			
-			if (callTimes.size() != callFunctions.size()) {
-				throw new RuntimeException("callTimes and callFunctions " +
-										   "sizes do not match (area=" + 
-										   area.getName() + " procedure=" + 
-										   procedureName);
-			}
-			
-			for (int i = 0; i < callTimes.size(); i++) {				
-				modelFactory.createProcedureCallSpecification(area, 
-															  procedureName,
-															  callTimes.get(i), 
-															  callFunctions.get(i));
-			}
-			
+		List<String> procedureNames = 
+			new ArrayList<>(dataCollector.getProceduresCalled(areaContext));
+		Plugin.logDebug("  (" + procedureNames.size() + ") procedures called: " + procedureNames);
+		List<ProcedureCallTime> procedureCallTimes = 
+			new ArrayList<>(dataCollector.getProcedureCallTimes(areaContext));
+		Plugin.logDebug("  (" + procedureCallTimes.size() + ") procedure call times: " + 
+					    procedureCallTimes);
+		List<AreaProcedureCallFunction> procedureCallFunctions = 
+			new ArrayList<>(dataCollector.getProcedureCallFunctions(areaContext));
+		Plugin.logDebug("  (" + procedureCallFunctions.size() + ") procedure call functions: " + 
+						procedureCallFunctions);
+		Assertions.isEqualInSize(procedureCallTimes,  procedureNames, 
+				 				 "#procedure call times != #procedures called");
+		Assertions.isEqualInSize(procedureCallFunctions,  procedureNames, 
+								 "#procedure call functions != #procedures called");		
+		for (int i = 0; i < procedureNames.size(); i++) {
+			modelFactory.createProcedureCallSpecification(area, procedureNames.get(i),
+														  procedureCallTimes.get(i), 
+														  procedureCallFunctions.get(i));			
 		}
 		
 	}
@@ -182,6 +182,8 @@ public final class SchemaImportToolProxy {
 		
 		// get the set name
 		String setName = dataCollector.getName(setContext);
+		
+		Plugin.logDebug("importing chained set " + setName + "...");
 		
 		// create the set
 		Set set = modelFactory.createSet(setName, SetMode.CHAINED,
@@ -267,6 +269,8 @@ public final class SchemaImportToolProxy {
 	
 	private void handleDDLCATLOD() {
 			
+		Plugin.logDebug("handling DDLCATLOD...");
+		
 		// create the DDLCATLOD area
 		SchemaArea area = modelFactory.createArea("DDLCATLOD");
 		
@@ -281,8 +285,6 @@ public final class SchemaImportToolProxy {
 		}
 		
 		// copy the records from those contained in the DDLDCLOD area
-		boolean ignoreNamingConventionsForElements = 
-			isOptionIgnoreNamingConventionsForElements();
 		for (SchemaRecord originalRecord : 
 			 schema.getArea("DDLDCLOD").getRecords()) {
 			
@@ -307,10 +309,8 @@ public final class SchemaImportToolProxy {
 				
 				// create the element
 				Element element = 
-					modelFactory.createElement(record, parent, 
-											   originalElement.getName(), 
-											   originalElement.getBaseName(),
-											   ignoreNamingConventionsForElements);	
+					modelFactory.createElement(record, parent, originalElement.getName(), 
+											   originalElement.getBaseName());	
 				
 				// set some of the element's attributes
 				element.setLevel(originalElement.getLevel());		
@@ -402,11 +402,8 @@ public final class SchemaImportToolProxy {
 				for (KeyElement originalKeyElement : 
 					 originalRecord.getCalcKey().getElements()) {	
 					
-					modelFactory.createKeyElement(key, 
-												  originalKeyElement.getElement()
-												  					.getName(), 
-												  SortSequence.ASCENDING,
-												  ignoreNamingConventionsForElements);					
+					modelFactory.createKeyElement(key, originalKeyElement.getElement().getName(), 
+												  SortSequence.ASCENDING);					
 				}			
 				
 			}
@@ -594,9 +591,7 @@ public final class SchemaImportToolProxy {
 				
 	}
 
-	private void handleElement(SchemaRecord record, Element parent,
-							   Object elementContext,
-							   boolean ignoreNamingConventions) {
+	private void handleElement(SchemaRecord record, Element parent, Object elementContext) {
 		
 		// get the data collector
 		@SuppressWarnings("unchecked")
@@ -606,13 +601,13 @@ public final class SchemaImportToolProxy {
 		// get the element name
 		String elementName = dataCollector.getName(elementContext);
 		
+		Plugin.logDebug("importing element " + elementName + "...");
+		
 		// get the base element name
 		String baseName = dataCollector.getBaseName(elementContext);		
 		
 		// create the element
-		Element element = 
-			modelFactory.createElement(record, parent, elementName, baseName,
-									   ignoreNamingConventions);	
+		Element element = modelFactory.createElement(record, parent, elementName, baseName);	
 		
 		// set some of the element's attributes
 		element.setLevel(dataCollector.getLevel(elementContext));		
@@ -700,8 +695,7 @@ public final class SchemaImportToolProxy {
 		for (Object childElementContext :  
 			tool.getSubordinateElementContexts(elementContext)) {
 			
-			handleElement(record, element, childElementContext,
-						  ignoreNamingConventions);			
+			handleElement(record, element, childElementContext);			
 		}				
 		
 	}
@@ -715,6 +709,8 @@ public final class SchemaImportToolProxy {
 		
 		// get the record name
 		String recordName = dataCollector.getName(recordContext);
+		
+		Plugin.logDebug("importing record " + recordName + "...");
 		
 		// get the record id
 		short recordId = dataCollector.getRecordId(recordContext);
@@ -739,7 +735,7 @@ public final class SchemaImportToolProxy {
 			modelFactory.createRecord(recordName, recordId, StorageMode.FIXED, 
 									  locationMode, viaSetName, areaName);
 		
-		// set the base name and versiontring baseName = dataCollector.getBaseName(recordContext);
+		// set the base name and version
 		String baseName = dataCollector.getBaseName(recordContext);
 		short baseVersion = dataCollector.getBaseVersion(recordContext);		
 		record.setBaseName(baseName);
@@ -752,57 +748,45 @@ public final class SchemaImportToolProxy {
 		record.setSynonymVersion(synonymVersion);
 		
 		// deal with record procedures
-		for (String procedureName : 
-			 dataCollector.getProceduresCalled(recordContext)) {
-								
-			List<ProcedureCallTime> callTimes = 
-				new ArrayList<ProcedureCallTime>();
-			callTimes.addAll(dataCollector.getProcedureCallTimes(recordContext, 
-													     	 	 procedureName));
-			Assertions.isCollectionNotEmpty(callTimes, "callTimes is empty");
-			
-			List<RecordProcedureCallVerb> callVerbs =
-				new ArrayList<RecordProcedureCallVerb>();
-			callVerbs.addAll(dataCollector.getProcedureCallVerbs(recordContext, 
-														 	 	 procedureName));
-			Assertions.isCollectionNotEmpty(callVerbs, "callVerbs is empty");
-			
-			if (callTimes.size() != callVerbs.size()) {
-				throw new RuntimeException("callTimes and callVerbs sizes do " +
-										   "not match (record=" + record.getName() + 
-										   " procedure=" + procedureName);
-			}
-			
-			for (int i = 0; i < callTimes.size(); i++) {				
-				modelFactory.createProcedureCallSpecification(record, 
-															  procedureName,
-															  callTimes.get(i), 
-															  callVerbs.get(i));
-			}
-			
+		List<String> procedureNames = 
+			new ArrayList<>(dataCollector.getProceduresCalled(recordContext));
+		Plugin.logDebug("  (" + procedureNames.size() + ") procedures called: " + procedureNames);
+		List<ProcedureCallTime> procedureCallTimes = 
+			new ArrayList<>(dataCollector.getProcedureCallTimes(recordContext));
+		Plugin.logDebug("  (" + procedureCallTimes.size() + ") procedure call times: " + 
+					    procedureCallTimes);
+		List<RecordProcedureCallVerb> procedureCallVerbs = 
+			new ArrayList<>(dataCollector.getProcedureCallVerbs(recordContext));
+		Plugin.logDebug("  (" + procedureCallVerbs.size() + ") procedure call verbs: " + 
+						procedureCallVerbs);
+		Assertions.isEqualInSize(procedureCallTimes,  procedureNames, 
+				 				 "#procedure call times != #procedures called");
+		Assertions.isEqualInSize(procedureCallVerbs,  procedureNames, 
+								 "#procedure call verbs != #procedures called");
+		for (int i = 0; i < procedureNames.size(); i++) {
+			modelFactory.createProcedureCallSpecification(record, procedureNames.get(i),
+														  procedureCallTimes.get(i), 
+														  procedureCallVerbs.get(i));		
 		}		
 		
 		// add the (validated) elements to the record
-		boolean ignoreNamingConventionsForElements = 
-				isOptionIgnoreNamingConventionsForElements();
-		for (Object elementContext : tool.getRootElementContexts(recordContext)) {					
-			handleElement(record, null, elementContext, 
-						  ignoreNamingConventionsForElements);									
+		Collection<?> elementContexts = tool.getRootElementContexts(recordContext);
+		Plugin.logDebug("importing " + elementContexts.size() + " root elements for " + recordName + 
+						"...");
+		for (Object elementContext : elementContexts) {					
+			handleElement(record, null, elementContext);									
 		}
 		
 		// correct the record's storage mode
 		record.setStorageMode(getStorageMode(record));
 				
-		// set the minimum root and fragment lengths if (and only if) the record 
-		// has a storage mode other than fixed
-		if (record.getStorageMode() != StorageMode.FIXED) {
-			Short minimumRootLength = 
-				dataCollector.getMinimumRootLength(recordContext);
-			record.setMinimumRootLength(minimumRootLength);
-			Short minimumFragmentLength =
-				dataCollector.getMinimumFragmentLength(recordContext);
-			record.setMinimumFragmentLength(minimumFragmentLength);
-		}
+		// set the minimum root and fragment lengths (regardless of the record's storage mode)
+		Short minimumRootLength = 
+			dataCollector.getMinimumRootLength(recordContext);
+		record.setMinimumRootLength(minimumRootLength);
+		Short minimumFragmentLength =
+			dataCollector.getMinimumFragmentLength(recordContext);
+		record.setMinimumFragmentLength(minimumFragmentLength);
 	
 		// if the record has a location mode of CALC, create the CALC key
 		if (record.getLocationMode() == LocationMode.CALC) {									
@@ -816,9 +800,7 @@ public final class SchemaImportToolProxy {
 			for (String elementName : 
 				 dataCollector.getCalcKeyElementNames(recordContext)) {	
 				
-				modelFactory.createKeyElement(key, elementName, 
-											  SortSequence.ASCENDING,
-											  ignoreNamingConventionsForElements);					
+				modelFactory.createKeyElement(key, elementName, SortSequence.ASCENDING);					
 			}			
 			
 		}
@@ -876,7 +858,7 @@ public final class SchemaImportToolProxy {
 												offsetPageCount, offsetPercent, 
 												pageCount, percent);
 			
-		}							
+		}
 		
 	}
 
@@ -943,10 +925,7 @@ public final class SchemaImportToolProxy {
 				
 		if (!sortedByDbkey) {
 			
-			// the set is not sorted by dbkey; create a key element for each
-			// element in the sort key
-			boolean ignoreNamingConventionsForElements = 
-				isOptionIgnoreNamingConventionsForElements();
+			// the set is not sorted by dbkey; create a key element for each element in the sort key
 			for (String elementName : 
 				 dataCollector.getSortKeyElements(setContext, recordName)) {
 								
@@ -955,8 +934,7 @@ public final class SchemaImportToolProxy {
 					dataCollector.getSortSequence(setContext, recordName, 
 													 elementName);
 				// create the key element
-				modelFactory.createKeyElement(key, elementName, sortSequence,
-											  ignoreNamingConventionsForElements);
+				modelFactory.createKeyElement(key, elementName, sortSequence);
 				
 			}
 			
@@ -969,8 +947,7 @@ public final class SchemaImportToolProxy {
 				dataCollector.getSortSequence(setContext, recordName, null);
 			
 			// create the key element
-			modelFactory.createKeyElement(key, null, sortSequence,
-										  isOptionIgnoreNamingConventionsForElements());
+			modelFactory.createKeyElement(key, null, sortSequence);
 									
 		}
 		
@@ -985,6 +962,8 @@ public final class SchemaImportToolProxy {
 		
 		// get the set name
 		String setName = dataCollector.getName(setContext);
+		
+		Plugin.logDebug("importing system-owned indexed set " + setName + "...");
 		
 		// create the set in the schema		
 		Set set = 
@@ -1087,6 +1066,8 @@ public final class SchemaImportToolProxy {
 		// get the set name
 		String setName = dataCollector.getName(setContext);
 		
+		Plugin.logDebug("importing user-owned indexed set " + setName + "...");
+		
 		// create the set		
 		Set set = 
 			modelFactory.createSet(setName, SetMode.INDEXED,
@@ -1171,7 +1152,9 @@ public final class SchemaImportToolProxy {
 	}
 
 	public Schema invokeImportTool() {
-					
+		
+		Plugin.logDebug("importing schema...");
+		
 		// create the model factory
 		modelFactory = new ModelFactory(schema);
 		
@@ -1264,14 +1247,16 @@ public final class SchemaImportToolProxy {
 					throw new RuntimeException(message);
 				}
 				
-				// perform the maximum value check (not sure if the CA IDMS
-				// schema performs this check)				
-				if (minimumRootLength > record.getDataLength()) {
+				// don't perform the maximum value check --> the CA IDMS schema compiler does NOT
+				// perform this check)				
+				/*if (minimumRootLength > record.getDataLength()) {
 					String message = 
-						"minimum root length invalid: exceeds 'Data length' " +
-						"(record=" + record.getName() + ")";
+						"minimum root length (" + minimumRootLength + ") invalid: exceeds " +
+						"'Data length' (" + record.getDataLength() + "; record=" + 
+						record.getName() + ")";
 					throw new RuntimeException(message);
-				}
+				}*/
+				
 				// the minimum root length is valid; set the possibly adjusted 
 				// value in the record
 				record.setMinimumRootLength(Short.valueOf(minimumRootLength));
@@ -1352,12 +1337,6 @@ public final class SchemaImportToolProxy {
 		return b.booleanValue();
 	}
 	
-	private boolean isOptionIgnoreNamingConventionsForElements() {
-		Boolean b = 
-			dataEntryContext.getAttribute(GeneralContextAttributeKeys.IGNORE_NAMING_CONVENTIONS_FOR_ELEMENTS);
-		return b.booleanValue();
-	}
-
 	private boolean isRecordCompressed(SchemaRecord record) {
 		for (RecordProcedureCallSpecification procedureCallSpec :
 			 record.getProcedures()) {

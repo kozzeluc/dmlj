@@ -11,11 +11,10 @@ import org.lh.dmlj.schema.editor.importtool.IAreaDataCollector;
 public class AreaDataCollector 
 	implements IAreaDataCollector<SchemaSyntaxWrapper> {
 
-	private static List<String> getProcedureLines(SchemaSyntaxWrapper context,
-												  String procedureName) {
+	private static List<String> getProcedureLines(SchemaSyntaxWrapper context) {
 		
 		List<String> list = new ArrayList<>();
-		String scanItem = "         CALL " + procedureName + " ";				
+		String scanItem = "         CALL ";				
 		for (String line : context.getLines()) {
 			if (line.startsWith(scanItem)) {				
 				list.add(line);
@@ -34,14 +33,19 @@ public class AreaDataCollector
 	}
 
 	@Override
-	public Collection<ProcedureCallTime> getProcedureCallTimes(SchemaSyntaxWrapper context, 
-															   String procedureName) {
+	public Collection<ProcedureCallTime> getProcedureCallTimes(SchemaSyntaxWrapper context) {
+		
+		List<String> procedureNames = new ArrayList<>(getProceduresCalled(context));
+		List<String> procedureLines = getProcedureLines(context);
 		
 		List<ProcedureCallTime> list = new ArrayList<>();
-				
-		for (String line : getProcedureLines(context, procedureName)) {
-			int i = line.indexOf(" " + procedureName + " ") + 
-					procedureName.length() + 2;
+		
+		for (int k = 0; k < procedureLines.size(); k++) {
+			
+			String procedureName = procedureNames.get(k);
+			String line = procedureLines.get(k);
+			
+			int i = line.indexOf(" " + procedureName + " ") + procedureName.length() + 2;
 			
 			if (line.substring(i).startsWith("ON ERROR DURING")) {
 				list.add(ProcedureCallTime.ON_ERROR_DURING);
@@ -53,10 +57,10 @@ public class AreaDataCollector
 				} else {
 					p = line.substring(i);
 				}
-				ProcedureCallTime procedureCallTime = 
-					ProcedureCallTime.valueOf(p);
+				ProcedureCallTime procedureCallTime = ProcedureCallTime.valueOf(p);
 				list.add(procedureCallTime);
 			}
+		
 		}
 		
 		return list;
@@ -64,14 +68,20 @@ public class AreaDataCollector
 	}
 
 	@Override
-	public Collection<AreaProcedureCallFunction> getProcedureCallFunctions(SchemaSyntaxWrapper context, 
-																		   String procedureName) {
+	public Collection<AreaProcedureCallFunction> getProcedureCallFunctions(SchemaSyntaxWrapper context) {
 
+		List<String> procedureNames = new ArrayList<>(getProceduresCalled(context));
+		List<String> procedureLines = getProcedureLines(context);		
+		
 		List<AreaProcedureCallFunction> list = new ArrayList<>();
 		
-		for (String line : getProcedureLines(context, procedureName)) {
-			int i = line.indexOf(" " + procedureName + " ") + 
-					procedureName.length() + 2;
+		for (int k = 0; k < procedureLines.size(); k++) {
+			
+			String procedureName = procedureNames.get(k);
+			String line = procedureLines.get(k);
+		
+			int i = line.indexOf(" " + procedureName + " ") + procedureName.length() + 2;		
+	
 			int j;
 			if (line.substring(i).startsWith("ON ERROR DURING")) {
 				j = i + 15;
@@ -88,8 +98,7 @@ public class AreaDataCollector
 							AreaProcedureCallFunction.valueOf(p);
 						list.add(areaProcedureCallFunction);
 					} else {
-						String q = 
-							p.replaceAll(" ", "_").replaceFirst("_FOR", "");
+						String q = p.replaceAll(" ", "_").replaceFirst("_FOR", "");
 						AreaProcedureCallFunction areaProcedureCallFunction =
 							AreaProcedureCallFunction.valueOf(q);
 						list.add(areaProcedureCallFunction);

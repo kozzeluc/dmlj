@@ -3,6 +3,9 @@ package org.lh.dmlj.schema.editor.preference;
 public abstract class PreferenceConstants {
 	
 	public static final String UNITS = "units";
+	public static final String LOG_DIAGNISTIC_MESSAGES = "logDiagnosticMessages";
+	
+	public static final String COMPRESSION_PROCEDURES = "compressionProcedures";
 	
 	public static final String TOP_MARGIN = "topMargin";
 	public static final String BOTTOM_MARGIN = "bottomMargin";

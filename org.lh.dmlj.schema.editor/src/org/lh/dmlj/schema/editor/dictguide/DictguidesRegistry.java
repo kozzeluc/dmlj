@@ -150,16 +150,23 @@ public class DictguidesRegistry {
 			// Guide; for troubleshooting purposes we will write the contents of
 			// that chapter to our temporary files folder
 			ByteArrayOutputStream out1 = new ByteArrayOutputStream();				
-			pdfExtractorService.extractContent(new FileInputStream(dictionaryStructureFile), out1);
+			PdfContentConsumer contentConsumer = new PdfContentConsumer(out1);
+			pdfExtractorService.extractContent(new FileInputStream(dictionaryStructureFile), 
+											   contentConsumer);
+			contentConsumer.finish();
 			String pdf1Extract = out1.toString();
+			out1.close();
 			dumpPdfExtract(pdf1Extract, new File(tmpFolder, "pdf1Extract.txt"));
 			
 			// parse the SQL Reference Guide; for troubleshooting purposes we 
 			// will write the contents of that chapter to our temporary files 
 			// folder
 			ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-			pdfExtractorService.extractContent(new FileInputStream(sqlFile), out2);
+			contentConsumer = new PdfContentConsumer(out2);
+			pdfExtractorService.extractContent(new FileInputStream(sqlFile), contentConsumer);
+			contentConsumer.finish();
 			String pdf2Extract = out2.toString();
+			out2.close();
 			dumpPdfExtract(pdf2Extract, new File(tmpFolder, "pdf2Extract.txt"));
 			
 			// create 1 file in a separate subfolder in the temporary files 
@@ -267,7 +274,12 @@ public class DictguidesRegistry {
 	}
 
 	public boolean entryExists(String id) {
-		return entries.contains(id);
+		for (String entry : entries) {
+			if (entry.startsWith(id + ",")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getActiveId() {
@@ -293,12 +305,13 @@ public class DictguidesRegistry {
 		return "";
 	}
 
-	public String getDocumentTitle(File pdfFile) throws IOException {
+	public String getDocumentTitle(File pdfFile) {
 		IPdfExtractorService pdfExtractorService = 
 			ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
-		Assert.isTrue(pdfExtractorService != null, 
-					  "logic error: PDF Extractor Service == null");
-		return pdfExtractorService.extractTitle(pdfFile);
+		Assert.isTrue(pdfExtractorService != null, "logic error: PDF Extractor Service == null");
+		DocumentTitleExtractor documentTitleExtractor = 
+			new DocumentTitleExtractor(pdfExtractorService, pdfFile);
+		return documentTitleExtractor.extractTitle();
 	}
 	
 	/**

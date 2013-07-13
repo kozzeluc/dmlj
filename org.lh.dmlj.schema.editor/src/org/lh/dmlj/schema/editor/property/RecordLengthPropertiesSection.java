@@ -75,12 +75,12 @@ public class RecordLengthPropertiesSection
 						"must include all CALC, index, and sort control elements";
 					return new ErrorEditHandler(message);
 				}
-				// perform the maximum value check (not sure if the CA IDMS
-				// schema performs this check)				
-				if (newMinimumRootLength > target.getDataLength()) {
+				// don't perform the maximum value check --> the CA IDMS schema compiler does NOT
+				// perform this check				
+				/*if (newMinimumRootLength > target.getDataLength()) {
 					String message = "exceeds 'Data length'";
 					return new ErrorEditHandler(message);
-				} 
+				}*/ 
 				// the value entered is valid
 				return super.getEditHandler(attribute, newMinimumRootLength);
 			} else if (newMinimumRootLength != null && 

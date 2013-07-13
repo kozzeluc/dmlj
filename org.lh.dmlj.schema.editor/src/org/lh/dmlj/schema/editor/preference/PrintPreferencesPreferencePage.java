@@ -60,7 +60,7 @@ public class PrintPreferencesPreferencePage
 	 */
 	public PrintPreferencesPreferencePage() {
 		super();
-		setDescription("[description goes here]");
+		setDescription("Print settings:");
 	}	
 
 	@Override
@@ -148,7 +148,7 @@ public class PrintPreferencesPreferencePage
 		
 		IPreferenceStore store = getPreferenceStore();
 				
-		Unit unit = Unit.valueOf(store.getString(PreferenceConstants.UNITS));
+		Unit unit = Unit.valueOf(store.getDefaultString(PreferenceConstants.UNITS));
 		// we do not need to change lblMargins since the unit is set at another preference page
 		
 		// margins are stored in pels (logical pixels; 72 pels == 1 inch)...

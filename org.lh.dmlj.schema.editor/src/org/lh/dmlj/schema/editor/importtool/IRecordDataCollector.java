@@ -35,11 +35,9 @@ public interface IRecordDataCollector<T> {
 
 	Short getOffsetPercent(T context);
 
-	Collection<ProcedureCallTime> getProcedureCallTimes(T context, 
-										  			    String procedureName);
+	Collection<ProcedureCallTime> getProcedureCallTimes(T context);
 
-	Collection<RecordProcedureCallVerb> getProcedureCallVerbs(T context, 
-												 		      String procedureName);
+	Collection<RecordProcedureCallVerb> getProcedureCallVerbs(T contex);
 
 	Collection<String> getProceduresCalled(T context);
 
@@ -49,7 +47,7 @@ public interface IRecordDataCollector<T> {
 	
 	String getSynonymName(T context);
 	
-	short getSynonymVersion(T context);	
+	short getSynonymVersion(T context);			
 	
 	Short getViaDisplacementPageCount(T context);
 

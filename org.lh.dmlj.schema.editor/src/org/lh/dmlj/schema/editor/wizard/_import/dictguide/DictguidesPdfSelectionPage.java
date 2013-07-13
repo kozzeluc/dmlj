@@ -1,7 +1,6 @@
 package org.lh.dmlj.schema.editor.wizard._import.dictguide;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -22,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
@@ -29,14 +29,19 @@ import org.lh.dmlj.schema.editor.service.ServicesPlugin;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
 public class DictguidesPdfSelectionPage extends WizardPage {
-	
 	private String   description;
+	private Label 	 lblPdfExtractorServiceDescription;
 	private Label    lblTitle;
+	private String 	 licensedProductName;
+	private String 	 licensedProductVersion;
+	private String 	 licenseName;
+	private String 	 licenseText;
+	private Link 	 linkLicense;
 	private String   manualType;
 	private String[] manualTypeTokens;
 	private Text     textDescription;
 	private Text     textFile;	
-
+	
 	private static String getTitle(final File file) {				
 		
 		// declare an array to hold the title and release information
@@ -46,12 +51,7 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		// .pdf file can sometimes take a few seconds
 		Runnable runnable = new Runnable() {
 			public void run() {		
-				try {
-					title[0] = 
-						DictguidesRegistry.INSTANCE.getDocumentTitle(file);					
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}		
+				title[0] = DictguidesRegistry.INSTANCE.getDocumentTitle(file);							
 			}
 		};
 		
@@ -131,20 +131,35 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		});
 		btnBrowse.setText("Browse...");
 		new Label(container, SWT.NONE);
+		
+		lblPdfExtractorServiceDescription = new Label(container, SWT.NONE);
+		lblPdfExtractorServiceDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		lblPdfExtractorServiceDescription.setText("(PDF Extractor Service description)");
 		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
+		
+		linkLicense = new Link(container, SWT.WRAP);
+		linkLicense.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1));
+		linkLicense.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ViewLicenseDialog dialog = 
+					new ViewLicenseDialog(Display.getCurrent().getActiveShell(), licenseName, 
+										  licenseText);
+				dialog.open();
+			}
+		});
 		new Label(container, SWT.NONE);
 		
 		lblTitle = new Label(container, SWT.NONE);
 		lblTitle.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		lblTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
+		GridData gd_lblTitle = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gd_lblTitle.verticalIndent = 20;
+		lblTitle.setLayoutData(gd_lblTitle);
 		new Label(container, SWT.NONE);
 		
 		textDescription = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1);
+		gd_text.verticalIndent = 20;
 		gd_text.widthHint = 300;
 		textDescription.setLayoutData(gd_text);
 		textDescription.setText(description);
@@ -155,6 +170,28 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		
 		if (pdfExtractorService == null) {
 			setErrorMessage("PDF Extractor Service is NOT available");
+		} else {
+			licensedProductName = pdfExtractorService.getLicensedProductName();
+			licensedProductVersion = pdfExtractorService.getLicensedProductVersion();
+			licenseName = pdfExtractorService.getLicenseName();
+			licenseText = pdfExtractorService.getLicenseText();
+			if (licensedProductName != null) {
+				String p = "PDF content is extracted using " + licensedProductName + " version " +
+						   licensedProductVersion +".";
+				lblPdfExtractorServiceDescription.setText(p);
+				// make sure the required license is also copied in the feature project USING THE
+				// RIGHT FILE NAME
+				linkLicense.setText(licensedProductName + " version " + licensedProductVersion +
+								    " is protected by the <a>" + licenseName + 
+									"</a>.\nThis license is distributed with the CA IDMS/DB " +
+									"Schema Diagram Editor\n(this product); see the " +
+									"'" + licenseName + ".txt' file in your Eclipse\ninstallation's " +
+									"'features/org.lh.dmlj.schema.editor_x.y.z.qualifier' folder\n" +
+									"or use the above link to read this license.");
+			} else {
+				lblPdfExtractorServiceDescription.setVisible(false);
+				linkLicense.setVisible(false);
+			}
 		}
 		
 		setPageComplete(false);
@@ -183,7 +220,8 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 	private boolean isVersionOK(String title) {
 		return title.endsWith(" (r16 SP2)") ||
 			   title.endsWith(" (r17)") ||
-			   title.endsWith(" (Version 18.0.00)");
+			   title.endsWith(" (Version 18.0.00)") ||
+			   title.endsWith(" (Release 18.5.00)");
 	}
 
 	private void validatePage() {

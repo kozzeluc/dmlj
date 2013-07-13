@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.extension.OptionExtensionElement;
@@ -28,12 +30,12 @@ import org.lh.dmlj.schema.editor.extension.OptionGroupExtensionElement;
 import org.lh.dmlj.schema.editor.extension.OptionsExtensionElement;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
+import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 
 public class OptionsPage extends AbstractDataEntryPage {
 	
 	private Button 	  				btnDdlcatlod;
 	private Button 	  				btnLooak_155;
-	private Button 	  				btnIgnoreNamConForElements;
 	private Button 	  				btnOoak_012;
 	private List<Label>		        idmsntwkOptionGroupLabels = new ArrayList<>();
 	private Label     				lblIdmsntwk;
@@ -177,8 +179,7 @@ public class OptionsPage extends AbstractDataEntryPage {
 		gd_lblprocedureNames.horizontalIndent = 5;
 		gd_lblprocedureNames.verticalIndent = 5;
 		lblprocedureNames.setLayoutData(gd_lblprocedureNames);
-		lblprocedureNames.setText("Database procedures used for COMPRESSION (" +
-								  "other than IDMSCOMP; comma-separated list):");		
+		lblprocedureNames.setText("Database procedures used for COMPRESSION (comma-separated list):");		
 		textProcedures = new Text(composite, SWT.BORDER);
 		textProcedures.addKeyListener(new KeyAdapter() {
 			@Override
@@ -197,20 +198,6 @@ public class OptionsPage extends AbstractDataEntryPage {
 		GridData gd_textProcedures = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_textProcedures.horizontalIndent = 5;
 		textProcedures.setLayoutData(gd_textProcedures);
-		
-		btnIgnoreNamConForElements = new Button(composite, SWT.CHECK);
-		btnIgnoreNamConForElements.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				validatePage();
-			}
-		});
-		GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd.horizontalIndent = 5;
-		gd.verticalIndent = 5;
-		btnIgnoreNamConForElements.setLayoutData(gd);
-		btnIgnoreNamConForElements.setSelection(false);
-		btnIgnoreNamConForElements.setText("Ignore naming conventions for elements");		
 		
 		// create a check button for each configured option; deal with the ones
 		// not belonging to a group first and then process the options group by
@@ -339,6 +326,10 @@ public class OptionsPage extends AbstractDataEntryPage {
 			}
 		}		
 		
+		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		String p = store.getString(PreferenceConstants.COMPRESSION_PROCEDURES);
+		textProcedures.setText(p);
+		
 		validatePage();
 		
 		return composite;
@@ -360,9 +351,7 @@ public class OptionsPage extends AbstractDataEntryPage {
 				NamingConventions.validate(procedureName, 
 										   NamingConventions.Type.PROCEDURE_NAME);
 			if (validationResult.getStatus() == ValidationResult.Status.OK) {
-				if (!procedureNames.contains(procedureName) && 
-					!procedureName.equals("IDMSCOMP")) {
-					
+				if (!procedureNames.contains(procedureName)) {
 					procedureNames.add(procedureName);
 				}
 			} else {
@@ -378,9 +367,6 @@ public class OptionsPage extends AbstractDataEntryPage {
 			String p = procedureNames.toString();
 			textProcedures.setText(p.substring(1, p.length() - 1));
 		}
-		boolean b = btnIgnoreNamConForElements.getSelection();
-		getContext().setAttribute(GeneralContextAttributeKeys.IGNORE_NAMING_CONVENTIONS_FOR_ELEMENTS, 
-				  	  			  Boolean.valueOf(b));
 		
 		// fixed IDMSNTWK version 1 options
 		getContext().setAttribute(GeneralContextAttributeKeys.ADD_OFFSET_FOR_OOAK_012, 

@@ -55,6 +55,12 @@ abstract class Assertions {
 		}
 	}
 
+	static void isEqualInSize(Collection<?> col1, Collection<?> col2, String message) {
+		if (col1.size() != col2.size()) {
+			throw new RuntimeException(message);
+		}
+	}
+	
 	static void isNotNull(Object object, Class<?> targetClass) {
 		String message = 
 			"the supplied " + targetClass.getSimpleName() + " is null";
