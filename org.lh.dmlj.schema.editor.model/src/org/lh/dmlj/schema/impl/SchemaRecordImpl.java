@@ -520,18 +520,9 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				dataLength = i;
 			}
 		}
-		// add 4 bytes when the record is fragmented...
-		if (isFragmented()) {
+		if (isFragmented() || getStorageMode() != StorageMode.FIXED) {
+			// add 4 bytes when the record is fragmented or the record's storage mode is NOT FIXED
 			dataLength += 4;
-		} else {
-			// if the record is compressed, add 4 bytes too...
-			boolean ok = false;
-			for (RecordProcedureCallSpecification call : getProcedures()) {
-				if (!ok && call.getProcedure().getName().equals("IDMSCOMP")) {						
-					dataLength += 4;
-					ok = true;
-				}
-			}
 		}	
 		// round the data length to the next higher or equal multiple of four...
 		while (dataLength % 4 > 0) {
