@@ -28,6 +28,11 @@ public class PdfExtractorService implements IPdfExtractorService {
 			Reader reader = tika.parse(in);
 			BufferedReader bufferedReader = new BufferedReader(reader);
 			boolean proceed = true;
+			// New in Tika 1.3: text from bookmarks is now extracted (TIKA-1035) 
+			// see: http://issues.apache.org/jira/browse/TIKA-1035).
+			// The IPdfContentConsumer has to be aware of this; it is only of relevence for the
+			// 'Dictionary Structure Reference Guides' because it is the very last chapter in each 
+			// of these books that interests us...
 			for (String line = bufferedReader.readLine(); line != null && proceed;
 				 line = bufferedReader.readLine()) {			
 				
