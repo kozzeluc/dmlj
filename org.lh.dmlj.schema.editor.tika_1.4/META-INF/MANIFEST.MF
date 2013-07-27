@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PDF Content Extractor Service using Apache Tika 1.4
+Bundle-SymbolicName: org.lh.dmlj.schema.editor.tika_1.4
+Bundle-Version: 1.2.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: Luc Hermans
+Import-Package: org.lh.dmlj.schema.editor.service.api
+Service-Component: OSGI-INF/component.xml
+Bundle-ClassPath: .,
+ tika-app-1.4.jar
+Bundle-ActivationPolicy: lazy
