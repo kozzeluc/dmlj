@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -53,6 +54,7 @@ import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.extension.DataEntryPageExtensionElement;
 import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
 import org.lh.dmlj.schema.editor.extension.ImportToolExtensionElement;
@@ -65,6 +67,7 @@ import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryPageController;
 import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
+import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 
 /**
  * This wizard is used for both importing (import mode; this is the default 
@@ -544,6 +547,18 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		Properties importToolParms = 
 			activeImportToolExtensionElement.getParameters();	
 		
+		// store the list of compression routines in the plug-in's preference store if it was
+		// modified
+		List<String> contextCompressionProcedures = 
+			context.getAttribute(GeneralContextAttributeKeys.COMPRESSION_PROCEDURE_NAMES);
+		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		String p = store.getString(PreferenceConstants.COMPRESSION_PROCEDURES);
+		if (!p.equals(contextCompressionProcedures)) {
+			String q = contextCompressionProcedures.toString();
+			store.setValue(PreferenceConstants.COMPRESSION_PROCEDURES, 
+						   q.substring(1, q.length() - 1));
+		}
+		
 		// create the import tool proxy
 		final SchemaImportToolProxy proxy = 
 			new SchemaImportToolProxy(importTool, context, importToolParms);					
@@ -578,8 +593,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		}
 		IPath workspacePath = 
 			ResourcesPlugin.getWorkspace().getRoot().getLocation();
-		String p = fullPath.toString()
-						   .substring(workspacePath.toString().length());
+		p = fullPath.toString().substring(workspacePath.toString().length());
 		IPath path = new Path(p);		
 		final IFile modelFile = 
 			ResourcesPlugin.getWorkspace().getRoot().getFile(path);		

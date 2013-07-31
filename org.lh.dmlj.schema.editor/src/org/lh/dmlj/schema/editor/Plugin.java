@@ -22,7 +22,10 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
+import org.lh.dmlj.schema.editor.service.ServicesPlugin;
+import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -82,7 +85,8 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 	}
 
 	public static void logDebug(String message) {
-		if (getDefault().isLogDebugMessages()) {
+		// the test 'getDefault() != null' is only there for testing, in order to avoid a NPE
+		if (getDefault() != null && getDefault().isLogDebugMessages()) {
 			log(IStatus.INFO, IStatus.OK, message, null);
 		}
 	}
@@ -189,6 +193,11 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		
+		// initialize the dictguide registry; this registry contains all imported dictionary guides
+		DictguidesRegistry.init(getStateLocation().toFile(),				 
+								ServicesPlugin.getDefault()
+											  .getService(IPdfExtractorService.class));
 		
 		// Locate the temporary files folder in the workspace.  We should 
 		// probably put our temporary files somewhere else, since the folder 

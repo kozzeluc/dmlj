@@ -23,9 +23,10 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 
 	private enum EntityType {AREA, RECORD, SET};
 		
-	private IDataCollectorRegistry dataCollectorRegistry;
-	private IDataEntryContext 	   dataEntryContext;
-	private File 				   file;
+	private IDataCollectorRegistry 		 dataCollectorRegistry;
+	private IDataEntryContext 	   		 dataEntryContext;
+	private File 				   		 file;
+	private IPromptForDigitCountResolver promptForDigitCountResolver; // used only when TESTing
 	
 	private static String pad(short number, int length) {
 		StringBuilder p = new StringBuilder();
@@ -514,15 +515,21 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		} else if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS)) {
 			digitCount = 4;
 		} else if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_PROMPT)) {
-			// prompt for digit count
-			PromptForDigitCountDialog dialog = 
-				new PromptForDigitCountDialog(Display.getCurrent().getActiveShell(),
-							      			  context, recordDataCollector,
-							      			  controlElementName);			
-			if (dialog.open() == IDialogConstants.CANCEL_ID) {
-				throw new RuntimeException("Import cancelled.");
+			if (promptForDigitCountResolver != null) {
+				// get the digit count from the resolver (TEST circumstances only)
+				digitCount = 
+					promptForDigitCountResolver.getDigitCount(recordDataCollector.getName(context));
+			} else {
+				// prompt for digit count
+				PromptForDigitCountDialog dialog = 
+					new PromptForDigitCountDialog(Display.getCurrent().getActiveShell(),
+								      			  context, recordDataCollector,
+								      			  controlElementName);			
+				if (dialog.open() == IDialogConstants.CANCEL_ID) {
+					throw new RuntimeException("Import cancelled.");
+				}
+				digitCount = dialog.getSelectedDigitCount();
 			}
-			digitCount = dialog.getSelectedDigitCount();
 		}
 		if (digitCount != -1) {
 			// get the record id
@@ -686,6 +693,16 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		context.getProperties().put("containsBaseNamesFlag",
 									String.valueOf(containsBaseNamesFlag));
 		
+	}
+	
+	/**
+	 * Provides a replacement for PromptForDigitCountDialog; sould only be set when running in a 
+	 * TEST environment (e.g. when running JUnit tests).  MIGHT be interesting to provide IRL
+	 * situations as well though...
+	 * @param newValue the simulator for PromptForDigitCountDialog
+	 */
+	public void setPromptForDigitCountResolver(IPromptForDigitCountResolver newValue) {
+		promptForDigitCountResolver = newValue;
 	}
 
 }

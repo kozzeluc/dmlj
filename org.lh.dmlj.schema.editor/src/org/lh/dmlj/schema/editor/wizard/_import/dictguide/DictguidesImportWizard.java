@@ -112,7 +112,8 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 										  	   sqlFile,
 										  	   sqlTitle,
 										  	   id,
-										  	   defaultForInfoTab);						
+										  	   defaultForInfoTab,
+										  	   Plugin.getDefault().createTmpFolder());						
 			}
 		};
 		

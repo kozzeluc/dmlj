@@ -49,6 +49,20 @@ public class PdfContentConsumer implements IPdfContentConsumer {
 			}
 		} else if (writing) {				
 			
+			// New in Tika 1.3: text from bookmarks is now extracted (TIKA-1035) 
+			// see: http://issues.apache.org/jira/browse/TIKA-1035).
+			// The IPdfContentConsumer has to be aware of this; it is only of relevence for the
+			// 'Dictionary Structure Reference Guides' because it is the very last chapter in each
+			// of these books that interests us...
+			if (line.trim().equals("Bookshelf") || 										// < 18.0
+				line.trim().equals("CA IDMS Dictionary Structure Reference Guide")) { 	// >= 18.0
+				
+				// before Tika 1.3 we wouldn't get here; the bookmarks don't interest us and we 
+				// need to return false to prevent them from being appended to the last record
+				// described in the reference guide
+				return false;
+			}
+			
 			if (line.startsWith(type + " " + next + dotOrColon) ||
 				line.startsWith(" " + type + " " + next + dotOrColon)) {
 									

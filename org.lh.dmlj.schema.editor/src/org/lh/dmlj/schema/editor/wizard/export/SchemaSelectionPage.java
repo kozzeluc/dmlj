@@ -66,10 +66,13 @@ public class SchemaSelectionPage extends WizardPage {
 		for (File fileOrFolder : folder.listFiles(FILTER)) {
 			if (!fileOrFolder.getName().startsWith(".")) {
 				if (fileOrFolder.isDirectory()) {
+					if (fileOrFolder.getName().equalsIgnoreCase("schemas")) {
+						System.out.println();
+					}
 					TreeItem folderTreeItem = 
 						new TreeItem(parentTreeItem, SWT.NONE);
 					folderTreeItem.setImage(iconFolder);
-					folderTreeItem.setText(folder.getName());
+					folderTreeItem.setText(fileOrFolder.getName());
 					map.put(folderTreeItem, fileOrFolder);
 					addTreeItems(folderTreeItem, fileOrFolder);
 					if (folderTreeItem.getItemCount() == 0) {
@@ -109,15 +112,20 @@ public class SchemaSelectionPage extends WizardPage {
 		IWorkspaceRoot root = workspace.getRoot();		
 		
 		for (IProject project : root.getProjects()) {
-			if (!project.getName().startsWith(".")) {				
+			if (!project.getName().startsWith(".")) {								
 				File projectFolder = project.getLocation().toFile();
 				TreeItem projectTreeItem = new TreeItem(tree, SWT.NONE);
 				projectTreeItem.setImage(iconProject);
 				projectTreeItem.setText(projectFolder.getName());				
-				addTreeItems(projectTreeItem, projectFolder);
+				try {
+					addTreeItems(projectTreeItem, projectFolder);
+				} catch (NullPointerException e) {
+					// this situation usually indicates an open project without any .schema file
+					Plugin.logDebug("caught NPE (export) : " + project.getName());
+				}
 				if (projectTreeItem.getItemCount() == 0) {
 					projectTreeItem.dispose();
-				}
+				}				
 			}
 		}	
 				

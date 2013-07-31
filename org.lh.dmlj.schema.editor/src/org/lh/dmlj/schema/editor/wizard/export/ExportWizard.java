@@ -5,12 +5,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.net.URI;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.template.SchemaTemplate;
 
@@ -65,6 +69,7 @@ public class ExportWizard extends Wizard implements IExportWizard {
 			}			
 		}		
 		
+		// generate the schema syntax (no busy cursor needed since this is lightning fast)
 		try {
 			SchemaTemplate template = new SchemaTemplate();
 			String syntax = template.generate(schema);
@@ -82,7 +87,6 @@ public class ExportWizard extends Wizard implements IExportWizard {
 			
 			in.close();
 			
-			return true;
 		} catch (Throwable t) {
 			String title = "Error";
 			String p = t.getMessage() != null ? " (" + t.getMessage() + ")": "";
@@ -90,11 +94,36 @@ public class ExportWizard extends Wizard implements IExportWizard {
 							 t.getClass().getSimpleName() + p + ". See log.";
 			String[] buttons = { "OK" };
 			MessageDialog dialog = 
-				new MessageDialog(getShell(), title, null, message, 
-								  MessageDialog.QUESTION, buttons, 1);
+				new MessageDialog(getShell(), title, null, message, MessageDialog.QUESTION, buttons, 
+								  1);
 			dialog.open();
 			return false;
 		}
+		
+		// open the generated syntax file in a text editor:
+        try {           
+        	// replace backward slashes into forward ones...
+        	StringBuilder p = new StringBuilder(file.getAbsolutePath());
+        	for (int i = 0; i < p.length(); i++) {
+        		if (p.charAt(i) == '\\') {
+        			p.setCharAt(i, '/');
+        		}
+        	}
+        	URI uri = new URI("file:///" + p.toString());
+            IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), 
+            			   uri, "org.eclipse.ui.DefaultTextEditor", true);
+	    } catch (Throwable t) {
+	            // something went wrong while opening the file in a text editor, provide the user 
+	    		// with some feedback...
+	            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error", 
+	            						"Cannot open syntax file '" + file.getAbsolutePath() + 
+	            						"'.");
+	            // and print a stack trace...
+	            t.printStackTrace();
+	    }
+        
+        return true;
+        
 	}
 
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.DuplicatesOption;
@@ -42,7 +41,6 @@ import org.lh.dmlj.schema.editor.importtool.IRecordDataCollector;
 import org.lh.dmlj.schema.editor.importtool.ISchemaDataCollector;
 import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 import org.lh.dmlj.schema.editor.importtool.ISetDataCollector;
-import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 
 public final class SchemaImportToolProxy {
 	
@@ -76,28 +74,11 @@ public final class SchemaImportToolProxy {
 		this.dataEntryContext = dataEntryContext;
 		this.importToolParameters = importToolParameters;
 		
-		// create the list of compression procedure names (IDMSCOMP is no longer considered by 
-		// default a compression routine unless it is specified as such in the preferences)
-		compressionProcedures = new ArrayList<>();
-		List<String> contextCompressionProcedures = 
+		// get the list of compression procedure names (IDMSCOMP is no longer considered by default
+		// a compression routine unless it is specified as such in the preferences)
+		compressionProcedures = 
 			dataEntryContext.getAttribute(GeneralContextAttributeKeys.COMPRESSION_PROCEDURE_NAMES);
-		// store the list of compression routines in the plug-in's preference store if it was
-		// modified
-		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
-		String p = store.getString(PreferenceConstants.COMPRESSION_PROCEDURES);
-		if (!p.equals(contextCompressionProcedures)) {
-			String q = contextCompressionProcedures.toString();
-			store.setValue(PreferenceConstants.COMPRESSION_PROCEDURES, 
-						   q.substring(1, q.length() - 1));
-		}
-		if (contextCompressionProcedures != null && !contextCompressionProcedures.isEmpty()) {
-			for (String procedureName : contextCompressionProcedures) {
-				String q = procedureName.trim().toUpperCase();
-				if (!compressionProcedures.contains(q)) { // this should always be the case !
-					compressionProcedures.add(q);
-				}
-			}
-		}
+		
 	}
 	
 	private boolean containsOccursDependingOnField(SchemaRecord record) {
@@ -760,9 +741,11 @@ public final class SchemaImportToolProxy {
 		Plugin.logDebug("  (" + procedureCallVerbs.size() + ") procedure call verbs: " + 
 						procedureCallVerbs);
 		Assertions.isEqualInSize(procedureCallTimes,  procedureNames, 
-				 				 "#procedure call times != #procedures called");
+				 				 "#procedure call times != #procedures called (record=" + 
+				 				recordName + ")");
 		Assertions.isEqualInSize(procedureCallVerbs,  procedureNames, 
-								 "#procedure call verbs != #procedures called");
+								 "#procedure call verbs != #procedures called (record=" + 
+								 recordName + ")");
 		for (int i = 0; i < procedureNames.size(); i++) {
 			modelFactory.createProcedureCallSpecification(record, procedureNames.get(i),
 														  procedureCallTimes.get(i), 

@@ -21,7 +21,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.Assert;
-import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase1Extractor;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase1ExtractorCatalog;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase2Extractor;
@@ -29,22 +28,26 @@ import org.lh.dmlj.schema.editor.dictguide.helper.Phase2ExtractorCatalog;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase3Checker;
 import org.lh.dmlj.schema.editor.dictguide.helper.Phase4Formatter;
 import org.lh.dmlj.schema.editor.property.RecordInfoValueObject;
-import org.lh.dmlj.schema.editor.service.ServicesPlugin;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
 public class DictguidesRegistry {
 	
-	private static final String ALPHABET_LC = "abcdefghijklmnopqrstuvwxyz";
-	private static final String ALPHABET_UC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private static final String DIGITS = "0123456789";
-	private static final String SPECIAL_CHARS = " -_.";
+	private static final String 	 ALPHABET_LC = "abcdefghijklmnopqrstuvwxyz";
+	private static final String 	 ALPHABET_UC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static final String 	 DIGITS = "0123456789";
+	private static final String 	 SPECIAL_CHARS = " -_.";
 	
-	public static final DictguidesRegistry INSTANCE = new DictguidesRegistry();
+	public static DictguidesRegistry INSTANCE; // instantiated via setup(File folder) method
 	
-	private String	    activeId;
-	private File 	    folder;
-	private File	    manifestFile;
-	private Set<String> entries = new LinkedHashSet<>();
+	private String	    		 activeId;
+	private Set<String> 		 entries = new LinkedHashSet<>();
+	private File 	    		 folder;
+	private File	   		 	 manifestFile;
+	private IPdfExtractorService pdfExtractorService;
+	
+	public static void init(File folder, IPdfExtractorService pdfExtractorService) {
+		INSTANCE = new DictguidesRegistry(new File(folder, "dictguides"), pdfExtractorService);
+	}
 	
 	private static BufferedReader createBufferedReader(ZipFile file,
 													   ZipEntry entry) {
@@ -70,9 +73,10 @@ public class DictguidesRegistry {
 		out.close();
 	}
 
-	private DictguidesRegistry() {
+	private DictguidesRegistry(File folder, IPdfExtractorService pdfExtractorService) {
 		super();
-		folder = new File(Plugin.getDefault().getStateLocation().toFile(), "dictguides");
+		this.folder = folder;
+		this.pdfExtractorService = pdfExtractorService;
 		if (!folder.exists()) {
 			if (!folder.mkdir()) {
 				throw new RuntimeException("cannot create dictguides folder");
@@ -109,7 +113,8 @@ public class DictguidesRegistry {
 					   	    File sqlFile,
 					   	    String sqlTitle,
 					   	    String id,
-					   	    boolean defaultForInfoTab) {
+					   	    boolean defaultForInfoTab, 
+					   	    File tmpFolder) {
 		
 		if (!isValid(id)) {
 			throw new IllegalArgumentException("id is invalid: " + id);
@@ -133,18 +138,12 @@ public class DictguidesRegistry {
 							 "allowed in a document title: " + sqlTitle;
 			throw new IllegalArgumentException(message);
 		}
-		
-		IPdfExtractorService pdfExtractorService = 
-			ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
-		Assert.isTrue(pdfExtractorService != null, 
-					  "logic error: PDF Extractor Service == null");
 	
 		try {
 			
-			// we need a temporary files folder; we will not cleanup the 
+			// we need the temporary files folder; we will not cleanup the 
 			// contents of this folder when we're done so that we can do some 
-			// troubleshooting if needed
-			File tmpFolder = Plugin.getDefault().createTmpFolder();
+			// troubleshooting if needed			
 			
 			// get the chapter we need from the Dictionary Structure Reference 
 			// Guide; for troubleshooting purposes we will write the contents of
@@ -306,8 +305,6 @@ public class DictguidesRegistry {
 	}
 
 	public String getDocumentTitle(File pdfFile) {
-		IPdfExtractorService pdfExtractorService = 
-			ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
 		Assert.isTrue(pdfExtractorService != null, "logic error: PDF Extractor Service == null");
 		DocumentTitleExtractor documentTitleExtractor = 
 			new DocumentTitleExtractor(pdfExtractorService, pdfFile);
