@@ -1,3 +1,39 @@
+Version 1.2.0
+=============
+- Reworked the IPdfExtractorService interface (org.lh.dmlj.schema.editor.Service.api v1.2.0): this
+  kind of services now only have to extract content and metadata; all content and metadata
+  interpretation is moved to the org.lh.dmlj.schema.editor (v1.2.0) plug-in.
+- Support for CA IDMS/DB 18.5.00 documentation import.
+- Included plug-in org.lh.dmlj.schema.editor.tika_1.4 (v1.2.0); this plug-in wraps Tika 1.4 and
+  provides an IPdfExtractorService implementation.  This makes dictionary guide importation a-
+  standard feature.  The Apache Licence Version 2.0 is included with this feature.
+  Tika extracts the PDF bookmarks as of version 1.3; we don't need these, so we needed to modify
+  the PDF extraction mechanism for this.
+- The activator of the main plug-in provides a number of log methods; it also simulates a debug-
+  level, which depends on the new preference setting 'logDiagnosticMessages', that should allow us
+  to write debug-messages to the standard log.  Not much diagnostic messages are built-in now,
+  (almost) only the schema import wizard writes some to the log.
+- When importing from syntax, the record synonym name and version are now also extracted from the
+  'USES STRUCTURE OF RECORD' clause if a 'SHARE STRUCTURE OF RECORD' clause is missing.
+- The minimum root and fragment lengths are now ALWAYS requested from the selected import tool,
+  i.e. regardless of the record's storage mode (before: only when the storage mode was not FIXED).
+- The minimum root length can now exceed the record's data length (import wizard + properties view).
+- The naming conventions for element names were softened: the element name must not exceed 32
+  characters in length; what characters and the order in which they appear are no longer checked.
+- The procedures used for compression (import) are now configurable and IDMSCOMP is no longer always
+  considered as such a procedure.
+- When exporting a schema, the generated syntax file is now opened in a text editor.
+- BUG FIX: record and area procedure call specifications were not derived correctly when importing
+  (or updating a schema).  The (2) methods of IRecordDataCollector<T> and IAreaDataCollector<T>
+  other than the ones collecting the procedure names were refactored.
+- BUG FIX: when exporting a schema, bad names were generated for the tree items in the tree showing
+  all the workspace's .schema files (first export wizard page, the one with the message
+  'Select the CA IDMS/DB Schema' – depending on the number and complexity of workspace projects, it
+  takes (too) long before this page shows the schemas available for export).
+- BUG FIX: when building the list of projects containing .schema files during an export, a NPE was
+  thrown for projects not containing any .schema file.
+
+
 Version 1.1.0
 =============
 - A diagram can now be printed.

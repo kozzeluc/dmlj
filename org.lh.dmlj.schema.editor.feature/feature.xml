@@ -2,7 +2,7 @@
 <feature
       id="org.lh.dmlj.schema.editor"
       label="CA IDMS/DB Schema Diagram Editor"
-      version="1.1.0.qualifier"
+      version="1.2.0.qualifier"
       provider-name="Luc Hermans">
 
    <description url="http://sites.google.com/site/idmsschemasineclipse/">
@@ -18,6 +18,9 @@ CA IDMS/DB, CA IDMS and IDMS are all registered trademarks of CA Technologies.
 
    <license url="">
       This is not a commercial product and as such, NO claims whatsoever can be made.
+
+This product uses the Apache Tika library; the Apache License Version 2.0 is provided
+in this feature&apos;s folder of your Eclipse installation.
    </license>
 
    <url>
@@ -47,6 +50,13 @@ CA IDMS/DB, CA IDMS and IDMS are all registered trademarks of CA Technologies.
 
    <plugin
          id="org.lh.dmlj.schema.editor.service.api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.lh.dmlj.schema.editor.tika_1.4"
          download-size="0"
          install-size="0"
          version="0.0.0"
