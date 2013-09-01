@@ -32,6 +32,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.DefaultEditDomain;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
@@ -62,6 +64,7 @@ import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.gef.ui.rulers.RulerComposite;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.commands.ActionHandler;
@@ -89,13 +92,16 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
+import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
@@ -230,9 +236,11 @@ public class SchemaEditor
 	private boolean 					editorSaving = false;
 	private SchemaEditorRulerProvider   horizontalRulerProvider;
 	private Adapter						modelChangeListener;
+	private OutlinePage 				outlinePage;
 	private ResourceTracker 			resourceListener = new ResourceTracker();	
 	private RulerComposite				rulerComp;	
 	private Schema 						schema;
+	private SelectionSynchronizer 		selectionSynchronizer;
 	private URI    						uri;
 	private SchemaEditorRulerProvider   verticalRulerProvider;
 	private IResource 	   				workspaceResource;	
@@ -568,18 +576,21 @@ public class SchemaEditor
 			return getGraphicalViewer().getProperty(key);
 		} else if (type == IPropertySheetPage.class) {
             return new TabbedPropertySheetPage(this);
+		} else if (type == IContentOutlinePage.class) {
+			outlinePage = new OutlinePage(this);
+			return outlinePage;
+		} else if (type == CommandStack.class) {
+			return getCommandStack();
+		} else if (type == ActionRegistry.class) {
+			return getActionRegistry();
+		} else if (type == DefaultEditDomain.class) {
+			return getEditDomain();
+		} else if (type == SelectionSynchronizer.class) {
+			return getSelectionSynchronizer();
 		}
 
 		return super.getAdapter(type);
 	}	
-	
-	@Override
-	public CommandStack getCommandStack() {
-		// we need this if we want to be able to change attributes in the
-		// Properties View, so that's why we override this method and make it
-		// public
-		return super.getCommandStack();
-	}
 	
 	@Override
 	public String getContributorId() {
@@ -589,38 +600,83 @@ public class SchemaEditor
 	@Override
 	protected Control getGraphicalControl() {
 		return rulerComp;
-	}	
-
+	}
+	
 	@Override
 	protected PaletteRoot getPaletteRoot() {
 		PaletteRoot palette = new PaletteRoot();
         
-        // selection tools
-		PaletteToolbar toolbar = new PaletteToolbar("Tools");
-        ToolEntry tool = new PanningSelectionToolEntry();
-        toolbar.add(tool);
-        palette.setDefaultEntry(tool);
-        toolbar.add(new MarqueeToolEntry());
-        palette.add(toolbar);
-        
+        // selection tool
+		ToolEntry tool = new PanningSelectionToolEntry();
+		
+		// label creation tool
+		ImageDescriptor label16 = 
+		   	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/label16.GIF"));
+		ImageDescriptor label24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/label24.GIF"));
+        CombinedTemplateCreationEntry labelCreationTool = 
+        	new CombinedTemplateCreationEntry("Label", 
+        									  "Add diagram label", 
+        									  new SimpleFactory(DiagramLabel.class), 
+        									  label16, 
+        									  label24);
+	        
         // connector creation tool  
         ImageDescriptor connector16 = 
         	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/connector16.GIF"));
         ImageDescriptor connector24 = 
            	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/connector24.GIF"));
-        CombinedTemplateCreationEntry component = 
+        CombinedTemplateCreationEntry connectorCreationTool = 
         	new CombinedTemplateCreationEntry("Connector", 
         									  "Add connectors to connection", 
         									  new SimpleFactory(Connector.class), 
         									  connector16, 
         									  connector24);
         
-        // Elements drawer
-        PaletteDrawer createComponentsDrawer = new PaletteDrawer("Sets");
-        createComponentsDrawer.add(component);
-        palette.add(createComponentsDrawer);
+        // Tools toolbar
+        PaletteToolbar toolbar = new PaletteToolbar("Tools");
+        toolbar.add(tool);
+        toolbar.add(new MarqueeToolEntry());
+        palette.add(toolbar);
+        
+        // General drawer
+        PaletteDrawer createGeneralItemsDrawer = new PaletteDrawer("General");
+        createGeneralItemsDrawer.add(labelCreationTool);
+        palette.add(createGeneralItemsDrawer);
+        
+        // Sets drawer
+        PaletteDrawer createSetItemsDrawer = new PaletteDrawer("Sets");
+        createSetItemsDrawer.add(connectorCreationTool);
+        palette.add(createSetItemsDrawer);
+        
+        // the selection tool is the default entry
+        palette.setDefaultEntry(tool);
        
         return palette; 
+	}
+	
+	public Schema getSchema() {
+		return schema;
+	}
+	
+	@Override
+	protected SelectionSynchronizer getSelectionSynchronizer() {
+		if (selectionSynchronizer == null)
+			selectionSynchronizer = new SelectionSynchronizer() {
+			
+			@Override
+			protected EditPart convert(EditPartViewer viewer, EditPart part) {
+				if (outlinePage != null && outlinePage.canConvertEditPart(viewer, part)) {
+					// make sure the most relevant edit part is selected in the outline page
+					return outlinePage.convert(viewer, part);
+				} else {
+					// this request is not for the outline page, so have the standard selection
+					// synchronizer's pick the edit part
+					return super.convert(viewer, part);
+				}				
+			}
+		};
+		return selectionSynchronizer;
 	}
 
 	@Override
@@ -704,7 +760,13 @@ public class SchemaEditor
 		   		   .getExtensionToFactoryMap()
 		   		   .put("schema", new XMIResourceFactoryImpl());
 		Resource resource = resourceSet.getResource(uri, true);
-		schema = (Schema)resource.getContents().get(0);		
+		schema = (Schema)resource.getContents().get(0);	
+		
+		if (!editorSaving) {
+			if (outlinePage != null) {
+				outlinePage.setSchema(schema);
+			}
+		}
 	}
 	
 	@Override
@@ -741,4 +803,5 @@ public class SchemaEditor
 			setPartName(file.getName());
 		}
 	}
+
 }

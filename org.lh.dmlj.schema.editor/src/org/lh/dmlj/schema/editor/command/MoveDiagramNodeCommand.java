@@ -3,6 +3,7 @@ package org.lh.dmlj.schema.editor.command;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
@@ -41,6 +42,8 @@ public class MoveDiagramNodeCommand extends Command {
 					 				     	 .getMemberRole()
 					 				     	 .getSet()
 					 					  	 .getName());
+		} else if (diagramNode instanceof DiagramLabel) {
+			setLabel("Move diagram label");
 		} else {
 			setLabel("Move");
 		}

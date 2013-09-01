@@ -1,5 +1,6 @@
 package org.lh.dmlj.schema.editor.template;
 
+import java.util.List;
 import org.lh.dmlj.schema.*;
 
 public class SchemaTemplate
@@ -46,7 +47,13 @@ public class SchemaTemplate
 This template will generate a schema's DDL syntax.
 */
 
-Schema schema = (Schema)argument;
+@SuppressWarnings("unchecked")
+List<Object> args = (List<Object>) argument;
+Schema schema = (Schema) args.get(0);
+boolean fullSyntax = true;
+if (args.size() > 1) {  
+	fullSyntax = ((Boolean) args.get(1)).booleanValue();
+}
 String description = schema.getDescription();
 String memoDate = schema.getMemoDate();
 
@@ -112,31 +119,33 @@ for (String line : schema.getComments()) {
 
     stringBuffer.append(TEXT_17);
     
-AreaTemplate areaTemplate = new AreaTemplate();
-for (SchemaArea area : schema.getAreas()) {    
-    String syntax = areaTemplate.generate(area);
+if (fullSyntax) {
+	AreaTemplate areaTemplate = new AreaTemplate();
+	for (SchemaArea area : schema.getAreas()) {    
+    	String syntax = areaTemplate.generate(area);
 
     stringBuffer.append(TEXT_18);
     stringBuffer.append( syntax );
     
-} 
-RecordTemplate recordTemplate = new RecordTemplate();
-for (SchemaRecord record : schema.getRecords()) {    
-    String syntax = recordTemplate.generate(record);
+	} 
+	RecordTemplate recordTemplate = new RecordTemplate();
+	for (SchemaRecord record : schema.getRecords()) {    
+    	String syntax = recordTemplate.generate(record);
 
     stringBuffer.append(TEXT_19);
     stringBuffer.append( syntax );
     stringBuffer.append(TEXT_20);
     
-}
-SetTemplate setTemplate = new SetTemplate();
-for (Set set : schema.getSets()) {    
-    String syntax = setTemplate.generate(set);
+	}
+	SetTemplate setTemplate = new SetTemplate();
+	for (Set set : schema.getSets()) {    
+    	String syntax = setTemplate.generate(set);
 
     stringBuffer.append(TEXT_21);
     stringBuffer.append( syntax );
     stringBuffer.append(TEXT_22);
     
+	}
 }
 
     return stringBuffer.toString();

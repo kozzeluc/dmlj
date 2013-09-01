@@ -18,7 +18,7 @@ import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
 
-public class IndexEditPart extends AbstractDiagramNodeEditPart<SystemOwner> {
+public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<SystemOwner> {
 
 	private IndexEditPart() {
 		super(null); // disabled constructor

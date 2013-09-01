@@ -66,9 +66,6 @@ public class SchemaSelectionPage extends WizardPage {
 		for (File fileOrFolder : folder.listFiles(FILTER)) {
 			if (!fileOrFolder.getName().startsWith(".")) {
 				if (fileOrFolder.isDirectory()) {
-					if (fileOrFolder.getName().equalsIgnoreCase("schemas")) {
-						System.out.println();
-					}
 					TreeItem folderTreeItem = 
 						new TreeItem(parentTreeItem, SWT.NONE);
 					folderTreeItem.setImage(iconFolder);

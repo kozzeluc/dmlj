@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.policy.RecordGraphicalNodeEditPolicy;
 
 public class RecordEditPart 
-	extends AbstractDiagramNodeEditPart<SchemaRecord>  {
+	extends AbstractNonResizableDiagramNodeEditPart<SchemaRecord>  {
 
 	private RecordEditPart() {
 		super(null); // disabled constructor

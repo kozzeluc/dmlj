@@ -12,4 +12,12 @@ public abstract class PreferenceConstants {
 	public static final String LEFT_MARGIN = "leftMargin";
 	public static final String RIGHT_MARGIN = "rightMargin";
 	
+	public static final String ORGANISATION = "organisation";
+	
+	public static final String SHOW_RULERS = "showRulers";
+	public static final String SHOW_GRID = "showGrid";
+	public static final String SNAP_TO_GUIDES = "snapToGuides";
+	public static final String SNAP_TO_GRID = "snapToGrid";
+	public static final String SNAP_TO_GEOMETRY = "snapToGeometry";
+	
 }

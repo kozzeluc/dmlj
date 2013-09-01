@@ -5,6 +5,7 @@ import org.eclipse.gef.EditPartFactory;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
@@ -29,6 +30,8 @@ public class SchemaDiagramEditPartFactory implements EditPartFactory {
 			return new SetDescriptionEditPart((ConnectionLabel) model);
 		} else if (model instanceof Connector) {
 			return new ConnectorEditPart((Connector) model);
+		} else if (model instanceof DiagramLabel) {
+			return new DiagramLabelEditPart((DiagramLabel) model);
 		}
 		throw new IllegalStateException("No EditPart for " + model.getClass());
 	}

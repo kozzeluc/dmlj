@@ -22,6 +22,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -29,7 +30,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.policy.MoveDiagramNodeEditPolicy;
+import org.lh.dmlj.schema.editor.policy.SchemaXYLayoutEditPolicy;
 
 public class SchemaEditPart 
 	extends AbstractGraphicalEditPart implements Adapter {
@@ -53,9 +54,9 @@ public class SchemaEditPart
 	@Override
 	protected void createEditPolicies() {
 		
-		// install the edit policy for moving diagram nodes...
+		// install the edit policy for creating, moving and resizing diagram nodes...
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, 
-						  new MoveDiagramNodeEditPolicy());	
+						  new SchemaXYLayoutEditPolicy(getModel()));
 		
 		// install the snap feedback policy...
 		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy());
@@ -117,6 +118,11 @@ public class SchemaEditPart
 	protected List<?> getModelChildren() {
 		List<Object> allObjects = new ArrayList<>();
 		
+		// diagram label (optional)
+		if (getModel().getDiagramData().getLabel() != null) {
+			allObjects.add(getModel().getDiagramData().getLabel());
+		}
+		
 		// records
 		allObjects.addAll(getModel().getRecords());
 		
@@ -165,7 +171,29 @@ public class SchemaEditPart
 	@Override
 	public void notifyChanged(Notification notification) {
 		int featureID = notification.getFeatureID(SchemaRecord.class);
-		if (featureID == SchemaPackage.DIAGRAM_DATA__CONNECTORS) {
+		
+		if (featureID == SchemaPackage.DIAGRAM_DATA__LABEL) {
+			if (notification.getNewValue() != null &&
+				notification.getNewValue() instanceof DiagramLabel) {
+				
+				// the diagram label was added; create the diagram label edit part and add it to our
+				// list of children
+				DiagramLabelEditPart editPart =
+					new DiagramLabelEditPart((DiagramLabel) notification.getNewValue());
+				addChild(editPart, getChildren().size());					
+				
+			} else if (notification.getOldValue() != null &&
+					   notification.getOldValue() instanceof DiagramLabel) {
+				
+				// the diagram label was removed; find the diagram label edit part and remove it 
+				// from our list of children
+				GraphicalEditPart editPart = 
+					(GraphicalEditPart) getViewer().getEditPartRegistry()
+										  		   .get(notification.getOldValue());
+				removeChild(editPart);
+				
+			}
+		} else if (featureID == SchemaPackage.DIAGRAM_DATA__CONNECTORS) {
 			// We only act when the second connector is added or removed; the
 			// commands responsible for connector creation and deletion should
 			// therefore add the connector to or delete it from the 

@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -72,7 +74,10 @@ public class ExportWizard extends Wizard implements IExportWizard {
 		// generate the schema syntax (no busy cursor needed since this is lightning fast)
 		try {
 			SchemaTemplate template = new SchemaTemplate();
-			String syntax = template.generate(schema);
+			List<Object> args = new ArrayList<Object>();
+			args.add(schema);
+			args.add(Boolean.TRUE);	// full syntax
+			String syntax = template.generate(args); 
 			// remove trailing spaces...
 			PrintWriter out = new PrintWriter(new FileWriter(file));
 			

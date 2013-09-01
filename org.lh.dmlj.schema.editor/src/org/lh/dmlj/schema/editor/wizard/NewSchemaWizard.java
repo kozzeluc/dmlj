@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -27,11 +28,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.lh.dmlj.schema.DiagramData;
-import org.lh.dmlj.schema.Ruler;
-import org.lh.dmlj.schema.RulerType;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaFactory;
+import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
+import org.lh.dmlj.schema.editor.wizard.helper.IDiagramDataAttributeProvider;
+import org.lh.dmlj.schema.editor.wizard.helper.NewSchemaWizardHelper;
 
 
 public class NewSchemaWizard extends Wizard implements INewWizard {
@@ -84,29 +85,35 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 				@Override
 				protected void execute(IProgressMonitor progressMonitor) {
 					try {
-												
-						// create the schema and set its name and version
-						Schema schema = SchemaFactory.eINSTANCE.createSchema();
-						schema.setName("NEWSCHEM");
-						schema.setVersion((short) 1);
 						
-						// diagram data with rulers (todo: set these attributes 
-						// according to the editor's preferences)...
-						DiagramData diagramData = 
-							SchemaFactory.eINSTANCE.createDiagramData();
-						schema.setDiagramData(diagramData);
-						Ruler verticalRuler = 
-							SchemaFactory.eINSTANCE.createRuler();
-						verticalRuler.setType(RulerType.VERTICAL);
-						diagramData.setVerticalRuler(verticalRuler);
-						diagramData.getRulers()
-								   .add(verticalRuler); // ruler container
-						Ruler horizontalRuler = 
-							SchemaFactory.eINSTANCE.createRuler();
-						horizontalRuler.setType(RulerType.HORIZONTAL);
-						diagramData.setHorizontalRuler(horizontalRuler);
-						diagramData.getRulers()
-								   .add(horizontalRuler); // ruler container						
+						// create the schema and set its diagram data properties
+						final IPreferenceStore store = Plugin.getDefault().getPreferenceStore();					
+						IDiagramDataAttributeProvider diagramDataAttributeProvider = 
+							new IDiagramDataAttributeProvider() {
+								@Override
+								public boolean isShowGrid() {
+									return store.getBoolean(PreferenceConstants.SHOW_GRID);
+								}
+								@Override
+								public boolean isShowRulers() {
+									return store.getBoolean(PreferenceConstants.SHOW_RULERS);
+								}
+								@Override
+								public boolean isSnapToGeometry() {
+									return store.getBoolean(PreferenceConstants.SNAP_TO_GEOMETRY);
+								}
+								@Override
+								public boolean isSnapToGrid() {
+									return store.getBoolean(PreferenceConstants.SNAP_TO_GRID);
+								}
+								@Override
+								public boolean isSnapToGuides() {
+									return store.getBoolean(PreferenceConstants.SNAP_TO_GUIDES);
+								}							
+						};
+						NewSchemaWizardHelper helper = 
+							new NewSchemaWizardHelper(diagramDataAttributeProvider);
+						Schema schema = helper.createSchema();
 						
 						// Create a resource set
 						//

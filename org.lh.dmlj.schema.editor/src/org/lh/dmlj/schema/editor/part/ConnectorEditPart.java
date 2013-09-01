@@ -20,7 +20,7 @@ import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
 
-public class ConnectorEditPart extends AbstractDiagramNodeEditPart<Connector> {
+public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<Connector> {
 
 	private MemberRole memberRole;
 	

@@ -1,18 +1,13 @@
 package org.lh.dmlj.schema.editor;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -35,20 +30,19 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 
 	// The plug-in ID
 	public static final String 		PLUGIN_ID = 
-		"org.lh.dmlj.schema.editor"; //$NON-NLS-1$	
-	
-	private final static String 	PLUGIN_PROPERTIES = "plugin.properties";
+		"org.lh.dmlj.schema.editor"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Plugin 			plugin;
 			
 	private Font 					figureFont = 
 		new Font(Display.getCurrent(), "Arial", 6, SWT.NORMAL);
+	private Font 					figureFontBold = 
+		new Font(Display.getCurrent(), "Arial", 6, SWT.BOLD);
+	private Font 					figureFontItalic = 
+		new Font(Display.getCurrent(), "Arial", 6, SWT.ITALIC);
 	private Map<String, Image> 	 	images = new HashMap<String, Image>();
 	private boolean 				logDebugMessages;
-	private PropertyResourceBundle  pluginProperties;
-	private Font 					syntaxFont = 
-		new Font(Display.getCurrent(), "Courier New", 10, SWT.NORMAL);
 	private File 					tmpFolder;
 	
 	private static IStatus createStatus(int severity, int code, String message, 
@@ -137,6 +131,14 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		return figureFont;
 	}
 	
+	public Font getFigureFontBold() {
+		return figureFontBold;
+	}
+	
+	public Font getFigureFontItalic() {
+		return figureFontItalic;
+	}
+	
 	public Image getImage(String path) {
 		if (images.containsKey(path)) {
 			return images.get(path);
@@ -152,14 +154,6 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 			images.put(path, image);
 		}
 		return image;
-	}	
-	
-	public PropertyResourceBundle getPluginProperties() {
-		return pluginProperties;
-	}
-
-	public Font getSyntaxFont() {
-		return syntaxFont;
 	}
 
 	public File getTemporaryFilesFolder() {
@@ -182,17 +176,7 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		plugin = this;		
-				
-		try {
-			InputStream in = 
-				FileLocator.openStream(this.getBundle(), 
-									   new Path(PLUGIN_PROPERTIES), false);
-			pluginProperties = new PropertyResourceBundle(in);
-			in.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		plugin = this;
 		
 		// initialize the dictguide registry; this registry contains all imported dictionary guides
 		DictguidesRegistry.init(getStateLocation().toFile(),				 
@@ -236,8 +220,11 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		deleteDirectoryContents(tmpFolder);
 		tmpFolder.delete();		
 		
+		// cleanup any fonts we created
 		figureFont.dispose();
-		syntaxFont.dispose();
+		figureFontBold.dispose();
+		figureFontItalic.dispose();
+		
 		plugin = null;
 		super.stop(context);
 	}

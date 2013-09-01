@@ -27,7 +27,7 @@ import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.figure.SetDescriptionFigure;
 
 public class SetDescriptionEditPart 
-    extends AbstractDiagramNodeEditPart<ConnectionLabel>  {
+    extends AbstractNonResizableDiagramNodeEditPart<ConnectionLabel>  {
 
 	private SetDescriptionEditPart() {
 		super(null); // disabled constructor

@@ -12,6 +12,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
@@ -19,6 +20,13 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.SchemaPackage;
 
+
+/**
+ * A superclass for all diagram nodes, whether resizable or not.
+ * @author Luc Hermans
+ *
+ * @param <T> the model type
+ */
 public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode> 
 	extends AbstractGraphicalEditPart implements Adapter, NodeEditPart {
 	
@@ -30,7 +38,7 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	}
 	
 	@Override
-	public final void activate() {
+	public void activate() {
 		super.activate();
 		modelObjects.clear();
 		for (EObject modelObject : getModelObjects()) {
@@ -46,6 +54,10 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		}
 	}
 	
+	protected void adjustModelObjects(Notification notification,
+									  List<EObject> modelObjects) {				
+	}
+
 	/**
 	 * To be implemented by subclasses
 	 * @return a fixed list with the model objects upon which the figure data
@@ -58,7 +70,7 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	}	
 
 	@Override
-	public final void deactivate() {
+	public void deactivate() {
 		for (EObject modelObject : modelObjects) {
 			modelObject.eAdapters().remove(this);
 		}
@@ -71,6 +83,12 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		return (T) super.getModel();
 	}
 	
+	/**
+	 * @return an EditPolicy to be installed as the EditPolicy.PRIMARY_DRAG_ROLE, probably a
+	 * ModifiedNonResizableEditPolicy or a ModifiedResizableEditPolicy
+	 */
+	public abstract EditPolicy getResizeEditPolicy();
+
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
 		return new ChopboxAnchor(getFigure());
@@ -106,9 +124,13 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		
 		adjustModelObjects(notification, new ArrayList<>(modelObjects));
 		
-		refreshVisuals();
-		
 		int featureID = notification.getFeatureID(DiagramNode.class);
+		
+		if (featureID != Notification.NO_FEATURE_ID) {
+			// we only refresh when a feature has been changed (to avoid NPEs)
+			refreshVisuals();
+		}
+		
 		if (featureID == SchemaPackage.DIAGRAM_LOCATION__X ||
 			featureID == SchemaPackage.DIAGRAM_LOCATION__Y) {
 			
@@ -121,10 +143,6 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		
 	}	
 	
-	protected void adjustModelObjects(Notification notification,
-									  List<EObject> modelObjects) {				
-	}
-
 	protected void refreshConnections() {
 	}
 

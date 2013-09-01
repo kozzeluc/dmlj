@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.PluginPropertiesCache;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
 
 public class DictguidesImportWizard extends Wizard implements IImportWizard {	
@@ -44,9 +45,8 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 		// create and add the dictionary structure ref. guide selection page
 		String description;
 		try {
-			description = Plugin.getDefault()
-						 		.getPluginProperties()
-						 		.getString(KEY_DESCRIPTION_DICTIONARY_STRUCTURE);
+			description = 
+				PluginPropertiesCache.get(Plugin.getDefault(), KEY_DESCRIPTION_DICTIONARY_STRUCTURE);
 		} catch (MissingResourceException e) {
 			description = "";;
 		}		
@@ -57,9 +57,7 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 		
 		// create and add the SQL reference guide selection page		
 		try {
-			description = Plugin.getDefault()
-						 		.getPluginProperties()
-						 		.getString(KEY_DESCRIPTION_SQL);
+			description = PluginPropertiesCache.get(Plugin.getDefault(), KEY_DESCRIPTION_SQL);
 		} catch (MissingResourceException e) {
 			description = "";;
 		}

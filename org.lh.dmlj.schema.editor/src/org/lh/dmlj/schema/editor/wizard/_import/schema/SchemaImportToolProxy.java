@@ -1146,7 +1146,46 @@ public final class SchemaImportToolProxy {
 			dataEntryContext.getAttribute(IDataEntryContext.SCHEMA_NAME);		
 		Short schemaVersion = 
 			dataEntryContext.getAttribute(IDataEntryContext.SCHEMA_VERSION);
-		schema = modelFactory.createSchema(schemaName, schemaVersion);				
+		schema = modelFactory.createSchema(schemaName, schemaVersion);
+		
+		// set the diagram data properties from the defaults defined in the preferences; all of 
+		// these (default) values should be in the data entry context as well; if not, they will 
+		// default to false:
+		boolean showRulers = false;
+		if (dataEntryContext.containsAttribute(IDataEntryContext.DIAGRAMDATA_SHOW_RULERS)) {
+			showRulers = 
+				((Boolean) dataEntryContext.getAttribute(IDataEntryContext.DIAGRAMDATA_SHOW_RULERS))
+				.booleanValue();
+		}
+		schema.getDiagramData().setShowRulers(showRulers);
+		boolean showGrid = false;
+		if (dataEntryContext.containsAttribute(IDataEntryContext.DIAGRAMDATA_SHOW_GRID)) {
+			showGrid = 
+				((Boolean) dataEntryContext.getAttribute(IDataEntryContext.DIAGRAMDATA_SHOW_GRID))
+				.booleanValue();
+		}
+		schema.getDiagramData().setShowGrid(showGrid);
+		boolean snapToGuides = false;
+		if (dataEntryContext.containsAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GUIDES)) {
+			snapToGuides = 
+				((Boolean) dataEntryContext.getAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GUIDES))
+				.booleanValue();
+		}
+		schema.getDiagramData().setSnapToGuides(snapToGuides);
+		boolean snapToGrid = false;
+		if (dataEntryContext.containsAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GRID)) {
+			snapToGrid = 
+				((Boolean) dataEntryContext.getAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GRID))
+				.booleanValue();
+		}
+		schema.getDiagramData().setSnapToGrid(snapToGrid);
+		boolean snapToGeometry = false;
+		if (dataEntryContext.containsAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GEOMETRY)) {
+			snapToGeometry = 
+				((Boolean) dataEntryContext.getAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GEOMETRY))
+				.booleanValue();
+		}
+		schema.getDiagramData().setSnapToGeometry(snapToGeometry);
 		
 		// initialize the import tool
 		tool.init(dataEntryContext, importToolParameters, dataCollectorRegistry);

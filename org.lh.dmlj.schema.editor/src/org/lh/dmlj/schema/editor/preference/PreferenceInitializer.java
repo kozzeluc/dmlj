@@ -25,7 +25,18 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.TOP_MARGIN, 0);
 		store.setDefault(PreferenceConstants.BOTTOM_MARGIN, 0);	
 		store.setDefault(PreferenceConstants.LEFT_MARGIN, 0);	
-		store.setDefault(PreferenceConstants.RIGHT_MARGIN, 0);	
+		store.setDefault(PreferenceConstants.RIGHT_MARGIN, 0);
+		
+		// default diagram label preferences
+		store.setDefault(PreferenceConstants.ORGANISATION, 
+						 "Eclipse CA IDMS™/DB Schema Diagram Editor");
+		
+		// default diagram data for new and imported schemas
+		store.setDefault(PreferenceConstants.SHOW_RULERS, true);
+		store.setDefault(PreferenceConstants.SHOW_GRID, false);
+		store.setDefault(PreferenceConstants.SNAP_TO_GUIDES, true);
+		store.setDefault(PreferenceConstants.SNAP_TO_GRID, true);
+		store.setDefault(PreferenceConstants.SNAP_TO_GEOMETRY, true);		
 		
 	}
 

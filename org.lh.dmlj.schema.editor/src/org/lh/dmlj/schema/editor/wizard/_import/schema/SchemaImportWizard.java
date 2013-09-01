@@ -582,6 +582,20 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 			userSpecifiedLayoutManagerParms = null;
 		}
 		
+		// copy the default diagram data properties to the data entry context (import mode only)
+		if (!updateMode) {
+			context.setAttribute(IDataEntryContext.DIAGRAMDATA_SHOW_RULERS, 
+								 store.getBoolean(PreferenceConstants.SHOW_RULERS));
+			context.setAttribute(IDataEntryContext.DIAGRAMDATA_SHOW_GRID, 
+								 store.getBoolean(PreferenceConstants.SHOW_GRID));
+			context.setAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GUIDES, 
+								 store.getBoolean(PreferenceConstants.SNAP_TO_GUIDES));
+			context.setAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GRID, 
+								 store.getBoolean(PreferenceConstants.SNAP_TO_GRID));
+			context.setAttribute(IDataEntryContext.DIAGRAMDATA_SNAP_TO_GEOMETRY, 
+								 store.getBoolean(PreferenceConstants.SNAP_TO_GEOMETRY));
+		}
+		
 		// populate the schema and persist it to the file specified by the user;
     	// do the work within an operation.		
 		IPath fullPath;
