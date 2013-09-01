@@ -133,7 +133,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 */
 	public SchemaArea getArea() {
 		if (eContainerFeatureID() != SchemaPackage.AREA_SPECIFICATION__AREA) return null;
-		return (SchemaArea)eContainer();
+		return (SchemaArea)eInternalContainer();
 	}
 
 	/**

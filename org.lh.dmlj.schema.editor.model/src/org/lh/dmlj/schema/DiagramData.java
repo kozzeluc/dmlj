@@ -22,7 +22,10 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectionParts <em>Connection Parts</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectors <em>Connectors</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getHorizontalRuler <em>Horizontal Ruler</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getLabel <em>Label</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getLocations <em>Locations</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getRulers <em>Rulers</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.DiagramData#getSchema <em>Schema</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isShowGrid <em>Show Grid</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isShowRulers <em>Show Rulers</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isSnapToGeometry <em>Snap To Geometry</em>}</li>
@@ -30,7 +33,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.DiagramData#isSnapToGuides <em>Snap To Guides</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getVerticalRuler <em>Vertical Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getZoomLevel <em>Zoom Level</em>}</li>
- *   <li>{@link org.lh.dmlj.schema.DiagramData#getRulers <em>Rulers</em>}</li>
  * </ul>
  * </p>
  *
@@ -114,6 +116,34 @@ public interface DiagramData extends EObject {
 	void setHorizontalRuler(Ruler value);
 
 	/**
+	 * Returns the value of the '<em><b>Label</b></em>' containment reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.DiagramLabel#getDiagramData <em>Diagram Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Label</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Label</em>' containment reference.
+	 * @see #setLabel(DiagramLabel)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Label()
+	 * @see org.lh.dmlj.schema.DiagramLabel#getDiagramData
+	 * @model opposite="diagramData" containment="true"
+	 * @generated
+	 */
+	DiagramLabel getLabel();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#getLabel <em>Label</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Label</em>' containment reference.
+	 * @see #getLabel()
+	 * @generated
+	 */
+	void setLabel(DiagramLabel value);
+
+	/**
 	 * Returns the value of the '<em><b>Locations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.lh.dmlj.schema.DiagramLocation}.
 	 * <!-- begin-user-doc -->
@@ -173,6 +203,34 @@ public interface DiagramData extends EObject {
 	 * @generated
 	 */
 	EList<Ruler> getRulers();
+
+	/**
+	 * Returns the value of the '<em><b>Schema</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Schema#getDiagramData <em>Diagram Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Schema</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Schema</em>' container reference.
+	 * @see #setSchema(Schema)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData_Schema()
+	 * @see org.lh.dmlj.schema.Schema#getDiagramData
+	 * @model opposite="diagramData" required="true" transient="false"
+	 * @generated
+	 */
+	Schema getSchema();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.DiagramData#getSchema <em>Schema</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Schema</em>' container reference.
+	 * @see #getSchema()
+	 * @generated
+	 */
+	void setSchema(Schema value);
 
 	/**
 	 * Returns the value of the '<em><b>Show Grid</b></em>' attribute.

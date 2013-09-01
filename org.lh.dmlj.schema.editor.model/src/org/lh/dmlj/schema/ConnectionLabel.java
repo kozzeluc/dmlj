@@ -27,7 +27,6 @@ package org.lh.dmlj.schema;
 public interface ConnectionLabel extends DiagramNode {
 	/**
 	 * Returns the value of the '<em><b>Alignment</b></em>' attribute.
-	 * The default value is <code>""</code>.
 	 * The literals are from the enumeration {@link org.lh.dmlj.schema.LabelAlignment}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -39,7 +38,7 @@ public interface ConnectionLabel extends DiagramNode {
 	 * @see org.lh.dmlj.schema.LabelAlignment
 	 * @see #setAlignment(LabelAlignment)
 	 * @see org.lh.dmlj.schema.SchemaPackage#getConnectionLabel_Alignment()
-	 * @model default=""
+	 * @model
 	 * @generated
 	 */
 	LabelAlignment getAlignment();

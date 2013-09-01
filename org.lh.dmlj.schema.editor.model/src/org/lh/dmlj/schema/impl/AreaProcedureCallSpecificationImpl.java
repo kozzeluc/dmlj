@@ -111,7 +111,7 @@ public class AreaProcedureCallSpecificationImpl extends EObjectImpl implements A
 	 */
 	public SchemaArea getArea() {
 		if (eContainerFeatureID() != SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA) return null;
-		return (SchemaArea)eContainer();
+		return (SchemaArea)eInternalContainer();
 	}
 
 	/**

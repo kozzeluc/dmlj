@@ -68,7 +68,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchema()
 	 * @generated
 	 */
-	int SCHEMA = 22;
+	int SCHEMA = 24;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaAreaImpl <em>Area</em>}' class.
@@ -78,7 +78,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchemaArea()
 	 * @generated
 	 */
-	int SCHEMA_AREA = 23;
+	int SCHEMA_AREA = 25;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaRecordImpl <em>Record</em>}' class.
@@ -88,7 +88,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchemaRecord()
 	 * @generated
 	 */
-	int SCHEMA_RECORD = 24;
+	int SCHEMA_RECORD = 26;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SetImpl <em>Set</em>}' class.
@@ -98,7 +98,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSet()
 	 * @generated
 	 */
-	int SET = 25;
+	int SET = 27;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ElementImpl <em>Element</em>}' class.
@@ -108,7 +108,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getElement()
 	 * @generated
 	 */
-	int ELEMENT = 8;
+	int ELEMENT = 9;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.KeyElementImpl <em>Key Element</em>}' class.
@@ -118,7 +118,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getKeyElement()
 	 * @generated
 	 */
-	int KEY_ELEMENT = 13;
+	int KEY_ELEMENT = 14;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SystemOwnerImpl <em>System Owner</em>}' class.
@@ -128,7 +128,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSystemOwner()
 	 * @generated
 	 */
-	int SYSTEM_OWNER = 26;
+	int SYSTEM_OWNER = 28;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl <em>Via Specification</em>}' class.
@@ -138,7 +138,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getViaSpecification()
 	 * @generated
 	 */
-	int VIA_SPECIFICATION = 27;
+	int VIA_SPECIFICATION = 29;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.KeyImpl <em>Key</em>}' class.
@@ -148,7 +148,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getKey()
 	 * @generated
 	 */
-	int KEY = 12;
+	int KEY = 13;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.AreaSpecificationImpl <em>Area Specification</em>}' class.
@@ -168,7 +168,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOffsetExpression()
 	 * @generated
 	 */
-	int OFFSET_EXPRESSION = 16;
+	int OFFSET_EXPRESSION = 17;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl <em>Indexed Set Mode Specification</em>}' class.
@@ -178,7 +178,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getIndexedSetModeSpecification()
 	 * @generated
 	 */
-	int INDEXED_SET_MODE_SPECIFICATION = 10;
+	int INDEXED_SET_MODE_SPECIFICATION = 11;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.AreaProcedureCallSpecificationImpl <em>Area Procedure Call Specification</em>}' class.
@@ -361,7 +361,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRole()
 	 * @generated
 	 */
-	int ROLE = 20;
+	int ROLE = 22;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl <em>Record Procedure Call Specification</em>}' class.
@@ -371,7 +371,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallSpecification()
 	 * @generated
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION = 19;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION = 20;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ProcedureImpl <em>Procedure</em>}' class.
@@ -381,7 +381,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedure()
 	 * @generated
 	 */
-	int PROCEDURE = 18;
+	int PROCEDURE = 19;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl <em>Occurs Specification</em>}' class.
@@ -391,7 +391,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOccursSpecification()
 	 * @generated
 	 */
-	int OCCURS_SPECIFICATION = 15;
+	int OCCURS_SPECIFICATION = 16;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.MemberRoleImpl <em>Member Role</em>}' class.
@@ -401,7 +401,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getMemberRole()
 	 * @generated
 	 */
-	int MEMBER_ROLE = 14;
+	int MEMBER_ROLE = 15;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.OwnerRoleImpl <em>Owner Role</em>}' class.
@@ -411,7 +411,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getOwnerRole()
 	 * @generated
 	 */
-	int OWNER_ROLE = 17;
+	int OWNER_ROLE = 18;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramNodeImpl <em>Diagram Node</em>}' class.
@@ -421,7 +421,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramNode()
 	 * @generated
 	 */
-	int DIAGRAM_NODE = 7;
+	int DIAGRAM_NODE = 8;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramLocationImpl <em>Diagram Location</em>}' class.
@@ -431,7 +431,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramLocation()
 	 * @generated
 	 */
-	int DIAGRAM_LOCATION = 6;
+	int DIAGRAM_LOCATION = 7;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramDataImpl <em>Diagram Data</em>}' class.
@@ -590,76 +590,22 @@ public interface SchemaPackage extends EPackage {
 	int DIAGRAM_DATA__HORIZONTAL_RULER = 3;
 
 	/**
+	 * The feature id for the '<em><b>Label</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__LABEL = 4;
+
+	/**
 	 * The feature id for the '<em><b>Locations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DATA__LOCATIONS = 4;
-
-	/**
-	 * The feature id for the '<em><b>Show Grid</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__SHOW_GRID = 5;
-
-	/**
-	 * The feature id for the '<em><b>Show Rulers</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__SHOW_RULERS = 6;
-
-	/**
-	 * The feature id for the '<em><b>Snap To Geometry</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__SNAP_TO_GEOMETRY = 7;
-
-	/**
-	 * The feature id for the '<em><b>Snap To Grid</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__SNAP_TO_GRID = 8;
-
-	/**
-	 * The feature id for the '<em><b>Snap To Guides</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__SNAP_TO_GUIDES = 9;
-
-	/**
-	 * The feature id for the '<em><b>Vertical Ruler</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__VERTICAL_RULER = 10;
-
-	/**
-	 * The feature id for the '<em><b>Zoom Level</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM_DATA__ZOOM_LEVEL = 11;
+	int DIAGRAM_DATA__LOCATIONS = 5;
 
 	/**
 	 * The feature id for the '<em><b>Rulers</b></em>' containment reference list.
@@ -668,7 +614,79 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DATA__RULERS = 12;
+	int DIAGRAM_DATA__RULERS = 6;
+
+	/**
+	 * The feature id for the '<em><b>Schema</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__SCHEMA = 7;
+
+	/**
+	 * The feature id for the '<em><b>Show Grid</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__SHOW_GRID = 8;
+
+	/**
+	 * The feature id for the '<em><b>Show Rulers</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__SHOW_RULERS = 9;
+
+	/**
+	 * The feature id for the '<em><b>Snap To Geometry</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__SNAP_TO_GEOMETRY = 10;
+
+	/**
+	 * The feature id for the '<em><b>Snap To Grid</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__SNAP_TO_GRID = 11;
+
+	/**
+	 * The feature id for the '<em><b>Snap To Guides</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__SNAP_TO_GUIDES = 12;
+
+	/**
+	 * The feature id for the '<em><b>Vertical Ruler</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__VERTICAL_RULER = 13;
+
+	/**
+	 * The feature id for the '<em><b>Zoom Level</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_DATA__ZOOM_LEVEL = 14;
 
 	/**
 	 * The number of structural features of the '<em>Diagram Data</em>' class.
@@ -677,7 +695,117 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_DATA_FEATURE_COUNT = 13;
+	int DIAGRAM_DATA_FEATURE_COUNT = 15;
+
+	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ResizableDiagramNodeImpl <em>Resizable Diagram Node</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.ResizableDiagramNodeImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getResizableDiagramNode()
+	 * @generated
+	 */
+	int RESIZABLE_DIAGRAM_NODE = 21;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESIZABLE_DIAGRAM_NODE__DIAGRAM_LOCATION = DIAGRAM_NODE__DIAGRAM_LOCATION;
+
+	/**
+	 * The feature id for the '<em><b>Height</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESIZABLE_DIAGRAM_NODE__HEIGHT = DIAGRAM_NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Width</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESIZABLE_DIAGRAM_NODE__WIDTH = DIAGRAM_NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Resizable Diagram Node</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESIZABLE_DIAGRAM_NODE_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.DiagramLabelImpl <em>Diagram Label</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.DiagramLabelImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramLabel()
+	 * @generated
+	 */
+	int DIAGRAM_LABEL = 6;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LABEL__DIAGRAM_LOCATION = RESIZABLE_DIAGRAM_NODE__DIAGRAM_LOCATION;
+
+	/**
+	 * The feature id for the '<em><b>Height</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LABEL__HEIGHT = RESIZABLE_DIAGRAM_NODE__HEIGHT;
+
+	/**
+	 * The feature id for the '<em><b>Width</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LABEL__WIDTH = RESIZABLE_DIAGRAM_NODE__WIDTH;
+
+	/**
+	 * The feature id for the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LABEL__DESCRIPTION = RESIZABLE_DIAGRAM_NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Data</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LABEL__DIAGRAM_DATA = RESIZABLE_DIAGRAM_NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Diagram Label</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_LABEL_FEATURE_COUNT = RESIZABLE_DIAGRAM_NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Eyecatcher</b></em>' attribute.
@@ -885,7 +1013,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getGuide()
 	 * @generated
 	 */
-	int GUIDE = 9;
+	int GUIDE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Position</b></em>' attribute.
@@ -958,7 +1086,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getIndexElement()
 	 * @generated
 	 */
-	int INDEX_ELEMENT = 11;
+	int INDEX_ELEMENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Base Name</b></em>' attribute.
@@ -1454,7 +1582,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRuler()
 	 * @generated
 	 */
-	int RULER = 21;
+	int RULER = 23;
 
 	/**
 	 * The feature id for the '<em><b>Guides</b></em>' containment reference list.
@@ -2076,7 +2204,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetOrder()
 	 * @generated
 	 */
-	int SET_ORDER = 37;
+	int SET_ORDER = 39;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.DuplicatesOption <em>Duplicates Option</em>}' enum.
@@ -2086,7 +2214,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDuplicatesOption()
 	 * @generated
 	 */
-	int DUPLICATES_OPTION = 29;
+	int DUPLICATES_OPTION = 31;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.LabelAlignment <em>Label Alignment</em>}' enum.
@@ -2096,7 +2224,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getLabelAlignment()
 	 * @generated
 	 */
-	int LABEL_ALIGNMENT = 30;
+	int LABEL_ALIGNMENT = 32;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.LocationMode <em>Location Mode</em>}' enum.
@@ -2106,7 +2234,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getLocationMode()
 	 * @generated
 	 */
-	int LOCATION_MODE = 31;
+	int LOCATION_MODE = 33;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMode <em>Set Mode</em>}' enum.
@@ -2116,7 +2244,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetMode()
 	 * @generated
 	 */
-	int SET_MODE = 36;
+	int SET_MODE = 38;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.StorageMode <em>Storage Mode</em>}' enum.
@@ -2126,7 +2254,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getStorageMode()
 	 * @generated
 	 */
-	int STORAGE_MODE = 39;
+	int STORAGE_MODE = 41;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMembershipOption <em>Set Membership Option</em>}' enum.
@@ -2136,7 +2264,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetMembershipOption()
 	 * @generated
 	 */
-	int SET_MEMBERSHIP_OPTION = 35;
+	int SET_MEMBERSHIP_OPTION = 37;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SortSequence <em>Sort Sequence</em>}' enum.
@@ -2146,7 +2274,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSortSequence()
 	 * @generated
 	 */
-	int SORT_SEQUENCE = 38;
+	int SORT_SEQUENCE = 40;
 
 
 	/**
@@ -2157,7 +2285,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedureCallTime()
 	 * @generated
 	 */
-	int PROCEDURE_CALL_TIME = 32;
+	int PROCEDURE_CALL_TIME = 34;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.AreaProcedureCallFunction <em>Area Procedure Call Function</em>}' enum.
@@ -2167,7 +2295,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getAreaProcedureCallFunction()
 	 * @generated
 	 */
-	int AREA_PROCEDURE_CALL_FUNCTION = 28;
+	int AREA_PROCEDURE_CALL_FUNCTION = 30;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.RecordProcedureCallVerb <em>Record Procedure Call Verb</em>}' enum.
@@ -2177,7 +2305,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallVerb()
 	 * @generated
 	 */
-	int RECORD_PROCEDURE_CALL_VERB = 33;
+	int RECORD_PROCEDURE_CALL_VERB = 35;
 
 
 	/**
@@ -2188,7 +2316,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRulerType()
 	 * @generated
 	 */
-	int RULER_TYPE = 34;
+	int RULER_TYPE = 36;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.Usage <em>Usage</em>}' enum.
@@ -2198,7 +2326,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getUsage()
 	 * @generated
 	 */
-	int USAGE = 40;
+	int USAGE = 42;
 
 
 	/**
@@ -3419,6 +3547,17 @@ public interface SchemaPackage extends EPackage {
 	EReference getDiagramData_HorizontalRuler();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.DiagramData#getLabel <em>Label</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Label</em>'.
+	 * @see org.lh.dmlj.schema.DiagramData#getLabel()
+	 * @see #getDiagramData()
+	 * @generated
+	 */
+	EReference getDiagramData_Label();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.lh.dmlj.schema.DiagramData#getLocations <em>Locations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3441,6 +3580,38 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getDiagramData_ZoomLevel();
 
 	/**
+	 * Returns the meta object for class '{@link org.lh.dmlj.schema.DiagramLabel <em>Diagram Label</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Diagram Label</em>'.
+	 * @see org.lh.dmlj.schema.DiagramLabel
+	 * @generated
+	 */
+	EClass getDiagramLabel();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.DiagramLabel#getDescription <em>Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Description</em>'.
+	 * @see org.lh.dmlj.schema.DiagramLabel#getDescription()
+	 * @see #getDiagramLabel()
+	 * @generated
+	 */
+	EAttribute getDiagramLabel_Description();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.DiagramLabel#getDiagramData <em>Diagram Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Diagram Data</em>'.
+	 * @see org.lh.dmlj.schema.DiagramLabel#getDiagramData()
+	 * @see #getDiagramLabel()
+	 * @generated
+	 */
+	EReference getDiagramLabel_DiagramData();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.lh.dmlj.schema.DiagramData#getRulers <em>Rulers</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3450,6 +3621,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDiagramData_Rulers();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.DiagramData#getSchema <em>Schema</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Schema</em>'.
+	 * @see org.lh.dmlj.schema.DiagramData#getSchema()
+	 * @see #getDiagramData()
+	 * @generated
+	 */
+	EReference getDiagramData_Schema();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.DiagramData#isShowGrid <em>Show Grid</em>}'.
@@ -4165,6 +4347,38 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getRecordProcedureCallSpecification_Verb();
+
+	/**
+	 * Returns the meta object for class '{@link org.lh.dmlj.schema.ResizableDiagramNode <em>Resizable Diagram Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Resizable Diagram Node</em>'.
+	 * @see org.lh.dmlj.schema.ResizableDiagramNode
+	 * @generated
+	 */
+	EClass getResizableDiagramNode();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.ResizableDiagramNode#getHeight <em>Height</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Height</em>'.
+	 * @see org.lh.dmlj.schema.ResizableDiagramNode#getHeight()
+	 * @see #getResizableDiagramNode()
+	 * @generated
+	 */
+	EAttribute getResizableDiagramNode_Height();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.ResizableDiagramNode#getWidth <em>Width</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Width</em>'.
+	 * @see org.lh.dmlj.schema.ResizableDiagramNode#getWidth()
+	 * @see #getResizableDiagramNode()
+	 * @generated
+	 */
+	EAttribute getResizableDiagramNode_Width();
 
 	/**
 	 * Returns the meta object for class '{@link org.lh.dmlj.schema.Procedure <em>Procedure</em>}'.
@@ -5320,6 +5534,14 @@ public interface SchemaPackage extends EPackage {
 		EReference DIAGRAM_DATA__HORIZONTAL_RULER = eINSTANCE.getDiagramData_HorizontalRuler();
 
 		/**
+		 * The meta object literal for the '<em><b>Label</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM_DATA__LABEL = eINSTANCE.getDiagramData_Label();
+
+		/**
 		 * The meta object literal for the '<em><b>Locations</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5336,12 +5558,46 @@ public interface SchemaPackage extends EPackage {
 		EAttribute DIAGRAM_DATA__ZOOM_LEVEL = eINSTANCE.getDiagramData_ZoomLevel();
 
 		/**
+		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.DiagramLabelImpl <em>Diagram Label</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.lh.dmlj.schema.impl.DiagramLabelImpl
+		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDiagramLabel()
+		 * @generated
+		 */
+		EClass DIAGRAM_LABEL = eINSTANCE.getDiagramLabel();
+
+		/**
+		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIAGRAM_LABEL__DESCRIPTION = eINSTANCE.getDiagramLabel_Description();
+
+		/**
+		 * The meta object literal for the '<em><b>Diagram Data</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM_LABEL__DIAGRAM_DATA = eINSTANCE.getDiagramLabel_DiagramData();
+
+		/**
 		 * The meta object literal for the '<em><b>Rulers</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference DIAGRAM_DATA__RULERS = eINSTANCE.getDiagramData_Rulers();
+
+		/**
+		 * The meta object literal for the '<em><b>Schema</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM_DATA__SCHEMA = eINSTANCE.getDiagramData_Schema();
 
 		/**
 		 * The meta object literal for the '<em><b>Show Grid</b></em>' attribute feature.
@@ -5892,6 +6148,32 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute RECORD_PROCEDURE_CALL_SPECIFICATION__VERB = eINSTANCE.getRecordProcedureCallSpecification_Verb();
+
+		/**
+		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.ResizableDiagramNodeImpl <em>Resizable Diagram Node</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.lh.dmlj.schema.impl.ResizableDiagramNodeImpl
+		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getResizableDiagramNode()
+		 * @generated
+		 */
+		EClass RESIZABLE_DIAGRAM_NODE = eINSTANCE.getResizableDiagramNode();
+
+		/**
+		 * The meta object literal for the '<em><b>Height</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute RESIZABLE_DIAGRAM_NODE__HEIGHT = eINSTANCE.getResizableDiagramNode_Height();
+
+		/**
+		 * The meta object literal for the '<em><b>Width</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute RESIZABLE_DIAGRAM_NODE__WIDTH = eINSTANCE.getResizableDiagramNode_Width();
 
 		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.ProcedureImpl <em>Procedure</em>}' class.

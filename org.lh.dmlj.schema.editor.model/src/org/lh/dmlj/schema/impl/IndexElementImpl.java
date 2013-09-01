@@ -141,7 +141,7 @@ public class IndexElementImpl extends EObjectImpl implements IndexElement {
 	 */
 	public OccursSpecification getOccursSpecification() {
 		if (eContainerFeatureID() != SchemaPackage.INDEX_ELEMENT__OCCURS_SPECIFICATION) return null;
-		return (OccursSpecification)eContainer();
+		return (OccursSpecification)eInternalContainer();
 	}
 
 	/**

@@ -136,7 +136,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 */
 	public AreaSpecification getAreaSpecification() {
 		if (eContainerFeatureID() != SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION) return null;
-		return (AreaSpecification)eContainer();
+		return (AreaSpecification)eInternalContainer();
 	}
 
 	/**

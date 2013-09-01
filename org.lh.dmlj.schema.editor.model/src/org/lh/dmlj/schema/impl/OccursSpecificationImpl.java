@@ -164,7 +164,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 */
 	public Element getElement() {
 		if (eContainerFeatureID() != SchemaPackage.OCCURS_SPECIFICATION__ELEMENT) return null;
-		return (Element)eContainer();
+		return (Element)eInternalContainer();
 	}
 
 	/**

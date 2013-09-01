@@ -716,7 +716,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 */
 	public Schema getSchema() {
 		if (eContainerFeatureID() != SchemaPackage.SCHEMA_RECORD__SCHEMA) return null;
-		return (Schema)eContainer();
+		return (Schema)eInternalContainer();
 	}
 
 	/**
@@ -1406,6 +1406,11 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 		result.append(synonymVersion);
 		result.append(')');
 		return result.toString();
+	}
+
+	@Override
+	public int compareTo(SchemaRecord other) {
+		return getName().compareTo(other.getName());
 	}	
 
 } //SchemaRecordImpl

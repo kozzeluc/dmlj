@@ -379,7 +379,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 */
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.MEMBER_ROLE__SET) return null;
-		return (Set)eContainer();
+		return (Set)eInternalContainer();
 	}
 
 	/**

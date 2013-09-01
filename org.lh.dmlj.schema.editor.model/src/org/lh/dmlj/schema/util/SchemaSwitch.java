@@ -107,6 +107,14 @@ public class SchemaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SchemaPackage.DIAGRAM_LABEL: {
+				DiagramLabel diagramLabel = (DiagramLabel)theEObject;
+				T result = caseDiagramLabel(diagramLabel);
+				if (result == null) result = caseResizableDiagramNode(diagramLabel);
+				if (result == null) result = caseDiagramNode(diagramLabel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SchemaPackage.DIAGRAM_LOCATION: {
 				DiagramLocation diagramLocation = (DiagramLocation)theEObject;
 				T result = caseDiagramLocation(diagramLocation);
@@ -190,6 +198,13 @@ public class SchemaSwitch<T> extends Switch<T> {
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION: {
 				RecordProcedureCallSpecification recordProcedureCallSpecification = (RecordProcedureCallSpecification)theEObject;
 				T result = caseRecordProcedureCallSpecification(recordProcedureCallSpecification);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.RESIZABLE_DIAGRAM_NODE: {
+				ResizableDiagramNode resizableDiagramNode = (ResizableDiagramNode)theEObject;
+				T result = caseResizableDiagramNode(resizableDiagramNode);
+				if (result == null) result = caseDiagramNode(resizableDiagramNode);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -473,6 +488,21 @@ public class SchemaSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Diagram Label</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Diagram Label</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDiagramLabel(DiagramLabel object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Key</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -634,6 +664,21 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseRecordProcedureCallSpecification(RecordProcedureCallSpecification object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Resizable Diagram Node</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Resizable Diagram Node</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseResizableDiagramNode(ResizableDiagramNode object) {
 		return null;
 	}
 

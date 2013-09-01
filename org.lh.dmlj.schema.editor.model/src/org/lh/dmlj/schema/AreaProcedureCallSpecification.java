@@ -113,7 +113,6 @@ public interface AreaProcedureCallSpecification extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Function</b></em>' attribute.
-	 * The default value is <code>""</code>.
 	 * The literals are from the enumeration {@link org.lh.dmlj.schema.AreaProcedureCallFunction}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -125,7 +124,7 @@ public interface AreaProcedureCallSpecification extends EObject {
 	 * @see org.lh.dmlj.schema.AreaProcedureCallFunction
 	 * @see #setFunction(AreaProcedureCallFunction)
 	 * @see org.lh.dmlj.schema.SchemaPackage#getAreaProcedureCallSpecification_Function()
-	 * @model default=""
+	 * @model
 	 * @generated
 	 */
 	AreaProcedureCallFunction getFunction();

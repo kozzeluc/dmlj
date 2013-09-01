@@ -149,7 +149,7 @@ public class RecordProcedureCallSpecificationImpl extends EObjectImpl implements
 	 */
 	public SchemaRecord getRecord() {
 		if (eContainerFeatureID() != SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD) return null;
-		return (SchemaRecord)eContainer();
+		return (SchemaRecord)eInternalContainer();
 	}
 
 	/**

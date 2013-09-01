@@ -9,6 +9,7 @@ package org.lh.dmlj.schema;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>System Owner</b></em>'.
+ * @extends Comparable<SystemOwner>
  * <!-- end-user-doc -->
  *
  * <p>
@@ -23,7 +24,7 @@ package org.lh.dmlj.schema;
  * @model
  * @generated
  */
-public interface SystemOwner extends DiagramNode {
+public interface SystemOwner extends DiagramNode, Comparable<SystemOwner> {
 	/**
 	 * Returns the value of the '<em><b>Area Specification</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.AreaSpecification#getSystemOwner <em>System Owner</em>}'.

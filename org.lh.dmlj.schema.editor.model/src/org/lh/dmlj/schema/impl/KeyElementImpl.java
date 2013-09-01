@@ -181,7 +181,7 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 */
 	public Key getKey() {
 		if (eContainerFeatureID() != SchemaPackage.KEY_ELEMENT__KEY) return null;
-		return (Key)eContainer();
+		return (Key)eInternalContainer();
 	}
 
 	/**

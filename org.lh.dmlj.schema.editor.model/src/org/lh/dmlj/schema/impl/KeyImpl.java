@@ -369,7 +369,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 */
 	public SchemaRecord getRecord() {
 		if (eContainerFeatureID() != SchemaPackage.KEY__RECORD) return null;
-		return (SchemaRecord)eContainer();
+		return (SchemaRecord)eInternalContainer();
 	}
 
 	/**

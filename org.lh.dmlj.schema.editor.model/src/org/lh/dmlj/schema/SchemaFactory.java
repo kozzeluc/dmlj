@@ -134,6 +134,15 @@ public interface SchemaFactory extends EFactory {
 	DiagramData createDiagramData();
 
 	/**
+	 * Returns a new object of class '<em>Diagram Label</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Diagram Label</em>'.
+	 * @generated
+	 */
+	DiagramLabel createDiagramLabel();
+
+	/**
 	 * Returns a new object of class '<em>Key</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

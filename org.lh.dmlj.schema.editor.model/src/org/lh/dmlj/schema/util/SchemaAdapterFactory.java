@@ -96,6 +96,10 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createDiagramDataAdapter();
 			}
 			@Override
+			public Adapter caseDiagramLabel(DiagramLabel object) {
+				return createDiagramLabelAdapter();
+			}
+			@Override
 			public Adapter caseDiagramLocation(DiagramLocation object) {
 				return createDiagramLocationAdapter();
 			}
@@ -150,6 +154,10 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseRecordProcedureCallSpecification(RecordProcedureCallSpecification object) {
 				return createRecordProcedureCallSpecificationAdapter();
+			}
+			@Override
+			public Adapter caseResizableDiagramNode(ResizableDiagramNode object) {
+				return createResizableDiagramNodeAdapter();
 			}
 			@Override
 			public Adapter caseRole(Role object) {
@@ -414,6 +422,20 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.DiagramLabel <em>Diagram Label</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.DiagramLabel
+	 * @generated
+	 */
+	public Adapter createDiagramLabelAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.Key <em>Key</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -564,6 +586,20 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createRecordProcedureCallSpecificationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.ResizableDiagramNode <em>Resizable Diagram Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.ResizableDiagramNode
+	 * @generated
+	 */
+	public Adapter createResizableDiagramNodeAdapter() {
 		return null;
 	}
 

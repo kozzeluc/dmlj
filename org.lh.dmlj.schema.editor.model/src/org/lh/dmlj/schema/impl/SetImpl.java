@@ -243,7 +243,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 */
 	public Schema getSchema() {
 		if (eContainerFeatureID() != SchemaPackage.SET__SCHEMA) return null;
-		return (Schema)eContainer();
+		return (Schema)eInternalContainer();
 	}
 
 	/**
@@ -660,6 +660,11 @@ public class SetImpl extends EObjectImpl implements Set {
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION, newIndexedSetModeSpecification, newIndexedSetModeSpecification));
+	}
+
+	@Override
+	public int compareTo(Set other) {
+		return getName().compareTo(other.getName());
 	}
 
 } //SetImpl

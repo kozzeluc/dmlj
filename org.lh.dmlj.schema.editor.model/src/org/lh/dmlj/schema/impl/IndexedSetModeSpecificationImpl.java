@@ -203,7 +203,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 */
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET) return null;
-		return (Set)eContainer();
+		return (Set)eInternalContainer();
 	}
 
 	/**

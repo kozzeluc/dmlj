@@ -362,9 +362,9 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 		if (newDiagramData != diagramData) {
 			NotificationChain msgs = null;
 			if (diagramData != null)
-				msgs = ((InternalEObject)diagramData).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SCHEMA__DIAGRAM_DATA, null, msgs);
+				msgs = ((InternalEObject)diagramData).eInverseRemove(this, SchemaPackage.DIAGRAM_DATA__SCHEMA, DiagramData.class, msgs);
 			if (newDiagramData != null)
-				msgs = ((InternalEObject)newDiagramData).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SCHEMA__DIAGRAM_DATA, null, msgs);
+				msgs = ((InternalEObject)newDiagramData).eInverseAdd(this, SchemaPackage.DIAGRAM_DATA__SCHEMA, DiagramData.class, msgs);
 			msgs = basicSetDiagramData(newDiagramData, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
@@ -464,6 +464,10 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 		switch (featureID) {
 			case SchemaPackage.SCHEMA__AREAS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getAreas()).basicAdd(otherEnd, msgs);
+			case SchemaPackage.SCHEMA__DIAGRAM_DATA:
+				if (diagramData != null)
+					msgs = ((InternalEObject)diagramData).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SCHEMA__DIAGRAM_DATA, null, msgs);
+				return basicSetDiagramData((DiagramData)otherEnd, msgs);
 			case SchemaPackage.SCHEMA__RECORDS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRecords()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.SCHEMA__SETS:

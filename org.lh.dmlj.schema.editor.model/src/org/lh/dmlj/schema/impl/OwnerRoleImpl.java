@@ -216,7 +216,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 */
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.OWNER_ROLE__SET) return null;
-		return (Set)eContainer();
+		return (Set)eInternalContainer();
 	}
 
 	/**

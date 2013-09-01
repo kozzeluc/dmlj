@@ -132,7 +132,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 */
 	public Schema getSchema() {
 		if (eContainerFeatureID() != SchemaPackage.SCHEMA_AREA__SCHEMA) return null;
-		return (Schema)eContainer();
+		return (Schema)eInternalContainer();
 	}
 
 	/**
@@ -425,6 +425,11 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 		result.append(name);
 		result.append(')');
 		return result.toString();
+	}
+
+	@Override
+	public int compareTo(SchemaArea other) {
+		return getName().compareTo(other.getName());
 	}
 
 } //SchemaAreaImpl

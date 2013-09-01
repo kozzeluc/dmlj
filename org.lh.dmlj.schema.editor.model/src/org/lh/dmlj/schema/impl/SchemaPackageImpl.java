@@ -22,6 +22,7 @@ import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
+import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.DuplicatesOption;
@@ -41,6 +42,7 @@ import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.ResizableDiagramNode;
 import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.RulerType;
@@ -176,6 +178,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass diagramLabelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass keyEClass = null;
 
 	/**
@@ -247,6 +256,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	private EClass recordProcedureCallSpecificationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass resizableDiagramNodeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1427,7 +1443,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getDiagramData_Locations() {
+	public EReference getDiagramData_Label() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1436,8 +1452,44 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getDiagramData_Locations() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getDiagramData_ZoomLevel() {
-		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(11);
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(14);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDiagramLabel() {
+		return diagramLabelEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramLabel_Description() {
+		return (EAttribute)diagramLabelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramLabel_DiagramData() {
+		return (EReference)diagramLabelEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1446,7 +1498,16 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getDiagramData_Rulers() {
-		return (EReference)diagramDataEClass.getEStructuralFeatures().get(12);
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagramData_Schema() {
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -1455,33 +1516,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getDiagramData_ShowGrid() {
-		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDiagramData_ShowRulers() {
-		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDiagramData_SnapToGeometry() {
-		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getDiagramData_SnapToGrid() {
 		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -1490,7 +1524,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDiagramData_SnapToGuides() {
+	public EAttribute getDiagramData_ShowRulers() {
 		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -1499,8 +1533,35 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDiagramData_SnapToGeometry() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_SnapToGrid() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiagramData_SnapToGuides() {
+		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getDiagramData_VerticalRuler() {
-		return (EReference)diagramDataEClass.getEStructuralFeatures().get(10);
+		return (EReference)diagramDataEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -2048,6 +2109,33 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getResizableDiagramNode() {
+		return resizableDiagramNodeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getResizableDiagramNode_Height() {
+		return (EAttribute)resizableDiagramNodeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getResizableDiagramNode_Width() {
+		return (EAttribute)resizableDiagramNodeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getProcedure() {
 		return procedureEClass;
 	}
@@ -2284,7 +2372,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTION_PARTS);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__CONNECTORS);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__HORIZONTAL_RULER);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__LABEL);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__LOCATIONS);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__RULERS);
+		createEReference(diagramDataEClass, DIAGRAM_DATA__SCHEMA);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SHOW_GRID);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SHOW_RULERS);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SNAP_TO_GEOMETRY);
@@ -2292,7 +2383,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__SNAP_TO_GUIDES);
 		createEReference(diagramDataEClass, DIAGRAM_DATA__VERTICAL_RULER);
 		createEAttribute(diagramDataEClass, DIAGRAM_DATA__ZOOM_LEVEL);
-		createEReference(diagramDataEClass, DIAGRAM_DATA__RULERS);
+
+		diagramLabelEClass = createEClass(DIAGRAM_LABEL);
+		createEAttribute(diagramLabelEClass, DIAGRAM_LABEL__DESCRIPTION);
+		createEReference(diagramLabelEClass, DIAGRAM_LABEL__DIAGRAM_DATA);
 
 		diagramLocationEClass = createEClass(DIAGRAM_LOCATION);
 		createEAttribute(diagramLocationEClass, DIAGRAM_LOCATION__EYECATCHER);
@@ -2391,6 +2485,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE);
 		createEReference(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD);
 		createEAttribute(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__VERB);
+
+		resizableDiagramNodeEClass = createEClass(RESIZABLE_DIAGRAM_NODE);
+		createEAttribute(resizableDiagramNodeEClass, RESIZABLE_DIAGRAM_NODE__HEIGHT);
+		createEAttribute(resizableDiagramNodeEClass, RESIZABLE_DIAGRAM_NODE__WIDTH);
 
 		roleEClass = createEClass(ROLE);
 
@@ -2513,8 +2611,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		// Add supertypes to classes
 		connectionLabelEClass.getESuperTypes().add(this.getDiagramNode());
 		connectorEClass.getESuperTypes().add(this.getDiagramNode());
+		diagramLabelEClass.getESuperTypes().add(this.getResizableDiagramNode());
 		memberRoleEClass.getESuperTypes().add(this.getRole());
 		ownerRoleEClass.getESuperTypes().add(this.getRole());
+		resizableDiagramNodeEClass.getESuperTypes().add(this.getDiagramNode());
 		schemaRecordEClass.getESuperTypes().add(this.getDiagramNode());
 		systemOwnerEClass.getESuperTypes().add(this.getDiagramNode());
 
@@ -2522,7 +2622,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEClass(areaProcedureCallSpecificationEClass, AreaProcedureCallSpecification.class, "AreaProcedureCallSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAreaProcedureCallSpecification_Area(), this.getSchemaArea(), this.getSchemaArea_Procedures(), "area", null, 1, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAreaProcedureCallSpecification_CallTime(), this.getProcedureCallTime(), "callTime", null, 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAreaProcedureCallSpecification_Function(), this.getAreaProcedureCallFunction(), "function", "", 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAreaProcedureCallSpecification_Function(), this.getAreaProcedureCallFunction(), "function", null, 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAreaProcedureCallSpecification_Procedure(), this.getProcedure(), null, "procedure", null, 1, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(areaSpecificationEClass, AreaSpecification.class, "AreaSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2540,7 +2640,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getConnectionPart_TargetEndpointLocation(), this.getDiagramLocation(), null, "targetEndpointLocation", null, 0, 1, ConnectionPart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(connectionLabelEClass, ConnectionLabel.class, "ConnectionLabel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getConnectionLabel_Alignment(), this.getLabelAlignment(), "alignment", "", 0, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getConnectionLabel_Alignment(), this.getLabelAlignment(), "alignment", null, 0, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getConnectionLabel_MemberRole(), this.getMemberRole(), this.getMemberRole_ConnectionLabel(), "memberRole", null, 1, 1, ConnectionLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2552,7 +2652,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getDiagramData_ConnectionParts(), this.getConnectionPart(), null, "connectionParts", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_Connectors(), this.getConnector(), null, "connectors", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_HorizontalRuler(), this.getRuler(), null, "horizontalRuler", null, 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_Label(), this.getDiagramLabel(), this.getDiagramLabel_DiagramData(), "label", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_Locations(), this.getDiagramLocation(), null, "locations", null, 0, -1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_Rulers(), this.getRuler(), this.getRuler_DiagramData(), "rulers", null, 2, 2, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramData_Schema(), this.getSchema(), this.getSchema_DiagramData(), "schema", null, 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_ShowGrid(), ecorePackage.getEBoolean(), "showGrid", "false", 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_ShowRulers(), ecorePackage.getEBoolean(), "showRulers", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_SnapToGeometry(), ecorePackage.getEBoolean(), "snapToGeometry", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2560,7 +2663,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getDiagramData_SnapToGuides(), ecorePackage.getEBoolean(), "snapToGuides", null, 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagramData_VerticalRuler(), this.getRuler(), null, "verticalRuler", null, 1, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiagramData_ZoomLevel(), ecorePackage.getEDouble(), "zoomLevel", "1.0d", 0, 1, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDiagramData_Rulers(), this.getRuler(), this.getRuler_DiagramData(), "rulers", null, 2, 2, DiagramData.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(diagramLabelEClass, DiagramLabel.class, "DiagramLabel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDiagramLabel_Description(), ecorePackage.getEString(), "description", null, 0, 1, DiagramLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramLabel_DiagramData(), this.getDiagramData(), this.getDiagramData_Label(), "diagramData", null, 1, 1, DiagramLabel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(diagramLocationEClass, DiagramLocation.class, "DiagramLocation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDiagramLocation_Eyecatcher(), ecorePackage.getEString(), "eyecatcher", null, 0, 1, DiagramLocation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2660,6 +2766,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getRecordProcedureCallSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_Procedures(), "record", null, 1, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRecordProcedureCallSpecification_Verb(), this.getRecordProcedureCallVerb(), "verb", null, 0, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(resizableDiagramNodeEClass, ResizableDiagramNode.class, "ResizableDiagramNode", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getResizableDiagramNode_Height(), ecorePackage.getEShort(), "height", null, 0, 1, ResizableDiagramNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getResizableDiagramNode_Width(), ecorePackage.getEShort(), "width", null, 0, 1, ResizableDiagramNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(roleEClass, Role.class, "Role", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(rulerEClass, Ruler.class, "Ruler", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2671,7 +2781,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getSchema_Areas(), this.getSchemaArea(), this.getSchemaArea_Schema(), "areas", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_Comments(), ecorePackage.getEString(), "comments", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_Description(), ecorePackage.getEString(), "description", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSchema_DiagramData(), this.getDiagramData(), null, "diagramData", null, 1, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchema_DiagramData(), this.getDiagramData(), this.getDiagramData_Schema(), "diagramData", null, 1, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_MemoDate(), ecorePackage.getEString(), "memoDate", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_Name(), ecorePackage.getEString(), "name", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchema_Procedures(), this.getProcedure(), null, "procedures", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

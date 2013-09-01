@@ -212,6 +212,7 @@ public interface Schema extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Diagram Data</b></em>' containment reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.DiagramData#getSchema <em>Schema</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Diagram Data</em>' reference isn't clear,
@@ -221,7 +222,8 @@ public interface Schema extends EObject {
 	 * @return the value of the '<em>Diagram Data</em>' containment reference.
 	 * @see #setDiagramData(DiagramData)
 	 * @see org.lh.dmlj.schema.SchemaPackage#getSchema_DiagramData()
-	 * @model containment="true" required="true"
+	 * @see org.lh.dmlj.schema.DiagramData#getSchema
+	 * @model opposite="schema" containment="true" required="true"
 	 * @generated
 	 */
 	DiagramData getDiagramData();

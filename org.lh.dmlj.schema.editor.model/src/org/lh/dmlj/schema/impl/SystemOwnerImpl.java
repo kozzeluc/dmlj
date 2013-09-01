@@ -130,7 +130,7 @@ public class SystemOwnerImpl extends DiagramNodeImpl implements SystemOwner {
 	 */
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.SYSTEM_OWNER__SET) return null;
-		return (Set)eContainer();
+		return (Set)eInternalContainer();
 	}
 
 	/**
@@ -281,6 +281,11 @@ public class SystemOwnerImpl extends DiagramNodeImpl implements SystemOwner {
 				return getSet() != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	@Override
+	public int compareTo(SystemOwner other) {
+		return getSet().getName().compareTo(other.getSet().getName());
 	}
 
 } //SystemOwnerImpl

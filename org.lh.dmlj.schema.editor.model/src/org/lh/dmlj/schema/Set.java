@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Set</b></em>'.
+ * @extends Comparable<Set>
  * <!-- end-user-doc -->
  *
  * <p>
@@ -33,7 +34,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Set extends EObject {
+public interface Set extends EObject, Comparable<Set> {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

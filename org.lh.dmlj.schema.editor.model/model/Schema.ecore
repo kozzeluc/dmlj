@@ -22,8 +22,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="area" lowerBound="1" eType="#//SchemaArea"
         eOpposite="#//SchemaArea/procedures"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="callTime" eType="#//ProcedureCallTime"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="function" eType="#//AreaProcedureCallFunction"
-        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="function" eType="#//AreaProcedureCallFunction"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" lowerBound="1"
         eType="#//Procedure"/>
   </eClassifiers>
@@ -51,8 +50,7 @@
         eType="#//DiagramLocation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConnectionLabel" eSuperTypes="#//DiagramNode">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alignment" eType="#//LabelAlignment"
-        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alignment" eType="#//LabelAlignment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="memberRole" lowerBound="1"
         eType="#//MemberRole" eOpposite="#//MemberRole/connectionLabel"/>
   </eClassifiers>
@@ -70,8 +68,14 @@
         eType="#//Connector" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="horizontalRuler" lowerBound="1"
         eType="#//Ruler"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="label" eType="#//DiagramLabel"
+        containment="true" eOpposite="#//DiagramLabel/diagramData"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="locations" upperBound="-1"
         eType="#//DiagramLocation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rulers" lowerBound="2"
+        upperBound="2" eType="#//Ruler" containment="true" eOpposite="#//Ruler/diagramData"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="schema" lowerBound="1"
+        eType="#//Schema" eOpposite="#//Schema/diagramData"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="showGrid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="showRulers" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -82,8 +86,11 @@
         eType="#//Ruler"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="zoomLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
         defaultValueLiteral="1.0d"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rulers" lowerBound="2"
-        upperBound="2" eType="#//Ruler" containment="true" eOpposite="#//Ruler/diagramData"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramLabel" eSuperTypes="#//ResizableDiagramNode">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramData" lowerBound="1"
+        eType="#//DiagramData" eOpposite="#//DiagramData/label"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramLocation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="eyecatcher" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -248,6 +255,11 @@
     <eLiterals name="MODIFY" value="5"/>
     <eLiterals name="STORE" value="6"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResizableDiagramNode" abstract="true"
+      eSuperTypes="#//DiagramNode">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Role" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Ruler">
     <eStructuralFeatures xsi:type="ecore:EReference" name="guides" upperBound="-1"
@@ -283,7 +295,7 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diagramData" lowerBound="1"
-        eType="#//DiagramData" containment="true"/>
+        eType="#//DiagramData" containment="true" eOpposite="#//DiagramData/schema"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="memoDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedures" upperBound="-1"

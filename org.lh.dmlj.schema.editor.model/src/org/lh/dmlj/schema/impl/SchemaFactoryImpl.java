@@ -32,7 +32,7 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	 */
 	public static SchemaFactory init() {
 		try {
-			SchemaFactory theSchemaFactory = (SchemaFactory)EPackage.Registry.INSTANCE.getEFactory("http://org.lh.dmlj.schema/schema.ecore"); 
+			SchemaFactory theSchemaFactory = (SchemaFactory)EPackage.Registry.INSTANCE.getEFactory(SchemaPackage.eNS_URI);
 			if (theSchemaFactory != null) {
 				return theSchemaFactory;
 			}
@@ -67,6 +67,7 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 			case SchemaPackage.CONNECTION_LABEL: return createConnectionLabel();
 			case SchemaPackage.CONNECTOR: return createConnector();
 			case SchemaPackage.DIAGRAM_DATA: return createDiagramData();
+			case SchemaPackage.DIAGRAM_LABEL: return createDiagramLabel();
 			case SchemaPackage.DIAGRAM_LOCATION: return createDiagramLocation();
 			case SchemaPackage.ELEMENT: return createElement();
 			case SchemaPackage.GUIDE: return createGuide();
@@ -288,6 +289,16 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	public DiagramData createDiagramData() {
 		DiagramDataImpl diagramData = new DiagramDataImpl();
 		return diagramData;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DiagramLabel createDiagramLabel() {
+		DiagramLabelImpl diagramLabel = new DiagramLabelImpl();
+		return diagramLabel;
 	}
 
 	/**
