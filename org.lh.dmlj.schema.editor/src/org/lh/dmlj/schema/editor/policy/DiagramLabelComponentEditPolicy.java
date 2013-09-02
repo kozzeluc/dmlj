@@ -24,7 +24,12 @@ public class DiagramLabelComponentEditPolicy extends ComponentEditPolicy {
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
 		
 		List<?> editParts = deleteRequest.getEditParts(); 
-		Assert.isTrue(editParts.size() == 1, "only 1 diagram label expected");
+		if (editParts.size() > 1) {
+			// if more than 1 items are selected in the diagram; don't allow to delete the diagram
+			// label by returning null
+			return null;
+		}
+		Assert.isTrue(editParts.size() == 1, "exactly 1 diagram label expected");
 		Assert.isTrue(editParts.get(0) instanceof DiagramLabelEditPart ||
 					  editParts.get(0) instanceof DiagramLabelTreeEditPart, 
 					  "expected a diagram label");
