@@ -29,7 +29,8 @@ public class DiagramLabelFigure extends Figure {
 			FigureUtilities.getTextExtents(schemaIdentification, 
 										   Plugin.getDefault().getFigureFontBold());
 		Dimension sizeDescription = 
-			FigureUtilities.getTextExtents(description, Plugin.getDefault().getFigureFontItalic());
+			FigureUtilities.getTextExtents((description != null ? description : ""), 
+										   Plugin.getDefault().getFigureFontItalic());
 		
 		// ... then determine the initial width; the width is the largest one required - because of 
 		// some strange behaviour issue when the zoom level exceeds 1.0 (100%), we add 5 pixels - 
