@@ -114,8 +114,8 @@ public class ExportWizard extends Wizard implements IExportWizard {
         			p.setCharAt(i, '/');
         		}
         	}
-        	URI uri = new URI("file:///" + p.toString());
-            IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), 
+            URI uri = new URI("file", p.toString(), null); // make sure the file name is encoded
+        	IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), 
             			   uri, "org.eclipse.ui.DefaultTextEditor", true);
 	    } catch (Throwable t) {
 	            // something went wrong while opening the file in a text editor, provide the user 
