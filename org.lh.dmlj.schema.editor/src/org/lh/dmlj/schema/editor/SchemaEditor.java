@@ -115,7 +115,7 @@ public class SchemaEditor
 	private static final EAttribute ATTRIBUTE_SHOW_GRID = 
 		SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
 	private static final EAttribute ATTRIBUTE_SHOW_RULERS = 
-		SchemaPackage.eINSTANCE.getDiagramData_ShowRulers();	
+		SchemaPackage.eINSTANCE.getDiagramData_ShowRulers();
 	
 	// This class listens to changes to the file system in the workspace, and
 	// makes changes accordingly.
@@ -244,7 +244,7 @@ public class SchemaEditor
 	private URI    						uri;
 	private SchemaEditorRulerProvider   verticalRulerProvider;
 	private IResource 	   				workspaceResource;	
-	
+
 	public SchemaEditor() {
 		super();
 		setEditDomain(new DefaultEditDomain(this));		
@@ -365,7 +365,7 @@ public class SchemaEditor
 			// make sure we are informed of zoom changes
 			manager.addZoomListener(new ZoomListener() {
 				@Override
-				public void zoomChanged(double zoom) {			
+				public void zoomChanged(double zoom) {
 					if (zoom != schema.getDiagramData().getZoomLevel()) {
 						SetZoomLevelCommand command = 
 							new SetZoomLevelCommand(schema, zoom);
@@ -753,7 +753,23 @@ public class SchemaEditor
 	}	
 	
 	protected void setInput(IEditorInput input) {
+		
+		Plugin.logDebug(Plugin.DebugItem.CALLING_METHOD);
+		
 		superSetInput(input);
+		
+		if (schema != null) {
+			// Always keep the same Schema object to avoid trouble (note that if the file was
+			// overwritten with something else, there is a mismatch between the Schema object and
+			// the file contents).  We can't show a message because there is a chance that the user
+			// will get to see it while importing a schema.
+			/*MessageDialog.openWarning(getSite().getShell(), "Warning", "The file holding the " +
+					  				  "diagram for schema " + schema.getName() + " version " +
+					  				  schema.getVersion() + " (" + getTitle() + ") seems to have " +
+					  				  "changed; these changes are NOT reflected in the diagram, " +
+					  				  "so make sure you fix this situation.");*/
+			return;
+		}
 		
 		ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry()
@@ -761,12 +777,12 @@ public class SchemaEditor
 		   		   .put("schema", new XMIResourceFactoryImpl());
 		Resource resource = resourceSet.getResource(uri, true);
 		schema = (Schema)resource.getContents().get(0);	
-		
 		if (!editorSaving) {
 			if (outlinePage != null) {
 				outlinePage.setSchema(schema);
 			}
 		}
+		
 	}
 	
 	@Override
@@ -778,13 +794,10 @@ public class SchemaEditor
 	}	
 	
 	private void superSetInput(IEditorInput input) {
-		// The workspace never changes for an editor. So, removing and re-adding
-		// the
-		// resourceListener is not necessary. But it is being done here for the
-		// sake
-		// of proper implementation. Plus, the resourceListener needs to be
-		// added
-		// to the workspace the first time around.
+		// The workspace never changes for an editor. So, removing and re-adding the
+		// resourceListener is not necessary. But it is being done here for the sake of proper 
+		// implementation. Plus, the resourceListener needs to be added to the workspace the first 
+		// time around.
 		if (getEditorInput() != null) {
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 			file.getWorkspace().removeResourceChangeListener(resourceListener);
@@ -795,9 +808,7 @@ public class SchemaEditor
 		if (getEditorInput() != null) {
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 			workspaceResource = 
-				ResourcesPlugin.getWorkspace()
-							   .getRoot()
-							   .findMember(file.getFullPath());
+				ResourcesPlugin.getWorkspace().getRoot().findMember(file.getFullPath());
 			uri = URI.createFileURI(file.getLocation().toFile().getAbsolutePath());			
 			file.getWorkspace().addResourceChangeListener(resourceListener);
 			setPartName(file.getName());

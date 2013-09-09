@@ -732,23 +732,17 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		IWorkbenchPage page = workbenchWindow.getActivePage();
 		final IWorkbenchPart activePart = page.getActivePart();
 		if (activePart instanceof ISetSelectionTarget) {
-			final ISelection targetSelection = 
-				new StructuredSelection(modelFile);
-			getShell().getDisplay().asyncExec
-				(new Runnable() {
-					 public void run() {
-						 ((ISetSelectionTarget)activePart).selectReveal(targetSelection);
-					 }
-				 });
+			ISelection targetSelection = new StructuredSelection(modelFile);
+			((ISetSelectionTarget)activePart).selectReveal(targetSelection);
 		}
 		// Open an editor on the new file (this will only work if the file 
-		// extension is .layout)
+		// extension is .schema)
 		try {
 			page.openEditor(new FileEditorInput(modelFile),
 							workbench.getEditorRegistry()
 									 .getDefaultEditor(modelFile.getFullPath()
 											 				    .toString())
-											 				    .getId());					 	 
+											 				    .getId());	
 		} catch (PartInitException exception) {
 			MessageDialog.openError(workbenchWindow.getShell(), "Open Editor", 
 									exception.getMessage());

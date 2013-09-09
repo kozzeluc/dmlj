@@ -32,6 +32,10 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 	public static final String 		PLUGIN_ID = 
 		"org.lh.dmlj.schema.editor"; //$NON-NLS-1$
 
+	public static enum DebugItem {
+		CALLING_METHOD
+	}
+	
 	// The shared instance
 	private static Plugin 			plugin;
 			
@@ -69,6 +73,14 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 	public static Plugin getDefault() {
 		return plugin;
 	}
+	
+	private static String getSimpleClassName(String className) {
+		if (className.indexOf(".") > -1 && ! className.endsWith(".")) {
+			return className.substring(className.lastIndexOf(".") + 1);
+		} else {
+			return className;
+		}
+	}
 
 	private static void log(int severity, int code, String message, Throwable exception) {
 		log(createStatus(severity, code, message, exception));
@@ -83,6 +95,32 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		if (getDefault() != null && getDefault().isLogDebugMessages()) {
 			log(IStatus.INFO, IStatus.OK, message, null);
 		}
+	}
+	
+	public static void logDebug(DebugItem debugItem) {
+		
+		if (getDefault() == null || !getDefault().isLogDebugMessages()) {
+			// not in debug mode
+			return;
+		}
+		
+		if (debugItem == DebugItem.CALLING_METHOD) {		
+			Thread currentThread = Thread.currentThread();
+			StackTraceElement[] stackTraceElements = currentThread.getStackTrace();
+			if (stackTraceElements.length > 3) {
+				Plugin.logDebug("Method " + stackTraceElements[2].getMethodName() + 
+								"(...) in class " +
+								stackTraceElements[2].getClassName() + 
+								"\n         was called from " +
+								stackTraceElements[3].getClassName() + "." + 
+								stackTraceElements[3].getMethodName() + "(" +
+								getSimpleClassName(stackTraceElements[3].getClassName()) + 
+								".java:" +
+								stackTraceElements[3].getLineNumber() + ")" +
+								"\n         (thread=" + currentThread.getName() + ")");
+			}						
+		}
+		
 	}
 
 	public static void logError(String message, Throwable exception) {
