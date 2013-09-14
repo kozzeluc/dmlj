@@ -1,3 +1,18 @@
+Version 1.3.1
+=============
+- Bug fix: could not drop a diagram label from the palette for schemas with no description (i.e. whose 
+  description is null) due to a NPE while calculating the diagram label's initial size.
+- Bug fix: export syntax - solved the issue with opening the exported syntax file when its name 
+  contains 'illegal' characters like spaces (error message + the file was not opened).
+- Bug fix: when the diagram label is selected together with at least 1 other item in the diagram,
+  an assertion error would result ("only 1 diagram label expected" message; see workspace log).  The 
+  user wouldn't have noticed though.
+- Bug fix: after importing a schema and zooming in or out (without closing and reopening the file),
+  the source and target connection points were not scaled correctly; this was due to the editor's
+  setInput(...) method being called twice, causing a situation where 2 Schema objects were in 
+  circulation.
+
+
 Version 1.3.0
 =============
 - Implemented the Outline view synchronization. 
