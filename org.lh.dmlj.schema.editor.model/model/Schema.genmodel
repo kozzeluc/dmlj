@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.lh.dmlj.schema.editor.model/src" modelPluginID="org.lh.dmlj.schema.editor.model"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2013  Luc Hermans&#xD;&#xA;&#xD;&#xA;This program is free software: you can redistribute it and/or modify it under the terms of the&#xD;&#xA;GNU General Public License as published by the Free Software Foundation, either version 3 of the&#xD;&#xA;License, or (at your option) any later version.&#xD;&#xA;&#xD;&#xA;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without&#xD;&#xA;even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU&#xD;&#xA;General Public License for more details.&#xD;&#xA;&#xD;&#xA;You should have received a copy of the GNU General Public License along with this program.  If&#xD;&#xA;not, see &lt;http://www.gnu.org/licenses/>.&#xD;&#xA;&#xD;&#xA;Contact information: kozzeluc@gmail.com."
+    modelDirectory="/org.lh.dmlj.schema.editor.model/src" modelPluginID="org.lh.dmlj.schema.editor.model"
     modelName="Schema" importerID="org.eclipse.emf.importer.cdo" complianceLevel="7.0"
     copyrightFields="false" editPluginID="org.lh.dmlj.schema.editor.model">
   <foreignModel>Schema.ecore</foreignModel>
@@ -85,11 +86,6 @@
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//StorageMode/VARIABLE"/>
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//StorageMode/VARIABLE_COMPRESSED"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//Unit">
-      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Unit/CENTIMETERS"/>
-      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Unit/INCHES"/>
-      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Unit/PIXELS"/>
-    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//Usage">
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/DISPLAY"/>
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/COMPUTATIONAL"/>
@@ -134,16 +130,21 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/connectionParts"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/connectors"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/horizontalRuler"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/label"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/locations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/rulers"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/schema"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/showGrid"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/showRulers"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/snapToGeometry"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/snapToGrid"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/snapToGuides"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/unit"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/verticalRuler"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramData/zoomLevel"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//DiagramData/rulers"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//DiagramLabel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramLabel/description"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//DiagramLabel/diagramData"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//DiagramLocation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//DiagramLocation/eyecatcher"/>
@@ -168,9 +169,9 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//Element/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Element/redefines"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/syntaxLength"/>
-      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/syntaxName"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/syntaxPosition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/usage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Element/value"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Guide">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Guide/position"/>
@@ -243,6 +244,10 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//RecordProcedureCallSpecification/record"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//RecordProcedureCallSpecification/verb"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="Schema.ecore#//ResizableDiagramNode">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ResizableDiagramNode/height"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ResizableDiagramNode/width"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="Schema.ecore#//Role"/>
     <genClasses ecoreClass="Schema.ecore#//Ruler">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Ruler/guides"/>
@@ -251,6 +256,7 @@
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Schema">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Schema/areas"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Schema/comments"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Schema/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Schema/diagramData"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Schema/memoDate"/>
