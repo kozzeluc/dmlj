@@ -5,22 +5,16 @@
       version="1.3.2.qualifier"
       provider-name="Luc Hermans">
 
-   <description url="http://sites.google.com/site/idmsschemasineclipse/">
-      A free and extensible diagram editor for CA IDMS/DB.
-Please refer to http://sites.google.com/site/idmsschemasineclipse/
-for more information.
+   <description url="%descriptionURL">
+      %description
    </description>
 
    <copyright>
-      Written 2011-2013 by Luc Hermans, who is the owner of this product.
-CA IDMS/DB, CA IDMS and IDMS are all registered trademarks of CA Technologies.
+      %copyright
    </copyright>
 
-   <license url="">
-      This is not a commercial product and as such, NO claims whatsoever can be made.
-
-This product uses the Apache Tika library; the Apache License Version 2.0 is provided
-in this feature&apos;s folder of your Eclipse installation.
+   <license url="%licenseURL">
+      %license
    </license>
 
    <url>
