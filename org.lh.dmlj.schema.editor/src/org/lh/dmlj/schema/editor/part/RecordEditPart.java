@@ -45,6 +45,7 @@ import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.policy.RecordGraphicalNodeEditPolicy;
+import org.lh.dmlj.schema.editor.policy.RecordXYLayoutEditPolicy;
 
 public class RecordEditPart 
 	extends AbstractNonResizableDiagramNodeEditPart<SchemaRecord>  {
@@ -97,11 +98,15 @@ public class RecordEditPart
 	
 	@Override
 	protected void createEditPolicies() {
-		RecordFigure cFigure = (RecordFigure) getFigure();
+		RecordFigure figure = (RecordFigure) getFigure();
+		
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, 
 						  new RecordGraphicalNodeEditPolicy(getModel(),
-								  							cFigure,
+								  							figure,
 								  						    getViewer()));
+		
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new RecordXYLayoutEditPolicy(getModel()));
+		
 	}
 	
 	@Override

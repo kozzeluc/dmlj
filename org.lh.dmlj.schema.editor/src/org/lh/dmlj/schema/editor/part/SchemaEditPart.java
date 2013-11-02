@@ -65,6 +65,7 @@ public class SchemaEditPart
 	public final void activate() {
 		super.activate();
 		getModel().getDiagramData().eAdapters().add(this);
+		getModel().eAdapters().add(this);
 	}
 	
 	@Override
@@ -88,7 +89,8 @@ public class SchemaEditPart
 	}
 	
 	@Override
-	public final void deactivate() {		
+	public final void deactivate() {
+		getModel().eAdapters().remove(this);
 		getModel().getDiagramData().eAdapters().remove(this);
 		super.deactivate();
 	}
@@ -188,7 +190,9 @@ public class SchemaEditPart
 	public void notifyChanged(Notification notification) {
 		int featureID = notification.getFeatureID(SchemaRecord.class);
 		
-		if (featureID == SchemaPackage.DIAGRAM_DATA__LABEL) {
+		if (notification.getNotifier() == getModel().getDiagramData() &&
+			featureID == SchemaPackage.DIAGRAM_DATA__LABEL) {
+			
 			if (notification.getNewValue() != null &&
 				notification.getNewValue() instanceof DiagramLabel) {
 				
@@ -209,7 +213,9 @@ public class SchemaEditPart
 				removeChild(editPart);
 				
 			}
-		} else if (featureID == SchemaPackage.DIAGRAM_DATA__CONNECTORS) {
+		} else if (notification.getNotifier() == getModel().getDiagramData() &&
+				   featureID == SchemaPackage.DIAGRAM_DATA__CONNECTORS) {
+			
 			// We only act when the second connector is added or removed; the
 			// commands responsible for connector creation and deletion should
 			// therefore add the connector to or delete it from the 
@@ -324,7 +330,57 @@ public class SchemaEditPart
 										  		   .get(memberRecord);
 				memberRecordEditPart.refresh();				
 			}
+		} else if (notification.getNotifier() == getModel() &&
+				   featureID == SchemaPackage.SCHEMA__SETS &
+				   notification.getEventType() == Notification.ADD &&
+				   ((Set) notification.getNewValue()).getSystemOwner() != null) {			
+			
+			// an index was added
+			Set set = (Set) notification.getNewValue();
+			
+			// create the index edit part and add it as a child
+			IndexEditPart indexEditPart =
+				new IndexEditPart(set.getSystemOwner());
+			addChild(indexEditPart, getChildren().size());
+			
+			// create the set label edit part and add it as a child
+			SetDescriptionEditPart setDescriptionEditPart = 
+				new SetDescriptionEditPart(set.getMembers().get(0).getConnectionLabel());
+			addChild(setDescriptionEditPart, getChildren().size());
+			
+			// refresh the member record edit part
+			SchemaRecord memberRecord = set.getMembers().get(0).getRecord();
+			GraphicalEditPart memberRecordEditPart = 
+				(GraphicalEditPart) getViewer().getEditPartRegistry().get(memberRecord);
+			memberRecordEditPart.refresh();
+			
+		} else if (notification.getNotifier() == getModel() &&
+				   featureID == SchemaPackage.SCHEMA__SETS &
+				   notification.getEventType() == Notification.REMOVE &&
+				   ((Set) notification.getOldValue()).getSystemOwner() != null) {
+			
+			// an index was removed			
+			Set set = (Set) notification.getOldValue();
+			
+			// find the member record's edit part: we cannot use the model for this because the
+			// reference to it will already have been nullified; remove the index edit part
+			IndexEditPart indexEditPart = 
+				(IndexEditPart) getViewer().getEditPartRegistry()
+										  	   .get(set.getSystemOwner());			
+			GraphicalEditPart memberRecordEditPart = indexEditPart.getRecordEditPart();			
+			removeChild(indexEditPart);
+			
+			// remove the set label edit part
+			GraphicalEditPart setDescriptionEditPart = 
+				(GraphicalEditPart) getViewer().getEditPartRegistry()
+											   .get(set.getMembers().get(0).getConnectionLabel());
+			removeChild(setDescriptionEditPart);
+				
+			// refresh the member record edit part
+			memberRecordEditPart.refresh();
+			
 		}
+		
 	}
 
 	@Override

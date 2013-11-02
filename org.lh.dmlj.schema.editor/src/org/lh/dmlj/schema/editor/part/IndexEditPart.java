@@ -19,6 +19,7 @@ package org.lh.dmlj.schema.editor.part;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -77,6 +78,27 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 		ConnectionPart connectionPart = memberRole.getConnectionParts().get(0);					
 		connectionParts.add(connectionPart);
 		return connectionParts;
+	}
+
+	/**
+	 * Finds the index's member record edit part by following the source connection to it.  This 
+	 * can be useful when an index was deleted and its member record edit part needs to be 
+	 * refreshed.  This method will only work if no connectors are put between index and record, so
+	 * first remove the connectors before ever removing an index.
+	 * @return the index's member record edit part
+	 */
+	public RecordEditPart getRecordEditPart() {
+		List<?> sourceConnections = getSourceConnections();
+		Assert.isTrue(sourceConnections.size() == 1, 
+					  "expected only 1 source target connection: " + sourceConnections.size());
+		Assert.isTrue(sourceConnections.get(0) instanceof SetEditPart,
+					  "expected an org.lh.dmlj.schema.editor.part.SetEditPart: " +
+					  sourceConnections.get(0).getClass().getName());
+		SetEditPart setEditPart = (SetEditPart) sourceConnections.get(0);
+		Assert.isTrue(setEditPart.getTarget() instanceof RecordEditPart,
+				  	  "expected an org.lh.dmlj.schema.editor.part.RecordEditPart: " +
+					  setEditPart.getTarget().getClass().getName());
+		return (RecordEditPart) setEditPart.getTarget();
 	}
 
 	@Override

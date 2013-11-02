@@ -116,6 +116,7 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
@@ -637,6 +638,18 @@ public class SchemaEditor
         									  label16, 
         									  label24);
 	        
+        // index creation tool
+        ImageDescriptor index16 = 
+        	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/index16.gif"));
+        ImageDescriptor index24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/index24.gif"));
+        CombinedTemplateCreationEntry indexCreationTool = 
+        	new CombinedTemplateCreationEntry("Index", 
+        									  "Add index to record", 
+        									  new SimpleFactory(SystemOwner.class), 
+        									  index16, 
+        									  index24);
+        
         // connector creation tool  
         ImageDescriptor connector16 = 
         	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/connector16.GIF"));
@@ -662,6 +675,7 @@ public class SchemaEditor
         
         // Sets drawer
         PaletteDrawer createSetItemsDrawer = new PaletteDrawer("Sets");
+        createSetItemsDrawer.add(indexCreationTool);
         createSetItemsDrawer.add(connectorCreationTool);
         palette.add(createSetItemsDrawer);
         

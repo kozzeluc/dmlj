@@ -22,6 +22,10 @@ import org.eclipse.draw2d.geometry.Rectangle;
 
 public class IndexFigure extends PolygonShape {
 	
+	public static final int UNSCALED_HEIGHT = 22;
+	public static final int UNSCALED_WIDTH = 22;
+	
+	
 	public IndexFigure() {
 		super();
 		
@@ -29,7 +33,7 @@ public class IndexFigure extends PolygonShape {
 		setOpaque(true);
 		setForegroundColor(ColorConstants.black);
 		
-		Rectangle r = new Rectangle(0, 0, 22, 22);
+		Rectangle r = new Rectangle(0, 0, UNSCALED_WIDTH, UNSCALED_HEIGHT);
 		setStart(r.getTopLeft());
 		addPoint(r.getTopLeft());
 		addPoint(r.getTopRight());
