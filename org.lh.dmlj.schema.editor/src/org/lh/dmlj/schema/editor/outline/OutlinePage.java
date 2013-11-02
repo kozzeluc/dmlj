@@ -34,6 +34,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
@@ -75,6 +76,10 @@ public class OutlinePage
 		} else if (model instanceof ConnectionLabel) {
 			ConnectionLabel connectionLabel = (ConnectionLabel) model;
 			EObject target = getTarget(connectionLabel.getMemberRole());
+			return (EditPart) viewer.getEditPartRegistry().get(target);
+		} else if (model instanceof ConnectionPart) {
+			ConnectionPart connectionPart = (ConnectionPart) model;
+			EObject target = getTarget(connectionPart.getMemberRole());
 			return (EditPart) viewer.getEditPartRegistry().get(target);
 		}
 		return null;
