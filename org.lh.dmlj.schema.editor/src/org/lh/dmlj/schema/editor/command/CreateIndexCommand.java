@@ -41,9 +41,11 @@ public class CreateIndexCommand extends Command {
 	private static final String AREA_NAME_SUFFIX = "-AREA";
 	private static final String SET_NAME_PREFIX = "NEW-INDEX-";
 	
-	private MemberRole 	 memberRole;
-	private SchemaRecord record;
-	private Set			 set;
+	private SchemaArea 		  area;
+	private AreaSpecification areaSpecification;
+	private MemberRole 	 	  memberRole;
+	private SchemaRecord 	  record;
+	private Set			 	  set;
 
 	public CreateIndexCommand(SchemaRecord record) {
 		super("Add index to record");
@@ -73,11 +75,10 @@ public class CreateIndexCommand extends Command {
 			SchemaFactory.eINSTANCE.createIndexedSetModeSpecification();		
 		indexedSetModeSpecification.setSymbolicIndexName(setName);		
 		
-		SchemaArea area = SchemaFactory.eINSTANCE.createSchemaArea();
+		area = SchemaFactory.eINSTANCE.createSchemaArea();
 		area.setName(areaName);		
 		
-		AreaSpecification areaSpecification = SchemaFactory.eINSTANCE.createAreaSpecification();
-		areaSpecification.setArea(area);
+		areaSpecification = SchemaFactory.eINSTANCE.createAreaSpecification();		
 		
 		DiagramLocation recordLocation = record.getDiagramLocation();
 		
@@ -125,14 +126,15 @@ public class CreateIndexCommand extends Command {
 	public void redo() {
 		
 		DiagramData diagramData = record.getSchema().getDiagramData();
-		
-		record.getSchema().getAreas().add(set.getSystemOwner().getAreaSpecification().getArea());
+				
+		record.getSchema().getAreas().add(area);
+		area.getAreaSpecifications().add(areaSpecification);
 		diagramData.getLocations().add(set.getSystemOwner().getDiagramLocation());
 		diagramData.getLocations().add(memberRole.getConnectionLabel().getDiagramLocation());
 		diagramData.getConnectionLabels().add(memberRole.getConnectionLabel());
 		diagramData.getConnectionParts().add(memberRole.getConnectionParts().get(0));
 		record.getMemberRoles().add(memberRole);
-		record.getSchema().getSets().add(set); // trigger for index edit part & label creation		
+		record.getSchema().getSets().add(set);		
 		
 	}
 	
@@ -141,13 +143,14 @@ public class CreateIndexCommand extends Command {
 		
 		DiagramData diagramData = record.getSchema().getDiagramData();
 		
-		record.getSchema().getAreas().remove(set.getSystemOwner().getAreaSpecification().getArea());
+		area.getAreaSpecifications().remove(areaSpecification);
+		record.getSchema().getAreas().remove(area);
 		diagramData.getLocations().remove(set.getSystemOwner().getDiagramLocation());
 		diagramData.getLocations().remove(memberRole.getConnectionLabel().getDiagramLocation());
 		diagramData.getConnectionLabels().remove(memberRole.getConnectionLabel());
 		diagramData.getConnectionParts().remove(memberRole.getConnectionParts().get(0));		
 		record.getMemberRoles().remove(memberRole);
-		record.getSchema().getSets().remove(set); // trigger for index edit part & label removal		
+		record.getSchema().getSets().remove(set);		
 		
 	}
 	
