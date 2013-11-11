@@ -207,13 +207,15 @@ public abstract class Tools {
 	}
 
 	public static String getSystemOwnerArea(MemberRole memberRole) {
-		if (memberRole.getSet().getSystemOwner() != null) {
+		try {
 			return memberRole.getSet()
 							 .getSystemOwner()
 							 .getAreaSpecification()
 							 .getArea()
 							 .getName();
-		} else {
+		} catch (Throwable t) {
+			// if, for some reason, detecting the system owner's area fails (e.g. somewhere during
+			// an index removal process or when undoing the creation of a new index), return null
 			return null;
 		}
 	}
