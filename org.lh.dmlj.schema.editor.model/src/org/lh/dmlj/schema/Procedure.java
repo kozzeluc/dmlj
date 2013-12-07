@@ -16,6 +16,7 @@
  */
 package org.lh.dmlj.schema;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -27,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Procedure#getName <em>Name</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Procedure#getSchema <em>Schema</em>}</li>
  * </ul>
  * </p>
  *
@@ -60,5 +62,41 @@ public interface Procedure extends EObject {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Schema</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Schema#getProcedures <em>Procedures</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Schema</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Schema</em>' container reference.
+	 * @see #setSchema(Schema)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getProcedure_Schema()
+	 * @see org.lh.dmlj.schema.Schema#getProcedures
+	 * @model opposite="procedures" transient="false"
+	 * @generated
+	 */
+	Schema getSchema();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.Procedure#getSchema <em>Schema</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Schema</em>' container reference.
+	 * @see #getSchema()
+	 * @generated
+	 */
+	void setSchema(Schema value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" many="false"
+	 * @generated
+	 */
+	EList<ProcedureCallSpecification> getCallSpecifications();
 
 } // Procedure

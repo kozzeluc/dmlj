@@ -71,6 +71,43 @@ public interface SchemaPackage extends EPackage {
 	SchemaPackage eINSTANCE = org.lh.dmlj.schema.impl.SchemaPackageImpl.init();
 
 	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ProcedureCallSpecificationImpl <em>Procedure Call Specification</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.ProcedureCallSpecificationImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedureCallSpecification()
+	 * @generated
+	 */
+	int PROCEDURE_CALL_SPECIFICATION = 20;
+
+	/**
+	 * The feature id for the '<em><b>Call Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROCEDURE_CALL_SPECIFICATION__CALL_TIME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Procedure</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROCEDURE_CALL_SPECIFICATION__PROCEDURE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Procedure Call Specification</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaImpl <em>Schema</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -78,7 +115,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchema()
 	 * @generated
 	 */
-	int SCHEMA = 24;
+	int SCHEMA = 25;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaAreaImpl <em>Area</em>}' class.
@@ -88,7 +125,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchemaArea()
 	 * @generated
 	 */
-	int SCHEMA_AREA = 25;
+	int SCHEMA_AREA = 26;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SchemaRecordImpl <em>Record</em>}' class.
@@ -98,7 +135,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSchemaRecord()
 	 * @generated
 	 */
-	int SCHEMA_RECORD = 26;
+	int SCHEMA_RECORD = 27;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.SetImpl <em>Set</em>}' class.
@@ -108,7 +145,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSet()
 	 * @generated
 	 */
-	int SET = 27;
+	int SET = 28;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ElementImpl <em>Element</em>}' class.
@@ -138,7 +175,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSystemOwner()
 	 * @generated
 	 */
-	int SYSTEM_OWNER = 28;
+	int SYSTEM_OWNER = 29;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl <em>Via Specification</em>}' class.
@@ -148,7 +185,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getViaSpecification()
 	 * @generated
 	 */
-	int VIA_SPECIFICATION = 29;
+	int VIA_SPECIFICATION = 30;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.KeyImpl <em>Key</em>}' class.
@@ -201,31 +238,13 @@ public interface SchemaPackage extends EPackage {
 	int AREA_PROCEDURE_CALL_SPECIFICATION = 0;
 
 	/**
-	 * The feature id for the '<em><b>Area</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION__AREA = 0;
-
-	/**
 	 * The feature id for the '<em><b>Call Time</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = 1;
-
-	/**
-	 * The feature id for the '<em><b>Function</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION = 2;
+	int AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = PROCEDURE_CALL_SPECIFICATION__CALL_TIME;
 
 	/**
 	 * The feature id for the '<em><b>Procedure</b></em>' reference.
@@ -234,7 +253,25 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = 3;
+	int AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = PROCEDURE_CALL_SPECIFICATION__PROCEDURE;
+
+	/**
+	 * The feature id for the '<em><b>Area</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AREA_PROCEDURE_CALL_SPECIFICATION__AREA = PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Function</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION = PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Area Procedure Call Specification</em>' class.
@@ -243,7 +280,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AREA_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = 4;
+	int AREA_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Symbolic Subarea Name</b></em>' attribute.
@@ -371,7 +408,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRole()
 	 * @generated
 	 */
-	int ROLE = 22;
+	int ROLE = 23;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl <em>Record Procedure Call Specification</em>}' class.
@@ -381,7 +418,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallSpecification()
 	 * @generated
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION = 20;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION = 21;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.ProcedureImpl <em>Procedure</em>}' class.
@@ -715,7 +752,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getResizableDiagramNode()
 	 * @generated
 	 */
-	int RESIZABLE_DIAGRAM_NODE = 21;
+	int RESIZABLE_DIAGRAM_NODE = 22;
 
 	/**
 	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
@@ -1531,13 +1568,22 @@ public interface SchemaPackage extends EPackage {
 	int PROCEDURE__NAME = 0;
 
 	/**
+	 * The feature id for the '<em><b>Schema</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROCEDURE__SCHEMA = 1;
+
+	/**
 	 * The number of structural features of the '<em>Procedure</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROCEDURE_FEATURE_COUNT = 1;
+	int PROCEDURE_FEATURE_COUNT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Call Time</b></em>' attribute.
@@ -1546,7 +1592,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = 0;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = PROCEDURE_CALL_SPECIFICATION__CALL_TIME;
 
 	/**
 	 * The feature id for the '<em><b>Procedure</b></em>' reference.
@@ -1555,7 +1601,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = 1;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = PROCEDURE_CALL_SPECIFICATION__PROCEDURE;
 
 	/**
 	 * The feature id for the '<em><b>Record</b></em>' container reference.
@@ -1564,7 +1610,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD = 2;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD = PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Verb</b></em>' attribute.
@@ -1573,7 +1619,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION__VERB = 3;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION__VERB = PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Record Procedure Call Specification</em>' class.
@@ -1582,7 +1628,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RECORD_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = 4;
+	int RECORD_PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT = PROCEDURE_CALL_SPECIFICATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.RulerImpl <em>Ruler</em>}' class.
@@ -1592,7 +1638,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRuler()
 	 * @generated
 	 */
-	int RULER = 23;
+	int RULER = 24;
 
 	/**
 	 * The feature id for the '<em><b>Guides</b></em>' containment reference list.
@@ -2214,7 +2260,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetOrder()
 	 * @generated
 	 */
-	int SET_ORDER = 39;
+	int SET_ORDER = 40;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.DuplicatesOption <em>Duplicates Option</em>}' enum.
@@ -2224,7 +2270,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDuplicatesOption()
 	 * @generated
 	 */
-	int DUPLICATES_OPTION = 31;
+	int DUPLICATES_OPTION = 32;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.LabelAlignment <em>Label Alignment</em>}' enum.
@@ -2234,7 +2280,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getLabelAlignment()
 	 * @generated
 	 */
-	int LABEL_ALIGNMENT = 32;
+	int LABEL_ALIGNMENT = 33;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.LocationMode <em>Location Mode</em>}' enum.
@@ -2244,7 +2290,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getLocationMode()
 	 * @generated
 	 */
-	int LOCATION_MODE = 33;
+	int LOCATION_MODE = 34;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMode <em>Set Mode</em>}' enum.
@@ -2254,7 +2300,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetMode()
 	 * @generated
 	 */
-	int SET_MODE = 38;
+	int SET_MODE = 39;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.StorageMode <em>Storage Mode</em>}' enum.
@@ -2264,7 +2310,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getStorageMode()
 	 * @generated
 	 */
-	int STORAGE_MODE = 41;
+	int STORAGE_MODE = 42;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMembershipOption <em>Set Membership Option</em>}' enum.
@@ -2274,7 +2320,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetMembershipOption()
 	 * @generated
 	 */
-	int SET_MEMBERSHIP_OPTION = 37;
+	int SET_MEMBERSHIP_OPTION = 38;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SortSequence <em>Sort Sequence</em>}' enum.
@@ -2284,7 +2330,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSortSequence()
 	 * @generated
 	 */
-	int SORT_SEQUENCE = 40;
+	int SORT_SEQUENCE = 41;
 
 
 	/**
@@ -2295,7 +2341,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedureCallTime()
 	 * @generated
 	 */
-	int PROCEDURE_CALL_TIME = 34;
+	int PROCEDURE_CALL_TIME = 35;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.AreaProcedureCallFunction <em>Area Procedure Call Function</em>}' enum.
@@ -2305,7 +2351,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getAreaProcedureCallFunction()
 	 * @generated
 	 */
-	int AREA_PROCEDURE_CALL_FUNCTION = 30;
+	int AREA_PROCEDURE_CALL_FUNCTION = 31;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.RecordProcedureCallVerb <em>Record Procedure Call Verb</em>}' enum.
@@ -2315,7 +2361,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallVerb()
 	 * @generated
 	 */
-	int RECORD_PROCEDURE_CALL_VERB = 35;
+	int RECORD_PROCEDURE_CALL_VERB = 36;
 
 
 	/**
@@ -2326,7 +2372,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRulerType()
 	 * @generated
 	 */
-	int RULER_TYPE = 36;
+	int RULER_TYPE = 37;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.Usage <em>Usage</em>}' enum.
@@ -2336,7 +2382,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getUsage()
 	 * @generated
 	 */
-	int USAGE = 42;
+	int USAGE = 43;
 
 
 	/**
@@ -4272,28 +4318,6 @@ public interface SchemaPackage extends EPackage {
 	EReference getAreaProcedureCallSpecification_Area();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getProcedure <em>Procedure</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Procedure</em>'.
-	 * @see org.lh.dmlj.schema.AreaProcedureCallSpecification#getProcedure()
-	 * @see #getAreaProcedureCallSpecification()
-	 * @generated
-	 */
-	EReference getAreaProcedureCallSpecification_Procedure();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getCallTime <em>Call Time</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Call Time</em>'.
-	 * @see org.lh.dmlj.schema.AreaProcedureCallSpecification#getCallTime()
-	 * @see #getAreaProcedureCallSpecification()
-	 * @generated
-	 */
-	EAttribute getAreaProcedureCallSpecification_CallTime();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.AreaProcedureCallSpecification#getFunction <em>Function</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4315,17 +4339,6 @@ public interface SchemaPackage extends EPackage {
 	EClass getRecordProcedureCallSpecification();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getProcedure <em>Procedure</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Procedure</em>'.
-	 * @see org.lh.dmlj.schema.RecordProcedureCallSpecification#getProcedure()
-	 * @see #getRecordProcedureCallSpecification()
-	 * @generated
-	 */
-	EReference getRecordProcedureCallSpecification_Procedure();
-
-	/**
 	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getRecord <em>Record</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4335,17 +4348,6 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getRecordProcedureCallSpecification_Record();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getCallTime <em>Call Time</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Call Time</em>'.
-	 * @see org.lh.dmlj.schema.RecordProcedureCallSpecification#getCallTime()
-	 * @see #getRecordProcedureCallSpecification()
-	 * @generated
-	 */
-	EAttribute getRecordProcedureCallSpecification_CallTime();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.RecordProcedureCallSpecification#getVerb <em>Verb</em>}'.
@@ -4410,6 +4412,49 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getProcedure_Name();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.Procedure#getSchema <em>Schema</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Schema</em>'.
+	 * @see org.lh.dmlj.schema.Procedure#getSchema()
+	 * @see #getProcedure()
+	 * @generated
+	 */
+	EReference getProcedure_Schema();
+
+	/**
+	 * Returns the meta object for class '{@link org.lh.dmlj.schema.ProcedureCallSpecification <em>Procedure Call Specification</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Procedure Call Specification</em>'.
+	 * @see org.lh.dmlj.schema.ProcedureCallSpecification
+	 * @generated
+	 */
+	EClass getProcedureCallSpecification();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.ProcedureCallSpecification#getCallTime <em>Call Time</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Call Time</em>'.
+	 * @see org.lh.dmlj.schema.ProcedureCallSpecification#getCallTime()
+	 * @see #getProcedureCallSpecification()
+	 * @generated
+	 */
+	EAttribute getProcedureCallSpecification_CallTime();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.ProcedureCallSpecification#getProcedure <em>Procedure</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Procedure</em>'.
+	 * @see org.lh.dmlj.schema.ProcedureCallSpecification#getProcedure()
+	 * @see #getProcedureCallSpecification()
+	 * @generated
+	 */
+	EReference getProcedureCallSpecification_Procedure();
 
 	/**
 	 * Returns the meta object for class '{@link org.lh.dmlj.schema.OccursSpecification <em>Occurs Specification</em>}'.
@@ -6094,22 +6139,6 @@ public interface SchemaPackage extends EPackage {
 		EReference AREA_PROCEDURE_CALL_SPECIFICATION__AREA = eINSTANCE.getAreaProcedureCallSpecification_Area();
 
 		/**
-		 * The meta object literal for the '<em><b>Procedure</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = eINSTANCE.getAreaProcedureCallSpecification_Procedure();
-
-		/**
-		 * The meta object literal for the '<em><b>Call Time</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = eINSTANCE.getAreaProcedureCallSpecification_CallTime();
-
-		/**
 		 * The meta object literal for the '<em><b>Function</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6128,28 +6157,12 @@ public interface SchemaPackage extends EPackage {
 		EClass RECORD_PROCEDURE_CALL_SPECIFICATION = eINSTANCE.getRecordProcedureCallSpecification();
 
 		/**
-		 * The meta object literal for the '<em><b>Procedure</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE = eINSTANCE.getRecordProcedureCallSpecification_Procedure();
-
-		/**
 		 * The meta object literal for the '<em><b>Record</b></em>' container reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD = eINSTANCE.getRecordProcedureCallSpecification_Record();
-
-		/**
-		 * The meta object literal for the '<em><b>Call Time</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME = eINSTANCE.getRecordProcedureCallSpecification_CallTime();
 
 		/**
 		 * The meta object literal for the '<em><b>Verb</b></em>' attribute feature.
@@ -6202,6 +6215,40 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PROCEDURE__NAME = eINSTANCE.getProcedure_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Schema</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROCEDURE__SCHEMA = eINSTANCE.getProcedure_Schema();
+
+		/**
+		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.ProcedureCallSpecificationImpl <em>Procedure Call Specification</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.lh.dmlj.schema.impl.ProcedureCallSpecificationImpl
+		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedureCallSpecification()
+		 * @generated
+		 */
+		EClass PROCEDURE_CALL_SPECIFICATION = eINSTANCE.getProcedureCallSpecification();
+
+		/**
+		 * The meta object literal for the '<em><b>Call Time</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROCEDURE_CALL_SPECIFICATION__CALL_TIME = eINSTANCE.getProcedureCallSpecification_CallTime();
+
+		/**
+		 * The meta object literal for the '<em><b>Procedure</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROCEDURE_CALL_SPECIFICATION__PROCEDURE = eINSTANCE.getProcedureCallSpecification_Procedure();
 
 		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl <em>Occurs Specification</em>}' class.

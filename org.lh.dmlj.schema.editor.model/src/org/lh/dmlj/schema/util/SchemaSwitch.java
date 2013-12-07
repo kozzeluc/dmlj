@@ -82,6 +82,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION: {
 				AreaProcedureCallSpecification areaProcedureCallSpecification = (AreaProcedureCallSpecification)theEObject;
 				T result = caseAreaProcedureCallSpecification(areaProcedureCallSpecification);
+				if (result == null) result = caseProcedureCallSpecification(areaProcedureCallSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -205,9 +206,16 @@ public class SchemaSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SchemaPackage.PROCEDURE_CALL_SPECIFICATION: {
+				ProcedureCallSpecification procedureCallSpecification = (ProcedureCallSpecification)theEObject;
+				T result = caseProcedureCallSpecification(procedureCallSpecification);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION: {
 				RecordProcedureCallSpecification recordProcedureCallSpecification = (RecordProcedureCallSpecification)theEObject;
 				T result = caseRecordProcedureCallSpecification(recordProcedureCallSpecification);
+				if (result == null) result = caseProcedureCallSpecification(recordProcedureCallSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -704,6 +712,21 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProcedure(Procedure object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Procedure Call Specification</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Procedure Call Specification</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProcedureCallSpecification(ProcedureCallSpecification object) {
 		return null;
 	}
 

@@ -251,6 +251,7 @@ public interface Schema extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Procedures</b></em>' containment reference list.
 	 * The list contents are of type {@link org.lh.dmlj.schema.Procedure}.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Procedure#getSchema <em>Schema</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Procedures</em>' containment reference list isn't clear,
@@ -259,7 +260,8 @@ public interface Schema extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Procedures</em>' containment reference list.
 	 * @see org.lh.dmlj.schema.SchemaPackage#getSchema_Procedures()
-	 * @model containment="true"
+	 * @see org.lh.dmlj.schema.Procedure#getSchema
+	 * @model opposite="schema" containment="true"
 	 * @generated
 	 */
 	EList<Procedure> getProcedures();

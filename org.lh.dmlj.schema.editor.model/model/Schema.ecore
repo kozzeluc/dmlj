@@ -18,13 +18,10 @@
     <eLiterals name="COMMIT" value="12"/>
     <eLiterals name="ROLLBACK" value="13"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AreaProcedureCallSpecification">
+  <eClassifiers xsi:type="ecore:EClass" name="AreaProcedureCallSpecification" eSuperTypes="#//ProcedureCallSpecification">
     <eStructuralFeatures xsi:type="ecore:EReference" name="area" lowerBound="1" eType="#//SchemaArea"
         eOpposite="#//SchemaArea/procedures"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="callTime" eType="#//ProcedureCallTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="function" eType="#//AreaProcedureCallFunction"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" lowerBound="1"
-        eType="#//Procedure"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AreaSpecification">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="symbolicSubareaName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -230,17 +227,26 @@
         eOpposite="#//Set/owner"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Procedure">
+    <eOperations name="getCallSpecifications">
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList">
+        <eTypeArguments eClassifier="#//ProcedureCallSpecification"/>
+      </eGenericType>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="schema" eType="#//Schema"
+        eOpposite="#//Schema/procedures"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProcedureCallSpecification" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="callTime" eType="#//ProcedureCallTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" lowerBound="1"
+        eType="#//Procedure"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ProcedureCallTime">
     <eLiterals name="BEFORE"/>
     <eLiterals name="AFTER" value="1"/>
     <eLiterals name="ON_ERROR_DURING" value="2"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RecordProcedureCallSpecification">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="callTime" eType="#//ProcedureCallTime"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" lowerBound="1"
-        eType="#//Procedure"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RecordProcedureCallSpecification" eSuperTypes="#//ProcedureCallSpecification">
     <eStructuralFeatures xsi:type="ecore:EReference" name="record" lowerBound="1"
         eType="#//SchemaRecord" eOpposite="#//SchemaRecord/procedures"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="verb" eType="#//RecordProcedureCallVerb"/>
@@ -299,7 +305,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="memoDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="procedures" upperBound="-1"
-        eType="#//Procedure" containment="true"/>
+        eType="#//Procedure" containment="true" eOpposite="#//Procedure/schema"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="records" upperBound="-1"
         eType="#//SchemaRecord" containment="true" eOpposite="#//SchemaRecord/schema"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sets" upperBound="-1" eType="#//Set"

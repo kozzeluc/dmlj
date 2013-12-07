@@ -19,6 +19,7 @@ package org.lh.dmlj.schema.impl;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -49,6 +50,7 @@ import org.lh.dmlj.schema.OccursSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Procedure;
+import org.lh.dmlj.schema.ProcedureCallSpecification;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
@@ -280,6 +282,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	private EClass procedureEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass procedureCallSpecificationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2047,26 +2056,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getAreaProcedureCallSpecification_Procedure() {
-		return (EReference)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getAreaProcedureCallSpecification_CallTime() {
-		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getAreaProcedureCallSpecification_Function() {
-		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2083,26 +2074,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getRecordProcedureCallSpecification_Procedure() {
-		return (EReference)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getRecordProcedureCallSpecification_Record() {
-		return (EReference)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getRecordProcedureCallSpecification_CallTime() {
-		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
+		return (EReference)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2111,7 +2084,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getRecordProcedureCallSpecification_Verb() {
-		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2157,6 +2130,42 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 */
 	public EAttribute getProcedure_Name() {
 		return (EAttribute)procedureEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProcedure_Schema() {
+		return (EReference)procedureEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProcedureCallSpecification() {
+		return procedureCallSpecificationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getProcedureCallSpecification_CallTime() {
+		return (EAttribute)procedureCallSpecificationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProcedureCallSpecification_Procedure() {
+		return (EReference)procedureCallSpecificationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2351,9 +2360,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		// Create classes and their features
 		areaProcedureCallSpecificationEClass = createEClass(AREA_PROCEDURE_CALL_SPECIFICATION);
 		createEReference(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__AREA);
-		createEAttribute(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__CALL_TIME);
 		createEAttribute(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__FUNCTION);
-		createEReference(areaProcedureCallSpecificationEClass, AREA_PROCEDURE_CALL_SPECIFICATION__PROCEDURE);
 
 		areaSpecificationEClass = createEClass(AREA_SPECIFICATION);
 		createEAttribute(areaSpecificationEClass, AREA_SPECIFICATION__SYMBOLIC_SUBAREA_NAME);
@@ -2489,10 +2496,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		procedureEClass = createEClass(PROCEDURE);
 		createEAttribute(procedureEClass, PROCEDURE__NAME);
+		createEReference(procedureEClass, PROCEDURE__SCHEMA);
+
+		procedureCallSpecificationEClass = createEClass(PROCEDURE_CALL_SPECIFICATION);
+		createEAttribute(procedureCallSpecificationEClass, PROCEDURE_CALL_SPECIFICATION__CALL_TIME);
+		createEReference(procedureCallSpecificationEClass, PROCEDURE_CALL_SPECIFICATION__PROCEDURE);
 
 		recordProcedureCallSpecificationEClass = createEClass(RECORD_PROCEDURE_CALL_SPECIFICATION);
-		createEAttribute(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__CALL_TIME);
-		createEReference(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__PROCEDURE);
 		createEReference(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD);
 		createEAttribute(recordProcedureCallSpecificationEClass, RECORD_PROCEDURE_CALL_SPECIFICATION__VERB);
 
@@ -2619,11 +2629,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		areaProcedureCallSpecificationEClass.getESuperTypes().add(this.getProcedureCallSpecification());
 		connectionLabelEClass.getESuperTypes().add(this.getDiagramNode());
 		connectorEClass.getESuperTypes().add(this.getDiagramNode());
 		diagramLabelEClass.getESuperTypes().add(this.getResizableDiagramNode());
 		memberRoleEClass.getESuperTypes().add(this.getRole());
 		ownerRoleEClass.getESuperTypes().add(this.getRole());
+		recordProcedureCallSpecificationEClass.getESuperTypes().add(this.getProcedureCallSpecification());
 		resizableDiagramNodeEClass.getESuperTypes().add(this.getDiagramNode());
 		schemaRecordEClass.getESuperTypes().add(this.getDiagramNode());
 		systemOwnerEClass.getESuperTypes().add(this.getDiagramNode());
@@ -2631,9 +2643,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		// Initialize classes and features; add operations and parameters
 		initEClass(areaProcedureCallSpecificationEClass, AreaProcedureCallSpecification.class, "AreaProcedureCallSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAreaProcedureCallSpecification_Area(), this.getSchemaArea(), this.getSchemaArea_Procedures(), "area", null, 1, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAreaProcedureCallSpecification_CallTime(), this.getProcedureCallTime(), "callTime", null, 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAreaProcedureCallSpecification_Function(), this.getAreaProcedureCallFunction(), "function", null, 0, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAreaProcedureCallSpecification_Procedure(), this.getProcedure(), null, "procedure", null, 1, 1, AreaProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(areaSpecificationEClass, AreaSpecification.class, "AreaSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAreaSpecification_SymbolicSubareaName(), ecorePackage.getEString(), "symbolicSubareaName", null, 0, 1, AreaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2769,10 +2779,19 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		initEClass(procedureEClass, Procedure.class, "Procedure", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getProcedure_Name(), ecorePackage.getEString(), "name", null, 0, 1, Procedure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProcedure_Schema(), this.getSchema(), this.getSchema_Procedures(), "schema", null, 0, 1, Procedure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		EOperation op = addEOperation(procedureEClass, null, "getCallSpecifications", 0, 1, IS_UNIQUE, IS_ORDERED);
+		EGenericType g1 = createEGenericType(ecorePackage.getEEList());
+		EGenericType g2 = createEGenericType(this.getProcedureCallSpecification());
+		g1.getETypeArguments().add(g2);
+		initEOperation(op, g1);
+
+		initEClass(procedureCallSpecificationEClass, ProcedureCallSpecification.class, "ProcedureCallSpecification", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getProcedureCallSpecification_CallTime(), this.getProcedureCallTime(), "callTime", null, 0, 1, ProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProcedureCallSpecification_Procedure(), this.getProcedure(), null, "procedure", null, 1, 1, ProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(recordProcedureCallSpecificationEClass, RecordProcedureCallSpecification.class, "RecordProcedureCallSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getRecordProcedureCallSpecification_CallTime(), this.getProcedureCallTime(), "callTime", null, 0, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRecordProcedureCallSpecification_Procedure(), this.getProcedure(), null, "procedure", null, 1, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRecordProcedureCallSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_Procedures(), "record", null, 1, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRecordProcedureCallSpecification_Verb(), this.getRecordProcedureCallVerb(), "verb", null, 0, 1, RecordProcedureCallSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2794,12 +2813,12 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getSchema_DiagramData(), this.getDiagramData(), this.getDiagramData_Schema(), "diagramData", null, 1, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_MemoDate(), ecorePackage.getEString(), "memoDate", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_Name(), ecorePackage.getEString(), "name", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSchema_Procedures(), this.getProcedure(), null, "procedures", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSchema_Procedures(), this.getProcedure(), this.getProcedure_Schema(), "procedures", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchema_Records(), this.getSchemaRecord(), this.getSchemaRecord_Schema(), "records", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSchema_Sets(), this.getSet(), this.getSet_Schema(), "sets", null, 0, -1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchema_Version(), ecorePackage.getEShort(), "version", null, 0, 1, Schema.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		EOperation op = addEOperation(schemaEClass, this.getSchemaArea(), "getArea", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(schemaEClass, this.getSchemaArea(), "getArea", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = addEOperation(schemaEClass, this.getProcedure(), "getProcedure", 0, 1, IS_UNIQUE, IS_ORDERED);

@@ -162,6 +162,10 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createProcedureAdapter();
 			}
 			@Override
+			public Adapter caseProcedureCallSpecification(ProcedureCallSpecification object) {
+				return createProcedureCallSpecificationAdapter();
+			}
+			@Override
 			public Adapter caseRecordProcedureCallSpecification(RecordProcedureCallSpecification object) {
 				return createRecordProcedureCallSpecificationAdapter();
 			}
@@ -624,6 +628,20 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createProcedureAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.ProcedureCallSpecification <em>Procedure Call Specification</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.ProcedureCallSpecification
+	 * @generated
+	 */
+	public Adapter createProcedureCallSpecificationAdapter() {
 		return null;
 	}
 

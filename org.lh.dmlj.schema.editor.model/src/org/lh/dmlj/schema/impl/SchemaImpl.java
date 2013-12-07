@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -389,7 +388,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 */
 	public EList<Procedure> getProcedures() {
 		if (procedures == null) {
-			procedures = new EObjectContainmentEList<Procedure>(Procedure.class, this, SchemaPackage.SCHEMA__PROCEDURES);
+			procedures = new EObjectContainmentWithInverseEList<Procedure>(Procedure.class, this, SchemaPackage.SCHEMA__PROCEDURES, SchemaPackage.PROCEDURE__SCHEMA);
 		}
 		return procedures;
 	}
@@ -478,6 +477,8 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 				if (diagramData != null)
 					msgs = ((InternalEObject)diagramData).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SCHEMA__DIAGRAM_DATA, null, msgs);
 				return basicSetDiagramData((DiagramData)otherEnd, msgs);
+			case SchemaPackage.SCHEMA__PROCEDURES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getProcedures()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.SCHEMA__RECORDS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRecords()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.SCHEMA__SETS:
