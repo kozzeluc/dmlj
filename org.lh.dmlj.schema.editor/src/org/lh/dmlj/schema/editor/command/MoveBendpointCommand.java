@@ -27,8 +27,8 @@ public class MoveBendpointCommand extends AbstractBendpointCommand {
 	
 	@Override
 	public void execute() {
-		removeBendpoint(index);	// will set oldX and oldY
-		insertBendpoint(index, x, y);
+		removeBendpoint(connectionPartIndex);	// will set oldX and oldY
+		insertBendpoint(connectionPartIndex, x, y);
 	}
 	
 	@Override
@@ -37,8 +37,8 @@ public class MoveBendpointCommand extends AbstractBendpointCommand {
 		// removeBendpoint(index)...
 		int oldXa = oldX;
 		int oldYa = oldY;
-		removeBendpoint(index);	// will set oldX and oldY to x and y
-		insertBendpoint(index, oldXa, oldYa);
+		removeBendpoint(connectionPartIndex);	// will set oldX and oldY to x and y
+		insertBendpoint(connectionPartIndex, oldXa, oldYa);
 	}
 	
 }

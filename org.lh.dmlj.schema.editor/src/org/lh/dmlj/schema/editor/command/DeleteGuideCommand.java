@@ -16,14 +16,26 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
+
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.Ruler;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+import org.lh.dmlj.schema.editor.command.annotation.Reference;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 
+@ModelChange(category=REMOVE_ITEM)
 public class DeleteGuideCommand extends Command {
 
-	private Guide guide;
-	private Ruler ruler;
+	@Owner 	   private Ruler 	  ruler;
+	@Reference private EReference reference = SchemaPackage.eINSTANCE.getRuler_Guides();
+	@Item 	   private Guide 	  guide;
+	
+	private int i;
 	
 	public DeleteGuideCommand(Ruler ruler, Guide guide) {
 		super("Delete Guide");
@@ -32,13 +44,19 @@ public class DeleteGuideCommand extends Command {
 	}		
 	
 	@Override
-	public void execute() {		
+	public void execute() {
+		i = ruler.getGuides().indexOf(guide);
+		redo();
+	}
+	
+	@Override
+	public void redo() {		
 		ruler.getGuides().remove(guide);				
 	}
 	
 	@Override
 	public void undo() {		
-		ruler.getGuides().add(guide);		
+		ruler.getGuides().add(i, guide);		
 	}	
 	
 }

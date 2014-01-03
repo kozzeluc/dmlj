@@ -16,8 +16,16 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.LocationMode;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 /**
  * A command that will change the record's location mode to VIA and set the 
@@ -25,8 +33,14 @@ import org.lh.dmlj.schema.SchemaRecord;
  * of execution) and will definitely run into trouble when executed for a record 
  * that is defined as either CALC or VIA.
  */
+@ModelChange(category=SET_FEATURES)
 public class MakeRecordViaCommand extends AbstractChangeLocationModeCommand {
 
+	@Owner 	  private SchemaRecord 		   record;
+	@Features private EStructuralFeature[] features = new EStructuralFeature[] {
+		SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()
+	};	
+	
 	private String viaSetName; 
 	private String symbolicDisplacementName; 
 	private Short  displacementPageCount;
@@ -37,6 +51,7 @@ public class MakeRecordViaCommand extends AbstractChangeLocationModeCommand {
 								Short displacementPageCount) {
 		
 		super("Set 'Location mode' to 'VIA'", record);	
+		this.record = record;
 		this.viaSetName = viaSetName;
 		this.symbolicDisplacementName = symbolicDisplacementName;
 		this.displacementPageCount = displacementPageCount;
@@ -44,16 +59,22 @@ public class MakeRecordViaCommand extends AbstractChangeLocationModeCommand {
 	
 	@Override
 	public void execute() {
-		if (record.getLocationMode() != LocationMode.DIRECT) {
-			throw new IllegalArgumentException("record not DIRECT");
-		}
-		createViaSpecification(viaSetName, symbolicDisplacementName, 
-							   displacementPageCount, -1);
+		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");
+		createViaSpecification(viaSetName, symbolicDisplacementName, displacementPageCount, -1);
+		record.setLocationMode(LocationMode.VIA);
+		stash(0);
+	}
+	
+	@Override
+	public void redo() {
+		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");
+		restoreViaSpecification(0);
 		record.setLocationMode(LocationMode.VIA);
 	}
 	
 	@Override
 	public void undo() {
+		Assert.isTrue(record.getLocationMode() == LocationMode.VIA, "record not VIA");
 		record.setLocationMode(LocationMode.DIRECT);
 		removeViaSpecification();	
 	}

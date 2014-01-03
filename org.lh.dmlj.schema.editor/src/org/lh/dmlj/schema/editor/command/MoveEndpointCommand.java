@@ -16,126 +16,121 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.SchemaFactory;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
+@ModelChange(category=SET_FEATURES)
 public class MoveEndpointCommand extends Command {
+		
+	@Owner 	  private ConnectionPart 		connectionPart;
+	@Features private EStructuralFeature[] 	features;
 	
-	private ConnectionPart connectionPart;
-	private Integer	   	   oldX;
-	private Integer	   	   oldY;
-	private boolean    	   owner;
-	private int 	   	   x;
-	private int 	   	   y;	
+	private int newX;
+	private int newY;
 	
-	public MoveEndpointCommand(ConnectionPart connectionPart, int x, int y, 
-							   boolean owner) {
+	private boolean 		source;		
+	private DiagramLocation oldLocation;
+	private int 			oldLocationIndex;
+	private DiagramLocation newLocation;	
+	
+	public MoveEndpointCommand(ConnectionPart connectionPart, int newX, int newY, boolean source) {
 		super();
 		this.connectionPart = connectionPart;
-		this.x = x;
-		this.y = y; 
-		this.owner = owner;
+		this.newX = newX;
+		this.newY = newY; 
+		this.source = source;		
 	}
 	
 	@Override
 	public void execute() {		
 		
-		DiagramLocation oldLocation;
-		if (owner) {
+		DiagramData diagramData = 
+			connectionPart.getMemberRole().getSet().getSchema().getDiagramData();
+		
+		// depending on whether we're moving the source or target endpoint, set the feature and save
+		// the old location, if present, and its location in the locations container (the schema's 
+		// diagram data)
+		if (source) {
+			features = 
+				new EStructuralFeature[] {SchemaPackage.eINSTANCE
+													   .getConnectionPart_SourceEndpointLocation()};
 			oldLocation = connectionPart.getSourceEndpointLocation();
 		} else {
+			features = 
+				new EStructuralFeature[] {SchemaPackage.eINSTANCE
+													   .getConnectionPart_TargetEndpointLocation()};
 			oldLocation = connectionPart.getTargetEndpointLocation();
-		}
+		}		
 		if (oldLocation != null) {
-			oldX = oldLocation.getX();
-			oldY = oldLocation.getY();
-			connectionPart.getMemberRole()
-						  .getSet()
-						  .getSchema()
-						  .getDiagramData()
-						  .getLocations()
-						  .remove(oldLocation);
+			oldLocationIndex = diagramData.getLocations().indexOf(oldLocation);
 		}
 		
-		DiagramLocation newLocation = 
-			SchemaFactory.eINSTANCE.createDiagramLocation();
-		newLocation.setX(x);
-		newLocation.setY(y);
-		String p = owner ? " owner endpoint (" : " member endpoint (";
-		newLocation.setEyecatcher("set " + 
-								  connectionPart.getMemberRole()
-												.getSet()
-												.getName() + p +
-												connectionPart.getMemberRole()
-															  .getRecord()
-														 	  .getName() + ")");
+		// create the new location
+		newLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+		newLocation.setX(newX);
+		newLocation.setY(newY);
+		String p = source ? " owner endpoint (" : " member endpoint (";
+		newLocation.setEyecatcher("set " + connectionPart.getMemberRole().getSet().getName() + p +
+								  connectionPart.getMemberRole().getRecord().getName() + ")");
 		
-		connectionPart.getMemberRole()
-					  .getSet()
-					  .getSchema()
-					  .getDiagramData()
-					  .getLocations()
-					  .add(newLocation);
+		// go finish the job
+		redo();
+		
+	}
 	
-		if (owner) {
+	@Override
+	public void redo() {
+
+		DiagramData diagramData = 
+			connectionPart.getMemberRole().getSet().getSchema().getDiagramData(); 
+		
+		// remove the old location, if any, from the locations container (the schema's diagram data)
+		if (oldLocation != null) {
+			diagramData.getLocations().remove(oldLocation);
+		}		
+		
+		// set the new source or target endpoint
+		if (source) {
 			connectionPart.setSourceEndpointLocation(newLocation);
 		} else {
 			connectionPart.setTargetEndpointLocation(newLocation);
 		}
+		
+		// add the new location to the locations container
+		diagramData.getLocations().add(newLocation);
 		
 	}
 	
 	@Override
 	public void undo() {
 		
-		DiagramLocation newLocation; 
-		if (owner) {
-			newLocation = connectionPart.getSourceEndpointLocation();
-		} else {
-			newLocation = connectionPart.getTargetEndpointLocation();
-		}
-		connectionPart.getMemberRole()
-					  .getSet()
-					  .getSchema()
-					  .getDiagramData()
-					  .getLocations()
-					  .remove(newLocation);
+		DiagramData diagramData = 
+			connectionPart.getMemberRole().getSet().getSchema().getDiagramData(); 
+				
+		// remove the new location from the locations container (the schema's diagram data)
+		diagramData.getLocations().remove(newLocation);
 		
-		if (oldX == null || oldY == null) {
-			if (owner) {
-				connectionPart.setSourceEndpointLocation(null);
-			} else {
-				connectionPart.setTargetEndpointLocation(null);
-			}
-			return;
-		}
-		
-		DiagramLocation oldLocation = 
-			SchemaFactory.eINSTANCE.createDiagramLocation();
-		oldLocation.setX(oldX);
-		oldLocation.setY(oldY);
-		String p = owner ? "owner " : "member ";
-		oldLocation.setEyecatcher("set " + p + " endpoint " + 
-								  connectionPart.getMemberRole()
-								  				.getSet()
-								  				.getName() + " (" + 
-								  connectionPart.getMemberRole()
-								  				.getRecord()
-								  				.getName() + ")");
-			
-		connectionPart.getMemberRole()
-					  .getSet()
-					  .getSchema()
-					  .getDiagramData()
-					  .getLocations()
-					  .add(oldLocation);
-		
-		if (owner) {
+		// restore the old source or target endpoint (which might be null)
+		if (source) {
 			connectionPart.setSourceEndpointLocation(oldLocation);
 		} else {
 			connectionPart.setTargetEndpointLocation(oldLocation);
+		}
+		
+		// if applicable: add the old location to the locations container again, at its original 
+		// position
+		if (oldLocation != null) {
+			diagramData.getLocations().add(oldLocationIndex, oldLocation);
 		}
 		
 	}

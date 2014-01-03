@@ -16,39 +16,43 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
+
+@ModelChange(category=SET_FEATURES)
 public class SetBooleanAttributeCommand extends Command {
 	
-	private EObject 	object;
-	private EAttribute	attribute;
-	private boolean		value;
+	@Owner 	  private EObject 	 		   owner;
+	@Features private EStructuralFeature[] features;
 	
-	private boolean		oldValue;	
+	private boolean	oldValue;
+	private boolean	newValue;			
 		
-	public SetBooleanAttributeCommand(EObject object, EAttribute attribute, 
-		 		  					  boolean value, String label) {		
+	public SetBooleanAttributeCommand(EObject owner, EAttribute attribute, boolean newValue, 
+									  String attributeLabel) {		
 		
-		super("Set '" + label + "' to " + value);
-		this.object = object;
-		this.attribute = attribute;
-		this.value = value;
+		super("Set '" + attributeLabel + "' to " + newValue);
+		this.owner = owner;
+		this.features = new EStructuralFeature[] {attribute};
+		oldValue = (boolean) owner.eGet(attribute);
+		this.newValue = newValue;
 	}
 	
 	@Override
-	public void execute() {
-		oldValue = (boolean) object.eGet(attribute);
-		object.eSet(attribute, value);
-	}
-		
-	public EAttribute getAttribute() {
-		return attribute;
-	}
+	public void execute() {		
+		owner.eSet(features[0], newValue);
+	}	
 
 	@Override
 	public void undo() {
-		object.eSet(attribute, oldValue);
+		owner.eSet(features[0], oldValue);
 	}
 }

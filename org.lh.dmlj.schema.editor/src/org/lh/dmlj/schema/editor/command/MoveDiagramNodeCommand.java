@@ -16,15 +16,29 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
+@ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class MoveDiagramNodeCommand extends Command {
+	
+	@Owner 	  private DiagramLocation 		diagramLocation;	
+	@Features private EStructuralFeature[] 	features = {
+		SchemaPackage.eINSTANCE.getDiagramLocation_X(),
+		SchemaPackage.eINSTANCE.getDiagramLocation_Y()
+	};
 	
 	private DiagramNode diagramNode;
 	private int 		oldX;
@@ -67,16 +81,22 @@ public class MoveDiagramNodeCommand extends Command {
 	
 	@Override
 	public void execute() {
-		oldX = diagramNode.getDiagramLocation().getX();
-		oldY = diagramNode.getDiagramLocation().getY();
-		diagramNode.getDiagramLocation().setX(x);
-		diagramNode.getDiagramLocation().setY(y);
+		diagramLocation = diagramNode.getDiagramLocation();
+		oldX = diagramLocation.getX();
+		oldY = diagramLocation.getY();
+		redo();
+	}
+	
+	@Override
+	public void redo() {
+		diagramLocation.setX(x);
+		diagramLocation.setY(y);
 	}
 	
 	@Override
 	public void undo() {
-		diagramNode.getDiagramLocation().setX(oldX);
-		diagramNode.getDiagramLocation().setY(oldY);
+		diagramLocation.setX(oldX);
+		diagramLocation.setY(oldY);
 	}
 	
 }

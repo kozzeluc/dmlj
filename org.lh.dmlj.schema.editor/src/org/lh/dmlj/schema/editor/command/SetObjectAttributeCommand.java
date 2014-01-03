@@ -16,26 +16,30 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 
+@ModelChange(category=SET_FEATURES)
 public class SetObjectAttributeCommand extends Command {
 	
-	private EObject    object;
-	private EAttribute attribute;
-	private Object	   value;
+	@Owner	  private EObject      		   owner;
+	@Features private EStructuralFeature[] features;
 	
-	private Object	   oldValue;
-
-	private static String getLabel(EAttribute attribute, Object value,
-								   String attributeLabel) {
-		
+	private Object oldValue;
+	private Object newValue;
+	
+	private static String getLabel(EAttribute attribute, Object value, String attributeLabel) {		
 		if (value != null) {
 			if (attribute.getEType().getInstanceClass().isEnum()) {
 				String sValue = value.toString();
-				return "Set '" + attributeLabel + "' to '" + 
-					   sValue.replaceAll("_", " ") + "'";
+				return "Set '" + attributeLabel + "' to '" + sValue.replaceAll("_", " ") + "'";
 			} else {
 				return "Set '" + attributeLabel + "' to '" + value + "'";
 			}
@@ -44,23 +48,23 @@ public class SetObjectAttributeCommand extends Command {
 		}
 	}
 	
-	public SetObjectAttributeCommand(EObject object, EAttribute attribute, 
-							 		 Object value, String attributeLabel) {
+	public SetObjectAttributeCommand(EObject owner, EAttribute attribute, Object newValue, 
+									 String attributeLabel) {
 		
-		super(getLabel(attribute, value, attributeLabel));
-		this.object = object;
-		this.attribute = attribute;
-		this.value = value;
+		super(getLabel(attribute, newValue, attributeLabel));
+		this.owner = owner;
+		this.features = new EStructuralFeature[] {attribute};
+		oldValue = owner.eGet(attribute);
+		this.newValue = newValue;		
 	}
 	
 	@Override
 	public void execute() {
-		oldValue = object.eGet(attribute);
-		object.eSet(attribute, value);
-	}
-		
+		owner.eSet(features[0], newValue);
+	}	
+			
 	@Override
 	public void undo() {
-		object.eSet(attribute, oldValue);
+		owner.eSet(features[0], oldValue);
 	}
 }

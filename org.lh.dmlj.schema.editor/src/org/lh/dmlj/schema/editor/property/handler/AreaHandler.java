@@ -27,11 +27,14 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
+import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
 import org.lh.dmlj.schema.editor.command.ChangeAreaSpecificationCommand;
 import org.lh.dmlj.schema.editor.command.MoveRecordOrIndexToOtherAreaCommand;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.IAreaSpecificationProvider;
 import org.lh.dmlj.schema.editor.property.ui.AreaDialog;
 
@@ -163,28 +166,119 @@ public class AreaHandler implements IHyperlinkHandler {
 			}
 			
 		} else {
-			
-			// the record or system owner (and index) move(s) to another area; 
-			// we might need to create the new area first and a cleanup of the 
-			// old area is possibly needed
-			if (areaSpecification.getRecord() != null) {
-				return new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), 
-											 	     		   dialog.getAreaName(),
-											 	     		   dialog.getSymbolicSubareaName(),
-											 	     		   dialog.getOffsetPageCount(),
-											 	     		   dialog.getOffsetPercent(),
-											 	     		   dialog.getPageCount(),
-											 	     		   dialog.getPercent());				
+						
+			// the record or system owner (and index) move(s) to another area; we might need to 
+			// create the new area first and a cleanup of the old area is possibly needed - return a 
+			// compound command if either the symbolic subarea or 1 or more offset expression 
+			// attributes have changed...
+			if (isSymbolicSubareaChanged(areaSpecification, dialog) ||
+				isOffsetExpressionChanged(areaSpecification, dialog)) {
+				
+				// the record moves to another area AND either the symbolic subarea or at least 1 
+				// offset expression attribute have changed; we need to create a compound command
+								
+				// create the command to move the record or index to another area 
+				String ccLabel;
+				MoveRecordOrIndexToOtherAreaCommand moveRecordOrIndexToOtherAreaCommand;
+				if (areaSpecification.getRecord() != null) {
+					SchemaRecord record = areaSpecification.getRecord();
+					ccLabel = "Move record '" + Tools.removeTrailingUnderscore(record.getName()) + 
+							"' to area '" + dialog.getAreaName() + "'";
+					moveRecordOrIndexToOtherAreaCommand = 
+						new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), 
+											 	     			dialog.getAreaName());				
+				} else {
+					SystemOwner systemOwner = areaSpecification.getSystemOwner();
+					ccLabel = "Move index '" + 
+							Tools.removeTrailingUnderscore(systemOwner.getSet().getName()) + 
+							"' to area '" + dialog.getAreaName() + "'";
+					moveRecordOrIndexToOtherAreaCommand = 
+						new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), 
+			 	     		   									dialog.getAreaName());
+				}
+				
+				// create the command to change the area specification (symbolic subarea or offset
+				// expression
+				Command changeAreaSpecificationCommand =
+					new ChangeAreaSpecificationCommand(areaSpecification, 
+													   dialog.getSymbolicSubareaName(), 
+													   dialog.getOffsetPageCount(), 
+													   dialog.getOffsetPercent(), 
+													   dialog.getPageCount(), 
+													   dialog.getPercent());				
+				
+				// create the compound command and return it			
+				CompoundCommand cc = new CompoundCommand(ccLabel);				
+				cc.add(moveRecordOrIndexToOtherAreaCommand);
+				cc.add(changeAreaSpecificationCommand);
+				return cc;
+				
 			} else {
-				return new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), 
-		 	     		   									   dialog.getAreaName(),
-		 	     		   									   dialog.getSymbolicSubareaName(),
-		 	     		   									   dialog.getOffsetPageCount(),
-		 	     		   									   dialog.getOffsetPercent(),
-		 	     		   									   dialog.getPageCount(),
-		 	     		   									   dialog.getPercent());
+				// the record or index moves to another area; neither the symbolic subarea nor any 
+				// offset expression attribute have changed
+				if (areaSpecification.getRecord() != null) {
+					return new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), 
+	 	     												   	   dialog.getAreaName());
+				} else {
+					return new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), 
+																   dialog.getAreaName());
+				}
 			}
 		}		
+		
+	}
+	
+	private boolean isOffsetExpressionChanged(AreaSpecification areaSpecification, 
+											  AreaDialog dialog) {
+		
+		// get the old and new area specification information...
+		
+		OffsetExpression offsetExpression = areaSpecification.getOffsetExpression();
+		
+		Integer oldOffsetPageCount = 
+			offsetExpression == null ? null : offsetExpression.getOffsetPageCount();
+		Integer newOffsetPageCount = dialog.getOffsetPageCount();
+		
+		Short oldOffsetPercent = 
+			offsetExpression == null ? null : offsetExpression.getOffsetPercent();
+		Short newOffsetPercent = dialog.getOffsetPercent();
+		
+		Integer oldPageCount = 
+			offsetExpression == null ? null : offsetExpression.getPageCount();
+		Integer newPageCount = dialog.getPageCount();
+		
+		Short oldPercent = 
+			offsetExpression == null ? null : offsetExpression.getPercent();
+		Short newPercent = dialog.getPercent();
+		
+		// ... and see if something has changed
+		return oldOffsetPageCount != null && !oldOffsetPageCount.equals(newOffsetPageCount) ||
+			   newOffsetPageCount != null && !newOffsetPageCount.equals(oldOffsetPageCount) ||
+		    
+			   oldOffsetPercent != null && !oldOffsetPercent.equals(newOffsetPercent) ||
+			   newOffsetPercent != null && !newOffsetPercent.equals(oldOffsetPercent) ||
+		    
+			   oldPageCount != null && !oldPageCount.equals(newPageCount) ||
+			   newPageCount != null && !newPageCount.equals(oldPageCount) ||
+		    
+			   oldPercent != null && !oldPercent.equals(newOffsetPercent) ||			    
+			   newPercent != null && !newPercent.equals(oldOffsetPercent);
+						
+	}
+	
+	private boolean isSymbolicSubareaChanged(AreaSpecification areaSpecification, 
+			  								 AreaDialog dialog) {
+		
+		// get the old and new area specification information...
+		String oldSymbolicSubareaName = areaSpecification.getSymbolicSubareaName(); 
+		String newSymbolicSubareaName = dialog.getSymbolicSubareaName();			
+		
+		// ... and see if something has changed
+		return oldSymbolicSubareaName != null && 
+				!oldSymbolicSubareaName.equals(newSymbolicSubareaName) ||
+				
+				newSymbolicSubareaName != null && 
+				!newSymbolicSubareaName.equals(oldSymbolicSubareaName);
 		
 	}
 

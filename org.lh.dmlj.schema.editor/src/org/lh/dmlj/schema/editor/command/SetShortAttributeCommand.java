@@ -16,35 +16,42 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 
+@ModelChange(category=SET_FEATURES)
 public class SetShortAttributeCommand extends Command {
 	
-	private EObject 	object;
-	private EAttribute	attribute;
-	private short 		value;
+	@Owner 	  private EObject      		   owner;
+	@Features private EStructuralFeature[] features;
 	
-	private short 		oldValue;
+	private short oldValue;
+	private short newValue;		
 
-	public SetShortAttributeCommand(EObject object, EAttribute attribute, 
-							 		short value, String label) {
+	public SetShortAttributeCommand(EObject owner, EAttribute attribute, short newValue, 
+									String attributeLabel) {
 		
-		super("Set '" + label + "' to '" + value + "'");
-		this.object = object;
-		this.attribute = attribute;
-		this.value = value;
+		super("Set '" + attributeLabel + "' to '" + newValue + "'");
+		this.owner = owner;
+		this.features = new EStructuralFeature[] {attribute};
+		oldValue = (short) owner.eGet(attribute);
+		this.newValue = newValue;
 	}
 	
 	@Override
 	public void execute() {
-		oldValue = (short) object.eGet(attribute);
-		object.eSet(attribute, value);
+		owner.eSet(features[0], newValue);
 	}
 		
 	@Override
 	public void undo() {
-		object.eSet(attribute, oldValue);
+		owner.eSet(features[0], oldValue);
 	}
 }

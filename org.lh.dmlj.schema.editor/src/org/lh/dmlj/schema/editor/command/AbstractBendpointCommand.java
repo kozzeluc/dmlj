@@ -24,23 +24,23 @@ import org.lh.dmlj.schema.SchemaFactory;
 public abstract class AbstractBendpointCommand extends Command {
 
 	protected ConnectionPart connectionPart;
-	protected int 		 	 index;	
+	protected int 		 	 connectionPartIndex;	
 	protected int		 	 oldX;
 	protected int		 	 oldY;
 	protected int		 	 x;
 	protected int		 	 y;
 	
-	public AbstractBendpointCommand(ConnectionPart connectionPart, int index) {
+	public AbstractBendpointCommand(ConnectionPart connectionPart, int connectionPartIndex) {
 		super();
 		this.connectionPart = connectionPart; 
-		this.index = index;
+		this.connectionPartIndex = connectionPartIndex;
 	}
 	
-	public AbstractBendpointCommand(ConnectionPart connectionPart, int index, 
+	public AbstractBendpointCommand(ConnectionPart connectionPart, int connectionPartIndex, 
 								    int x, int y) {
 		super();
 		this.connectionPart = connectionPart; 
-		this.index = index;
+		this.connectionPartIndex = connectionPartIndex;
 		this.x = x;
 		this.y = y;
 	}
@@ -218,6 +218,87 @@ public abstract class AbstractBendpointCommand extends Command {
 						 				 			   .getName() + ")");
 			}
 		}		
+	}
+	
+	protected void restoreBendpoint(DiagramLocation bendpoint, int connectionPartIndex,
+									int locationsIndex) {
+		
+		// The line representing a set consists of either 1 or 2 connections; in the latter case a 
+		// connector is present on both source and target endpoint locations; the numbering of the 
+		// eyecatcher indexes for the second ConnectionPart's bendpoints starts at 1 plus the last 
+		// bendpoint of the first ConnectionPart (or zero if the first ConnectionPart has no 
+		// bendpoints).  Although the eyecatcher is purely documentational, this avoids duplicate 
+		// eyecatcher indexes for a set.
+		int eyecatcherIndex = connectionPartIndex;
+		if (connectionPart.getMemberRole()
+						  .getConnectionParts()
+						  .indexOf(connectionPart) > 0) {
+			
+			eyecatcherIndex += connectionPart.getMemberRole()
+										     .getConnectionParts()
+										     .get(0)
+										     .getBendpointLocations()
+										     .size();
+		}		
+		
+		// add the bendpoint to the schema again; we need the locations index (inside the diagram
+		// data container) here too, not when we're adding a bendpoint, but when undoing the
+		// removal of a bendpoint - -1 has to be treated as adding the bendpoint to the end of the 
+		// list
+		if (locationsIndex > -1) {
+			connectionPart.getMemberRole()
+						  .getSet()
+						  .getSchema()
+						  .getDiagramData()
+						  .getLocations()
+						  .add(locationsIndex, bendpoint);
+		} else {
+			connectionPart.getMemberRole()
+			  .getSet()
+			  .getSchema()
+			  .getDiagramData()
+			  .getLocations()
+			  .add(bendpoint);
+		}
+
+		// insert it at the right place in the connection again
+		connectionPart.getBendpointLocations().add(connectionPartIndex, bendpoint);
+		
+		// modify the eyecatcher of subsequent bendpoints, if any...
+		int j = connectionPart.getBendpointLocations().size();
+		for (int i = connectionPartIndex + 1; i < j; i++) {
+			DiagramLocation aBendpoint = 
+				connectionPart.getBendpointLocations().get(i);
+			aBendpoint.setEyecatcher("bendpoint [" + ++eyecatcherIndex + 
+									 "] set " + 
+									 connectionPart.getMemberRole()
+									 			   .getSet()
+									 			   .getName() + " (" + 
+									 connectionPart.getMemberRole()
+									 			   .getRecord()
+									 			   .getName() + ")");
+		}
+		if (connectionPart.getMemberRole().getConnectionParts().size() > 1 &&
+			connectionPart.getMemberRole()
+				  		  .getConnectionParts()
+				  		  .indexOf(connectionPart) == 0) {
+			
+			for (DiagramLocation aBendpoint : connectionPart.getMemberRole()
+															.getConnectionParts()
+															.get(1)
+															.getBendpointLocations()) {
+				
+				aBendpoint.setEyecatcher("bendpoint [" + ++eyecatcherIndex + 
+						 				 "] set " + 
+						 				 connectionPart.getMemberRole()
+						 				 			   .getSet()
+						 				 			   .getName() + " (" + 
+						 				 connectionPart.getMemberRole()
+						 				 			   .getRecord()
+						 				 			   .getName() + ")");
+			}
+		}		
+		
 	}	
 	
 }

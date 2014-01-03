@@ -16,7 +16,13 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 
 /**
@@ -24,9 +30,15 @@ import org.lh.dmlj.schema.SchemaRecord;
  * only be used for VIA records and will definitely run into trouble when 
  * executed for a record that is defined as either CALC or DIRECT.
  */
+@ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class ChangeViaSpecificationCommand 
 	extends AbstractChangeLocationModeCommand {
 
+	@Owner	  private SchemaRecord 		   record;
+	@Features private EStructuralFeature[] features = {
+		SchemaPackage.eINSTANCE.getSchemaRecord_ViaSpecification()
+	};
+	
 	private String newViaSetName; 
 	private String newSymbolicDisplacementName; 
 	private Short  newDisplacementPageCount;	
@@ -41,6 +53,7 @@ public class ChangeViaSpecificationCommand
 										 Short displacementPageCount) {
 		
 		super("Change VIA specification", record);
+		this.record = record;
 		newViaSetName = viaSetName;
 		newSymbolicDisplacementName = symbolicDisplacementName;
 		newDisplacementPageCount = displacementPageCount;

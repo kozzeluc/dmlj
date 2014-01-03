@@ -16,13 +16,21 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.LocationMode;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 /**
  * A command that will change the record's location mode to CALC and set the 
@@ -30,8 +38,14 @@ import org.lh.dmlj.schema.SchemaRecord;
  * execution) and will definitely run into trouble when executed for a record 
  * that is defined as either CALC or VIA.
  */
+@ModelChange(category=SET_FEATURES)
 public class MakeRecordCalcCommand extends AbstractChangeLocationModeCommand {
 
+	@Owner 	  private SchemaRecord 		   record;
+	@Features private EStructuralFeature[] features = new EStructuralFeature[] {
+		SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()
+	};
+	
 	private List<Element> 	 calcKeyElements;
 	private DuplicatesOption duplicatesOption;
 	
@@ -39,24 +53,31 @@ public class MakeRecordCalcCommand extends AbstractChangeLocationModeCommand {
 								 List<Element> calcKeyElements,
 								 DuplicatesOption duplicatesOption) {
 		super("Set 'Location mode' to 'CALC'", record);
+		this.record = record;
 		this.calcKeyElements = new ArrayList<>(calcKeyElements);
 		this.duplicatesOption = duplicatesOption;
 	}	
 	
 	@Override
 	public void execute() {
-		if (record.getLocationMode() != LocationMode.DIRECT) {
-			throw new IllegalArgumentException("record not DIRECT");
-		}
-		createCalcKey(calcKeyElements, null, duplicatesOption, false, -1);
+		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");
+		createCalcKey(calcKeyElements, null, duplicatesOption, false, -1);		
 		record.setLocationMode(LocationMode.CALC);
+		stash(0);
 	}
 	
 	@Override
+	public void redo() {
+		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");		
+		restoreCalcKey(0);
+		record.setLocationMode(LocationMode.CALC);
+	}	
+	
+	@Override
 	public void undo() {
+		Assert.isTrue(record.getLocationMode() == LocationMode.CALC, "record not CALC");
 		record.setLocationMode(LocationMode.DIRECT);
 		removeCalcKey();		
 	}
 	
-
 }

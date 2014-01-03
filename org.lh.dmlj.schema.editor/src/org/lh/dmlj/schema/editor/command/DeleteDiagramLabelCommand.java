@@ -16,53 +16,52 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
+
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+import org.lh.dmlj.schema.editor.command.annotation.Reference;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 
+@ModelChange(category=REMOVE_ITEM)
 public class DeleteDiagramLabelCommand extends Command {
 	
-	private DiagramLabel diagramLabel;
-	private Schema 		 schema;	
+	@Owner 	   private DiagramData  diagramData;
+	@Item	   private DiagramLabel diagramLabel;
+			   private int			i; // index of diagram label diagram location
+	@Reference private EReference   reference = SchemaPackage.eINSTANCE.getDiagramData_Label();	
 	
 	public DeleteDiagramLabelCommand(Schema schema) {
 		super("Delete diagram label");
-		this.schema = schema;
+		this.diagramData = schema.getDiagramData();
 	}
 	
 	@Override
 	public void execute() {
-		
-		diagramLabel = schema.getDiagramData().getLabel();
-		Assert.isTrue(diagramLabel != null);
-		
-		diagramLabel.setDiagramData(null);
-		
-		schema.getDiagramData().getLocations().remove(diagramLabel.getDiagramLocation());
-		
+		diagramLabel = diagramData.getLabel();
+		i = diagramData.getLocations().indexOf(diagramLabel.getDiagramLocation());
+		redo();		
+	}
+
+	@Override
+	public void redo() {		
+		Assert.isTrue(diagramData.getLabel() != null);		
+		diagramLabel.setDiagramData(null);		
+		diagramData.getLocations().remove(diagramLabel.getDiagramLocation());		
 	}
 
 	@Override
 	public void undo() {
-		
-		Assert.isTrue(schema.getDiagramData().getLabel() == null);
-	
-		schema.getDiagramData().getLocations().add(diagramLabel.getDiagramLocation());
-		
-		diagramLabel.setDiagramData(schema.getDiagramData());
-		
-	}
-	
-	@Override
-	public void redo() {
-		
-		Assert.isTrue(schema.getDiagramData().getLabel() != null);
-		
-		diagramLabel.setDiagramData(null);
-		
-		schema.getDiagramData().getLocations().remove(diagramLabel.getDiagramLocation());
-		
+		Assert.isTrue(diagramData.getLabel() == null);	
+		diagramData.getLocations().add(i, diagramLabel.getDiagramLocation());		
+		diagramLabel.setDiagramData(diagramData);		
 	}
 	
 }

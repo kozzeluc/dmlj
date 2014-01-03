@@ -16,19 +16,32 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
 import java.text.NumberFormat;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
+
+@ModelChange(category=SET_FEATURES)
 public class SetZoomLevelCommand extends Command {
-	
-	private boolean canUndo = true;
-	
-	private Schema schema; 
-	private double zoomLevel;
+		
+	@Owner 	  private DiagramData  		   diagramData; 
+	@Features private EStructuralFeature[] features = {
+		SchemaPackage.eINSTANCE.getDiagramData_ZoomLevel()
+	};
 	
 	private double oldZoomLevel;
+	private double newZoomLevel;	
+	
+	private boolean canUndo = true;	
 	
 	public SetZoomLevelCommand(Schema schema, double zoomLevel) {
 		this(schema, zoomLevel, true);
@@ -36,8 +49,8 @@ public class SetZoomLevelCommand extends Command {
 	
 	public SetZoomLevelCommand(Schema schema, double zoomLevel, boolean canUndo) {
 		super("Zoom to " + NumberFormat.getPercentInstance().format(zoomLevel));
-		this.schema = schema;
-		this.zoomLevel = zoomLevel;
+		this.diagramData = schema.getDiagramData();
+		this.newZoomLevel = zoomLevel;
 		this.canUndo = canUndo;
 	}	
 	
@@ -48,13 +61,24 @@ public class SetZoomLevelCommand extends Command {
 	
 	@Override
 	public void execute() {
-		oldZoomLevel = schema.getDiagramData().getZoomLevel();
-		schema.getDiagramData().setZoomLevel(zoomLevel);
-	}	
+		oldZoomLevel = diagramData.getZoomLevel();
+		diagramData.setZoomLevel(newZoomLevel);
+	}
+	
+	@Override
+	public void redo() {
+		if (!canUndo) {
+			throw new RuntimeException("cannot redo (canUndo == false)");
+		}		
+		diagramData.setZoomLevel(newZoomLevel);
+	}
 
 	@Override
 	public void undo() {
-		schema.getDiagramData().setZoomLevel(oldZoomLevel);
+		if (!canUndo) {
+			throw new RuntimeException("cannot undo");
+		}
+		diagramData.setZoomLevel(oldZoomLevel);
 	}
 	
 }

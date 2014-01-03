@@ -16,22 +16,42 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.lh.dmlj.schema.ConnectionPart;
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
 
-public class CreateBendpointCommand extends AbstractBendpointCommand {	
+import org.eclipse.emf.ecore.EReference;
+import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+import org.lh.dmlj.schema.editor.command.annotation.Reference;
+
+@ModelChange(category=ADD_ITEM)
+public class CreateBendpointCommand extends AbstractBendpointCommand {
 	
-	public CreateBendpointCommand(ConnectionPart connectionPart, int index, 
-								  int x, int y) {
-		super(connectionPart, index, x, y);		
+	@Owner 	   private ConnectionPart 	connectionPart;
+	@Item  	   private DiagramLocation 	bendpoint;
+	@Reference private EReference 		reference = 
+		SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations();	
+	
+	public CreateBendpointCommand(ConnectionPart connectionPart, int index, int x, int y) {
+		super(connectionPart, index, x, y);
+		this.connectionPart = connectionPart;
 	}
 	
 	@Override
 	public void execute() {
-		insertBendpoint(index, x, y);		
+		bendpoint = insertBendpoint(connectionPartIndex, x, y);		
+	}
+	
+	@Override
+	public void redo() {
+		restoreBendpoint(bendpoint, connectionPartIndex, -1);
 	}
 	
 	@Override
 	public void undo() {
-		removeBendpoint(index);		
+		removeBendpoint(connectionPartIndex);		
 	}
 }

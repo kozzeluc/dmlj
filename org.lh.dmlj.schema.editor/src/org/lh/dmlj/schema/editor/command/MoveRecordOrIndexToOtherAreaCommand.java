@@ -16,83 +16,70 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.MOVE_ITEM;
+import static org.lh.dmlj.schema.editor.command.annotation.OwnerType.NEW;
+import static org.lh.dmlj.schema.editor.command.annotation.OwnerType.OLD;
+
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.common.Tools;
 
 /**
- * A Command class to move a record or index to another area.  The new area 
- * might not yet exist and thus will be created if needed; if the old area does 
- * not contain any records or system owners (indexes) after the move, this 
- * command will also remove the old area from the schema.  The SchemaRecord's or 
- * SystemOwner's AreaSpecification will always be replaced with a new one.
+ * A Command class to move a record or index to another area.  The new area might not yet exist and 
+ * thus will be created if needed; if the old area does not contain any records or system owners 
+ * (indexes) after the move, this command will also remove the old area from the schema.  The 
+ * SchemaRecord's or SystemOwner's AreaSpecification will never be replaced with a new one; the old 
+ * one is retained (this used to be different in the past).<br><br>
+ * Besides moving a record or index to another area, a whole bunch of other attributes in the area
+ * specification can be changed as well.
  */
-public class MoveRecordOrIndexToOtherAreaCommand 
-	extends AbstractOffsetExpressionManipulationCommand {
+@ModelChange(category=MOVE_ITEM)
+public class MoveRecordOrIndexToOtherAreaCommand extends Command {
 	
-	private SchemaRecord 	  record;
-	private SystemOwner 	  systemOwner;
-	private String 		 	  newAreaName;
+	@Owner(type=OLD) private SchemaArea		   oldArea;
+	@Owner(type=NEW) private SchemaArea 	   newArea;
+	@Reference 		 private EReference 	   reference = SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications();	
+	@Item			 private AreaSpecification areaSpecification;
+	
 	private Schema			  schema;
-	
-	private SchemaArea	 	  oldArea;
-	private AreaSpecification oldAreaSpecification;
-	private int				  oldAreaSpecificationIndex; // SchemaArea.areaSpecifications
-	private int				  oldAreaIndex = -1;		 // Schema.areas; -1 if area retained	
-	
-	private SchemaArea   	  newArea;
-	private AreaSpecification newAreaSpecification;
-	private String  		  newSymbolicSubareaName;
-	private Integer 		  newOffsetPageCount;
-	private Short   		  newOffsetPercent;
-	private Integer 		  newPageCount;
-	private Short   		  newPercent;	
-
-	public MoveRecordOrIndexToOtherAreaCommand(SchemaRecord record, 
-			 						    	   String newAreaName,
-			 						    	   String newSymbolicSubareaName,
-			 						    	   Integer newOffsetPageCount,
-			 						    	   Short newOffsetPercent,
-			 						    	   Integer newPageCount,
-			 						    	   Short newPercent) {
+	private SchemaRecord 	  record;	
+	private SystemOwner 	  systemOwner;			
 		
-		super("Move record '" + 
-			  Tools.removeTrailingUnderscore(record.getName()) + "' to area '" + 
-			  newAreaName + "'");
-		this.record = record;
-		schema = record.getSchema();
-		this.newAreaName = newAreaName;
-   	    this.newSymbolicSubareaName = newSymbolicSubareaName;
-   	    this.newOffsetPageCount = newOffsetPageCount;
-   	    this.newOffsetPercent = newOffsetPercent;
-   	    this.newPageCount = newPageCount;
-   	    this.newPercent = newPercent;
+	private int				  oldAreaIndex = -1;
+	private int				  oldAreaSpecificationIndex;	
+		
+	private String 		 	  newAreaName;
+
+	private static boolean isAreaObsolete(SchemaArea area) {
+		return area.getRecords().isEmpty() && area.getIndexes().isEmpty();
 	}
 	
-	public MoveRecordOrIndexToOtherAreaCommand(SystemOwner systemOwner, 
-				    						   String newAreaName,
-				    						   String newSymbolicSubareaName,
-				    						   Integer newOffsetPageCount,
-				    						   Short newOffsetPercent,
-				    						   Integer newPageCount,
-				    						   Short newPercent) {
+	public MoveRecordOrIndexToOtherAreaCommand(SchemaRecord record, String newAreaName) {		
+		
+		super("Move record '" + Tools.removeTrailingUnderscore(record.getName()) + "' to area '" + 
+			  newAreaName + "'");
+		this.record = record;		
+		this.newAreaName = newAreaName;   	    
+	}
 	
-		super("Move index '" + 
-			  Tools.removeTrailingUnderscore(systemOwner.getSet().getName()) + 
+	public MoveRecordOrIndexToOtherAreaCommand(SystemOwner systemOwner, String newAreaName) {		
+		
+		super("Move index '" + Tools.removeTrailingUnderscore(systemOwner.getSet().getName()) + 
 			  "' to area '" + newAreaName + "'");
-		this.systemOwner = systemOwner;
-		schema = systemOwner.getSet().getSchema();
-		this.newAreaName = newAreaName;
-   	    this.newSymbolicSubareaName = newSymbolicSubareaName;
-   	    this.newOffsetPageCount = newOffsetPageCount;
-   	    this.newOffsetPercent = newOffsetPercent;
-   	    this.newPageCount = newPageCount;
-   	    this.newPercent = newPercent;
+		this.systemOwner = systemOwner;		
+		this.newAreaName = newAreaName;   	    
 	}	
 	
 	@Override
@@ -103,25 +90,30 @@ public class MoveRecordOrIndexToOtherAreaCommand
 					  "logic error: record == null && system owner == null");
 		Assert.isTrue(newAreaName != null, "logic error: newAreaName == null");
 		
-		// save the old data; when saving the area, we also keep the references
-		// to the procedure calls, which makes restoring the area easy
-		oldArea = record != null ? 
-				  record.getAreaSpecification().getArea() :
-				  systemOwner.getAreaSpecification().getArea();
-		oldAreaSpecification = record != null ?
-							   record.getAreaSpecification() :
-							   systemOwner.getAreaSpecification();		
-		oldAreaSpecificationIndex = 
-			oldArea.getAreaSpecifications().indexOf(oldAreaSpecification);
-		if (record != null && oldArea.getRecords().size() == 1 && 
-			oldArea.getIndexes().isEmpty() ||
-			systemOwner != null && oldArea.getRecords().isEmpty() && 
-			oldArea.getIndexes().size() == 1) {
-			
-			// the old area will be removed; (only then) retain its index in the 
-			// Schema.areas reference
-			oldAreaIndex = schema.getAreas().indexOf(oldArea);
+		// save the old data; when saving the area, we also keep the references to the (area)  
+		// procedure calls, which makes restoring the area easy
+		if (record != null) {
+			// we're moving a record to another area
+			schema = record.getSchema();
+			oldArea = record.getAreaSpecification().getArea();
+			areaSpecification = record.getAreaSpecification();			
+		} else {
+			// we're moving an index to another area
+			schema = systemOwner.getSet().getSchema();
+			oldArea = systemOwner.getAreaSpecification().getArea();
+			areaSpecification = systemOwner.getAreaSpecification();
 		}
+		oldAreaIndex = schema.getAreas().indexOf(oldArea);
+		oldAreaSpecificationIndex = oldArea.getAreaSpecifications().indexOf(areaSpecification);			
+		
+		// if we're moving the record or index to a NEW area, create that area but don't hook it to 
+		// the schema yet
+		newArea = schema.getArea(newAreaName);
+		if (newArea == null) {		
+			// the record is moved to a NEW area; create it and set its name 
+			newArea = SchemaFactory.eINSTANCE.createSchemaArea();
+			newArea.setName(newAreaName);					
+		}		
 		
 		// go ahead with the changes
 		redo();
@@ -131,41 +123,16 @@ public class MoveRecordOrIndexToOtherAreaCommand
 	@Override
 	public void redo() {
 		
-		// check if we're moving the record or index to a NEW area
-		newArea = schema.getArea(newAreaName);
-		if (newArea == null) {
-			
-			// the record is moved to a NEW area; create it and hook it to the
-			// schema
-			newArea = SchemaFactory.eINSTANCE.createSchemaArea();
-			newArea.setName(newAreaName);
+		// if we're moving the record or index to a NEW area, hook that area to the schema
+		if (newArea != oldArea) {
 			newArea.setSchema(schema);
-			
 		}
 		
-		// create the new area specification and set its attributes
-		newAreaSpecification = 
-			SchemaFactory.eINSTANCE.createAreaSpecification();
-		if (newSymbolicSubareaName != null) {
-			newAreaSpecification.setSymbolicSubareaName(newSymbolicSubareaName);
-		} else {
-			maintainOffsetExpression(newAreaSpecification, newOffsetPageCount, 
-									 newOffsetPercent, newPageCount, 
-									 newPercent);
-		}
-		
-		// replace the record's or system owner's area specification with the 
-		// new one
-		newAreaSpecification.setArea(newArea);
-		if (record != null) {			
-			record.setAreaSpecification(newAreaSpecification);
-		} else {
-			systemOwner.setAreaSpecification(newAreaSpecification);
-		}
-		oldAreaSpecification.setArea(null);
+		// hook the area specification to the new area
+		areaSpecification.setArea(newArea);		
 		
 		// remove the old area from the schema if needed
-		if (oldAreaIndex > -1) {
+		if (isAreaObsolete(oldArea)) {
 			schema.getAreas().remove(oldArea);
 		}
 		
@@ -174,31 +141,19 @@ public class MoveRecordOrIndexToOtherAreaCommand
 	@Override
 	public void undo() {
 		
-		// restore the old area (together with its possible procedure calls) if 
-		// it was removed from the schema; insert it at its original position in 
-		// the list of areas
-		if (oldAreaIndex > -1) {
+		// restore the old area (together with its possible procedure calls) if it was removed from 
+		// the schema; insert it at its original position in the list of areas
+		if (isAreaObsolete(oldArea)) {
 			schema.getAreas().add(oldAreaIndex, oldArea);
 		}
 		
-		// restore the record's or system owner's area specification at its 
-		// original position in the area's list of area specifications and in 
-		// the record or system owner
-		oldArea.getAreaSpecifications().add(oldAreaSpecificationIndex, 
-											oldAreaSpecification);
-		if (record != null) {
-			record.setAreaSpecification(oldAreaSpecification);
-		} else {
-			systemOwner.setAreaSpecification(oldAreaSpecification);
-		}
-		newAreaSpecification.setArea(null);
+		// restore the record's or system owner's area specification at its original position in the 
+		// area's list of area specifications
+		oldArea.getAreaSpecifications().add(oldAreaSpecificationIndex, areaSpecification);
 		
-		// finally, remove the new area from the schema if it was created during
-		// the execution of this command (the area will contain neither records
-		// nor indexes at this point)
-		if (newArea.getRecords().isEmpty() && 
-			newArea.getIndexes().isEmpty()) {
-			
+		// finally, remove the new area from the schema if it was created during the execution of 
+		// this command (the area will contain neither records nor indexes at this point)
+		if (isAreaObsolete(newArea)) {			
 			schema.getAreas().remove(newArea);
 		}
 		

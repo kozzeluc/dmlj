@@ -16,17 +16,31 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.ResizableDiagramNode;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
+@ModelChange(category=SET_FEATURES)
 public class ResizeDiagramNodeCommand extends Command {
 	
-	private ResizableDiagramNode diagramNode;
-	private short 				 oldWidth;
-	private short 				 oldHeight;
-	private short 				 width;
-	private short 				 height;
+	@Owner	  private ResizableDiagramNode diagramNode;
+	@Features private EStructuralFeature[] features = {
+		SchemaPackage.eINSTANCE.getResizableDiagramNode_Width(),
+		SchemaPackage.eINSTANCE.getResizableDiagramNode_Height()
+	};
+	
+	private short oldWidth;
+	private short oldHeight;
+	
+	private short newWidth;
+	private short newHeight;
 	
 	@SuppressWarnings("unused")
 	private ResizeDiagramNodeCommand() {
@@ -36,8 +50,8 @@ public class ResizeDiagramNodeCommand extends Command {
 	public ResizeDiagramNodeCommand(ResizableDiagramNode diagramNode, short width, short height) {
 		super();
 		this.diagramNode = diagramNode;
-		this.width = width;
-		this.height = height;
+		this.newWidth = width;
+		this.newHeight = height;
 		if (diagramNode instanceof DiagramLabel) {
 			setLabel("Resize diagram label");
 		} else {
@@ -49,8 +63,13 @@ public class ResizeDiagramNodeCommand extends Command {
 	public void execute() {
 		oldWidth = diagramNode.getWidth();
 		oldHeight = diagramNode.getHeight();
-		diagramNode.setWidth(width);
-		diagramNode.setHeight(height);
+		redo();
+	}
+	
+	@Override
+	public void redo() {
+		diagramNode.setWidth(newWidth);
+		diagramNode.setHeight(newHeight);
 	}
 	
 	@Override

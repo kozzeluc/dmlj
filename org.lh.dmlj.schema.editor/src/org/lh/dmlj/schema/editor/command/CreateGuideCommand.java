@@ -16,16 +16,27 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
+
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.SchemaFactory;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+import org.lh.dmlj.schema.editor.command.annotation.Reference;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 
+@ModelChange(category=ADD_ITEM)
 public class CreateGuideCommand extends Command {
 
-	private Guide guide; 	
-	private int   position;
-	private Ruler ruler;
+	@Owner 	   private Ruler  	  ruler;
+	@Reference private EReference reference = SchemaPackage.eINSTANCE.getRuler_Guides();
+	@Item  	   private Guide  	  guide; 	
+	
+	private int position;	
 	
 	public CreateGuideCommand(Ruler ruler, int position) {
 		super("Add Guide");
@@ -37,7 +48,12 @@ public class CreateGuideCommand extends Command {
 	public void execute() {		
 		guide = SchemaFactory.eINSTANCE.createGuide();
 		guide.setPosition(position);
-		ruler.getGuides().add(guide);							
+		redo();							
+	}
+	
+	@Override
+	public void redo() {
+		ruler.getGuides().add(guide);
 	}
 	
 	@Override

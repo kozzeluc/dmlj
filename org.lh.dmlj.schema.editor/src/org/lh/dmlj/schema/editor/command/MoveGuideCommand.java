@@ -16,13 +16,24 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Guide;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
+@ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class MoveGuideCommand extends Command {
 
-	private Guide guide; 
-	private int   positionDelta;
+	@Owner 	  private Guide 		 		guide; 
+	@Features private EStructuralFeature[] 	features = {
+		SchemaPackage.eINSTANCE.getGuide_Position()
+	};
+	
+	private int positionDelta;
 	
 	public MoveGuideCommand(Guide guide, int positionDelta) {
 		super("Move Guide");

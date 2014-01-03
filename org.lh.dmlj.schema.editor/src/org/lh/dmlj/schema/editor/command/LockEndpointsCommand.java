@@ -16,111 +16,119 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
+
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaFactory;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
+@ModelChange(category=SET_FEATURES)
 public class LockEndpointsCommand extends Command {
 
-	private MemberRole memberRole;
+	@Owner	  private MemberRole 			memberRole;
+	@Features private EStructuralFeature[] 	features = new EStructuralFeature[] {
+		SchemaPackage.eINSTANCE.getConnectionPart_SourceEndpointLocation(),
+		SchemaPackage.eINSTANCE.getConnectionPart_TargetEndpointLocation()
+	};	
 	
-	private Point 	   ownerEndpoint;
-	private Point 	   memberEndpoint;
+	private Point 			newSourceEndpoint;
+	private DiagramLocation newSourceEndpointLocation;
+	private Point 			newTargetEndpoint;
+	private DiagramLocation newTargetEndpointLocation;	
 	
-	private boolean    ownerEndpointSet = false;
-	private boolean    memberEndpointSet = false;
-	
-	public LockEndpointsCommand(MemberRole memberRole, Point ownerEndpoint,
-								Point memberEndpoint) {
+	public LockEndpointsCommand(MemberRole memberRole, Point newSourceEndpoint, 
+								Point newTargetEndpoint) {
+		
 		super();
 		this.memberRole = memberRole;
-		this.ownerEndpoint = ownerEndpoint;
-		this.memberEndpoint = memberEndpoint;
+		this.newSourceEndpoint = newSourceEndpoint;
+		this.newTargetEndpoint = newTargetEndpoint;
 	}
 	
 	@Override
 	public void execute() {	
-		if (memberRole.getConnectionParts()
-					  .get(0)
-					  .getSourceEndpointLocation() == null && 
-			ownerEndpoint != null) {
-			
-			// the owner endpoint will only be added for user owned sets			
-			DiagramLocation location = 
-				SchemaFactory.eINSTANCE.createDiagramLocation();
-			location.setX(ownerEndpoint.x);
-			location.setY(ownerEndpoint.y);
-			location.setEyecatcher("set " + memberRole.getSet().getName() + 
-								   " owner endpoint (" +
-								   memberRole.getRecord().getName() + ")");
-			memberRole.getConnectionParts()
-			  		  .get(0)
-			  		  .setSourceEndpointLocation(location);
-			
-			memberRole.getSet()
-	  		  		  .getSchema()
-	  		  		  .getDiagramData()
-	  		  		  .getLocations()
-	  		  		  .add(location);
-			
-			ownerEndpointSet = true;
+		
+		// prepare the source endpoint location if needed
+		DiagramLocation oldSourceEndpointLocation = 
+			memberRole.getConnectionParts().get(0).getSourceEndpointLocation();		
+		if (oldSourceEndpointLocation == null && newSourceEndpoint != null) {	
+			// the source endpoint will only be added for user owned sets			
+			newSourceEndpointLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+			newSourceEndpointLocation.setX(newSourceEndpoint.x);
+			newSourceEndpointLocation.setY(newSourceEndpoint.y);
+			newSourceEndpointLocation.setEyecatcher("set " + memberRole.getSet().getName() + 
+								   					" owner endpoint (" +
+								   					memberRole.getRecord().getName() + ")");								
 		}
-		if (memberRole.getConnectionParts()
+		
+		// prepare the target endpoint location if needed
+		DiagramLocation oldTargetEndpointLocation = 
+			memberRole.getConnectionParts()
 					  .get(memberRole.getConnectionParts().size() - 1)
-					  .getTargetEndpointLocation() == null) {
-			
-			DiagramLocation location = 
-				SchemaFactory.eINSTANCE.createDiagramLocation();
-			location.setX(memberEndpoint.x);
-			location.setY(memberEndpoint.y);
-			location.setEyecatcher("set " + memberRole.getSet().getName() + 
-								   " member endpoint (" +
-								   memberRole.getRecord().getName() + ")");
-			memberRole.getConnectionParts()
-			  		  .get(memberRole.getConnectionParts().size() - 1)
-					  .setTargetEndpointLocation(location);
-				
-			memberRole.getSet()
-			  		  .getSchema()
-			  		  .getDiagramData()
-			  		  .getLocations()
-			  		  .add(location);
-			
-			memberEndpointSet = true;
+					  .getTargetEndpointLocation();
+		if (oldTargetEndpointLocation == null && newTargetEndpoint != null) {			
+			newTargetEndpointLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+			newTargetEndpointLocation.setX(newTargetEndpoint.x);
+			newTargetEndpointLocation.setY(newTargetEndpoint.y);
+			newTargetEndpointLocation.setEyecatcher("set " + memberRole.getSet().getName() + 
+								   					" member endpoint (" +
+								   					memberRole.getRecord().getName() + ")");									
 		}
+		
+		// go finish the job
+		redo();
+		
+	}
+	
+	@Override
+	public void redo() {
+		
+		DiagramData diagramData = memberRole.getSet().getSchema().getDiagramData();
+		
+		// set the source endpoint location if needed
+		if (newSourceEndpointLocation != null) {
+			memberRole.getConnectionParts()
+					  .get(0)
+					  .setSourceEndpointLocation(newSourceEndpointLocation);				
+			diagramData.getLocations().add(newSourceEndpointLocation);
+		}
+		
+		// set the target endpoint location if needed
+		if (newTargetEndpointLocation != null) {
+			memberRole.getConnectionParts()
+	  		  		  .get(memberRole.getConnectionParts().size() - 1)
+	  		  		  .setTargetEndpointLocation(newTargetEndpointLocation);		
+			diagramData.getLocations().add(newTargetEndpointLocation);			
+		}
+		
 	}
 	
 	@Override
 	public void undo() {
-		if (memberEndpointSet) {
-			
-			DiagramLocation location = 
-				memberRole.getConnectionParts().get(0).getTargetEndpointLocation();
-			
-			memberRole.getSet()
-	  		  		  .getSchema()
-	  		  		  .getDiagramData()
-	  		  		  .getLocations()
-	  		  		  .remove(location);
-					
-			memberRole.getConnectionParts().get(0).setTargetEndpointLocation(null);
-			
+		
+		DiagramData diagramData = memberRole.getSet().getSchema().getDiagramData();
+		
+		// remove the source endpoint location if needed
+		if (newSourceEndpointLocation != null) {								
+			memberRole.getConnectionParts().get(0).setSourceEndpointLocation(null);	
+			diagramData.getLocations().remove(newSourceEndpointLocation);
 		}
-		if (ownerEndpointSet) {
-			
-			DiagramLocation location = 
-				memberRole.getConnectionParts().get(0).getSourceEndpointLocation();
-			
-			memberRole.getSet()
-	  		  		  .getSchema()
-	  		  		  .getDiagramData()
-	  		  		  .getLocations()
-	  		  		  .remove(location);
-					
-			memberRole.getConnectionParts().get(0).setSourceEndpointLocation(null);
-			
+		
+		// remove the target endpoint location if needed
+		if (newTargetEndpointLocation != null) {
+			memberRole.getConnectionParts()
+	  		  		  .get(memberRole.getConnectionParts().size() - 1)
+	  		  		  .setTargetEndpointLocation(null);
+			diagramData.getLocations().remove(newTargetEndpointLocation);						
 		}
+		
 	}
 }

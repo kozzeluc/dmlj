@@ -16,21 +16,50 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.lh.dmlj.schema.ConnectionPart;
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
 
+import org.eclipse.emf.ecore.EReference;
+import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.DiagramData;
+import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+import org.lh.dmlj.schema.editor.command.annotation.Reference;
+
+@ModelChange(category=REMOVE_ITEM)
 public class DeleteBendpointCommand extends AbstractBendpointCommand {	
 	
-	public DeleteBendpointCommand(ConnectionPart connectionPart, int index) {
-		super(connectionPart, index);		
+	@Owner 	   private ConnectionPart 	connectionPart;
+	@Item  	   private DiagramLocation 	bendpoint;
+	@Reference private EReference 		reference = 
+		SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations();	
+
+	private int locationsIndex;
+	
+	public DeleteBendpointCommand(ConnectionPart connectionPart, int connectionPartIndex) {
+		super(connectionPart, connectionPartIndex);
+		this.connectionPart = connectionPart;
+		
 	}
 	
 	@Override
 	public void execute() {
-		removeBendpoint(index); // will set oldX and oldY		
+		bendpoint = connectionPart.getBendpointLocations().get(connectionPartIndex);
+		DiagramData diagramData = 
+			connectionPart.getMemberRole().getSet().getSchema().getDiagramData();
+		locationsIndex = diagramData.getLocations().indexOf(bendpoint);
+		redo();
+	}	
+	
+	@Override
+	public void redo() {
+		removeBendpoint(connectionPartIndex); // will set oldX and oldY
 	}
 	
 	@Override
 	public void undo() {
-		insertBendpoint(index, oldX, oldY);		
+		restoreBendpoint(bendpoint, connectionPartIndex, locationsIndex);		
 	}
 }
