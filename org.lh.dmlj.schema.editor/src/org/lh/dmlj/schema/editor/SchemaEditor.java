@@ -118,6 +118,8 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
@@ -252,6 +254,7 @@ public class SchemaEditor
 	
 	private boolean 					editorSaving = false;
 	private SchemaEditorRulerProvider   horizontalRulerProvider;
+	private ModelChangeDispatcher 		modelChangeDispatcher = new ModelChangeDispatcher();
 	private Adapter						modelChangeListener;
 	private OutlinePage 				outlinePage;
 	private ResourceTracker 			resourceListener = new ResourceTracker();	
@@ -398,12 +401,22 @@ public class SchemaEditor
 		// add a listener to the command stack to 
 		// - change the zoom manager's zoom level when the user performs an undo 
 		//   or redo of a set zoom level command
-		// it works better this way than via the model change listener hereafter
-		// since we only need to cover the zoom command's undo and redo and we
-		// do get some strange effects if we work with the model change listener
+		//   [it works better this way than via the model change listener hereafter
+		//    since we only need to cover the zoom command's undo and redo and we
+		//    do get some strange effects if we work with the model change listener
+		//    --> WHY IS THE MODEL CHANGE LISTENER STILL HERE THEN ?]
+		// - if the command involved is annotated with a @ModelChange annotation, dispatch the  
+		//   command stack event to the command stack event dispatcher to inform all of its   
+		//   listeners of a model change 'event' - a command annotated with @ModelChange should  
+		//   always leave the model in a consistent state after its execute(), redo() or undo() 
+		//   method has been called (like any other command actually; the annotation is merely used 
+		//   to extract the kind (category) of model change
 		getCommandStack().addCommandStackEventListener(new CommandStackEventListener() {
 			@Override
 			public void stackChanged(CommandStackEvent event) {				
+				
+				// we should probably get rid of the next if statement and the manager.setZoom()
+				// call:
 				if (event.isPostChangeEvent() && 
 					event.getCommand() instanceof SetZoomLevelCommand &&
 					(event.getDetail() == CommandStack.POST_UNDO ||
@@ -412,11 +425,17 @@ public class SchemaEditor
 					
 					manager.setZoom(schema.getDiagramData().getZoomLevel());				
 				}
+				
+				// dispatch the command stack event to our dispatcher:				
+				modelChangeDispatcher.dispatch(event);
+				
 			}
 		});
 		
 		// attach a model change listener to respond to changes to the zoom
 		// level, rulers&guides and grid visibility
+		// TODO change the way we react to these model changes by switching to the 
+		// modelChangeDispatcher's capabilities (i.e. register ourselves as an IModelChangeListener)
 		modelChangeListener = new Adapter() {
 			@Override
 			public Notifier getTarget() {
@@ -597,7 +616,12 @@ public class SchemaEditor
 			outlinePage = new OutlinePage(this);
 			return outlinePage;
 		} else if (type == CommandStack.class) {
+			// the command stack is accessible by anybody else but only for executing commands -
+			// implementing the IModelChangeListener is the preferred way to catch up with model 
+			// changes
 			return getCommandStack();
+		} else if (type == IModelChangeProvider.class) {
+			return modelChangeDispatcher;
 		} else if (type == ActionRegistry.class) {
 			return getActionRegistry();
 		} else if (type == DefaultEditDomain.class) {
