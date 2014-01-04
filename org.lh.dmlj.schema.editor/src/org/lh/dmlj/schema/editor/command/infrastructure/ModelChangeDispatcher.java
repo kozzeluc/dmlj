@@ -333,17 +333,16 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 			}
 			logDebug(debugMessage.toString());			
 			
-			// only notify a listener when it's NOT on the queue of obsolete listeners		
-			for (IModelChangeListener listener : listeners) {
+			// only notify a listener when it's NOT on the queue of obsolete listeners; it is 
+			// important to traverse a copy of the listener list because listeners can be added and
+			// removed during the notification process
+			for (IModelChangeListener listener : new ArrayList<>(listeners)) {
 				if (!isObsolete(listener)) {
 					notifier.doNotify(listener);
 				} 
 			}		
 			
-			// remove all obsolete listeners, if any; clear the obsolete listeners set
-			for (IModelChangeListener listener : obsoleteListeners) {
-				listeners.remove(listener);
-			}
+			// clear the obsolete listeners set
 			obsoleteListeners.clear();
 			
 		}
@@ -534,13 +533,12 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	}
 
 	public void removeModelChangeListener(IModelChangeListener listener) {
-		// when dispatching, the listener-to-be-removed should be put on the obsolete listeners list 
-		// and NOT be removed immediately
+		// when dispatching, the listener-to-be-removed should be put on the obsolete listeners  
+		// list; it can be removed immediately
 		if (dispatching) {
 			obsoleteListeners.add(listener);
-		} else {
-			listeners.remove(listener);
-		}
+		} 
+		listeners.remove(listener);
 	}
 	
 }

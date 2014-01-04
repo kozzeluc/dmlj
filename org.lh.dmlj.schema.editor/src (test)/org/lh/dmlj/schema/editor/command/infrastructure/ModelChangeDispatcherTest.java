@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
@@ -33,7 +34,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.emf.ecore.EObject;
@@ -57,23 +60,20 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.OwnerType;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
-import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeNotifier;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 
 public class ModelChangeDispatcherTest {
 
-	private static int getListenerCount(ModelChangeDispatcher dispatcher) {
-		Field field;
+	@SuppressWarnings("unchecked")
+	private static List<IModelChangeListener> getListeners(ModelChangeDispatcher dispatcher) {		
 		try {
-			field = ModelChangeDispatcher.class.getDeclaredField("listeners");
+			Field field = ModelChangeDispatcher.class.getDeclaredField("listeners");
 			field.setAccessible(true);
-			return ((Collection<?>) field.get(dispatcher)).size();
+			return new ArrayList<>(((Collection<IModelChangeListener>) field.get(dispatcher)));
 		} catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 		
-	}
+	}	
 
 	@Test
 	public void testAddOrRemoveItemNotifier_AddItemCategory() {
@@ -749,8 +749,8 @@ public class ModelChangeDispatcherTest {
 		// create the ModelChangeDispatcher
 		final ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();									
 		
-		// create 1 mock and 1 real IModelChangeListeners and add them both to the model change 
-		// dispatcher's listeners - the order in whey they are registered matters because listener1
+		// create 1 mock and 1 real IModelChangeListener and add them both to the model change 
+		// dispatcher's listeners - the order in which they are registered matters because listener1
 		// has to remove listener2 before that one gets notified
 		final IModelChangeListener listener2 = mock(IModelChangeListener.class);
 		IModelChangeListener listener1 = new IModelChangeListener() {			
@@ -758,10 +758,11 @@ public class ModelChangeDispatcherTest {
 			public void afterRemoveItem(EObject owner, EReference reference, Object item) {
 				// remove listener2; no more methods should be called on it as of NOW ! 
 				dispatcher.removeModelChangeListener(listener2);
-				// check that the dispatcher still has 2 registered listeners, and that for (only) 
+				// check that the dispatcher has only 1 registered listener, and that for (only) 
 				// the second listener, isObsolete() returns true
-				int listenerCount = getListenerCount(dispatcher);
-				assertEquals(2, listenerCount);
+				List<IModelChangeListener> listeners = getListeners(dispatcher);				
+				assertEquals(1, listeners.size());
+				assertSame(this, listeners.get(0)); // 'this' refers to listener1
 				assertFalse(dispatcher.isObsolete(this));
 				assertTrue(dispatcher.isObsolete(listener2));
 			}			
@@ -801,14 +802,88 @@ public class ModelChangeDispatcherTest {
 
 		// check that the dispatcher has only 1 registered listener, namely our first listener, and 
 		// that for that listener, isObsolete() returns false
-		int listenerCount = getListenerCount(dispatcher);
-		assertEquals(1, listenerCount);
+		List<IModelChangeListener> listeners = getListeners(dispatcher);				
+		assertEquals(1, listeners.size());
+		assertSame(listener1, listeners.get(0));
 		assertFalse(dispatcher.isObsolete(listener1));		
 		
 		// unregister the model change listener
 		dispatcher.removeModelChangeListener(listener1);		
 		
 	}
+	
+	@Test
+	public void testDispatch_DeferredListener() {
+		
+		// create the ModelChangeDispatcher
+		final ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();									
+		
+		// create a mock and a real IModelChangeListener and add only the real one to the model 
+		// change dispatcher's listeners; when its addItem method is called, it adds the second 
+		// listener, which should NOT be notified during the dispatch processing
+		final IModelChangeListener listener2 = mock(IModelChangeListener.class);
+		IModelChangeListener listener1 = new IModelChangeListener() {			
+			@Override
+			public void afterAddItem(EObject owner, EReference reference, Object item) {
+				// add listener2				
+				dispatcher.addModelChangeListener(listener2);
+				// check that the dispatcher has 2 registered listeners, neither of them are 
+				// obsolete of course, but let's check that as well
+				List<IModelChangeListener> listeners = getListeners(dispatcher);				
+				assertEquals(2, listeners.size());
+				assertSame(this, listeners.get(0)); 		// 'this' refers to listener1
+				assertSame(listener2, listeners.get(1));
+				assertFalse(dispatcher.isObsolete(this));
+				assertFalse(dispatcher.isObsolete(listener2));				
+			}			
+			@Override
+			public void afterRemoveItem(EObject owner, EReference reference, Object item) {
+				throw new RuntimeException("method should not be called: afterAddItem");				
+			}
+			@Override
+			public void afterMoveItem(EObject oldOwner, EReference reference,  Object item, 
+									  EObject newOwner) {
+				throw new RuntimeException("method should not be called: afterMoveItem");				
+			}			
+			@Override
+			public void afterSetFeatures(EObject owner, EStructuralFeature[] attributes) {
+				throw new RuntimeException("method should not be called: afterSetFeatures");				
+			}
+		};
+		dispatcher.addModelChangeListener(listener1); // only add the first listener !		
+		
+		// simulate a POST_EXECUTE command stack notification		
+		AddItemCommand removeItemCommand = new AddItemCommand();
+		CommandStackEvent event = mock(CommandStackEvent.class);						
+		when(event.getCommand()).thenReturn(removeItemCommand);
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
+		dispatcher.dispatch(event);			
+
+		// ...no method should have been called on the second listener because it was registered
+		// during and not before the dispatch processing
+		verify(listener2, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
+				 								 anyObject(), any(EObject.class));		
+		verify(listener2, never()).afterAddItem(any(EObject.class), any(EReference.class), 
+											    any(EObject.class));		
+		verify(listener2, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
+				  								   any(EObject.class));
+		verify(listener2, never()).afterSetFeatures(any(EObject.class), 
+													any(EStructuralFeature[].class));
+
+		// check that the dispatcher still has 2 registered listeners and that neither of them is		
+		// obsolete
+		List<IModelChangeListener> listeners = getListeners(dispatcher);				
+		assertEquals(2, listeners.size());
+		assertSame(listener1, listeners.get(0));
+		assertSame(listener2, listeners.get(1));
+		assertFalse(dispatcher.isObsolete(listener1));
+		assertFalse(dispatcher.isObsolete(listener2));
+		
+		// unregister both model change listeners
+		dispatcher.removeModelChangeListener(listener1);
+		dispatcher.removeModelChangeListener(listener2);
+		
+	}	
 	
 	@Test
 	public void testMoveItemNotifier() {
