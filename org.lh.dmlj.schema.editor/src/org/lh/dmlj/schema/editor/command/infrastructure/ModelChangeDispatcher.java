@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
@@ -241,6 +242,33 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		if (!listeners.contains(listener)) {
 			// avoid notifying the same listener twice
 			listeners.add(listener);
+			// write a debug message to the log...
+			StringBuilder debugMessage = new StringBuilder();
+			debugMessage.append("Added model change dispatch listener:" + "\n");
+			debugMessage.append("Listener class: " + listener.getClass().getName() + "\n");			
+			if (listener instanceof EditPart) {
+				EditPart editPart = (EditPart) listener;
+				debugMessage.append("Edit part model: " + (editPart).getModel());
+				debugMessage.append("\n");
+				if (editPart.getParent() != null) {
+					EditPart parent = editPart.getParent();
+					debugMessage.append("Parent edit part class: " + parent.getClass().getName() + "\n");
+					debugMessage.append("Parent edit part model: " + parent.getModel() + "\n");	
+					if (parent.getParent() != null) {
+						EditPart grandParent = parent.getParent();
+						debugMessage.append("Grand parent edit part class: " + 
+											grandParent.getClass().getName() + "\n");
+						debugMessage.append("Grand parent edit part model: " + grandParent.getModel() + 
+											"\n");				
+					} else {
+						debugMessage.append("Grand parent edit part: null\n");
+					}
+				} else {
+					debugMessage.append("Parent edit part: null\n");
+				}
+			}
+			debugMessage.append("The listener count is now " + listeners.size());			
+			logDebug(debugMessage.toString());			
 		}
 	}
 	
@@ -534,11 +562,38 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 
 	public void removeModelChangeListener(IModelChangeListener listener) {
 		// when dispatching, the listener-to-be-removed should be put on the obsolete listeners  
-		// list; it can be removed immediately
+		// list; it can be removed immediately from the listener list however
 		if (dispatching) {
 			obsoleteListeners.add(listener);
 		} 
 		listeners.remove(listener);
+		// write a debug message to the log...
+		StringBuilder debugMessage = new StringBuilder();
+		debugMessage.append("Removed model change dispatch listener:" + "\n");
+		debugMessage.append("Listener class: " + listener.getClass().getName() + "\n");
+		if (listener instanceof EditPart) {
+			EditPart editPart = (EditPart) listener;
+			debugMessage.append("Edit part model: " + (editPart).getModel());
+			debugMessage.append("\n");
+			if (editPart.getParent() != null) {
+				EditPart parent = editPart.getParent();
+				debugMessage.append("Parent edit part class: " + parent.getClass().getName() + "\n");
+				debugMessage.append("Parent edit part model: " + parent.getModel() + "\n");
+				if (parent.getParent() != null) {
+					EditPart grandParent = parent.getParent();
+					debugMessage.append("Grand parent edit part class: " + 
+										grandParent.getClass().getName() + "\n");
+					debugMessage.append("Grand parent edit part model: " + grandParent.getModel() + 
+										"\n");				
+				} else {
+					debugMessage.append("Grand parent edit part: null\n");
+				}				
+			} else {
+				debugMessage.append("Parent edit part: null\n");
+			}
+		}
+		debugMessage.append("The listener count is now " + listeners.size());			
+		logDebug(debugMessage.toString());		
 	}
 	
 }
