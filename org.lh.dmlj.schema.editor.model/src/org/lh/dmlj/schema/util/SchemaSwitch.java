@@ -35,7 +35,7 @@ import org.lh.dmlj.schema.*;
  * @see org.lh.dmlj.schema.SchemaPackage
  * @generated
  */
-public class SchemaSwitch<T> extends Switch<T> {
+public class SchemaSwitch<T1> extends Switch<T1> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -77,202 +77,213 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	@Override
-	protected T doSwitch(int classifierID, EObject theEObject) {
+	protected T1 doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION: {
 				AreaProcedureCallSpecification areaProcedureCallSpecification = (AreaProcedureCallSpecification)theEObject;
-				T result = caseAreaProcedureCallSpecification(areaProcedureCallSpecification);
+				T1 result = caseAreaProcedureCallSpecification(areaProcedureCallSpecification);
 				if (result == null) result = caseProcedureCallSpecification(areaProcedureCallSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.AREA_SPECIFICATION: {
 				AreaSpecification areaSpecification = (AreaSpecification)theEObject;
-				T result = caseAreaSpecification(areaSpecification);
+				T1 result = caseAreaSpecification(areaSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.CONNECTION_PART: {
 				ConnectionPart connectionPart = (ConnectionPart)theEObject;
-				T result = caseConnectionPart(connectionPart);
+				T1 result = caseConnectionPart(connectionPart);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.CONNECTION_LABEL: {
 				ConnectionLabel connectionLabel = (ConnectionLabel)theEObject;
-				T result = caseConnectionLabel(connectionLabel);
+				T1 result = caseConnectionLabel(connectionLabel);
 				if (result == null) result = caseDiagramNode(connectionLabel);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.CONNECTOR: {
 				Connector connector = (Connector)theEObject;
-				T result = caseConnector(connector);
+				T1 result = caseConnector(connector);
 				if (result == null) result = caseDiagramNode(connector);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.DIAGRAM_DATA: {
 				DiagramData diagramData = (DiagramData)theEObject;
-				T result = caseDiagramData(diagramData);
+				T1 result = caseDiagramData(diagramData);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.DIAGRAM_LABEL: {
 				DiagramLabel diagramLabel = (DiagramLabel)theEObject;
-				T result = caseDiagramLabel(diagramLabel);
+				T1 result = caseDiagramLabel(diagramLabel);
 				if (result == null) result = caseResizableDiagramNode(diagramLabel);
+				if (result == null) result = caseINodeTextProvider(diagramLabel);
 				if (result == null) result = caseDiagramNode(diagramLabel);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.DIAGRAM_LOCATION: {
 				DiagramLocation diagramLocation = (DiagramLocation)theEObject;
-				T result = caseDiagramLocation(diagramLocation);
+				T1 result = caseDiagramLocation(diagramLocation);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.DIAGRAM_NODE: {
 				DiagramNode diagramNode = (DiagramNode)theEObject;
-				T result = caseDiagramNode(diagramNode);
+				T1 result = caseDiagramNode(diagramNode);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.ELEMENT: {
 				Element element = (Element)theEObject;
-				T result = caseElement(element);
+				T1 result = caseElement(element);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.GUIDE: {
 				Guide guide = (Guide)theEObject;
-				T result = caseGuide(guide);
+				T1 result = caseGuide(guide);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.INDEXED_SET_MODE_SPECIFICATION: {
 				IndexedSetModeSpecification indexedSetModeSpecification = (IndexedSetModeSpecification)theEObject;
-				T result = caseIndexedSetModeSpecification(indexedSetModeSpecification);
+				T1 result = caseIndexedSetModeSpecification(indexedSetModeSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.INDEX_ELEMENT: {
 				IndexElement indexElement = (IndexElement)theEObject;
-				T result = caseIndexElement(indexElement);
+				T1 result = caseIndexElement(indexElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.INODE_TEXT_PROVIDER: {
+				INodeTextProvider<?> iNodeTextProvider = (INodeTextProvider<?>)theEObject;
+				T1 result = caseINodeTextProvider(iNodeTextProvider);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.KEY: {
 				Key key = (Key)theEObject;
-				T result = caseKey(key);
+				T1 result = caseKey(key);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.KEY_ELEMENT: {
 				KeyElement keyElement = (KeyElement)theEObject;
-				T result = caseKeyElement(keyElement);
+				T1 result = caseKeyElement(keyElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.MEMBER_ROLE: {
 				MemberRole memberRole = (MemberRole)theEObject;
-				T result = caseMemberRole(memberRole);
+				T1 result = caseMemberRole(memberRole);
 				if (result == null) result = caseRole(memberRole);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.OCCURS_SPECIFICATION: {
 				OccursSpecification occursSpecification = (OccursSpecification)theEObject;
-				T result = caseOccursSpecification(occursSpecification);
+				T1 result = caseOccursSpecification(occursSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.OFFSET_EXPRESSION: {
 				OffsetExpression offsetExpression = (OffsetExpression)theEObject;
-				T result = caseOffsetExpression(offsetExpression);
+				T1 result = caseOffsetExpression(offsetExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.OWNER_ROLE: {
 				OwnerRole ownerRole = (OwnerRole)theEObject;
-				T result = caseOwnerRole(ownerRole);
+				T1 result = caseOwnerRole(ownerRole);
 				if (result == null) result = caseRole(ownerRole);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.PROCEDURE: {
 				Procedure procedure = (Procedure)theEObject;
-				T result = caseProcedure(procedure);
+				T1 result = caseProcedure(procedure);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.PROCEDURE_CALL_SPECIFICATION: {
 				ProcedureCallSpecification procedureCallSpecification = (ProcedureCallSpecification)theEObject;
-				T result = caseProcedureCallSpecification(procedureCallSpecification);
+				T1 result = caseProcedureCallSpecification(procedureCallSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION: {
 				RecordProcedureCallSpecification recordProcedureCallSpecification = (RecordProcedureCallSpecification)theEObject;
-				T result = caseRecordProcedureCallSpecification(recordProcedureCallSpecification);
+				T1 result = caseRecordProcedureCallSpecification(recordProcedureCallSpecification);
 				if (result == null) result = caseProcedureCallSpecification(recordProcedureCallSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.RESIZABLE_DIAGRAM_NODE: {
 				ResizableDiagramNode resizableDiagramNode = (ResizableDiagramNode)theEObject;
-				T result = caseResizableDiagramNode(resizableDiagramNode);
+				T1 result = caseResizableDiagramNode(resizableDiagramNode);
 				if (result == null) result = caseDiagramNode(resizableDiagramNode);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.ROLE: {
 				Role role = (Role)theEObject;
-				T result = caseRole(role);
+				T1 result = caseRole(role);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.RULER: {
 				Ruler ruler = (Ruler)theEObject;
-				T result = caseRuler(ruler);
+				T1 result = caseRuler(ruler);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.SCHEMA: {
 				Schema schema = (Schema)theEObject;
-				T result = caseSchema(schema);
+				T1 result = caseSchema(schema);
+				if (result == null) result = caseINodeTextProvider(schema);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.SCHEMA_AREA: {
 				SchemaArea schemaArea = (SchemaArea)theEObject;
-				T result = caseSchemaArea(schemaArea);
+				T1 result = caseSchemaArea(schemaArea);
+				if (result == null) result = caseINodeTextProvider(schemaArea);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.SCHEMA_RECORD: {
 				SchemaRecord schemaRecord = (SchemaRecord)theEObject;
-				T result = caseSchemaRecord(schemaRecord);
+				T1 result = caseSchemaRecord(schemaRecord);
 				if (result == null) result = caseDiagramNode(schemaRecord);
+				if (result == null) result = caseINodeTextProvider(schemaRecord);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.SET: {
 				Set set = (Set)theEObject;
-				T result = caseSet(set);
+				T1 result = caseSet(set);
+				if (result == null) result = caseINodeTextProvider(set);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.SYSTEM_OWNER: {
 				SystemOwner systemOwner = (SystemOwner)theEObject;
-				T result = caseSystemOwner(systemOwner);
+				T1 result = caseSystemOwner(systemOwner);
 				if (result == null) result = caseDiagramNode(systemOwner);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case SchemaPackage.VIA_SPECIFICATION: {
 				ViaSpecification viaSpecification = (ViaSpecification)theEObject;
-				T result = caseViaSpecification(viaSpecification);
+				T1 result = caseViaSpecification(viaSpecification);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -291,7 +302,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSchema(Schema object) {
+	public T1 caseSchema(Schema object) {
 		return null;
 	}
 
@@ -306,7 +317,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSchemaArea(SchemaArea object) {
+	public T1 caseSchemaArea(SchemaArea object) {
 		return null;
 	}
 
@@ -321,7 +332,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSchemaRecord(SchemaRecord object) {
+	public T1 caseSchemaRecord(SchemaRecord object) {
 		return null;
 	}
 
@@ -336,7 +347,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSet(Set object) {
+	public T1 caseSet(Set object) {
 		return null;
 	}
 
@@ -351,7 +362,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseRole(Role object) {
+	public T1 caseRole(Role object) {
 		return null;
 	}
 
@@ -366,7 +377,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseRuler(Ruler object) {
+	public T1 caseRuler(Ruler object) {
 		return null;
 	}
 
@@ -381,7 +392,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseElement(Element object) {
+	public T1 caseElement(Element object) {
 		return null;
 	}
 
@@ -396,7 +407,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseGuide(Guide object) {
+	public T1 caseGuide(Guide object) {
 		return null;
 	}
 
@@ -411,7 +422,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseKeyElement(KeyElement object) {
+	public T1 caseKeyElement(KeyElement object) {
 		return null;
 	}
 
@@ -426,7 +437,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMemberRole(MemberRole object) {
+	public T1 caseMemberRole(MemberRole object) {
 		return null;
 	}
 
@@ -441,7 +452,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSystemOwner(SystemOwner object) {
+	public T1 caseSystemOwner(SystemOwner object) {
 		return null;
 	}
 
@@ -456,7 +467,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseViaSpecification(ViaSpecification object) {
+	public T1 caseViaSpecification(ViaSpecification object) {
 		return null;
 	}
 
@@ -471,7 +482,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDiagramNode(DiagramNode object) {
+	public T1 caseDiagramNode(DiagramNode object) {
 		return null;
 	}
 
@@ -486,7 +497,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDiagramLocation(DiagramLocation object) {
+	public T1 caseDiagramLocation(DiagramLocation object) {
 		return null;
 	}
 
@@ -501,7 +512,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDiagramData(DiagramData object) {
+	public T1 caseDiagramData(DiagramData object) {
 		return null;
 	}
 
@@ -516,7 +527,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDiagramLabel(DiagramLabel object) {
+	public T1 caseDiagramLabel(DiagramLabel object) {
 		return null;
 	}
 
@@ -531,7 +542,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseKey(Key object) {
+	public T1 caseKey(Key object) {
 		return null;
 	}
 
@@ -546,7 +557,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAreaSpecification(AreaSpecification object) {
+	public T1 caseAreaSpecification(AreaSpecification object) {
 		return null;
 	}
 
@@ -561,7 +572,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseConnectionPart(ConnectionPart object) {
+	public T1 caseConnectionPart(ConnectionPart object) {
 		return null;
 	}
 
@@ -576,7 +587,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseConnectionLabel(ConnectionLabel object) {
+	public T1 caseConnectionLabel(ConnectionLabel object) {
 		return null;
 	}
 
@@ -591,7 +602,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseConnector(Connector object) {
+	public T1 caseConnector(Connector object) {
 		return null;
 	}
 
@@ -606,7 +617,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseOffsetExpression(OffsetExpression object) {
+	public T1 caseOffsetExpression(OffsetExpression object) {
 		return null;
 	}
 
@@ -621,7 +632,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseOwnerRole(OwnerRole object) {
+	public T1 caseOwnerRole(OwnerRole object) {
 		return null;
 	}
 
@@ -636,7 +647,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIndexedSetModeSpecification(IndexedSetModeSpecification object) {
+	public T1 caseIndexedSetModeSpecification(IndexedSetModeSpecification object) {
 		return null;
 	}
 
@@ -651,7 +662,22 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIndexElement(IndexElement object) {
+	public T1 caseIndexElement(IndexElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>INode Text Provider</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>INode Text Provider</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public <T> T1 caseINodeTextProvider(INodeTextProvider<T> object) {
 		return null;
 	}
 
@@ -666,7 +692,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAreaProcedureCallSpecification(AreaProcedureCallSpecification object) {
+	public T1 caseAreaProcedureCallSpecification(AreaProcedureCallSpecification object) {
 		return null;
 	}
 
@@ -681,7 +707,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseRecordProcedureCallSpecification(RecordProcedureCallSpecification object) {
+	public T1 caseRecordProcedureCallSpecification(RecordProcedureCallSpecification object) {
 		return null;
 	}
 
@@ -696,7 +722,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseResizableDiagramNode(ResizableDiagramNode object) {
+	public T1 caseResizableDiagramNode(ResizableDiagramNode object) {
 		return null;
 	}
 
@@ -711,7 +737,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseProcedure(Procedure object) {
+	public T1 caseProcedure(Procedure object) {
 		return null;
 	}
 
@@ -726,7 +752,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseProcedureCallSpecification(ProcedureCallSpecification object) {
+	public T1 caseProcedureCallSpecification(ProcedureCallSpecification object) {
 		return null;
 	}
 
@@ -741,7 +767,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseOccursSpecification(OccursSpecification object) {
+	public T1 caseOccursSpecification(OccursSpecification object) {
 		return null;
 	}
 
@@ -757,7 +783,7 @@ public class SchemaSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	@Override
-	public T defaultCase(EObject object) {
+	public T1 defaultCase(EObject object) {
 		return null;
 	}
 

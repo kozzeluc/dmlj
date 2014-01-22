@@ -49,6 +49,7 @@ import org.lh.dmlj.schema.ViaSpecification;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMode <em>Mode</em>}</li>
@@ -64,6 +65,15 @@ import org.lh.dmlj.schema.ViaSpecification;
  * @generated
  */
 public class SetImpl extends EObjectImpl implements Set {
+	/**
+	 * The default value of the '{@link #getNodeText() <em>Node Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNodeText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NODE_TEXT_EDEFAULT = null;
 	/**
 	 * The cached value of the '{@link #getIndexedSetModeSpecification() <em>Indexed Set Mode Specification</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -181,6 +191,15 @@ public class SetImpl extends EObjectImpl implements Set {
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.SET;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getNodeText() {
+		return getName();
 	}
 
 	/**
@@ -476,6 +495,8 @@ public class SetImpl extends EObjectImpl implements Set {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.SET__NODE_TEXT:
+				return getNodeText();
 			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
 				return getIndexedSetModeSpecification();
 			case SchemaPackage.SET__MEMBERS:
@@ -587,6 +608,8 @@ public class SetImpl extends EObjectImpl implements Set {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SET__NODE_TEXT:
+				return NODE_TEXT_EDEFAULT == null ? getNodeText() != null : !NODE_TEXT_EDEFAULT.equals(getNodeText());
 			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
 				return indexedSetModeSpecification != null;
 			case SchemaPackage.SET__MEMBERS:

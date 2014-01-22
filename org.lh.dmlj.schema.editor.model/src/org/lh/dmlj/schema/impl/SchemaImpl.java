@@ -17,19 +17,17 @@
 package org.lh.dmlj.schema.impl;
 
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.Schema;
@@ -45,6 +43,7 @@ import org.lh.dmlj.schema.Set;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getAreas <em>Areas</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getComments <em>Comments</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getDescription <em>Description</em>}</li>
@@ -61,6 +60,15 @@ import org.lh.dmlj.schema.Set;
  * @generated
  */
 public class SchemaImpl extends EObjectImpl implements Schema {
+	/**
+	 * The default value of the '{@link #getNodeText() <em>Node Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNodeText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NODE_TEXT_EDEFAULT = null;
 	/**
 	 * The cached value of the '{@link #getAreas() <em>Areas</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -204,6 +212,15 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.SCHEMA;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getNodeText() {
+		return getName() + " version " + getVersion();
 	}
 
 	/**
@@ -517,6 +534,8 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA__NODE_TEXT:
+				return getNodeText();
 			case SchemaPackage.SCHEMA__AREAS:
 				return getAreas();
 			case SchemaPackage.SCHEMA__COMMENTS:
@@ -639,6 +658,8 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA__NODE_TEXT:
+				return NODE_TEXT_EDEFAULT == null ? getNodeText() != null : !NODE_TEXT_EDEFAULT.equals(getNodeText());
 			case SchemaPackage.SCHEMA__AREAS:
 				return areas != null && !areas.isEmpty();
 			case SchemaPackage.SCHEMA__COMMENTS:
@@ -685,6 +706,11 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 		result.append(version);
 		result.append(')');
 		return result.toString();
+	}
+	
+	@Override
+	public int compareTo(Schema other) {
+		return getName().compareTo(other.getName());
 	}
 
 } //SchemaImpl

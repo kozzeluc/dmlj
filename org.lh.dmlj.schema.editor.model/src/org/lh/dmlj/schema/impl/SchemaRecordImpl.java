@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.LocationMode;
@@ -54,6 +55,7 @@ import org.lh.dmlj.schema.ViaSpecification;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getBaseVersion <em>Base Version</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getControlLength <em>Control Length</em>}</li>
@@ -85,6 +87,15 @@ import org.lh.dmlj.schema.ViaSpecification;
  * @generated
  */
 public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
+	/**
+	 * The default value of the '{@link #getNodeText() <em>Node Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNodeText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NODE_TEXT_EDEFAULT = null;
 	/**
 	 * The default value of the '{@link #getBaseName() <em>Base Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -399,6 +410,15 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.SCHEMA_RECORD;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getNodeText() {
+		return getName();
 	}
 
 	/**
@@ -1115,6 +1135,8 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA_RECORD__NODE_TEXT:
+				return getNodeText();
 			case SchemaPackage.SCHEMA_RECORD__BASE_NAME:
 				return getBaseName();
 			case SchemaPackage.SCHEMA_RECORD__BASE_VERSION:
@@ -1330,6 +1352,8 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA_RECORD__NODE_TEXT:
+				return NODE_TEXT_EDEFAULT == null ? getNodeText() != null : !NODE_TEXT_EDEFAULT.equals(getNodeText());
 			case SchemaPackage.SCHEMA_RECORD__BASE_NAME:
 				return BASE_NAME_EDEFAULT == null ? baseName != null : !BASE_NAME_EDEFAULT.equals(baseName);
 			case SchemaPackage.SCHEMA_RECORD__BASE_VERSION:
@@ -1382,6 +1406,38 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return viaSpecification != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == INodeTextProvider.class) {
+			switch (derivedFeatureID) {
+				case SchemaPackage.SCHEMA_RECORD__NODE_TEXT: return SchemaPackage.INODE_TEXT_PROVIDER__NODE_TEXT;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == INodeTextProvider.class) {
+			switch (baseFeatureID) {
+				case SchemaPackage.INODE_TEXT_PROVIDER__NODE_TEXT: return SchemaPackage.SCHEMA_RECORD__NODE_TEXT;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**

@@ -17,12 +17,10 @@
 package org.lh.dmlj.schema;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Set</b></em>'.
- * @extends Comparable<Set>
+ * A representation of the model object '<em><b>Set</b></em>'. 
  * <!-- end-user-doc -->
  *
  * <p>
@@ -44,7 +42,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Set extends EObject, Comparable<Set> {
+public interface Set extends INodeTextProvider<Set> {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

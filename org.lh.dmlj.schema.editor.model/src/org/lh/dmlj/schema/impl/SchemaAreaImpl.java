@@ -46,6 +46,7 @@ import org.lh.dmlj.schema.SystemOwner;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getAreaSpecifications <em>Area Specifications</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getIndexes <em>Indexes</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getName <em>Name</em>}</li>
@@ -58,6 +59,15 @@ import org.lh.dmlj.schema.SystemOwner;
  * @generated
  */
 public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
+	/**
+	 * The default value of the '{@link #getNodeText() <em>Node Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNodeText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NODE_TEXT_EDEFAULT = null;
 	/**
 	 * The cached value of the '{@link #getAreaSpecifications() <em>Area Specifications</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -112,6 +122,15 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.SCHEMA_AREA;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getNodeText() {
+		return getName();
 	}
 
 	/**
@@ -330,6 +349,8 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA_AREA__NODE_TEXT:
+				return getNodeText();
 			case SchemaPackage.SCHEMA_AREA__AREA_SPECIFICATIONS:
 				return getAreaSpecifications();
 			case SchemaPackage.SCHEMA_AREA__INDEXES:
@@ -405,6 +426,8 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.SCHEMA_AREA__NODE_TEXT:
+				return NODE_TEXT_EDEFAULT == null ? getNodeText() != null : !NODE_TEXT_EDEFAULT.equals(getNodeText());
 			case SchemaPackage.SCHEMA_AREA__AREA_SPECIFICATIONS:
 				return areaSpecifications != null && !areaSpecifications.isEmpty();
 			case SchemaPackage.SCHEMA_AREA__INDEXES:

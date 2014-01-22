@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.SchemaPackage;
 
 /**
@@ -37,6 +38,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.impl.DiagramLabelImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLabelImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLabelImpl#getDiagramData <em>Diagram Data</em>}</li>
  * </ul>
@@ -45,6 +47,16 @@ import org.lh.dmlj.schema.SchemaPackage;
  * @generated
  */
 public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements DiagramLabel {
+	/**
+	 * The default value of the '{@link #getNodeText() <em>Node Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNodeText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NODE_TEXT_EDEFAULT = null;
+
 	/**
 	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -82,6 +94,15 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 	@Override
 	protected EClass eStaticClass() {
 		return SchemaPackage.Literals.DIAGRAM_LABEL;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getNodeText() {
+		return "Diagram label";
 	}
 
 	/**
@@ -198,6 +219,8 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case SchemaPackage.DIAGRAM_LABEL__NODE_TEXT:
+				return getNodeText();
 			case SchemaPackage.DIAGRAM_LABEL__DESCRIPTION:
 				return getDescription();
 			case SchemaPackage.DIAGRAM_LABEL__DIAGRAM_DATA:
@@ -250,12 +273,46 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case SchemaPackage.DIAGRAM_LABEL__NODE_TEXT:
+				return NODE_TEXT_EDEFAULT == null ? getNodeText() != null : !NODE_TEXT_EDEFAULT.equals(getNodeText());
 			case SchemaPackage.DIAGRAM_LABEL__DESCRIPTION:
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
 			case SchemaPackage.DIAGRAM_LABEL__DIAGRAM_DATA:
 				return getDiagramData() != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == INodeTextProvider.class) {
+			switch (derivedFeatureID) {
+				case SchemaPackage.DIAGRAM_LABEL__NODE_TEXT: return SchemaPackage.INODE_TEXT_PROVIDER__NODE_TEXT;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == INodeTextProvider.class) {
+			switch (baseFeatureID) {
+				case SchemaPackage.INODE_TEXT_PROVIDER__NODE_TEXT: return SchemaPackage.DIAGRAM_LABEL__NODE_TEXT;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**
@@ -272,6 +329,11 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 		result.append(description);
 		result.append(')');
 		return result.toString();
+	}
+
+	@Override
+	public int compareTo(DiagramLabel diagramLabel) {
+		return 0; // there really should be only 1 diagram label in a diagram
 	}
 
 } //DiagramLabelImpl

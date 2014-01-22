@@ -39,6 +39,7 @@ import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Guide;
+import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.IndexElement;
 import org.lh.dmlj.schema.IndexedSetModeSpecification;
 import org.lh.dmlj.schema.Key;
@@ -254,6 +255,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	private EClass indexElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass iNodeTextProviderEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2011,6 +2019,24 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getINodeTextProvider() {
+		return iNodeTextProviderEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getINodeTextProvider_NodeText() {
+		return (EAttribute)iNodeTextProviderEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getIndexedSetModeSpecification_KeyCount() {
 		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(1);
 	}
@@ -2446,6 +2472,9 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(indexElementEClass, INDEX_ELEMENT__NAME);
 		createEReference(indexElementEClass, INDEX_ELEMENT__OCCURS_SPECIFICATION);
 
+		iNodeTextProviderEClass = createEClass(INODE_TEXT_PROVIDER);
+		createEAttribute(iNodeTextProviderEClass, INODE_TEXT_PROVIDER__NODE_TEXT);
+
 		keyEClass = createEClass(KEY);
 		createEAttribute(keyEClass, KEY__CALC_KEY);
 		createEAttribute(keyEClass, KEY__COMPRESSED);
@@ -2625,6 +2654,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		setNsURI(eNS_URI);
 
 		// Create type parameters
+		addETypeParameter(iNodeTextProviderEClass, "T");
 
 		// Set bounds for type parameters
 
@@ -2632,12 +2662,34 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		areaProcedureCallSpecificationEClass.getESuperTypes().add(this.getProcedureCallSpecification());
 		connectionLabelEClass.getESuperTypes().add(this.getDiagramNode());
 		connectorEClass.getESuperTypes().add(this.getDiagramNode());
-		diagramLabelEClass.getESuperTypes().add(this.getResizableDiagramNode());
+		EGenericType g1 = createEGenericType(this.getResizableDiagramNode());
+		diagramLabelEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getINodeTextProvider());
+		EGenericType g2 = createEGenericType(this.getDiagramLabel());
+		g1.getETypeArguments().add(g2);
+		diagramLabelEClass.getEGenericSuperTypes().add(g1);
 		memberRoleEClass.getESuperTypes().add(this.getRole());
 		ownerRoleEClass.getESuperTypes().add(this.getRole());
 		recordProcedureCallSpecificationEClass.getESuperTypes().add(this.getProcedureCallSpecification());
 		resizableDiagramNodeEClass.getESuperTypes().add(this.getDiagramNode());
-		schemaRecordEClass.getESuperTypes().add(this.getDiagramNode());
+		g1 = createEGenericType(this.getINodeTextProvider());
+		g2 = createEGenericType(this.getSchema());
+		g1.getETypeArguments().add(g2);
+		schemaEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getINodeTextProvider());
+		g2 = createEGenericType(this.getSchemaArea());
+		g1.getETypeArguments().add(g2);
+		schemaAreaEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getDiagramNode());
+		schemaRecordEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getINodeTextProvider());
+		g2 = createEGenericType(this.getSchemaRecord());
+		g1.getETypeArguments().add(g2);
+		schemaRecordEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getINodeTextProvider());
+		g2 = createEGenericType(this.getSet());
+		g1.getETypeArguments().add(g2);
+		setEClass.getEGenericSuperTypes().add(g1);
 		systemOwnerEClass.getESuperTypes().add(this.getDiagramNode());
 
 		// Initialize classes and features; add operations and parameters
@@ -2729,6 +2781,9 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getIndexElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, IndexElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIndexElement_OccursSpecification(), this.getOccursSpecification(), this.getOccursSpecification_IndexElements(), "occursSpecification", null, 1, 1, IndexElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(iNodeTextProviderEClass, INodeTextProvider.class, "INodeTextProvider", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getINodeTextProvider_NodeText(), ecorePackage.getEString(), "nodeText", null, 1, 1, INodeTextProvider.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+
 		initEClass(keyEClass, Key.class, "Key", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getKey_CalcKey(), ecorePackage.getEBoolean(), "calcKey", null, 0, 1, Key.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getKey_Compressed(), ecorePackage.getEBoolean(), "compressed", null, 0, 1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2782,8 +2837,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getProcedure_Schema(), this.getSchema(), this.getSchema_Procedures(), "schema", null, 0, 1, Procedure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = addEOperation(procedureEClass, null, "getCallSpecifications", 0, 1, IS_UNIQUE, IS_ORDERED);
-		EGenericType g1 = createEGenericType(ecorePackage.getEEList());
-		EGenericType g2 = createEGenericType(this.getProcedureCallSpecification());
+		g1 = createEGenericType(ecorePackage.getEEList());
+		g2 = createEGenericType(this.getProcedureCallSpecification());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 

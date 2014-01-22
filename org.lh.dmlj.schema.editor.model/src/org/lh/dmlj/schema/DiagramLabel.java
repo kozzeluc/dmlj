@@ -34,7 +34,7 @@ package org.lh.dmlj.schema;
  * @model
  * @generated
  */
-public interface DiagramLabel extends ResizableDiagramNode {
+public interface DiagramLabel extends ResizableDiagramNode, INodeTextProvider<DiagramLabel> {
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->

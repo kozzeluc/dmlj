@@ -17,12 +17,10 @@
 package org.lh.dmlj.schema;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Area</b></em>'.
- * @extends Comparable<SchemaArea>
  * <!-- end-user-doc -->
  *
  * <p>
@@ -41,7 +39,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface SchemaArea extends EObject, Comparable<SchemaArea> {
+public interface SchemaArea extends INodeTextProvider<SchemaArea> {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

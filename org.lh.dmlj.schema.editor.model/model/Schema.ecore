@@ -84,10 +84,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="zoomLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
         defaultValueLiteral="1.0d"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramLabel" eSuperTypes="#//ResizableDiagramNode">
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramLabel">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diagramData" lowerBound="1"
         eType="#//DiagramData" eOpposite="#//DiagramData/label"/>
+    <eGenericSuperTypes eClassifier="#//ResizableDiagramNode"/>
+    <eGenericSuperTypes eClassifier="#//INodeTextProvider">
+      <eTypeArguments eClassifier="#//DiagramLabel"/>
+    </eGenericSuperTypes>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramLocation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="eyecatcher" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -148,6 +152,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="occursSpecification" lowerBound="1"
         eType="#//OccursSpecification" eOpposite="#//OccursSpecification/indexElements"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="INodeTextProvider" abstract="true" interface="true">
+    <eTypeParameters name="T"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nodeText" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"
+        volatile="true" transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Key">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="calcKey" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
@@ -311,6 +321,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="sets" upperBound="-1" eType="#//Set"
         containment="true" eOpposite="#//Set/schema"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
+    <eGenericSuperTypes eClassifier="#//INodeTextProvider">
+      <eTypeArguments eClassifier="#//Schema"/>
+    </eGenericSuperTypes>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SchemaArea">
     <eOperations name="getRecord" eType="#//SchemaRecord">
@@ -332,8 +345,11 @@
         derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="schema" lowerBound="1"
         eType="#//Schema" eOpposite="#//Schema/areas"/>
+    <eGenericSuperTypes eClassifier="#//INodeTextProvider">
+      <eTypeArguments eClassifier="#//SchemaArea"/>
+    </eGenericSuperTypes>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SchemaRecord" eSuperTypes="#//DiagramNode">
+  <eClassifiers xsi:type="ecore:EClass" name="SchemaRecord">
     <eOperations name="getElement" eType="#//Element">
       <eParameters name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eOperations>
@@ -384,6 +400,10 @@
         defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="viaSpecification" eType="#//ViaSpecification"
         containment="true" eOpposite="#//ViaSpecification/record"/>
+    <eGenericSuperTypes eClassifier="#//DiagramNode"/>
+    <eGenericSuperTypes eClassifier="#//INodeTextProvider">
+      <eTypeArguments eClassifier="#//SchemaRecord"/>
+    </eGenericSuperTypes>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Set">
     <eStructuralFeatures xsi:type="ecore:EReference" name="indexedSetModeSpecification"
@@ -401,6 +421,9 @@
         containment="true" eOpposite="#//SystemOwner/set"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="viaMembers" upperBound="-1"
         eType="#//ViaSpecification" eOpposite="#//ViaSpecification/set"/>
+    <eGenericSuperTypes eClassifier="#//INodeTextProvider">
+      <eTypeArguments eClassifier="#//Set"/>
+    </eGenericSuperTypes>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="SetMembershipOption">
     <eLiterals name="MANDATORY_AUTOMATIC"/>

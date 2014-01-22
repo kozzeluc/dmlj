@@ -1151,6 +1151,22 @@
     <element xmi:type="ecore:EClass" href="Schema.ecore#//ProcedureCallSpecification"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_QeNJUl8lEeOA3YQHF5jSWg" x="106" y="773"/>
   </children>
+  <children xmi:type="notation:Node" xmi:id="_9DlH0INvEeO3Q62aBSW7Vg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_9Dr1gINvEeO3Q62aBSW7Vg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_9Dr1gYNvEeO3Q62aBSW7Vg" visible="false" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_9Dr1goNvEeO3Q62aBSW7Vg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_9Dr1g4NvEeO3Q62aBSW7Vg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_9Dr1hINvEeO3Q62aBSW7Vg"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_9DsckINvEeO3Q62aBSW7Vg" visible="false" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_9DsckYNvEeO3Q62aBSW7Vg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_9DsckoNvEeO3Q62aBSW7Vg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_9Dsck4NvEeO3Q62aBSW7Vg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_9DlH0YNvEeO3Q62aBSW7Vg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="Schema.ecore#//INodeTextProvider"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_9DlH0oNvEeO3Q62aBSW7Vg" x="703" y="32"/>
+  </children>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_bkHoomhJEeGYNNH4YLenhA">
     <horizontalGuides xmi:type="notation:Guide" xmi:id="_ApzP4GhMEeGYNNH4YLenhA" position="151"/>
     <horizontalGuides xmi:type="notation:Guide" xmi:id="_y0kI8GhMEeGYNNH4YLenhA" position="379">
