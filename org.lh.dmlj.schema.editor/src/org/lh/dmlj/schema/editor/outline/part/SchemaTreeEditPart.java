@@ -20,23 +20,157 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.gef.EditPart;
+import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
-
-	public SchemaTreeEditPart(Schema schema, CommandStack commandStack) {
-		super(schema, commandStack);
+	
+	public SchemaTreeEditPart(Schema schema, 
+							  IModelChangeProvider modelChangeProvider) {
+		
+		super(schema, modelChangeProvider);
 	}
 
 	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+		
+		if (owner == getModel().getDiagramData() && 
+			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
+			
+			// a DIAGRAM LABEL was added; avoid just refreshing the children since this may be 
+			// costly; create the edit part and add it as a child
+			EditPart child = SchemaTreeEditPartFactory.createEditPart(item, modelChangeProvider);
+			addChild(child, 0);		// the diagram label is always the first child			
+		
+		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Areas()) {			
+			
+			// an AREA was added; avoid just refreshing the children since this may be costly; 			
+			// first, create an edit part for the area and add it as a child
+			SchemaArea area = (SchemaArea) item;
+			int i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());
+			EditPart child = SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
+			addChild(child, i);
+			
+		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
+			
+			// a RECORD was added; avoid just refreshing the children since this may be costly;  			
+			// first, create an edit part for the record and add it as a child
+			SchemaRecord record = (SchemaRecord) item;
+			int i = getInsertionIndex(getChildren(), record, getChildNodeTextProviderOrder());
+			EditPart child = SchemaTreeEditPartFactory.createEditPart(record, modelChangeProvider);
+			addChild(child, i);
+			
+			// second, when a record is added, an AREA is also created and added; create an edit  
+			// part for the record's area and add it as a child as well - THIS MAY CHANGE IN THE 
+			// FUTURE
+			SchemaArea area = record.getAreaSpecification().getArea();
+			i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());
+			EditPart child2 = SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
+			addChild(child2, i);			
+		
+		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
+			
+			// a SET was added; avoid just refreshing the children since this may be costly; first,
+			// create the appropriate edit part for the set and add it as a child
+			Set set = (Set) item;
+			EObject model;
+			if (set.getSystemOwner() == null) {
+				// USER OWNER
+				model = set.getMembers().get(0).getConnectionParts().get(0);
+			} else {
+				// SYSTEM OWNER
+				model = set.getSystemOwner();
+			}
+			int i = getInsertionIndex(getChildren(), set, getChildNodeTextProviderOrder());
+			EditPart child = SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);			
+			addChild(child, i); 	
+			
+			// second, when a system owned indexed set is added, an area is also created and added;  
+			// create an edit part for the index AREA and add it as a child as well - THIS MAY 
+			// CHANGE IN THE FUTURE
+			if (set.getSystemOwner() != null) {				
+				SchemaArea area = set.getSystemOwner().getAreaSpecification().getArea();
+				i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());				
+				EditPart child2 = 
+					SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
+				addChild(child2, i); 
+			}
+		
+		}
+		
+	}
+	
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
+		if (owner == getModel().getDiagramData() && 
+			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
+			
+			// the diagram label was removed; avoid just refreshing the children since this may be 
+			// costly; find the edit part and remove it as a child
+			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
+			removeChild(child);
+		
+		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Areas()) {
+			
+			// an area was removed; avoid just refreshing the children since this may be costly; 
+			// find the edit part and remove it as a child
+			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
+			removeChild(child);
+			
+		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
+			
+			// a record was removed; avoid just refreshing the children since this may be costly; 
+			// find the edit part and remove it as a child
+			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
+			removeChild(child);
+			
+			// remove the record's area when it no longer exists
+			removeObsoleteChildren();
+			
+		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
+			
+			// a set was removed; avoid just refreshing the children since this may be costly; 
+			// find the edit part and remove it as a child
+			Set set = (Set) item;
+			EObject model;
+			if (set.getSystemOwner() == null) {
+				// USER OWNER
+				model = set.getMembers().get(0).getConnectionParts().get(0);
+			} else {
+				// SYSTEM OWNER
+				model = set.getSystemOwner();
+			}
+			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(model);
+			removeChild(child);
+			
+			// in the case of a system owned indexed set: remove the ystem owner's area when it no 
+			// longer exists
+			if (set.getSystemOwner() != null) {
+				removeObsoleteChildren();
+			}
+			
+		}
+	}	
+	
+	@Override
+	protected Class<?>[] getChildNodeTextProviderOrder() {
+		return new Class<?>[] {DiagramLabel.class, SchemaArea.class, SchemaRecord.class, Set.class};	
+	}	
+	
+	@Override
 	protected String getImagePath() {
 		return "icons/schema.gif";
-	}
-
+	}	
+	
 	@Override
 	protected List<?> getModelChildren() {
 		
@@ -77,8 +211,27 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 	}
 
 	@Override
-	protected String getNodeText() {
-		return getModel().getName() + " version " + getModel().getVersion();
+	protected INodeTextProvider<Schema> getNodeTextProvider() {
+		return getModel();
 	}
 
+	private void removeObsoleteChildren() {
+		
+		// remove child edit parts that refer to areas that no longer exist in the schema
+		List<EditPart> toRemove = new ArrayList<>();
+		for (Object child : getChildren()) {
+			Object model = ((EditPart) child).getModel();
+			if (model instanceof SchemaArea) {
+				SchemaArea area = (SchemaArea) model;
+				if (area.getSchema() == null) {
+					toRemove.add((EditPart) child);
+				}
+			}
+		}
+		for (EditPart editPart : toRemove) {
+			removeChild(editPart);
+		}
+		
+	}
+	
 }

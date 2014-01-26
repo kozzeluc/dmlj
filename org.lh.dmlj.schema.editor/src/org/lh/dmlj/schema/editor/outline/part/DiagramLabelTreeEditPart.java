@@ -17,14 +17,17 @@
 package org.lh.dmlj.schema.editor.outline.part;
 
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.commands.CommandStack;
 import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.INodeTextProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.policy.DiagramLabelComponentEditPolicy;
 
 public class DiagramLabelTreeEditPart extends AbstractSchemaTreeEditPart<DiagramLabel> {
 
-	public DiagramLabelTreeEditPart(DiagramLabel diagramLabel, CommandStack commandStack) {
-		super(diagramLabel, commandStack);
+	public DiagramLabelTreeEditPart(DiagramLabel diagramLabel, 
+									IModelChangeProvider modelChangeProvider) {
+		
+		super(diagramLabel, modelChangeProvider);
 	}
 	
 	@Override
@@ -41,8 +44,8 @@ public class DiagramLabelTreeEditPart extends AbstractSchemaTreeEditPart<Diagram
 	}
 
 	@Override
-	protected String getNodeText() {
-		return "Diagram label";
-	}
+	protected INodeTextProvider<DiagramLabel> getNodeTextProvider() {
+		return getModel();
+	}	
 
 }

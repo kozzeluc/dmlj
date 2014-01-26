@@ -20,18 +20,85 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
 import org.lh.dmlj.schema.AreaSpecification;
+import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.SchemaArea;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
-
-	public AreaTreeEditPart(SchemaArea area, CommandStack commandStack) {
-		super(area, commandStack);
+	
+	public AreaTreeEditPart(SchemaArea area, IModelChangeProvider modelChangeProvider) {		
+		super(area, modelChangeProvider);
 	}
 
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  EObject newOwner) {
+		
+		if (oldOwner instanceof SchemaArea &&
+			reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications()) {
+			
+			// a record or system owner was moved to another area...
+			AreaSpecification areaSpecification = (AreaSpecification) item;
+			if (oldOwner == getModel()) {
+				// ...and the source area matches this edit part's area; a record or system owner 
+				// has been moved away from this area, cleanup the corresponding child edit part
+				Object model;
+				if (areaSpecification.getRecord() != null) {
+					model = areaSpecification.getRecord();
+				} else {
+					model = areaSpecification.getSystemOwner();
+				}
+				// we cannot use the edit part registry to find the child because we're not at the
+				// top (schema) level
+				EditPart child = childFor(model); 
+				removeChild(child);													
+			} else if (newOwner == getModel()) {
+				// ...and the target area matches this edit part's area; a record or system owner 
+				// has been moved towards this area, create and insert the appropriate child edit  
+				// part at the right position
+				Object model;
+				INodeTextProvider<?> nodeTextProvider;
+				if (areaSpecification.getRecord() != null) {
+					model = areaSpecification.getRecord();
+					nodeTextProvider = (INodeTextProvider<?>) model;
+				} else {
+					model = areaSpecification.getSystemOwner();
+					nodeTextProvider = ((SystemOwner) model).getSet();
+				}
+				int i = getInsertionIndex(getChildren(), nodeTextProvider, getChildNodeTextProviderOrder());
+				EditPart child = 
+					SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);
+				addChild(child, i);
+			}
+		}		
+		
+	}
+
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		if (owner == getNodeTextProvider() && 
+			isFeatureSet(features, SchemaPackage.eINSTANCE.getSchemaArea_Name())) {
+			
+			// the area name has changed... the order of the parent edit part might become 
+			// disrupted, so we have to inform that edit part of this fact
+			nodeTextChanged();						
+		}
+	}
+
+	@Override
+	protected Class<?>[] getChildNodeTextProviderOrder() {
+		return new Class<?>[] {SchemaRecord.class, Set.class};
+	}
+	
 	@Override
 	protected String getImagePath() {
 		return "icons/data_source.gif";
@@ -66,8 +133,8 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 	}
 
 	@Override
-	protected String getNodeText() {
-		return getModel().getName();
-	}
+	protected INodeTextProvider<SchemaArea> getNodeTextProvider() {
+		return getModel();
+	}	
 
 }

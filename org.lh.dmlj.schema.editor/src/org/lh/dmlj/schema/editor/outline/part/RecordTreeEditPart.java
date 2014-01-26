@@ -21,22 +21,143 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.common.Tools;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord> {
 
-	public RecordTreeEditPart(SchemaRecord record, CommandStack commandStack) {
-		super(record, commandStack);
+	public RecordTreeEditPart(SchemaRecord record, IModelChangeProvider modelChangeProvider) {
+		super(record, modelChangeProvider);
 	}
 	
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+		
+		EObject parentModelObject = getParentModelObject();		
+		if (parentModelObject instanceof Schema && owner == getModel().getSchema() && 
+			reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {
+			
+			// a set was added; if the model record is the owner or member of that set, we need to
+			// add a child for the new set but only if the record is at the top level
+			Set set = (Set) item;
+			boolean addChild = false;
+			if (set.getOwner() == getModel()) {
+				// the model record is the owner of the new set
+				addChild = true;
+			} else {
+				// traverse all set members and see if the model record is one of them
+				for (MemberRole memberRole : set.getMembers()) {
+					if (memberRole.getRecord() == getModel()) {
+						addChild = true;
+						break;
+					}					
+				}
+			}
+			if (addChild) {
+				
+				// create an edit part for the new set; the model object passed to the edit part
+				// factory is always the first connection part for the first member in the case of
+				// a user owned set, and the system owner in the case of a system owned indexed set
+				EObject model = set.getSystemOwner() != null ? set.getSystemOwner() :
+								set.getMembers().get(0).getConnectionParts().get(0);
+				EditPart child = 
+					SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);
+				
+				// calculate the insertion index
+				int index = getInsertionIndex(getChildren(), set, getChildNodeTextProviderOrder());
+				
+				// add the child at the appropriate position
+				addChild(child, index);
+				
+			}
+			
+		}
+		
+	}
+	
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
+		
+		EObject parentModelObject = getParentModelObject();		
+		if (parentModelObject instanceof Schema && owner == getModel().getSchema() && 
+			reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {
+			
+			// a set was removed; if the model record is the owner or member of that set, we need to
+			// remove the child edit part belonging to the removed set; we cannot use the item but
+			// will need to traverse the child edit parts for this matter - we only need to do this
+			// when we're at the top level
+			String setName = ((Set) item).getName();
+			
+			// traverse the child edit parts and see if the removed set is one of them; if so,
+			// remove the child edit part for the set - mind that removing a set in the DDLCATLOD
+			// area will fail, but it is unlikely that anyone would like to delete a set there
+			for (Object child : getChildren()) {
+				AbstractSchemaTreeEditPart<?> cChild = (AbstractSchemaTreeEditPart<?>) child;
+				if (cChild.getModel() instanceof ConnectionPart) {
+					// user owned set
+					ConnectionPart model = (ConnectionPart) cChild.getModel();
+					if (model.getMemberRole().getSet().getName().equals(setName)) {
+						removeChild(cChild);
+						break;
+					}
+				} else if (cChild.getModel() instanceof SystemOwner) {
+					// system owned set
+					SystemOwner model = (SystemOwner) cChild.getModel();
+					if (model.getSet().getName().equals(setName)) {
+						removeChild(cChild);
+						break;
+					}
+				}
+			}
+			
+		}
+		
+	}
+	
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		if (owner == getNodeTextProvider() && 
+			isFeatureSet(features, SchemaPackage.eINSTANCE.getSchemaRecord_Name())) {
+			
+			// the record name has changed... the order of the parent edit part might become 
+			// disrupted, so we have to inform that edit part of this fact
+			nodeTextChanged();						
+		}
+	}
+	
+	@Override
+	protected Class<?>[] getChildNodeTextProviderOrder() {
+		return new Class<?>[] {Set.class};
+	}
+	
+	@Override
+	protected String getImagePath() {
+		EObject parentModelObject = getParentModelObject();
+		if (parentModelObject instanceof ConnectionPart) {
+			Set set = ((ConnectionPart) parentModelObject).getMemberRole().getSet();
+			if (set.getOwner() != null && set.getOwner().getRecord() == getModel()) {
+				return "icons/owner_record.gif";
+			} else {
+				return "icons/member_record.gif";
+			}
+		} else if (parentModelObject instanceof SystemOwner) {
+			return "icons/member_record.gif";
+		} else {
+			return "icons/record.gif";
+		}
+	}
+
 	@Override
 	protected List<?> getModelChildren() {
 		
@@ -83,27 +204,10 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 	}
 
 	@Override
-	protected String getImagePath() {
-		EObject parentModelObject = getParentModelObject();
-		if (parentModelObject instanceof ConnectionPart) {
-			Set set = ((ConnectionPart) parentModelObject).getMemberRole().getSet();
-			if (set.getOwner() != null && set.getOwner().getRecord() == getModel()) {
-				return "icons/owner_record.gif";
-			} else {
-				return "icons/member_record.gif";
-			}
-		} else if (parentModelObject instanceof SystemOwner) {
-			return "icons/member_record.gif";
-		} else {
-			return "icons/record.gif";
-		}
+	protected INodeTextProvider<SchemaRecord> getNodeTextProvider() {
+		return getModel();
 	}
 
-	@Override
-	protected String getNodeText() {
-		return Tools.removeTrailingUnderscore(getModel().getName());
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void registerModel() {

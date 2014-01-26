@@ -20,17 +20,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class IndexTreeEditPart extends AbstractSchemaTreeEditPart<SystemOwner> {
 
-	public IndexTreeEditPart(SystemOwner systemOwner, CommandStack commandStack) {
-		super(systemOwner, commandStack);
+	public IndexTreeEditPart(SystemOwner systemOwner, IModelChangeProvider modelChangeProvider) {
+		super(systemOwner, modelChangeProvider);
 	}
-
+	
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		if (owner == getNodeTextProvider() && 
+			isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Name())) {
+			
+			// the set name has changed... the order of the parent edit part might become disrupted, 
+			// so we have to inform that edit part of this fact
+			nodeTextChanged();						
+		}
+	}	
+	
+	@Override
+	protected Class<?>[] getChildNodeTextProviderOrder() {
+		return new Class<?>[] {SchemaRecord.class};
+	}
+	
 	@Override
 	protected String getImagePath() {
 		if (getParentModelObject() instanceof SchemaRecord) {
@@ -54,10 +74,10 @@ public class IndexTreeEditPart extends AbstractSchemaTreeEditPart<SystemOwner> {
 	}
 
 	@Override
-	protected String getNodeText() {
-		return getModel().getSet().getName();
+	protected INodeTextProvider<Set> getNodeTextProvider() {
+		return getModel().getSet();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void registerModel() {

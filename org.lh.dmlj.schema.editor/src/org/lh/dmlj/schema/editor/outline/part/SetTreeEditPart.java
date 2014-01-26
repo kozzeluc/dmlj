@@ -21,43 +21,42 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
-import org.lh.dmlj.schema.editor.common.Tools;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> {
 
-	protected SetTreeEditPart(ConnectionPart connectionPart, CommandStack commandStack) {
-		super(connectionPart, commandStack);
+	protected SetTreeEditPart(ConnectionPart connectionPart, 
+							  IModelChangeProvider modelChangeProvider) {
+		
+		super(connectionPart, modelChangeProvider);
 	}
 	
 	@Override
-	public List<?> getModelChildren() {
-		
-		List<SchemaRecord> children = new ArrayList<>();
-		
-		// add the owner record
-		children.add(getModel().getMemberRole().getSet().getOwner().getRecord());
-		
-		// add the member
-		List<SchemaRecord> memberRecords = new ArrayList<>();
-		for (MemberRole memberRole : getModel().getMemberRole().getSet().getMembers()) {
-			memberRecords.add(memberRole.getRecord());
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		if (owner == getNodeTextProvider() && 
+			isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Name())) {
+			
+			// the set name has changed... the order of the parent edit part might become disrupted, 
+			// so we have to inform that edit part of this fact
+			nodeTextChanged();						
 		}
-		children.addAll(memberRecords);
-		
-		// sort the list of children
-		Collections.sort(children);
-		
-		return children;
-		
+	}	
+	
+	@Override
+	protected Class<?>[] getChildNodeTextProviderOrder() {
+		return new Class<?>[] {SchemaRecord.class};
 	}
-
+	
 	@Override
 	protected String getImagePath() {
 		String setName = getModel().getMemberRole().getSet().getName();
@@ -113,10 +112,32 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 	}
 
 	@Override
-	protected String getNodeText() {
-		return Tools.removeTrailingUnderscore(getModel().getMemberRole().getSet().getName());
+	public List<?> getModelChildren() {
+		
+		List<SchemaRecord> children = new ArrayList<>();
+		
+		// add the owner record
+		children.add(getModel().getMemberRole().getSet().getOwner().getRecord());
+		
+		// add the member records
+		List<SchemaRecord> memberRecords = new ArrayList<>();
+		for (MemberRole memberRole : getModel().getMemberRole().getSet().getMembers()) {
+			memberRecords.add(memberRole.getRecord());
+		}
+		children.addAll(memberRecords);
+		
+		// sort the list of children
+		Collections.sort(children);
+		
+		return children;
+		
 	}
-	
+
+	@Override
+	protected INodeTextProvider<Set> getNodeTextProvider() {
+		return getModel().getMemberRole().getSet();
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void registerModel() {
