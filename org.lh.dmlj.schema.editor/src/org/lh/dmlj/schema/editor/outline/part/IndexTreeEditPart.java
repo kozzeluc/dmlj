@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPolicy;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -28,6 +29,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.policy.IndexComponentEditPolicy;
 
 public class IndexTreeEditPart extends AbstractSchemaTreeEditPart<SystemOwner> {
 
@@ -45,6 +47,12 @@ public class IndexTreeEditPart extends AbstractSchemaTreeEditPart<SystemOwner> {
 			nodeTextChanged();						
 		}
 	}	
+	
+	@Override
+	protected void createEditPolicies() {			
+		// the next edit policy allows for the deletion of an index
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new IndexComponentEditPolicy());		
+	}
 	
 	@Override
 	protected Class<?>[] getChildNodeTextProviderOrder() {

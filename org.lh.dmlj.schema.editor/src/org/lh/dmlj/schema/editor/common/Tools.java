@@ -156,7 +156,14 @@ public abstract class Tools {
 
 	public static String getSortKeys(MemberRole memberRole) {
 		
-		if (memberRole.getSet().getOrder() != SetOrder.SORTED) {
+		if (memberRole.getSet().getOrder() != SetOrder.SORTED ||
+			// added the next condition to avoid a NPE when deleting an index (before changing the 
+			// diagram edit parts to the new model change notification mechanism);
+			// TODO remove this condition when the diagram edit parts are modified to use the
+			//      new model change notification system (categorized command stack events) instead 
+			//      of model change events
+			memberRole.getSortKey() == null) { 
+			
 			return null;
 		}
 		

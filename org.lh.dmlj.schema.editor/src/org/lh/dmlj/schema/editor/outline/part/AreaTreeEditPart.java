@@ -38,7 +38,27 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 	public AreaTreeEditPart(SchemaArea area, IModelChangeProvider modelChangeProvider) {		
 		super(area, modelChangeProvider);
 	}
-
+	
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+		if (owner == getModel().getSchema() && 
+			reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {
+			
+			// a set is added; if it is a system owned indexed set, make sure we create a child 
+			// edit part for it if the system owner is stored in the model area
+			Set set = (Set) item;
+			if (set.getSystemOwner() != null) {
+				SchemaArea area = set.getSystemOwner().getAreaSpecification().getArea();
+				if (area == getModel()) {					
+					EditPart child = SchemaTreeEditPartFactory.createEditPart(set.getSystemOwner(), 
+																			  modelChangeProvider);					
+					int index = getInsertionIndex(getChildren(), set, getChildNodeTextProviderOrder());					
+					addChild(child, index);					
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
 							  EObject newOwner) {
@@ -81,6 +101,31 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 			}
 		}		
 		
+	}
+
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
+		if (owner == getModel().getSchema() && 
+			reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {
+			
+			// a set was removed; if the set is system owned and the model area contains the system
+			// owner of that set, we need to remove the child edit part belonging to the removed 
+			// system owner; we can use the item because it still has a reference to the obsolete
+			// system owner
+			Set set = (Set) item;
+			if (set.getSystemOwner() != null) {
+				try {
+					// see if a child edit part exists for the system owner
+					EditPart child = childFor(set.getSystemOwner());
+					// yes: the system owner IS contained in the model area; remove the child edit
+					// part
+					removeChild(child);
+				} catch (IllegalArgumentException e) {
+					// no: the system owner is not contained in the model area
+				}
+			}			
+			
+		}
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.lh.dmlj.schema.ConnectionPart;
@@ -34,6 +35,7 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
+import org.lh.dmlj.schema.editor.policy.IndexComponentEditPolicy;
 
 public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<SystemOwner> {
 
@@ -45,6 +47,12 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 		super(systemOwner);
 	}	
 
+	@Override
+	protected void createEditPolicies() {			
+		// the next edit policy allows for the deletion of an index
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new IndexComponentEditPolicy());		
+	}
+	
 	@Override
 	protected IFigure createFigure() {
 		Figure figure = new IndexFigure();

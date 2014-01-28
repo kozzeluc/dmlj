@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.policy;
 
 import java.util.List;
 
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
@@ -25,7 +26,6 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorsCommand;
 import org.lh.dmlj.schema.editor.command.DeleteIndexCommand;
-import org.lh.dmlj.schema.editor.part.IndexEditPart;
 
 public class IndexComponentEditPolicy extends ComponentEditPolicy {
 
@@ -35,12 +35,13 @@ public class IndexComponentEditPolicy extends ComponentEditPolicy {
 	
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
-		List<?> editParts = deleteRequest.getEditParts(); 
-		if (editParts.size() != 1 || !(editParts.get(0) instanceof IndexEditPart)) {			
+		@SuppressWarnings("unchecked")
+		List<EditPart> editParts = deleteRequest.getEditParts(); 
+		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof SystemOwner)) {						
 			return null;
 		}
 		// get the system owner and the only set member
-		SystemOwner systemOwner = ((IndexEditPart)editParts.get(0)).getModel();
+		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
 		MemberRole memberRole = systemOwner.getSet().getMembers().get(0); 
 		// we might need to delete the connectors first, so create a chained command when needed
 		Command deleteIndexCommand = new DeleteIndexCommand(systemOwner);

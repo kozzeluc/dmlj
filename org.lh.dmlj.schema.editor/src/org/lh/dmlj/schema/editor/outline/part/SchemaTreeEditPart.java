@@ -95,16 +95,60 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			addChild(child, i); 	
 			
 			// second, when a system owned indexed set is added, an area is also created and added;  
-			// create an edit part for the index AREA and add it as a child as well - THIS MAY 
-			// CHANGE IN THE FUTURE
+			// create an edit part for the index AREA and add it as a child as well BUT ONLY WHEN
+			// NEEDED
 			if (set.getSystemOwner() != null) {				
 				SchemaArea area = set.getSystemOwner().getAreaSpecification().getArea();
-				i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());				
-				EditPart child2 = 
-					SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
-				addChild(child2, i); 
+				try {
+					childFor(area);
+					// if we get here, there is already a child edit part for the area
+				} catch (IllegalArgumentException e) {
+					// no child edit partexists for the area; create and add one
+					i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());				
+					EditPart child2 = 
+						SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
+					addChild(child2, i);
+				}				
 			}
 		
+		}
+		
+	}
+	
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  EObject newOwner) {
+		
+		if (reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications()) {
+			// a record or system owner is moved to another area; remove the area edit part 
+			// belonging to the old area if the old area was removed from the schema because it 
+			// became empty...
+			SchemaArea oldArea = (SchemaArea) oldOwner;
+			if (getModel().getArea(oldArea.getName()) == null) {
+				// the old area was removed from the schema
+				EditPart child = childFor(oldArea);
+				removeChild(child);
+			}
+			// ...and/or create a new edit part for the new area if it was created because of the 
+			// move
+			SchemaArea newArea = (SchemaArea) newOwner;
+			boolean createNewEditPart = true;
+			for (Object child : getChildren()) {
+				if (((EditPart)child).getModel() == newArea) {
+					// no need to create an edit part for the new area since it is already there; it
+					// will refresh itself and its children itself
+					createNewEditPart = false;
+					break;
+				}
+			}
+			if (createNewEditPart) {
+				// we need to create a new child edit part because the new area is indeed new
+				EditPart child = 
+					SchemaTreeEditPartFactory.createEditPart(newArea, modelChangeProvider);
+				int index = 
+					getInsertionIndex(getChildren(), newArea, getChildNodeTextProviderOrder());
+				addChild(child, index);
+			}
 		}
 		
 	}
@@ -152,7 +196,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(model);
 			removeChild(child);
 			
-			// in the case of a system owned indexed set: remove the ystem owner's area when it no 
+			// in the case of a system owned indexed set: remove the system owner's area when it no 
 			// longer exists
 			if (set.getSystemOwner() != null) {
 				removeObsoleteChildren();
