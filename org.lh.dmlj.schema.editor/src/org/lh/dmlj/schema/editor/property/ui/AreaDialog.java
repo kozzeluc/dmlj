@@ -318,16 +318,12 @@ public class AreaDialog extends Dialog {
 		
 		textNewArea.addKeyListener(new KeyAdapter() {			
 			@Override
-			public void keyReleased(KeyEvent e) {				
-				if (e.keyCode == 13 || 		 // enter-key
-					e.keyCode == 16777296 || // enter-key								
-					e.keyCode == SWT.ESC) {	
-					
-					String p = textNewArea.getText().toUpperCase();
-					textNewArea.setText(p);
-					textNewArea.setSelection(p.length());
-					enableAndDisable();					
-				}
+			public void keyReleased(KeyEvent e) {								
+				Point selection = textNewArea.getSelection();
+				String p = textNewArea.getText().toUpperCase();
+				textNewArea.setText(p);
+				textNewArea.setSelection(selection);
+				enableAndDisable();				
 			}
 		});
 		
@@ -341,15 +337,11 @@ public class AreaDialog extends Dialog {
 		textRenameArea.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {				
-				if (e.keyCode == 13 || 		 // enter-key
-					e.keyCode == 16777296 || // enter-key								
-					e.keyCode == SWT.ESC) {	
-					
-					String p = textRenameArea.getText().toUpperCase();
-					textRenameArea.setText(p);
-					textRenameArea.setSelection(p.length());
-					enableAndDisable();					
-				}
+				Point selection = textRenameArea.getSelection();
+				String p = textRenameArea.getText().toUpperCase();
+				textRenameArea.setText(p);
+				textRenameArea.setSelection(selection);
+				enableAndDisable();
 			}
 		});
 		
