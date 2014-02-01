@@ -19,9 +19,9 @@ package org.lh.dmlj.schema.editor.ruler;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.rulers.RulerChangeListener;
@@ -33,57 +33,105 @@ import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.CreateGuideCommand;
 import org.lh.dmlj.schema.editor.command.DeleteGuideCommand;
 import org.lh.dmlj.schema.editor.command.MoveGuideCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.preference.Unit;
 
 public class SchemaEditorRulerProvider 
-	extends RulerProvider implements IPropertyChangeListener {
+	extends RulerProvider implements IModelChangeListener, IPropertyChangeListener {
 	
-	private GraphicalViewer graphicalViewer;
-	private GuideListener 	listener;
-	private Ruler 		  	ruler;	
+	private GraphicalViewer 	 graphicalViewer;
+	private IModelChangeProvider modelChangeProvider;
+	private Ruler 		  		 ruler;	
 	
-	public SchemaEditorRulerProvider(Ruler ruler, GraphicalViewer graphicalViewer) {
+	public SchemaEditorRulerProvider(Ruler ruler, SchemaEditor schemaEditor) {
 		super();
 		
 		this.ruler = ruler;
-		this.graphicalViewer = graphicalViewer;
+		this.graphicalViewer = (GraphicalViewer) schemaEditor.getAdapter(GraphicalViewer.class);
 		
-		// we need a listener so that we can notify our own listeners when a
-		// guide is added, removed or moved - this is necessary to show/hide the
-		// guide at the right position in the ruler
-		listener = new GuideListener(this.listeners);
-		
-		// attach the guide listener to the ruler...
-		ruler.eAdapters().add(listener);
-		
-		// ...and to each existing guide
-		for (Guide guide : ruler.getGuides()) {
-			guide.eAdapters().add(listener);
-		}
+		// hookup to the model change provider
+		modelChangeProvider = 
+			(IModelChangeProvider) schemaEditor.getAdapter(IModelChangeProvider.class);
+		modelChangeProvider.addModelChangeListener(this);		
 		
 		// make sure we can track changes in the preferred units 
 		Plugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);		
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {	
+		if (owner == ruler && reference == SchemaPackage.eINSTANCE.getRuler_Guides()) {
+			
+			// a guide was added
+			Guide guide = (Guide) item;
+			
+			// if we directly traverse the list of listeners when adding a guide, we get a 
+			// java.util.ConcurrentModificationException, so traverse a copy of the list of 
+			// listeners and notify each of them of the new or obsolete guide
+			for (Object listener : new ArrayList<>(listeners)) {			
+				RulerChangeListener rulerChangeListener = (RulerChangeListener) listener;
+				rulerChangeListener.notifyGuideReparented(guide);
+			}
+			
+		}
+	}
+
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  EObject newOwner) {				
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
+		if (owner == ruler && reference == SchemaPackage.eINSTANCE.getRuler_Guides()) {
+			
+			// a guide was added
+			Guide guide = (Guide) item;
+			
+			// if we directly traverse the list of listeners when adding a guide, we get a 
+			// java.util.ConcurrentModificationException, so traverse a copy of the list of 
+			// listeners and notify each of them of the new or obsolete guide
+			for (Object listener : new ArrayList<>(listeners)) {			
+				RulerChangeListener rulerChangeListener = (RulerChangeListener) listener;
+				rulerChangeListener.notifyGuideReparented(guide);
+			}
+			
+		}
+	}
+
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {	
+		if (features[0] == SchemaPackage.eINSTANCE.getGuide_Position()) {
+			
+			// a guide was moved
+			Guide guide = (Guide) owner;
+			
+			// traverse the ruler provider listeners and notify them of the moved guide
+			for (Object listener : listeners) {
+				RulerChangeListener rulerChangeListener = (RulerChangeListener) listener;
+				rulerChangeListener.notifyGuideMoved(guide);
+			}
+			
+		}
+	}
+
 	/**
-	 * This method should be called when the ruler provider is no longer needed
-	 * (e.g. when the editor is closed).
+	 * This method should be called when the ruler provider is no longer needed (e.g. when the 
+	 * editor is closed).
 	 */
 	public void dispose() {
 		
-				
-		// detach the guide listener from each existing guide...
-		for (Guide guide : ruler.getGuides()) {
-			guide.eAdapters().remove(listener);
-		}
-		
-		// and from the the ruler...
-		ruler.eAdapters().remove(listener);
+		// remove us as a listener from the model change provider
+		modelChangeProvider.removeModelChangeListener(this);		
 		
 		// remove the preference store listener
 		Plugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
@@ -153,6 +201,7 @@ public class SchemaEditorRulerProvider
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
+		// this method is called when the units are changed in the preferences
 		if (event.getProperty().equals(PreferenceConstants.UNITS)) {						
 			if (ruler.getDiagramData().isShowRulers()) {
 				// repaint the ruler:
@@ -163,78 +212,5 @@ public class SchemaEditorRulerProvider
 			}
 		}
 	}
-
-	class GuideListener implements Adapter {
-
-		private List<?> listeners;
-		
-		GuideListener(List<?> listeners) {
-			super();
-			this.listeners = listeners;
-		}
-		
-		@Override
-		public Notifier getTarget() {			
-			return null;
-		}
-
-		@Override
-		public boolean isAdapterForType(Object type) {			
-			return false;
-		}
-
-		@Override
-		public void notifyChanged(Notification notification) {			
-			
-			int featureID = notification.getFeatureID(Ruler.class);
-			
-			if (featureID == SchemaPackage.RULER__GUIDES &&
-				(notification.getEventType() == Notification.ADD ||
-				 notification.getEventType() == Notification.REMOVE)) {
-				
-				// guide added or removed; get the guide
-				final Guide guide;
-				if (notification.getEventType() == Notification.ADD) {
-					// guide added; add this listener					
-					guide = (Guide) notification.getNewValue();					
-					guide.eAdapters().add(this);																					
-				} else {
-					// guide removed; remove this listener					
-					guide = (Guide) notification.getOldValue();
-					guide.eAdapters().remove(this);
-				}
-				
-				// if we directly traverse the list of listeners when adding a
-				// guide, we get a java.util.ConcurrentModificationException, so 
-				// traverse a copy of the list of listeners and notify each of
-				// them of the new or obsolete guide
-				for (Object listener : new ArrayList<>(listeners)) {			
-					RulerChangeListener rulerChangeListener = 
-						(RulerChangeListener) listener;
-					rulerChangeListener.notifyGuideReparented(guide);
-				}
-				
-			} else if (featureID == SchemaPackage.GUIDE__POSITION &&
-					   notification.getEventType() == Notification.SET) {
-				
-				// guide moved; get the guide
-				Guide guide = (Guide) notification.getNotifier();
-				
-				// traverse the ruler provider listeners and notify them of the
-				// moved guide
-				for (Object listener : listeners) {
-					RulerChangeListener rulerChangeListener = 
-						(RulerChangeListener) listener;
-					rulerChangeListener.notifyGuideMoved(guide);
-				}
-			}
-			
-		}
-
-		@Override
-		public void setTarget(Notifier newTarget) {			
-		}
-		
-	}	
 	
 }

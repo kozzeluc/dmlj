@@ -325,13 +325,13 @@ public class SchemaEditor
 		
 	    // left (vertical) ruler properties				
 	    verticalRulerProvider = 
-	        new SchemaEditorRulerProvider(schema.getDiagramData().getVerticalRuler(), viewer);
+	        new SchemaEditorRulerProvider(schema.getDiagramData().getVerticalRuler(), this);
 	    getGraphicalViewer().setProperty(RulerProvider.PROPERTY_VERTICAL_RULER,
 	  				     				 verticalRulerProvider);		
 	    
 	    // top (horizontal) ruler properties
 	    horizontalRulerProvider = 
-	        new SchemaEditorRulerProvider(schema.getDiagramData().getHorizontalRuler(), viewer);		
+	        new SchemaEditorRulerProvider(schema.getDiagramData().getHorizontalRuler(), this);		
 	    getGraphicalViewer().setProperty(RulerProvider.PROPERTY_HORIZONTAL_RULER, 
 					     				 horizontalRulerProvider);
 	    
@@ -620,6 +620,8 @@ public class SchemaEditor
 			// implementing the IModelChangeListener is the preferred way to catch up with model 
 			// changes
 			return getCommandStack();
+		} else if (type == GraphicalViewer.class) {
+			return getGraphicalViewer();
 		} else if (type == IModelChangeProvider.class) {
 			return modelChangeDispatcher;
 		} else if (type == ActionRegistry.class) {
