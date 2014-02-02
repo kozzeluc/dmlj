@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,11 +38,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -118,6 +118,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
@@ -135,6 +136,8 @@ public class SchemaEditor
 		SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
 	private static final EAttribute ATTRIBUTE_SHOW_RULERS = 
 		SchemaPackage.eINSTANCE.getDiagramData_ShowRulers();
+	private static final EAttribute ATTRIBUTE_ZOOM_LEVEL =
+		SchemaPackage.eINSTANCE.getDiagramData_ZoomLevel();
 	
 	// This class listens to changes to the file system in the workspace, and
 	// makes changes accordingly.
@@ -255,7 +258,7 @@ public class SchemaEditor
 	private boolean 					editorSaving = false;
 	private SchemaEditorRulerProvider   horizontalRulerProvider;
 	private ModelChangeDispatcher 		modelChangeDispatcher = new ModelChangeDispatcher();
-	private Adapter						modelChangeListener;
+	private IModelChangeListener		modelChangeListener;
 	private OutlinePage 				outlinePage;
 	private ResourceTracker 			resourceListener = new ResourceTracker();	
 	private RulerComposite				rulerComp;	
@@ -398,74 +401,70 @@ public class SchemaEditor
 		/*getGraphicalViewer().setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
 										 MouseWheelZoomHandler.SINGLETON);*/		
 		
-		// add a listener to the command stack to 
-		// - change the zoom manager's zoom level when the user performs an undo 
-		//   or redo of a set zoom level command
-		//   [it works better this way than via the model change listener hereafter
-		//    since we only need to cover the zoom command's undo and redo and we
-		//    do get some strange effects if we work with the model change listener
-		//    --> WHY IS THE MODEL CHANGE LISTENER STILL HERE THEN ?]
-		// - if the command involved is annotated with a @ModelChange annotation, dispatch the  
-		//   command stack event to the command stack event dispatcher to inform all of its   
-		//   listeners of a model change 'event' - a command annotated with @ModelChange should  
-		//   always leave the model in a consistent state after its execute(), redo() or undo() 
-		//   method has been called (like any other command actually; the annotation is merely used 
-		//   to extract the kind (category) of model change
+		// add a listener to the command stack to have the model change dispatcher dispatch the  
+		// command stack event to inform all of its listeners of a model change 'event' - a command 
+		// annotated with @ModelChange should always leave the model in a consistent state after its 
+		// execute(), redo() or undo() method has been called (like any other command actually; the 
+		// annotation is merely used to extract the kind [category] of model change)
 		getCommandStack().addCommandStackEventListener(new CommandStackEventListener() {
 			@Override
-			public void stackChanged(CommandStackEvent event) {				
-				
-				// we should probably get rid of the next if statement and the manager.setZoom()
-				// call:
-				if (event.isPostChangeEvent() && 
-					event.getCommand() instanceof SetZoomLevelCommand &&
-					(event.getDetail() == CommandStack.POST_UNDO ||
-					 event.getDetail() == CommandStack.POST_REDO) &&
-					manager != null) {
-					
-					manager.setZoom(schema.getDiagramData().getZoomLevel());				
-				}
-				
+			public void stackChanged(CommandStackEvent event) {												
 				// dispatch the command stack event to our dispatcher:				
-				modelChangeDispatcher.dispatch(event);
-				
+				modelChangeDispatcher.dispatch(event);				
 			}
 		});
 		
-		// attach a model change listener to respond to changes to the zoom
-		// level, rulers&guides and grid visibility
-		// TODO change the way we react to these model changes by switching to the 
-		// modelChangeDispatcher's capabilities (i.e. register ourselves as an IModelChangeListener)
-		modelChangeListener = new Adapter() {
+		// attach a model change listener to respond to changes to rulers&guides, grid visibility 
+		// and zoom level
+		modelChangeListener = new IModelChangeListener() {
+						
 			@Override
-			public Notifier getTarget() {
-				return null;
+			public void afterAddItem(EObject owner, EReference reference, Object item) {								
 			}
+
 			@Override
-			public boolean isAdapterForType(Object type) {
-				return false;
+			public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+									  EObject newOwner) {								
 			}
+
 			@Override
-			public void notifyChanged(Notification notification) {
-				if (notification.getEventType() == Notification.SET &&
-					notification.getFeature() == ATTRIBUTE_SHOW_RULERS) {
+			public void afterRemoveItem(EObject owner, EReference reference, Object item) {								
+			}
+
+			@Override
+			public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+				if (owner == schema.getDiagramData() && 
+					features.length == 1 && features[0] == ATTRIBUTE_SHOW_RULERS) {
 					
-					boolean showRulers = notification.getNewBooleanValue();
+					// the rulers are to be shown or hidden
+					boolean showRulers = schema.getDiagramData().isShowRulers();
 					getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
 													 Boolean.valueOf(showRulers));
-				} else if (notification.getEventType() == Notification.SET &&
-						   notification.getFeature() == ATTRIBUTE_SHOW_GRID) {
+				} else if (owner == schema.getDiagramData() && 
+						   features.length == 1 && features[0] == ATTRIBUTE_SHOW_GRID) {
 					
-					boolean showGrid = notification.getNewBooleanValue();					
+					// the grid has to be shown or hidden
+					boolean showGrid = schema.getDiagramData().isShowGrid();					
 					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
 													 Boolean.valueOf(showGrid));
-				}
+				} else if (owner == schema.getDiagramData() && 
+						   features.length == 1 && features[0] == ATTRIBUTE_ZOOM_LEVEL) {
+					
+					// the zoom level has changed; it is important to set the manager's zoom level
+					// only when it's different from the current model value (to avoid assertion
+					// errors regarding the 'dispatching' indicator in the model change dispatcher,
+					// meaning we've put a command on the command stack while dispatching a command
+					// stack event)
+					if (manager != null && 
+						schema.getDiagramData().getZoomLevel() != manager.getZoom()) {
+						
+						manager.setZoom(schema.getDiagramData().getZoomLevel());
+					}
+				}				
 			}
-			@Override
-			public void setTarget(Notifier newTarget) {				
-			}
+			
 		};
-		schema.getDiagramData().eAdapters().add(modelChangeListener);
+		modelChangeDispatcher.addModelChangeListener(modelChangeListener);
 		
 	}
 	
@@ -530,7 +529,7 @@ public class SchemaEditor
 	}
 	
 	public void dispose() {
-		schema.getDiagramData().eAdapters().remove(modelChangeListener);
+		modelChangeDispatcher.removeModelChangeListener(modelChangeListener);
 		verticalRulerProvider.dispose();
 		horizontalRulerProvider.dispose();
 		getSite().getWorkbenchWindow().getPartService()
