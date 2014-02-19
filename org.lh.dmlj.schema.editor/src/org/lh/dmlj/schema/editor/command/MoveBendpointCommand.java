@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,29 +16,56 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.lh.dmlj.schema.ConnectionPart;
+import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
 
-public class MoveBendpointCommand extends AbstractBendpointCommand {	
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.ConnectionPart;
+import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
+
+@ModelChange(category=SET_FEATURES)
+public class MoveBendpointCommand extends Command {	
 	
-	public MoveBendpointCommand(ConnectionPart connectionPart, int index, int x, 
-								int y) {
-		super(connectionPart, index, x, y);		
+	@Owner    private DiagramLocation 	   bendpoint;	
+	@Features private EStructuralFeature[] features = {
+		SchemaPackage.eINSTANCE.getDiagramLocation_X(),
+		SchemaPackage.eINSTANCE.getDiagramLocation_Y()
+	};	
+	
+	private int oldX;
+	private int oldY;
+	
+	private int newX;
+	private int newY;
+	
+	public MoveBendpointCommand(ConnectionPart connectionPart, int index, int x, int y) {
+		super();
+		bendpoint = connectionPart.getBendpointLocations().get(index);
+		newX = x;
+		newY = y;
 	}
 	
 	@Override
 	public void execute() {
-		removeBendpoint(connectionPartIndex);	// will set oldX and oldY
-		insertBendpoint(connectionPartIndex, x, y);
+		oldX = bendpoint.getX();
+		oldY = bendpoint.getY();
+		redo();
+	}
+	
+	@Override
+	public void redo() {
+		bendpoint.setX(newX);
+		bendpoint.setY(newY);
 	}
 	
 	@Override
 	public void undo() {
-		// saveguard oldX and oldY because they will be changed by the call to
-		// removeBendpoint(index)...
-		int oldXa = oldX;
-		int oldYa = oldY;
-		removeBendpoint(connectionPartIndex);	// will set oldX and oldY to x and y
-		insertBendpoint(connectionPartIndex, oldXa, oldYa);
+		bendpoint.setX(oldX);
+		bendpoint.setY(oldY);
 	}
 	
 }
