@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,19 +19,18 @@ package org.lh.dmlj.schema.editor.part;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ReconnectRequest;
-import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
@@ -42,6 +41,7 @@ import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.policy.RecordGraphicalNodeEditPolicy;
@@ -51,47 +51,53 @@ public class RecordEditPart
 	extends AbstractNonResizableDiagramNodeEditPart<SchemaRecord>  {
 
 	private RecordEditPart() {
-		super(null); // disabled constructor
+		super(null, null); // disabled constructor
 	}
 	
-	public RecordEditPart(SchemaRecord record) {
-		super(record);		
+	public RecordEditPart(SchemaRecord record, IModelChangeProvider modelChangeProvider) {
+		super(record, modelChangeProvider);		
+	}	
+	
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  EObject newOwner) {
+
+		if (item == getModel().getAreaSpecification()) {
+			// the record was moved to another area
+			refreshVisuals();
+		}		
 	}
 	
 	@Override
-	protected void adjustModelObjects(Notification notification,
-			 						  List<EObject> modelObjects) {
-				
-		if (notification.getFeature() == SchemaPackage.eINSTANCE
-				 									  .getSchemaRecord_CalcKey() ||
-			notification.getFeature() == SchemaPackage.eINSTANCE
-					 								  .getSchemaRecord_ViaSpecification()) {			
-			
-			EObject oldValue = (EObject) notification.getOldValue();
-			EObject newValue = (EObject) notification.getNewValue();
-			
-			if (oldValue == null && newValue != null) {
-				addModelObject(newValue);
-			} else if (oldValue != null && newValue == null) {
-				removeModelObject(oldValue);
-			} else {
-				throw new RuntimeException("logic error: " + 
-										   notification.toString());
-			}
-			
-		} else if (notification.getFeature() == SchemaPackage.eINSTANCE
-				  											 .getSchemaRecord_AreaSpecification()) {
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
 		
-			Assert.isTrue(notification.getOldValue() != null &&
-						  notification.getNewValue() != null, 
-						  "logic error: notification.getOldValue() == null || " +
-						  "notification.getNewValue() == null");
-			AreaSpecification oldValue = 
-				(AreaSpecification) notification.getOldValue();
-			AreaSpecification newValue = 
-				(AreaSpecification) notification.getNewValue();
-			removeModelObject(oldValue.getArea());
-			addModelObject(newValue.getArea());
+		super.afterSetFeatures(owner, features);
+		
+		if (owner == getModel()) {			
+			
+			// refresh the edit part's visuals because one of the contained items has changed
+			refreshVisuals();
+		
+		} else if (getModel().getLocationMode() == LocationMode.VIA &&
+				   owner == getModel().getViaSpecification().getSet() &&
+				   isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Name())) {
+			
+			// the name of the the record's VIA set has changed
+			refreshVisuals();			
+			
+		} else if (getModel().getLocationMode() == LocationMode.CALC &&
+				   owner == getModel().getCalcKey() && 
+				   isFeatureSet(features, SchemaPackage.eINSTANCE.getKey_DuplicatesOption())) {
+			
+			// the CALC key's duplicates option has changed
+			refreshVisuals();			
+		
+		} else if (owner == getModel().getAreaSpecification().getArea() &&
+				   isFeatureSet(features, SchemaPackage.eINSTANCE.getSchemaArea_Name())) {
+			
+			// the name of the area in which the record is stored has changed
+			refreshVisuals();
+			
 		}
 		
 	}
@@ -129,20 +135,6 @@ public class RecordEditPart
 		return figure;
 	}
 	
-	@Override
-	protected EObject[] getModelObjects() {
-		List<EObject> modelObjects = new ArrayList<>();
-		modelObjects.add(getModel());
-		modelObjects.add(getModel().getDiagramLocation());
-		if (getModel().getLocationMode() == LocationMode.CALC) {
-			modelObjects.add(getModel().getCalcKey());
-		} else if (getModel().getLocationMode() == LocationMode.VIA) {
-			modelObjects.add(getModel().getViaSpecification().getSet());
-		}
-		modelObjects.add(getModel().getAreaSpecification().getArea());
-		return modelObjects.toArray(new EObject[] {});
-	}	
-
 	@Override
 	protected List<ConnectionPart> getModelSourceConnections() {
 		List<ConnectionPart> connectionParts = new ArrayList<>();

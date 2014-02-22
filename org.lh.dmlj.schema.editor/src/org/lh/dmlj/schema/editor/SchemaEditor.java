@@ -322,7 +322,7 @@ public class SchemaEditor
 		// configure the graphical viewer...
 		GraphicalViewer viewer = getGraphicalViewer();
 		viewer.setRootEditPart(root);
-		viewer.setEditPartFactory(new SchemaDiagramEditPartFactory());		
+		viewer.setEditPartFactory(new SchemaDiagramEditPartFactory(modelChangeDispatcher));		
 		viewer.setSelectionManager(new ModifiedSelectionManager(viewer));
 		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 		

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,13 +19,16 @@ package org.lh.dmlj.schema.editor.part;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
 import org.lh.dmlj.schema.editor.policy.DiagramLabelComponentEditPolicy;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
@@ -36,17 +39,32 @@ public class DiagramLabelEditPart
 	private IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
 	
 	private DiagramLabelEditPart() {
-		super(null); // disabled constructor
+		super(null, null); // disabled constructor
 	}
 	
-	public DiagramLabelEditPart(DiagramLabel diagramLabel) {
-		super(diagramLabel);		
+	public DiagramLabelEditPart(DiagramLabel diagramLabel,
+								IModelChangeProvider modelChangeProvider) {
+		
+		super(diagramLabel, modelChangeProvider);		
 	}
 	
 	@Override
 	public void activate() {
 		super.activate();
 		store.addPropertyChangeListener(this);
+	}
+	
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		
+		super.afterSetFeatures(owner, features);
+		
+		if (owner == getModel() &&
+			isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLabel_Description())) {
+			
+			// the diagram label's description has been set; refresh the edit part's visuals
+			refreshVisuals();		
+		}				
 	}
 	
 	@Override
@@ -72,11 +90,6 @@ public class DiagramLabelEditPart
 	}
 
 	@Override
-	protected EObject[] getModelObjects() {
-		return new EObject[] {getModel(), getModel().getDiagramLocation()};
-	}
-
-	@Override
 	public double getZoomLevel() {
 		return getModel().getDiagramData().getZoomLevel();
 	}
@@ -84,7 +97,7 @@ public class DiagramLabelEditPart
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(PreferenceConstants.ORGANISATION)) {
-			refresh();
+			refreshVisuals();
 		}
 	}
 

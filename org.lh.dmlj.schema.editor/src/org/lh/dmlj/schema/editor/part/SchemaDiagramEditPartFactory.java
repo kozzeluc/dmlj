@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,31 +25,40 @@ import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class SchemaDiagramEditPartFactory implements EditPartFactory {
+	
+	private IModelChangeProvider modelChangeProvider;	
+	
+	public static EditPart createEditPart(Object model, IModelChangeProvider modelChangeProvider) {
+		if (model instanceof Schema) {
+			return new SchemaEditPart((Schema) model, modelChangeProvider);
+		} else if (model instanceof SchemaRecord) {
+			return new RecordEditPart((SchemaRecord) model, modelChangeProvider);
+		} else if (model instanceof SystemOwner) {
+			return new IndexEditPart((SystemOwner) model, modelChangeProvider);
+		} else if (model instanceof ConnectionPart) {
+			return new SetEditPart((ConnectionPart) model, modelChangeProvider);
+		} else if (model instanceof ConnectionLabel) {
+			return new SetDescriptionEditPart((ConnectionLabel) model, modelChangeProvider);
+		} else if (model instanceof Connector) {
+			return new ConnectorEditPart((Connector) model, modelChangeProvider);
+		} else if (model instanceof DiagramLabel) {
+			return new DiagramLabelEditPart((DiagramLabel) model, modelChangeProvider);
+		}
+		throw new IllegalStateException("No EditPart for " + model.getClass());		
+	}
 
-	public SchemaDiagramEditPartFactory() {
+	public SchemaDiagramEditPartFactory(IModelChangeProvider modelChangeProvider) {
 		super();
+		this.modelChangeProvider = modelChangeProvider;
 	}
 	
 	@Override
 	public EditPart createEditPart(EditPart context, Object model) {
-		if (model instanceof Schema) {
-			return new SchemaEditPart((Schema) model);
-		} else if (model instanceof SchemaRecord) {
-			return new RecordEditPart((SchemaRecord) model);
-		} else if (model instanceof SystemOwner) {
-			return new IndexEditPart((SystemOwner) model);
-		} else if (model instanceof ConnectionPart) {
-			return new SetEditPart((ConnectionPart) model);
-		} else if (model instanceof ConnectionLabel) {
-			return new SetDescriptionEditPart((ConnectionLabel) model);
-		} else if (model instanceof Connector) {
-			return new ConnectorEditPart((Connector) model);
-		} else if (model instanceof DiagramLabel) {
-			return new DiagramLabelEditPart((DiagramLabel) model);
-		}
-		throw new IllegalStateException("No EditPart for " + model.getClass());
+		// just delegate to our public static method
+		return createEditPart(model, modelChangeProvider);
 	}
 
 }

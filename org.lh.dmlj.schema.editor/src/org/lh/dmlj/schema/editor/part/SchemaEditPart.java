@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,16 +18,19 @@ package org.lh.dmlj.schema.editor.part;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.CompoundSnapToHelper;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.SnapToGeometry;
@@ -36,9 +39,9 @@ import org.eclipse.gef.SnapToGuides;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
+import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
-import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -46,28 +49,269 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.policy.SchemaXYLayoutEditPolicy;
 
 public class SchemaEditPart 
-	extends AbstractGraphicalEditPart implements Adapter {
+	extends AbstractGraphicalEditPart implements IModelChangeListener {
+	
+	private IModelChangeProvider modelChangeProvider;
 
 	@SuppressWarnings("unused")
 	private SchemaEditPart() {
 		super(); // disabled constructor
 	}
 	
-	public SchemaEditPart(Schema schema) {
+	public SchemaEditPart(Schema schema, IModelChangeProvider modelChangeProvider) {
 		super();
 		setModel(schema);
+		this.modelChangeProvider = modelChangeProvider;
 	}
 	
 	@Override
 	public final void activate() {
 		super.activate();
-		getModel().getDiagramData().eAdapters().add(this);
-		getModel().eAdapters().add(this);
+		modelChangeProvider.addModelChangeListener(this);
 	}
 	
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+		
+		if (owner == getModel().getDiagramData() && 
+			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
+			
+			// a DIAGRAM LABEL was added
+			EditPart child = SchemaDiagramEditPartFactory.createEditPart(item, modelChangeProvider);
+			addChild(child, getChildren().size());			
+		
+		} else if (owner == getModel() && 
+				   reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
+			
+			// a RECORD was added
+			SchemaRecord record = (SchemaRecord) item;			
+			EditPart child = SchemaDiagramEditPartFactory.createEditPart(record, modelChangeProvider);
+			addChild(child, getChildren().size());
+		
+		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
+			
+			// a SET was added
+			Set set = (Set) item;
+			
+			// create an edit part for the SYSTEM OWNER or refresh the owner record edit part
+			if (set.getSystemOwner() != null) {	
+				// create an edit part for the SYSTEM OWNER and add it as a child
+				EObject model = set.getSystemOwner();
+				EditPart child = 
+					SchemaDiagramEditPartFactory.createEditPart(model, modelChangeProvider);			
+				addChild(child, getChildren().size());
+			} else {					
+				// refresh the owner record edit part
+				SchemaRecord ownerRecord = set.getOwner().getRecord();
+				GraphicalEditPart memberRecordEditPart = 
+					(GraphicalEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
+				memberRecordEditPart.refresh();
+			}
+			
+			// refresh the member record edit part
+			SchemaRecord memberRecord = set.getMembers().get(0).getRecord();
+			GraphicalEditPart memberRecordEditPart = 
+				(GraphicalEditPart) getViewer().getEditPartRegistry().get(memberRecord);
+			memberRecordEditPart.refresh();
+			
+			// create the set label edit part and add it as a child
+			ConnectionLabel connectionLabel = set.getMembers().get(0).getConnectionLabel();
+			EditPart setDescriptionEditPart = 
+				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider);
+			addChild(setDescriptionEditPart, getChildren().size());
+			
+		} else if (owner instanceof MemberRole && 
+				   reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts()) {			
+		
+			// connectors created
+			
+			MemberRole memberRole = (MemberRole) owner;
+			
+			// create and add the 2 connector edit parts
+			for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
+				Connector model = connectionPart.getConnector();
+				EditPart connectorEditPart =
+					SchemaDiagramEditPartFactory.createEditPart(model, modelChangeProvider);
+				addChild(connectorEditPart, getChildren().size());					
+			}
+			
+			// find and refresh the owner edit part
+			GraphicalEditPart ownerEditPart;
+			if (memberRole.getSet().getOwner() != null) {
+				// user owned set
+				SchemaRecord ownerRecord = memberRole.getSet().getOwner().getRecord();
+				ownerEditPart = (GraphicalEditPart) getViewer().getEditPartRegistry()
+															   .get(ownerRecord);
+			} else {
+				// system owned set
+				SystemOwner systemOwner = memberRole.getSet().getSystemOwner();
+				ownerEditPart = (GraphicalEditPart) getViewer().getEditPartRegistry()
+						   						   			   .get(systemOwner);
+			}
+			ownerEditPart.refresh();
+			
+			// find and refresh the member record edit part
+			SchemaRecord memberRecord = memberRole.getRecord();
+			GraphicalEditPart memberRecordEditPart = 
+				(GraphicalEditPart) getViewer().getEditPartRegistry()
+									  		   .get(memberRecord);
+			memberRecordEditPart.refresh();			
+			
+		}		
+		
+	}
+
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  EObject newOwner) {		
+	}
+
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
+		
+		if (owner == getModel().getDiagramData() && 
+			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
+			
+			// the diagram label was removed
+			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
+			removeChild(child);
+		
+		} else if (owner == getModel() && 
+				   reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
+			
+			// a record was removed
+			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
+			removeChild(child);				
+			
+		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
+			
+			// a set was removed
+			Set set = (Set) item;
+			
+			// remove the SYSTEM OWNER's edit part if applicable			
+			if (set.getSystemOwner() != null) {				
+				EObject model = set.getSystemOwner();
+				EditPart child = (EditPart) getViewer().getEditPartRegistry().get(model);
+				removeChild(child);
+			}
+			
+			// gather the set label edit part(s) as well as all (owner and member) record edit parts
+			// involved 
+			List<EditPart> setDescriptionEditParts = new ArrayList<>();	
+			List<EditPart> recordEditParts = new ArrayList<>();	
+			for (Object object : getViewer().getEditPartRegistry().entrySet()) {
+				Entry<?, ?> entry = (Entry<?, ?>) object;																
+				if (entry.getKey() instanceof ConnectionLabel) {
+					// set label edit part...
+					ConnectionLabel connectionLabel = (ConnectionLabel) entry.getKey();
+					if (connectionLabel.getMemberRole().getSet() == set) {
+						// ... that is involved
+						setDescriptionEditParts.add((EditPart) entry.getValue());
+					}
+				} else if (entry.getKey() instanceof ConnectionPart) {
+					// set connection edit part...					
+					ConnectionPart connectionPart = (ConnectionPart) entry.getKey();
+					if (connectionPart.getMemberRole().getSet() == set) {
+						// ... that is involved
+						SetEditPart setEditPart = (SetEditPart) entry.getValue();
+						if (setEditPart.getSource() != null) {
+							// owner record
+							Assert.isTrue(setEditPart.getSource() instanceof RecordEditPart);
+							recordEditParts.add(setEditPart.getSource());
+						}						
+						// member record
+						Assert.isTrue(setEditPart.getTarget() instanceof RecordEditPart);
+						recordEditParts.add(setEditPart.getTarget());
+					}
+				}
+			}
+			
+			// remove the set label edit part(s) involved
+			Assert.isTrue(!setDescriptionEditParts.isEmpty(), 
+						  "expected at least 1 SetDescriptionEditPart");			
+			for (EditPart setDescriptionEditPart : setDescriptionEditParts) {
+				removeChild(setDescriptionEditPart);
+			}
+			
+			// refresh the record edit part(s) involved
+			Assert.isTrue(!recordEditParts.isEmpty(), "expected at least 1 RecordEditPart");
+			for (EditPart editPart : recordEditParts) {
+				editPart.refresh();				
+			}
+		
+		} else if (owner instanceof MemberRole && 
+				   reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts()) {			
+		
+			// connectors removed
+			
+			MemberRole memberRole = (MemberRole) owner;
+			Assert.isTrue(memberRole.getConnectionParts().size() == 1);
+			
+			// find and remove both connector edit parts
+			List<ConnectionPart> connectionParts = new ArrayList<>();
+			connectionParts.add(memberRole.getConnectionParts().get(0));
+			connectionParts.add((ConnectionPart) item); // the removed connection part
+			List<ConnectorEditPart> connectorEditParts = new ArrayList<>();
+			for (Object object : getViewer().getEditPartRegistry().entrySet()) {
+				Entry<?, ?> entry = (Entry<?, ?>) object;																
+				if (entry.getKey() instanceof ConnectionPart) {
+					// set connection edit part...					
+					ConnectionPart connectionPart = (ConnectionPart) entry.getKey();
+					if (connectionParts.indexOf(connectionPart) > -1) {
+						// ... that is involved
+						SetEditPart setEditPart = (SetEditPart) entry.getValue();
+						Assert.isTrue(setEditPart.getSource() instanceof ConnectorEditPart ||
+									  setEditPart.getTarget() instanceof ConnectorEditPart);
+						if (setEditPart.getSource() instanceof ConnectorEditPart) {
+							// second connector edit part
+							connectorEditParts.add((ConnectorEditPart) setEditPart.getSource());
+						} else {
+							// first connector edit part
+							connectorEditParts.add((ConnectorEditPart) setEditPart.getTarget());
+						}						
+					}
+				}
+			}
+			Assert.isTrue(connectorEditParts.size() == 2);
+			for (EditPart editPart : connectorEditParts) {
+				removeChild(editPart);
+			}
+
+			// refresh the owner edit part
+			GraphicalEditPart ownerEditPart;
+			if (memberRole.getSet().getOwner() != null) {
+				// user owned set
+				SchemaRecord ownerRecord = memberRole.getSet().getOwner().getRecord();
+				ownerEditPart = (GraphicalEditPart) getViewer().getEditPartRegistry()
+				  		   						   			   .get(ownerRecord);
+			} else {
+				// system owned set
+				SystemOwner systemOwner = memberRole.getSet().getSystemOwner();
+				ownerEditPart = (GraphicalEditPart) getViewer().getEditPartRegistry()
+						   						   			   .get(systemOwner);
+			}
+			ownerEditPart.refresh();
+			
+			// refresh the member record edit part
+			SchemaRecord memberRecord = memberRole.getRecord();
+			GraphicalEditPart memberRecordEditPart = 
+				(GraphicalEditPart) getViewer().getEditPartRegistry()
+									  		   .get(memberRecord);
+			memberRecordEditPart.refresh();				
+		
+		}		
+		
+	}
+
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {		
+	}
+
 	@Override
 	protected void createEditPolicies() {
 		
@@ -90,8 +334,7 @@ public class SchemaEditPart
 	
 	@Override
 	public final void deactivate() {
-		getModel().eAdapters().remove(this);
-		getModel().getDiagramData().eAdapters().remove(this);
+		modelChangeProvider.removeModelChangeListener(this);
 		super.deactivate();
 	}
 	
@@ -174,217 +417,6 @@ public class SchemaEditPart
 		}
 		
 		return allObjects;
-	}
-
-	@Override
-	public Notifier getTarget() {
-		return null;
-	}
-
-	@Override
-	public boolean isAdapterForType(Object type) {
-		return false;
-	}
-
-	@Override
-	public void notifyChanged(Notification notification) {
-		int featureID = notification.getFeatureID(SchemaRecord.class);
-		
-		if (notification.getNotifier() == getModel().getDiagramData() &&
-			featureID == SchemaPackage.DIAGRAM_DATA__LABEL) {
-			
-			if (notification.getNewValue() != null &&
-				notification.getNewValue() instanceof DiagramLabel) {
-				
-				// the diagram label was added; create the diagram label edit part and add it to our
-				// list of children
-				DiagramLabelEditPart editPart =
-					new DiagramLabelEditPart((DiagramLabel) notification.getNewValue());
-				addChild(editPart, getChildren().size());					
-				
-			} else if (notification.getOldValue() != null &&
-					   notification.getOldValue() instanceof DiagramLabel) {
-				
-				// the diagram label was removed; find the diagram label edit part and remove it 
-				// from our list of children
-				GraphicalEditPart editPart = 
-					(GraphicalEditPart) getViewer().getEditPartRegistry()
-										  		   .get(notification.getOldValue());
-				removeChild(editPart);
-				
-			}
-		} else if (notification.getNotifier() == getModel().getDiagramData() &&
-				   featureID == SchemaPackage.DIAGRAM_DATA__CONNECTORS) {
-			
-			// We only act when the second connector is added or removed; the
-			// commands responsible for connector creation and deletion should
-			// therefore add the connector to or delete it from the 
-			// DiagramData's connectors list attribute as their very last
-			// activity, thus triggering the adjustment of the diagram 
-			// hereunder.
-			if (notification.getNewValue() != null &&
-				notification.getNewValue() instanceof Connector &&
-				getModel().getDiagramData().getConnectors().size() % 2 == 0) {				
-				
-				// connectors created; the second connector is in the 
-				// notification's new value field
-				
-				MemberRole memberRole = 
-					((Connector) notification.getNewValue())
-											 .getConnectionPart()
-											 .getMemberRole();
-				
-				// create the 2 connector edit parts
-				for (ConnectionPart connectionPart : 
-					 memberRole.getConnectionParts()) {
-					
-					ConnectorEditPart connectorEditPart =
-						new ConnectorEditPart(connectionPart.getConnector());
-					addChild(connectorEditPart, getChildren().size());					
-				}
-				
-				// refresh the owner edit part
-				GraphicalEditPart ownerEditPart;
-				if (memberRole.getSet().getOwner() != null) {
-					// user owned set
-					SchemaRecord ownerRecord = 
-						memberRole.getSet().getOwner().getRecord();
-					ownerEditPart = 
-						(GraphicalEditPart) getViewer().getEditPartRegistry()
-					  		   						   .get(ownerRecord);
-				} else {
-					// system owned set
-					SystemOwner systemOwner = 
-						memberRole.getSet().getSystemOwner();
-					ownerEditPart = 
-						(GraphicalEditPart) getViewer().getEditPartRegistry()
-							   						   .get(systemOwner);
-				}
-				ownerEditPart.refresh();
-				
-				// refresh the member record edit part
-				SchemaRecord memberRecord = memberRole.getRecord();
-				GraphicalEditPart memberRecordEditPart = 
-					(GraphicalEditPart) getViewer().getEditPartRegistry()
-										  		   .get(memberRecord);
-				memberRecordEditPart.refresh();
-			} else if (notification.getOldValue() != null &&
-					   notification.getOldValue() instanceof Connector &&
-					   getModel().getDiagramData().getConnectors().size() % 2 == 0) {				
-					
-				// Connectors deleted; the second connector is in the 
-				// notification's old value field, still refers to the set's
-				// second ConnectionPart, but the reference to the MemberRole in
-				// that ConnectionPart is nullified (because the ConnectionPart
-				// is no longer part of the model).  We can use the memberRole
-				// field in the connector and set edit parts to remove 
-				// everything that needs to be removed (both connectors and the
-				// connection from the second connector to the member record).
-				
-				Connector connector = (Connector) notification.getOldValue();				
-				GraphicalEditPart editPart = 
-					(GraphicalEditPart) getViewer().getEditPartRegistry()
-										  		   .get(connector);
-				ConnectorEditPart connectorEditPart = 
-					(ConnectorEditPart) editPart; // second connector edit part
-				MemberRole memberRole = connectorEditPart.getMemberRole();
-				List<?> connections = connectorEditPart.getSourceConnections();
-				for (Object connection : connections) {
-					// only 1 connection is expected to be present
-					removeChild((SetEditPart)connection); // second connection part
-				}
-				removeChild(connectorEditPart);
-				for (Object child : getChildren()) {
-					if (child instanceof ConnectorEditPart) {
-						connectorEditPart = (ConnectorEditPart) child;
-						if (connectorEditPart.getMemberRole() == memberRole) {
-							removeChild(connectorEditPart); // first connector 
-							break;						    // edit part
-						}
-					}
-				}
-
-				// refresh the owner edit part
-				GraphicalEditPart ownerEditPart;
-				if (memberRole.getSet().getOwner() != null) {
-					// user owned set
-					SchemaRecord ownerRecord = 
-						memberRole.getSet().getOwner().getRecord();
-					ownerEditPart = 
-						(GraphicalEditPart) getViewer().getEditPartRegistry()
-					  		   						   .get(ownerRecord);
-				} else {
-					// system owned set
-					SystemOwner systemOwner = 
-						memberRole.getSet().getSystemOwner();
-					ownerEditPart = 
-						(GraphicalEditPart) getViewer().getEditPartRegistry()
-							   						   .get(systemOwner);
-				}
-				ownerEditPart.refresh();
-				
-				// refresh the member record edit part
-				SchemaRecord memberRecord = memberRole.getRecord();
-				GraphicalEditPart memberRecordEditPart = 
-					(GraphicalEditPart) getViewer().getEditPartRegistry()
-										  		   .get(memberRecord);
-				memberRecordEditPart.refresh();				
-			}
-		} else if (notification.getNotifier() == getModel() &&
-				   featureID == SchemaPackage.SCHEMA__SETS &
-				   notification.getEventType() == Notification.ADD &&
-				   ((Set) notification.getNewValue()).getSystemOwner() != null) {			
-			
-			// an index was added
-			Set set = (Set) notification.getNewValue();
-			
-			// create the index edit part and add it as a child
-			IndexEditPart indexEditPart =
-				new IndexEditPart(set.getSystemOwner());
-			addChild(indexEditPart, getChildren().size());
-			
-			// create the set label edit part and add it as a child
-			SetDescriptionEditPart setDescriptionEditPart = 
-				new SetDescriptionEditPart(set.getMembers().get(0).getConnectionLabel());
-			addChild(setDescriptionEditPart, getChildren().size());
-			
-			// refresh the member record edit part
-			SchemaRecord memberRecord = set.getMembers().get(0).getRecord();
-			GraphicalEditPart memberRecordEditPart = 
-				(GraphicalEditPart) getViewer().getEditPartRegistry().get(memberRecord);
-			memberRecordEditPart.refresh();
-			
-		} else if (notification.getNotifier() == getModel() &&
-				   featureID == SchemaPackage.SCHEMA__SETS &
-				   notification.getEventType() == Notification.REMOVE &&
-				   ((Set) notification.getOldValue()).getSystemOwner() != null) {
-			
-			// an index was removed			
-			Set set = (Set) notification.getOldValue();
-			
-			// find the member record's edit part: we cannot use the model for this because the
-			// reference to it will already have been nullified; remove the index edit part
-			IndexEditPart indexEditPart = 
-				(IndexEditPart) getViewer().getEditPartRegistry()
-										  	   .get(set.getSystemOwner());			
-			GraphicalEditPart memberRecordEditPart = indexEditPart.getRecordEditPart();			
-			removeChild(indexEditPart);
-			
-			// remove the set label edit part
-			GraphicalEditPart setDescriptionEditPart = 
-				(GraphicalEditPart) getViewer().getEditPartRegistry()
-											   .get(set.getMembers().get(0).getConnectionLabel());
-			removeChild(setDescriptionEditPart);
-				
-			// refresh the member record edit part
-			memberRecordEditPart.refresh();
-			
-		}
-		
-	}
-
-	@Override
-	public void setTarget(Notifier newTarget) {				
 	}
 	
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.part;
 
 import org.eclipse.gef.EditPolicy;
 import org.lh.dmlj.schema.ResizableDiagramNode;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.policy.ModifiedResizableEditPolicy;
 
 /**
@@ -29,8 +30,10 @@ import org.lh.dmlj.schema.editor.policy.ModifiedResizableEditPolicy;
 public abstract class AbstractResizableDiagramNodeEditPart<T extends ResizableDiagramNode> 
 	extends AbstractDiagramNodeEditPart<T> {
 	
-	protected AbstractResizableDiagramNodeEditPart(T diagramNode) {
-		super(diagramNode);
+	protected AbstractResizableDiagramNodeEditPart(T diagramNode,
+												   IModelChangeProvider modelChangeProvider) {
+		
+		super(diagramNode, modelChangeProvider);
 	}
 	
 	@Override

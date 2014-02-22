@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,14 +25,17 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
 
@@ -41,16 +44,30 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 	private MemberRole memberRole;
 	
 	private ConnectorEditPart() {
-		super(null); // disabled constructor
+		super(null, null); // disabled constructor
 	}
 	
-	public ConnectorEditPart(Connector connector) {
-		super(connector);
+	public ConnectorEditPart(Connector connector, IModelChangeProvider modelChangeProvider) {
+		super(connector, modelChangeProvider);
 		// keep track of the MemberRole because if connectors are deleted, the 
 		// reference to that MemberRole will be nullified in the ConnectionPart
 		this.memberRole = connector.getConnectionPart().getMemberRole();
 	}	
 
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		
+		super.afterSetFeatures(owner, features);
+		
+		if (owner == getModel() && 
+			isFeatureSet(features, SchemaPackage.eINSTANCE.getConnector_Label())) {
+			
+			// the connector label is set; refresh the edit part's visuals
+			refreshVisuals();					
+		}
+		
+	}
+	
 	@Override
 	protected void createEditPolicies() {
 		// make sure we can delete connectors:
@@ -82,12 +99,6 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 		return memberRole;
 	}
 	
-	@Override
-	protected EObject[] getModelObjects() {
-		return new EObject[] {getModel(), 
-							  getModel().getDiagramLocation()};
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	protected List<ConnectionPart> getModelSourceConnections() {

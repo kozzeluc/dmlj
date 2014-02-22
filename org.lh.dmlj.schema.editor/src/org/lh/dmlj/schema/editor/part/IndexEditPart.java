@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,7 +24,6 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -34,17 +33,18 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
 import org.lh.dmlj.schema.editor.policy.IndexComponentEditPolicy;
 
 public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<SystemOwner> {
 
 	private IndexEditPart() {
-		super(null); // disabled constructor
+		super(null, null); // disabled constructor
 	}
 	
-	public IndexEditPart(SystemOwner systemOwner) {
-		super(systemOwner);
+	public IndexEditPart(SystemOwner systemOwner, IModelChangeProvider modelChangeProvider) {
+		super(systemOwner, modelChangeProvider);
 	}	
 
 	@Override
@@ -74,12 +74,6 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	}		
 
 	@Override
-	protected EObject[] getModelObjects() {
-		return new EObject[] {getModel(), 
-							  getModel().getDiagramLocation()};
-	}
-
-	@Override
 	protected List<ConnectionPart> getModelSourceConnections() {
 		List<ConnectionPart> connectionParts = new ArrayList<>();
 		MemberRole memberRole = getModel().getSet().getMembers().get(0);
@@ -95,6 +89,7 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	 * first remove the connectors before ever removing an index.
 	 * @return the index's member record edit part
 	 */
+	@Deprecated
 	public RecordEditPart getRecordEditPart() {
 		List<?> sourceConnections = getSourceConnections();
 		Assert.isTrue(sourceConnections.size() == 1, 

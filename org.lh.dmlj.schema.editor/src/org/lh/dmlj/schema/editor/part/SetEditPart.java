@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,9 +29,9 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
@@ -39,8 +39,12 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
+import org.lh.dmlj.schema.editor.policy.SetComponentEditPolicy;
 import org.lh.dmlj.schema.editor.policy.SetXYLayoutEditPolicy;
 
 /** 
@@ -50,43 +54,36 @@ import org.lh.dmlj.schema.editor.policy.SetXYLayoutEditPolicy;
  * representing the owner and (a) member of the set.  If 2 ConnectionParts 
  * are present for a set, it means that 1 line is drawn between the owner figure 
  * and the first connector (figure) and 1 line between the second connector 
- * (figure) and the member record (figure).<br><br>
- * 
- * SetEditPart instances currently represent a direct line between the
- * owner and member figures and each MemberRole is considered to contain only 1
- * ConnectionPart instance (in other words, we currently don't support 
- * connectors).
+ * (figure) and the member record (figure).<br><br> 
  */
-public class SetEditPart extends AbstractConnectionEditPart {
+public class SetEditPart 
+	extends AbstractConnectionEditPart implements IModelChangeListener {
 
-	private MemberRole memberRole;
+	private MemberRole 			 memberRole;	
+	private IModelChangeProvider modelChangeProvider;
 	
-	private Adapter changeListener = new Adapter() {
+	/**
+	 * Checks whether the feature of interest is set in a grouped model change.
+	 * @param setFeatures the features set in the model change
+	 * @param featureOfInterest the feature of interest
+	 * @return true if the feature of interest is contained in the list of set features, false if 
+	 * 		   not
+	 */
+	protected static final boolean isFeatureSet(EStructuralFeature[] setFeatures, 
+								   		  		EStructuralFeature featureOfInterest) {
 		
-		@Override
-		public Notifier getTarget() {
-			return null;
+		for (EStructuralFeature feature : setFeatures) {
+			if (feature == featureOfInterest) {
+				return true;
+			}
 		}
-
-		@Override
-		public boolean isAdapterForType(Object type) {
-			return false;
-		}
-		
-		@Override
-		public void notifyChanged(Notification notification) {
-			refreshVisuals();
-		}
-		
-		@Override
-		public void setTarget(Notifier newTarget) {		
-		}
-		
-	};
+		return false;
+	}	
 	
-	public SetEditPart(ConnectionPart connectionPart) {
+	public SetEditPart(ConnectionPart connectionPart, IModelChangeProvider modelChangeProvider) {
 		super();
 		setModel(connectionPart);
+		this.modelChangeProvider = modelChangeProvider;
 		// keep track of the MemberRole because if connectors are involved and
 		// deleted, the reference to that MemberRole will be nullified in the
 		// ConnectionPart
@@ -96,14 +93,46 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	@Override
 	public final void activate() {
 		super.activate();
-		// add a model change listener for the ConnectionPart, the MemberRole to
-		// which it belongs and the Set; we ignore the other ConnectionPart
-		// belonging to the MemberRole, if any...
-		getModel().eAdapters().add(changeListener);			 
-		memberRole.eAdapters().add(changeListener); 	
-		memberRole.getSet().eAdapters().add(changeListener);
+		modelChangeProvider.addModelChangeListener(this);
 	}	
 	
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+		if (owner == getModel() &&
+			reference == SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations()) {
+			
+			// a bendpoint was added
+			refreshVisuals();						
+		}
+	}
+
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  EObject newOwner) {		
+	}
+
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {	
+		if (owner == getModel() &&
+			reference == SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations()) {
+			
+			// a bendpoint was removed
+			refreshVisuals();						
+		}
+	}
+
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		if (owner instanceof DiagramLocation &&
+			getModel().getBendpointLocations().indexOf(owner) > -1 &&
+			(isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLocation_X()) ||
+			 isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLocation_Y()))) {
+			
+			// a bendpoint was moved
+			refreshVisuals();
+		}
+	}
+
 	@Override
 	protected void createEditPolicies() {
 		
@@ -112,7 +141,11 @@ public class SetEditPart extends AbstractConnectionEditPart {
 						  new SetXYLayoutEditPolicy(getModel(), connection));	
 		
 		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE,
-						  new ConnectionEndpointEditPolicy());
+						  new ConnectionEndpointEditPolicy());		
+		
+		// make sure we can delete a set by pressing the delete key on the line represented by this
+		// edit part:
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetComponentEditPolicy());			
 		
 		refreshBendpointEditPolicy();		
 		
@@ -159,10 +192,7 @@ public class SetEditPart extends AbstractConnectionEditPart {
 	
 	@Override
 	public final void deactivate() {
-		// remove the model change listeners...		 	
-		memberRole.getSet().eAdapters().remove(changeListener);
-		memberRole.eAdapters().remove(changeListener);
-		getModel().eAdapters().remove(changeListener);			 
+		modelChangeProvider.removeModelChangeListener(this);			 
 		super.deactivate();
 	}
 	

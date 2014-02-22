@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,62 +16,104 @@
  */
 package org.lh.dmlj.schema.editor.part;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.figure.SetDescriptionFigure;
+import org.lh.dmlj.schema.editor.policy.SetDescriptionComponentEditPolicy;
 
 public class SetDescriptionEditPart 
     extends AbstractNonResizableDiagramNodeEditPart<ConnectionLabel>  {
 
 	private SetDescriptionEditPart() {
-		super(null); // disabled constructor
+		super(null, null); // disabled constructor
 	}
 	
-	public SetDescriptionEditPart(ConnectionLabel connectionLabel) {
-		super(connectionLabel);		
+	public SetDescriptionEditPart(ConnectionLabel connectionLabel, 
+								  IModelChangeProvider modelChangeProvider) {
+		super(connectionLabel, modelChangeProvider);		
 	}	
-
+	
 	@Override
-	protected void adjustModelObjects(Notification notification,
-									  List<EObject> modelObjects) {
-	
-		if (notification.getFeature() == SchemaPackage.eINSTANCE
-					 								  .getSystemOwner_AreaSpecification()) {
-	
-			Assert.isTrue(notification.getOldValue() != null &&
-						  notification.getNewValue() != null, 
-						  "logic error: notification.getOldValue() == null || " +
-						  "notification.getNewValue() == null");
-			AreaSpecification oldValue = 
-				(AreaSpecification) notification.getOldValue();
-			AreaSpecification newValue = 
-				(AreaSpecification) notification.getNewValue();
-			removeModelObject(oldValue.getArea());
-			addModelObject(newValue.getArea());
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		
+		super.afterSetFeatures(owner, features);
+		
+		if (owner == getModel().getMemberRole().getSet() &&
+			isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Name())) {
+			
+			// the set name has changed
+			refreshVisuals();
+		} else if (owner == getModel().getMemberRole() &&
+				   (isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition()) ||
+					isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition()) ||
+					isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition()) ||
+					isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition()))) {
+			
+			// the maintained pointers (might) have (been) changed (no need to check the owner
+			// pointer positions; we're only interested in pointer availability, not pointer
+			// position)
+			refreshVisuals();
+			
+		} else if (owner == getModel().getMemberRole() &&
+				   isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_MembershipOption())) {
+			
+			// the membership option has changed
+			refreshVisuals();
+			
+		} else if (owner == getModel().getMemberRole().getSortKey() &&
+				   isFeatureSet(features, SchemaPackage.eINSTANCE.getKey_DuplicatesOption())) {
+			
+			// the sort key's duplicates option has changed
+			refreshVisuals();
+			
+		} else if (getModel().getMemberRole().getSet().getSystemOwner() != null &&
+				   owner == getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea() &&
+				   isFeatureSet(features, SchemaPackage.eINSTANCE.getSchemaArea_Name())) {
+			
+			// the system owner's containing area name has changed
+			refreshVisuals();
+			
 		}
 		
+	}
+	
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  EObject newOwner) {
+		
+		if (getModel().getMemberRole().getSet().getSystemOwner() != null &&
+			item == getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification()) {
+			
+			// the system owner has moved to another area
+			refreshVisuals();
+			
+		}
+		
+	}
+	
+	@Override
+	protected void createEditPolicies() {
+		// make sure we can delete a set by pressing the delete key on the line represented by this
+		// edit part:
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetDescriptionComponentEditPolicy());
 	}
 
 	@Override
@@ -94,34 +136,6 @@ public class SetDescriptionEditPart
         return figure;
 	}
 	
-	@Override
-	protected EObject[] getModelObjects() {
-		
-		List<EObject> modelObjects = new ArrayList<>();		
-
-		modelObjects.add(getModel());
-		modelObjects.add(getModel().getMemberRole());
-		modelObjects.add(getModel().getMemberRole().getSet());
-		
-		SystemOwner systemOwner =
-			getModel().getMemberRole().getSet().getSystemOwner();
-		if (systemOwner != null) {
-			// in the case of a system owned indexed set, make sure we get 
-			// notifications when the area name changes
-			modelObjects.add(systemOwner);
-			SchemaArea area = getModel().getMemberRole()
-										.getSet()
-										.getSystemOwner()
-										.getAreaSpecification()
-										.getArea(); 
-			modelObjects.add(area);
-		}
-		
-		modelObjects.add(getModel().getDiagramLocation());		
-		
-		return modelObjects.toArray(new EObject[] {});
-	}
-
 	@Override
 	public void showSourceFeedback(Request request) {
 		if (request instanceof ChangeBoundsRequest) {
