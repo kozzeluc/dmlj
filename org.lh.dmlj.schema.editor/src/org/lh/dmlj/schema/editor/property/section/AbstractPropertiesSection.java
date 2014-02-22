@@ -181,11 +181,9 @@ public abstract class AbstractPropertiesSection
 	private void doRefresh() {									
 		// refresh the properties section; we need to invoke the refresh() method asynchronously to 
 		// avoid 'Widget is disposed' errors (don't ask why ;-)):
-		final Class<?> _class = getClass();
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println(_class.getSimpleName());
 				refresh();
 			}				
 		});		
