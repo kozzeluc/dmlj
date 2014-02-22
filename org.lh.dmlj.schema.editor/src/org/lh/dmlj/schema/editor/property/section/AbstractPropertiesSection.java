@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,10 +18,9 @@ package org.lh.dmlj.schema.editor.property.section;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.commands.CommandStack;
-import org.eclipse.gef.commands.CommandStackEvent;
-import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
@@ -36,41 +35,41 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
+import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.property.IGraphicalEditorProvider;
 
 /**
- * A TOP LEVEL (abstract) property section exposing a GEF editor and its command stack, listens for
- * stack changes (i.e. commands being executed/undone/redone) to make sure the information shown is
- * always up-to-date, and that guarantees the undo/redo retargeted actions to be always available.
+ * A TOP LEVEL (abstract) property section exposing the active editor, that listens for model 
+ * changes to make sure the information shown is always up-to-date, and that guarantees the 
+ * undo/redo retargeted actions to be always available.
  * <br><br>
  * Subclasses should always call the createControls(...) method in their own implementation; the
  * same applies to the aboutToBeHidden(), aboutToBeShown(), dispose() and setInput(...) methods, if
  * overridden.
  * <br><br>
- * The GEF editor should have adapters available for the  following types :
+ * The editor should have adapters available for the following types :
  * <ul>
- * <li>CommandStack: the object returned by the editor's getCommandStack() method</li>
+ * <li>IModelChangeProvider: the component that dispatches model changes for the editor</li>
  * <li>ActionRegistry: the object returned by the editor's  getActionRegistry() method</li>
  * </ul>
  * These adapter classes are to be returned by the editor's getAdapter(...) method.
  * <br><br>
- * If an outline page is provided by the GEF editor, that outline page should implement the
+ * If an outline page is provided by the editor, that outline page should implement the
  * IGraphicalEditorProvider<?> interface, through which the editor can be obtained.
  * <br><br>
  * @author Luc Hermans
  */
 public abstract class AbstractPropertiesSection 
-	extends AbstractPropertySection implements CommandStackEventListener {
+	extends AbstractPropertySection implements IModelChangeListener {
 
-	private boolean					  addedRedo; 	
-	private boolean 				  addedUndo; 
-	protected CommandStack 	  		  commandStack;
-	protected GraphicalEditor  		  editor;		// the GEF editor
-	protected EditPart 				  input; 		// the input edit part
-	protected EObject 				  modelObject;  // the input model object
-	protected TabbedPropertySheetPage page;	
-	protected ISelection 			  selection;
-	//private ISelection 			  selectionCopy; // see stackChanged(...)
+	private boolean					addedRedo; 	
+	private boolean 				addedUndo; 
+	protected GraphicalEditor  		editor;		  			
+	private IModelChangeProvider 	modelChangeProvider;
+	protected EObject 				modelObject;
+	private TabbedPropertySheetPage page;	
+		
 	
 	public AbstractPropertiesSection() {
 		super();
@@ -116,6 +115,32 @@ public abstract class AbstractPropertiesSection
 		
 	}
 	
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+		// whatever model change, just refresh the properties section
+		doRefresh();
+	}
+	
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  EObject newOwner) {
+		
+		// whatever model change, just refresh the properties section
+		doRefresh();
+	}
+	
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
+		// whatever model change, just refresh the properties section
+		doRefresh();
+	}
+	
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+		// whatever model change, just refresh the properties section
+		doRefresh();
+	}
+	
 	private void clearGlobalActionHandlers() {
 		
 		// 'restore' the original action bars if needed
@@ -147,19 +172,32 @@ public abstract class AbstractPropertiesSection
 	
 	@Override
 	public void dispose() {
-		// remove us as a command stack event listener if we have a command stack
-		if (commandStack != null) {
-			commandStack.removeCommandStackEventListener(this);
+		// remove us as a model change listener if we have a model change provider
+		if (modelChangeProvider != null) {
+			modelChangeProvider.removeModelChangeListener(this);
 		}
 	};
 	
+	private void doRefresh() {									
+		// refresh the properties section; we need to invoke the refresh() method asynchronously to 
+		// avoid 'Widget is disposed' errors (don't ask why ;-)):
+		final Class<?> _class = getClass();
+		Display.getCurrent().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println(_class.getSimpleName());
+				refresh();
+			}				
+		});		
+	}
+
 	@Override
 	public void setInput(IWorkbenchPart part, ISelection selection) {
 		
-		// remove us as a command stack event listener if we have a command stack
-		if (commandStack != null) {
-			commandStack.removeCommandStackEventListener(this);
-			commandStack = null;
+		// remove us as a model change listener if we have a model change provider
+		if (modelChangeProvider != null) {
+			modelChangeProvider.removeModelChangeListener(this);
+			modelChangeProvider = null;
 		}		
 		
 		super.setInput(part, selection);
@@ -181,59 +219,19 @@ public abstract class AbstractPropertiesSection
 			editor = outlinePage.getEditor();
 		} else {
 			editor = (GraphicalEditor) part;
-		} 
-		
-		// store the selection
-		Assert.isTrue(selection instanceof IStructuredSelection, "not a IStructuredSelection");
-		this.selection = selection;
+		}		
 		
 		// set the input from the selection
-		input = (EditPart) ((IStructuredSelection) selection).getFirstElement();
+		EditPart input = (EditPart) ((IStructuredSelection) selection).getFirstElement();
 		modelObject = (EObject) ((EditPart) input).getModel();
 		
 		// make sure the undo and redo actions are available
 		addGlobalActionHandlers((ActionRegistry) editor.getAdapter(ActionRegistry.class));
 		
-	    // we need the editor's command stack to change the model data
-	    commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
-	    commandStack.addCommandStackEventListener(this);
+	    // we need the editor's model change provider to change the model data
+	    modelChangeProvider = (IModelChangeProvider) editor.getAdapter(IModelChangeProvider.class);
+	    modelChangeProvider.addModelChangeListener(this);
 	
-	}
-	
-	@Override
-	public final void stackChanged(CommandStackEvent event) {
-		// by listening for command stack events we are able to refresh the
-		// whole property sheet page; this seems to be the most practical
-		// approach in keeping all tabs and sections in sync with the model
-		if (event.isPreChangeEvent() &&
-			(event.getDetail() == CommandStack.PRE_EXECUTE ||
-			 event.getDetail() == CommandStack.PRE_REDO ||
-			 event.getDetail() == CommandStack.PRE_UNDO)) {
-				
-			// for some awkard reason, the setInput method is sometimes called 
-			// somewhere between the event's pre- and post processing with a 
-			// different selection, so we set aside the current selection here
-			//selectionCopy = selection; 												   // <-----
-		} else if (event.isPostChangeEvent() &&
-			(event.getDetail() == CommandStack.POST_EXECUTE ||
-			 event.getDetail() == CommandStack.POST_REDO ||
-			 event.getDetail() == CommandStack.POST_UNDO)) {
-							
-			// we need to execute this asynchronously to avoid Widget' is 
-			// disposed' errors (don't ask why ;-)):
-			Display.getCurrent().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					/*// (simulate a) clear (of) the current selection
-					page.selectionChanged(getPart(), new StructuredSelection());
-					// set the (original) selection again; this will NOT work when we will have
-					// the capability to DELETE objects...
-					page.selectionChanged(getPart(), selectionCopy);*/					
-					
-					refresh(); // just call refresh(); this avoids some flickering
-				}				
-			});
-		}
 	}	
 	
 }

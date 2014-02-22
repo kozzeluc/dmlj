@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,6 +25,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -306,7 +307,10 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 		// part's model object
 	    target = getTarget(modelObject);
 	    
-	    // pass the command stack to the property editor
+	    // get the command stack from the editor and pass it to the property editor (all model 
+	    // changes are carried out via commands that are put and executed on the command stack)
+	    CommandStack commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
+	    Assert.isNotNull(commandStack, "no command stack available");
 	    propertyEditor.setCommandStack(commandStack);
 	
 	} 	
