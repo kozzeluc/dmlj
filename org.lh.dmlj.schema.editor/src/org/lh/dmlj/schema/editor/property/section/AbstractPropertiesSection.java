@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.property.section;
 
+import java.lang.reflect.Field;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -26,6 +28,7 @@ import org.eclipse.gef.ui.parts.GraphicalEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
@@ -179,16 +182,36 @@ public abstract class AbstractPropertiesSection
 	};
 	
 	private void doRefresh() {									
-		// refresh the properties section; we need to invoke the refresh() method asynchronously to 
-		// avoid 'Widget is disposed' errors (don't ask why ;-)):
 		Display.getCurrent().asyncExec(new Runnable() {
 			@Override
-			public void run() {
-				refresh();
+			public void run() {															
+				// make sure that tabs that are no longer relevant are hided and new tabs created  
+				// when needed; not doing so could result in "attribute owner is null" assertion  
+				// errors, besides the fact that sections might be visible for which no valid  
+				// content exists or tabs not showing up when expected - doing it this way instead 
+				// of calling refresh() causes some flicker though :-(
+				ISelection currentSelection = getPageCurrentSelection();				
+				page.selectionChanged(editor, new StructuredSelection());
+				page.selectionChanged(editor, currentSelection);									
 			}				
 		});		
 	}
-
+	
+	private ISelection getPageCurrentSelection() {
+		ISelection selection = null;
+		try {
+			// return the page's current selection
+			Field field = TabbedPropertySheetPage.class.getDeclaredField("currentSelection");
+			field.setAccessible(true);
+			selection = (ISelection) field.get(page);
+		} catch (Throwable t) {
+			// in the case of trouble: just log the exception and return an empty selection
+			t.printStackTrace(); 
+			selection = new StructuredSelection();
+		}
+		return selection;
+	}	
+	
 	@Override
 	public void setInput(IWorkbenchPart part, ISelection selection) {
 		
