@@ -44,6 +44,7 @@ import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetShortAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommandTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
+import org.lh.dmlj.schema.editor.common.ToolsTest;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 
 
@@ -82,7 +83,10 @@ import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 	SetZoomLevelCommandTest.class,
 	
 	// edit part tests
-	AbstractSchemaTreeEditPartTest.class
+	AbstractSchemaTreeEditPartTest.class,
+	
+	// utility class tests
+	ToolsTest.class
 	
 })
 public class AllTests {	
