@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.common;
 
 import org.lh.dmlj.schema.DuplicatesOption;
+import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.MemberRole;
@@ -227,6 +228,46 @@ public abstract class Tools {
 		}
 	}
 	
+	public static boolean isInvolvedInOccurs(Element element) {
+		
+		// check if the element itself has an OCCURS specification 
+		if (element.getOccursSpecification() != null) {
+			return true;
+		}
+		
+		// check if any of the element's parent fields, if any, has an OCCURS specification
+		Element parent = element.getParent();
+		while (parent != null) {
+			if (parent.getOccursSpecification() != null) {
+				return true;
+			}
+			parent = parent.getParent();
+		}
+		
+		return false;
+		
+	}
+
+	public static boolean isInvolvedInRedefines(Element element) {		
+		
+		// check if the element itself refers to a redefined field 
+		if (element.getRedefines() != null) {
+			return true;
+		}
+		
+		// check if any of the element's parent fields, if any, refers to a redefined field
+		Element parent = element.getParent();
+		while (parent != null) {
+			if (parent.getRedefines() != null) {
+				return true;
+			}
+			parent = parent.getParent();
+		}
+		
+		return false;
+		
+	}
+
 	/**
 	 * Removes the trailing underscore from the given name (DDLCATLOD related
 	 * records and sets).  The given name does not necessarily have a trailing
