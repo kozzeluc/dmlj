@@ -1,3 +1,22 @@
+Version 1.4.0
+=============
+- Added functionality to add and delete indexes (palette contains new index icon).
+- Rework the procedure class specifications in the model.
+- Model change notification redesign.
+- Correct OK button enablement for the "edit area specification" dialog.  Before, the user would  
+  have to hit the enter key in either the new area or rename area text fields in order for the OK  
+  button to become enabled; from now on, after releasing a key in either field will evaluate the  
+  enabled status of the OK button.
+- The user can now control every detail of a set's order; 2 hyperlinks were added in the Properties 
+  view (general and sorted set property sections).
+- Increased the width of the value column in attributes based property sections (Property View; 
+  200 --> 300 pixels).
+- Bug fix: an index is not selected in the outline view if the line that connects the index figure 
+  with the record is selected in the diagram.  
+- Bug fix: changing a record's location mode could result in "attribute owner is null" assertion 
+  errors and have the CALC or VIA tab show up for DIRECT records.
+
+
 Version 1.3.2
 =============
 - Added GNU General Public License Version 3 (GPL 3.0); no functionality added, modified or removed.

@@ -2,7 +2,7 @@
 <feature
       id="org.lh.dmlj.schema.editor"
       label="CA IDMS/DB Schema Diagram Editor"
-      version="1.3.2.qualifier"
+      version="1.4.0.qualifier"
       provider-name="Luc Hermans">
 
    <description url="%descriptionURL">
