@@ -19,6 +19,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.lh.dmlj.schema.editor.command.ChangeAreaSpecificationCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeCalcKeyCommandTest;
+import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommandTest;
+import org.lh.dmlj.schema.editor.command.ChangeSortKeysCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeViaSpecificationCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateBendpointCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateConnectorCommandTest;
@@ -57,6 +59,8 @@ import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 	// command tests
 	ChangeAreaSpecificationCommandTest.class,
 	ChangeCalcKeyCommandTest.class,
+	ChangeSetOrderCommandTest.class,
+	ChangeSortKeysCommandTest.class,
 	ChangeViaSpecificationCommandTest.class,
 	CreateBendpointCommandTest.class,
 	CreateConnectorCommandTest.class,

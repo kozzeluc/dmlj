@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,8 +31,12 @@ import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.property.handler.ErrorEditHandler;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
+import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
+import org.lh.dmlj.schema.editor.property.handler.SetOrderHandler;
 
 public class SetGeneralPropertiesSection extends AbstractSetPropertiesSection {
+	
+	private IHyperlinkHandler setOrderHandler = new SetOrderHandler(this);
 
 	private static final EAttribute[] ATTRIBUTES = 
 		{SchemaPackage.eINSTANCE.getSet_Name(),
@@ -122,6 +126,15 @@ public class SetGeneralPropertiesSection extends AbstractSetPropertiesSection {
 		}
 	}
 	
+	@Override
+	public IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSet_Order()) {
+			return setOrderHandler;
+		} else {
+			return super.getHyperlinkHandler(attribute);
+		}
+	}
+
 	@Override
 	protected String getValue(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {	

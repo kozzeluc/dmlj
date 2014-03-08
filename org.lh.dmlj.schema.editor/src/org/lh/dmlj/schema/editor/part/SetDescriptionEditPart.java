@@ -84,6 +84,13 @@ public class SetDescriptionEditPart
 			// the sort key's duplicates option has changed
 			refreshVisuals();
 			
+		} else if (owner == getModel().getMemberRole().getSet() &&
+				   (isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Order()) ||
+					isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_SortKey()))) {
+			
+			// the set order or a sort key has changed
+			refreshVisuals();
+			
 		} else if (getModel().getMemberRole().getSet().getSystemOwner() != null &&
 				   owner == getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea() &&
 				   isFeatureSet(features, SchemaPackage.eINSTANCE.getSchemaArea_Name())) {

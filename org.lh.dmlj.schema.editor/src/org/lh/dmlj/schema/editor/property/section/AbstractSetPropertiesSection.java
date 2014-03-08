@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,16 +24,22 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.property.ISetProvider;
 
 public abstract class AbstractSetPropertiesSection 
-	extends AbstractAttributesBasedPropertiesSection<MemberRole> {
+	extends AbstractAttributesBasedPropertiesSection<MemberRole> implements ISetProvider {
+	
+	protected Set set;
 	
 	public AbstractSetPropertiesSection() {
 		super(Plugin.getDefault());
+	}	
+
+	@Override
+	public final Set getSet() {
+		return target.getSet();
 	}
-
-	protected Set set;
-
+	
 	@Override
 	protected final MemberRole getTarget(Object modelObject) {		
 		Assert.isTrue(modelObject instanceof ConnectionPart ||

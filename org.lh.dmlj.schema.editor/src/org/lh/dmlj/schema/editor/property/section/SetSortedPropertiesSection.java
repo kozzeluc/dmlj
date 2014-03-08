@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,9 +25,13 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.editor.property.filter.IEnumFilter;
+import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
+import org.lh.dmlj.schema.editor.property.handler.SetOrderHandler;
 
 public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 
+	private IHyperlinkHandler setOrderHandler = new SetOrderHandler(this);
+	
 	private static final EAttribute[] ATTRIBUTES = 
 		{SchemaPackage.eINSTANCE.getKey_ElementSummary(),
 		 SchemaPackage.eINSTANCE.getKey_DuplicatesOption()};
@@ -90,5 +94,14 @@ public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 			return super.getEnumFilter(attribute);
 		}
 	}
+	
+	@Override
+	public IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
+			return setOrderHandler;
+		} else {
+			return super.getHyperlinkHandler(attribute);
+		}
+	}	
 
 }
