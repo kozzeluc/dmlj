@@ -88,7 +88,7 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 	
 		// create the second table column, holding the property values
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		column2.setWidth(200);
+		column2.setWidth(300);
 		column2.setText("Value");
 		
 		// add the description manager
