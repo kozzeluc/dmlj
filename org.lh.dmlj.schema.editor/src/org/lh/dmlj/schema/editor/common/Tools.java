@@ -44,6 +44,29 @@ public abstract class Tools {
 		}
 		return p.toString();
 	}
+	
+	public static Element getDefaultSortKeyElement(SchemaRecord record) {
+		
+		if (record.getElements() == null) {
+			// element list not set in record (shouldn't really happen)
+			return null;
+		}
+		
+		// traverse all elements; find and return the first suitable element
+		for (Element element : record.getElements()) {
+			if (!element.getName().equalsIgnoreCase("FILLER") &&
+				element.getLength() <= 256 &&
+				!isInvolvedInRedefines(element) &&
+				!isInvolvedInOccurs(element)) {
+				
+				return element;
+			}
+		}
+		
+		// no suitable element defined; the record cannot participate in a sorted set
+		return null;
+		
+	}	
 
 	public static String getDuplicatesOption(Key calcKey) {
 		if (calcKey == null) {
