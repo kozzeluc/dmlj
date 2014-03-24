@@ -370,6 +370,149 @@ public class ModelChangeDispatcherTest {
 	}
 	
 	@Test
+	public void testDispatch_NestedCompoundCommand() {
+		
+		// under certain circumstances, GEF will wrap commands in compound commands, which can 
+		// result in nested compound commands; if the event command denotes a compound command that
+		// is composed of 1 (and only 1) compound command, the commands making up the inner compound 
+		// command have to be dispatched 
+		
+		// create the ModelChangeDispatcher
+		ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();	
+		
+		// create a mock IModelChangeListener and add it to the model change dispatcher's listeners
+		IModelChangeListener listener = mock(IModelChangeListener.class);
+		dispatcher.addModelChangeListener(listener);
+		
+		// simulate a PRE_EXECUTE command stack notification using a real CompoundCommand (composed 
+		// of another compund command that is composed of 2 mock commands) and a mock 
+		// CommandStackEvent...
+		Command command1 = mock(Command.class);
+		Command command2 = mock(Command.class);
+		CompoundCommand innerCompoundCommand = new CompoundCommand("inner compound command");
+		innerCompoundCommand.add(command1);
+		innerCompoundCommand.add(command2);
+		CompoundCommand outerCompoundCommand = new CompoundCommand("outer compound command");
+		outerCompoundCommand.add(innerCompoundCommand);
+		CommandStackEvent event = mock(CommandStackEvent.class);
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
+		when(event.getCommand()).thenReturn(outerCompoundCommand);
+		dispatcher.dispatch(event);		
+		
+		// ...no listener method should have been called
+		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
+				   							   any(EObject.class));		
+		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
+												anyObject(), any(EObject.class));
+		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
+				  								  any(EObject.class));
+		verify(listener, never()).afterSetFeatures(any(EObject.class), any(EStructuralFeature[].class));		
+
+		// simulate a PRE_REDO command stack notification
+		when(event.getDetail()).thenReturn(CommandStack.PRE_REDO);		
+		dispatcher.dispatch(event);
+
+		// ...no listener method should have been called
+		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
+											   any(EObject.class));		
+		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
+												anyObject(), any(EObject.class));
+		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
+				  								  any(EObject.class));
+		verify(listener, never()).afterSetFeatures(any(EObject.class), any(EStructuralFeature[].class));
+
+		// simulate a PRE_UNDO command stack notification
+		when(event.getDetail()).thenReturn(CommandStack.PRE_UNDO);		
+		dispatcher.dispatch(event);
+
+		// ...no listener method should have been called
+		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
+											   any(EObject.class));		
+		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
+												anyObject(), any(EObject.class));
+		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
+				  								  any(EObject.class));
+		verify(listener, never()).afterSetFeatures(any(EObject.class), any(EStructuralFeature[].class));
+
+		
+		// simulate a POST_EXECUTE command stack notification				
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
+		dispatcher.dispatch(event);
+
+		// ...no listener method should have been called (because all commands are missing the
+		// @ModelChange annotation)
+		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
+											   any(EObject.class));		
+		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
+												anyObject(), any(EObject.class));
+		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
+				  								  any(EObject.class));
+		verify(listener, never()).afterSetFeatures(any(EObject.class), any(EStructuralFeature[].class));
+		
+		
+		// simulate a POST_EXECUTE command stack notification using a compound command containing a
+		// command annotated with @ModelChange(category=MOVE_ITEM) and a command annotated with
+		// @ModelChange(category=SET_ATTRIBUTES)...
+		MoveItemCommand moveItemCommand = new MoveItemCommand();
+		SetFeaturesCommand setAttributeCommand = new SetFeaturesCommand();		
+		outerCompoundCommand = new CompoundCommand("test compound command");
+		outerCompoundCommand.add(moveItemCommand);
+		outerCompoundCommand.add(setAttributeCommand);
+		when(event.getCommand()).thenReturn(outerCompoundCommand);
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
+		dispatcher.dispatch(event);
+
+		// ...and verify that the right listener methods have been called (we cannot check the 
+		// order in which they were called but this order is not really relevant since the model
+		// will contain the changes from BOTH commands on either method call)
+		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
+											   any(EObject.class));		
+		verify(listener, times(1)).afterMoveItem(moveItemCommand.oldOwner, moveItemCommand.reference, 
+												 moveItemCommand.item, moveItemCommand.newOwner);
+		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
+				  								  any(EObject.class));
+		verify(listener, times(1)).afterSetFeatures(setAttributeCommand.owner, 
+													setAttributeCommand.features);
+		
+		// simulate a POST_UNDO command stack notification using the same compound command		
+		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);		
+		dispatcher.dispatch(event);
+
+		// ...and verify that the right listener methods have been called (we cannot check the 
+		// order in which they were called but this order is not really relevant since the model
+		// will contain the changes from BOTH commands on either method call)
+		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
+											   any(EObject.class));		
+		verify(listener, times(1)).afterMoveItem(moveItemCommand.oldOwner, moveItemCommand.reference, 
+												 moveItemCommand.item, moveItemCommand.newOwner);
+		verify(listener, times(1)).afterMoveItem(moveItemCommand.newOwner, moveItemCommand.reference, 
+				 								 moveItemCommand.item, moveItemCommand.oldOwner);
+		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
+				  								  any(EObject.class));
+		verify(listener, times(2)).afterSetFeatures(setAttributeCommand.owner, 
+													setAttributeCommand.features);
+		
+		// simulate a POST_REDO command stack notification using the same compound command		
+		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);		
+		dispatcher.dispatch(event);
+
+		// ...and verify that the right listener methods have been called (we cannot check the 
+		// order in which they were called but this order is not really relevant since the model
+		// will contain the changes from BOTH commands on either method call)
+		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
+											   any(EObject.class));		
+		verify(listener, times(2)).afterMoveItem(moveItemCommand.oldOwner, moveItemCommand.reference, 
+												 moveItemCommand.item, moveItemCommand.newOwner);
+		verify(listener, times(1)).afterMoveItem(moveItemCommand.newOwner, moveItemCommand.reference, 
+				 								 moveItemCommand.item, moveItemCommand.oldOwner);
+		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
+				  								  any(EObject.class));
+		verify(listener, times(3)).afterSetFeatures(setAttributeCommand.owner, 
+													setAttributeCommand.features);		
+		
+	}
+
+	@Test
 	public void testDispatch_SimpleCommand() {
 		
 		// create the ModelChangeDispatcher
@@ -1050,7 +1193,7 @@ public class ModelChangeDispatcherTest {
 			assertEquals("assertion failed: not POST_EXECUTE/POST_UNDO/POST_REDO", e.getMessage());
 		}		
 		
-	}	
+	}
 	
 	@ModelChange(category=ADD_ITEM)
 	private static class AddItemCommand extends Command {

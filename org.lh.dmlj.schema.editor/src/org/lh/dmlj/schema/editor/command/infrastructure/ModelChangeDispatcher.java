@@ -192,10 +192,16 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	}
 	
 	private static String getEventDetailDescription(int eventDetail) {
-		if (eventDetail == CommandStack.POST_EXECUTE) {
+		if (eventDetail == CommandStack.PRE_EXECUTE) {
+			return "PRE_EXECUTE";		
+		} if (eventDetail == CommandStack.POST_EXECUTE) {
 			return "POST_EXECUTE";
+		} else if (eventDetail == CommandStack.PRE_REDO) {
+			return "PRE_REDO";
 		} else if (eventDetail == CommandStack.POST_REDO) {
 			return "POST_REDO";
+		} else if (eventDetail == CommandStack.PRE_UNDO) {
+			return "PRE_UNDO";	
 		} else if (eventDetail == CommandStack.POST_UNDO) {
 			return "POST_UNDO";	
 		}
@@ -272,7 +278,17 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void dispatch(CommandStackEvent event) {		
+		
+		// log every event when in debug mode
+		StringBuilder debugMessage = new StringBuilder();
+		debugMessage.append("****************************** CommandStackEvent: " +
+							"******************************\n");
+		debugMessage.append("Command class: " + event.getCommand().getClass().getName() + "\n");
+		debugMessage.append("Event detail: " + getEventDetailDescription(event.getDetail()) + " (" + 
+	 						event.getDetail() + ")");
+		logDebug(debugMessage.toString());
 		
 		// we don't care about pre-change events
 		if (event.isPreChangeEvent()) {
@@ -280,7 +296,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		}
 		
 		// we don't expect to be in dispatching mode
-		Assert.isTrue(!dispatching);		
+		Assert.isTrue(!dispatching, "already dispatching; check for previous exceptions");		
 		
 		// the event's command is possibly a compound command - build a list of commands to process
 		Command eventCommand = event.getCommand();
@@ -288,8 +304,16 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		if (eventCommand instanceof CompoundCommand) {
 			// the event command is a compound command
 			CompoundCommand compoundCommand = (CompoundCommand) eventCommand;
-			@SuppressWarnings("unchecked")
 			List<Command> compoundCommandCommands = compoundCommand.getCommands();			
+			if (compoundCommandCommands.size() == 1 &&
+				compoundCommandCommands.get(0) instanceof CompoundCommand) {
+				
+				// in some cases, compound commands that we create are wrapped themselves in a
+				// compound command, so make sure we can handle this situation
+				CompoundCommand wrappedCompoundCommand = 
+					(CompoundCommand) compoundCommandCommands.get(0);
+				compoundCommandCommands = wrappedCompoundCommand.getCommands();
+			}
 			if (isExecuteOrRedo(event.getDetail())) {
 				// add the individual commands in the order they are listed in the compound command,
 				// listeners should be aware that the model contains the situation after undoing all
@@ -304,6 +328,19 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 					commands.add(compoundCommandCommands.get(i));
 				}
 			}
+			// log the commands contained in the compound command
+			debugMessage = new StringBuilder();
+				debugMessage.append("Compound command classes (in the order in which they will " +
+									"be dispatched):\n");
+			
+			for (int i = 0; i < commands.size(); i++) {
+				if (i > 0) {
+					debugMessage.append("\n");				
+				}
+				debugMessage.append("[" + i + "] " + commands.get(i).getClass().getName() + 
+									"(label='" + commands.get(i).getLabel() + "')");				
+			}
+			logDebug(debugMessage.toString());			
 		} else {
 			// the event command is a simple command
 			commands.add(eventCommand);
