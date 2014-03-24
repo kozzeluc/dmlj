@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,8 +25,7 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.DeleteConnectorsCommand;
-import org.lh.dmlj.schema.editor.command.DeleteIndexCommand;
+import org.lh.dmlj.schema.editor.command.DeleteIndexCommandCreationAssistant;
 
 public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 
@@ -50,16 +49,7 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 		if (set.getSystemOwner() == null) {
 			return null;
 		}		
-		// we might need to delete the connectors first, so create a chained command when needed
-		Command deleteIndexCommand = new DeleteIndexCommand(set.getSystemOwner());
-		if (memberRole.getConnectionParts().size() > 1) {
-			// connectors present, create a compound command
-			Command deleteConnectorsCommand = new DeleteConnectorsCommand(memberRole);
-			return deleteConnectorsCommand.chain(deleteIndexCommand);
-		} else {
-			// no connectors present, the simple delete index command will do
-			return deleteIndexCommand;
-		}
+		return DeleteIndexCommandCreationAssistant.getCommand(memberRole);
 	}
 	
 }

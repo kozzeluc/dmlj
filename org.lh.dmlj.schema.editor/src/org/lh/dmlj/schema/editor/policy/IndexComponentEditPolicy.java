@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,8 +24,7 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.DeleteConnectorsCommand;
-import org.lh.dmlj.schema.editor.command.DeleteIndexCommand;
+import org.lh.dmlj.schema.editor.command.DeleteIndexCommandCreationAssistant;
 
 public class IndexComponentEditPolicy extends ComponentEditPolicy {
 
@@ -40,19 +39,9 @@ public class IndexComponentEditPolicy extends ComponentEditPolicy {
 		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof SystemOwner)) {						
 			return null;
 		}
-		// get the system owner and the only set member
 		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
-		MemberRole memberRole = systemOwner.getSet().getMembers().get(0); 
-		// we might need to delete the connectors first, so create a chained command when needed
-		Command deleteIndexCommand = new DeleteIndexCommand(systemOwner);
-		if (memberRole.getConnectionParts().size() > 1) {
-			// connectors present, create a compound command
-			Command deleteConnectorsCommand = new DeleteConnectorsCommand(memberRole);
-			return deleteConnectorsCommand.chain(deleteIndexCommand);
-		} else {
-			// no connectors present, the simple delete index command will do
-			return deleteIndexCommand;
-		}
+		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);		
+		return DeleteIndexCommandCreationAssistant.getCommand(memberRole);
 	}
 	
 }

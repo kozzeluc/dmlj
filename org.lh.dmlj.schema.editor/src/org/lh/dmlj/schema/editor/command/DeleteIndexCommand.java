@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
@@ -142,6 +143,13 @@ public class DeleteIndexCommand extends Command {
 	
 	@Override
 	public void redo() {				
+		
+		// the member record type isn't allowed to be stored VIA the given system indexed set
+		// (because we don't handle changing a record's location mode to DIRECT in this command)
+		Assert.isTrue(record.getViaSpecification() == null ||
+					  record.getViaSpecification().getSet() != systemOwner.getSet(), 
+					  "record " + record.getName() + " is stored VIA set " + 
+					  systemOwner.getSet().getName());		
 		
 		// remove the system owner's area specification from the area; if the area has become 
 		// obsolete, remove it and, together with it, any obsolete procedures
