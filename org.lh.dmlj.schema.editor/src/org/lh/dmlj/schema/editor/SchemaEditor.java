@@ -60,6 +60,7 @@ import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
+import org.eclipse.gef.palette.ConnectionCreationToolEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
 import org.eclipse.gef.palette.PaletteDrawer;
 import org.eclipse.gef.palette.PaletteRoot;
@@ -69,6 +70,7 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.print.PrintGraphicalViewerOperation;
 import org.eclipse.gef.requests.SimpleFactory;
 import org.eclipse.gef.rulers.RulerProvider;
+import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.DeleteAction;
 import org.eclipse.gef.ui.actions.PrintAction;
@@ -122,6 +124,9 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
+import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
+import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
+import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.part.SchemaDiagramEditPartFactory;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
@@ -663,6 +668,41 @@ public class SchemaEditor
         									  label16, 
         									  label24);
 	        
+        // chained set creation tool
+        ImageDescriptor chainedSet16 = 
+        	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/chainedSet16.gif"));
+        ImageDescriptor chainedSet24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/chainedSet24.gif"));
+        ConnectionCreationToolEntry chainedSetCreationTool = 
+        	new ConnectionCreationToolEntry("Chained Set", "Add chained set", 
+        									new SimpleFactory(IChainedSetPlaceHolder.class), 
+        									chainedSet16, chainedSet24);
+        chainedSetCreationTool.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);        
+        
+        // multiple-member set tool
+        ImageDescriptor multipleMemberSet16 = 
+        	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/multipleMemberSet16.gif"));
+        ImageDescriptor multipleMemberSet24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/multipleMemberSet24.gif"));
+        ConnectionCreationToolEntry multipleMemberSetCreationTool = 
+        	new ConnectionCreationToolEntry("Multiple-member Set", 
+        									"Add member record type to chained set", 
+        									new SimpleFactory(IMultipleMemberSetPlaceHolder.class), 
+        									multipleMemberSet16, multipleMemberSet24);
+        multipleMemberSetCreationTool.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, 
+        											  true);        
+        
+        // indexed set creation tool
+        ImageDescriptor indexedSet16 = 
+        	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/indexedSet16.gif"));
+        ImageDescriptor indexedSet24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/indexedSet24.gif"));
+        ConnectionCreationToolEntry indexedSetCreationTool = 
+        	new ConnectionCreationToolEntry("Indexed Set", "Add user owned indexed set", 
+        									new SimpleFactory(IIndexedSetPlaceHolder.class), 
+        									indexedSet16, indexedSet24);
+        indexedSetCreationTool.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);        
+        
         // index creation tool
         ImageDescriptor index16 = 
         	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/index16.gif"));
@@ -700,6 +740,9 @@ public class SchemaEditor
         
         // Sets drawer
         PaletteDrawer createSetItemsDrawer = new PaletteDrawer("Sets");
+        createSetItemsDrawer.add(chainedSetCreationTool);
+        createSetItemsDrawer.add(multipleMemberSetCreationTool);
+        createSetItemsDrawer.add(indexedSetCreationTool);
         createSetItemsDrawer.add(indexCreationTool);
         createSetItemsDrawer.add(connectorCreationTool);
         palette.add(createSetItemsDrawer);

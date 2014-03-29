@@ -16,7 +16,9 @@
  */
 package org.lh.dmlj.schema.editor.part;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -27,17 +29,21 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.figure.SetDescriptionFigure;
+import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.SetDescriptionComponentEditPolicy;
+import org.lh.dmlj.schema.editor.policy.SetDescriptionGraphicalNodeEditPolicy;
 
 public class SetDescriptionEditPart 
     extends AbstractNonResizableDiagramNodeEditPart<ConnectionLabel>  {
@@ -118,9 +124,19 @@ public class SetDescriptionEditPart
 	
 	@Override
 	protected void createEditPolicies() {
+		
 		// make sure we can delete a set by pressing the delete key on the line represented by this
 		// edit part:
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetDescriptionComponentEditPolicy());
+		
+		// make sure we can add member record types to existing sets - the palette tool to 
+		// accomplish this can be used in conjunction with either this edit part, the connection
+		// part (set) edit part(s) or the connector edit parts (if present); ALL logic to handle 
+		// this is handled with this type of edit part, so the other edit parts should set this edit
+		// part as the target for those create connection requests
+		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, 
+				  		  new SetDescriptionGraphicalNodeEditPolicy(getModel()));		
+		
 	}
 
 	@Override
@@ -141,37 +157,6 @@ public class SetDescriptionEditPart
         figure.setToolTip(tooltip);
         
         return figure;
-	}
-	
-	@Override
-	public void showSourceFeedback(Request request) {
-		if (request instanceof ChangeBoundsRequest) {
-			// Change the line color of the connection parts and connectors to 
-			// which this label belongs to red so that the user can see to which 
-			// connection parts the label belongs.
-			for (ConnectionPart connectionPart : 
-				 getModel().getMemberRole().getConnectionParts()) {
-				
-				SetEditPart setEditPart = 
-					(SetEditPart) getViewer().getEditPartRegistry()
-											 .get(connectionPart);
-				PolylineConnection connection = 
-					(PolylineConnection) setEditPart.getFigure();
-				connection.setLineWidth(2);
-				connection.setForegroundColor(ColorConstants.red);
-				
-				Connector connector = connectionPart.getConnector();
-				if (connector != null) {
-					ConnectorEditPart connectorEditPart = 
-						(ConnectorEditPart) getViewer().getEditPartRegistry()
-													   .get(connector);
-					((ConnectorFigure)connectorEditPart.getFigure()).setLineWidth(2);
-					connectorEditPart.getFigure()
-								     .setForegroundColor(ColorConstants.red);
-				}
-			}
-		}
-		super.showSourceFeedback(request);
 	}
 	
 	@Override
@@ -203,7 +188,29 @@ public class SetDescriptionEditPart
 		}
 		super.eraseSourceFeedback(request);
 	}
-
+	
+	@Override
+	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
+		// only manipulate the source connection anchor when adding a member record type to an
+		// existing set...
+		if (!(request instanceof CreateConnectionRequest) ||
+			((CreateConnectionRequest) request).getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
+						
+			return super.getSourceConnectionAnchor(request);
+		}		
+		// ...we want the line that is drawn, to start at the owner of the set:
+		SchemaRecord ownerRecord = getModel().getMemberRole().getSet().getOwner().getRecord();
+		RecordEditPart ownerRecordEditPart = 
+			(RecordEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
+		Assert.isNotNull(ownerRecordEditPart, "no edit part for record " + ownerRecord.getName());
+		return ownerRecordEditPart.getSourceConnectionAnchor(request);
+	}
+	
+	@Override
+	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
+		return super.getTargetConnectionAnchor(request);
+	}
+	
 	@Override
 	protected void setFigureData() {
 		
@@ -228,6 +235,37 @@ public class SetDescriptionEditPart
 		
 		figure.setSystemOwnerArea(Tools.getSystemOwnerArea(memberRole));
 		
+	}
+
+	@Override
+	public void showSourceFeedback(Request request) {		
+		if (request instanceof ChangeBoundsRequest) {
+			// Change the line color of the connection parts and connectors to 
+			// which this label belongs to red so that the user can see to which 
+			// connection parts the label belongs.
+			for (ConnectionPart connectionPart : 
+				 getModel().getMemberRole().getConnectionParts()) {
+				
+				SetEditPart setEditPart = 
+					(SetEditPart) getViewer().getEditPartRegistry()
+											 .get(connectionPart);
+				PolylineConnection connection = 
+					(PolylineConnection) setEditPart.getFigure();
+				connection.setLineWidth(2);
+				connection.setForegroundColor(ColorConstants.red);
+				
+				Connector connector = connectionPart.getConnector();
+				if (connector != null) {
+					ConnectorEditPart connectorEditPart = 
+						(ConnectorEditPart) getViewer().getEditPartRegistry()
+													   .get(connector);
+					((ConnectorFigure)connectorEditPart.getFigure()).setLineWidth(2);
+					connectorEditPart.getFigure()
+								     .setForegroundColor(ColorConstants.red);
+				}
+			}
+		}
+		super.showSourceFeedback(request);
 	}
 
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -27,8 +28,11 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.requests.CreateConnectionRequest;
+import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
@@ -37,6 +41,7 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
+import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
 
 public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<Connector> {
@@ -144,6 +149,35 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		return new ConnectorAnchor((ConnectorFigure) getFigure(), getModel());
 	}
+	
+	@Override
+	public EditPart getTargetEditPart(Request request) {
+		
+		// we need to do something special ONLY in the case when adding a member record type to a
+		// (possibly already multiple-member) set...
+		if (!(request instanceof CreateConnectionRequest) ||
+			((CreateConnectionRequest) request).getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
+							
+			return super.getTargetEditPart(request);
+		}
+		
+		// ... if the user has already selected a set, just have the default behaviour proceed
+		CreateConnectionRequest cRequest = (CreateConnectionRequest) request;
+		if (cRequest.getSourceEditPart() != null) {			
+			return super.getTargetEditPart(request);			
+		}		
+		
+		// ...we want the line that is drawn, to start at the owner of the set, so 'redirect' to the
+		// connection label edit part and have that take care of everything
+		ConnectionLabel connectionLabel = memberRole.getConnectionLabel();
+		SetDescriptionEditPart setDescriptionEditPart = 
+			(SetDescriptionEditPart) getViewer().getEditPartRegistry().get(connectionLabel);
+		Assert.isNotNull(setDescriptionEditPart, "no edit part for set description: " + 
+						 memberRole.getSet().getName() + " (" + memberRole.getRecord(). getName() +
+						 ")");
+		return setDescriptionEditPart;
+		
+	}	
 
 	@Override
 	protected void setFigureData() {

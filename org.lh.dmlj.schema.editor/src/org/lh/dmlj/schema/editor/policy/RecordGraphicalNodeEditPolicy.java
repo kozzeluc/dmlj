@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,25 +18,40 @@ package org.lh.dmlj.schema.editor.policy;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SetMode;
+import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
+import org.lh.dmlj.schema.editor.command.AddMemberToSetCommand;
+import org.lh.dmlj.schema.editor.command.CreateSetCommand;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommand;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
+import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
+import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.part.SetEditPart;
 
 /**
- * An edit policy that enables moving both connection end points.
+ * An edit policy that enables moving both connection end points and creating new sets or adding a
+ * member record type to an existing set, making it a multiple-member set if not already.
  */
 public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 
@@ -56,12 +71,71 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 	
 	@Override
 	protected Command getConnectionCompleteCommand(CreateConnectionRequest request) {
+		// called when the user wants to add a chained or indexed set and is hoovering above a  
+		// candidate member record type OR when he wants to add a member record type to an existing
+		// set, making it a multiple-member set if not so already
+		if (request.getStartCommand() instanceof CreateSetCommand) {
+			// creation of new set in progress
+			CreateSetCommand command = (CreateSetCommand) request.getStartCommand();
+			if (record != command.getOwner()) {
+				// the owner and member have to be different record types
+				command.setMemberRecord(record);
+				return command;
+			}			
+		} else if (request.getStartCommand() instanceof AddMemberToSetCommand) {
+			// adding a member record type to an existing set 
+			AddMemberToSetCommand command = (AddMemberToSetCommand)request.getStartCommand();
+			Set set = command.getSet();
+			if (set.getOwner().getRecord() == record) {
+				// the record already participates in the given set as the owner record type
+				return null;
+			}
+			for (MemberRole memberRole : set.getMembers()) {
+				if (memberRole.getRecord() == record) {
+					// the record already participates in the given set as a member record type
+					return null;
+				}
+			}
+			// the record is a valid candidate for participating in the set as an additional member
+			// record type, provided the set is either not sorted, OR sorted AND at least 1 element
+			// suitable for the sort key is defined in the record
+			if (set.getOrder() != SetOrder.SORTED || 
+				Tools.getDefaultSortKeyElement(record) != null) {
+				
+				// supply the member record type to the command since we couldn't do this at command
+				// construction time
+				command.setMemberRecord(record);
+				return command;
+			}
+		}
 		return null;
 	}
 
 	@Override
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
-		return null;
+		// we should only instantiate a set creation command when we're adding either a chained or
+		// indexed set
+		if (request.getNewObjectType() != IChainedSetPlaceHolder.class &&
+			request.getNewObjectType() != IIndexedSetPlaceHolder.class) {
+			
+			return null;
+		}
+		// if we get here, we're called when the user wants to add a chained or indexed set and is 
+		// hoovering above a candidate owner record type
+		if (!(request.getStartCommand() instanceof CreateSetCommand) ||
+			((CreateSetCommand) request.getStartCommand()).getOwner() != record) {
+			
+			// avoid creating a new command over and over again for the same owner record
+			SetMode mode = null;
+			if (request.getNewObjectType() == IChainedSetPlaceHolder.class) {
+				mode = SetMode.CHAINED;
+			} else if (request.getNewObjectType() == IIndexedSetPlaceHolder.class) {
+				mode = SetMode.INDEXED;
+			} 
+			Assert.isNotNull(mode, "cannot determine set mode");	
+			request.setStartCommand(new CreateSetCommand(record, mode));
+		}
+		return request.getStartCommand();
 	}
 
 	@Override
@@ -160,6 +234,23 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 		} else {
 			return null;
 		}
-	}	
+	}
 	
+	@Override
+	protected Connection createDummyConnection(Request request) {
+		if (!(request instanceof CreateConnectionRequest) ||
+			((CreateConnectionRequest) request).getNewObjectType() != IChainedSetPlaceHolder.class &&
+			((CreateConnectionRequest) request).getNewObjectType() != IIndexedSetPlaceHolder.class) {
+			
+			return super.createDummyConnection(request);
+		}
+		// we're adding a chained or (user-owned) indexed set; make sure the line that is shown
+		// while looking for the member record type is fitted with an arrow at its target end
+		PolylineConnection connection = new PolylineConnection();
+		PolylineDecoration decoration = new PolylineDecoration();
+		decoration.setTemplate(PolylineDecoration.TRIANGLE_TIP);
+		connection.setTargetDecoration(decoration);
+		return connection;
+	}	
+		
 }

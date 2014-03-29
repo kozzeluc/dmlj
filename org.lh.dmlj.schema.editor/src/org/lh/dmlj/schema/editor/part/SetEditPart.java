@@ -19,6 +19,7 @@ package org.lh.dmlj.schema.editor.part;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
@@ -32,9 +33,13 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
+import org.eclipse.gef.requests.CreateConnectionRequest;
+import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
@@ -43,6 +48,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 import org.lh.dmlj.schema.editor.policy.SetComponentEditPolicy;
 import org.lh.dmlj.schema.editor.policy.SetXYLayoutEditPolicy;
@@ -222,6 +228,35 @@ public class SetEditPart
 		return new PrecisionPoint(location.getX(), location.getY());
 	}
 
+	@Override
+	public EditPart getTargetEditPart(Request request) {
+		
+		// we need to do something special ONLY in the case when adding a member record type to a
+		// (possibly already multiple-member) set...
+		if (!(request instanceof CreateConnectionRequest) ||
+			((CreateConnectionRequest) request).getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
+							
+			return super.getTargetEditPart(request);
+		}
+		
+		// ... if the user has already selected a set, just have the default behaviour proceed
+		CreateConnectionRequest cRequest = (CreateConnectionRequest) request;
+		if (cRequest.getSourceEditPart() != null) {			
+			return super.getTargetEditPart(request);			
+		}
+		
+		// ...we want the line that is drawn, to start at the owner of the set, so 'redirect' to the
+		// connection label edit part and have that take care of everything
+		ConnectionLabel connectionLabel = memberRole.getConnectionLabel();
+		SetDescriptionEditPart setDescriptionEditPart = 
+			(SetDescriptionEditPart) getViewer().getEditPartRegistry().get(connectionLabel);
+		Assert.isNotNull(setDescriptionEditPart, "no edit part for set description: " + 
+						 memberRole.getSet().getName() + " (" + memberRole.getRecord(). getName() +
+						 ")");
+		return setDescriptionEditPart;
+		
+	}
+	
 	private void refreshBendpointEditPolicy() {
 		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, 
 						  new SetBendpointEditPolicy(this));
@@ -248,6 +283,6 @@ public class SetEditPart
 		getConnectionFigure().setRoutingConstraint(bendpoints);
 		
 		refreshBendpointEditPolicy();
-	}
+	}	
 	
 }

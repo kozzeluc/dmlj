@@ -34,9 +34,15 @@ import org.lh.dmlj.schema.SetMode;
 
 public abstract class AbstractSortKeyManipulationCommand extends Command {
 
-	private Set 				  set;
-	private StashedDataSlot[]	  stashedDataSlots = new StashedDataSlot[2];	
-	private ISortKeyDescription[] sortKeyDescriptions; // null if newOrder != SetOrder.SORTED
+	private Set 				    set;
+	private StashedDataSlot[]	    stashedDataSlots = new StashedDataSlot[2];	
+	protected ISortKeyDescription[] sortKeyDescriptions; // null if newOrder != SetOrder.SORTED
+	
+	protected AbstractSortKeyManipulationCommand(Set set) {
+		super();
+		this.set = set;
+		// for sorted sets, the sortKeyDescriptions should be set in time
+	}	
 	
 	protected AbstractSortKeyManipulationCommand(Set set, 
 												 ISortKeyDescription[] sortKeyDescriptions) {
@@ -50,13 +56,22 @@ public abstract class AbstractSortKeyManipulationCommand extends Command {
 		}
 	}
 	
-	protected final void prepareSortKey(int index, StashedDataSlot slot) {		
+	protected final void prepareSortKey(SchemaRecord record, int memberRoleIndex, int slotIndex) {		
 		
-		MemberRole memberRole = set.getMembers().get(index);
-		SchemaRecord record = memberRole.getRecord();
+		// initialize the data slot if needed
+		if (stashedDataSlots[slotIndex] == null) {
+			stashedDataSlots[slotIndex] = new StashedDataSlot();
+		}
 		
-		Assert.isTrue(sortKeyDescriptions[index].getElementNames().length == 
-				 	  sortKeyDescriptions[index].getSortSequences().length,
+		StashedDataSlot slot = stashedDataSlots[slotIndex];
+		while (memberRoleIndex > slot.stashedSortKeys.size()) {
+			// provide a dummy stashed sort key so that memberRoleIndex always points to the right
+			// stashed sort key
+			slot.stashedSortKeys.add(new StashedSortKey());
+		}
+		
+		Assert.isTrue(sortKeyDescriptions[memberRoleIndex].getElementNames().length == 
+				 	  sortKeyDescriptions[memberRoleIndex].getSortSequences().length,
 				 	 "the number of element names must match the number of sort sequences");		
 		
 		StashedSortKey preparedSortKey = new StashedSortKey();
@@ -64,11 +79,11 @@ public abstract class AbstractSortKeyManipulationCommand extends Command {
 		preparedSortKey.sortKey = SchemaFactory.eINSTANCE.createKey();
 		preparedSortKey.sortKeyIndex = record.getKeys().size();
 		preparedSortKey.sortKeyElementIndexes = 
-			new int[sortKeyDescriptions[index].getElementNames().length];
+			new int[sortKeyDescriptions[memberRoleIndex].getElementNames().length];
 		List<String> processed = new ArrayList<>();
-		for (int i = 0; i < sortKeyDescriptions[index].getElementNames().length; i++) {
+		for (int i = 0; i < sortKeyDescriptions[memberRoleIndex].getElementNames().length; i++) {
 			// get the sort element name; an element can be specified only once
-			String elementName = sortKeyDescriptions[index].getElementNames()[i];
+			String elementName = sortKeyDescriptions[memberRoleIndex].getElementNames()[i];
 			Assert.isTrue(processed.indexOf(elementName) < 0, 
 						  "already a sort element in record " + record.getName() +
 						  ": " + elementName);
@@ -80,20 +95,20 @@ public abstract class AbstractSortKeyManipulationCommand extends Command {
 			preparedSortKey.sortKeyElements.add(element);
 			preparedSortKey.sortKeyElementIndexes[i] = element.getKeyElements().size();
 			KeyElement keyElement = SchemaFactory.eINSTANCE.createKeyElement();
-			keyElement.setSortSequence(sortKeyDescriptions[index].getSortSequences()[i]);
+			keyElement.setSortSequence(sortKeyDescriptions[memberRoleIndex].getSortSequences()[i]);
 			preparedSortKey.sortKey.getElements().add(keyElement);
 			preparedSortKey.sortKeyKeyElements.add(keyElement);
 			// remember the element name
 			processed.add(elementName);
 		}
 		Assert.isTrue(set.getMode() == SetMode.INDEXED ||
-					  sortKeyDescriptions[index].getDuplicatesOption() != DuplicatesOption.BY_DBKEY, 
+					  sortKeyDescriptions[memberRoleIndex].getDuplicatesOption() != DuplicatesOption.BY_DBKEY, 
 					  "duplicates by dbkey is only allowed for INDEXED sets: " + set.getName());
 		preparedSortKey.sortKey
-					   .setDuplicatesOption(sortKeyDescriptions[index].getDuplicatesOption());
-		preparedSortKey.sortKey.setNaturalSequence(sortKeyDescriptions[index].isNaturalSequence());
+					   .setDuplicatesOption(sortKeyDescriptions[memberRoleIndex].getDuplicatesOption());
+		preparedSortKey.sortKey.setNaturalSequence(sortKeyDescriptions[memberRoleIndex].isNaturalSequence());
 		if (set.getMode()== SetMode.INDEXED) {
-			preparedSortKey.sortKey.setCompressed(sortKeyDescriptions[index].isCompressed());
+			preparedSortKey.sortKey.setCompressed(sortKeyDescriptions[memberRoleIndex].isCompressed());
 		} else {
 			preparedSortKey.sortKey.setCompressed(false);
 		}
@@ -104,16 +119,15 @@ public abstract class AbstractSortKeyManipulationCommand extends Command {
 	
 	protected final void prepareSortKeys(int slotIndex) {
 		Assert.isTrue(stashedDataSlots[slotIndex] == null, 
-					  "stashed data slot already in use: " + slotIndex);
-		stashedDataSlots[slotIndex] = new StashedDataSlot();
+			  	  	  "stashed data slot already in use: " + slotIndex);
 		for (int i = 0; i < set.getMembers().size(); i++) {
-			prepareSortKey(i, stashedDataSlots[slotIndex]);
+			MemberRole memberRole = set.getMembers().get(i);
+			prepareSortKey(memberRole.getRecord(), i, slotIndex);
 		}
 	}	
 	
-	protected final void removeSortKey(int index) {		
+	protected final void removeSortKey(MemberRole memberRole) {		
 		
-		MemberRole memberRole = set.getMembers().get(index);
 		Key sortKey = memberRole.getSortKey();
 		
 		for (KeyElement keyElement : memberRole.getSortKey().getElements()) {
@@ -127,14 +141,17 @@ public abstract class AbstractSortKeyManipulationCommand extends Command {
 
 	protected final void removeSortKeys() {
 		for (int i = 0; i < set.getMembers().size(); i++) {
-			removeSortKey(i);
+			MemberRole memberRole = set.getMembers().get(i);
+			removeSortKey(memberRole);
 		}
 	}
 	
-	protected final void restoreSortKey(int index, StashedDataSlot slot) {		
+	protected final void restoreSortKey(SchemaRecord record, int memberRoleIndex, int slotIndex) {		
 		
-		MemberRole memberRole = set.getMembers().get(index);
-		StashedSortKey stashedSortKey = slot.stashedSortKeys.get(index);
+		StashedDataSlot slot = stashedDataSlots[slotIndex];	
+		
+		MemberRole memberRole = set.getMembers().get(memberRoleIndex);
+		StashedSortKey stashedSortKey = slot.stashedSortKeys.get(memberRoleIndex);
 		
 		for (int i = 0; i < stashedSortKey.sortKeyElements.size(); i++) {
 			Element element = stashedSortKey.sortKeyElements.get(i);
@@ -150,11 +167,12 @@ public abstract class AbstractSortKeyManipulationCommand extends Command {
 	protected final void restoreSortKeys(int slotIndex) {
 		Assert.isTrue(stashedDataSlots[slotIndex] != null, "stashed data slot empty: " + slotIndex);
 		for (int i = 0; i < set.getMembers().size(); i++) {
-			restoreSortKey(i, stashedDataSlots[slotIndex]);
+			MemberRole memberRole = set.getMembers().get(i);
+			restoreSortKey(memberRole.getRecord(), i, slotIndex);
 		}
 	}
 	
-	protected final void stashSortKey(int index, StashedDataSlot slot) {
+	private final void stashSortKey(int index, StashedDataSlot slot) {
 		
 		MemberRole memberRole = set.getMembers().get(index);
 		

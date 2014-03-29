@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.EditPart;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
@@ -39,6 +41,33 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 							  IModelChangeProvider modelChangeProvider) {
 		
 		super(connectionPart, modelChangeProvider);
+	}
+	
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+		if (owner == getNodeTextProvider() && 
+			reference == SchemaPackage.eINSTANCE.getSet_Members()) {
+			
+			// a member record type was added to the set
+			SchemaRecord memberRecord = ((MemberRole) item).getRecord();
+			EditPart child = 
+				SchemaTreeEditPartFactory.createEditPart(memberRecord, modelChangeProvider);					
+			int index = 
+				getInsertionIndex(getChildren(), memberRecord, getChildNodeTextProviderOrder());					
+			addChild(child, index);			
+		}
+	}
+	
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
+		if (owner == getNodeTextProvider() && 
+			reference == SchemaPackage.eINSTANCE.getSet_Members()) {
+			
+			// a member record type was removed from the set; although the item is set to the member
+			// role involved, the reference to the record itself is lost, so we need to figure out
+			// ourselves which member record was removed... or just refresh the children:
+			refreshChildren();
+		}
 	}
 	
 	@Override

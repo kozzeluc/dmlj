@@ -108,9 +108,9 @@ public class SchemaEditPart
 			} else {					
 				// refresh the owner record edit part
 				SchemaRecord ownerRecord = set.getOwner().getRecord();
-				GraphicalEditPart memberRecordEditPart = 
+				GraphicalEditPart ownerRecordEditPart = 
 					(GraphicalEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
-				memberRecordEditPart.refresh();
+				ownerRecordEditPart.refresh();
 			}
 			
 			// refresh the member record edit part
@@ -124,6 +124,30 @@ public class SchemaEditPart
 			EditPart setDescriptionEditPart = 
 				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider);
 			addChild(setDescriptionEditPart, getChildren().size());
+			
+		} else if (reference == SchemaPackage.eINSTANCE.getSet_Members()) {			
+			
+			// a member record type was added to an existing (user-owned chained) set
+			Set set = (Set) owner;
+			MemberRole memberRole = (MemberRole) item;
+											
+			// refresh the owner record edit part
+			SchemaRecord ownerRecord = set.getOwner().getRecord();
+			GraphicalEditPart ownerRecordEditPart = 
+				(GraphicalEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
+			ownerRecordEditPart.refresh();			
+			
+			// refresh the member record edit part
+			SchemaRecord memberRecord = memberRole.getRecord();
+			GraphicalEditPart memberRecordEditPart = 
+				(GraphicalEditPart) getViewer().getEditPartRegistry().get(memberRecord);
+			memberRecordEditPart.refresh();
+			
+			// create the set label edit part and add it as a child
+			ConnectionLabel connectionLabel = memberRole.getConnectionLabel();
+			EditPart setDescriptionEditPart = 
+				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider);
+			addChild(setDescriptionEditPart, getChildren().size());			
 			
 		} else if (owner instanceof MemberRole && 
 				   reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts()) {			
@@ -190,7 +214,9 @@ public class SchemaEditPart
 			
 		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
 			
-			// a set was removed
+			// a set was removed; we don't expect any connectors to be present (i.e. connectors
+			// should be removed before a set is removed; if connectors were present, this will have
+			// impact on what we have to do here though)
 			Set set = (Set) item;
 			
 			// remove the SYSTEM OWNER's edit part if applicable			
@@ -219,6 +245,10 @@ public class SchemaEditPart
 					if (connectionPart.getMemberRole().getSet() == set) {
 						// ... that is involved
 						SetEditPart setEditPart = (SetEditPart) entry.getValue();
+						MemberRole memberRole = setEditPart.getMemberRole();
+						Assert.isTrue(memberRole.getConnectionParts().size() == 1, 
+								  	  "expected exactly 1 connection part: " + 
+								  	  memberRole.getConnectionParts().size());						
 						if (setEditPart.getSource() != null) {
 							// owner record
 							Assert.isTrue(setEditPart.getSource() instanceof RecordEditPart);
@@ -238,16 +268,47 @@ public class SchemaEditPart
 				removeChild(setDescriptionEditPart);
 			}
 			
-			// refresh the record edit part(s) involved
-			Assert.isTrue(!recordEditParts.isEmpty(), "expected at least 1 RecordEditPart");
+			// refresh the record edit part(s) involved; our list might be empty, e.g. when 
+			// connectors were present
 			for (EditPart editPart : recordEditParts) {
 				editPart.refresh();				
 			}
 		
+		} else if (reference == SchemaPackage.eINSTANCE.getSet_Members()) {
+			
+			// a record was removed as a member record type from a set; remove the set description
+			// edit part first - we don't expect any connectors to be present (i.e. connectors
+			// should be removed before a member record type is removed from a set) 
+			MemberRole memberRole = (MemberRole) item;
+			Assert.isTrue(memberRole.getConnectionParts().size() == 1, 
+					  	  "expected exactly 1 connection part: " + 
+					  	  memberRole.getConnectionParts().size());
+			EditPart child = 
+				(EditPart) getViewer().getEditPartRegistry().get(memberRole.getConnectionLabel());
+			removeChild(child);
+			
+			// identify the owner and member record edit parts			
+			SetEditPart setEditPart =
+				(SetEditPart) getViewer().getEditPartRegistry()
+				  	   					 .get(memberRole.getConnectionParts().get(0));
+			List<EditPart> recordEditParts = new ArrayList<>();
+			recordEditParts.add(setEditPart.getSource()); // owner record edit part
+			recordEditParts.add(setEditPart.getTarget()); // member record edit part
+			
+			// remove the connection edit part
+			removeChild(setEditPart);				
+			
+			// refresh the record edit part involved
+			Assert.isTrue(recordEditParts.size() == 2, 
+						  "expected exactly 2 RecordEditPart instances");
+			for (EditPart editPart : recordEditParts) {
+				editPart.refresh();				
+			}						
+						
 		} else if (owner instanceof MemberRole && 
 				   reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts()) {			
 		
-			// connectors removed
+			// connectors removed (possibly because the set is being removed too)
 			
 			MemberRole memberRole = (MemberRole) owner;
 			Assert.isTrue(memberRole.getConnectionParts().size() == 1);
@@ -257,6 +318,7 @@ public class SchemaEditPart
 			connectionParts.add(memberRole.getConnectionParts().get(0));
 			connectionParts.add((ConnectionPart) item); // the removed connection part
 			List<ConnectorEditPart> connectorEditParts = new ArrayList<>();
+			GraphicalEditPart memberRecordEditPart = null;
 			for (Object object : getViewer().getEditPartRegistry().entrySet()) {
 				Entry<?, ?> entry = (Entry<?, ?>) object;																
 				if (entry.getKey() instanceof ConnectionPart) {
@@ -270,6 +332,7 @@ public class SchemaEditPart
 						if (setEditPart.getSource() instanceof ConnectorEditPart) {
 							// second connector edit part
 							connectorEditParts.add((ConnectorEditPart) setEditPart.getSource());
+							memberRecordEditPart = (RecordEditPart) setEditPart.getTarget();
 						} else {
 							// first connector edit part
 							connectorEditParts.add((ConnectorEditPart) setEditPart.getTarget());
@@ -297,12 +360,10 @@ public class SchemaEditPart
 			}
 			ownerEditPart.refresh();
 			
-			// refresh the member record edit part
-			SchemaRecord memberRecord = memberRole.getRecord();
-			GraphicalEditPart memberRecordEditPart = 
-				(GraphicalEditPart) getViewer().getEditPartRegistry()
-									  		   .get(memberRecord);
-			memberRecordEditPart.refresh();				
+			// refresh the member record edit part (the only remaining connection edit part will be 
+			// created again, provided the set isn't removed together with the connectors)
+			Assert.isNotNull(memberRecordEditPart);			
+			memberRecordEditPart.refresh();			
 		
 		}		
 		

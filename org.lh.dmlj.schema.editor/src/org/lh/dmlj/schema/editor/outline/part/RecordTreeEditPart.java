@@ -52,7 +52,7 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			// add a child for the new set but only if the record is at the top level
 			Set set = (Set) item;
 			boolean addChild = false;
-			if (set.getOwner() == getModel()) {
+			if (set.getOwner() != null && set.getOwner().getRecord() == getModel()) {
 				// the model record is the owner of the new set
 				addChild = true;
 			} else {
@@ -79,6 +79,28 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 				
 				// add the child at the appropriate position
 				addChild(child, index);
+				
+			}
+			
+		} else if (reference == SchemaPackage.eINSTANCE.getSet_Members()) {
+			
+			// a member record type was added to (what is now) a multiple-member set (if it wasn't 
+			// one already); if the member role refers to the model record, we need to make sure 
+			// that the set becomes visible as a child
+			MemberRole memberRole = (MemberRole) item;
+			if (memberRole.getRecord() == getModel()) {
+				
+				// create an edit part for the set	
+				EditPart child = 
+					SchemaTreeEditPartFactory.createEditPart(memberRole.getConnectionParts().get(0), 
+															 modelChangeProvider);
+					
+				// calculate the insertion index
+				int index = getInsertionIndex(getChildren(), memberRole.getSet(),
+											  getChildNodeTextProviderOrder());
+					
+				// add the child at the appropriate position
+				addChild(child, index);			
 				
 			}
 			
@@ -121,7 +143,22 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 				}
 			}
 			
+		} else if (reference == SchemaPackage.eINSTANCE.getSet_Members()) {
+			
+			// a member record type was removed from the set; because the member role still refers
+			// to its connection part(s), it's easy to remove the child edit part for the (first)
+			// connection part
+			MemberRole memberRole = (MemberRole) item;
+			try {
+				EditPart child = childFor(memberRole.getConnectionParts().get(0));
+				// the model record was a member of the set; remove the connection child edit part
+				removeChild(child);				
+			} catch (IllegalArgumentException e) {
+				// the model record wasn't a member of the set; ignore this condition				
+			}
+			
 		}
+			
 		
 	}
 	

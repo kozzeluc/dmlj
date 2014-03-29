@@ -167,7 +167,7 @@ public class RecordEditPart
 	}
 	
 	@Override
-	public ConnectionAnchor getSourceConnectionAnchor(Request request) {		
+	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		if (!(request instanceof ReconnectRequest)) {
 			return super.getSourceConnectionAnchor(request);
 		}
@@ -268,6 +268,6 @@ public class RecordEditPart
 			figure.setDuplicatesOption("");
 		}
 		figure.setAreaName(record.getAreaSpecification().getArea().getName());
-	}	
+	}		
 	
 }

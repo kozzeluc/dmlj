@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.lh.dmlj.schema.editor.command.AddMemberToSetCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeAreaSpecificationCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeCalcKeyCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommandTest;
@@ -27,10 +28,12 @@ import org.lh.dmlj.schema.editor.command.CreateConnectorCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateIndexCommandTest;
+import org.lh.dmlj.schema.editor.command.CreateSetCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteDiagramLabelCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteGuideCommandTest;
+import org.lh.dmlj.schema.editor.command.DeleteIndexCommandCreationAssistantTest;
 import org.lh.dmlj.schema.editor.command.DeleteIndexCommandTest;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordCalcCommandTest;
@@ -57,6 +60,7 @@ import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 	ModelChangeDispatcherTest.class,
 	
 	// command tests
+	AddMemberToSetCommandTest.class,
 	ChangeAreaSpecificationCommandTest.class,
 	ChangeCalcKeyCommandTest.class,
 	ChangeSetOrderCommandTest.class,
@@ -67,11 +71,13 @@ import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 	CreateDiagramLabelCommandTest.class,
 	CreateGuideCommandTest.class,
 	CreateIndexCommandTest.class,
+	CreateSetCommandTest.class,
 	DeleteBendpointCommandTest.class,
 	DeleteConnectorCommandTest.class,
 	DeleteDiagramLabelCommandTest.class,
 	DeleteGuideCommandTest.class,
-	DeleteIndexCommandTest.class,
+	DeleteIndexCommandCreationAssistantTest.class,
+	DeleteIndexCommandTest.class,	
 	LockEndpointsCommandTest.class,
 	MakeRecordCalcCommandTest.class,
 	MakeRecordDirectCommandTest.class,
