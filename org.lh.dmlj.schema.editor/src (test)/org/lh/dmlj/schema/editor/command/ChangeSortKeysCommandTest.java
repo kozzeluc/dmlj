@@ -44,14 +44,21 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
+import org.lh.dmlj.schema.editor.testtool.Xmi;
 
 public class ChangeSortKeysCommandTest {
 
 	private ObjectGraph objectGraph;
 	private Schema 		schema;		
+	private Xmi 		xmi;
 	
 	private void checkObjectGraph(ObjectGraph expected) {
 		ObjectGraph actual = TestTools.asObjectGraph(schema);
+		assertEquals(expected, actual);		
+	}
+	
+	private void checkXmi(Xmi expected) {
+		Xmi actual = TestTools.asXmi(schema);
 		assertEquals(expected, actual);		
 	}
 	
@@ -60,6 +67,7 @@ public class ChangeSortKeysCommandTest {
 		// we'll use EMPSCHM throughout these tests
 		schema = TestTools.getEmpschmSchema();
 		objectGraph = TestTools.asObjectGraph(schema);
+		xmi = TestTools.asXmi(schema);
 	}
 	
 	@Test
@@ -167,6 +175,7 @@ public class ChangeSortKeysCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		sortKey = set.getMembers().get(0).getSortKey();
 		assertEquals(2, sortKey.getElements().size());
 		assertEquals("EMP-FIRST-NAME-0415", sortKey.getElements().get(0).getElement().getName());
@@ -181,10 +190,12 @@ public class ChangeSortKeysCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}
 	
@@ -220,6 +231,7 @@ public class ChangeSortKeysCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		sortKey = set.getMembers().get(0).getSortKey();
 		assertEquals(3, sortKey.getElements().size());
 		assertEquals("EMP-FIRST-NAME-0415", sortKey.getElements().get(0).getElement().getName());
@@ -236,10 +248,12 @@ public class ChangeSortKeysCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}
 	
@@ -275,6 +289,7 @@ public class ChangeSortKeysCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		sortKey = set.getMembers().get(0).getSortKey();
 		assertEquals(3, sortKey.getElements().size());
 		assertEquals("BIRTH-DATE-0415", sortKey.getElements().get(0).getElement().getName());
@@ -291,10 +306,12 @@ public class ChangeSortKeysCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}
 	
@@ -326,6 +343,7 @@ public class ChangeSortKeysCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		sortKey = set.getMembers().get(0).getSortKey();
 		assertEquals(1, sortKey.getElements().size());
 		assertEquals("EMP-LAST-NAME-0415", sortKey.getElements().get(0).getElement().getName());
@@ -338,10 +356,12 @@ public class ChangeSortKeysCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}	
 	
@@ -392,6 +412,7 @@ public class ChangeSortKeysCommandTest {
 		
 		command.execute();		
 		objectGraph = TestTools.asObjectGraph(schema);	
+		xmi = TestTools.asXmi(schema);
 		
 		
 		// now we're ready to change a sort key in a multiple member set...
@@ -405,6 +426,7 @@ public class ChangeSortKeysCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		
 		Key sortKey = memberRole[0].getSortKey();
 		assertNotNull(sortKey);		
@@ -455,10 +477,12 @@ public class ChangeSortKeysCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}
 
@@ -488,6 +512,7 @@ public class ChangeSortKeysCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		sortKey = set.getMembers().get(0).getSortKey();
 		assertEquals(1, sortKey.getElements().size());
 		assertEquals("SKILL-NAME-0455", sortKey.getElements().get(0).getElement().getName());
@@ -500,10 +525,12 @@ public class ChangeSortKeysCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}
 

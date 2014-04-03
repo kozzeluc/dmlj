@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.junit.Before;
 import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.LabelAlignment;
 import org.lh.dmlj.schema.MemberRole;
@@ -46,14 +47,21 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
+import org.lh.dmlj.schema.editor.testtool.Xmi;
 
 public class CreateSetCommandTest {
 
 	private ObjectGraph objectGraph;
-	private Schema 		schema;	
+	private Schema 		schema;
+	private Xmi 		xmi;
 
 	private void checkObjectGraph(ObjectGraph expected) {
 		ObjectGraph actual = TestTools.asObjectGraph(schema);
+		assertEquals(expected, actual);		
+	}
+	
+	private void checkXmi(Xmi expected) {
+		Xmi actual = TestTools.asXmi(schema);
 		assertEquals(expected, actual);		
 	}
 	
@@ -62,6 +70,7 @@ public class CreateSetCommandTest {
 		// we'll use EMPSCHM throughout these tests
 		schema = TestTools.getEmpschmSchema();
 		objectGraph = TestTools.asObjectGraph(schema);
+		xmi = TestTools.asXmi(schema);
 	}
 	
 	@Test
@@ -167,6 +176,7 @@ public class CreateSetCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		
 		assertEquals(originalSetCount + 1, schema.getSets().size());
 		Set set = schema.getSet("NEW-SET-1");
@@ -193,15 +203,21 @@ public class CreateSetCommandTest {
 		assertNull(memberRole.getIndexDbkeyPosition());
 		assertNull(memberRole.getSortKey());
 		assertEquals(1, memberRole.getConnectionParts().size());
-		assertEquals(0, memberRole.getConnectionParts().get(0).getBendpointLocations().size());
-		assertNull(memberRole.getConnectionParts().get(0).getConnector());
-		assertNull(memberRole.getConnectionParts().get(0).getSourceEndpointLocation());
-		assertNull(memberRole.getConnectionParts().get(0).getTargetEndpointLocation());
-		assertNotNull(memberRole.getConnectionLabel());
 		
-		ConnectionLabel connectionLabel = memberRole.getConnectionLabel();
+		ConnectionPart connectionPart = memberRole.getConnectionParts().get(0);
+		assertEquals(0, connectionPart.getBendpointLocations().size());
+		assertNull(connectionPart.getConnector());
+		assertNull(connectionPart.getSourceEndpointLocation());
+		assertNull(connectionPart.getTargetEndpointLocation());
+		assertEquals(schema.getDiagramData().getConnectionParts().size() - 1, 
+		 	 	 	 schema.getDiagramData().getConnectionParts().indexOf(connectionPart));	
+				
+		ConnectionLabel connectionLabel = memberRole.getConnectionLabel();		
 		assertNotNull(connectionLabel);
 		assertSame(LabelAlignment.LEFT, connectionLabel.getAlignment());
+		assertEquals(schema.getDiagramData().getConnectionLabels().size() - 1, 
+			 	 	 schema.getDiagramData().getConnectionLabels().indexOf(connectionLabel));	
+	
 		
 		DiagramLocation diagramLocation = connectionLabel.getDiagramLocation();
 		assertNotNull(diagramLocation);
@@ -215,10 +231,12 @@ public class CreateSetCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}
 	
@@ -236,6 +254,7 @@ public class CreateSetCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		
 		assertEquals(originalSetCount + 1, schema.getSets().size());
 		Set set = schema.getSet("NEW-SET-1");
@@ -262,15 +281,20 @@ public class CreateSetCommandTest {
 		assertEquals(2, memberRole.getOwnerDbkeyPosition().shortValue());
 		assertNull(memberRole.getSortKey());
 		assertEquals(1, memberRole.getConnectionParts().size());
-		assertEquals(0, memberRole.getConnectionParts().get(0).getBendpointLocations().size());
-		assertNull(memberRole.getConnectionParts().get(0).getConnector());
-		assertNull(memberRole.getConnectionParts().get(0).getSourceEndpointLocation());
-		assertNull(memberRole.getConnectionParts().get(0).getTargetEndpointLocation());
-		assertNotNull(memberRole.getConnectionLabel());
+		
+		ConnectionPart connectionPart = memberRole.getConnectionParts().get(0);
+		assertEquals(0, connectionPart.getBendpointLocations().size());
+		assertNull(connectionPart.getConnector());
+		assertNull(connectionPart.getSourceEndpointLocation());
+		assertNull(connectionPart.getTargetEndpointLocation());
+		assertEquals(schema.getDiagramData().getConnectionParts().size() - 1, 
+	 	 	 	 	 schema.getDiagramData().getConnectionParts().indexOf(connectionPart));
 		
 		ConnectionLabel connectionLabel = memberRole.getConnectionLabel();
 		assertNotNull(connectionLabel);
 		assertSame(LabelAlignment.LEFT, connectionLabel.getAlignment());
+		assertEquals(schema.getDiagramData().getConnectionLabels().size() - 1, 
+		 	 	 	 schema.getDiagramData().getConnectionLabels().indexOf(connectionLabel));
 		
 		DiagramLocation diagramLocation = connectionLabel.getDiagramLocation();
 		assertNotNull(diagramLocation);
@@ -284,10 +308,12 @@ public class CreateSetCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}	
 

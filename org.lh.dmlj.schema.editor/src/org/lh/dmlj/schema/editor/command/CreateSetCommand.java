@@ -56,7 +56,6 @@ public class CreateSetCommand extends Command {
 	
 	private MemberRole 		memberRole;
 	private OwnerRole  		ownerRole;
-	private DiagramLocation labelLocation;
 
 	public CreateSetCommand(SchemaRecord owner, SetMode mode) {
 		super(mode == SetMode.CHAINED ? "Create chained set" : "Create user owned indexed set");
@@ -105,7 +104,7 @@ public class CreateSetCommand extends Command {
 		ConnectionPart connectionPart = SchemaFactory.eINSTANCE.createConnectionPart();
 		connectionPart.setMemberRole(memberRole);
 		
-		labelLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+		DiagramLocation labelLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
 		labelLocation.setEyecatcher("set label " + set.getName() + " (" + member.getName() +")");
 		// TODO make calculating the label location more intelligent
 		labelLocation.setX(owner.getDiagramLocation().getX() + RecordFigure.UNSCALED_WIDTH + 5);
@@ -134,7 +133,11 @@ public class CreateSetCommand extends Command {
 		
 		memberRole.setRecord(member);
 		
-		schema.getDiagramData().getLocations().add(labelLocation);
+		schema.getDiagramData().getConnectionParts().add(memberRole.getConnectionParts().get(0));
+		schema.getDiagramData().getConnectionLabels().add(memberRole.getConnectionLabel());
+		schema.getDiagramData()
+			  .getLocations()
+			  .add(memberRole.getConnectionLabel().getDiagramLocation());
 		
 	}
 	
@@ -153,7 +156,11 @@ public class CreateSetCommand extends Command {
 		
 		memberRole.setRecord(null);
 		
-		schema.getDiagramData().getLocations().remove(labelLocation);		
+		schema.getDiagramData().getConnectionParts().remove(memberRole.getConnectionParts().get(0));
+		schema.getDiagramData().getConnectionLabels().remove(memberRole.getConnectionLabel());
+		schema.getDiagramData()
+			  .getLocations()
+			  .remove(memberRole.getConnectionLabel().getDiagramLocation());		
 		
 	}
 

@@ -52,22 +52,30 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
+import org.lh.dmlj.schema.editor.testtool.Xmi;
 
 public class AddMemberToSetCommandTest {
 
 	private ObjectGraph objectGraph;
-	private Schema 		schema;		
+	private Schema 		schema;	
+	private Xmi 		xmi;
 	
 	private void checkObjectGraph(ObjectGraph expected) {
 		ObjectGraph actual = TestTools.asObjectGraph(schema);
 		assertEquals(expected, actual);		
-	}	
+	}
+	
+	private void checkXmi(Xmi expected) {
+		Xmi actual = TestTools.asXmi(schema);
+		assertEquals(expected, actual);		
+	}
 	
 	@Before
 	public void setup() {
 		// we'll use EMPSCHM throughout these tests
 		schema = TestTools.getEmpschmSchema();
 		objectGraph = TestTools.asObjectGraph(schema);
+		xmi = TestTools.asXmi(schema);
 	}
 	
 	@Test
@@ -185,6 +193,7 @@ public class AddMemberToSetCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		
 		assertEquals(2, set.getMembers().size());
 		MemberRole newMemberRole = set.getMembers().get(1);
@@ -203,10 +212,14 @@ public class AddMemberToSetCommandTest {
 		assertNull(connectionPart.getConnector());
 		assertNull(connectionPart.getSourceEndpointLocation());
 		assertNull(connectionPart.getTargetEndpointLocation());
+		assertEquals(schema.getDiagramData().getConnectionParts().size() - 1, 
+					 schema.getDiagramData().getConnectionParts().indexOf(connectionPart));
 		
 		ConnectionLabel connectionLabel = newMemberRole.getConnectionLabel();
 		assertNotNull(connectionLabel);
 		assertSame(LabelAlignment.LEFT, connectionLabel.getAlignment());
+		assertEquals(schema.getDiagramData().getConnectionLabels().size() - 1, 
+				 	 schema.getDiagramData().getConnectionLabels().indexOf(connectionLabel));
 		
 		DiagramLocation diagramLocation = connectionLabel.getDiagramLocation();
 		assertNotNull(diagramLocation);
@@ -220,10 +233,12 @@ public class AddMemberToSetCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}
 	
@@ -242,6 +257,7 @@ public class AddMemberToSetCommandTest {
 		
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
 		
 		assertEquals(2, set.getMembers().size());
 		MemberRole newMemberRole = set.getMembers().get(1);
@@ -260,11 +276,15 @@ public class AddMemberToSetCommandTest {
 		assertNull(connectionPart.getConnector());
 		assertNull(connectionPart.getSourceEndpointLocation());
 		assertNull(connectionPart.getTargetEndpointLocation());
+		assertEquals(schema.getDiagramData().getConnectionParts().size() - 1, 
+				 	 schema.getDiagramData().getConnectionParts().indexOf(connectionPart));
 		
 		ConnectionLabel connectionLabel = newMemberRole.getConnectionLabel();
 		assertNotNull(connectionLabel);
 		assertSame(LabelAlignment.LEFT, connectionLabel.getAlignment());
-		
+		assertEquals(schema.getDiagramData().getConnectionLabels().size() - 1, 
+			 	 	 schema.getDiagramData().getConnectionLabels().indexOf(connectionLabel));	
+	
 		DiagramLocation diagramLocation = connectionLabel.getDiagramLocation();
 		assertNotNull(diagramLocation);
 		assertEquals(schema.getDiagramData().getLocations().size() - 1,
@@ -289,10 +309,12 @@ public class AddMemberToSetCommandTest {
 		
 		command.undo();
 		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
 		
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 		
 	}	
 

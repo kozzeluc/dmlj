@@ -48,7 +48,6 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSet_Members();
 	@Item	   private MemberRole memberRole;
 			
-	private DiagramLocation 	labelLocation;
 	private SchemaRecord 		memberRecord;
 	private DiagramData	    	diagramData;	
 	
@@ -88,7 +87,7 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 		ConnectionPart connectionPart = SchemaFactory.eINSTANCE.createConnectionPart();
 		connectionPart.setMemberRole(memberRole);
 		
-		labelLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+		DiagramLocation labelLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
 		labelLocation.setEyecatcher("set label " + set.getName() + " (" + memberRecord.getName() +
 									")");
 		// TODO make calculating the label location more intelligent
@@ -115,7 +114,9 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 		if (set.getOrder() == SetOrder.SORTED) {
 			restoreSortKey(memberRecord, set.getMembers().size() - 1, 0);			
 		}
-		diagramData.getLocations().add(labelLocation);				
+		diagramData.getConnectionParts().add(memberRole.getConnectionParts().get(0));
+		diagramData.getConnectionLabels().add(memberRole.getConnectionLabel());
+		diagramData.getLocations().add(memberRole.getConnectionLabel().getDiagramLocation());				
 	}
 	
 	public void setMemberRecord(SchemaRecord memberRecord) {
@@ -129,7 +130,9 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 		}
 		memberRole.setRecord(null);	
 		memberRole.setSet(null);
-		diagramData.getLocations().remove(labelLocation);	
+		diagramData.getConnectionParts().remove(memberRole.getConnectionParts().get(0));
+		diagramData.getConnectionLabels().remove(memberRole.getConnectionLabel());
+		diagramData.getLocations().remove(memberRole.getConnectionLabel().getDiagramLocation());	
 	}
 	
 	private static class SortKeyDescription implements ISortKeyDescription {
