@@ -149,9 +149,10 @@ public class SetEditPart
 		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE,
 						  new ConnectionEndpointEditPolicy());		
 		
-		// make sure we can delete a set by pressing the delete key on the line represented by this
+		// make sure we can remove a member record type from a set (or remove the set altogether if
+		// it's not a multiple-memberset) by pressing the delete key on the line represented by this
 		// edit part:
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetComponentEditPolicy());			
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetComponentEditPolicy(true));			
 		
 		refreshBendpointEditPolicy();		
 		

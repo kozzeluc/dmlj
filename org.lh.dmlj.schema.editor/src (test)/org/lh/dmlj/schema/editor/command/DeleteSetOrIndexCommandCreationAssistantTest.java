@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
@@ -29,28 +30,28 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
-public class DeleteIndexCommandCreationAssistantTest {
+public class DeleteSetOrIndexCommandCreationAssistantTest {
 
 	private Schema schema;	
 	
 	@Before
 	public void setup() {
 		// we'll use EMPSCHM throughout these tests
-				schema = TestTools.getEmpschmSchema();
+		schema = TestTools.getEmpschmSchema();
 	}
 	
 	@Test
-	public void testSimpleCommand() {		
+	public void test_Index_SimpleCommand() {		
 		// a simple (delete index) command will be returned when the member record isn't stored VIA 
 		// the index to be deleted AND when no connectors are present on the line between the index
 		// figure and the member record		
 		MemberRole memberRole = schema.getSet("JOB-TITLE-NDX").getMembers().get(0);		
-		Command command = DeleteIndexCommandCreationAssistant.getCommand(memberRole);
+		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertTrue(command instanceof DeleteIndexCommand);		
 	}
 	
 	@Test
-	public void testCompoundCommandWithDeleteConnectors() {		
+	public void test_Index_CompoundCommandWithDeleteConnectors() {		
 		
 		// a compound command composed of (only) a delete connectors and delete index command will 
 		// be returned when connectors are present on the line between the index figure and the 
@@ -62,7 +63,7 @@ public class DeleteIndexCommandCreationAssistantTest {
 		createConnectorCommand.execute();
 		
 		// have the compound created and verify		
-		Command command = DeleteIndexCommandCreationAssistant.getCommand(memberRole);
+		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertTrue(command instanceof CompoundCommand);	
 		CompoundCommand compoundCommand = (CompoundCommand) command;
 		assertEquals("Delete index", compoundCommand.getLabel());
@@ -73,7 +74,17 @@ public class DeleteIndexCommandCreationAssistantTest {
 	}
 	
 	@Test
-	public void testCompoundCommandWithChangeLocationModeOfMember() {		
+	public void test_Index_CompoundCommandWithDeleteBendpoints_WithoutConnectors() {	
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void test_Index_CompoundCommandWithDeleteBendpoints_WithConnectors() {	
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void test_Index_CompoundCommandWithChangeLocationModeOfMember() {		
 		
 		// a compound command composed of (only) a make record DIRECT and delete index command will 
 		// be returned when connectors are NOT present on the line between the index figure and the 
@@ -91,7 +102,7 @@ public class DeleteIndexCommandCreationAssistantTest {
 		
 		// have the compound created and verify		
 		MemberRole memberRole = schema.getSet("JOB-TITLE-NDX").getMembers().get(0);
-		Command command = DeleteIndexCommandCreationAssistant.getCommand(memberRole);
+		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertTrue(command instanceof CompoundCommand);	
 		CompoundCommand compoundCommand = (CompoundCommand) command;
 		assertEquals("Delete index", compoundCommand.getLabel());
@@ -102,7 +113,9 @@ public class DeleteIndexCommandCreationAssistantTest {
 	}	
 	
 	@Test
-	public void testCompoundCommandWithChangeLocationModeOfMemberAndDeleteConnectors() {		
+	public void test_Index_CompoundCommandWithEverything() {		
+		
+		fail("test case incomplete: make sure bendpoints are removed as well");
 		
 		// a compound command composed of a delete connectors, make record DIRECT and delete index 
 		// command will be returned when connectors are present on the line between the index figure  
@@ -122,7 +135,7 @@ public class DeleteIndexCommandCreationAssistantTest {
 		createConnectorCommand.execute();		
 		
 		// have the compound created and verify		
-		Command command = DeleteIndexCommandCreationAssistant.getCommand(memberRole);
+		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertTrue(command instanceof CompoundCommand);	
 		CompoundCommand compoundCommand = (CompoundCommand) command;
 		assertEquals("Delete index", compoundCommand.getLabel());
@@ -131,6 +144,96 @@ public class DeleteIndexCommandCreationAssistantTest {
 		assertTrue(compoundCommand.getCommands().get(1) instanceof MakeRecordDirectCommand);
 		assertTrue(compoundCommand.getCommands().get(2) instanceof DeleteIndexCommand);
 		
+	}
+	
+	@Test
+	public void test_SingleMemberSet_SimpleCommand() {		
+		fail("not yet implemented");		
+	}
+	
+	@Test
+	public void test_SingleMemberSet_CompoundCommandWithDeleteConnectors() {				
+		fail("not yet implemented");			
+	}
+	
+	@Test
+	public void test_SingleMemberSet_CompoundCommandWithDeleteBendpoints_WithoutConnectors() {	
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void test_SingleMemberSet_CompoundCommandWithDeleteBendpoints_WithConnectors() {	
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void test_SingleMemberSet_CompoundCommandWithChangeLocationModeOfMember() {				
+		fail("not yet implemented");		
+	}	
+	
+	@Test
+	public void test_SingleMemberSet_CompoundCommandWithEverything() {				
+		fail("not yet implemented");
+	}
+	
+	@Test
+	public void test_MultipleMemberSet_RemoveMember_SimpleCommand() {		
+		fail("not yet implemented");		
+	}
+	
+	@Test
+	public void test_MultipleMemberSet_RemoveMember_CompoundCommandWithDeleteConnectors() {				
+		fail("not yet implemented");			
+	}
+	
+	@Test
+	public void test_MultipleMemberSet_RemoveMember_CompoundCommandWithDeleteBendpoints_WithoutConnectors() {	
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void test_MultipleMemberSet_RemoveMember_CompoundCommandWithDeleteBendpoints_WithConnectors() {	
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void test_MultipleMemberSet_RemoveMember_CompoundCommandWithChangeLocationModeOfMember() {				
+		fail("not yet implemented");		
+	}	
+	
+	@Test
+	public void test_MultipleMemberSet_RemoveMember_CompoundCommandWithEverything() {				
+		fail("not yet implemented");
+	}
+	
+	@Test
+	public void test_MultipleMemberSet_DeleteSet_SimpleCommand() {		
+		fail("not yet implemented");		
+	}
+	
+	@Test
+	public void test_MultipleMemberSet_DeleteSet_CompoundCommandWithDeleteConnectors() {				
+		fail("not yet implemented");			
+	}
+	
+	@Test
+	public void test_MultipleMemberSet_DeleteSet_CompoundCommandWithDeleteBendpoints_WithoutConnectors() {	
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void test_MultipleMemberSet_DeleteSet_CompoundCommandWithDeleteBendpoints_WithConnectors() {	
+		fail("not yet implemented");
+	}
+
+	@Test
+	public void test_MultipleMemberSet_DeleteSet_CompoundCommandWithChangeLocationModeOfMember() {				
+		fail("not yet implemented");		
+	}	
+	
+	@Test
+	public void test_MultipleMemberSet_DeleteSet_CompoundCommandWithEverything() {				
+		fail("not yet implemented");
 	}	
 
 }

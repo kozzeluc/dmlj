@@ -23,25 +23,28 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
 
-public class IndexComponentEditPolicy extends ComponentEditPolicy {
-
-	public IndexComponentEditPolicy() {
-		super();
+public class RecordComponentEditPolicy extends ComponentEditPolicy {
+	
+	private MemberRole memberRole;
+	
+	public RecordComponentEditPolicy(MemberRole memberRole) {
+		super();		
+		this.memberRole = memberRole;
 	}
 	
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
 		@SuppressWarnings("unchecked")
 		List<EditPart> editParts = deleteRequest.getEditParts(); 
-		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof SystemOwner)) {						
+		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof SchemaRecord)) {						
 			return null;
 		}
-		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
-		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);		
-		return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		// get the record and have the right command created (at the moment this means: remove the
+		// record from the configured set)
+		return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);		
 	}
 	
 }

@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
@@ -34,6 +36,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.policy.RecordComponentEditPolicy;
 
 public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord> {
 
@@ -170,6 +173,29 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			// the record name has changed... the order of the parent edit part might become 
 			// disrupted, so we have to inform that edit part of this fact
 			nodeTextChanged();						
+		}
+	}
+	
+	@Override
+	protected void createEditPolicies() {		
+		EObject parentModelObject = getParentModelObject();
+		if (parentModelObject instanceof ConnectionPart) {
+			Set set = ((ConnectionPart) parentModelObject).getMemberRole().getSet();
+			if (set.getMembers().size() > 1 && set.getOwner().getRecord() != getModel()) {
+				// the set is a multiple-member set and the model record is a member of it; the next 
+				// edit policy allows for the removal of the record as a set member
+				MemberRole memberRole = null;
+				for (MemberRole aMemberRole : getModel().getMemberRoles()) {
+					if (aMemberRole.getSet() == set) {
+						memberRole = aMemberRole;
+						break;
+					}
+				}
+				Assert.isNotNull(memberRole, "internal error: no member role set (" + 
+								 getModel().getName() + ")");
+				installEditPolicy(EditPolicy.COMPONENT_ROLE, 
+								  new RecordComponentEditPolicy(memberRole));
+			}
 		}
 	}
 	

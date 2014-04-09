@@ -33,8 +33,9 @@ import org.lh.dmlj.schema.editor.command.DeleteBendpointCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteDiagramLabelCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteGuideCommandTest;
-import org.lh.dmlj.schema.editor.command.DeleteIndexCommandCreationAssistantTest;
 import org.lh.dmlj.schema.editor.command.DeleteIndexCommandTest;
+import org.lh.dmlj.schema.editor.command.DeleteSetCommandTest;
+import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistantTest;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordCalcCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommandTest;
@@ -43,6 +44,7 @@ import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveRecordOrIndexToOtherAreaCommandTest;
+import org.lh.dmlj.schema.editor.command.RemoveMemberFromSetCommandTest;
 import org.lh.dmlj.schema.editor.command.ResizeDiagramNodeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommandTest;
@@ -76,8 +78,9 @@ import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 	DeleteConnectorCommandTest.class,
 	DeleteDiagramLabelCommandTest.class,
 	DeleteGuideCommandTest.class,
-	DeleteIndexCommandCreationAssistantTest.class,
-	DeleteIndexCommandTest.class,	
+	DeleteSetOrIndexCommandCreationAssistantTest.class,
+	DeleteIndexCommandTest.class,
+	DeleteSetCommandTest.class,
 	LockEndpointsCommandTest.class,
 	MakeRecordCalcCommandTest.class,
 	MakeRecordDirectCommandTest.class,
@@ -86,6 +89,7 @@ import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 	MoveEndpointCommandTest.class,
 	MoveGuideCommandTest.class,
 	MoveRecordOrIndexToOtherAreaCommandTest.class,
+	RemoveMemberFromSetCommandTest.class,
 	ResizeDiagramNodeCommandTest.class,
 	SetBooleanAttributeCommandTest.class,
 	SetObjectAttributeCommandTest.class,

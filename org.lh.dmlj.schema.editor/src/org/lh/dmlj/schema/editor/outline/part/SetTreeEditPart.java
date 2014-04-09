@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
@@ -34,6 +35,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.policy.SetComponentEditPolicy;
 
 public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> {
 
@@ -80,6 +82,23 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 			nodeTextChanged();						
 		}
 	}	
+	
+	@Override
+	protected void createEditPolicies() {
+		if (getParentModelObject() instanceof Schema) {
+			// the next edit policy allows for the deletion of a set
+			installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetComponentEditPolicy(false));
+		} else if (getParentModelObject() instanceof SchemaRecord) {
+			// if the parent model object is a member in the model set AND the set is a multiple-
+			// member set, install the edit policy that allows for the removal of that record as a 
+			// set member
+			if (getModel().getMemberRole().getRecord() == getParentModelObject() &&
+				getModel().getMemberRole().getSet().getMembers().size() > 1) {
+				
+				installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetComponentEditPolicy(true));
+			}
+		}
+	}
 	
 	@Override
 	protected Class<?>[] getChildNodeTextProviderOrder() {
