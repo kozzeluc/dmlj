@@ -53,23 +53,23 @@ public abstract class DeleteSetOrIndexCommandCreationAssistant {
 		
 			MemberRole memberRole = memberRoles.get(i);			
 			
-			ConnectionPart firstConnectionPart = memberRole.getConnectionParts().get(0);
+			ConnectionPart firstConnectionPart = memberRole.getConnectionParts().get(0);			
 			if (!firstConnectionPart.getBendpointLocations().isEmpty()) {
 				for (@SuppressWarnings("unused") DiagramLocation bendpoint : 
 					 firstConnectionPart.getBendpointLocations()) {				
 					
-					new DeleteBendpointCommand(firstConnectionPart, 0);
+					commands.add(new DeleteBendpointCommand(firstConnectionPart, 0));
 				}
 			}
 			
-			ConnectionPart secondConnectionPart = memberRole.getConnectionParts().get(0);
 			if (memberRole.getConnectionParts().size() > 1 &&
 				!memberRole.getConnectionParts().get(1).getBendpointLocations().isEmpty()) {
 			
+				ConnectionPart secondConnectionPart = memberRole.getConnectionParts().get(1);
 				for (@SuppressWarnings("unused") DiagramLocation bendpoint : 
 					 secondConnectionPart.getBendpointLocations()) {				
-					
-					new DeleteBendpointCommand(secondConnectionPart, 0);
+										
+					commands.add(new DeleteBendpointCommand(secondConnectionPart, 0));
 				}
 			}
 			
