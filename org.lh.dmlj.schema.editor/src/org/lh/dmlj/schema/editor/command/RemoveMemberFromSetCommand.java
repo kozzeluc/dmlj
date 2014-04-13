@@ -18,11 +18,14 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
@@ -30,32 +33,104 @@ import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.common.Tools;
 
 @ModelChange(category=REMOVE_ITEM)
-public class RemoveMemberFromSetCommand extends Command {
-	
+public class RemoveMemberFromSetCommand extends AbstractSortKeyManipulationCommand {
+		
 	@Owner 	   private Set 		  set;
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSet_Members();
 	@Item 	   private MemberRole memberRole;
+	
+	private DiagramData  diagramData;
+	private SchemaRecord memberRecord;
+	
+	private int memberRoleInRecordIndex;
+	private int memberRoleInSetIndex;
+	private int connectionLabelLocationIndex;
+	private int connectionLabelIndex;
+	private int connectionPartIndex;
 
 	public RemoveMemberFromSetCommand(MemberRole memberRole) {
-		super("Remove member record type from set " + 
-			  Tools.removeTrailingUnderscore(memberRole.getSet().getName()));
+		super(memberRole.getSet());
 		this.memberRole = memberRole;
 		set = memberRole.getSet();
+		setLabel("Remove member record type from set " + 
+				  Tools.removeTrailingUnderscore(memberRole.getSet().getName()));
 	}
 	
 	@Override
 	public void execute() {
-		System.out.println("RemoveMemberFromSetCommand.execute()");
+		
+		diagramData = set.getSchema().getDiagramData();
+		memberRecord = memberRole.getRecord();
+		
+		if (set.getOrder() == SetOrder.SORTED) {
+			stashSortKeys(0);
+		}
+		
+		// gather all the different (re-)insertion indexes
+		memberRoleInRecordIndex = memberRecord.getMemberRoles().indexOf(memberRole);
+		memberRoleInSetIndex = set.getMembers().indexOf(memberRole);
+		connectionLabelLocationIndex = 
+			diagramData.getLocations().indexOf(memberRole.getConnectionLabel().getDiagramLocation());
+		connectionLabelIndex = 
+			diagramData.getConnectionLabels().indexOf(memberRole.getConnectionLabel());
+		connectionPartIndex = 
+			diagramData.getConnectionParts().indexOf(memberRole.getConnectionParts().get(0)); 
+		
+		redo();
+		
 	}
 	
 	@Override
 	public void redo() {
-		System.out.println("RemoveMemberFromSetCommand.redo()");
+		
+		Assert.isTrue(memberRole.getSet().getMembers().size() > 1, "not a multiple-member set: " + 
+					  set.getName() + " (" + memberRole.getRecord().getName() + ")");
+		Assert.isTrue(memberRole.getRecord().getViaSpecification() == null ||
+					  memberRole.getRecord().getViaSpecification().getSet() != set, 
+					  "cannot remove record from its VIA set");
+		Assert.isTrue(memberRole.getConnectionParts().size() == 1, "connectors not removed");
+		Assert.isTrue(memberRole.getConnectionParts().get(0).getBendpointLocations().isEmpty(), 
+					  "bendpoints not removed");
+		
+		// remove the key if applicable
+		if (set.getOrder() == SetOrder.SORTED) {
+			removeSortKey(memberRole);
+		}		
+		
+		// decouple the member role from both the record and set
+		memberRole.setRecord(null);
+		memberRole.setSet(null);
+
+		// remove the diagram location of the connection label		
+		diagramData.getLocations().remove(memberRole.getConnectionLabel().getDiagramLocation());
+		
+		// remove the connection label
+		diagramData.getConnectionLabels().remove(memberRole.getConnectionLabel());
+		
+		// remove the (one and only) connection part
+		diagramData.getConnectionParts().remove(memberRole.getConnectionParts().get(0));						
+		
 	}
 	
 	@Override
 	public void undo() {
-		System.out.println("RemoveMemberFromSetCommand.undo()");
+		
+		// reattach the member role to both the record and set
+		memberRecord.getMemberRoles().add(memberRoleInRecordIndex, memberRole);
+		set.getMembers().add(memberRoleInSetIndex, memberRole);
+		
+		diagramData.getLocations().add(connectionLabelLocationIndex, 
+									   memberRole.getConnectionLabel().getDiagramLocation());
+		diagramData.getConnectionLabels().add(connectionLabelIndex, 
+											  memberRole.getConnectionLabel());
+		diagramData.getConnectionParts().add(connectionPartIndex, 
+											 memberRole.getConnectionParts().get(0));
+		
+		// restore the key if applicable
+		if (set.getOrder() == SetOrder.SORTED) {
+			restoreSortKey(memberRole.getRecord(), memberRoleInSetIndex, 0);
+		}
+		
 	}
 	
 }
