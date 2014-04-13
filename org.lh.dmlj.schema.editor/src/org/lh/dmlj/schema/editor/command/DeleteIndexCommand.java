@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -27,10 +27,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.DiagramData;
-import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallSpecification;
@@ -40,14 +38,15 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 
 @ModelChange(category=REMOVE_ITEM)
-public class DeleteIndexCommand extends Command {	
+public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {	
 	
 	@Owner	   private Schema 	  schema;
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
@@ -55,7 +54,6 @@ public class DeleteIndexCommand extends Command {
 	
 	private SchemaArea	 		  area;
 	private DiagramData  		  diagramData;
-	private Key 		 		  key;
 	private MemberRole 	 		  memberRole;		
 	private List<Procedure>		  obsoleteProcedures = new ArrayList<>();
 	private List<String>		  procedureNames = new ArrayList<>();
@@ -74,8 +72,9 @@ public class DeleteIndexCommand extends Command {
 	
 	
 	public DeleteIndexCommand(SystemOwner systemOwner) {
-		super("Delete index");
+		super(systemOwner.getSet());
 		this.systemOwner = systemOwner;
+		setLabel("Delete index");
 	}		
 
 	@Override
@@ -88,7 +87,9 @@ public class DeleteIndexCommand extends Command {
 		record = memberRole.getRecord();
 		diagramData = schema.getDiagramData();
 		area = systemOwner.getAreaSpecification().getArea();
-		key = memberRole.getSortKey();
+		if (set.getOrder() == SetOrder.SORTED) {
+			stashSortKeys(0);
+		}
 			
 		// gather all the different (re-)insertion indexes
 		areaInSchemaIndex = schema.getAreas().indexOf(area);
@@ -180,10 +181,11 @@ public class DeleteIndexCommand extends Command {
 		diagramData.getConnectionParts().remove(memberRole.getConnectionParts().get(0));		
 		
 		// remove the member role and its key, if any
-		record.getMemberRoles().remove(memberRole);		
-		if (key != null) {
-			key.setMemberRole(null);
+				
+		if (set.getOrder() == SetOrder.SORTED) {
+			removeSortKey(memberRole);
 		}
+		record.getMemberRoles().remove(memberRole);
 		
 		// remove the set from the schema
 		schema.getSets().remove(set);
@@ -238,8 +240,8 @@ public class DeleteIndexCommand extends Command {
 		
 		// restore the member role and its key, if applicable
 		record.getMemberRoles().add(memberRoleIndex, memberRole);
-		if (key != null) {
-			key.setMemberRole(memberRole);
+		if (set.getOrder() == SetOrder.SORTED) {
+			restoreSortKey(record, 0, 0);
 		}
 		
 		//add the set to the schema again

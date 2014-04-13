@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,6 +30,9 @@ import org.junit.Test;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.AreaSpecification;
+import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.Key;
+import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
@@ -38,13 +41,14 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
@@ -67,6 +71,19 @@ public class DeleteIndexCommandTest {
 		int originalDiagramLocationsCount = schema.getDiagramData().getLocations().size();
 		int originalAreaSpecificationsCount = 
 			schema.getArea("EMP-DEMO-REGION").getAreaSpecifications().size();
+		// additional data we need to perform key related checks:
+		SchemaRecord recordEmployee = systemOwner.getSet().getMembers().get(0).getRecord();
+		assertEquals("EMPLOYEE", recordEmployee.getName());
+		Key sortKey = systemOwner.getSet().getMembers().get(0).getSortKey();
+		assertEquals(2, recordEmployee.getKeys().indexOf(sortKey));
+		assertNotNull(sortKey);
+		assertEquals(2, sortKey.getElements().size());
+		KeyElement keyElement1 = sortKey.getElements().get(0);
+		Element element1 = keyElement1.getElement();
+		assertEquals(3, element1.getKeyElements().size());
+		KeyElement keyElement2 = sortKey.getElements().get(1);
+		Element element2 = keyElement2.getElement();
+		assertEquals(3, element2.getKeyElements().size());
 		
 		// create the command
 		DeleteIndexCommand command = new DeleteIndexCommand(systemOwner);
@@ -82,6 +99,15 @@ public class DeleteIndexCommandTest {
 		assertNull(schema.getSet("EMP-NAME-NDX"));
 		assertEquals(originalAreaSpecificationsCount - 1, 
 					 schema.getArea("EMP-DEMO-REGION").getAreaSpecifications().size());
+		
+		// regarding the index' sort key: it should be removed from both elements involved AND from  
+		// the member record as well
+		//assertEquals(-1, );
+		assertEquals(-1, recordEmployee.getKeys().indexOf(sortKey));
+		assertEquals(2, element1.getKeyElements().size());
+		assertEquals(-1, element1.getKeyElements().indexOf(keyElement1));
+		assertEquals(2, element2.getKeyElements().size());
+		assertEquals(-1, element2.getKeyElements().indexOf(keyElement2));
 		
 		
 		// once execute() has been called, all annotated field values should be in place; make sure
@@ -259,6 +285,19 @@ public class DeleteIndexCommandTest {
 		int originalSetCount = schema.getSets().size();
 		int originalDiagramLocationsCount = schema.getDiagramData().getLocations().size();
 		int originalProcedureCount = schema.getProcedures().size();
+		// additional data we need to perform key related checks:
+		SchemaRecord recordEmployee = systemOwner.getSet().getMembers().get(0).getRecord();
+		assertEquals("EMPLOYEE", recordEmployee.getName());
+		Key sortKey = systemOwner.getSet().getMembers().get(0).getSortKey();
+		assertEquals(2, recordEmployee.getKeys().indexOf(sortKey));
+		assertNotNull(sortKey);
+		assertEquals(2, sortKey.getElements().size());
+		KeyElement keyElement1 = sortKey.getElements().get(0);
+		Element element1 = keyElement1.getElement();
+		assertEquals(3, element1.getKeyElements().size());
+		KeyElement keyElement2 = sortKey.getElements().get(1);
+		Element element2 = keyElement2.getElement();
+		assertEquals(3, element2.getKeyElements().size());
 		//
 		Xmi xmi = asXmi(schema);		
 		ObjectGraph objectGraph = asObjectGraph(schema);
@@ -280,6 +319,15 @@ public class DeleteIndexCommandTest {
 		assertNull(schema.getArea("OBSOLETE-AREA"));
 		assertNull(schema.getProcedure("OBSPROC1"));
 		assertNull(schema.getProcedure("OBSPROC2"));
+		
+		// regarding the index' sort key: it should be removed from both elements involved AND from  
+		// the member record as well
+		//assertEquals(-1, );
+		assertEquals(-1, recordEmployee.getKeys().indexOf(sortKey));
+		assertEquals(2, element1.getKeyElements().size());
+		assertEquals(-1, element1.getKeyElements().indexOf(keyElement1));
+		assertEquals(2, element2.getKeyElements().size());
+		assertEquals(-1, element2.getKeyElements().indexOf(keyElement2));		
 		
 		
 		// undo the command and check if the system-owned indexed set is restored (as a matter of 
