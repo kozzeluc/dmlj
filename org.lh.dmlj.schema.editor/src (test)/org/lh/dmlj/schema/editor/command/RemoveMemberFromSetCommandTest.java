@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -206,6 +207,9 @@ public class RemoveMemberFromSetCommandTest {
 	@Test
 	public void testUnsorted() {
 		
+		// additional data we need to check the EMPLOYEE record's prefix
+		fail("make sure we (can) verify that no gaps are created in a record's prefix");
+		
 		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
@@ -277,6 +281,9 @@ public class RemoveMemberFromSetCommandTest {
 		KeyElement keyElement = sortKey.getElements().get(0);
 		Element element = keyElement.getElement();
 		assertEquals(1, element.getKeyElements().size());
+		
+		// additional data we need to check the EMPLOYEE record's prefix
+		fail("make sure we (can) verify that no gaps are created in a record's prefix");
 		
 		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
 		command.execute();

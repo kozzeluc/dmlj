@@ -16,10 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.asObjectGraph;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.asXmi;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
@@ -84,6 +81,8 @@ public class DeleteIndexCommandTest {
 		KeyElement keyElement2 = sortKey.getElements().get(1);
 		Element element2 = keyElement2.getElement();
 		assertEquals(3, element2.getKeyElements().size());
+		// additional data we need to check the EMPLOYEE record's prefix
+		fail("make sure we (can) verify that no gaps are created in a record's prefix");
 		
 		// create the command
 		DeleteIndexCommand command = new DeleteIndexCommand(systemOwner);
@@ -298,6 +297,8 @@ public class DeleteIndexCommandTest {
 		KeyElement keyElement2 = sortKey.getElements().get(1);
 		Element element2 = keyElement2.getElement();
 		assertEquals(3, element2.getKeyElements().size());
+		// additional data we need to check the EMPLOYEE record's prefix
+		fail("make sure we (can) verify that no gaps are created in a record's prefix");
 		//
 		Xmi xmi = asXmi(schema);		
 		ObjectGraph objectGraph = asObjectGraph(schema);
