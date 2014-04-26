@@ -54,7 +54,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertTrue(pointer.isOwnerDefined());
 		assertFalse(pointer.isMemberDefined());
 		
-		Short positionInPrefix = pointer.getPositionInPrefix();
+		Short positionInPrefix = pointer.getCurrentPositionInPrefix();
 		assertNotNull(positionInPrefix);
 		assertEquals((short) 13, positionInPrefix.shortValue());
 		
@@ -89,7 +89,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertTrue(pointer.isOwnerDefined());
 		assertFalse(pointer.isMemberDefined());
 		
-		Short positionInPrefix = pointer.getPositionInPrefix();
+		Short positionInPrefix = pointer.getCurrentPositionInPrefix();
 		assertNull(positionInPrefix);		
 		
 		assertSame(role, pointer.getOwnerRole());
@@ -125,7 +125,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertTrue(pointer.isOwnerDefined());
 		assertFalse(pointer.isMemberDefined());
 		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		assertSame(role, pointer.getOwnerRole());
 		
@@ -158,7 +158,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertTrue(pointer.isOwnerDefined());
 		assertFalse(pointer.isMemberDefined());
 		
-		assertNull(pointer.getPositionInPrefix());
+		assertNull(pointer.getCurrentPositionInPrefix());
 		
 		assertSame(role, pointer.getOwnerRole());
 		
@@ -193,7 +193,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertFalse(pointer.isOwnerDefined());
 		assertTrue(pointer.isMemberDefined());
 		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		try {
 			pointer.getOwnerRole();
@@ -228,7 +228,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertFalse(pointer.isOwnerDefined());
 		assertTrue(pointer.isMemberDefined());
 		
-		assertNull(pointer.getPositionInPrefix());
+		assertNull(pointer.getCurrentPositionInPrefix());
 		
 		try {
 			pointer.getOwnerRole();
@@ -265,7 +265,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertFalse(pointer.isOwnerDefined());
 		assertTrue(pointer.isMemberDefined());
 		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		try {
 			pointer.getOwnerRole();
@@ -300,7 +300,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertFalse(pointer.isOwnerDefined());
 		assertTrue(pointer.isMemberDefined());
 		
-		assertNull(pointer.getPositionInPrefix());
+		assertNull(pointer.getCurrentPositionInPrefix());
 		
 		try {
 			pointer.getOwnerRole();
@@ -337,7 +337,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertFalse(pointer.isOwnerDefined());
 		assertTrue(pointer.isMemberDefined());
 		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		try {
 			pointer.getOwnerRole();
@@ -372,7 +372,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertFalse(pointer.isOwnerDefined());
 		assertTrue(pointer.isMemberDefined());
 		
-		assertNull(pointer.getPositionInPrefix());
+		assertNull(pointer.getCurrentPositionInPrefix());
 		
 		try {
 			pointer.getOwnerRole();
@@ -409,7 +409,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertFalse(pointer.isOwnerDefined());
 		assertTrue(pointer.isMemberDefined());
 		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		try {
 			pointer.getOwnerRole();
@@ -444,7 +444,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertFalse(pointer.isOwnerDefined());
 		assertTrue(pointer.isMemberDefined());
 		
-		assertNull(pointer.getPositionInPrefix());
+		assertNull(pointer.getCurrentPositionInPrefix());
 		
 		try {
 			pointer.getOwnerRole();

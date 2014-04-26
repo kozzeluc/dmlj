@@ -39,6 +39,10 @@ public class Pointer<T extends Role> {
 		this.type = type;		
 	}
 	
+	public Short getCurrentPositionInPrefix() {
+		return PointerUtil.getPositionInPrefix(role, type);
+	}
+
 	protected MemberRole getMemberRole() {
 		if (!isMemberDefined()) {
 			throw new UnsupportedOperationException("not a member type pointer");
@@ -51,10 +55,6 @@ public class Pointer<T extends Role> {
 			throw new UnsupportedOperationException("not an owner type pointer");
 		}
 		return (OwnerRole) role;
-	}
-	
-	public Short getPositionInPrefix() {
-		return PointerUtil.getPositionInPrefix(role, type);
 	}
 	
 	public String getRecordName() {

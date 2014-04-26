@@ -42,7 +42,7 @@ public class PointerToUnsetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getNextDbkeyPosition()).thenReturn(positionInPrefix);
 		
 		PointerToUnset<OwnerRole> pointer = PointerFactory.newPointerToUnset(role, OWNER_NEXT);		
-		assertEquals(positionInPrefix, pointer.getPositionInPrefix().shortValue());
+		assertEquals(positionInPrefix, pointer.getCurrentPositionInPrefix().shortValue());
 		
 		pointer.unset();
 		verify(role, times(1)).setNextDbkeyPosition((short) 0);		
@@ -62,7 +62,7 @@ public class PointerToUnsetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getPriorDbkeyPosition()).thenReturn(positionInPrefix);
 		
 		PointerToUnset<OwnerRole> pointer = PointerFactory.newPointerToUnset(role, OWNER_PRIOR);		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		pointer.unset();
 		verify(role, times(1)).setPriorDbkeyPosition(null);		
@@ -82,7 +82,7 @@ public class PointerToUnsetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getNextDbkeyPosition()).thenReturn(positionInPrefix);
 		
 		PointerToUnset<MemberRole> pointer = PointerFactory.newPointerToUnset(role, MEMBER_NEXT);		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		pointer.unset();
 		verify(role, times(1)).setNextDbkeyPosition(null);		
@@ -102,7 +102,7 @@ public class PointerToUnsetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getPriorDbkeyPosition()).thenReturn(positionInPrefix);
 		
 		PointerToUnset<MemberRole> pointer = PointerFactory.newPointerToUnset(role, MEMBER_PRIOR);		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		pointer.unset();
 		verify(role, times(1)).setPriorDbkeyPosition(null);		
@@ -122,7 +122,7 @@ public class PointerToUnsetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getOwnerDbkeyPosition()).thenReturn(positionInPrefix);
 		
 		PointerToUnset<MemberRole> pointer = PointerFactory.newPointerToUnset(role, MEMBER_OWNER);		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		pointer.unset();
 		verify(role, times(1)).setOwnerDbkeyPosition(null);		
@@ -142,7 +142,7 @@ public class PointerToUnsetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getIndexDbkeyPosition()).thenReturn(positionInPrefix);
 		
 		PointerToUnset<MemberRole> pointer = PointerFactory.newPointerToUnset(role, MEMBER_INDEX);		
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());
 		
 		pointer.unset();
 		verify(role, times(1)).setIndexDbkeyPosition(null);		

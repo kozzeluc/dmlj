@@ -209,7 +209,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertSame(role, pointer.getRole());
 		assertSame(OWNER_NEXT, pointer.getType());
 		assertEquals((short) 13, pointer.getPositionInPrefixToSet());
-		assertNull(pointer.getPositionInPrefix());
+		assertNull(pointer.getCurrentPositionInPrefix());
 	}
 	
 	@Test
@@ -221,7 +221,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertSame(role, pointer.getRole());
 		assertSame(MEMBER_NEXT, pointer.getType());
 		assertSame(Short.valueOf((short) 17), pointer.getPositionInPrefixToSet());
-		assertNull(pointer.getPositionInPrefix());
+		assertNull(pointer.getCurrentPositionInPrefix());
 	}
 	
 	@Test
@@ -302,7 +302,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
 		assertSame(OWNER_PRIOR, pointer.getType());
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());		
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());		
 	}
 	
 	@Test
@@ -314,7 +314,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
 		assertSame(MEMBER_PRIOR, pointer.getType());
-		assertSame(positionInPrefix, pointer.getPositionInPrefix());		
+		assertSame(positionInPrefix, pointer.getCurrentPositionInPrefix());		
 	}
 	
 	@Test
@@ -373,7 +373,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertSame(role, pointer.getRole());
 		assertSame(OWNER_NEXT, pointer.getType());
 		assertEquals((short) 13, pointer.getNewPositionInPrefix());
-		assertEquals((short) 7, pointer.getPositionInPrefix().shortValue());
+		assertEquals((short) 7, pointer.getCurrentPositionInPrefix().shortValue());
 	}
 	
 	@Test
@@ -386,7 +386,32 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertSame(role, pointer.getRole());
 		assertSame(MEMBER_NEXT, pointer.getType());
 		assertEquals((short) 17, pointer.getNewPositionInPrefix());
-		assertSame(Short.valueOf((short) 7), pointer.getPositionInPrefix());
-	}	
+		assertSame(Short.valueOf((short) 7), pointer.getCurrentPositionInPrefix());
+	}
+	
+	@Test
+	public void testNewPointerToMoveInvalidArgument() {
+		
+		try {
+			OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
+			when(role.getNextDbkeyPosition()).thenReturn((short) 1);
+			PointerFactory.newPointerToMove(role, OWNER_NEXT, (short) 0);
+			fail("should throw an IllegalArgumentException because the new prefix position is invalid");
+		} catch (IllegalArgumentException e) {
+			assertEquals("positionInPrefixToSet must be a whole integer in the range 1 through 8180: 0", 
+						 e.getMessage());
+		}
+		
+		try {
+			OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
+			when(role.getNextDbkeyPosition()).thenReturn((short) 1);
+			PointerFactory.newPointerToMove(role, OWNER_NEXT, (short) 8181);
+			fail("should throw an IllegalArgumentException because the new prefix position is invalid");
+		} catch (IllegalArgumentException e) {
+			assertEquals("positionInPrefixToSet must be a whole integer in the range 1 through 8180: 8181", 
+						 e.getMessage());
+		}		
+		
+	}
 
 }
