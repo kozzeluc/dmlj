@@ -53,6 +53,11 @@ import org.lh.dmlj.schema.editor.command.SetZoomLevelCommandTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
 import org.lh.dmlj.schema.editor.common.ToolsTest;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
+import org.lh.dmlj.schema.editor.prefix.PointerFactoryTest;
+import org.lh.dmlj.schema.editor.prefix.PointerTest;
+import org.lh.dmlj.schema.editor.prefix.PointerToSetTest;
+import org.lh.dmlj.schema.editor.prefix.PointerToUnsetTest;
+import org.lh.dmlj.schema.editor.prefix.PointerUtilTest;
 
 
 @RunWith(Suite.class)
@@ -89,6 +94,11 @@ import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 	MoveEndpointCommandTest.class,
 	MoveGuideCommandTest.class,
 	MoveRecordOrIndexToOtherAreaCommandTest.class,
+	PointerFactoryTest.class,
+	PointerTest.class,
+	PointerToSetTest.class,
+	PointerToUnsetTest.class,
+	PointerUtilTest.class,
 	RemoveMemberFromSetCommandTest.class,
 	ResizeDiagramNodeCommandTest.class,
 	SetBooleanAttributeCommandTest.class,
