@@ -55,9 +55,13 @@ import org.lh.dmlj.schema.editor.common.ToolsTest;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 import org.lh.dmlj.schema.editor.prefix.PointerFactoryTest;
 import org.lh.dmlj.schema.editor.prefix.PointerTest;
+import org.lh.dmlj.schema.editor.prefix.PointerToMoveTest;
 import org.lh.dmlj.schema.editor.prefix.PointerToSetTest;
 import org.lh.dmlj.schema.editor.prefix.PointerToUnsetTest;
-import org.lh.dmlj.schema.editor.prefix.PointerUtilTest;
+import org.lh.dmlj.schema.editor.prefix.PrefixFactoryTest;
+import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendageTest;
+import org.lh.dmlj.schema.editor.prefix.PrefixForPointerRemovalTest;
+import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 
 
 @RunWith(Suite.class)
@@ -96,9 +100,13 @@ import org.lh.dmlj.schema.editor.prefix.PointerUtilTest;
 	MoveRecordOrIndexToOtherAreaCommandTest.class,
 	PointerFactoryTest.class,
 	PointerTest.class,
+	PointerToMoveTest.class,	
 	PointerToSetTest.class,
 	PointerToUnsetTest.class,
-	PointerUtilTest.class,
+	PrefixFactoryTest.class,
+	PrefixForPointerAppendageTest.class,
+	PrefixForPointerRemovalTest.class,
+	PrefixUtilTest.class,
 	RemoveMemberFromSetCommandTest.class,
 	ResizeDiagramNodeCommandTest.class,
 	SetBooleanAttributeCommandTest.class,

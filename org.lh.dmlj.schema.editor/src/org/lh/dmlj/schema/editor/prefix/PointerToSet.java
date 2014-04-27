@@ -21,25 +21,25 @@ import org.lh.dmlj.schema.Role;
 /**
  * Represents a pointer in a record's prefix whose position in the prefix is to be set.
  */
-public class PointerToSet<T extends Role> extends Pointer<T> {
+class PointerToSet<T extends Role> extends Pointer<T> {
 
 	private Short positionInPrefixToSet;	
 	
-	protected PointerToSet(T role, PointerType type, short positionInPrefixToSet) {
+	PointerToSet(T role, PointerType type, short positionInPrefixToSet) {
 		super(role, type);
 		this.positionInPrefixToSet = Short.valueOf(positionInPrefixToSet);
 	}
 	
-	public short getPositionInPrefixToSet() {
+	short getPositionInPrefixToSet() {
 		return positionInPrefixToSet.shortValue();
 	}
 	
-	public void set() {
-		PointerUtil.setPositionInPrefix(role, type, positionInPrefixToSet);
+	void set() {
+		PrefixUtil.setPositionInPrefix(role, type, positionInPrefixToSet);
 	}
 	
-	public void unset() {
-		PointerUtil.setPositionInPrefix(role, type, null);
+	void unset() {
+		PrefixUtil.setPositionInPrefix(role, type, null);
 	}
 	
 }

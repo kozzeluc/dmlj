@@ -40,7 +40,7 @@ public class Pointer<T extends Role> {
 	}
 	
 	public Short getCurrentPositionInPrefix() {
-		return PointerUtil.getPositionInPrefix(role, type);
+		return PrefixUtil.getPositionInPrefix(role, type);
 	}
 
 	protected MemberRole getMemberRole() {

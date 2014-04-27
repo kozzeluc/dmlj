@@ -18,7 +18,9 @@ package org.lh.dmlj.schema.editor.prefix;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_INDEX;
@@ -27,22 +29,29 @@ import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_OWNER;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_PRIOR;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.OWNER_NEXT;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.OWNER_PRIOR;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Matchers.any;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Role;
+import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.testtool.TestTools;
 
-public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
+public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 	
 	private void assertWrongPointerTypeWhenGettingPositionInPrefix(Role role, PointerType type) {
 		try {
-			PointerUtil.getPositionInPrefix(role, type);
+			PrefixUtil.getPositionInPrefix(role, type);
 			fail("should throw an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 			assertEquals("no pointer of type " + type + " for " + role, e.getMessage());
@@ -52,7 +61,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 	
 	private void assertWrongPointerTypeWhenSettingPositionInPrefix(Role role, PointerType type) {
 		try {
-			PointerUtil.setPositionInPrefix(role, type, (short) 5);
+			PrefixUtil.setPositionInPrefix(role, type, (short) 5);
 			fail("should throw an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 			assertEquals("no pointer of type " + type + " for " + role, e.getMessage());
@@ -63,31 +72,31 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 	@Test
 	public void testIsPointerTypeValid() {
 	
-		assertTrue(PointerUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
+		assertTrue(PrefixUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
 												  OWNER_NEXT));		
-		assertTrue(PointerUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
+		assertTrue(PrefixUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
 				  								  OWNER_PRIOR));
 		
-		assertTrue(PointerUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
+		assertTrue(PrefixUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
 				  								  MEMBER_NEXT));		
-		assertTrue(PointerUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
+		assertTrue(PrefixUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
 				  								  MEMBER_PRIOR));
-		assertTrue(PointerUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
+		assertTrue(PrefixUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
 				  								  MEMBER_OWNER));
-		assertTrue(PointerUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
+		assertTrue(PrefixUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
 				  								  MEMBER_INDEX));		
 		
-		assertFalse(PointerUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
+		assertFalse(PrefixUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
 												   MEMBER_NEXT));		
-		assertFalse(PointerUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
+		assertFalse(PrefixUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
 												   MEMBER_PRIOR));
-		assertFalse(PointerUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
+		assertFalse(PrefixUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
 												   MEMBER_OWNER));
-		assertFalse(PointerUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
+		assertFalse(PrefixUtil.isPointerTypeValid(mockOwnerRoleWithNoPointersSet("A", "B"), 
 												   MEMBER_INDEX));
-		assertFalse(PointerUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
+		assertFalse(PrefixUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
 												   OWNER_NEXT));
-		assertFalse(PointerUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
+		assertFalse(PrefixUtil.isPointerTypeValid(mockMemberRoleWithNoPointersSet("A", "B"), 
 												   OWNER_PRIOR));		
 		
 	}
@@ -98,13 +107,13 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 			 positionInPrefix++) {
 			
 			if (positionInPrefix > 0 && positionInPrefix <= 8180) {
-				assertTrue(PointerUtil.isPositionInPrefixValid(positionInPrefix));
+				assertTrue(PrefixUtil.isPositionInPrefixValid(positionInPrefix));
 			} else {
-				assertFalse(PointerUtil.isPositionInPrefixValid(positionInPrefix));
+				assertFalse(PrefixUtil.isPositionInPrefixValid(positionInPrefix));
 			}
 		}
 		// take care of Short.MAX_VALUE, which we skipped to avoid an endless loop
-		assertFalse(PointerUtil.isPositionInPrefixValid(Short.MAX_VALUE));
+		assertFalse(PrefixUtil.isPositionInPrefixValid(Short.MAX_VALUE));
 	}
 	
 	@Test
@@ -130,14 +139,14 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
 		when(role.getNextDbkeyPosition()).thenReturn((short) 3);
-		assertEquals(Short.valueOf((short) 3), PointerUtil.getPositionInPrefix(role, OWNER_NEXT));
+		assertEquals(Short.valueOf((short) 3), PrefixUtil.getPositionInPrefix(role, OWNER_NEXT));
 		
 		verify(role, times(1)).getNextDbkeyPosition();
 		verify(role, never()).getPriorDbkeyPosition();
 		
 		
 		role = mockOwnerRoleWithNoPointersSet("A", "B");		
-		assertNull(PointerUtil.getPositionInPrefix(role, OWNER_NEXT));
+		assertNull(PrefixUtil.getPositionInPrefix(role, OWNER_NEXT));
 		
 		verify(role, times(1)).getNextDbkeyPosition();
 		verify(role, never()).getPriorDbkeyPosition();		
@@ -149,14 +158,14 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
 		when(role.getPriorDbkeyPosition()).thenReturn((short) 5);
-		assertEquals(Short.valueOf((short) 5), PointerUtil.getPositionInPrefix(role, OWNER_PRIOR));
+		assertEquals(Short.valueOf((short) 5), PrefixUtil.getPositionInPrefix(role, OWNER_PRIOR));
 		
 		verify(role, never()).getNextDbkeyPosition();
 		verify(role, times(1)).getPriorDbkeyPosition();
 		
 		
 		role = mockOwnerRoleWithNoPointersSet("A", "B");		
-		assertNull(PointerUtil.getPositionInPrefix(role, OWNER_PRIOR));
+		assertNull(PrefixUtil.getPositionInPrefix(role, OWNER_PRIOR));
 		
 		verify(role, never()).getNextDbkeyPosition();
 		verify(role, times(1)).getPriorDbkeyPosition();	
@@ -168,7 +177,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		when(role.getNextDbkeyPosition()).thenReturn((short) 9);
-		assertEquals(Short.valueOf((short) 9), PointerUtil.getPositionInPrefix(role, MEMBER_NEXT));
+		assertEquals(Short.valueOf((short) 9), PrefixUtil.getPositionInPrefix(role, MEMBER_NEXT));
 		
 		verify(role, times(1)).getNextDbkeyPosition();
 		verify(role, never()).getPriorDbkeyPosition();
@@ -177,7 +186,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
-		assertNull(PointerUtil.getPositionInPrefix(role, MEMBER_NEXT));
+		assertNull(PrefixUtil.getPositionInPrefix(role, MEMBER_NEXT));
 		
 		verify(role, times(1)).getNextDbkeyPosition();
 		verify(role, never()).getPriorDbkeyPosition();
@@ -191,7 +200,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		when(role.getPriorDbkeyPosition()).thenReturn((short) 2);
-		assertEquals(Short.valueOf((short) 2), PointerUtil.getPositionInPrefix(role, MEMBER_PRIOR));
+		assertEquals(Short.valueOf((short) 2), PrefixUtil.getPositionInPrefix(role, MEMBER_PRIOR));
 		
 		verify(role, never()).getNextDbkeyPosition();
 		verify(role, times(1)).getPriorDbkeyPosition();
@@ -200,7 +209,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
-		assertNull(PointerUtil.getPositionInPrefix(role, MEMBER_PRIOR));
+		assertNull(PrefixUtil.getPositionInPrefix(role, MEMBER_PRIOR));
 		
 		verify(role, never()).getNextDbkeyPosition();
 		verify(role, times(1)).getPriorDbkeyPosition();
@@ -214,7 +223,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		when(role.getOwnerDbkeyPosition()).thenReturn((short) 1);
-		assertEquals(Short.valueOf((short) 1), PointerUtil.getPositionInPrefix(role, MEMBER_OWNER));
+		assertEquals(Short.valueOf((short) 1), PrefixUtil.getPositionInPrefix(role, MEMBER_OWNER));
 		
 		verify(role, never()).getNextDbkeyPosition();
 		verify(role, never()).getPriorDbkeyPosition();
@@ -223,7 +232,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
-		assertNull(PointerUtil.getPositionInPrefix(role, MEMBER_OWNER));
+		assertNull(PrefixUtil.getPositionInPrefix(role, MEMBER_OWNER));
 		
 		verify(role, never()).getNextDbkeyPosition();
 		verify(role, never()).getPriorDbkeyPosition();
@@ -237,7 +246,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		when(role.getIndexDbkeyPosition()).thenReturn((short) 1);
-		assertEquals(Short.valueOf((short) 1), PointerUtil.getPositionInPrefix(role, MEMBER_INDEX));
+		assertEquals(Short.valueOf((short) 1), PrefixUtil.getPositionInPrefix(role, MEMBER_INDEX));
 		
 		verify(role, never()).getNextDbkeyPosition();
 		verify(role, never()).getPriorDbkeyPosition();
@@ -246,7 +255,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
-		assertNull(PointerUtil.getPositionInPrefix(role, MEMBER_INDEX));
+		assertNull(PrefixUtil.getPositionInPrefix(role, MEMBER_INDEX));
 		
 		verify(role, never()).getNextDbkeyPosition();
 		verify(role, never()).getPriorDbkeyPosition();
@@ -278,7 +287,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
 		
-		PointerUtil.setPositionInPrefix(role, OWNER_NEXT, (short) 7);		
+		PrefixUtil.setPositionInPrefix(role, OWNER_NEXT, (short) 7);		
 		
 		verify(role, times(1)).setNextDbkeyPosition((short) 7);
 		verify(role, times(1)).setNextDbkeyPosition(any(Short.class));
@@ -288,7 +297,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		role = mockOwnerRoleWithNoPointersSet("A", "B");		
 		when(role.getNextDbkeyPosition()).thenReturn((short) 7);
 		
-		PointerUtil.setPositionInPrefix(role, OWNER_NEXT, null);		
+		PrefixUtil.setPositionInPrefix(role, OWNER_NEXT, null);		
 		
 		verify(role, times(1)).setNextDbkeyPosition((short) 0);
 		verify(role, times(1)).setNextDbkeyPosition(any(Short.class));
@@ -302,7 +311,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
-		PointerUtil.setPositionInPrefix(role, OWNER_PRIOR, newPositionInPrefix);		
+		PrefixUtil.setPositionInPrefix(role, OWNER_PRIOR, newPositionInPrefix);		
 		
 		verify(role, never()).setNextDbkeyPosition(any(Short.class));
 		verify(role, times(1)).setPriorDbkeyPosition(newPositionInPrefix);
@@ -312,7 +321,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		role = mockOwnerRoleWithNoPointersSet("A", "B");		
 		when(role.getNextDbkeyPosition()).thenReturn((short) 7);
 		
-		PointerUtil.setPositionInPrefix(role, OWNER_PRIOR, null);		
+		PrefixUtil.setPositionInPrefix(role, OWNER_PRIOR, null);		
 		
 		verify(role, never()).setNextDbkeyPosition(any(Short.class));
 		verify(role, times(1)).setPriorDbkeyPosition(null);
@@ -326,7 +335,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
-		PointerUtil.setPositionInPrefix(role, MEMBER_NEXT, newPositionInPrefix);		
+		PrefixUtil.setPositionInPrefix(role, MEMBER_NEXT, newPositionInPrefix);		
 		
 		verify(role, times(1)).setNextDbkeyPosition(newPositionInPrefix);
 		verify(role, times(1)).setNextDbkeyPosition(any(Short.class));
@@ -338,7 +347,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
 		when(role.getNextDbkeyPosition()).thenReturn((short) 7);
 		
-		PointerUtil.setPositionInPrefix(role, MEMBER_NEXT, null);		
+		PrefixUtil.setPositionInPrefix(role, MEMBER_NEXT, null);		
 		
 		verify(role, times(1)).setNextDbkeyPosition(null);
 		verify(role, times(1)).setNextDbkeyPosition(any(Short.class));
@@ -354,7 +363,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
-		PointerUtil.setPositionInPrefix(role, MEMBER_PRIOR, newPositionInPrefix);		
+		PrefixUtil.setPositionInPrefix(role, MEMBER_PRIOR, newPositionInPrefix);		
 		
 		verify(role, never()).setNextDbkeyPosition(any(Short.class));
 		verify(role, times(1)).setPriorDbkeyPosition(newPositionInPrefix);
@@ -366,7 +375,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
 		when(role.getPriorDbkeyPosition()).thenReturn((short) 7);
 		
-		PointerUtil.setPositionInPrefix(role, MEMBER_PRIOR, null);		
+		PrefixUtil.setPositionInPrefix(role, MEMBER_PRIOR, null);		
 		
 		verify(role, never()).setNextDbkeyPosition(any(Short.class));
 		verify(role, times(1)).setPriorDbkeyPosition(null);
@@ -382,7 +391,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
-		PointerUtil.setPositionInPrefix(role, MEMBER_OWNER, newPositionInPrefix);		
+		PrefixUtil.setPositionInPrefix(role, MEMBER_OWNER, newPositionInPrefix);		
 		
 		verify(role, never()).setNextDbkeyPosition(any(Short.class));
 		verify(role, never()).setPriorDbkeyPosition(any(Short.class));
@@ -394,7 +403,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
 		when(role.getOwnerDbkeyPosition()).thenReturn((short) 7);
 		
-		PointerUtil.setPositionInPrefix(role, MEMBER_OWNER, null);		
+		PrefixUtil.setPositionInPrefix(role, MEMBER_OWNER, null);		
 		
 		verify(role, never()).setNextDbkeyPosition(any(Short.class));
 		verify(role, never()).setPriorDbkeyPosition(any(Short.class));
@@ -410,7 +419,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
-		PointerUtil.setPositionInPrefix(role, MEMBER_INDEX, newPositionInPrefix);		
+		PrefixUtil.setPositionInPrefix(role, MEMBER_INDEX, newPositionInPrefix);		
 		
 		verify(role, never()).setNextDbkeyPosition(any(Short.class));
 		verify(role, never()).setPriorDbkeyPosition(any(Short.class));		
@@ -422,7 +431,7 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
 		when(role.getOwnerDbkeyPosition()).thenReturn((short) 7);
 		
-		PointerUtil.setPositionInPrefix(role, MEMBER_INDEX, null);		
+		PrefixUtil.setPositionInPrefix(role, MEMBER_INDEX, null);		
 		
 		verify(role, never()).setNextDbkeyPosition(any(Short.class));
 		verify(role, never()).setPriorDbkeyPosition(any(Short.class));
@@ -430,6 +439,119 @@ public class PointerUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		verify(role, times(1)).setIndexDbkeyPosition(null);
 		verify(role, times(1)).setIndexDbkeyPosition(any(Short.class));	
 		
-	}	
+	}
+	
+	@Test
+	public void testPointerSorting() {
+		
+		List<Pointer<?>> unsortedList = new ArrayList<>();
+		
+		Pointer<?> pointer1 = mock(Pointer.class);
+		when(pointer1.getCurrentPositionInPrefix()).thenReturn((short) 2);
+		unsortedList.add(pointer1);
+		
+		Pointer<?> pointer2 = mock(Pointer.class);
+		when(pointer2.getCurrentPositionInPrefix()).thenReturn((short) 1);
+		unsortedList.add(pointer2);
+		
+		List<Pointer<?>> sortedList = PrefixUtil.asSortedList(unsortedList);
+		assertNotNull(sortedList);
+		assertEquals(2, sortedList.size());
+		assertSame(pointer2, sortedList.get(0));
+		assertSame(pointer1, sortedList.get(1));
+		
+	}
+	
+	@Test
+	public void testPointerListAssemblage() {
+		
+		Schema schema = TestTools.getEmpschmSchema();
+		SchemaRecord recordEmployee = schema.getRecord("EMPLOYEE");		
+		List<Pointer<?>> pointers = PrefixUtil.getPointersForRecord(recordEmployee);
+		assertNotNull(pointers);
+		assertEquals(16, pointers.size());
+		
+		assertEquals("EMPLOYEE", pointers.get(0).getRecordName());
+		assertEquals("DEPT-EMPLOYEE", pointers.get(0).getSetName());
+		assertSame(MEMBER_NEXT, pointers.get(0).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(1).getRecordName());
+		assertEquals("DEPT-EMPLOYEE", pointers.get(1).getSetName());
+		assertSame(MEMBER_PRIOR, pointers.get(1).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(2).getRecordName());
+		assertEquals("DEPT-EMPLOYEE", pointers.get(2).getSetName());
+		assertSame(MEMBER_OWNER, pointers.get(2).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(3).getRecordName());
+		assertEquals("EMP-NAME-NDX", pointers.get(3).getSetName());
+		assertSame(MEMBER_INDEX, pointers.get(3).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(4).getRecordName());
+		assertEquals("OFFICE-EMPLOYEE", pointers.get(4).getSetName());
+		assertSame(MEMBER_INDEX, pointers.get(4).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(5).getRecordName());
+		assertEquals("OFFICE-EMPLOYEE", pointers.get(5).getSetName());
+		assertSame(MEMBER_OWNER, pointers.get(5).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(6).getRecordName());
+		assertEquals("EMP-COVERAGE", pointers.get(6).getSetName());
+		assertSame(OWNER_NEXT, pointers.get(6).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(7).getRecordName());
+		assertEquals("EMP-COVERAGE", pointers.get(7).getSetName());
+		assertSame(OWNER_PRIOR, pointers.get(7).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(8).getRecordName());
+		assertEquals("EMP-EMPOSITION", pointers.get(8).getSetName());
+		assertSame(OWNER_NEXT, pointers.get(8).getType());		
+		
+		assertEquals("EMPLOYEE", pointers.get(9).getRecordName());
+		assertEquals("EMP-EMPOSITION", pointers.get(9).getSetName());
+		assertSame(OWNER_PRIOR, pointers.get(9).getType());
+
+		assertEquals("EMPLOYEE", pointers.get(10).getRecordName());
+		assertEquals("EMP-EXPERTISE", pointers.get(10).getSetName());
+		assertSame(OWNER_NEXT, pointers.get(10).getType());		
+		
+		assertEquals("EMPLOYEE", pointers.get(11).getRecordName());
+		assertEquals("EMP-EXPERTISE", pointers.get(11).getSetName());
+		assertSame(OWNER_PRIOR, pointers.get(11).getType());	
+		
+		assertEquals("EMPLOYEE", pointers.get(12).getRecordName());
+		assertEquals("MANAGES", pointers.get(12).getSetName());
+		assertSame(OWNER_NEXT, pointers.get(12).getType());		
+		
+		assertEquals("EMPLOYEE", pointers.get(13).getRecordName());
+		assertEquals("MANAGES", pointers.get(13).getSetName());
+		assertSame(OWNER_PRIOR, pointers.get(13).getType());
+		
+		assertEquals("EMPLOYEE", pointers.get(14).getRecordName());
+		assertEquals("REPORTS-TO", pointers.get(14).getSetName());
+		assertSame(OWNER_NEXT, pointers.get(14).getType());		
+		
+		assertEquals("EMPLOYEE", pointers.get(15).getRecordName());
+		assertEquals("REPORTS-TO", pointers.get(15).getSetName());
+		assertSame(OWNER_PRIOR, pointers.get(15).getType());		
+		
+	}
+	
+	@Test
+	public void testIsPointerListConsistent() {
+		
+		List<Pointer<?>> unsortedList = new ArrayList<>();		
+		Pointer<?> pointer1 = mock(Pointer.class);
+		when(pointer1.getCurrentPositionInPrefix()).thenReturn((short) 2);
+		unsortedList.add(pointer1);		
+		Pointer<?> pointer2 = mock(Pointer.class);
+		when(pointer2.getCurrentPositionInPrefix()).thenReturn((short) 1);
+		unsortedList.add(pointer2);		
+		List<Pointer<?>> sortedList = PrefixUtil.asSortedList(unsortedList);
+				
+		assertTrue(PrefixUtil.isPointerListConsistent(sortedList));
+		assertFalse(PrefixUtil.isPointerListConsistent(unsortedList));
+		
+	}
 	
 }

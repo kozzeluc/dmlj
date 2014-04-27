@@ -18,24 +18,24 @@ package org.lh.dmlj.schema.editor.prefix;
 
 import org.lh.dmlj.schema.Role;
 
-public class PointerFactory {	
+class PointerFactory {	
 	
-	public static <T extends Role> Pointer<T> newPointer(T role, PointerType type) {
-		if (PointerUtil.isPointerTypeValid(role, type)) {
+	static <T extends Role> Pointer<T> newPointer(T role, PointerType type) {
+		if (PrefixUtil.isPointerTypeValid(role, type)) {
 			return new Pointer<T>(role, type);
 		} else {
 			throw new IllegalArgumentException("no pointer of type " + type + " for " + role);
 		}		
 	}
 	
-	public static <T extends Role> PointerToMove<T> newPointerToMove(T role, PointerType type,
+	static <T extends Role> PointerToMove<T> newPointerToMove(T role, PointerType type,
 		  	   														short newPositionInPrefix) {
 		
-		Short positionInPrefix = PointerUtil.getPositionInPrefix(role, type);
+		Short positionInPrefix = PrefixUtil.getPositionInPrefix(role, type);
 		if (positionInPrefix == null) {
 			throw new IllegalArgumentException("not set: " + type);			
 		}
-		if (!PointerUtil.isPositionInPrefixValid(newPositionInPrefix)) {
+		if (!PrefixUtil.isPositionInPrefixValid(newPositionInPrefix)) {
 			String message = 
 				"positionInPrefixToSet must be a whole integer in the range 1 through 8180: " +
 				newPositionInPrefix;
@@ -44,14 +44,14 @@ public class PointerFactory {
 		return new PointerToMove<T>(role, type, newPositionInPrefix);
 	}	
 	
-	public static <T extends Role> PointerToSet<T> newPointerToSet(T role, PointerType type,
+	static <T extends Role> PointerToSet<T> newPointerToSet(T role, PointerType type,
 															  	   short positionInPrefixToSet) {
 		
-		Short positionInPrefix = PointerUtil.getPositionInPrefix(role, type);
+		Short positionInPrefix = PrefixUtil.getPositionInPrefix(role, type);
 		if (positionInPrefix != null) {
 			throw new IllegalArgumentException("already set: " + type);			
 		}
-		if (!PointerUtil.isPositionInPrefixValid(positionInPrefixToSet)) {
+		if (!PrefixUtil.isPositionInPrefixValid(positionInPrefixToSet)) {
 			String message = 
 				"positionInPrefixToSet must be a whole integer in the range 1 through 8180: " +
 				positionInPrefixToSet;
@@ -60,8 +60,8 @@ public class PointerFactory {
 		return new PointerToSet<T>(role, type, positionInPrefixToSet);
 	}
 	
-	public static <T extends Role> PointerToUnset<T> newPointerToUnset(T role, PointerType type) {		
-		Short positionInPrefix = PointerUtil.getPositionInPrefix(role, type);
+	static <T extends Role> PointerToUnset<T> newPointerToUnset(T role, PointerType type) {		
+		Short positionInPrefix = PrefixUtil.getPositionInPrefix(role, type);
 		if (positionInPrefix == null) {
 			throw new IllegalArgumentException("not set: " + type);			
 		}		

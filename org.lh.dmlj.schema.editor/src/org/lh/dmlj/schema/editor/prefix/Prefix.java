@@ -16,31 +16,34 @@
  */
 package org.lh.dmlj.schema.editor.prefix;
 
-import org.lh.dmlj.schema.Role;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Represents a pointer in a record's prefix whose position in the prefix is to be unset (i.e. set
- * to zero or null, depending on the pointer type).
- */
-class PointerToUnset<T extends Role> extends Pointer<T> {
+import org.lh.dmlj.schema.SchemaRecord;
 
-	private Short oldPositionInPrefix;	
+public class Prefix {
 	
-	PointerToUnset(T role, PointerType type) {
-		super(role, type);
-		oldPositionInPrefix = PrefixUtil.getPositionInPrefix(role, type);
+	protected List<Pointer<?>> pointers;
+	protected SchemaRecord     record;
+	
+	@SuppressWarnings("unused")
+	private Prefix() {
+		// disabled constructor
+		super(); 
 	}
 	
-	Short getOldPositionInPrefix() {
-		return oldPositionInPrefix;
+	Prefix(SchemaRecord record, List<Pointer<?>> pointers) {
+		super();
+		this.record = record;
+		this.pointers = new ArrayList<>(pointers);
 	}
 	
-	void reset() {
-		PrefixUtil.setPositionInPrefix(role, type, oldPositionInPrefix);
+	public List<Pointer<?>> getPointers() {
+		return new ArrayList<>(pointers);		
 	}
 	
-	void unset() {
-		PrefixUtil.setPositionInPrefix(role, type, null);
+	public SchemaRecord getRecord() {
+		return record;
 	}
-	
+
 }
