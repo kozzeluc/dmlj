@@ -44,6 +44,9 @@ import org.lh.dmlj.schema.editor.command.annotation.Item;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
+import org.lh.dmlj.schema.editor.prefix.PointerType;
+import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
+import org.lh.dmlj.schema.editor.prefix.PrefixForPointerRemoval;
 
 @ModelChange(category=REMOVE_ITEM)
 public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {	
@@ -52,13 +55,14 @@ public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
 	@Item 	   private Set 		  set;
 	
-	private SchemaArea	 		  area;
-	private DiagramData  		  diagramData;
-	private MemberRole 	 		  memberRole;		
-	private List<Procedure>		  obsoleteProcedures = new ArrayList<>();
-	private List<String>		  procedureNames = new ArrayList<>();
-	private SchemaRecord 		  record;
-	private SystemOwner	 		  systemOwner;
+	private SchemaArea	 		    area;
+	private DiagramData  		    diagramData;
+	private MemberRole 	 		    memberRole;		
+	private List<Procedure>		    obsoleteProcedures = new ArrayList<>();
+	private PrefixForPointerRemoval prefix;
+	private List<String>		    procedureNames = new ArrayList<>();
+	private SchemaRecord 		    record;
+	private SystemOwner	 		    systemOwner;
 	
 	private int 				  areaInSchemaIndex;
 	private int 				  areaSpecificationIndex;
@@ -84,7 +88,7 @@ public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {
 					
 		set = systemOwner.getSet();
 		memberRole = systemOwner.getSet().getMembers().get(0);
-		record = memberRole.getRecord();
+		record = memberRole.getRecord();		
 		diagramData = schema.getDiagramData();
 		area = systemOwner.getAreaSpecification().getArea();
 		if (set.getOrder() == SetOrder.SORTED) {
@@ -138,6 +142,18 @@ public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {
 			}			
 		});
 		
+		// last but not least: make sure the member record's prefix can keeps its integrity and that
+		// we can remove and move the pointers in the member record's prefix in a controlled way
+		List<PointerType> pointersToRemove = new ArrayList<>();
+		if (memberRole.getIndexDbkeyPosition() != null) {
+			pointersToRemove.add(PointerType.MEMBER_INDEX);
+		}
+		if (memberRole.getOwnerDbkeyPosition() != null) {
+			pointersToRemove.add(PointerType.MEMBER_OWNER);
+		}
+		PointerType[] pointersToRemoveAsArray = pointersToRemove.toArray(new PointerType[] {});
+		prefix = PrefixFactory.newPrefixForPointerRemoval(memberRole, pointersToRemoveAsArray);
+		
 		redo();
 		
 	}
@@ -180,8 +196,10 @@ public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {
 		// remove the (one and only) connection part
 		diagramData.getConnectionParts().remove(memberRole.getConnectionParts().get(0));		
 		
-		// remove the member role and its key, if any
-				
+		// take care of the member record's prefix
+		prefix.removePointers();
+		
+		// remove the member role and its key, if any				
 		if (set.getOrder() == SetOrder.SORTED) {
 			removeSortKey(memberRole);
 		}
@@ -243,6 +261,9 @@ public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {
 		if (set.getOrder() == SetOrder.SORTED) {
 			restoreSortKey(record, 0, 0);
 		}
+		
+		// take care of the member record's prefix
+		prefix.reset();		
 		
 		//add the set to the schema again
 		schema.getSets().add(setInSchemaIndex, set);		

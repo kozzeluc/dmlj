@@ -16,7 +16,11 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.asObjectGraph;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.asXmi;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
@@ -30,10 +34,12 @@ import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
+import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
@@ -47,12 +53,24 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
+import org.lh.dmlj.schema.editor.prefix.Pointer;
+import org.lh.dmlj.schema.editor.prefix.PointerType;
+import org.lh.dmlj.schema.editor.prefix.Prefix;
+import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 import org.lh.dmlj.schema.editor.testtool.Xmi;
 
 public class DeleteIndexCommandTest {
 
+	private void assertPointerNotInPrefix(Prefix prefix, Role role, PointerType type) {
+		for (Pointer<?> pointer : prefix.getPointers()) {
+			if (pointer.getRole() == role && pointer.getType() == type) {
+				fail("pointer not expected in prefix: " + type + " " + role);
+			}
+		}
+	}
+	
 	@Test
 	public void test_NoObsoleteArea() {
 		
@@ -81,8 +99,17 @@ public class DeleteIndexCommandTest {
 		KeyElement keyElement2 = sortKey.getElements().get(1);
 		Element element2 = keyElement2.getElement();
 		assertEquals(3, element2.getKeyElements().size());
-		// additional data we need to check the EMPLOYEE record's prefix
-		fail("make sure we (can) verify that no gaps are created in a record's prefix");
+		// prefix related data
+		Prefix prefix = PrefixFactory.newPrefixForInquiry(recordEmployee);
+		assertEquals(16, prefix.getPointers().size());
+		MemberRole memberRole = null;
+		for (MemberRole aMemberRole : recordEmployee.getMemberRoles()) {
+			if (aMemberRole.getSet() == systemOwner.getSet()) {
+				memberRole = aMemberRole;
+				break;
+			}			
+		}
+		assertNotNull(memberRole);
 		
 		// create the command
 		DeleteIndexCommand command = new DeleteIndexCommand(systemOwner);
@@ -107,6 +134,13 @@ public class DeleteIndexCommandTest {
 		assertEquals(-1, element1.getKeyElements().indexOf(keyElement1));
 		assertEquals(2, element2.getKeyElements().size());
 		assertEquals(-1, element2.getKeyElements().indexOf(keyElement2));
+		
+		// we need to check the integrity of the EMPLOYEE record's prefix; if we can create a prefix
+		// abstraction through the dedicated factory, the prefix' integrity is OK
+		prefix = PrefixFactory.newPrefixForInquiry(recordEmployee);
+		assertEquals(15, prefix.getPointers().size());
+		assertPointerNotInPrefix(prefix, memberRole, PointerType.MEMBER_INDEX);
+		assertPointerNotInPrefix(prefix, memberRole, PointerType.MEMBER_OWNER);
 		
 		
 		// once execute() has been called, all annotated field values should be in place; make sure
@@ -297,8 +331,17 @@ public class DeleteIndexCommandTest {
 		KeyElement keyElement2 = sortKey.getElements().get(1);
 		Element element2 = keyElement2.getElement();
 		assertEquals(3, element2.getKeyElements().size());
-		// additional data we need to check the EMPLOYEE record's prefix
-		fail("make sure we (can) verify that no gaps are created in a record's prefix");
+		// prefix related data
+		Prefix prefix = PrefixFactory.newPrefixForInquiry(recordEmployee);
+		assertEquals(16, prefix.getPointers().size());
+		MemberRole memberRole = null;
+		for (MemberRole aMemberRole : recordEmployee.getMemberRoles()) {
+			if (aMemberRole.getSet() == systemOwner.getSet()) {
+				memberRole = aMemberRole;
+				break;
+			}			
+		}
+		assertNotNull(memberRole);
 		//
 		Xmi xmi = asXmi(schema);		
 		ObjectGraph objectGraph = asObjectGraph(schema);
@@ -328,7 +371,14 @@ public class DeleteIndexCommandTest {
 		assertEquals(2, element1.getKeyElements().size());
 		assertEquals(-1, element1.getKeyElements().indexOf(keyElement1));
 		assertEquals(2, element2.getKeyElements().size());
-		assertEquals(-1, element2.getKeyElements().indexOf(keyElement2));		
+		assertEquals(-1, element2.getKeyElements().indexOf(keyElement2));
+		
+		// we need to check the integrity of the EMPLOYEE record's prefix; if we can create a prefix
+		// abstraction through the dedicated factory, the prefix' integrity is OK
+		prefix = PrefixFactory.newPrefixForInquiry(recordEmployee);
+		assertEquals(15, prefix.getPointers().size());
+		assertPointerNotInPrefix(prefix, memberRole, PointerType.MEMBER_INDEX);
+		assertPointerNotInPrefix(prefix, memberRole, PointerType.MEMBER_OWNER);
 		
 		
 		// undo the command and check if the system-owned indexed set is restored (as a matter of 
