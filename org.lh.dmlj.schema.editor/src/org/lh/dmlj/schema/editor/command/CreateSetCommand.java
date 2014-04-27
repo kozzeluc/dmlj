@@ -38,8 +38,10 @@ import org.lh.dmlj.schema.editor.command.annotation.Item;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
+import org.lh.dmlj.schema.editor.prefix.PointerType;
+import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
+import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendage;
 
 @ModelChange(category=ADD_ITEM)
 public class CreateSetCommand extends Command {
@@ -50,9 +52,11 @@ public class CreateSetCommand extends Command {
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
 	@Item  	   private Set	  	  set;
 	
-	private SchemaRecord member;
-	private SetMode 	 mode;
-	private SchemaRecord owner;
+	private SchemaRecord 	 		  member;
+	private PrefixForPointerAppendage memberPrefix;
+	private SetMode 	 	 		  mode;
+	private SchemaRecord 	 		  owner;
+	private PrefixForPointerAppendage ownerPrefix;
 	
 	private MemberRole 		memberRole;
 	private OwnerRole  		ownerRole;
@@ -86,20 +90,10 @@ public class CreateSetCommand extends Command {
 		
 		ownerRole = SchemaFactory.eINSTANCE.createOwnerRole();
 		ownerRole.setSet(set);
-		ownerRole.setNextDbkeyPosition(Tools.getFirstAvailablePointerPosition(owner));
-		ownerRole.setPriorDbkeyPosition((short) (ownerRole.getNextDbkeyPosition() + 1));
 		
 		memberRole = SchemaFactory.eINSTANCE.createMemberRole();
 		memberRole.setSet(set);
 		memberRole.setMembershipOption(SetMembershipOption.MANDATORY_AUTOMATIC);
-		if (mode == SetMode.CHAINED) {
-			memberRole.setNextDbkeyPosition(Tools.getFirstAvailablePointerPosition(member));
-			memberRole.setPriorDbkeyPosition((short) (memberRole.getNextDbkeyPosition() + 1));
-			memberRole.setOwnerDbkeyPosition((short) (memberRole.getPriorDbkeyPosition() + 1));
-		} else {
-			memberRole.setIndexDbkeyPosition((short) (Tools.getFirstAvailablePointerPosition(member)));
-			memberRole.setOwnerDbkeyPosition((short) (memberRole.getIndexDbkeyPosition() + 1));			
-		}
 		
 		ConnectionPart connectionPart = SchemaFactory.eINSTANCE.createConnectionPart();
 		connectionPart.setMemberRole(memberRole);
@@ -130,8 +124,27 @@ public class CreateSetCommand extends Command {
 		set.setSchema(schema);
 		
 		ownerRole.setRecord(owner);
+		if (ownerPrefix == null) {
+			ownerPrefix = 
+				PrefixFactory.newPrefixForPointerAppendage(ownerRole, PointerType.OWNER_NEXT, 
+														   PointerType.OWNER_PRIOR);
+		}
+		ownerPrefix.appendPointers();
 		
 		memberRole.setRecord(member);
+		if (memberPrefix == null) {
+			if (mode == SetMode.CHAINED) {
+				memberPrefix = 
+					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_NEXT, 
+															   PointerType.MEMBER_PRIOR, 
+															   PointerType.MEMBER_OWNER);
+			} else {
+				memberPrefix = 
+					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_INDEX, 
+															   PointerType.MEMBER_OWNER);			
+			}
+		}
+		memberPrefix.appendPointers();
 		
 		schema.getDiagramData().getConnectionParts().add(memberRole.getConnectionParts().get(0));
 		schema.getDiagramData().getConnectionLabels().add(memberRole.getConnectionLabel());
@@ -152,8 +165,10 @@ public class CreateSetCommand extends Command {
 		
 		set.setSchema(null);
 		
+		ownerPrefix.reset();
 		ownerRole.setRecord(null);
 		
+		memberPrefix.reset();
 		memberRole.setRecord(null);
 		
 		schema.getDiagramData().getConnectionParts().remove(memberRole.getConnectionParts().get(0));
