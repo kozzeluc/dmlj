@@ -40,6 +40,9 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
+import org.lh.dmlj.schema.editor.prefix.PointerType;
+import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
+import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendage;
 
 @ModelChange(category=ADD_ITEM)
 public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
@@ -48,8 +51,9 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSet_Members();
 	@Item	   private MemberRole memberRole;
 			
-	private SchemaRecord 		memberRecord;
-	private DiagramData	    	diagramData;	
+	private SchemaRecord 			  memberRecord;
+	private PrefixForPointerAppendage memberPrefix;
+	private DiagramData	    		  diagramData;	
 	
 	public AddMemberToSetCommand(Set set) {
 		super(set, null);
@@ -66,15 +70,7 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 		Assert.isNotNull(memberRecord, "member not set");		
 		
 		memberRole = SchemaFactory.eINSTANCE.createMemberRole();
-		memberRole.setMembershipOption(SetMembershipOption.MANDATORY_AUTOMATIC);
-		if (set.getMode() == SetMode.CHAINED) {
-			memberRole.setNextDbkeyPosition(Tools.getFirstAvailablePointerPosition(memberRecord));
-			memberRole.setPriorDbkeyPosition((short) (memberRole.getNextDbkeyPosition() + 1));
-			memberRole.setOwnerDbkeyPosition((short) (memberRole.getPriorDbkeyPosition() + 1));
-		} else {
-			memberRole.setIndexDbkeyPosition((short) (Tools.getFirstAvailablePointerPosition(memberRecord)));
-			memberRole.setOwnerDbkeyPosition((short) (memberRole.getIndexDbkeyPosition() + 1));			
-		}
+		memberRole.setMembershipOption(SetMembershipOption.MANDATORY_AUTOMATIC);		
 		
 		if (set.getOrder() == SetOrder.SORTED) {
 			// we only supply a sort key description for the new member record type; we do need to
@@ -109,11 +105,28 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 	
 	@Override
 	public void redo() {		
+		
 		memberRole.setRecord(memberRecord);	
 		memberRole.setSet(set);
+		
+		if (memberPrefix == null) {
+			if (set.getMode() == SetMode.CHAINED) {
+				memberPrefix = 
+					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_NEXT, 
+															   PointerType.MEMBER_PRIOR, 
+															   PointerType.MEMBER_OWNER);
+			} else {
+				memberPrefix = 
+					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_INDEX, 
+															   PointerType.MEMBER_OWNER);			
+			}
+		}
+		memberPrefix.appendPointers();
+		
 		if (set.getOrder() == SetOrder.SORTED) {
 			restoreSortKey(memberRecord, set.getMembers().size() - 1, 0);			
 		}
+		
 		diagramData.getConnectionParts().add(memberRole.getConnectionParts().get(0));
 		diagramData.getConnectionLabels().add(memberRole.getConnectionLabel());
 		diagramData.getLocations().add(memberRole.getConnectionLabel().getDiagramLocation());				
