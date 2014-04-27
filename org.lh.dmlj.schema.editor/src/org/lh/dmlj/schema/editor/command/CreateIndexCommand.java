@@ -121,7 +121,7 @@ public class CreateIndexCommand extends Command {
 		memberRole = SchemaFactory.eINSTANCE.createMemberRole();
 		memberRole.getConnectionParts().add(connectionPart);
 		memberRole.setConnectionLabel(connectionLabel);
-		memberRole.setIndexDbkeyPosition(null); 			 
+		// no pointers are appended to the member record type's prefix for the new index 			 
 		memberRole.setMembershipOption(MANDATORY_AUTOMATIC); 
 		
 		set = SchemaFactory.eINSTANCE.createSet();
