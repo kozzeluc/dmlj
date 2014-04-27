@@ -18,6 +18,9 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
 import org.lh.dmlj.schema.DiagramData;
@@ -31,6 +34,9 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.common.Tools;
+import org.lh.dmlj.schema.editor.prefix.PointerType;
+import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
+import org.lh.dmlj.schema.editor.prefix.PrefixForPointerRemoval;
 
 @ModelChange(category=REMOVE_ITEM)
 public class RemoveMemberFromSetCommand extends AbstractSortKeyManipulationCommand {
@@ -39,8 +45,9 @@ public class RemoveMemberFromSetCommand extends AbstractSortKeyManipulationComma
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSet_Members();
 	@Item 	   private MemberRole memberRole;
 	
-	private DiagramData  diagramData;
-	private SchemaRecord memberRecord;
+	private DiagramData  			diagramData;
+	private SchemaRecord 			memberRecord;
+	private PrefixForPointerRemoval prefix;
 	
 	private int memberRoleInRecordIndex;
 	private int memberRoleInSetIndex;
@@ -76,6 +83,20 @@ public class RemoveMemberFromSetCommand extends AbstractSortKeyManipulationComma
 		connectionPartIndex = 
 			diagramData.getConnectionParts().indexOf(memberRole.getConnectionParts().get(0)); 
 		
+		// make sure we can keep the member record's prefix in a consistent state (we're only 
+		// expecting chained sets here because this command is to be used only for multiple-member
+		// sets		
+		List<PointerType> pointersToRemove = new ArrayList<>();		
+		pointersToRemove.add(PointerType.MEMBER_NEXT); // mandatory pointer for chained sets		
+		if (memberRole.getPriorDbkeyPosition() != null) {
+			pointersToRemove.add(PointerType.MEMBER_PRIOR);
+		}
+		if (memberRole.getOwnerDbkeyPosition() != null) {
+			pointersToRemove.add(PointerType.MEMBER_OWNER);
+		}
+		PointerType[] pointersToRemoveAsArray = pointersToRemove.toArray(new PointerType[] {});		
+		prefix = PrefixFactory.newPrefixForPointerRemoval(memberRole, pointersToRemoveAsArray);
+		
 		redo();
 		
 	}
@@ -95,7 +116,10 @@ public class RemoveMemberFromSetCommand extends AbstractSortKeyManipulationComma
 		// remove the key if applicable
 		if (set.getOrder() == SetOrder.SORTED) {
 			removeSortKey(memberRole);
-		}		
+		}
+		
+		// take care of the member record's prefix
+		prefix.removePointers();
 		
 		// decouple the member role from both the record and set
 		memberRole.setRecord(null);
@@ -118,6 +142,9 @@ public class RemoveMemberFromSetCommand extends AbstractSortKeyManipulationComma
 		// reattach the member role to both the record and set
 		memberRecord.getMemberRoles().add(memberRoleInRecordIndex, memberRole);
 		set.getMembers().add(memberRoleInSetIndex, memberRole);
+		
+		// take care of the member record's prefix
+		prefix.reset();		
 		
 		diagramData.getLocations().add(connectionLabelLocationIndex, 
 									   memberRole.getConnectionLabel().getDiagramLocation());

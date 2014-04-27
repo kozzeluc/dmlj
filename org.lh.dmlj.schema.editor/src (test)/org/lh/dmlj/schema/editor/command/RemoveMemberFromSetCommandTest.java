@@ -20,10 +20,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
@@ -39,6 +40,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
@@ -47,6 +49,10 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
+import org.lh.dmlj.schema.editor.prefix.Pointer;
+import org.lh.dmlj.schema.editor.prefix.PointerType;
+import org.lh.dmlj.schema.editor.prefix.Prefix;
+import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 import org.lh.dmlj.schema.editor.testtool.Xmi;
@@ -205,10 +211,9 @@ public class RemoveMemberFromSetCommandTest {
 	}
 	
 	@Test
-	public void testUnsorted() {
+	public void testUnsorted() {		
 		
-		// additional data we need to check the EMPLOYEE record's prefix
-		fail("make sure we (can) verify that no gaps are created in a record's prefix");
+		SchemaRecord recordNonHospClaim = memberRoleNonHospClaim.getRecord();
 		
 		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
 		command.execute();
@@ -228,6 +233,9 @@ public class RemoveMemberFromSetCommandTest {
 		assertEquals(-1, schema.getDiagramData()
 				   			   .getConnectionParts()
 				   			   .indexOf(memberRoleNonHospClaim.getConnectionParts().get(0)));
+		
+		Prefix prefix = PrefixFactory.newPrefixForInquiry(recordNonHospClaim);
+		assertTrue(prefix.getPointers().isEmpty());
 
 		command.undo();
 		checkObjectGraph(objectGraph);
@@ -282,9 +290,6 @@ public class RemoveMemberFromSetCommandTest {
 		Element element = keyElement.getElement();
 		assertEquals(1, element.getKeyElements().size());
 		
-		// additional data we need to check the EMPLOYEE record's prefix
-		fail("make sure we (can) verify that no gaps are created in a record's prefix");
-		
 		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
@@ -304,6 +309,9 @@ public class RemoveMemberFromSetCommandTest {
 				   			   .getConnectionParts()
 				   			   .indexOf(memberRoleNonHospClaim.getConnectionParts().get(0)));
 		
+		Prefix prefix = PrefixFactory.newPrefixForInquiry(recordNonHospClaim);
+		assertTrue(prefix.getPointers().isEmpty());		
+		
 		// regarding the sort key: it should be removed from the element involved AND from the 
 		// member record as well
 		assertEquals(-1, recordNonHospClaim.getKeys().indexOf(sortKey));
@@ -317,6 +325,89 @@ public class RemoveMemberFromSetCommandTest {
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
 		checkXmi(touchedXmi);		
+		
+	}
+	
+	@Test
+	public void testPointerShifting() {
+			
+		// make sure record NON-HOSP-CLAIM participates in another set so that we can verify that
+		// the prefix is kept in a consistent state
+		SchemaRecord recordNonHospClaim = memberRoleNonHospClaim.getRecord();
+		SchemaRecord recordHospitalClaim = memberRoleHospitalClaim.getRecord();
+		CreateSetCommand tmpCommand = new CreateSetCommand(recordHospitalClaim, SetMode.CHAINED);
+		tmpCommand.setMemberRecord(recordNonHospClaim);
+		tmpCommand.execute(); // the new set will be called "NEW-SET-1"
+		
+		Prefix prefix = PrefixFactory.newPrefixForInquiry(recordNonHospClaim);
+		List<Pointer<?>> pointers = prefix.getPointers();
+		assertEquals(5, pointers.size());
+		assertEquals("COVERAGE-CLAIMS", pointers.get(0).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointers.get(0).getType());
+		assertEquals((short) 1, pointers.get(0).getCurrentPositionInPrefix().shortValue());
+		assertEquals("COVERAGE-CLAIMS", pointers.get(1).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR, pointers.get(1).getType());
+		assertEquals((short) 2, pointers.get(1).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(2).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointers.get(2).getType());
+		assertEquals((short) 3, pointers.get(2).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(3).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR, pointers.get(3).getType());
+		assertEquals((short) 4, pointers.get(3).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(4).getSetName());
+		assertSame(PointerType.MEMBER_OWNER, pointers.get(4).getType());
+		assertEquals((short) 5, pointers.get(4).getCurrentPositionInPrefix().shortValue());
+		
+		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
+		command.execute();
+		prefix = PrefixFactory.newPrefixForInquiry(recordNonHospClaim);
+		pointers = prefix.getPointers();
+		assertEquals(3, pointers.size());
+		assertEquals("NEW-SET-1", pointers.get(0).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointers.get(0).getType());		
+		assertEquals((short) 1, pointers.get(0).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(1).getSetName());		
+		assertSame(PointerType.MEMBER_PRIOR, pointers.get(1).getType());
+		assertEquals((short) 2, pointers.get(1).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(2).getSetName());
+		assertSame(PointerType.MEMBER_OWNER, pointers.get(2).getType());
+		assertEquals((short) 3, pointers.get(2).getCurrentPositionInPrefix().shortValue());
+		
+		
+		command.undo();
+		prefix = PrefixFactory.newPrefixForInquiry(recordNonHospClaim);
+		pointers = prefix.getPointers();
+		assertEquals(5, pointers.size());
+		assertEquals("COVERAGE-CLAIMS", pointers.get(0).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointers.get(0).getType());
+		assertEquals((short) 1, pointers.get(0).getCurrentPositionInPrefix().shortValue());
+		assertEquals("COVERAGE-CLAIMS", pointers.get(1).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR, pointers.get(1).getType());
+		assertEquals((short) 2, pointers.get(1).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(2).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointers.get(2).getType());
+		assertEquals((short) 3, pointers.get(2).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(3).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR, pointers.get(3).getType());
+		assertEquals((short) 4, pointers.get(3).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(4).getSetName());
+		assertSame(PointerType.MEMBER_OWNER, pointers.get(4).getType());
+		assertEquals((short) 5, pointers.get(4).getCurrentPositionInPrefix().shortValue());
+		
+		
+		command.redo();
+		prefix = PrefixFactory.newPrefixForInquiry(recordNonHospClaim);
+		pointers = prefix.getPointers();
+		assertEquals(3, pointers.size());
+		assertEquals("NEW-SET-1", pointers.get(0).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointers.get(0).getType());
+		assertEquals((short) 1, pointers.get(0).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(1).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR, pointers.get(1).getType());
+		assertEquals((short) 2, pointers.get(1).getCurrentPositionInPrefix().shortValue());
+		assertEquals("NEW-SET-1", pointers.get(2).getSetName());
+		assertSame(PointerType.MEMBER_OWNER, pointers.get(2).getType());
+		assertEquals((short) 3, pointers.get(2).getCurrentPositionInPrefix().shortValue());
 		
 	}
 
