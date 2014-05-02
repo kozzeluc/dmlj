@@ -28,6 +28,8 @@ public class Pointer<T extends Role> {
 	
 	protected T   		  role;
 	protected PointerType type;
+	private String 		  recordName;
+	private String 		  setName;
 	
 	protected Pointer() {
 		throw new UnsupportedOperationException("disabled constructor");
@@ -36,7 +38,14 @@ public class Pointer<T extends Role> {
 	protected Pointer(T role, PointerType type) {
 		super();	
 		this.role = role;
-		this.type = type;		
+		this.type = type;
+		if (isOwnerDefined()) {			
+			recordName = getOwnerRole().getRecord().getName();
+			setName = getOwnerRole().getSet().getName();
+		} else {
+			recordName = getMemberRole().getRecord().getName();
+			setName = getMemberRole().getSet().getName();
+		}
 	}
 	
 	public Short getCurrentPositionInPrefix() {
@@ -57,12 +66,8 @@ public class Pointer<T extends Role> {
 		return (OwnerRole) role;
 	}
 	
-	public String getRecordName() {
-		if (isOwnerDefined()) {			
-			return getOwnerRole().getRecord().getName();
-		} else {
-			return getMemberRole().getRecord().getName();
-		}
+	public String getRecordName() {		
+		return recordName;
 	}
 	
 	public T getRole() {
@@ -70,11 +75,7 @@ public class Pointer<T extends Role> {
 	}
 	
 	public String getSetName() {
-		if (isOwnerDefined()) {
-			return getOwnerRole().getSet().getName();
-		} else {
-			return getMemberRole().getSet().getName();
-		}
+		return setName;
 	}
 	
 	public PointerType getType() {
