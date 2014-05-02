@@ -554,4 +554,102 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 	}
 	
+	@Test
+	public void testGetDefinedPointerTypesForOwnerRole() {
+
+		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
+		
+		PointerType[] definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(0, definedPointerTypes.length);
+		
+		when(role.getNextDbkeyPosition()).thenReturn((short) 5);
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(1, definedPointerTypes.length);
+		assertSame(OWNER_NEXT, definedPointerTypes[0]);
+		
+		when(role.getNextDbkeyPosition()).thenReturn((short) 0);
+		when(role.getPriorDbkeyPosition()).thenReturn(Short.valueOf((short) 7));
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(1, definedPointerTypes.length);
+		assertSame(OWNER_PRIOR, definedPointerTypes[0]);
+		
+		when(role.getNextDbkeyPosition()).thenReturn((short) 5);
+		when(role.getPriorDbkeyPosition()).thenReturn(Short.valueOf((short) 7));
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(2, definedPointerTypes.length);
+		assertSame(OWNER_NEXT, definedPointerTypes[0]);
+		assertSame(OWNER_PRIOR, definedPointerTypes[1]);
+		
+	}
+	
+	@Test
+	public void testGetDefinedPointerTypesForMemberRole() {
+		
+		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
+		
+		PointerType[] definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(0, definedPointerTypes.length);
+		
+		when(role.getNextDbkeyPosition()).thenReturn(Short.valueOf((short) 5));
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(1, definedPointerTypes.length);
+		assertSame(MEMBER_NEXT, definedPointerTypes[0]);
+		
+		when(role.getNextDbkeyPosition()).thenReturn(null);
+		when(role.getPriorDbkeyPosition()).thenReturn(Short.valueOf((short) 7));
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(1, definedPointerTypes.length);
+		assertSame(MEMBER_PRIOR, definedPointerTypes[0]);
+		
+		when(role.getPriorDbkeyPosition()).thenReturn(null);
+		when(role.getOwnerDbkeyPosition()).thenReturn(Short.valueOf((short) 9));
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(1, definedPointerTypes.length);
+		assertSame(MEMBER_OWNER, definedPointerTypes[0]);
+		
+		when(role.getOwnerDbkeyPosition()).thenReturn(null);
+		when(role.getIndexDbkeyPosition()).thenReturn(Short.valueOf((short) 9));
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(1, definedPointerTypes.length);
+		assertSame(MEMBER_INDEX, definedPointerTypes[0]);
+		
+		when(role.getNextDbkeyPosition()).thenReturn(Short.valueOf((short) 5));
+		when(role.getPriorDbkeyPosition()).thenReturn(Short.valueOf((short) 6));
+		when(role.getOwnerDbkeyPosition()).thenReturn(null);
+		when(role.getIndexDbkeyPosition()).thenReturn(null);
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(2, definedPointerTypes.length);
+		assertSame(MEMBER_NEXT, definedPointerTypes[0]);		
+		assertSame(MEMBER_PRIOR, definedPointerTypes[1]);
+		
+		when(role.getNextDbkeyPosition()).thenReturn(Short.valueOf((short) 5));
+		when(role.getPriorDbkeyPosition()).thenReturn(null);
+		when(role.getOwnerDbkeyPosition()).thenReturn(Short.valueOf((short) 6));
+		when(role.getIndexDbkeyPosition()).thenReturn(null);
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(2, definedPointerTypes.length);
+		assertSame(MEMBER_NEXT, definedPointerTypes[0]);		
+		assertSame(MEMBER_OWNER, definedPointerTypes[1]);		
+		
+		when(role.getNextDbkeyPosition()).thenReturn(Short.valueOf((short) 5));
+		when(role.getPriorDbkeyPosition()).thenReturn(Short.valueOf((short) 6));
+		when(role.getOwnerDbkeyPosition()).thenReturn(Short.valueOf((short) 7));
+		when(role.getIndexDbkeyPosition()).thenReturn(null);
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(3, definedPointerTypes.length);
+		assertSame(MEMBER_NEXT, definedPointerTypes[0]);		
+		assertSame(MEMBER_PRIOR, definedPointerTypes[1]);		
+		assertSame(MEMBER_OWNER, definedPointerTypes[2]);
+		
+		when(role.getNextDbkeyPosition()).thenReturn(null);
+		when(role.getPriorDbkeyPosition()).thenReturn(null);
+		when(role.getOwnerDbkeyPosition()).thenReturn(Short.valueOf((short) 6));
+		when(role.getIndexDbkeyPosition()).thenReturn(Short.valueOf((short) 7));
+		definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		assertEquals(2, definedPointerTypes.length);
+		assertSame(MEMBER_OWNER, definedPointerTypes[0]);		
+		assertSame(MEMBER_INDEX, definedPointerTypes[1]);		
+		
+	}
+	
 }

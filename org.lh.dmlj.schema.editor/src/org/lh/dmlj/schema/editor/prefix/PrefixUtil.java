@@ -33,7 +33,7 @@ import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.SchemaRecord;
 
-class PrefixUtil {
+public class PrefixUtil {
 
 	static List<Pointer<?>> asSortedList(List<Pointer<?>> unsortedPointerList) {
 		List<Pointer<?>> sortedPointers = new ArrayList<>(unsortedPointerList);
@@ -47,6 +47,38 @@ class PrefixUtil {
 		return sortedPointers;
 	}
 
+	public static PointerType[] getDefinedPointerTypes(MemberRole role) {
+		List<PointerType> pointersToRemoveInMember = new ArrayList<>();		
+		if (role.getNextDbkeyPosition() != null) {
+			pointersToRemoveInMember.add(PointerType.MEMBER_NEXT);
+		}
+		if (role.getPriorDbkeyPosition() != null) {
+			pointersToRemoveInMember.add(PointerType.MEMBER_PRIOR);
+		}
+		if (role.getOwnerDbkeyPosition() != null) {
+			pointersToRemoveInMember.add(PointerType.MEMBER_OWNER);
+		}
+		if (role.getIndexDbkeyPosition() != null) {
+			pointersToRemoveInMember.add(PointerType.MEMBER_INDEX);
+		}
+		PointerType[] pointersToRemoveAsArray = 
+			pointersToRemoveInMember.toArray(new PointerType[] {});		
+		return pointersToRemoveAsArray;	
+	}
+	
+	public static PointerType[] getDefinedPointerTypes(OwnerRole role) {
+		List<PointerType> pointersToRemoveInOwner = new ArrayList<>();		
+		if (role.getNextDbkeyPosition() != 0) {
+			pointersToRemoveInOwner.add(PointerType.OWNER_NEXT);
+		}
+		if (role.getPriorDbkeyPosition() != null) {
+			pointersToRemoveInOwner.add(PointerType.OWNER_PRIOR);
+		}
+		PointerType[] pointersToRemoveAsArray = 
+			pointersToRemoveInOwner.toArray(new PointerType[] {});
+		return pointersToRemoveAsArray;
+	}	
+	
 	static List<Pointer<?>> getPointersForRecord(SchemaRecord record) {
 		List<Pointer<?>> pointers = new ArrayList<>();
 		for (OwnerRole ownerRole : record.getOwnerRoles()) {
