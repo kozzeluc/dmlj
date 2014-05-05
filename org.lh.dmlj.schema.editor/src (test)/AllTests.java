@@ -50,6 +50,8 @@ import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetShortAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommandTest;
+import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRoleTest;
+import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRoleTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
 import org.lh.dmlj.schema.editor.common.ToolsTest;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
@@ -107,6 +109,8 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	PrefixForPointerAppendageTest.class,
 	PrefixForPointerRemovalTest.class,
 	PrefixUtilTest.class,
+	RemovableMemberRoleTest.class,
+	RemovableOwnerRoleTest.class,
 	RemoveMemberFromSetCommandTest.class,
 	ResizeDiagramNodeCommandTest.class,
 	SetBooleanAttributeCommandTest.class,
