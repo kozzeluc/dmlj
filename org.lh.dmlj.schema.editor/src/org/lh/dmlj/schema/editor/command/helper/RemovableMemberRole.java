@@ -27,6 +27,7 @@ import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
@@ -36,6 +37,8 @@ import org.lh.dmlj.schema.editor.prefix.PrefixForPointerRemoval;
 import org.lh.dmlj.schema.editor.prefix.PrefixUtil;
 
 public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
+	
+	private Schema schema;
 	
 	private SchemaRecord record;
 	private int indexOfRoleInRecordsMemberRoles;
@@ -56,10 +59,15 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	private int indexOfConnectionLabelLocationInDiagramDatasLocations;
 
 	public RemovableMemberRole(MemberRole role) {
-		super(role);		
+		super(role);
+		rememberSchemaData();
 		rememberRecordData();
 		rememberSetData();
 		rememberMembershipData();
+	}
+
+	private void rememberSchemaData() {
+		schema = role.getRecord().getSchema();		
 	}
 
 	private void rememberRecordData() {
@@ -92,7 +100,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 
 	private void rememberConnectionPartData() {		
 		ConnectionPart connectionPart = role.getConnectionParts().get(0);
-		DiagramData diagramData = set.getSchema().getDiagramData();
+		DiagramData diagramData = schema.getDiagramData();
 		indexOfConnectionPartInDiagramDatasConnectionParts = 
 			diagramData.getConnectionParts().indexOf(connectionPart);		
 		DiagramLocation sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 
@@ -109,7 +117,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	
 	private void rememberConnectionLabelData() {		
 		ConnectionLabel connectionLabel = role.getConnectionLabel();
-		DiagramData diagramData = set.getSchema().getDiagramData();
+		DiagramData diagramData = schema.getDiagramData();
 		indexOfConnectionLabelInDiagramDatasConnectionLabels = 
 			diagramData.getConnectionLabels().indexOf(role.getConnectionLabel());
 		indexOfConnectionLabelLocationInDiagramDatasLocations = 
@@ -149,7 +157,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 
 	private void removeConnectionPartData() {
 		ConnectionPart connectionPart = role.getConnectionParts().get(0);
-		DiagramData diagramData = set.getSchema().getDiagramData();
+		DiagramData diagramData = schema.getDiagramData();
 		diagramData.getConnectionParts().remove(connectionPart);
 		DiagramLocation sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 		
 		if (sourceEndpointLocation != null) {
@@ -163,7 +171,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	
 	private void removeConnectionLabelData() {
 		ConnectionLabel connectionLabel = role.getConnectionLabel(); 
-		DiagramData diagramData = set.getSchema().getDiagramData();
+		DiagramData diagramData = schema.getDiagramData();
 		diagramData.getConnectionLabels().remove(connectionLabel);
 		diagramData.getLocations().remove(connectionLabel.getDiagramLocation());	
 	}	
@@ -203,7 +211,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 
 	private void restoreConnectionPartData() {	
 		ConnectionPart connectionPart = role.getConnectionParts().get(0);
-		DiagramData diagramData = set.getSchema().getDiagramData();
+		DiagramData diagramData = schema.getDiagramData();
 		diagramData.getConnectionParts().add(indexOfConnectionPartInDiagramDatasConnectionParts, 
 											 connectionPart);		
 		DiagramLocation sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 
@@ -220,7 +228,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	
 	private void restoreConnectionLabelData() {	
 		ConnectionLabel connectionLabel = role.getConnectionLabel();
-		DiagramData diagramData = set.getSchema().getDiagramData();
+		DiagramData diagramData = schema.getDiagramData();
 		diagramData.getConnectionLabels().add(indexOfConnectionLabelInDiagramDatasConnectionLabels, 
 											  role.getConnectionLabel());
 		diagramData.getLocations().add(indexOfConnectionLabelLocationInDiagramDatasLocations,

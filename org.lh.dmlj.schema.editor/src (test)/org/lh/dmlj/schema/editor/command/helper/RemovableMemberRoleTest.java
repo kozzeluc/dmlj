@@ -68,6 +68,7 @@ public class RemovableMemberRoleTest {
 		when(diagramData.getConnectionParts()).thenReturn(diagramDataConnectionParts);
 		
 		SchemaRecord record = mock(SchemaRecord.class);
+		when(record.getSchema()).thenReturn(schema);
 		
 		Set impactedSet = mock(Set.class);
 		when(impactedSet.getSchema()).thenReturn(schema);
@@ -341,6 +342,7 @@ public class RemovableMemberRoleTest {
 		when(diagramData.getConnectionParts()).thenReturn(diagramDataConnectionParts);		
 		
 		SchemaRecord record = mock(SchemaRecord.class);
+		when(record.getSchema()).thenReturn(schema);
 		
 		Set impactedSet = mock(Set.class);
 		when(impactedSet.getSchema()).thenReturn(schema);
