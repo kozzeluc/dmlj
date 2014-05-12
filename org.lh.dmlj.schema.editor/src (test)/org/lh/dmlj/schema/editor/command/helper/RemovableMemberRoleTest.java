@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.command.helper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -44,8 +46,162 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
+import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole.DiagramLocationIndex;
+import org.mockito.ArgumentCaptor;
 
 public class RemovableMemberRoleTest {
+	
+	private static void testRemovableMemberRoleForDiagramLocationTesting(
+		int connectionLabelLocationIndex,
+		int sourceEndpointLocationIndex,
+		int targetEndpointLocationIndex) {
+		
+		Schema schema = mock(Schema.class);
+		
+		DiagramData diagramData = mock(DiagramData.class);
+		when(schema.getDiagramData()).thenReturn(diagramData);
+		
+		@SuppressWarnings("unchecked")
+		EList<ConnectionLabel> diagramDataConnectionLabels = mock(EList.class);
+		when(diagramData.getConnectionLabels()).thenReturn(diagramDataConnectionLabels);
+		
+		@SuppressWarnings("unchecked")
+		EList<DiagramLocation> diagramDataLocations = mock(EList.class);
+		when(diagramData.getLocations()).thenReturn(diagramDataLocations);
+		
+		@SuppressWarnings("unchecked")
+		EList<ConnectionPart> diagramDataConnectionParts = mock(EList.class);
+		when(diagramData.getConnectionParts()).thenReturn(diagramDataConnectionParts);
+		
+		SchemaRecord record = mock(SchemaRecord.class);
+		when(record.getSchema()).thenReturn(schema);
+		
+		Set impactedSet = mock(Set.class);
+		when(impactedSet.getSchema()).thenReturn(schema);
+		when(impactedSet.getOrder()).thenReturn(SetOrder.LAST);		
+		
+		MemberRole roleToRemove = mock(MemberRole.class);
+		when(roleToRemove.getRecord()).thenReturn(record);
+		when(roleToRemove.getSet()).thenReturn(impactedSet);
+		when(roleToRemove.getNextDbkeyPosition()).thenReturn(Short.valueOf((short) 1));
+		when(roleToRemove.getPriorDbkeyPosition()).thenReturn(null);
+		when(roleToRemove.getOwnerDbkeyPosition()).thenReturn(null);
+		when(roleToRemove.getIndexDbkeyPosition()).thenReturn(null);		
+		
+		List<OwnerRole> recordOwnerRoleList = new ArrayList<>();
+		
+		@SuppressWarnings("unchecked")
+		EList<OwnerRole> recordOwnerRoles = mock(EList.class);
+		when(recordOwnerRoles.iterator()).thenReturn(recordOwnerRoleList.iterator());		
+		when(recordOwnerRoles.indexOf(anyObject())).thenThrow(new RuntimeException("not to be called"));
+		when(record.getOwnerRoles()).thenReturn(recordOwnerRoles);
+		
+		List<MemberRole> recordMemberRoleList = new ArrayList<>();
+		recordMemberRoleList.add(roleToRemove);		
+		
+		@SuppressWarnings("unchecked")
+		EList<MemberRole> recordMemberRoles = mock(EList.class);
+		when(recordMemberRoles.iterator()).thenReturn(recordMemberRoleList.iterator());				
+		when(recordMemberRoles.indexOf(roleToRemove)).thenReturn(0);
+		when(record.getMemberRoles()).thenReturn(recordMemberRoles);
+		
+		@SuppressWarnings("unchecked")
+		EList<MemberRole> setMemberRoles = mock(EList.class);
+		when(setMemberRoles.indexOf(roleToRemove)).thenReturn(0);
+		when(impactedSet.getMembers()).thenReturn(setMemberRoles);
+		
+		when(roleToRemove.getSortKey()).thenReturn(null);
+		
+		ConnectionLabel connectionLabel = mock(ConnectionLabel.class);
+		when(roleToRemove.getConnectionLabel()).thenReturn(connectionLabel);
+		when(diagramDataConnectionLabels.indexOf(connectionLabel)).thenReturn(0);		
+		
+		ConnectionPart connectionPart = mock(ConnectionPart.class);
+		@SuppressWarnings("unchecked")
+		EList<ConnectionPart> roleConnectionParts = mock(EList.class);
+		when(roleConnectionParts.get(0)).thenReturn(connectionPart);
+		when(roleToRemove.getConnectionParts()).thenReturn(roleConnectionParts);
+		when(diagramDataConnectionParts.indexOf(connectionPart)).thenReturn(0);
+		
+		DiagramLocation connectionLabelLocation = mock(DiagramLocation.class);
+		when(connectionLabel.getDiagramLocation()).thenReturn(connectionLabelLocation);
+		when(diagramDataLocations.indexOf(connectionLabelLocation)).thenReturn(connectionLabelLocationIndex);
+		
+		DiagramLocation sourceEndpointLocation = mock(DiagramLocation.class);
+		if (sourceEndpointLocationIndex > -1) {
+			when(connectionPart.getSourceEndpointLocation()).thenReturn(sourceEndpointLocation);
+			when(diagramDataLocations.indexOf(sourceEndpointLocation)).thenReturn(sourceEndpointLocationIndex);
+		}
+		
+		DiagramLocation targetEndpointLocation = mock(DiagramLocation.class);
+		if (targetEndpointLocationIndex > -1) {
+			when(connectionPart.getTargetEndpointLocation()).thenReturn(targetEndpointLocation);
+			when(diagramDataLocations.indexOf(targetEndpointLocation)).thenReturn(targetEndpointLocationIndex);
+		}
+				
+		RemovableMemberRole removableMemberRole = new RemovableMemberRole(roleToRemove);
+		
+		removableMemberRole.remove();		
+		removableMemberRole.restore();	
+		
+		List<DiagramLocationIndex> diagramLocationIndexes = new ArrayList<>();
+		diagramLocationIndexes.add(new DiagramLocationIndex(connectionLabelLocation, 
+														connectionLabelLocationIndex));
+		if (sourceEndpointLocationIndex > -1) {
+			diagramLocationIndexes.add(new DiagramLocationIndex(sourceEndpointLocation, 
+															sourceEndpointLocationIndex));
+		}
+		if (targetEndpointLocationIndex > -1) {
+			diagramLocationIndexes.add(new DiagramLocationIndex(targetEndpointLocation, 
+															targetEndpointLocationIndex));
+		}
+		Collections.sort(diagramLocationIndexes);
+		
+		int transformedConnectionLabelLocationIndex = -1;
+		int transformedSourceEndpointLocationIndex = -1;
+		int transformedTargetEndpointLocationIndex = -1;
+		for (int i = 0; i < diagramLocationIndexes.size(); i++) {
+			DiagramLocationIndex index = diagramLocationIndexes.get(i);
+			if (index.diagramLocation == connectionLabelLocation) {
+				transformedConnectionLabelLocationIndex = i;
+			} else if (index.diagramLocation == sourceEndpointLocation) {
+				transformedSourceEndpointLocationIndex = i;
+			} else {
+				transformedTargetEndpointLocationIndex = i;
+			}
+		}		
+		
+		// it is important that all diagram locations are restored back to their original values;
+		// the order in which these values are restored matters
+		ArgumentCaptor<Integer> indexCaptor = ArgumentCaptor.forClass(Integer.class);
+		ArgumentCaptor<DiagramLocation> elementCaptor = ArgumentCaptor.forClass(DiagramLocation.class);	
+		verify(diagramDataLocations, times(diagramLocationIndexes.size())).add(indexCaptor.capture(), 
+																			   elementCaptor.capture());
+		List<Integer> indexes = indexCaptor.getAllValues();				
+		
+		assertEquals(Integer.valueOf(connectionLabelLocationIndex), 
+					 indexes.get(transformedConnectionLabelLocationIndex));
+		if (sourceEndpointLocationIndex > -1) {
+			assertEquals(Integer.valueOf(sourceEndpointLocationIndex), 
+					 	 indexes.get(transformedSourceEndpointLocationIndex));
+		}
+		if (targetEndpointLocationIndex > -1) {
+			assertEquals(Integer.valueOf(targetEndpointLocationIndex), 
+					 	 indexes.get(transformedTargetEndpointLocationIndex));
+		}
+		List<DiagramLocation> diagramLocationArguments = elementCaptor.getAllValues();		
+		assertSame(connectionLabelLocation, 
+				   diagramLocationArguments.get(transformedConnectionLabelLocationIndex));
+		if (sourceEndpointLocationIndex > -1) {
+			assertSame(sourceEndpointLocation, 
+					   diagramLocationArguments.get(transformedSourceEndpointLocationIndex));
+		}
+		if (targetEndpointLocationIndex > -1) {
+			assertSame(targetEndpointLocation, 
+					   diagramLocationArguments.get(transformedTargetEndpointLocationIndex));		
+		}
+		
+	}
 
 	@Test
 	public void testUnsortedChainedSet() {
@@ -564,6 +720,26 @@ public class RemovableMemberRoleTest {
 		
 		
 		removableMemberRole.restore();		
+		
+	}
+	
+	@Test
+	public void testRestoreDiagramLocation_SequenceCheckAfterRestore() {		
+		
+		testRemovableMemberRoleForDiagramLocationTesting(0, 1, 2);
+		testRemovableMemberRoleForDiagramLocationTesting(2, 0, 1);
+		testRemovableMemberRoleForDiagramLocationTesting(1, 2, 0);
+		testRemovableMemberRoleForDiagramLocationTesting(0, 2, 1);
+		testRemovableMemberRoleForDiagramLocationTesting(1, 0, 2);
+		testRemovableMemberRoleForDiagramLocationTesting(2, 1, 0);
+	
+		testRemovableMemberRoleForDiagramLocationTesting(0, -1, 1);
+		testRemovableMemberRoleForDiagramLocationTesting(1, -1, 0);
+		
+		testRemovableMemberRoleForDiagramLocationTesting(0, 1, -1);
+		testRemovableMemberRoleForDiagramLocationTesting(1, 0, -1);
+		
+		testRemovableMemberRoleForDiagramLocationTesting(0, -1, -1);
 		
 	}
 	

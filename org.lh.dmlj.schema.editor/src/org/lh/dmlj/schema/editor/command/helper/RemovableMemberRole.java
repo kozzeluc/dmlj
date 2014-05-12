@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.command.helper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.lh.dmlj.schema.ConnectionLabel;
@@ -52,11 +53,10 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	private List<KeyElementIndex> indexesOfKeyElementsInElementsKeyElements = new ArrayList<>();
 	
 	private int indexOfConnectionPartInDiagramDatasConnectionParts;
-	private Integer	indexOfSourceEndpointLocationInDiagramDatasLocations;
-	private Integer	indexOfTargetEndpointLocationInDiagramDatasLocations;
+		
+	private int indexOfConnectionLabelInDiagramDatasConnectionLabels;	
 	
-	private int indexOfConnectionLabelInDiagramDatasConnectionLabels;
-	private int indexOfConnectionLabelLocationInDiagramDatasLocations;
+	private List<DiagramLocationIndex> indexesInDiagramDatasLocations = new ArrayList<>();
 
 	public RemovableMemberRole(MemberRole role) {
 		super(role);
@@ -88,6 +88,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 		}		
 		rememberConnectionPartData();
 		rememberConnectionLabelData();
+		rememberDiagramLocationData();
 	}
 	
 	private void rememberSortKeyData() {
@@ -102,26 +103,46 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 		ConnectionPart connectionPart = role.getConnectionParts().get(0);
 		DiagramData diagramData = schema.getDiagramData();
 		indexOfConnectionPartInDiagramDatasConnectionParts = 
-			diagramData.getConnectionParts().indexOf(connectionPart);		
-		DiagramLocation sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 
-		if (sourceEndpointLocation != null) {
-			indexOfSourceEndpointLocationInDiagramDatasLocations = 
-				Integer.valueOf(diagramData.getLocations().indexOf(sourceEndpointLocation));
-		}
-		DiagramLocation targetEndpointLocation = connectionPart.getTargetEndpointLocation();
-		if (targetEndpointLocation != null) {
-			indexOfTargetEndpointLocationInDiagramDatasLocations = 
-				Integer.valueOf(diagramData.getLocations().indexOf(targetEndpointLocation));
-		} 
+			diagramData.getConnectionParts().indexOf(connectionPart);
 	}
 	
 	private void rememberConnectionLabelData() {		
 		ConnectionLabel connectionLabel = role.getConnectionLabel();
 		DiagramData diagramData = schema.getDiagramData();
 		indexOfConnectionLabelInDiagramDatasConnectionLabels = 
-			diagramData.getConnectionLabels().indexOf(role.getConnectionLabel());
-		indexOfConnectionLabelLocationInDiagramDatasLocations = 
-			diagramData.getLocations().indexOf(connectionLabel.getDiagramLocation());
+			diagramData.getConnectionLabels().indexOf(connectionLabel);		
+	}
+	
+	private void rememberDiagramLocationData() {
+		
+		DiagramData diagramData = schema.getDiagramData();
+		
+		ConnectionPart connectionPart = role.getConnectionParts().get(0);
+		DiagramLocation sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 
+		if (sourceEndpointLocation != null) {
+			DiagramLocationIndex sourceEndpointLocationIndex = 
+				new DiagramLocationIndex(sourceEndpointLocation, 
+										 diagramData.getLocations().indexOf(sourceEndpointLocation));
+			indexesInDiagramDatasLocations.add(sourceEndpointLocationIndex);
+		}
+		DiagramLocation targetEndpointLocation = connectionPart.getTargetEndpointLocation();
+		if (targetEndpointLocation != null) {
+			DiagramLocationIndex targetEndpointLocationIndex = 
+				new DiagramLocationIndex(targetEndpointLocation, 
+										 diagramData.getLocations().indexOf(targetEndpointLocation));
+			indexesInDiagramDatasLocations.add(targetEndpointLocationIndex);
+		}
+		
+		ConnectionLabel connectionLabel = role.getConnectionLabel();		
+		DiagramLocationIndex connectionLabelIndex = 
+			new DiagramLocationIndex(connectionLabel.getDiagramLocation(), 
+									 diagramData.getLocations()
+									 			.indexOf(connectionLabel.getDiagramLocation()));
+		indexesInDiagramDatasLocations.add(connectionLabelIndex);
+		
+		
+		Collections.sort(indexesInDiagramDatasLocations);		
+		
 	}
 	
 	protected void removeData() {			
@@ -197,6 +218,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 		}		
 		restoreConnectionPartData();
 		restoreConnectionLabelData();
+		restoreDiagramLocationData();
 	}	
 
 	private void restoreSortKey() {						
@@ -214,26 +236,22 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 		DiagramData diagramData = schema.getDiagramData();
 		diagramData.getConnectionParts().add(indexOfConnectionPartInDiagramDatasConnectionParts, 
 											 connectionPart);		
-		DiagramLocation sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 
-		if (sourceEndpointLocation != null) {
-			int i = indexOfSourceEndpointLocationInDiagramDatasLocations.intValue();
-			diagramData.getLocations().add(i, sourceEndpointLocation);
-		}
-		DiagramLocation targetEndpointLocation = connectionPart.getTargetEndpointLocation();
-		if (targetEndpointLocation != null) {
-			int i = indexOfTargetEndpointLocationInDiagramDatasLocations.intValue(); 
-			diagramData.getLocations().add(i, targetEndpointLocation);
-		}
 	}	
 	
 	private void restoreConnectionLabelData() {	
 		ConnectionLabel connectionLabel = role.getConnectionLabel();
 		DiagramData diagramData = schema.getDiagramData();
 		diagramData.getConnectionLabels().add(indexOfConnectionLabelInDiagramDatasConnectionLabels, 
-											  role.getConnectionLabel());
-		diagramData.getLocations().add(indexOfConnectionLabelLocationInDiagramDatasLocations,
-									   connectionLabel.getDiagramLocation());
+											  connectionLabel);		
 	}
+	
+	private void restoreDiagramLocationData() {		
+		DiagramData diagramData = schema.getDiagramData();
+		for (DiagramLocationIndex diagramLocationIndex :  indexesInDiagramDatasLocations) {
+			diagramData.getLocations().add(diagramLocationIndex.value, 
+										   diagramLocationIndex.diagramLocation);
+		}
+	}	
 	
 	private static class KeyElementIndex {
 		
@@ -259,6 +277,23 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 			value = element.getKeyElements().indexOf(keyElement);
 		}
 		
+	}
+	static class DiagramLocationIndex implements Comparable<DiagramLocationIndex> {
+		
+		DiagramLocation diagramLocation;
+		int value;
+		
+		DiagramLocationIndex(DiagramLocation diagramLocation, int value) {
+			super();
+			this.diagramLocation = diagramLocation;
+			this.value = value;
+		}
+
+		@Override
+		public int compareTo(DiagramLocationIndex other) {			
+			return value - other.value;
+		}
+				
 	}
 	
 }
