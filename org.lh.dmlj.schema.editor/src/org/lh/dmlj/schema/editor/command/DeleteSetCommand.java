@@ -16,9 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
@@ -27,37 +25,69 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
+import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
+import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRole;
 
+/**
+ * A command that removes a set from a schema, disconnects the owner- and member roles from the
+ * owner-and member record types and cleans up the sort key and its elements in the case of a sorted
+ * set.  This command can <b>NOT</b> deal with :<ul>
+ * <li>multiple-member sets</li>
+ * <li>a set whose member record type is stored VIA the set that is to be deleted</li>
+ * <li>multiple connection parts, i.e. no connectors should be present</li>
+ * <li>bendpoints</li>
+ *</ul>
+ */
 @ModelChange(category=ModelChangeCategory.REMOVE_ITEM)
-public class DeleteSetCommand extends Command {
+public class DeleteSetCommand extends AbstractSortKeyManipulationCommand {
 
-	@Owner	   private Schema 	  schema;
+	@Owner private Schema schema;
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
-	@Item 	   private Set 		  set;	
+	@Item private Set set;	
+	
+	private int indexOfSetInSchemasSets;	
+	private RemovableOwnerRole ownerRoleToBecomeObsolete;
+	private RemovableMemberRole memberRoleToBecomeObsolete;
 	
 	public DeleteSetCommand(Set set) {
-		super("Delete set");
+		super(set);
+		setLabel("Delete set");
 		this.set = set;
 		schema = set.getSchema();
 	}
 	
-	
 	@Override
-	public void execute() {		
-		System.out.println("DeleteSetCommand.execute()");
+	public void execute() {
+		rememberState();		
+		deleteSet();		
 	}
 	
+	private void rememberState() {
+		indexOfSetInSchemasSets = schema.getSets().indexOf(set);
+		ownerRoleToBecomeObsolete = new RemovableOwnerRole(set.getOwner());
+		memberRoleToBecomeObsolete = new RemovableMemberRole(set.getMembers().get(0));		
+	}	
+
+	private void deleteSet() {		
+		ownerRoleToBecomeObsolete.remove();
+		memberRoleToBecomeObsolete.remove();
+		schema.getSets().remove(set);
+	}
+
 	@Override
 	public void redo() {
-		
-		Assert.isTrue(set.getMembers().size() == 1, "cannot directly delete a multiple-member set");
-		
-		System.out.println("DeleteSetCommand.redo()");
+		deleteSet();				
 	}
 	
 	@Override
 	public void undo() {
-		System.out.println("DeleteSetCommand.undo()");
+		restoreSet();
+	}
+	
+	private void restoreSet() {		
+		ownerRoleToBecomeObsolete.restore();
+		memberRoleToBecomeObsolete.restore();
+		schema.getSets().add(indexOfSetInSchemasSets, set);
 	}
 	
 }
