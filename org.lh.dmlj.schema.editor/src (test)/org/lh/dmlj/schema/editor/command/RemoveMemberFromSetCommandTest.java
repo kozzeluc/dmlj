@@ -20,21 +20,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.lh.dmlj.schema.editor.testtool.TestTools.assertCommandCategorySet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
+import static org.lh.dmlj.schema.editor.testtool.TestTools.assertItemSet;
+import static org.lh.dmlj.schema.editor.testtool.TestTools.assertOwnerSet;
+import static org.lh.dmlj.schema.editor.testtool.TestTools.assertReferenceSet;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
 import org.junit.Before;
 import org.junit.Test;
+import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
-import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -43,12 +46,7 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
@@ -59,8 +57,6 @@ import org.lh.dmlj.schema.editor.testtool.Xmi;
 
 public class RemoveMemberFromSetCommandTest {
 
-	private MemberRole  memberRoleDentalClaim;
-	private MemberRole  memberRoleHospitalClaim;
 	private MemberRole  memberRoleNonHospClaim;
 	private ObjectGraph objectGraph;
 	private Schema 		schema;
@@ -84,42 +80,14 @@ public class RemoveMemberFromSetCommandTest {
 		// RemoveMemberFromSetCommand only operates against multiple-member sets - we need to 
 		// manipulate each member record type and change its location mode to direct because we
 		// cannot remove a record from its VIA set
+		
 		schema = TestTools.getEmpschmSchema();
-		set = schema.getSet("COVERAGE-CLAIMS");
+		set = TestTools.getSet(schema, "COVERAGE-CLAIMS");
 		assertSame(SetOrder.LAST, set.getOrder());
-		memberRoleHospitalClaim = set.getMembers().get(0);
-		assertEquals("HOSPITAL-CLAIM", memberRoleHospitalClaim.getRecord().getName());
-		memberRoleNonHospClaim = set.getMembers().get(1);
-		assertEquals("NON-HOSP-CLAIM", memberRoleNonHospClaim.getRecord().getName());
-		memberRoleDentalClaim = set.getMembers().get(2);
-		assertEquals("DENTAL-CLAIM", memberRoleDentalClaim.getRecord().getName());
-		Command tmpCommand1 = new MakeRecordDirectCommand(memberRoleHospitalClaim.getRecord());
-		tmpCommand1.execute();
-		Command tmpCommand2 = new MakeRecordDirectCommand(memberRoleNonHospClaim.getRecord());
-		tmpCommand2.execute();
-		Command tmpCommand3 = new MakeRecordDirectCommand(memberRoleDentalClaim.getRecord());
-		tmpCommand3.execute();
-		assertSame(LocationMode.DIRECT, memberRoleHospitalClaim.getRecord().getLocationMode());
-		assertSame(LocationMode.DIRECT, memberRoleNonHospClaim.getRecord().getLocationMode());
-		assertSame(LocationMode.DIRECT, memberRoleDentalClaim.getRecord().getLocationMode());
-		assertTrue(memberRoleHospitalClaim.getConnectionParts().get(0).getBendpointLocations().isEmpty());
-		assertEquals(2, memberRoleNonHospClaim.getConnectionParts().get(0).getBendpointLocations().size());
-		Command tmpCommand4 = 
-			new DeleteBendpointCommand(memberRoleNonHospClaim.getConnectionParts().get(0), 0);
-		tmpCommand4.execute();
-		Command tmpCommand5 = 
-			new DeleteBendpointCommand(memberRoleNonHospClaim.getConnectionParts().get(0), 0);
-		tmpCommand5.execute();
-		assertTrue(memberRoleNonHospClaim.getConnectionParts().get(0).getBendpointLocations().isEmpty());
-		assertEquals(2, memberRoleDentalClaim.getConnectionParts().get(0).getBendpointLocations().size());
-		Command tmpCommand6 = 
-			new DeleteBendpointCommand(memberRoleDentalClaim.getConnectionParts().get(0), 0);
-		tmpCommand6.execute();
-		Command tmpCommand7 = 
-			new DeleteBendpointCommand(memberRoleDentalClaim.getConnectionParts().get(0), 0);
-		tmpCommand7.execute();
-		assertEquals(0, memberRoleDentalClaim.getConnectionParts().get(0).getBendpointLocations().size());
-		assertTrue(memberRoleDentalClaim.getConnectionParts().get(0).getBendpointLocations().isEmpty());
+		memberRoleNonHospClaim = 
+			(MemberRole) TestTools.getRole(schema, "NON-HOSP-CLAIM", "COVERAGE-CLAIMS");
+		TestTools.makeDirect(memberRoleNonHospClaim.getRecord());		
+		TestTools.removeAllBendpoints(memberRoleNonHospClaim);				
 		
 		objectGraph = TestTools.asObjectGraph(schema);
 		xmi = TestTools.asXmi(schema);
@@ -129,113 +97,43 @@ public class RemoveMemberFromSetCommandTest {
 	@Test
 	public void testAnnotations() {
 						
-		Command command = new RemoveMemberFromSetCommand(memberRoleHospitalClaim);
-		command.execute();
+		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
 		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.REMOVE_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.REMOVE_ITEM, modelChangeAnnotation.category());
-		
-		// make sure the owner is set
-		Set owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(set, owner);	
-		
-		// make sure the members reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSet_Members());
-		
-		// make sure the item is set
-		MemberRole item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRoleHospitalClaim, item);
-		
-		
-		command.undo();
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(set, owner);	
-		
-		// make sure the members reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSet_Members());
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRoleHospitalClaim, item);		
-		
-		
-		command.redo();
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(set, owner);	
-		
-		// make sure the members reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSet_Members());
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRoleHospitalClaim, item);		
+		command.execute();		
+		assertCommandCategorySet(command, ModelChangeCategory.REMOVE_ITEM);		
+		assertOwnerSet(command, set);
+		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSet_Members());
+		assertItemSet(command, memberRoleNonHospClaim);		
+				
+		command.undo();		
+		assertOwnerSet(command, set);
+		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSet_Members());
+		assertItemSet(command, memberRoleNonHospClaim);
+				
+		command.redo();		
+		assertOwnerSet(command, set);
+		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSet_Members());
+		assertItemSet(command, memberRoleNonHospClaim);		
 		
 	}
 	
 	@Test
-	public void testUnsorted() {		
+	public void testUnsorted() {	
 		
-		SchemaRecord recordNonHospClaim = memberRoleNonHospClaim.getRecord();
+		// make sure that we are sure that we've verified that both the source- and target endpoints 
+		// are removed
+		DiagramLocation sourceEndpoint = 
+			memberRoleNonHospClaim.getConnectionParts().get(0).getSourceEndpointLocation(); 
+		assertNotNull(sourceEndpoint);
+		DiagramLocation targetEndpoint = 
+			memberRoleNonHospClaim.getConnectionParts().get(0).getTargetEndpointLocation(); 
+		assertNotNull(targetEndpoint);
 		
 		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
 		Xmi touchedXmi = TestTools.asXmi(schema);
-		
-		assertEquals(2, set.getMembers().size());
-		assertEquals(0, set.getMembers().indexOf(memberRoleHospitalClaim));
-		assertEquals(1, set.getMembers().indexOf(memberRoleDentalClaim));
-		assertEquals(-1, schema.getDiagramData()
-							   .getLocations()
-							   .indexOf(memberRoleNonHospClaim.getConnectionLabel()
-									   						  .getDiagramLocation()));
-		assertEquals(-1, schema.getDiagramData()
-				   			   .getConnectionLabels()
-				   			   .indexOf(memberRoleNonHospClaim.getConnectionLabel()));
-		assertEquals(-1, schema.getDiagramData()
-				   			   .getConnectionParts()
-				   			   .indexOf(memberRoleNonHospClaim.getConnectionParts().get(0)));
-		
-		Prefix prefix = PrefixFactory.newPrefixForInquiry(recordNonHospClaim);
-		assertTrue(prefix.getPointers().isEmpty());
+		TestTools.assertRecordRemovedFromSet(schema, "COVERAGE-CLAIMS", "NON-HOSP-CLAIM");		
 
 		command.undo();
 		checkObjectGraph(objectGraph);
@@ -250,7 +148,12 @@ public class RemoveMemberFromSetCommandTest {
 	@Test
 	public void testSorted() {
 		
-		// make the set sorted first...
+		MemberRole memberRoleHospitalClaim = 
+			(MemberRole) TestTools.getRole(schema, "HOSPITAL-CLAIM", "COVERAGE-CLAIMS");		
+		MemberRole memberRoleDentalClaim = 
+			(MemberRole) TestTools.getRole(schema, "DENTAL-CLAIM", "COVERAGE-CLAIMS");
+		
+		// make the set sorted first...		
 		ISortKeyDescription[] sortKeyDescriptions = new ISortKeyDescription[3]; 
 		
 		sortKeyDescriptions[0] = mock(ISortKeyDescription.class);
@@ -290,6 +193,7 @@ public class RemoveMemberFromSetCommandTest {
 		Element element = keyElement.getElement();
 		assertEquals(1, element.getKeyElements().size());
 		
+		
 		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
 		command.execute();
 		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
@@ -324,7 +228,7 @@ public class RemoveMemberFromSetCommandTest {
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
-		checkXmi(touchedXmi);		
+		checkXmi(touchedXmi);
 		
 	}
 	
@@ -334,7 +238,7 @@ public class RemoveMemberFromSetCommandTest {
 		// make sure record NON-HOSP-CLAIM participates in another set so that we can verify that
 		// the prefix is kept in a consistent state
 		SchemaRecord recordNonHospClaim = memberRoleNonHospClaim.getRecord();
-		SchemaRecord recordHospitalClaim = memberRoleHospitalClaim.getRecord();
+		SchemaRecord recordHospitalClaim = TestTools.getRecord(schema, "HOSPITAL-CLAIM");
 		CreateSetCommand tmpCommand = new CreateSetCommand(recordHospitalClaim, SetMode.CHAINED);
 		tmpCommand.setMemberRecord(recordNonHospClaim);
 		tmpCommand.execute(); // the new set will be called "NEW-SET-1"
@@ -407,7 +311,7 @@ public class RemoveMemberFromSetCommandTest {
 		assertEquals((short) 2, pointers.get(1).getCurrentPositionInPrefix().shortValue());
 		assertEquals("NEW-SET-1", pointers.get(2).getSetName());
 		assertSame(PointerType.MEMBER_OWNER, pointers.get(2).getType());
-		assertEquals((short) 3, pointers.get(2).getCurrentPositionInPrefix().shortValue());
+		assertEquals((short) 3, pointers.get(2).getCurrentPositionInPrefix().shortValue());		
 		
 	}
 

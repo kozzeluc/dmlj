@@ -38,6 +38,7 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommand;
+import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
 import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommand;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
@@ -185,6 +186,7 @@ public abstract class TestTools {
 			(MemberRole) getRole(UNTOUCHED_EMPSCHM, recordName, setName);
 		obsoleteDiagramLocations.add(untouchedMemberRole.getConnectionLabel().getDiagramLocation());
 		for (ConnectionPart untouchedConnectionPart : untouchedMemberRole.getConnectionParts()) {
+			obsoleteDiagramLocations.addAll(untouchedConnectionPart.getBendpointLocations());
 			if (untouchedConnectionPart.getSourceEndpointLocation() != null) {
 				obsoleteDiagramLocations.add(untouchedConnectionPart.getSourceEndpointLocation());
 			}
@@ -276,8 +278,8 @@ public abstract class TestTools {
 		assertSame(expected, actual);
 	}
 
-	public static void assertMemberRoleRemoved(Schema touchedSchema, String recordName, 
-			  								   String setName) {
+	private static void assertMemberRoleRemoved(Schema touchedSchema, String recordName, 
+			  								    String setName) {
 	
 		SchemaRecord untouchedRecord = getRecord(UNTOUCHED_EMPSCHM, recordName);
 		SchemaRecord touchedRecord = getRecord(touchedSchema, recordName);
@@ -302,8 +304,8 @@ public abstract class TestTools {
 		
 	}
 
-	public static void assertOwnerRoleRemoved(Schema touchedSchema, String recordName, 
-											  String setName) {
+	private static void assertOwnerRoleRemoved(Schema touchedSchema, String recordName, 
+											   String setName) {
 		
 		SchemaRecord untouchedRecord = getRecord(UNTOUCHED_EMPSCHM, recordName);
 		SchemaRecord touchedRecord = getRecord(touchedSchema, recordName);
@@ -379,6 +381,20 @@ public abstract class TestTools {
 		Assert.assertEquals("set " + setName + " is a multiple-member set and all members but 1 " +
 							"should be removed first", 1, set.getMembers().size());
 		assertSetRemoved(touchedSchema, setName, set.getMembers().get(0).getRecord().getName());
+	}
+	
+	public static void assertRecordRemovedFromSet(Schema touchedSchema, String setName, 
+												  String recordName) {
+		
+		assertPointersRemoved(touchedSchema, recordName, setName);		
+		assertMemberRoleRemoved(touchedSchema, recordName, setName);
+		if (isSortedSet(UNTOUCHED_EMPSCHM, setName)) {
+			assertSortKeyRemoved(touchedSchema, recordName, setName);
+		}		
+		assertConnectionPartsRemoved(touchedSchema, setName, recordName);		
+		assertConnectionLabelRemoved(touchedSchema, setName, recordName);				
+		assertDiagramLocationsRemoved(touchedSchema, setName, recordName);
+		assertConnectorsRemoved(touchedSchema, setName, recordName);		
 	}
 	
 	public static void assertSetRemoved(Schema touchedSchema, String setName, 
@@ -595,6 +611,15 @@ public abstract class TestTools {
 		assertNotSame(SetOrder.LAST, set.getOrder());
 		new ChangeSetOrderCommand(set, SetOrder.LAST).execute();
 		assertSame(SetOrder.LAST, set.getOrder());
+	}
+	
+	public static void removeAllBendpoints(MemberRole memberRole) {
+		for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
+			while (!connectionPart.getBendpointLocations().isEmpty()) {
+				Command command = new DeleteBendpointCommand(connectionPart, 0);
+				command.execute();
+			}
+		}
 	}
 
 	public static abstract class Asserter<T> {
