@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.command;
 
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
@@ -39,7 +40,7 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRole;
  *</ul>
  */
 @ModelChange(category=ModelChangeCategory.REMOVE_ITEM)
-public class DeleteSetCommand extends AbstractSortKeyManipulationCommand {
+public class DeleteSetCommand extends Command {
 
 	@Owner private Schema schema;
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
@@ -50,8 +51,7 @@ public class DeleteSetCommand extends AbstractSortKeyManipulationCommand {
 	private RemovableMemberRole memberRoleToBecomeObsolete;
 	
 	public DeleteSetCommand(Set set) {
-		super(set);
-		setLabel("Delete set");
+		super("Delete set");
 		this.set = set;
 		schema = set.getSchema();
 	}
