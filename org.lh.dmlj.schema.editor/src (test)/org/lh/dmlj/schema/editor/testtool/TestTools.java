@@ -445,8 +445,12 @@ public abstract class TestTools {
 			@Override
 			public void doAssert(int itemIndex, Key expected, Key actual) {
 				Assert.assertEquals(String.valueOf(itemIndex), 
-									expected.getMemberRole().getSet().getName(), 
-					    			actual.getMemberRole().getSet().getName());
+									expected.isCalcKey(), actual.isCalcKey());
+				if (!expected.isCalcKey()) {				
+					Assert.assertEquals(String.valueOf(itemIndex), 
+										expected.getMemberRole().getSet().getName(), 
+						    			actual.getMemberRole().getSet().getName());
+				}
 			}			
 		});
 				

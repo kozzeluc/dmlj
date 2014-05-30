@@ -19,14 +19,16 @@ package org.lh.dmlj.schema.editor.command;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.asObjectGraph;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.asXmi;
+import static org.lh.dmlj.schema.editor.testtool.TestTools.assertCommandCategorySet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
+import static org.lh.dmlj.schema.editor.testtool.TestTools.assertItemSet;
+import static org.lh.dmlj.schema.editor.testtool.TestTools.assertOwnerSet;
+import static org.lh.dmlj.schema.editor.testtool.TestTools.assertReferenceSet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.getEmpschmSchema;
 
-import org.eclipse.emf.ecore.EReference;
 import org.junit.Test;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
@@ -47,12 +49,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
@@ -74,163 +71,52 @@ public class DeleteIndexCommandTest {
 	@Test
 	public void test_NoObsoleteArea() {
 		
-		// get the EMPSCHM version 1 schema from the testdata folder; locate the EMP-NAME-NDX system
+		// get the EMPSCHM version 1 schema from the testdata folder; locate the JOB-TITLE-NDX system
 		// owner
 		Schema schema = getEmpschmSchema();
 		Xmi xmi = asXmi(schema);		
-		ObjectGraph objectGraph = asObjectGraph(schema);
-		SystemOwner systemOwner = schema.getSet("EMP-NAME-NDX").getSystemOwner();
-		assertNotNull(systemOwner);
-		int originalAreaCount = schema.getAreas().size();
-		int originalSetCount = schema.getSets().size();
-		int originalDiagramLocationsCount = schema.getDiagramData().getLocations().size();
-		int originalAreaSpecificationsCount = 
-			schema.getArea("EMP-DEMO-REGION").getAreaSpecifications().size();
-		// additional data we need to perform key related checks:
-		SchemaRecord recordEmployee = systemOwner.getSet().getMembers().get(0).getRecord();
-		assertEquals("EMPLOYEE", recordEmployee.getName());
-		Key sortKey = systemOwner.getSet().getMembers().get(0).getSortKey();
-		assertEquals(2, recordEmployee.getKeys().indexOf(sortKey));
-		assertNotNull(sortKey);
-		assertEquals(2, sortKey.getElements().size());
-		KeyElement keyElement1 = sortKey.getElements().get(0);
-		Element element1 = keyElement1.getElement();
-		assertEquals(3, element1.getKeyElements().size());
-		KeyElement keyElement2 = sortKey.getElements().get(1);
-		Element element2 = keyElement2.getElement();
-		assertEquals(3, element2.getKeyElements().size());
-		// prefix related data
-		Prefix prefix = PrefixFactory.newPrefixForInquiry(recordEmployee);
-		assertEquals(16, prefix.getPointers().size());
-		MemberRole memberRole = null;
-		for (MemberRole aMemberRole : recordEmployee.getMemberRoles()) {
-			if (aMemberRole.getSet() == systemOwner.getSet()) {
-				memberRole = aMemberRole;
-				break;
-			}			
-		}
-		assertNotNull(memberRole);
+		ObjectGraph objectGraph = asObjectGraph(schema);		
+		Set set = TestTools.getSet(schema, "JOB-TITLE-NDX");
+		assertNotNull(set.getSystemOwner());
 		
 		// create the command
-		DeleteIndexCommand command = new DeleteIndexCommand(systemOwner);
+		DeleteIndexCommand command = new DeleteIndexCommand(set.getSystemOwner());
 		
 		// execute the command and check that the index is removed...
 		command.execute();
-		Xmi xmi1 = asXmi(schema);
-		ObjectGraph objectGraph1 = asObjectGraph(schema);
-		assertEquals(originalAreaCount, schema.getAreas().size());
-		assertEquals(originalSetCount - 1, schema.getSets().size());
-		assertEquals(originalDiagramLocationsCount - 2, 
-					 schema.getDiagramData().getLocations().size());
-		assertNull(schema.getSet("EMP-NAME-NDX"));
-		assertEquals(originalAreaSpecificationsCount - 1, 
-					 schema.getArea("EMP-DEMO-REGION").getAreaSpecifications().size());
+		ObjectGraph touchedObjectGraph = asObjectGraph(schema);
+		Xmi touchedXmi = asXmi(schema);
+		TestTools.assertSetRemoved(schema, "JOB-TITLE-NDX");
 		
-		// regarding the index' sort key: it should be removed from both elements involved AND from  
-		// the member record as well
-		//assertEquals(-1, );
-		assertEquals(-1, recordEmployee.getKeys().indexOf(sortKey));
-		assertEquals(2, element1.getKeyElements().size());
-		assertEquals(-1, element1.getKeyElements().indexOf(keyElement1));
-		assertEquals(2, element2.getKeyElements().size());
-		assertEquals(-1, element2.getKeyElements().indexOf(keyElement2));
-		
-		// we need to check the integrity of the EMPLOYEE record's prefix; if we can create a prefix
-		// abstraction through the dedicated factory, the prefix' integrity is OK
-		prefix = PrefixFactory.newPrefixForInquiry(recordEmployee);
-		assertEquals(15, prefix.getPointers().size());
-		assertPointerNotInPrefix(prefix, memberRole, PointerType.MEMBER_INDEX);
-		assertPointerNotInPrefix(prefix, memberRole, PointerType.MEMBER_OWNER);
-		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.REMOVE_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.REMOVE_ITEM, modelChangeAnnotation.category());		
-		
-		// make sure the owner is set
-		Schema owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == schema);
-		
-		// make sure the reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchema_Sets());			
-		
-		// make sure the item is set
-		Set item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == systemOwner.getSet());
+		// once execute() has been called, all annotated field values should be in place
+		assertCommandCategorySet(command, ModelChangeCategory.REMOVE_ITEM);
+		assertOwnerSet(command, schema);
+		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());
+		assertItemSet(command, set);		
 		
 		
 		// undo the command and check if the system-owned indexed set is restored (as a matter of 
 		// fact, check if the schema exactly matches the state before removing the index)
-		command.undo();			
-		Xmi xmi2 = TestTools.asXmi(schema);		
-		assertEquals(xmi, xmi2);		
-		ObjectGraph objectGraph2 = asObjectGraph(schema);
-		assertEquals(objectGraph, objectGraph2);
+		command.undo();		
+		assertEquals(objectGraph, asObjectGraph(schema));
+		assertEquals(xmi, TestTools.asXmi(schema));
 		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == schema);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchema_Sets());			
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == systemOwner.getSet());
+		// make sure the annotated field values are still there
+		assertOwnerSet(command, schema);
+		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());
+		assertItemSet(command, set);
 		
 
 		// redo the command and check that the index is removed again, in all of its facets (as a 
 		// matter of fact, check if the schema exactly matches the state before removing the index)
-		command.redo();	
-		Xmi xmi3 = TestTools.asXmi(schema);
-		assertEquals(xmi1, xmi3);
-		ObjectGraph objectGraph3 = asObjectGraph(schema);
-		assertEquals(objectGraph1, objectGraph3);
+		command.redo();			
+		assertEquals(touchedObjectGraph, asObjectGraph(schema));
+		assertEquals(touchedXmi, TestTools.asXmi(schema));				
 		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == schema);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchema_Sets());			
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == systemOwner.getSet());		
+		// make sure the annotated field values are still there
+		assertOwnerSet(command, schema);
+		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());
+		assertItemSet(command, set);		
 		
 	}
 	

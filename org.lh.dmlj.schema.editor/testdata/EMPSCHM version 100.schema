@@ -80,7 +80,7 @@
     <connectionParts memberRole="//@sets.4/@members.0"/>
     <connectionParts memberRole="//@sets.5/@members.0"/>
     <connectionParts memberRole="//@sets.6/@members.0" sourceEndpointLocation="//@diagramData/@locations.57"/>
-    <connectionParts memberRole="//@sets.7/@members.0"/>
+    <connectionParts memberRole="//@sets.7/@members.0" targetEndpointLocation="//@diagramData/@locations.59"/>
     <connectionParts bendpointLocations="//@diagramData/@locations.46 //@diagramData/@locations.45" memberRole="//@sets.8/@members.0" sourceEndpointLocation="//@diagramData/@locations.35" targetEndpointLocation="//@diagramData/@locations.31"/>
     <connectionParts bendpointLocations="//@diagramData/@locations.42 //@diagramData/@locations.40" memberRole="//@sets.9/@members.0" sourceEndpointLocation="//@diagramData/@locations.41" targetEndpointLocation="//@diagramData/@locations.39"/>
     <connectionParts bendpointLocations="//@diagramData/@locations.33 //@diagramData/@locations.44" memberRole="//@sets.10/@members.0" sourceEndpointLocation="//@diagramData/@locations.34" targetEndpointLocation="//@diagramData/@locations.32"/>
@@ -145,6 +145,7 @@
     <locations eyecatcher="bendpoint [0] set COVERAGE-CLAIMS (NON-HOSP-CLAIM)" x="65" y="76"/>
     <locations eyecatcher="set JOB-EMPOSITION owner endpoint (EMPOSITION)" x="64" y="53"/>
     <locations eyecatcher="set COVERAGE-CLAIMS member endpoint (HOSPITAL-CLAIM)" x="65"/>
+    <locations eyecatcher="set JOB-TITLE-NDX member endpoint (JOB)" x="20"/>
     <rulers type="VERTICAL"/>
     <rulers/>
   </diagramData>

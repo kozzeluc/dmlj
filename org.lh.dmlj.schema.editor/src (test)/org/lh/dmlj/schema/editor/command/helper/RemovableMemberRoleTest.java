@@ -743,4 +743,144 @@ public class RemovableMemberRoleTest {
 		
 	}
 	
+	@Test
+	public void testAdditionalObsoleteLocations() {
+		
+		// When deleting an index, besides removing and restoring the member role related locations,
+		// the system owner location has to be removed and restored as well; for this reason, we 
+		// allow a list of obsolete diagram locations to be provided upon construction of a 
+		// RemovableMemberRole - mind that we allow a list to be supplied altough we could have 
+		// settle for only 1 instance; this will give us some flexibility in the future, should the 
+		// need arise to supply more than 1 additional obsolete diagram location.
+		
+		Schema schema = mock(Schema.class);
+		
+		DiagramData diagramData = mock(DiagramData.class);
+		when(schema.getDiagramData()).thenReturn(diagramData);
+		
+		@SuppressWarnings("unchecked")
+		EList<ConnectionLabel> diagramDataConnectionLabels = mock(EList.class);
+		when(diagramData.getConnectionLabels()).thenReturn(diagramDataConnectionLabels);
+		
+		@SuppressWarnings("unchecked")
+		EList<DiagramLocation> diagramDataLocations = mock(EList.class);
+		when(diagramData.getLocations()).thenReturn(diagramDataLocations);
+		
+		@SuppressWarnings("unchecked")
+		EList<ConnectionPart> diagramDataConnectionParts = mock(EList.class);
+		when(diagramData.getConnectionParts()).thenReturn(diagramDataConnectionParts);
+		
+		SchemaRecord record = mock(SchemaRecord.class);
+		when(record.getSchema()).thenReturn(schema);
+		
+		Set set = mock(Set.class);
+		when(set.getSchema()).thenReturn(schema);
+		when(set.getOrder()).thenReturn(SetOrder.LAST);
+		
+		MemberRole roleToRemove = mock(MemberRole.class);
+		when(roleToRemove.getRecord()).thenReturn(record);
+		when(roleToRemove.getSet()).thenReturn(set);
+		when(roleToRemove.getNextDbkeyPosition()).thenReturn(Short.valueOf((short) 1));
+		when(roleToRemove.getPriorDbkeyPosition()).thenReturn(Short.valueOf((short) 2));
+		when(roleToRemove.getOwnerDbkeyPosition()).thenReturn(Short.valueOf((short) 3));
+		when(roleToRemove.getIndexDbkeyPosition()).thenReturn(null);
+		
+		List<OwnerRole> recordOwnerRoleList = new ArrayList<>();
+		@SuppressWarnings("unchecked")
+		EList<OwnerRole> recordOwnerRoles = mock(EList.class);
+		when(recordOwnerRoles.iterator()).thenReturn(recordOwnerRoleList.iterator());		
+		when(recordOwnerRoles.indexOf(anyObject())).thenThrow(new RuntimeException("not to be called"));
+		when(record.getOwnerRoles()).thenReturn(recordOwnerRoles);
+		
+		List<MemberRole> recordMemberRoleList = new ArrayList<>();
+		recordMemberRoleList.add(roleToRemove);		
+		@SuppressWarnings("unchecked")
+		EList<MemberRole> recordMemberRoles = mock(EList.class);
+		when(recordMemberRoles.iterator()).thenReturn(recordMemberRoleList.iterator());				
+		when(recordMemberRoles.indexOf(roleToRemove)).thenReturn(0);
+		when(record.getMemberRoles()).thenReturn(recordMemberRoles);
+		
+		@SuppressWarnings("unchecked")
+		EList<MemberRole> setMemberRoles = mock(EList.class);
+		when(setMemberRoles.indexOf(roleToRemove)).thenReturn(0);
+		when(set.getMembers()).thenReturn(setMemberRoles);
+		
+		when(roleToRemove.getSortKey()).thenReturn(null);
+		
+		ConnectionPart connectionPart = mock(ConnectionPart.class);
+		@SuppressWarnings("unchecked")
+		EList<ConnectionPart> roleConnectionParts = mock(EList.class);
+		when(roleConnectionParts.get(0)).thenReturn(connectionPart);
+		when(roleToRemove.getConnectionParts()).thenReturn(roleConnectionParts);
+		when(diagramDataConnectionParts.indexOf(connectionPart)).thenReturn(0);		
+		
+		ConnectionLabel connectionLabel = mock(ConnectionLabel.class);
+		when(roleToRemove.getConnectionLabel()).thenReturn(connectionLabel);
+		when(diagramDataConnectionLabels.indexOf(connectionLabel)).thenReturn(0);
+
+		
+		DiagramLocation connectionLabelLocation = mock(DiagramLocation.class);
+		when(connectionLabel.getDiagramLocation()).thenReturn(connectionLabelLocation);
+		when(diagramDataLocations.indexOf(connectionLabelLocation)).thenReturn(0);		
+		
+		DiagramLocation obsoleteLocation1 = mock(DiagramLocation.class);
+		when(diagramDataLocations.indexOf(obsoleteLocation1)).thenReturn(1);
+		
+		DiagramLocation sourceEndpointLocation = mock(DiagramLocation.class);
+		when(connectionPart.getSourceEndpointLocation()).thenReturn(sourceEndpointLocation);
+		when(diagramDataLocations.indexOf(sourceEndpointLocation)).thenReturn(2);
+		
+		DiagramLocation obsoleteLocation2 = mock(DiagramLocation.class);
+		when(diagramDataLocations.indexOf(obsoleteLocation2)).thenReturn(3);		
+		
+		DiagramLocation targetEndpointLocation = mock(DiagramLocation.class);
+		when(connectionPart.getTargetEndpointLocation()).thenReturn(targetEndpointLocation);
+		when(diagramDataLocations.indexOf(targetEndpointLocation)).thenReturn(4);			
+		
+		List<DiagramLocation> additionalObsoleteLocations = new ArrayList<>();
+		additionalObsoleteLocations.add(obsoleteLocation1);
+		additionalObsoleteLocations.add(obsoleteLocation2);
+		
+		
+		RemovableMemberRole removableMemberRole = 
+			new RemovableMemberRole(roleToRemove, additionalObsoleteLocations);
+		
+		
+		removableMemberRole.remove();
+		verify(diagramDataLocations, times(1)).remove(connectionLabelLocation);
+		verify(diagramDataLocations, times(1)).remove(obsoleteLocation1);
+		verify(diagramDataLocations, times(1)).remove(sourceEndpointLocation);
+		verify(diagramDataLocations, times(1)).remove(obsoleteLocation2);
+		verify(diagramDataLocations, times(1)).remove(targetEndpointLocation);
+		verify(diagramDataLocations, times(5)).remove(any(DiagramLocation.class));
+		
+		
+		removableMemberRole.restore();
+		// it is important that all diagram locations are restored back to their original values;
+		// the order in which these values are restored matters (that's why we need to be able to
+		// restore the supplied additional obsolete diagram locations)
+		ArgumentCaptor<Integer> indexCaptor = ArgumentCaptor.forClass(Integer.class);
+		ArgumentCaptor<DiagramLocation> elementCaptor = 
+			ArgumentCaptor.forClass(DiagramLocation.class);	
+		verify(diagramDataLocations, times(5)).add(indexCaptor.capture(), elementCaptor.capture());
+		List<Integer> capturedIndexes = indexCaptor.getAllValues();	
+		List<DiagramLocation> capturedLocations = elementCaptor.getAllValues();	
+		
+		assertEquals(Integer.valueOf(0), capturedIndexes.get(0));
+		assertSame(connectionLabelLocation, capturedLocations.get(0));
+		
+		assertEquals(Integer.valueOf(1), capturedIndexes.get(1));
+		assertSame(obsoleteLocation1, capturedLocations.get(1));
+		
+		assertEquals(Integer.valueOf(2), capturedIndexes.get(2));
+		assertSame(sourceEndpointLocation, capturedLocations.get(2));
+		
+		assertEquals(Integer.valueOf(3), capturedIndexes.get(3));
+		assertSame(obsoleteLocation2, capturedLocations.get(3));
+		
+		assertEquals(Integer.valueOf(4), capturedIndexes.get(4));
+		assertSame(targetEndpointLocation, capturedLocations.get(4));
+		
+	}
+	
 }

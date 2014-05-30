@@ -57,14 +57,22 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	private int indexOfConnectionLabelInDiagramDatasConnectionLabels;	
 	
 	private List<DiagramLocationIndex> indexesInDiagramDatasLocations = new ArrayList<>();
+	
+	private List<DiagramLocation> additionalObsoleteLocations;
 
 	public RemovableMemberRole(MemberRole role) {
+		this(role, new ArrayList<DiagramLocation>());
+	}
+	
+	public RemovableMemberRole(MemberRole role, List<DiagramLocation> additionalObsoleteLocations) {
 		super(role);
 		rememberSchemaData();
 		rememberRecordData();
 		rememberSetData();
 		rememberMembershipData();
-	}
+		rememberAdditionalObsoleteLocations(additionalObsoleteLocations);
+		sortIndexesInDiagramDatasLocations();
+	}	
 
 	private void rememberSchemaData() {
 		schema = role.getRecord().getSchema();		
@@ -138,19 +146,36 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 			new DiagramLocationIndex(connectionLabel.getDiagramLocation(), 
 									 diagramData.getLocations()
 									 			.indexOf(connectionLabel.getDiagramLocation()));
-		indexesInDiagramDatasLocations.add(connectionLabelIndex);
+		indexesInDiagramDatasLocations.add(connectionLabelIndex);		
 		
+	}
+	
+	private void rememberAdditionalObsoleteLocations(List<DiagramLocation> additionalObsoleteLocations) {
 		
-		Collections.sort(indexesInDiagramDatasLocations);		
+		this.additionalObsoleteLocations = additionalObsoleteLocations;
 		
+		DiagramData diagramData = schema.getDiagramData();
+		
+		for (DiagramLocation obsoleteLocation : additionalObsoleteLocations) {
+			DiagramLocationIndex companyingLocationIndex = 
+				new DiagramLocationIndex(obsoleteLocation, 
+										 diagramData.getLocations().indexOf(obsoleteLocation));
+			indexesInDiagramDatasLocations.add(companyingLocationIndex);
+		}
+		
+	}
+	
+	private void sortIndexesInDiagramDatasLocations() {
+		Collections.sort(indexesInDiagramDatasLocations);
 	}
 	
 	protected void removeData() {			
 		removeRecordData();
 		removeSetData();
-		removeMembershipData();		
+		removeMembershipData();	
+		removeAdditionalObsoleteLocations();
 	}
-	
+
 	private void removeRecordData() {
 		prefix.removePointers();		
 		record.getMemberRoles().remove(role);
@@ -197,10 +222,17 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 		diagramData.getLocations().remove(connectionLabel.getDiagramLocation());	
 	}	
 	
+	private void removeAdditionalObsoleteLocations() {		
+		DiagramData diagramData = schema.getDiagramData();
+		for (DiagramLocation obsoleteLocation : additionalObsoleteLocations) {
+			diagramData.getLocations().remove(obsoleteLocation);
+		}
+	}
+	
 	protected void restoreData() {	
 		restoreRecordData();
 		restoreSetData();			
-		restoreMembershipData();		
+		restoreMembershipDataAndAdditionalObsoleteLocations();		
 	}
 	
 	private void restoreRecordData(){
@@ -212,7 +244,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 		set.getMembers().add(indexOfRoleInSetsMembers, role);
 	}
 	
-	private void restoreMembershipData(){
+	private void restoreMembershipDataAndAdditionalObsoleteLocations(){
 		if (set.getOrder() == SetOrder.SORTED) {
 			restoreSortKey();
 		}		

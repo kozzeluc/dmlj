@@ -19,6 +19,7 @@ package org.lh.dmlj.schema.editor.command;
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -27,9 +28,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
-import org.lh.dmlj.schema.DiagramData;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
@@ -38,101 +38,81 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.prefix.PointerType;
-import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
-import org.lh.dmlj.schema.editor.prefix.PrefixForPointerRemoval;
+import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
 
 @ModelChange(category=REMOVE_ITEM)
-public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {	
+public class DeleteIndexCommand extends Command {	
 	
-	@Owner	   private Schema 	  schema;
+	@Owner private Schema schema;
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
-	@Item 	   private Set 		  set;
+	@Item private Set set;
 	
-	private SchemaArea	 		    area;
-	private DiagramData  		    diagramData;
-	private MemberRole 	 		    memberRole;		
-	private List<Procedure>		    obsoleteProcedures = new ArrayList<>();
-	private PrefixForPointerRemoval prefix;
-	private List<String>		    procedureNames = new ArrayList<>();
-	private SchemaRecord 		    record;
-	private SystemOwner	 		    systemOwner;
+	private SystemOwner systemOwner;
 	
-	private int 				  areaInSchemaIndex;
-	private int 				  areaSpecificationIndex;
-	private int 				  systemOwnerDiagramLocationIndex;
-	private int 				  connectionLabelLocationIndex;
-	private int 				  connectionLabelIndex;
-	private int 				  connectionPartIndex;
-	private int 				  memberRoleIndex;	
-	private Map<String, Integer>  procedureInSchemaIndexes = new HashMap<>();
-	private int 				  setInSchemaIndex;
+	private SchemaArea area;
+	private RemovableMemberRole memberRoleToRemove;		
+	private List<Procedure> obsoleteProcedures = new ArrayList<>();	
+	private List<String> procedureNames = new ArrayList<>();
+	private SchemaRecord record;	
+	
+	private int areaInSchemaIndex;
+	private int areaSpecificationIndex;
+	private Map<String, Integer> procedureInSchemaIndexes = new HashMap<>();
+	private int setInSchemaIndex;
 	
 	
 	public DeleteIndexCommand(SystemOwner systemOwner) {
-		super(systemOwner.getSet());
-		this.systemOwner = systemOwner;
-		setLabel("Delete index");
+		super("Delete index");
+		this.systemOwner = systemOwner;		
 	}		
 
 	@Override
 	public void execute() {
-		
-		schema = systemOwner.getSet().getSchema();
-					
-		set = systemOwner.getSet();
-		memberRole = systemOwner.getSet().getMembers().get(0);
-		record = memberRole.getRecord();		
-		diagramData = schema.getDiagramData();
+		rememberState();
+		deleteIndex();
+	}
+	
+	private void rememberState() {		
+		rememberSchema();
+		rememberAreaData();
+		rememberRecordData();
+		rememberSetData();
+		rememberMembershipData();
+	}
+
+	private void rememberSchema() {
+		schema = systemOwner.getSet().getSchema();		
+	}
+	
+	private void rememberAreaData() {	
 		area = systemOwner.getAreaSpecification().getArea();
-		if (set.getOrder() == SetOrder.SORTED) {
-			stashSortKeys(0);
-		}
-			
-		// gather all the different (re-)insertion indexes
-		areaInSchemaIndex = schema.getAreas().indexOf(area);
-		areaSpecificationIndex = 
-			area.getAreaSpecifications().indexOf(systemOwner.getAreaSpecification());
-		systemOwnerDiagramLocationIndex = 
-			diagramData.getLocations().indexOf(set.getSystemOwner().getDiagramLocation());
-		connectionLabelLocationIndex = 
-			diagramData.getLocations().indexOf(memberRole.getConnectionLabel().getDiagramLocation());
-		connectionLabelIndex = diagramData.getConnectionLabels().indexOf(memberRole.getConnectionLabel());
-		connectionPartIndex = 
-			diagramData.getConnectionParts().indexOf(memberRole.getConnectionParts().get(0));
-		memberRoleIndex = record.getMemberRoles().indexOf(memberRole);		
-		setInSchemaIndex = schema.getSets().indexOf(set);
-		
-		// procedure related stuff:
+		rememberAreaProcedures();
+	}	
+	
+	private void rememberAreaProcedures() {
 		for (AreaProcedureCallSpecification callSpec : area.getProcedures()) {
 			Procedure procedure = callSpec.getProcedure();
-			// keep track of the procedure's name
 			procedureNames.add(procedure.getName());			
-			// see if the procedure will become obsolete after removing the index
-			boolean obsolete = true;
+			boolean procedureIsObsolete = true;
 			for (ProcedureCallSpecification aCallSpec : procedure.getCallSpecifications()) {
 				if (aCallSpec instanceof RecordProcedureCallSpecification ||
 					((AreaProcedureCallSpecification) aCallSpec).getArea() != area) {
 					
-					// the procedure is called for a record, for another area, or both and is NOT
-					// obsolete
-					obsolete = false;
+					procedureIsObsolete = false;
 					break;
 				}
 			}
-			if (obsolete) {
+			if (procedureIsObsolete) {
 				int i = schema.getProcedures().indexOf(procedure);
 				procedureInSchemaIndexes.put(procedure.getName(), Integer.valueOf(i));
 				obsoleteProcedures.add(procedure);
 			}
 		}
-		// make sure the obsolete procedures get added again in the right order
 		Collections.sort(obsoleteProcedures, new Comparator<Procedure>() {
 			@Override
 			public int compare(Procedure procedure1, Procedure procedure2) {
@@ -140,134 +120,122 @@ public class DeleteIndexCommand extends AbstractSortKeyManipulationCommand {
 				int j = procedureInSchemaIndexes.get(procedure2.getName()).intValue();				
 				return i - j;
 			}			
-		});
-		
-		// last but not least: make sure the member record's prefix can keeps its integrity and that
-		// we can remove and move the pointers in the member record's prefix in a controlled way
-		List<PointerType> pointersToRemove = new ArrayList<>();
-		if (memberRole.getIndexDbkeyPosition() != null) {
-			pointersToRemove.add(PointerType.MEMBER_INDEX);
-		}
-		if (memberRole.getOwnerDbkeyPosition() != null) {
-			pointersToRemove.add(PointerType.MEMBER_OWNER);
-		}
-		PointerType[] pointersToRemoveAsArray = pointersToRemove.toArray(new PointerType[] {});
-		prefix = PrefixFactory.newPrefixForPointerRemoval(memberRole, pointersToRemoveAsArray);
-		
-		redo();
-		
+		});		
+		areaInSchemaIndex = schema.getAreas().indexOf(area);
+		areaSpecificationIndex = 
+			area.getAreaSpecifications().indexOf(systemOwner.getAreaSpecification());
 	}
 	
-	@Override
-	public void redo() {				
-		
-		// the member record type isn't allowed to be stored VIA the given system indexed set
-		// (because we don't handle changing a record's location mode to DIRECT in this command)
+	private void rememberRecordData() {
+		record = systemOwner.getSet().getMembers().get(0).getRecord();
+	}
+	
+	private void rememberSetData() {
+		set = systemOwner.getSet();
+		setInSchemaIndex = schema.getSets().indexOf(set);		
+	}
+	
+	private void rememberMembershipData() {		
+		memberRoleToRemove = 
+			new RemovableMemberRole(set.getMembers().get(0), 
+									Arrays.asList(systemOwner.getDiagramLocation()));				
+	}
+			
+	private void deleteIndex() {				
 		Assert.isTrue(record.getViaSpecification() == null ||
 					  record.getViaSpecification().getSet() != systemOwner.getSet(), 
-					  "record " + record.getName() + " is stored VIA set " + 
-					  systemOwner.getSet().getName());		
-		
-		// remove the system owner's area specification from the area; if the area has become 
-		// obsolete, remove it and, together with it, any obsolete procedures
-		area.getAreaSpecifications().remove(systemOwner.getAreaSpecification());
+					  "record " + record.getName() + " is stored VIA index " + 
+					  systemOwner.getSet().getName());				
+		removeAreaSpecification();
 		if (area.getAreaSpecifications().isEmpty()) {
-			// the area is obsolete, so remove it from the schema
-			schema.getAreas().remove(area);
-			// nullify the reference to the procedure for all of the obsolete area's procedure call 
-			// specifications
-			for (AreaProcedureCallSpecification callSpec : area.getProcedures()) {
-				callSpec.setProcedure(null);
-			}
-			// remove any obsolete procedures
-			for (String procedureName : procedureInSchemaIndexes.keySet()) {
-				Procedure procedure = schema.getProcedure(procedureName);
-				procedure.setSchema(null);
-			}
+			removeArea();
+		}		
+		removeMembershipData();
+		removeSet();					
+	}
+	
+	private void removeAreaSpecification() {
+		area.getAreaSpecifications().remove(systemOwner.getAreaSpecification());
+	}
+	
+	private void removeArea() {
+		schema.getAreas().remove(area);
+		removeProcedureCallSpecifications();
+		removeObsoleteProcedures();		
+	}
+	
+	private void removeProcedureCallSpecifications() {
+		for (AreaProcedureCallSpecification callSpec : area.getProcedures()) {
+			callSpec.setProcedure(null);
+		}		
+	}
+
+	private void removeObsoleteProcedures() {
+		for (String procedureName : procedureInSchemaIndexes.keySet()) {
+			Procedure procedure = schema.getProcedure(procedureName);
+			procedure.setSchema(null);
 		}
-		
-		// remove the diagram locations of both the system owner and the connection label
-		diagramData.getLocations().remove(set.getSystemOwner().getDiagramLocation());
-		diagramData.getLocations().remove(memberRole.getConnectionLabel().getDiagramLocation());
-		
-		// remove the connection label
-		diagramData.getConnectionLabels().remove(memberRole.getConnectionLabel());
-		
-		// remove the (one and only) connection part
-		diagramData.getConnectionParts().remove(memberRole.getConnectionParts().get(0));		
-		
-		// take care of the member record's prefix
-		prefix.removePointers();
-		
-		// remove the member role and its key, if any				
-		if (set.getOrder() == SetOrder.SORTED) {
-			removeSortKey(memberRole);
-		}
-		record.getMemberRoles().remove(memberRole);
-		
-		// remove the set from the schema
+	}
+
+	private void removeMembershipData() {
+		memberRoleToRemove.remove();
+	}	
+	
+	private void removeSet() {
 		schema.getSets().remove(set);
-		
+	}	
+	
+	@Override
+	public void redo() {
+		deleteIndex();
 	}
 
 	@Override
-	public void undo() {		
-				
-		// restore the area if it was obsolete
+	public void undo() {
+		restoreIndex();
+	}
+	
+	private void restoreIndex() {		
 		if (area.getSchema() == null) {
-			schema.getAreas().add(areaInSchemaIndex, area);
-		}
-		
-		// restore any obsolete procedures		
+			restoreArea();
+		}				
+		restoreRemovedProcedures();				
+		restoreAreaSpecification();		
+		restoreMembershipData();
+		restoreSet();						
+	}
+
+	private void restoreArea() {
+		schema.getAreas().add(areaInSchemaIndex, area);
+	}
+
+	private void restoreRemovedProcedures() {
 		for (Procedure procedure : obsoleteProcedures) {
 			int i = procedureInSchemaIndexes.get(procedure.getName()).intValue();
 			schema.getProcedures().add(i, procedure);
-		}
-		
-		// restore the references to the called procedures
+		}		
+		restoreRemovedProcedureCallSpecifications();		
+	}
+
+	private void restoreRemovedProcedureCallSpecifications() {
 		for (int i = 0; i < area.getProcedures().size(); i++) {
 			AreaProcedureCallSpecification callSpec = area.getProcedures().get(i);
 			Procedure procedure = schema.getProcedure(procedureNames.get(i));
 			callSpec.setProcedure(procedure);			
-		}
-		
-		// restore the system owner's area specification within the area
+		}		
+	}
+
+	private void restoreAreaSpecification() {
 		area.getAreaSpecifications().add(areaSpecificationIndex, 
-										 systemOwner.getAreaSpecification()); 
-		
-		// restore the diagram location for both the connection label and system owner
-		if (connectionLabelLocationIndex < systemOwnerDiagramLocationIndex) {
-			diagramData.getLocations().add(connectionLabelLocationIndex, 
-					   					   memberRole.getConnectionLabel().getDiagramLocation());
-			diagramData.getLocations().add(systemOwnerDiagramLocationIndex, 
-					   					   set.getSystemOwner().getDiagramLocation()); 			
-		} else {
-			diagramData.getLocations().add(systemOwnerDiagramLocationIndex, 
-					   					   set.getSystemOwner().getDiagramLocation()); 
-			diagramData.getLocations().add(connectionLabelLocationIndex, 
-					   					   memberRole.getConnectionLabel().getDiagramLocation());
-		}
-		
-		// restore the connection label
-		diagramData.getConnectionLabels().add(connectionLabelIndex, 
-											  memberRole.getConnectionLabel());
-		
-		// restore the (one and only) connection part
-		diagramData.getConnectionParts().add(connectionPartIndex, 
-											 memberRole.getConnectionParts().get(0));
-		
-		// restore the member role and its key, if applicable
-		record.getMemberRoles().add(memberRoleIndex, memberRole);
-		if (set.getOrder() == SetOrder.SORTED) {
-			restoreSortKey(record, 0, 0);
-		}
-		
-		// take care of the member record's prefix
-		prefix.reset();		
-		
-		//add the set to the schema again
-		schema.getSets().add(setInSchemaIndex, set);		
-		
+										 systemOwner.getAreaSpecification());
+	}
+
+	private void restoreMembershipData() {
+		memberRoleToRemove.restore();
+	}
+
+	private void restoreSet() {
+		schema.getSets().add(setInSchemaIndex, set);
 	}
 	
 }
