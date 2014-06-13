@@ -16,43 +16,40 @@
  */
 package org.lh.dmlj.schema.editor.policy;
 
-import java.util.List;
-
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
-import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
 
-public class SetComponentEditPolicy extends ComponentEditPolicy {
-
-	private boolean removeMemberOnly = true;
+public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 	
-	public SetComponentEditPolicy(boolean removeMemberOnly) {
+	private MemberRole memberRole;
+	private boolean allowRemovalOfSet;
+	
+	public RemoveMemberFromSetEditPolicy(MemberRole memberRole, boolean allowRemovalOfSet) {
 		super();
-		this.removeMemberOnly = removeMemberOnly;
+		this.memberRole = memberRole;
+		this.allowRemovalOfSet = allowRemovalOfSet;
 	}
 	
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
-		@SuppressWarnings("unchecked")
-		List<EditPart> editParts = deleteRequest.getEditParts(); 
-		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof ConnectionPart)) {						
+		if (deleteRequest.getEditParts().size() > 1) {						
 			return null;
 		}
-		// get the connection part and have the right command created
-		ConnectionPart connectionPart = (ConnectionPart) editParts.get(0).getModel();
-		MemberRole memberRole = connectionPart.getMemberRole();
-		if (removeMemberOnly) {
-			// create a command to remove the member record type from the set (or delete the set if
-			// it's not a multiple-member set)
-			return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		} else {
+		if (removingLastMember() && allowRemovalOfSet) {			
 			// create a command to remove the set
 			return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+		} else if (!removingLastMember()) {	
+			// create a command to remove the member record type from the set
+			return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);			
 		}
+		return null;
+	}
+
+	private boolean removingLastMember() {
+		return memberRole.getSet().getMembers().size() == 1;
 	}
 	
 }

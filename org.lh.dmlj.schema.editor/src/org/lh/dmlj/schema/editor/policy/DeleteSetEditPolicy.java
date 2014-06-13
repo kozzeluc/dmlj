@@ -16,35 +16,27 @@
  */
 package org.lh.dmlj.schema.editor.policy;
 
-import java.util.List;
-
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
-import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
 
-public class RecordComponentEditPolicy extends ComponentEditPolicy {
+public class DeleteSetEditPolicy extends ComponentEditPolicy {
 	
-	private MemberRole memberRole;
+	private Set set;
 	
-	public RecordComponentEditPolicy(MemberRole memberRole) {
-		super();		
-		this.memberRole = memberRole;
+	public DeleteSetEditPolicy(Set set) {
+		super();
+		this.set = set;
 	}
 	
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
-		@SuppressWarnings("unchecked")
-		List<EditPart> editParts = deleteRequest.getEditParts(); 
-		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof SchemaRecord)) {						
+		if (deleteRequest.getEditParts().size() > 1) {						
 			return null;
 		}
-		// get the record and have the right command created (at the moment this means: remove the
-		// record from the configured set)
-		return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);		
+		return DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 	}
 	
 }

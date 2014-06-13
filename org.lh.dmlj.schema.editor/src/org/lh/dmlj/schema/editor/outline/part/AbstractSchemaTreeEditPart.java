@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.swt.graphics.Image;
-import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.SchemaArea;
@@ -179,8 +178,8 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 			return (INodeTextProvider<?>) model;
 		} else if (model instanceof SchemaRecord) {
 			return (INodeTextProvider<?>) model;
-		} else if (model instanceof ConnectionPart) {
-			return ((ConnectionPart) model).getMemberRole().getSet();
+		} else if (model instanceof Set) {
+			return (INodeTextProvider<?>) model;
 		} else if (model instanceof SystemOwner) {			
 			return ((SystemOwner) model).getSet();
 		}			

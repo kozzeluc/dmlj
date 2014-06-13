@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
@@ -35,14 +34,13 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
-import org.lh.dmlj.schema.editor.policy.SetComponentEditPolicy;
+import org.lh.dmlj.schema.editor.policy.DeleteSetEditPolicy;
+import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
 
-public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> {
+public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 
-	protected SetTreeEditPart(ConnectionPart connectionPart, 
-							  IModelChangeProvider modelChangeProvider) {
-		
-		super(connectionPart, modelChangeProvider);
+	protected SetTreeEditPart(Set set, IModelChangeProvider modelChangeProvider) {		
+		super(set, modelChangeProvider);
 	}
 	
 	@Override
@@ -50,13 +48,18 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 		if (owner == getNodeTextProvider() && 
 			reference == SchemaPackage.eINSTANCE.getSet_Members()) {
 			
-			// a member record type was added to the set
+			// a member record type was added to the set (or a delete of a multiple-member set has
+			// been undone); only add a child when it's not already there:
 			SchemaRecord memberRecord = ((MemberRole) item).getRecord();
-			EditPart child = 
-				SchemaTreeEditPartFactory.createEditPart(memberRecord, modelChangeProvider);					
-			int index = 
-				getInsertionIndex(getChildren(), memberRecord, getChildNodeTextProviderOrder());					
-			addChild(child, index);			
+			try {
+				childFor(memberRecord);
+			} catch (IllegalArgumentException e) {
+				EditPart child = 
+					SchemaTreeEditPartFactory.createEditPart(memberRecord, modelChangeProvider);					
+				int index = 
+					getInsertionIndex(getChildren(), memberRecord, getChildNodeTextProviderOrder());					
+				addChild(child, index);
+			}
 		}
 	}
 	
@@ -87,15 +90,18 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 	protected void createEditPolicies() {
 		if (getParentModelObject() instanceof Schema) {
 			// the next edit policy allows for the deletion of a set
-			installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetComponentEditPolicy(false));
+			installEditPolicy(EditPolicy.COMPONENT_ROLE, new DeleteSetEditPolicy(getModel()));
 		} else if (getParentModelObject() instanceof SchemaRecord) {
-			// if the parent model object is a member in the model set AND the set is a multiple-
-			// member set, install the edit policy that allows for the removal of that record as a 
-			// set member
-			if (getModel().getMemberRole().getRecord() == getParentModelObject() &&
-				getModel().getMemberRole().getSet().getMembers().size() > 1) {
+			// if the parent model object is a member in the model set, install an edit policy that 
+			// allows for the removal of that record as a set member, provided it is not the last 
+			// member in that set (in other words, we don't want the whole set to be deleted, just 
+			// this 1 member record removed)
+			if (getParentModelObject() instanceof SchemaRecord &&  
+				isMemberofModelSet((SchemaRecord) getParentModelObject())) {
 				
-				installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetComponentEditPolicy(true));
+				MemberRole memberRole = getMemberRole((SchemaRecord) getParentModelObject());
+				installEditPolicy(EditPolicy.COMPONENT_ROLE, 
+								  new RemoveMemberFromSetEditPolicy(memberRole, false));
 			}
 		}
 	}
@@ -107,13 +113,13 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 	
 	@Override
 	protected String getImagePath() {
-		String setName = getModel().getMemberRole().getSet().getName();
-		if (getModel().getMemberRole().getSet().getMode() == SetMode.CHAINED) {			
+		String setName = getModel().getName();
+		if (getModel().getMode() == SetMode.CHAINED) {			
 			// chained set
 			if (getParentModelObject() instanceof SchemaRecord) {
 				// we want the parent record's role to be visible in the set image
 				SchemaRecord record = (SchemaRecord) getParentModelObject();
-				if (getModel().getMemberRole().getSet().getMembers().size() > 1) {
+				if (getModel().getMembers().size() > 1) {
 					// multiple member set
 					if (record.getRole(setName) instanceof OwnerRole) {		
 						// owner
@@ -133,7 +139,7 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 					}
 				}
 			} else {
-				if (getModel().getMemberRole().getSet().getMembers().size() > 1) {
+				if (getModel().getMembers().size() > 1) {
 					// multiple member set
 					return "icons/multiple_member_set.gif";
 				} else {
@@ -159,17 +165,28 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 		}
 	}
 
+	private MemberRole getMemberRole(SchemaRecord record) {
+		for (MemberRole memberRole : getModel().getMembers()) {
+			if (memberRole.getRecord() == record) {
+				return memberRole;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public List<?> getModelChildren() {
 		
 		List<SchemaRecord> children = new ArrayList<>();
 		
 		// add the owner record
-		children.add(getModel().getMemberRole().getSet().getOwner().getRecord());
+		if (getModel().getOwner() != null) {  // the set might have been deleted
+			children.add(getModel().getOwner().getRecord());
+		}
 		
 		// add the member records
 		List<SchemaRecord> memberRecords = new ArrayList<>();
-		for (MemberRole memberRole : getModel().getMemberRole().getSet().getMembers()) {
+		for (MemberRole memberRole : getModel().getMembers()) {
 			memberRecords.add(memberRole.getRecord());
 		}
 		children.addAll(memberRecords);
@@ -183,7 +200,11 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 
 	@Override
 	protected INodeTextProvider<Set> getNodeTextProvider() {
-		return getModel().getMemberRole().getSet();
+		return getModel();
+	}
+
+	private boolean isMemberofModelSet(SchemaRecord record) {
+		return getMemberRole(record) != null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -200,7 +221,7 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<ConnectionPart> 
 		} else {
 			// assure that set edit parts that are not at the top level will never be found
 			// by their model object; create an artificial key to make this happen
-			EditPartRegistryKey<ConnectionPart> key = new EditPartRegistryKey<>(getModel());
+			EditPartRegistryKey<Set> key = new EditPartRegistryKey<>(getModel());
 			getViewer().getEditPartRegistry().put(key, this);
 		}		
 		

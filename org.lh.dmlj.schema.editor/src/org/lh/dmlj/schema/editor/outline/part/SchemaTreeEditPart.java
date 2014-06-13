@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -85,7 +85,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			EObject model;
 			if (set.getSystemOwner() == null) {
 				// USER OWNER
-				model = set.getMembers().get(0).getConnectionParts().get(0);
+				model = set;
 			} else {
 				// SYSTEM OWNER
 				model = set.getSystemOwner();
@@ -182,13 +182,13 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			
 		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
 			
-			// a set was removed; avoid just refreshing the children since this may be costly; 
-			// find the edit part and remove it as a child
+			// a set or index was removed; avoid just refreshing the children since this may be  
+			// costly; find the edit part and remove it as a child
 			Set set = (Set) item;
-			EObject model;
+			EObject model = null;
 			if (set.getSystemOwner() == null) {
 				// USER OWNER
-				model = set.getMembers().get(0).getConnectionParts().get(0);
+				model = set;				
 			} else {
 				// SYSTEM OWNER
 				model = set.getSystemOwner();
@@ -237,14 +237,13 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 		Collections.sort(records);
 		children.addAll(records);
 		
-		// add the first connection part of the first set member or the system owner of the sets in 
-		// alphabetical order
+		// add the sets or the system owners in alphabetical order
 		List<Set> sets = new ArrayList<>(getModel().getSets());
 		Collections.sort(sets);
 		for (Set set : sets) {
 			if (set.getSystemOwner() == null) {
-				// user owned set (chained or indexed): first connection part of first member
-				children.add(set.getMembers().get(0).getConnectionParts().get(0));
+				// user owned set (chained or indexed): set
+				children.add(set);
 			} else {
 				// system owned indexed set: system owner
 				children.add(set.getSystemOwner());

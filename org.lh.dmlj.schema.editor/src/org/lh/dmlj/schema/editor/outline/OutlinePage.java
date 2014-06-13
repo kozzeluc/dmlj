@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,8 +36,8 @@ import org.eclipse.ui.part.PageBook;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.outline.part.SchemaTreeEditPartFactory;
 import org.lh.dmlj.schema.editor.property.IGraphicalEditorProvider;
@@ -71,16 +71,24 @@ public class OutlinePage
 		Object model = part.getModel();
 		if (model instanceof Connector) {
 			Connector connector = (Connector) model;
-			EObject target = getTarget(connector.getConnectionPart().getMemberRole());
+			EObject target = getTarget(connector.getConnectionPart().getMemberRole().getSet());
 			return (EditPart) viewer.getEditPartRegistry().get(target);
 		} else if (model instanceof ConnectionLabel) {
 			ConnectionLabel connectionLabel = (ConnectionLabel) model;
-			EObject target = getTarget(connectionLabel.getMemberRole());
+			EObject target = getTarget(connectionLabel.getMemberRole().getSet());
 			return (EditPart) viewer.getEditPartRegistry().get(target);
 		} else if (model instanceof ConnectionPart) {
 			ConnectionPart connectionPart = (ConnectionPart) model;
-			EObject target = getTarget(connectionPart.getMemberRole());
+			EObject target = getTarget(connectionPart.getMemberRole().getSet());
 			return (EditPart) viewer.getEditPartRegistry().get(target);
+		} else if (model instanceof Set) {
+			Set set = (Set) model;
+			EObject target = set.getMembers().get(0).getConnectionParts().get(0);
+			editPart = (EditPart) viewer.getEditPartRegistry().get(target);
+			// TODO check the following:
+			Assert.isNotNull(editPart, "not sure if this will work; we would want the first " +
+							 "connection part of a set to be used for the graphical editor");
+			return editPart;
 		}
 		return null;
 	}
@@ -108,11 +116,11 @@ public class OutlinePage
 		return editor;
 	}
 	
-	private EObject getTarget(MemberRole memberRole) {
-		if (memberRole.getSet().getSystemOwner() != null) {
-			return memberRole.getSet().getSystemOwner();
+	private EObject getTarget(Set set) {
+		if (set.getSystemOwner() != null) {
+			return set.getSystemOwner();
 		} else {
-			return memberRole.getSet().getMembers().get(0).getConnectionParts().get(0);
+			return set;
 		}
 	}
 

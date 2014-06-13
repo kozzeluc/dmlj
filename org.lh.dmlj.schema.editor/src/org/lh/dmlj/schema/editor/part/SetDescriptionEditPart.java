@@ -97,7 +97,8 @@ public class SetDescriptionEditPart
 			// the set order or a sort key has changed
 			refreshVisuals();
 			
-		} else if (getModel().getMemberRole().getSet().getSystemOwner() != null &&
+		} else if (getModel().getMemberRole().getSet() != null &&
+				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
 				   owner == getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea() &&
 				   isFeatureSet(features, SchemaPackage.eINSTANCE.getSchemaArea_Name())) {
 			

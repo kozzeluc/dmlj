@@ -50,7 +50,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
-import org.lh.dmlj.schema.editor.policy.SetComponentEditPolicy;
+import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
 import org.lh.dmlj.schema.editor.policy.SetXYLayoutEditPolicy;
 
 /** 
@@ -152,7 +152,8 @@ public class SetEditPart
 		// make sure we can remove a member record type from a set (or remove the set altogether if
 		// it's not a multiple-memberset) by pressing the delete key on the line represented by this
 		// edit part:
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetComponentEditPolicy(true));			
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, 
+						  new RemoveMemberFromSetEditPolicy(getMemberRole(), true));			
 		
 		refreshBendpointEditPolicy();		
 		

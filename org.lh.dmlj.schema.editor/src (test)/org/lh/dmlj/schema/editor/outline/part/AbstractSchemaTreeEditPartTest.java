@@ -1,3 +1,19 @@
+/**
+ * Copyright (C) 2014  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program.  If
+ * not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contact information: kozzeluc@gmail.com.
+ */
 package org.lh.dmlj.schema.editor.outline.part;
 
 import static org.junit.Assert.assertEquals;
@@ -7,17 +23,13 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.common.util.EList;
 import org.junit.Before;
 import org.junit.Test;
-import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLabel;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class AbstractSchemaTreeEditPartTest {
@@ -25,11 +37,7 @@ public class AbstractSchemaTreeEditPartTest {
 	private static final Class<?>[] CHILD_COMPARABLE_ORDER = 
 		{DiagramLabel.class, SchemaArea.class, SchemaRecord.class, Set.class};
 	
-	private List<Object> 				children;
-	
-	// use the @Mock on the following mocks to avoid generics related problems
-	@Mock private EList<ConnectionPart> connectionParts;	
-	@Mock private EList<MemberRole> 	memberRoles;	
+	private List<Object> children;
 	
 	@Before
 	public void setup() {
@@ -43,7 +51,7 @@ public class AbstractSchemaTreeEditPartTest {
 		// [3] SchemaRecord		TESTRECORD_V
 		// [4] SchemaRecord		TESTRECORD_X
 		// [5] SystemOwner		TESTSET_V
-		// [6] ConnectionPart	TESTSET_X
+		// [6] Set				TESTSET_X
 		children = new ArrayList<>();
 		
 		// add a diagram label edit part
@@ -91,18 +99,10 @@ public class AbstractSchemaTreeEditPartTest {
 		children.add(indexEditPart);		
 		
 		// add a chained set edit part: TESTSET_X
-		ConnectionPart connectionPart = mock(ConnectionPart.class);		
-		when(connectionParts.get(0)).thenReturn(connectionPart);
-		MemberRole memberRole = mock(MemberRole.class);
-		when(memberRole.getConnectionParts()).thenReturn(connectionParts);		
-		when(memberRoles.get(0)).thenReturn(memberRole);
-		Set chainedSet = mock(Set.class);
-		when(chainedSet.getName()).thenReturn("TESTSET_X");		
-		when(chainedSet.getMembers()).thenReturn(memberRoles);
-		when(connectionPart.getMemberRole()).thenReturn(memberRole);
-		when(memberRole.getSet()).thenReturn(chainedSet);
-		SetTreeEditPart setEditPart = mock(SetTreeEditPart.class);
-		when(setEditPart.getModel()).thenReturn(connectionPart);
+		Set set = mock(Set.class);
+		when(set.getName()).thenReturn("TESTSET_X");
+		SetTreeEditPart setEditPart = mock(SetTreeEditPart.class);		
+		when(setEditPart.getModel()).thenReturn(set);
 		children.add(setEditPart);
 		
 		assertEquals(7, children.size());

@@ -113,14 +113,18 @@ public class SchemaEditPart
 				ownerRecordEditPart.refresh();
 			}
 			
-			// refresh the member record edit part
-			SchemaRecord memberRecord = set.getMembers().get(0).getRecord();
+			// refresh the member record edit part (take the last member because we might be undoing
+			// the deletion of a multiple-member set)
+			SchemaRecord memberRecord = 
+				set.getMembers().get(set.getMembers().size() - 1).getRecord();
 			GraphicalEditPart memberRecordEditPart = 
 				(GraphicalEditPart) getViewer().getEditPartRegistry().get(memberRecord);
 			memberRecordEditPart.refresh();
 			
-			// create the set label edit part and add it as a child
-			ConnectionLabel connectionLabel = set.getMembers().get(0).getConnectionLabel();
+			// create the set label edit part and add it as a child (take the last member because we 
+			// might be undoing the deletion of a multiple-member set)
+			ConnectionLabel connectionLabel = 
+				set.getMembers().get(set.getMembers().size() - 1).getConnectionLabel();
 			EditPart setDescriptionEditPart = 
 				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider);
 			addChild(setDescriptionEditPart, getChildren().size());
@@ -214,9 +218,9 @@ public class SchemaEditPart
 			
 		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
 			
-			// a set was removed; we don't expect any connectors to be present (i.e. connectors
-			// should be removed before a set is removed; if connectors were present, this will have
-			// impact on what we have to do here though)
+			// a set or index was removed; we don't expect any connectors to be present (i.e. 
+			// connectors should be removed before a set is removed; if connectors were present, 
+			// this will have impact on what we have to do here though)
 			Set set = (Set) item;
 			
 			// remove the SYSTEM OWNER's edit part if applicable			
@@ -235,14 +239,14 @@ public class SchemaEditPart
 				if (entry.getKey() instanceof ConnectionLabel) {
 					// set label edit part...
 					ConnectionLabel connectionLabel = (ConnectionLabel) entry.getKey();
-					if (connectionLabel.getMemberRole().getSet() == set) {
+					if (connectionLabel.getMemberRole().getSet() == null) {
 						// ... that is involved
 						setDescriptionEditParts.add((EditPart) entry.getValue());
 					}
 				} else if (entry.getKey() instanceof ConnectionPart) {
 					// set connection edit part...					
 					ConnectionPart connectionPart = (ConnectionPart) entry.getKey();
-					if (connectionPart.getMemberRole().getSet() == set) {
+					if (connectionPart.getMemberRole().getSet() == null) {
 						// ... that is involved
 						SetEditPart setEditPart = (SetEditPart) entry.getValue();
 						MemberRole memberRole = setEditPart.getMemberRole();
@@ -287,20 +291,23 @@ public class SchemaEditPart
 				(EditPart) getViewer().getEditPartRegistry().get(memberRole.getConnectionLabel());
 			removeChild(child);
 			
-			// identify the owner and member record edit parts			
+			// identify the owner and member record edit parts (we might not always find these
+			// because the model update might be done in a composite command)
 			SetEditPart setEditPart =
 				(SetEditPart) getViewer().getEditPartRegistry()
 				  	   					 .get(memberRole.getConnectionParts().get(0));
 			List<EditPart> recordEditParts = new ArrayList<>();
-			recordEditParts.add(setEditPart.getSource()); // owner record edit part
-			recordEditParts.add(setEditPart.getTarget()); // member record edit part
+			if (setEditPart.getSource() != null) {
+				recordEditParts.add(setEditPart.getSource()); // owner record edit part
+			}
+			if (setEditPart.getTarget() != null) {
+				recordEditParts.add(setEditPart.getTarget()); // member record edit part
+			}
 			
 			// remove the connection edit part
 			removeChild(setEditPart);				
 			
-			// refresh the record edit part involved
-			Assert.isTrue(recordEditParts.size() == 2, 
-						  "expected exactly 2 RecordEditPart instances");
+			// refresh the owner and member record edit parts if we were able to find them
 			for (EditPart editPart : recordEditParts) {
 				editPart.refresh();				
 			}						
