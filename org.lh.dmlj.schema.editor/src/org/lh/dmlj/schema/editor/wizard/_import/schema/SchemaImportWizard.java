@@ -66,8 +66,10 @@ import org.eclipse.ui.part.ISetSelectionTarget;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.Plugin;
@@ -228,11 +230,31 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		
 	}
 	
-	protected void doPostProcessing(Schema targetSchema, 
-								    Schema referenceSchema) {
+	protected void doPostProcessing(Schema targetSchema, Schema referenceSchema) {
 		
-		// we'll only do some post-processing when in update mode and merely to
-		// allow for easier validation of the correctness of updating diagrams
+		// we'll only do some post-processing when in update mode, allowing the diagram label, if
+		// present, to be retained, and to allow for easier validation of the correctness of 
+		// updating diagrams
+		
+		DiagramLabel referenceDiagramLabel = referenceSchema.getDiagramData().getLabel();					
+		if (referenceDiagramLabel != null) {
+			
+			DiagramLabel targetDiagramLabel = SchemaFactory.eINSTANCE.createDiagramLabel();
+			targetSchema.getDiagramData().setLabel(targetDiagramLabel);
+			targetDiagramLabel.setWidth(referenceDiagramLabel.getWidth());
+			targetDiagramLabel.setHeight(referenceDiagramLabel.getHeight());
+			targetDiagramLabel.setDescription(referenceDiagramLabel.getDescription());
+			
+			DiagramLocation targetDiagramLabelLocation = 
+				SchemaFactory.eINSTANCE.createDiagramLocation();
+			targetSchema.getDiagramData().getLocations().add(targetDiagramLabelLocation);
+			targetDiagramLabel.setDiagramLocation(targetDiagramLabelLocation);
+			targetDiagramLabelLocation.setX(referenceDiagramLabel.getDiagramLocation().getX());
+			targetDiagramLabelLocation.setY(referenceDiagramLabel.getDiagramLocation().getY());
+			targetDiagramLabelLocation.setEyecatcher("diagram label");
+			
+		}		
+		
 		sortTargetList(targetSchema.getDiagramData().getConnectionLabels(), 
 				   	   referenceSchema.getDiagramData().getConnectionLabels(),
 				   	   new IKeyProvider<ConnectionLabel>() {
