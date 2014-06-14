@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.outline;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditDomain;
@@ -54,7 +53,7 @@ public class OutlinePage
 	}
 
 	public boolean canConvertEditPart(EditPartViewer viewer, EditPart part) {
-		return viewer == getViewer();
+		return true;
 	}	
 	
 	private void configureOutlineViewer() {
@@ -63,7 +62,6 @@ public class OutlinePage
 	}
 	
 	public EditPart convert(EditPartViewer viewer, EditPart part) {
-		Assert.isTrue(viewer == getViewer(), "viewer != getViewer()");
 		EditPart editPart = (EditPart) viewer.getEditPartRegistry().get(part.getModel());
 		if (editPart != null) {
 			return editPart;
@@ -84,11 +82,7 @@ public class OutlinePage
 		} else if (model instanceof Set) {
 			Set set = (Set) model;
 			EObject target = set.getMembers().get(0).getConnectionParts().get(0);
-			editPart = (EditPart) viewer.getEditPartRegistry().get(target);
-			// TODO check the following:
-			Assert.isNotNull(editPart, "not sure if this will work; we would want the first " +
-							 "connection part of a set to be used for the graphical editor");
-			return editPart;
+			return (EditPart) viewer.getEditPartRegistry().get(target);
 		}
 		return null;
 	}
