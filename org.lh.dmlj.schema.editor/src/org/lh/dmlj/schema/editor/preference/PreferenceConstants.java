@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,7 +28,10 @@ public abstract class PreferenceConstants {
 	public static final String LEFT_MARGIN = "leftMargin";
 	public static final String RIGHT_MARGIN = "rightMargin";
 	
-	public static final String ORGANISATION = "organisation";
+	public static final String DIAGRAMLABEL_ORGANISATION = "organisation";
+	public static final String DIAGRAMLABEL_SHOW_LAST_MODIFIED = "showLastModified";
+	public static final String DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN = 
+		"lastModifiedDateFormatPattern";
 	
 	public static final String SHOW_RULERS = "showRulers";
 	public static final String SHOW_GRID = "showGrid";

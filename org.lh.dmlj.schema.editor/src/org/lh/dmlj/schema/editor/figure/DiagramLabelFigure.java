@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -33,9 +33,11 @@ public class DiagramLabelFigure extends Figure {
 	private Label descriptionFigure;
 	private Label organisationFigure;
 	private Label schemaIdentificationFigure;
+	private Label lastModifiedFigure;
 	
 	public static Dimension getInitialSize(String organisation, String schemaName, 
-										   short schemaVersion, String description) {
+										   short schemaVersion, String description, 
+										   String lastModified) {
 				
 		// first calculate the size of each individual item...
 		Dimension sizeOrganisation =
@@ -47,16 +49,20 @@ public class DiagramLabelFigure extends Figure {
 		Dimension sizeDescription = 
 			FigureUtilities.getTextExtents((description != null ? description : ""), 
 										   Plugin.getDefault().getFigureFontItalic());
+		Dimension sizeLastModified =  
+			FigureUtilities.getTextExtents((lastModified != null ? lastModified : ""), 
+										   Plugin.getDefault().getFigureFont());
 		
 		// ... then determine the initial width; the width is the largest one required - because of 
 		// some strange behaviour issue when the zoom level exceeds 1.0 (100%), we add 5 pixels - 
-		// whereas the height is fixed to 35 pixels; at 75%, the diagram label seems oversized for
+		// whereas the height is fixed to 45 pixels; at 75%, the diagram label seems oversized for
 		// what the width is concerned
 		Dimension size = new Dimension();
 		size.width = 
 			Math.max(sizeOrganisation.width, 
-					 Math.max(sizeSchemaIdentification.width, sizeDescription.width)) + 5;
-		size.height = 35;
+					 Math.max(sizeSchemaIdentification.width, 
+							  Math.max(sizeDescription.width, sizeLastModified.width))) + 5;
+		size.height = 45;
 		
 		return size;
 	}
@@ -84,6 +90,7 @@ public class DiagramLabelFigure extends Figure {
 		schemaIdentificationFigure = 
 			addLabel(0, 10, 200, 14, Plugin.getDefault().getFigureFontBold());
 		descriptionFigure = addLabel(0, 21, 200, 14, Plugin.getDefault().getFigureFontItalic());
+		lastModifiedFigure = addLabel(0, 31, 200, 14, Plugin.getDefault().getFigureFont());
 		
 	}
 	
@@ -98,6 +105,11 @@ public class DiagramLabelFigure extends Figure {
 	public void setDescription(String description) {
 		String value = description != null ? description : "";
 		descriptionFigure.setText(value);
+	}
+
+	public void setLastModified(String lastModified) {
+		String value = lastModified != null ? lastModified : "";
+		lastModifiedFigure.setText(value);
 	}
 	
 	public void setOrganisation(String organisation) {

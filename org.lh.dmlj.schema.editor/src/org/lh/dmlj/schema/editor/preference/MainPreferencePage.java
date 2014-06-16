@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -64,6 +64,8 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	private Combo  comboSnapToGuides;
 	private Label  lbldontCheckThis;
 	private Text   textDiagramLabelOrganisation;
+	private Button btnDiagramLabelShowLastModified;
+	private Text textDiagramLabelLastModifiedPattern;
 	
 	private static void initializeDiagramAttributeComboValues(Combo combo) {
 		combo.add(FALSE);
@@ -186,7 +188,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		comboSnapToGeometry.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GEOMETRY));
 		
 		Group grpDiagramLabel = new Group(container, SWT.NONE);
-		grpDiagramLabel.setLayout(new GridLayout(2, false));
+		grpDiagramLabel.setLayout(new GridLayout(3, false));
 		grpDiagramLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		grpDiagramLabel.setText("Diagram label");
 		
@@ -197,7 +199,14 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		
 		textDiagramLabelOrganisation = new Text(grpDiagramLabel, SWT.BORDER);
 		textDiagramLabelOrganisation.setToolTipText("The name of the organisation to appear on the first line of the diagram label");
-		textDiagramLabelOrganisation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textDiagramLabelOrganisation.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		
+		btnDiagramLabelShowLastModified = new Button(grpDiagramLabel, SWT.CHECK);
+		btnDiagramLabelShowLastModified.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnDiagramLabelShowLastModified.setText("Show Last Modified; format:");
+		
+		textDiagramLabelLastModifiedPattern = new Text(grpDiagramLabel, SWT.BORDER);
+		textDiagramLabelLastModifiedPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		btnLogDiagnosticMessages = new Button(container, SWT.CHECK);
 		btnLogDiagnosticMessages.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 2, 1));
@@ -242,8 +251,14 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnInches.setSelection(unit == Unit.INCHES);
 		btnPixels.setSelection(unit == Unit.PIXELS);
 		
-		String organisation = store.getDefaultString(PreferenceConstants.ORGANISATION);
+		String organisation = store.getDefaultString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
 		textDiagramLabelOrganisation.setText(organisation);
+		boolean showLastModified = 
+			store.getDefaultBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED);
+		btnDiagramLabelShowLastModified.setSelection(showLastModified);
+		String pattern = 
+			store.getDefaultString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		textDiagramLabelLastModifiedPattern.setText(pattern);
 		
 		boolean showRulers = store.getDefaultBoolean(PreferenceConstants.SHOW_RULERS);
 		selectDiagramAttributeComboValue(comboShowRulers, showRulers);
@@ -273,8 +288,14 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnInches.setSelection(unit == Unit.INCHES);
 		btnPixels.setSelection(unit == Unit.PIXELS);
 		
-		String organisation = store.getString(PreferenceConstants.ORGANISATION);
+		String organisation = store.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
 		textDiagramLabelOrganisation.setText(organisation);
+		boolean showLastModified = 
+			store.getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED);
+		btnDiagramLabelShowLastModified.setSelection(showLastModified);
+		String pattern = 
+			store.getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		textDiagramLabelLastModifiedPattern.setText(pattern);
 		
 		boolean showRulers = store.getBoolean(PreferenceConstants.SHOW_RULERS);
 		selectDiagramAttributeComboValue(comboShowRulers, showRulers);
@@ -327,8 +348,12 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		}
 		store.setValue(PreferenceConstants.UNITS, unit.toString());
 		
-		store.setValue(PreferenceConstants.ORGANISATION, 
+		store.setValue(PreferenceConstants.DIAGRAMLABEL_ORGANISATION, 
 					   textDiagramLabelOrganisation.getText().trim());
+		store.setValue(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED, 
+				   	   btnDiagramLabelShowLastModified.getSelection());
+		store.setValue(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN, 
+				   	   textDiagramLabelLastModifiedPattern.getText().trim());
 		
 		store.setValue(PreferenceConstants.SHOW_RULERS,
 					   getDiagramAttributeComboValue(comboShowRulers));

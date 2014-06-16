@@ -25,15 +25,18 @@ import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class SchemaDiagramEditPartFactory implements EditPartFactory {
 	
 	private IModelChangeProvider modelChangeProvider;	
+	private SchemaEditor schemaEditor;
 	
-	public static EditPart createEditPart(Object model, IModelChangeProvider modelChangeProvider) {
+	public static EditPart createEditPart(Object model, IModelChangeProvider modelChangeProvider, 
+										  SchemaEditor schemaEditor) {
 		if (model instanceof Schema) {
-			return new SchemaEditPart((Schema) model, modelChangeProvider);
+			return new SchemaEditPart((Schema) model, schemaEditor);
 		} else if (model instanceof SchemaRecord) {
 			return new RecordEditPart((SchemaRecord) model, modelChangeProvider);
 		} else if (model instanceof SystemOwner) {
@@ -45,20 +48,25 @@ public class SchemaDiagramEditPartFactory implements EditPartFactory {
 		} else if (model instanceof Connector) {
 			return new ConnectorEditPart((Connector) model, modelChangeProvider);
 		} else if (model instanceof DiagramLabel) {
-			return new DiagramLabelEditPart((DiagramLabel) model, modelChangeProvider);
+			return new DiagramLabelEditPart((DiagramLabel) model, schemaEditor);
 		}
 		throw new IllegalStateException("No EditPart for " + model.getClass());		
 	}
+	
+	private static IModelChangeProvider getModelChangeProvider(SchemaEditor schemaEditor) {
+		return (IModelChangeProvider) schemaEditor.getAdapter(IModelChangeProvider.class);
+	}
 
-	public SchemaDiagramEditPartFactory(IModelChangeProvider modelChangeProvider) {
+	public SchemaDiagramEditPartFactory(SchemaEditor schemaEditor) {
 		super();
-		this.modelChangeProvider = modelChangeProvider;
+		this.schemaEditor = schemaEditor;
+		modelChangeProvider = getModelChangeProvider(schemaEditor);
 	}
 	
 	@Override
 	public EditPart createEditPart(EditPart context, Object model) {
 		// just delegate to our public static method
-		return createEditPart(model, modelChangeProvider);
+		return createEditPart(model, modelChangeProvider, schemaEditor);
 	}
 
 }

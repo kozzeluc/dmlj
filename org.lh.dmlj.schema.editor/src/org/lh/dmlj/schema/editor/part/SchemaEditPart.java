@@ -49,6 +49,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.policy.SchemaXYLayoutEditPolicy;
@@ -57,16 +58,19 @@ public class SchemaEditPart
 	extends AbstractGraphicalEditPart implements IModelChangeListener {
 	
 	private IModelChangeProvider modelChangeProvider;
+	private SchemaEditor schemaEditor;
 
 	@SuppressWarnings("unused")
 	private SchemaEditPart() {
 		super(); // disabled constructor
 	}
 	
-	public SchemaEditPart(Schema schema, IModelChangeProvider modelChangeProvider) {
+	public SchemaEditPart(Schema schema, SchemaEditor schemaEditor) {
 		super();
 		setModel(schema);
-		this.modelChangeProvider = modelChangeProvider;
+		this.schemaEditor = schemaEditor;
+		modelChangeProvider = 
+			(IModelChangeProvider) schemaEditor.getAdapter(IModelChangeProvider.class);
 	}
 	
 	@Override
@@ -82,7 +86,8 @@ public class SchemaEditPart
 			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
 			
 			// a DIAGRAM LABEL was added
-			EditPart child = SchemaDiagramEditPartFactory.createEditPart(item, modelChangeProvider);
+			EditPart child = 
+				SchemaDiagramEditPartFactory.createEditPart(item, modelChangeProvider, schemaEditor);
 			addChild(child, getChildren().size());			
 		
 		} else if (owner == getModel() && 
@@ -90,7 +95,8 @@ public class SchemaEditPart
 			
 			// a RECORD was added
 			SchemaRecord record = (SchemaRecord) item;			
-			EditPart child = SchemaDiagramEditPartFactory.createEditPart(record, modelChangeProvider);
+			EditPart child = 
+				SchemaDiagramEditPartFactory.createEditPart(record, modelChangeProvider, schemaEditor);
 			addChild(child, getChildren().size());
 		
 		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
@@ -103,7 +109,8 @@ public class SchemaEditPart
 				// create an edit part for the SYSTEM OWNER and add it as a child
 				EObject model = set.getSystemOwner();
 				EditPart child = 
-					SchemaDiagramEditPartFactory.createEditPart(model, modelChangeProvider);			
+					SchemaDiagramEditPartFactory.createEditPart(model, modelChangeProvider, 
+																schemaEditor);			
 				addChild(child, getChildren().size());
 			} else {					
 				// refresh the owner record edit part
@@ -126,7 +133,8 @@ public class SchemaEditPart
 			ConnectionLabel connectionLabel = 
 				set.getMembers().get(set.getMembers().size() - 1).getConnectionLabel();
 			EditPart setDescriptionEditPart = 
-				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider);
+				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider,
+															schemaEditor);
 			addChild(setDescriptionEditPart, getChildren().size());
 			
 		} else if (reference == SchemaPackage.eINSTANCE.getSet_Members()) {			
@@ -150,7 +158,8 @@ public class SchemaEditPart
 			// create the set label edit part and add it as a child
 			ConnectionLabel connectionLabel = memberRole.getConnectionLabel();
 			EditPart setDescriptionEditPart = 
-				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider);
+				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider,
+															schemaEditor);
 			addChild(setDescriptionEditPart, getChildren().size());			
 			
 		} else if (owner instanceof MemberRole && 
@@ -164,7 +173,8 @@ public class SchemaEditPart
 			for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
 				Connector model = connectionPart.getConnector();
 				EditPart connectorEditPart =
-					SchemaDiagramEditPartFactory.createEditPart(model, modelChangeProvider);
+					SchemaDiagramEditPartFactory.createEditPart(model, modelChangeProvider,
+																schemaEditor);
 				addChild(connectorEditPart, getChildren().size());					
 			}
 			

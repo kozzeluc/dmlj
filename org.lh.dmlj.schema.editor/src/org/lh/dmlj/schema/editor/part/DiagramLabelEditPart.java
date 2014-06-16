@@ -16,6 +16,9 @@
  */
 package org.lh.dmlj.schema.editor.part;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.emf.ecore.EObject;
@@ -24,34 +27,48 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.part.FileEditorInput;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
 import org.lh.dmlj.schema.editor.policy.DiagramLabelComponentEditPolicy;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 
 public class DiagramLabelEditPart 
-	extends AbstractResizableDiagramNodeEditPart<DiagramLabel> implements IPropertyChangeListener {
+	extends AbstractResizableDiagramNodeEditPart<DiagramLabel> 
+	implements IPropertyChangeListener, IPropertyListener {
 
-	private IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+	private File diagramFile;
+	private SchemaEditor schemaEditor;
+	private IPreferenceStore store = Plugin.getDefault().getPreferenceStore();	
 	
+	private static IModelChangeProvider getModelChangeProvider(SchemaEditor schemaEditor) {
+		return (IModelChangeProvider) schemaEditor.getAdapter(IModelChangeProvider.class);
+	}
+
 	private DiagramLabelEditPart() {
 		super(null, null); // disabled constructor
 	}
 	
-	public DiagramLabelEditPart(DiagramLabel diagramLabel,
-								IModelChangeProvider modelChangeProvider) {
+	public DiagramLabelEditPart(DiagramLabel diagramLabel, SchemaEditor schemaEditor) {
 		
-		super(diagramLabel, modelChangeProvider);		
+		super(diagramLabel, getModelChangeProvider(schemaEditor));
+		this.schemaEditor = schemaEditor;
+		FileEditorInput editorInput = (FileEditorInput) schemaEditor.getEditorInput();
+		diagramFile = editorInput.getFile().getLocation().toFile();
 	}
 	
 	@Override
 	public void activate() {
 		super.activate();
 		store.addPropertyChangeListener(this);
+		schemaEditor.addPropertyListener(this);
 	}
 	
 	@Override
@@ -85,8 +102,34 @@ public class DiagramLabelEditPart
 	
 	@Override
 	public void deactivate() {
+		schemaEditor.removePropertyListener(this);
 		store.removePropertyChangeListener(this);
 		super.deactivate();
+	}
+
+	private String getLastModified() {
+		
+		if (!Plugin.getDefault()
+				   .getPreferenceStore()
+				   .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
+			
+			return null;
+		}
+					
+		StringBuilder lastModified = new StringBuilder("Last modified: ");
+		
+		String pattern = 
+				Plugin.getDefault()
+					  .getPreferenceStore()
+					  .getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		lastModified.append(format.format(diagramFile.lastModified()));
+		
+		if (schemaEditor.isDirty()) {
+			lastModified.append(" (not saved)");
+		}
+		
+		return lastModified.toString();
 	}
 
 	@Override
@@ -94,9 +137,26 @@ public class DiagramLabelEditPart
 		return getModel().getDiagramData().getZoomLevel();
 	}
 
+	private boolean isDiagramLabelStillPresent() {
+		return getModel().getDiagramData() != null;
+	}
+
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(PreferenceConstants.ORGANISATION)) {
+		String property = event.getProperty();
+		if (property.equals(PreferenceConstants.DIAGRAMLABEL_ORGANISATION) ||
+			property.equals(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED) ||
+			property.equals(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN)) {
+			
+			refreshVisuals();
+		}
+	}
+	
+	@Override
+	public void propertyChanged(Object source, int propId) {
+		if (source == schemaEditor && propId == IEditorPart.PROP_DIRTY && 
+			isDiagramLabelStillPresent()) {
+			
 			refreshVisuals();
 		}
 	}
@@ -106,9 +166,10 @@ public class DiagramLabelEditPart
 		DiagramLabel diagramLabel = getModel();
 		Schema schema = diagramLabel.getDiagramData().getSchema();
 		DiagramLabelFigure figure = (DiagramLabelFigure) getFigure();
-		figure.setOrganisation(store.getString(PreferenceConstants.ORGANISATION));
+		figure.setOrganisation(store.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION));
 		figure.setSchemaIdentification(schema.getName(), schema.getVersion());
 		figure.setDescription(diagramLabel.getDescription());
+		figure.setLastModified(getLastModified());
 		figure.setPreferredSize(diagramLabel.getWidth(), diagramLabel.getHeight());
 	}
 

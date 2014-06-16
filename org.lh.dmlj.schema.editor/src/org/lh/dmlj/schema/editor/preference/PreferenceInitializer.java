@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -44,8 +44,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.RIGHT_MARGIN, 0);
 		
 		// default diagram label preferences
-		store.setDefault(PreferenceConstants.ORGANISATION, 
+		store.setDefault(PreferenceConstants.DIAGRAMLABEL_ORGANISATION, 
 						 "Eclipse CA IDMS™/DB Schema Diagram Editor");
+		store.setDefault(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED, true);
+		store.setDefault(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN, 
+						 "dd-MM-yyyy HH:mm:ss");
 		
 		// default diagram data for new and imported schemas
 		store.setDefault(PreferenceConstants.SHOW_RULERS, true);

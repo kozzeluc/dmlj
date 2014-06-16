@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -15,6 +15,9 @@
  * Contact information: kozzeluc@gmail.com.
  */
 package org.lh.dmlj.schema.editor.policy;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -81,11 +84,25 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			return null;
 		}	
 		
-		String organisation = 
-			Plugin.getDefault().getPreferenceStore().getString(PreferenceConstants.ORGANISATION);
+		String organisation = Plugin.getDefault()
+									.getPreferenceStore()
+									.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
+		String lastModified = null;
+		if (Plugin.getDefault()
+				  .getPreferenceStore()
+				  .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
+			
+			String pattern = 
+				Plugin.getDefault()
+					  .getPreferenceStore()
+					  .getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+			DateFormat format = new SimpleDateFormat(pattern);
+			lastModified = 
+				"Last modified: " + format.format(System.currentTimeMillis()) + " (not saved)";
+		}
 		Dimension size = 
 			DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(), 
-											  schema.getDescription()); 
+											  schema.getDescription(), lastModified); 
 		
 		return new CreateDiagramLabelCommand(schema, request.getLocation(), size);
 	}	
