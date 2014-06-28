@@ -45,9 +45,9 @@ public abstract class AbstractSetPropertiesSection
 		Assert.isTrue(modelObject instanceof ConnectionPart ||
 					  modelObject instanceof ConnectionLabel ||
 					  modelObject instanceof SystemOwner ||
-					  modelObject instanceof Connector,
-					  "not a ConnectionPart, ConnectionLabel, SystemOwner or " +
-					  "Connector");
+					  modelObject instanceof Connector ||
+					  modelObject instanceof Set,
+					  "not a ConnectionPart, ConnectionLabel, SystemOwner, Connector or Set");
 				
 		MemberRole memberRole;
 		if (modelObject instanceof ConnectionPart) {        	
@@ -59,6 +59,9 @@ public abstract class AbstractSetPropertiesSection
         } else if (modelObject instanceof SystemOwner) {	
         	SystemOwner systemOwner = (SystemOwner) modelObject;
         	memberRole = systemOwner.getSet().getMembers().get(0);
+        } else if (modelObject instanceof Set) {	
+        	Set set = (Set) modelObject;
+        	memberRole = set.getMembers().get(0);
         } else {
         	Connector connector = (Connector) modelObject;
         	memberRole = connector.getConnectionPart().getMemberRole();
