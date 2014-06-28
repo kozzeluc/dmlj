@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -36,7 +37,7 @@ import org.lh.dmlj.schema.editor.property.handler.SetOrderHandler;
 
 public class SetGeneralPropertiesSection extends AbstractSetPropertiesSection {
 	
-	private IHyperlinkHandler setOrderHandler = new SetOrderHandler(this);
+	private IHyperlinkHandler<EAttribute, Command> setOrderHandler = new SetOrderHandler(this);
 
 	private static final EAttribute[] ATTRIBUTES = 
 		{SchemaPackage.eINSTANCE.getSet_Name(),
@@ -127,7 +128,7 @@ public class SetGeneralPropertiesSection extends AbstractSetPropertiesSection {
 	}
 	
 	@Override
-	public IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSet_Order()) {
 			return setOrderHandler;
 		} else {

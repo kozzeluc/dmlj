@@ -16,9 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.property.handler;
 
+public interface IHyperlinkHandlerProvider<C, R> {
 
-public interface IHyperlinkHandler<C, R> {	
+	C getContext(int row);
 	
-	R hyperlinkActivated(C context);
+	IHyperlinkHandler<C, R> getHyperlinkHandler(int column);
 	
 }

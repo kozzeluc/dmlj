@@ -8,12 +8,15 @@ import static org.junit.Assert.assertSame;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -41,6 +44,7 @@ import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommand;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
 import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommand;
+import org.lh.dmlj.schema.editor.command.annotation.Features;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
@@ -270,6 +274,24 @@ public abstract class TestTools {
 		assertEquals(expectedLines, actualLines);
 	}
 	
+	public static void assertFeaturesSet(Command command, EStructuralFeature[] expected) {
+		
+		java.util.Set<EStructuralFeature> setOfExpected = new HashSet<>(Arrays.asList(expected));
+		Assert.assertEquals("expected contains duplicates", expected.length, setOfExpected.size());
+		
+		EStructuralFeature[] actual = ModelChangeDispatcher.getAnnotatedFieldValue(
+			command, 
+			Features.class, 
+			ModelChangeDispatcher.Availability.MANDATORY);
+		
+		for (EStructuralFeature actualFeature : actual) {
+			Assert.assertTrue("not expected: " + actualFeature, setOfExpected.remove(actualFeature));
+		}
+		
+		Assert.assertTrue("not set: " + setOfExpected, setOfExpected.isEmpty());
+		
+	}
+
 	public static void assertItemSet(Command command, EObject expected) {
 		EObject actual = ModelChangeDispatcher.getAnnotatedFieldValue(
 			command, 

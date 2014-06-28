@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.SchemaArea;
@@ -49,9 +50,9 @@ public class RecordGeneralPropertiesSection
 		 SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode(),
 		 SchemaPackage.eINSTANCE.getSchemaArea_Name()};
 
-	private IHyperlinkHandler areaHandler = new AreaHandler(this);
+	private IHyperlinkHandler<EAttribute, Command> areaHandler = new AreaHandler(this);
 	
-	private IHyperlinkHandler locationModeHandler = 
+	private IHyperlinkHandler<EAttribute, Command> locationModeHandler = 
 		new LocationModeHandler(this);
 	
 	public RecordGeneralPropertiesSection() {
@@ -191,7 +192,7 @@ public class RecordGeneralPropertiesSection
 	}
 	
 	@Override
-	public IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()) {
 			return locationModeHandler;
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {

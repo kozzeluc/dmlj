@@ -25,6 +25,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -195,7 +196,7 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 	 * @param attribute
 	 * @return 
 	 */
-	public IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
 		return null;
 	}
 

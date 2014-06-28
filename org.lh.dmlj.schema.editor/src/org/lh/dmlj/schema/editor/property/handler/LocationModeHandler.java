@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -39,7 +39,7 @@ import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
 import org.lh.dmlj.schema.editor.property.IRecordProvider;
 import org.lh.dmlj.schema.editor.property.ui.LocationModeDialog;
 
-public class LocationModeHandler implements IHyperlinkHandler {
+public class LocationModeHandler implements IHyperlinkHandler<EAttribute, Command> {
 
 	private IRecordProvider recordProvider;	
 	

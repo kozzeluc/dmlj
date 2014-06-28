@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,7 +38,7 @@ import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.IAreaSpecificationProvider;
 import org.lh.dmlj.schema.editor.property.ui.AreaDialog;
 
-public class AreaHandler implements IHyperlinkHandler {	
+public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {	
 	
 	private IAreaSpecificationProvider areaSpecificationProvider;
 	

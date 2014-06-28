@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
@@ -40,10 +41,10 @@ public class SetMemberPropertiesSection
 	extends AbstractSetPropertiesSection 
 	implements IAreaSpecificationProvider, IMemberRoleProvider {
 
-	private IHyperlinkHandler areaHandler = new AreaHandler(this);	
-	private IHyperlinkHandler chainedSetPointersHandler = 
+	private IHyperlinkHandler<EAttribute, Command> areaHandler = new AreaHandler(this);	
+	private IHyperlinkHandler<EAttribute, Command> chainedSetPointersHandler = 
 		new ChainedSetPointersHandler(this);
-	private IHyperlinkHandler indexedSetPointersHandler = 
+	private IHyperlinkHandler<EAttribute, Command> indexedSetPointersHandler = 
 		new IndexedSetPointersHandler(this);
 	
 	public SetMemberPropertiesSection() {
@@ -144,7 +145,7 @@ public class SetMemberPropertiesSection
 	}
 	
 	@Override
-	public IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
 			return areaHandler;
 		} else if (attribute == SchemaPackage.eINSTANCE

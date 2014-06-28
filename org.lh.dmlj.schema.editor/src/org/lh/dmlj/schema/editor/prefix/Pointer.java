@@ -88,6 +88,12 @@ public class Pointer<T extends Role> {
 
 	public boolean isOwnerDefined() {
 		return role instanceof OwnerRole;
-	}	
+	}
+	
+	public String toString() {
+		return "Pointer (record=" + recordName + " set=" + setName + " role=" + 
+			   (role instanceof OwnerRole ? "owner" : "member") + " position=" + 
+			   getCurrentPositionInPrefix() + ")";
+	}
 	
 }

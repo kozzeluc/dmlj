@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.editor.property.ui.IndexedSetPointersDialog;
 
 public class IndexedSetPointersHandler 
 	extends AbstractSetPointersHandler
-	implements IHyperlinkHandler {	
+	implements IHyperlinkHandler<EAttribute, Command> {	
 	
 	private IMemberRoleProvider memberRoleProvider;
 	

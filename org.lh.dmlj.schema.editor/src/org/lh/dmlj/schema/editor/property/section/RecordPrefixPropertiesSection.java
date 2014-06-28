@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,6 +16,9 @@
  */
 package org.lh.dmlj.schema.editor.property.section;        
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -28,13 +31,23 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.command.ChangePointerOrderCommand;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
 import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
+import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
+import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandlerProvider;
+import org.lh.dmlj.schema.editor.property.ui.PointerOrderDialog;
                       
-public class RecordPrefixPropertiesSection extends AbstractPropertiesSection {	
+public class RecordPrefixPropertiesSection 
+	extends AbstractPropertiesSection 
+	implements IHyperlinkHandlerProvider<Pointer<?>, Object> {	
 
-	private Table		   table;
+	private CommandStack commandStack;
+	private Prefix prefix;
+	private HyperlinkOnlyPropertyEditor<Pointer<?>> hyperlinkOnlyPropertyEditor;
+	private Table table;
 	protected SchemaRecord target;
 
 	public RecordPrefixPropertiesSection() {
@@ -85,8 +98,20 @@ public class RecordPrefixPropertiesSection extends AbstractPropertiesSection {
 		TableColumn column4 = new TableColumn(table, SWT.NONE);
 		column4.setWidth(60);
 		column4.setText("Pointer");	
+		
+		hyperlinkOnlyPropertyEditor = new HyperlinkOnlyPropertyEditor<>(table, this, new int[] {1});
 
-	}		
+	}
+	
+	@Override
+	public void dispose() {
+		hyperlinkOnlyPropertyEditor.dispose();
+	}
+
+	@Override
+	public Pointer<?> getContext(int row) {
+		return prefix.getPointers().get(row);
+	}
 
 	@Override
 	public final void refresh() {		
@@ -95,11 +120,11 @@ public class RecordPrefixPropertiesSection extends AbstractPropertiesSection {
 		table.removeAll();		
 		
 		// (re-)populate the table
-		Prefix prefix = PrefixFactory.newPrefixForInquiry(target);
+		prefix = PrefixFactory.newPrefixForInquiry(target);
 		for (Pointer<?> pointer : prefix.getPointers()) {												
 			TableItem item = new TableItem(table, SWT.NONE);			
 			item.setText(0, String.valueOf(pointer.getCurrentPositionInPrefix()));			
-			item.setText(1, pointer.getSetName());						
+			item.setText(1, Tools.removeTrailingUnderscore(pointer.getSetName()));						
 			if (pointer.isOwnerDefined()) {
 				item.setText(2, "owner");
 			} else {
@@ -108,6 +133,7 @@ public class RecordPrefixPropertiesSection extends AbstractPropertiesSection {
 			String pointerTypeAsString = pointer.getType().toString();
 			item.setText(3, pointerTypeAsString.substring(pointerTypeAsString.indexOf("_") + 1));
 		}
+		hyperlinkOnlyPropertyEditor.refresh();
 	
 		// we don't want any vertical scrollbar in the table; the following
 		// sequence allows us to do just that (i.e. vertically stretch the table
@@ -124,6 +150,35 @@ public class RecordPrefixPropertiesSection extends AbstractPropertiesSection {
 	public void setInput(IWorkbenchPart part, ISelection selection) {		
 		super.setInput(part, selection);
 		target = (SchemaRecord) modelObject;
+		commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
+	    Assert.isNotNull(commandStack, "no command stack available");
+	}
+
+	@Override
+	public IHyperlinkHandler<Pointer<?>, Object> getHyperlinkHandler(int column) {
+		if (column != 1) {
+			// we don't expect this to happen since we've only made 1 column hyperlink enabled
+			return null; 
+		}
+		return new IHyperlinkHandler<Pointer<?>, Object>() {
+			@Override
+			public Object hyperlinkActivated(Pointer<?> context) {
+				showPointerOrderDialog();
+				return null;
+			}
+		};
+	}
+
+	protected void showPointerOrderDialog() {
+		PointerOrderDialog dialog = 
+			new PointerOrderDialog(Display.getCurrent().getActiveShell(), prefix);
+		if (dialog.open() == IDialogConstants.CANCEL_ID) {
+			// cancel button pressed
+			return;
+		}
+		ChangePointerOrderCommand command = 
+			new ChangePointerOrderCommand(target, dialog.getDesiredPointerList());
+		commandStack.execute(command);
 	}
 
 }

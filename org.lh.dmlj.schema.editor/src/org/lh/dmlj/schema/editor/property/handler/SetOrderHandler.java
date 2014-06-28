@@ -28,7 +28,7 @@ import org.lh.dmlj.schema.editor.command.ChangeSortKeysCommand;
 import org.lh.dmlj.schema.editor.property.ISetProvider;
 import org.lh.dmlj.schema.editor.property.ui.SetOrderDialog;
 
-public class SetOrderHandler implements IHyperlinkHandler {
+public class SetOrderHandler implements IHyperlinkHandler<EAttribute, Command> {
 
 	private ISetProvider setProvider;	
 	

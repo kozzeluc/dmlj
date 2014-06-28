@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 import org.lh.dmlj.schema.editor.property.handler.LocationModeHandler;
@@ -32,7 +33,7 @@ public class RecordCalcPropertiesSection
 		{SchemaPackage.eINSTANCE.getKey_ElementSummary(),
 		 SchemaPackage.eINSTANCE.getKey_DuplicatesOption()};
 	
-	private IHyperlinkHandler 		  locationModeHandler = 
+	private IHyperlinkHandler<EAttribute, Command> locationModeHandler = 
 		new LocationModeHandler(this);	
 
 	public RecordCalcPropertiesSection() {
@@ -76,7 +77,7 @@ public class RecordCalcPropertiesSection
 	}
 	
 	@Override
-	public IHyperlinkHandler getHyperlinkHandler(EAttribute attribute) {
+	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
 			return locationModeHandler;
 		} else {

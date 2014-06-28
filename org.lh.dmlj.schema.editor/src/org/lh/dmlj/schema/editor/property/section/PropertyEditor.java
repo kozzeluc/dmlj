@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014 Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -180,7 +180,7 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 	private void hyperlinkActivated(EAttribute attribute) {		
 
 		// call the hyperlink handler code to get the Command
-		IHyperlinkHandler handler = section.getHyperlinkHandler(attribute);
+		IHyperlinkHandler<EAttribute, Command> handler = section.getHyperlinkHandler(attribute);
 		Command command = handler.hyperlinkActivated(attribute);
 		
 		// execute the Command on the command stack if not null
