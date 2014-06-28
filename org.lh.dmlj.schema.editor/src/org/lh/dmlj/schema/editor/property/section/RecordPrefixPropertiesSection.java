@@ -105,7 +105,9 @@ public class RecordPrefixPropertiesSection
 	
 	@Override
 	public void dispose() {
-		hyperlinkOnlyPropertyEditor.dispose();
+		if (hyperlinkOnlyPropertyEditor != null) {
+			hyperlinkOnlyPropertyEditor.dispose();
+		}
 	}
 
 	@Override
