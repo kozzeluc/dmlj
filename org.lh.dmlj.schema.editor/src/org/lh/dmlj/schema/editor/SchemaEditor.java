@@ -31,6 +31,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,6 +80,7 @@ import org.eclipse.gef.ui.actions.SelectAllAction;
 import org.eclipse.gef.ui.actions.UndoAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
+import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
@@ -101,10 +103,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
@@ -133,7 +139,7 @@ import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
 
 public class SchemaEditor 
 	extends GraphicalEditorWithFlyoutPalette 
-	implements ITabbedPropertySheetPageContributor {
+	implements CommandStackEventListener, ITabbedPropertySheetPageContributor {
 	
 	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";
 	
@@ -260,24 +266,30 @@ public class SchemaEditor
 		}
 	};
 	
-	private boolean 					editorSaving = false;
-	private SchemaEditorRulerProvider   horizontalRulerProvider;
-	private ModelChangeDispatcher 		modelChangeDispatcher = new ModelChangeDispatcher();
-	private IModelChangeListener		modelChangeListener;
-	private OutlinePage 				outlinePage;
-	private ResourceTracker 			resourceListener = new ResourceTracker();	
-	private RulerComposite				rulerComp;	
-	private Schema 						schema;
-	private SelectionSynchronizer 		selectionSynchronizer;
-	private URI    						uri;
-	private SchemaEditorRulerProvider   verticalRulerProvider;
-	private IResource 	   				workspaceResource;	
-
+	private boolean editorSaving = false;
+	private SchemaEditorRulerProvider horizontalRulerProvider;
+	private ModelChangeDispatcher modelChangeDispatcher = new ModelChangeDispatcher();
+	private IModelChangeListener modelChangeListener;
+	private OutlinePage outlinePage;
+	private PaletteRoot palette;
+	private ResourceTracker resourceListener = new ResourceTracker();	
+	private RulerComposite rulerComp;	
+	private Schema schema;
+	private SelectionSynchronizer selectionSynchronizer;
+	private URI uri;
+	private SchemaEditorRulerProvider verticalRulerProvider;
+	private IResource workspaceResource;
+	
 	public SchemaEditor() {
 		super();
-		setEditDomain(new DefaultEditDomain(this));		
 	}
 	
+	private void activePaletteToolChanged(ToolEntry tool) {
+		ModifiedPaletteViewerProvider paletteViewerProvider = 
+			(ModifiedPaletteViewerProvider) getPaletteViewerProvider();
+		paletteViewerProvider.selectTool(tool);		
+	}
+
 	private void closeEditor(final boolean save) {
 		final Display display = PlatformUI.getWorkbench().getDisplay();        
     	display.asyncExec(new Runnable() {
@@ -291,6 +303,11 @@ public class SchemaEditor
 	public void commandStackChanged(EventObject event) {
 		firePropertyChange(IEditorPart.PROP_DIRTY);
 		super.commandStackChanged(event);
+	}
+	
+	@Override
+	public void stackChanged(CommandStackEvent event) {												
+		modelChangeDispatcher.dispatch(event);				
 	}
 	
 	@Override
@@ -411,13 +428,7 @@ public class SchemaEditor
 		// annotated with @ModelChange should always leave the model in a consistent state after its 
 		// execute(), redo() or undo() method has been called (like any other command actually; the 
 		// annotation is merely used to extract the kind [category] of model change)
-		getCommandStack().addCommandStackEventListener(new CommandStackEventListener() {
-			@Override
-			public void stackChanged(CommandStackEvent event) {												
-				// dispatch the command stack event to our dispatcher:				
-				modelChangeDispatcher.dispatch(event);				
-			}
-		});
+		getCommandStack().addCommandStackEventListener(this);
 		
 		// attach a model change listener to respond to changes to rulers&guides, grid visibility 
 		// and zoom level
@@ -533,10 +544,20 @@ public class SchemaEditor
 	    rulerComp.setGraphicalViewer(graphicalViewer);
 	}
 	
+	@Override
+	protected PaletteViewerProvider createPaletteViewerProvider() {
+		return new ModifiedPaletteViewerProvider(this);
+	}
+	
 	public void dispose() {
-		modelChangeDispatcher.removeModelChangeListener(modelChangeListener);
+		getCommandStack().removeCommandStackEventListener(this);
+		ModifiedPaletteViewerProvider paletteViewerProvider = 
+			(ModifiedPaletteViewerProvider) getPaletteViewerProvider();
+		paletteViewerProvider.dispose(); 
+		hookActivePaletteViewerToEditDomain();		
 		verticalRulerProvider.dispose();
 		horizontalRulerProvider.dispose();
+		modelChangeDispatcher.dispose();
 		getSite().getWorkbenchWindow().getPartService()
 				.removePartListener(partListener);
 		partListener = null;
@@ -609,6 +630,15 @@ public class SchemaEditor
 		firePropertyChange(PROP_INPUT);
 	}
 
+	void fireActivePaletteToolChanged(SchemaEditor source, ToolEntry tool) {
+		Assert.isTrue(source == this, "event fired by another editor, this is NOT expected");
+		for (SchemaEditor anEditor : getAllEditorsForInput(getEditorInput())) {
+			if (anEditor != source) {
+				anEditor.activePaletteToolChanged(tool);
+			}
+		}
+	}
+
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class type) {
 		
 		if (type == ZoomManager.class) {
@@ -623,6 +653,7 @@ public class SchemaEditor
 			// the command stack is accessible by anybody else but only for executing commands -
 			// implementing the IModelChangeListener is the preferred way to catch up with model 
 			// changes
+			Assert.isNotNull(getEditDomain(), "edit domain not yet set");
 			return getCommandStack();
 		} else if (type == GraphicalViewer.class) {
 			return getGraphicalViewer();
@@ -631,19 +662,61 @@ public class SchemaEditor
 		} else if (type == ActionRegistry.class) {
 			return getActionRegistry();
 		} else if (type == DefaultEditDomain.class) {
+			Assert.isNotNull(getEditDomain(), "edit domain not yet set");
 			return getEditDomain();
 		} else if (type == SelectionSynchronizer.class) {
 			return getSelectionSynchronizer();
 		}
 
 		return super.getAdapter(type);
-	}	
+	}
+	
+	private List<SchemaEditor> getAllEditorsForInput(IEditorInput editorInput) {
+		List<SchemaEditor> editors = new ArrayList<>();
+		for (IWorkbenchWindow workbenchWindow : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+			for (IWorkbenchPage workbenchPage : workbenchWindow.getPages()) {
+				for (IEditorReference editorReference : workbenchPage.getEditorReferences()) {					
+					try {
+						if (editorReference.getEditorInput().equals(editorInput)) {
+							SchemaEditor schemaEditor = (SchemaEditor) editorReference.getEditor(true);
+							if (schemaEditor != null) {
+								editors.add(schemaEditor);
+							}
+						}
+					} catch (PartInitException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}
+		return editors;
+	}
+
+	private SchemaEditor getFirstEditorForSameInput(IEditorInput editorInput) {
+		for (IWorkbenchWindow workbenchWindow : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+			for (IWorkbenchPage workbenchPage : workbenchWindow.getPages()) {
+				for (IEditorReference editorReference : workbenchPage.getEditorReferences()) {					
+					try {
+						if (editorReference.getEditorInput().equals(editorInput)) {
+							SchemaEditor schemaEditor = (SchemaEditor) editorReference.getEditor(true);
+							if (schemaEditor != null && schemaEditor != this) {
+								return schemaEditor;
+							}
+						}
+					} catch (PartInitException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}
+		return null;
+	}
 	
 	@Override
 	public String getContributorId() {
 		return getSite().getId();
 	}
-	
+
 	@Override
 	protected Control getGraphicalControl() {
 		return rulerComp;
@@ -651,7 +724,18 @@ public class SchemaEditor
 	
 	@Override
 	protected PaletteRoot getPaletteRoot() {
-		PaletteRoot palette = new PaletteRoot();
+		
+		if (palette != null) {
+			return palette;
+		}
+		
+		SchemaEditor firstEditorForSameInput = getFirstEditorForSameInput(getEditorInput());		
+		if (firstEditorForSameInput != null) {
+			palette = firstEditorForSameInput.palette;
+			return palette;
+		}
+		
+		palette = new PaletteRoot();
         
         // selection tool
 		ToolEntry tool = new PanningSelectionToolEntry();
@@ -777,10 +861,37 @@ public class SchemaEditor
 		return selectionSynchronizer;
 	}
 
+	private void hookActivePaletteViewerToEditDomain() {
+		// unless the workbench is closing, we need to make sure that editors for the same diagram
+		// (editor input) have a functioning palette; we need to hook an active palette viewer to 
+		// the edit domain 
+		if (!PlatformUI.getWorkbench().isClosing()) {
+			SchemaEditor editor = getFirstEditorForSameInput(getEditorInput()); 
+			if (editor != null) {
+				((ModifiedPaletteViewerProvider) editor.getPaletteViewerProvider()).hookPaletteViewer();
+			}			
+		}
+	}
+
 	@Override
 	protected void initializeGraphicalViewer() {		
 		super.initializeGraphicalViewer();
 		getGraphicalViewer().setContents(schema);		
+	}
+	
+	@Override
+	public boolean isDirty() {
+		// if the workbench is NOT closing, refer to the super's method
+		if (!PlatformUI.getWorkbench().isClosing()) {			
+			return super.isDirty();
+		}
+		// make sure we get to see exactly 1 line if the editor is dirty, and not more
+		List<SchemaEditor> openEditors = getAllEditorsForInput(getEditorInput());
+		if (openEditors.isEmpty() || openEditors.get(0) == this) {
+			return super.isDirty();
+		} else {
+			return false;
+		}
 	}
 	
 	@Override
@@ -869,12 +980,20 @@ public class SchemaEditor
 			return;
 		}
 		
-		ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry()
-		   		   .getExtensionToFactoryMap()
-		   		   .put("schema", new XMIResourceFactoryImpl());
-		Resource resource = resourceSet.getResource(uri, true);
-		schema = (Schema)resource.getContents().get(0);	
+		SchemaEditor firstEditorForSameInput = getFirstEditorForSameInput(input);		
+		if (firstEditorForSameInput != null) {
+			setEditDomain(firstEditorForSameInput.getEditDomain());
+			schema = firstEditorForSameInput.getSchema();
+		} else {
+			setEditDomain(new DefaultEditDomain(null));
+			ResourceSet resourceSet = new ResourceSetImpl();
+			resourceSet.getResourceFactoryRegistry()
+			   		   .getExtensionToFactoryMap()
+			   		   .put("schema", new XMIResourceFactoryImpl());
+			Resource resource = resourceSet.getResource(uri, true);
+			schema = (Schema)resource.getContents().get(0);	
+		}
+			
 		if (!editorSaving) {
 			if (outlinePage != null) {
 				outlinePage.setSchema(schema);

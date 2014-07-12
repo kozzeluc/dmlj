@@ -74,11 +74,11 @@ public class SchemaEditPart
 	}
 	
 	@Override
-	public final void activate() {
-		super.activate();
+	public final void addNotify() {
+		super.addNotify();
 		modelChangeProvider.addModelChangeListener(this);
 	}
-	
+
 	@Override
 	public void afterAddItem(EObject owner, EReference reference, Object item) {
 		
@@ -249,14 +249,18 @@ public class SchemaEditPart
 				if (entry.getKey() instanceof ConnectionLabel) {
 					// set label edit part...
 					ConnectionLabel connectionLabel = (ConnectionLabel) entry.getKey();
-					if (connectionLabel.getMemberRole().getSet() == null) {
+					if (connectionLabel.getMemberRole().getSet() == null ||
+						connectionLabel.getMemberRole().getSet() == set) {
+						
 						// ... that is involved
 						setDescriptionEditParts.add((EditPart) entry.getValue());
 					}
 				} else if (entry.getKey() instanceof ConnectionPart) {
 					// set connection edit part...					
 					ConnectionPart connectionPart = (ConnectionPart) entry.getKey();
-					if (connectionPart.getMemberRole().getSet() == null) {
+					if (connectionPart.getMemberRole().getSet() == null ||
+						connectionPart.getMemberRole().getSet() == set) {
+						
 						// ... that is involved
 						SetEditPart setEditPart = (SetEditPart) entry.getValue();
 						MemberRole memberRole = setEditPart.getMemberRole();
@@ -411,12 +415,6 @@ public class SchemaEditPart
 	}
 	
 	@Override
-	public final void deactivate() {
-		modelChangeProvider.removeModelChangeListener(this);
-		super.deactivate();
-	}
-	
-	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 	    if (adapter == SnapToHelper.class) {
 	        // make sure we can snap figures to the grid, guides and geometry
@@ -495,6 +493,13 @@ public class SchemaEditPart
 		}
 		
 		return allObjects;
+	}
+
+	@Override
+	public final void removeNotify() {		
+		// note: this method doesn't seem to be called at all
+		modelChangeProvider.removeModelChangeListener(this);
+		super.removeNotify();
 	}
 	
 }

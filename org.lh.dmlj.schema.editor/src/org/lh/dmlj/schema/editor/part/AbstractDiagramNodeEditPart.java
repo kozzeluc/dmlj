@@ -69,13 +69,14 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		super();
 		setModel(diagramNode);
 		this.modelChangeProvider = modelChangeProvider;
+		modelChangeProvider.addModelChangeListener(this);
 	}
 	
 	@Override
-	public void activate() {
-		super.activate();
-		modelChangeProvider.addModelChangeListener(this);
-	}	
+	public void addNotify() {
+		super.addNotify();
+		modelChangeProvider.addModelChangeListener(this);		
+	}
 
 	@Override
 	public void afterAddItem(EObject owner, EReference reference, Object item) {
@@ -131,12 +132,6 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	}	
 
 	@Override
-	public void deactivate() {
-		modelChangeProvider.removeModelChangeListener(this);
-		super.deactivate();
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public final T getModel() {
 		return (T) super.getModel();
@@ -169,6 +164,14 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	}	
 	
 	protected void refreshConnections() {
+	}
+
+	@Override
+	public void removeNotify() {
+		// note: this method is NOT invoked when the editor is closed (i.e. when the viewer is 
+		//disposed)
+		modelChangeProvider.removeModelChangeListener(this);
+		super.removeNotify();
 	}
 
 	@Override

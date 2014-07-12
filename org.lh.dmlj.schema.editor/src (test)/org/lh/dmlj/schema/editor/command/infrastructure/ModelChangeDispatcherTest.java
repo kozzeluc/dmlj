@@ -1195,6 +1195,53 @@ public class ModelChangeDispatcherTest {
 		
 	}
 	
+	@Test
+	public void testDisposed() {
+		
+		ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();
+		
+		dispatcher.dispose();
+		
+		try {
+			dispatcher.addModelChangeListener(null);
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: model change dispatcher is disposed", e.getMessage());
+		}
+		
+		try {
+			dispatcher.dispatch(null);
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: model change dispatcher is disposed", e.getMessage());
+		}
+		
+		try {
+			dispatcher.dispose();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: model change dispatcher is already disposed", e.getMessage());
+		}
+		
+		try {
+			dispatcher.dispatch(null);
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: model change dispatcher is disposed", e.getMessage());
+		}
+		
+		assertTrue(dispatcher.isDisposed());
+		
+		try {
+			dispatcher.removeModelChangeListener(null);
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: model change dispatcher is disposed", e.getMessage());
+		}
+		
+		
+	}
+	
 	@ModelChange(category=ADD_ITEM)
 	private static class AddItemCommand extends Command {
 		

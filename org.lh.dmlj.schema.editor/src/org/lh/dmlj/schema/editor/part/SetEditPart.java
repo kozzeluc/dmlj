@@ -97,11 +97,11 @@ public class SetEditPart
 	}
 	
 	@Override
-	public final void activate() {
-		super.activate();
+	public void addNotify() {
+		super.addNotify();
 		modelChangeProvider.addModelChangeListener(this);
-	}	
-	
+	}
+
 	@Override
 	public void afterAddItem(EObject owner, EReference reference, Object item) {
 		if (owner == getModel() &&
@@ -135,6 +135,12 @@ public class SetEditPart
 			 isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLocation_Y()))) {
 			
 			// a bendpoint was moved
+			refreshVisuals();
+		} else if (owner == getModel() &&
+				   (isFeatureSet(features, SchemaPackage.eINSTANCE.getConnectionPart_SourceEndpointLocation()) ||
+					isFeatureSet(features, SchemaPackage.eINSTANCE.getConnectionPart_TargetEndpointLocation()))) {
+			
+			// an endpoint was moved
 			refreshVisuals();
 		}
 	}
@@ -196,12 +202,6 @@ public class SetEditPart
         connection.setToolTip(tooltip);
 		
 		return connection;		
-	}
-	
-	@Override
-	public final void deactivate() {
-		modelChangeProvider.removeModelChangeListener(this);			 
-		super.deactivate();
 	}
 	
 	public MemberRole getMemberRole() {
@@ -285,6 +285,14 @@ public class SetEditPart
 		getConnectionFigure().setRoutingConstraint(bendpoints);
 		
 		refreshBendpointEditPolicy();
+	}
+
+	@Override
+	public void removeNotify() {
+		// note: this method is NOT invoked when the editor is closed (i.e. when the viewer is 		
+		//disposed)
+		modelChangeProvider.removeModelChangeListener(this);			 
+		super.removeNotify();
 	}	
 	
 }

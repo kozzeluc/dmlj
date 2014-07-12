@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -48,9 +48,10 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	
 	public enum Availability {MANDATORY, OPTIONAL};	
 	
-	private boolean					   dispatching = false;
+	private boolean	dispatching = false;
+	private boolean disposed = false;
 	private List<IModelChangeListener> listeners = new ArrayList<>();
-	private Set<IModelChangeListener>  obsoleteListeners = new HashSet<>();
+	private Set<IModelChangeListener> obsoleteListeners = new HashSet<>();
 
 	private static <T extends Annotation> Field getAnnotatedField(
 		Object object, 
@@ -245,6 +246,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	}
 	
 	public void addModelChangeListener(IModelChangeListener listener) {
+		Assert.isTrue(!isDisposed(), "model change dispatcher is disposed");
 		if (!listeners.contains(listener)) {
 			// avoid notifying the same listener twice
 			listeners.add(listener);
@@ -280,6 +282,8 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	
 	@SuppressWarnings("unchecked")
 	public void dispatch(CommandStackEvent event) {		
+		
+		Assert.isTrue(!isDisposed(), "model change dispatcher is disposed");
 		
 		// log every event when in debug mode
 		StringBuilder debugMessage = new StringBuilder();
@@ -417,6 +421,19 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		
 	}
 	
+	public void dispose() {
+		// we provide this method because when a diagram editor is closed, the graphical edit parts
+		// will not have the opportunity to remove themselves as a listener because their 
+		// removeNotify() method will not be called; calling dispose() on the model change 
+		// dispatcher clears all listeners, which is good enough for us
+		Assert.isTrue(!isDisposed(), "model change dispatcher is already disposed");
+		Assert.isTrue(!dispatching, "shouldn't be invoked when dispatching");
+		listeners.clear();
+		disposed = true;
+		logDebug("Model change dispatcher was disposed; the listener count is now " + 
+				 listeners.size());
+	}
+
 	IModelChangeNotifier getAddOrRemoveItemNotifier(
 		Command command,
 		ModelChangeCategory category,
@@ -576,6 +593,10 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		
 	}
 	
+	public boolean isDisposed() {
+		return disposed;
+	}
+	
 	private boolean isExecuteOrRedo(int eventDetail) {
 		if (eventDetail == CommandStack.PRE_EXECUTE ||
 			eventDetail == CommandStack.PRE_REDO ||
@@ -598,6 +619,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	}
 
 	public void removeModelChangeListener(IModelChangeListener listener) {
+		Assert.isTrue(!isDisposed(), "model change dispatcher is disposed");
 		// when dispatching, the listener-to-be-removed should be put on the obsolete listeners  
 		// list; it can be removed immediately from the listener list however
 		if (dispatching) {
