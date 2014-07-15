@@ -1,5 +1,9 @@
 package org.lh.dmlj.schema.editor.template;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import org.lh.dmlj.schema.*;
 
 public class SetTemplate
@@ -52,7 +56,7 @@ public class SetTemplate
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -75,7 +79,11 @@ This template will generate a set's DDL syntax.
   
 See SetTemplateTest for a JUnit testcase.
 */
-Set set = (Set)argument;
+
+Object[] args = ((List<?>) argument).toArray();
+Set set = (Set) args[0];
+boolean sortSchemaEntities = ((Boolean) args[1]).booleanValue();
+
 String setName;
 if (set.getName().endsWith("_")) {
 	setName = set.getName().substring(0, set.getName().length() - 1);
@@ -211,7 +219,15 @@ if (set.getOwner() != null) {
     
     }
 }
-for (MemberRole memberRole : set.getMembers()) {
+List<MemberRole> memberRoles = new ArrayList<>(set.getMembers());
+if (sortSchemaEntities) {
+	Collections.sort(memberRoles, new Comparator<MemberRole>() {
+		public int compare(MemberRole m1, MemberRole m2) {
+			return m1.getRecord().getName().compareTo(m2.getRecord().getName());
+		}
+	});
+}
+for (MemberRole memberRole : memberRoles) {
     String recordName;
     if (memberRole.getRecord().getName().endsWith("_")) {
         StringBuilder p = new StringBuilder(memberRole.getRecord().getName()); 

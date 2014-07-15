@@ -37,6 +37,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// import preferences...
 		store.setDefault(PreferenceConstants.COMPRESSION_PROCEDURES, "IDMSCOMP");
 		
+		// export preferences
+		store.setDefault(PreferenceConstants.SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX, false);
+		
 		// printing preferences; margins are stored in pels (logical pixels; 72 pels == 1 inch)...
 		store.setDefault(PreferenceConstants.TOP_MARGIN, 0);
 		store.setDefault(PreferenceConstants.BOTTOM_MARGIN, 0);	

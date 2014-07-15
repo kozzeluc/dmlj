@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,10 +22,10 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
@@ -34,13 +34,16 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.template.SchemaTemplate;
 
 public class ExportWizard extends Wizard implements IExportWizard {
 
+	private ExportOptionsPage exportOptionsPage;
 	private OutputFileSelectionPage outputFileSelectionPage;
-	private SchemaSelectionPage 	schemaSelectionPage;
-	private IStructuredSelection 	selection;
+	private SchemaSelectionPage schemaSelectionPage;
+	private IStructuredSelection selection;
 	
 	private static String rtrim(String line) {
 		StringBuilder p = new StringBuilder(line);
@@ -61,6 +64,8 @@ public class ExportWizard extends Wizard implements IExportWizard {
 		addPage(schemaSelectionPage);
 		outputFileSelectionPage = new OutputFileSelectionPage();
 		addPage(outputFileSelectionPage);
+		exportOptionsPage = new ExportOptionsPage();
+		addPage(exportOptionsPage);
 	}
 
 	@Override
@@ -72,7 +77,9 @@ public class ExportWizard extends Wizard implements IExportWizard {
 	public boolean performFinish() {
 		
 		Schema schema = schemaSelectionPage.getSchema();
-		File file = outputFileSelectionPage.getFile();
+		File file = outputFileSelectionPage.getFile();		
+		boolean sortSchemaEntities = exportOptionsPage.isSortSchemaEntities();
+		storeSortSchemaEntitiesInPreferenceStore(sortSchemaEntities);
 		
 		if (file.exists()) {
 			String title = "Overwrite file ?";
@@ -90,10 +97,9 @@ public class ExportWizard extends Wizard implements IExportWizard {
 		// generate the schema syntax (no busy cursor needed since this is lightning fast)
 		try {
 			SchemaTemplate template = new SchemaTemplate();
-			List<Object> args = new ArrayList<Object>();
-			args.add(schema);
-			args.add(Boolean.TRUE);	// full syntax
-			String syntax = template.generate(args); 
+			String syntax = 
+				template.generate(Arrays.asList(new Object[] {schema, Boolean.TRUE, 
+															  Boolean.valueOf(sortSchemaEntities)})); 
 			// remove trailing spaces...
 			PrintWriter out = new PrintWriter(new FileWriter(file));
 			
@@ -109,6 +115,7 @@ public class ExportWizard extends Wizard implements IExportWizard {
 			in.close();
 			
 		} catch (Throwable t) {
+			t.printStackTrace();
 			String title = "Error";
 			String p = t.getMessage() != null ? " (" + t.getMessage() + ")": "";
 			String message = "An error occurred: " + 
@@ -145,6 +152,15 @@ public class ExportWizard extends Wizard implements IExportWizard {
         
         return true;
         
+	}
+
+	private void storeSortSchemaEntitiesInPreferenceStore(boolean newValue) {
+		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		boolean oldValue = 
+			store.getBoolean(PreferenceConstants.SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX);
+		if (newValue != oldValue) {
+			store.setValue(PreferenceConstants.SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX, newValue);
+		}
 	}
 
 }

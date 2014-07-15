@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,8 +17,7 @@
 package org.lh.dmlj.schema.editor.property.section;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -55,28 +54,27 @@ public abstract class AbstractSyntaxSection
 		throw new Error("no template object");
 	}	
 	
-	protected Object[] getTemplateParameters() {
+	protected Object[] getTemplateParametersOtherThanTemplateObject() {
 		return new Object[] {};
 	}
 	
 	@Override
 	protected String getValue(Object editPartModelObject) {
 		EObject templateObject = getTemplateObject(editPartModelObject);
-		Object[] templateParameters = getTemplateParameters();
+		Object[] templateParametersOtherThanTemplateObject = 
+			getTemplateParametersOtherThanTemplateObject();
 		String syntax;
 		try {
-			if (templateParameters == null || templateParameters.length == 0) {
-				syntax = (String) generateMethod.invoke(template, templateObject);
-			} else {
-				List<Object> args = new ArrayList<Object>();
-				args.add(templateObject);
-				if (templateParameters != null && templateParameters.length > 0) {
-					for (Object templateParameter : templateParameters) {
-						args.add(templateParameter);
-					}
-				}
-				syntax = (String) generateMethod.invoke(template, args);
-			}			
+			int argsLength = templateParametersOtherThanTemplateObject != null ? 
+							 templateParametersOtherThanTemplateObject.length + 1 : 1; 
+			Object args[] = new Object[argsLength];
+			args[0] = templateObject;
+			if (templateParametersOtherThanTemplateObject != null && 
+				templateParametersOtherThanTemplateObject.length > 0) {
+				
+				System.arraycopy(templateParametersOtherThanTemplateObject, 0, args, 1, argsLength - 1);
+			}
+			syntax = (String) generateMethod.invoke(template, Arrays.asList(args));						
 		} catch (Throwable t) {
 			t.printStackTrace();
 			syntax = "an error occurred while generating the DDL: " + 

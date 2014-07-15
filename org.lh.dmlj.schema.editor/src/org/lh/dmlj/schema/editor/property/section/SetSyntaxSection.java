@@ -34,7 +34,7 @@ public class SetSyntaxSection extends AbstractSyntaxSection {
 	public SetSyntaxSection() {
 		super(VALID_EDIT_PART_MODEL_OBJECTS, new SetTemplate());				
 	}
-
+	
 	@Override
 	protected EObject getTemplateObject(Object editPartModelObject) {		
 		// the template object is the edit part model object's set
@@ -61,6 +61,11 @@ public class SetSyntaxSection extends AbstractSyntaxSection {
 			SystemOwner systemOwner = (SystemOwner) editPartModelObject;
 			return systemOwner.getSet();
 		}		
+	}
+
+	@Override
+	protected Object[] getTemplateParametersOtherThanTemplateObject() {
+		return new Object[] {Boolean.FALSE};
 	}
 
 }

@@ -17,7 +17,8 @@ public class Syntax {
 	Syntax(Schema schema) {
 		super();
 		SchemaTemplate template = new SchemaTemplate();
-		String syntax = template.generate(Arrays.asList(new Object[] {schema}));
+		String syntax = 
+			template.generate(Arrays.asList(new Object[] {schema, Boolean.TRUE, Boolean.FALSE}));
 		try {
 			BufferedReader in = new BufferedReader(new StringReader(syntax));
 			for (String line = in.readLine(); line != null; line = in.readLine()) {

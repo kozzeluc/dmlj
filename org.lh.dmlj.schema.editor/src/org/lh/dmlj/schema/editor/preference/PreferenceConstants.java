@@ -39,4 +39,7 @@ public abstract class PreferenceConstants {
 	public static final String SNAP_TO_GRID = "snapToGrid";
 	public static final String SNAP_TO_GEOMETRY = "snapToGeometry";
 	
+	public static final String SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX = 
+		"sortSchemaEntitiesOnExportToSyntax";
+	
 }

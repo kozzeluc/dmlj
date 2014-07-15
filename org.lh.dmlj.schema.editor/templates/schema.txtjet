@@ -1,6 +1,6 @@
 <%
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,20 +16,18 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet package="org.lh.dmlj.schema.editor.template" imports="java.util.List org.lh.dmlj.schema.*" class="SchemaTemplate"%>
+<%@ jet package="org.lh.dmlj.schema.editor.template" imports="java.util.Arrays java.util.List java.util.ArrayList java.util.Collections org.lh.dmlj.schema.*" class="SchemaTemplate"%>
 <%
 
 /*
 This template will generate a schema's DDL syntax.
 */
 
-@SuppressWarnings("unchecked")
-List<Object> args = (List<Object>) argument;
-Schema schema = (Schema) args.get(0);
-boolean fullSyntax = true;
-if (args.size() > 1) {  
-	fullSyntax = ((Boolean) args.get(1)).booleanValue();
-}
+Object[] args = ((List<?>) argument).toArray();
+Schema schema = (Schema) args[0];
+boolean fullSyntax = ((Boolean) args[1]).booleanValue();
+boolean sortSchemaEntities = ((Boolean) args[2]).booleanValue();
+
 String description = schema.getDescription();
 String memoDate = schema.getMemoDate();
 %>
@@ -85,22 +83,35 @@ for (String line : schema.getComments()) {
 <%
 if (fullSyntax) {
 	AreaTemplate areaTemplate = new AreaTemplate();
-	for (SchemaArea area : schema.getAreas()) {    
-    	String syntax = areaTemplate.generate(area);
+	List<SchemaArea> areaList = new ArrayList<>(schema.getAreas());
+	if (sortSchemaEntities) {
+	    Collections.sort(areaList);
+	}
+	for (SchemaArea area : areaList) {    
+    	String syntax = areaTemplate.generate(Arrays.asList(new Object[] {area, Boolean.valueOf(sortSchemaEntities)}));
 %>
 <%= syntax %>
 <%
 	} 
-	RecordTemplate recordTemplate = new RecordTemplate();
-	for (SchemaRecord record : schema.getRecords()) {    
-    	String syntax = recordTemplate.generate(record);
+	RecordTemplate recordTemplate = new RecordTemplate();	
+	List<SchemaRecord> recordList = new ArrayList<>(schema.getRecords());
+	if (sortSchemaEntities) {
+	    Collections.sort(recordList);
+	}
+	for (SchemaRecord record : recordList) {
+	    String syntax = 
+	    	recordTemplate.generate(Arrays.asList(new Object[] {record, Boolean.valueOf(sortSchemaEntities)}));
 %>
 <%= syntax %>         
 <%
 	}
 	SetTemplate setTemplate = new SetTemplate();
-	for (Set set : schema.getSets()) {    
-    	String syntax = setTemplate.generate(set);
+	List<Set> setList = new ArrayList<>(schema.getSets());
+	if (sortSchemaEntities) {
+	    Collections.sort(setList);
+	}
+	for (Set set : setList) {    
+    	String syntax = setTemplate.generate(Arrays.asList(new Object[] {set, Boolean.valueOf(sortSchemaEntities)}));
 %>
 <%= syntax %>         
 <%

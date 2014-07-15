@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,8 +29,9 @@ public class SchemaSyntaxSection extends AbstractSyntaxSection {
 	}
 	
 	@Override
-	protected Object[] getTemplateParameters() {
-		return new Object[] {Boolean.FALSE}; // no full syntax
+	protected Object[] getTemplateParametersOtherThanTemplateObject() {
+		return new Object[] {Boolean.FALSE,		// no full syntax 
+							 Boolean.FALSE}; 	// schema entities NOT sorted
 	}
 	
 }

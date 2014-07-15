@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,7 +26,12 @@ public class RecordSyntaxSection extends AbstractSyntaxSection {
 	
 	public RecordSyntaxSection() {
 		super(VALID_EDIT_PART_MODEL_OBJECTS, new RecordTemplate());
-	}	
+	}
+	
+	@Override
+	protected Object[] getTemplateParametersOtherThanTemplateObject() {
+		return new Object[] {Boolean.FALSE};
+	}
 	
 	// if we ever want to provide tooltips for the elements in the syntax, the
 	// following method is a good start...

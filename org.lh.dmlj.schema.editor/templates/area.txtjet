@@ -1,6 +1,6 @@
 <%
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,7 +22,12 @@
 /*
 This template will generate an area's DDL syntax.
 */
-SchemaArea area = (SchemaArea)argument;
+
+Object[] args = ((List<?>) argument).toArray();
+SchemaArea area = (SchemaArea) args[0];
+@SuppressWarnings("unused")
+boolean sortSchemaEntities = ((Boolean) args[1]).booleanValue();
+
 Map<String, List<String>> subareas = new LinkedHashMap<>();
 Map<String, List<String>> displacements = new LinkedHashMap<>();
 Map<String, List<String>> indexes = new LinkedHashMap<>();

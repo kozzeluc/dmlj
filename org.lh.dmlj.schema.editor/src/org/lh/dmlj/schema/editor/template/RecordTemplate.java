@@ -66,7 +66,7 @@ public class RecordTemplate
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -86,7 +86,7 @@ public class RecordTemplate
 
 /*
 This template will generate a record's DDL syntax.  Currently these issues 
-exist :
+exist when entities are NOT sorted:
 
 - The order in which the "OWNER OF SET" clauses are generated is in most cases  
   the same as the order in the schema compiler's output.
@@ -98,7 +98,10 @@ exist :
 See RecordTemplateTest for a JUnit testcase.
 */
 
-SchemaRecord record = (SchemaRecord)argument;
+Object[] args = ((List<?>) argument).toArray();
+SchemaRecord record = (SchemaRecord) args[0];
+boolean sortSchemaEntities = ((Boolean) args[1]).booleanValue();
+
 String recordName;
 if (record.getName().endsWith("_")) {
 	recordName = 
@@ -264,7 +267,15 @@ if (symbolicSubareaName != null) {
     stringBuffer.append( areaName );
     
 }
-for (OwnerRole role : record.getOwnerRoles()) {
+List<OwnerRole> ownerRoles = new ArrayList<>(record.getOwnerRoles());
+if (sortSchemaEntities) {
+	Collections.sort(ownerRoles, new Comparator<OwnerRole>() {
+		public int compare(OwnerRole o1, OwnerRole o2) {
+			return o1.getSet().getName().compareTo(o2.getSet().getName());
+		}
+	});
+}
+for (OwnerRole role : ownerRoles) {
     String setName;
     if (role.getSet().getName().endsWith("_")) {
         setName = 
@@ -292,11 +303,11 @@ for (MemberRole role : record.getMemberRoles()) {
 if (record.getSchema().getName().equals("IDMSNTWK") &&
     record.getSchema().getVersion() == 1 ||
     record.getSchema().getName().equals("EMPSCHM") &&
-    record.getSchema().getVersion() == 100) {
+    record.getSchema().getVersion() == 100 ||
+    sortSchemaEntities) {
 
-    // only sort the "member of" comments for schemas other than IDMSNTWK 
-    // version 1 and EMPSCHM version 100; not sure if we get away with this for
-    // all schemas though    
+    // always sort the "member of" comments for all schemas other than IDMSNTWK version 1 and 
+    // EMPSCHM version 100, unless the user explicitly requested to sort schema entities
 	Collections.sort(setNames);
 }
 MemberRole[] memberRoles = new MemberRole[setNames.size()];
