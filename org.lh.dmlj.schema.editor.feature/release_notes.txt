@@ -1,3 +1,9 @@
+As of version 1.5.0
+===================
+- Changes can easily be tracked in the GIT repository (https://github.com/kozzeluc/dmlj); there is 
+  NO need to duplicate things here any longer.
+
+
 Version 1.4.0
 =============
 - Added functionality to add and delete indexes (palette contains new index icon).
