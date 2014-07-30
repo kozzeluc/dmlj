@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.lh.dmlj.schema.editor.preference.ImportPage"
+            class="org.lh.dmlj.schema.editor.dictionary.tools.DictionaryPreferencePage"
+            id="org.lh.dmlj.schema.editor.dictionary.tools.page"
+            name="Dictionary">
+      </page>
+   </extension>
+
+</plugin>
