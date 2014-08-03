@@ -5,9 +5,15 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.lh.dmlj.schema.editor.preference.ImportPage"
-            class="org.lh.dmlj.schema.editor.dictionary.tools.DictionaryPreferencePage"
-            id="org.lh.dmlj.schema.editor.dictionary.tools.page"
+            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.DictionaryPreferencePage"
+            id="org.lh.dmlj.schema.editor.dictionary.tools.main.page"
             name="Dictionary">
+      </page>
+      <page
+            category="org.lh.dmlj.schema.editor.dictionary.tools.main.page"
+            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.DriverInformationPage"
+            id="org.lh.dmlj.schema.editor.dictionary.tools.driver.page"
+            name="Driver information">
       </page>
    </extension>
 
