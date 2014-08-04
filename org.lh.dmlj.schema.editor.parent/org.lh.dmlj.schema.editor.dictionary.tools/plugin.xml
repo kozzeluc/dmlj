@@ -13,7 +13,7 @@
             category="org.lh.dmlj.schema.editor.dictionary.tools.main.page"
             class="org.lh.dmlj.schema.editor.dictionary.tools.preference.DriverInformationPage"
             id="org.lh.dmlj.schema.editor.dictionary.tools.driver.page"
-            name="Driver information">
+            name="Driver">
       </page>
    </extension>
 
