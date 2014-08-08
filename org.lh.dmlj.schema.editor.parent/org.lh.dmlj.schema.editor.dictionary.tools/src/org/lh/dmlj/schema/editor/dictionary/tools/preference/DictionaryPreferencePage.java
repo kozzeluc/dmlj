@@ -16,28 +16,79 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.preference;
 
+import java.io.File;
+import java.util.List;
+
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
+import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
-public class DictionaryPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class DictionaryPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	
 	private Table table;
-	private Text text;
+	private Text textDefaultSchema;
+	private Button btnAddDictionary;
+	private Button btnDeleteDictionary;
+	private Button btnEditDictionary;
+	private Button btnTestConnection;
+	
+	private File dictionaryFolder;
+	private List<Dictionary> dictionaries;
 
 	public DictionaryPreferencePage() {
 		super();
 		setDescription("Dictionary settings:");
+	}
+
+	private void addDictionary() {
+		EditDictionaryDialog dialog = new EditDictionaryDialog(getShell(), null);
+		if (dialog.open() == IDialogConstants.CANCEL_ID) {
+			return;
+		}
+		Dictionary dictionary;
+		try {
+			dictionary = Dictionary.newInstance(dictionaryFolder);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			MessageDialog.openError(getShell(), "Error while preparing new dictionary", 
+									t.getMessage());
+			return;
+		}
+		dictionary.setId(dialog.getDictionaryId());
+		dictionary.setHostname(dialog.getDictionaryHostname());
+		dictionary.setPort(dialog.getDictionaryPort());
+		dictionary.setDictname(dialog.getDictionaryDictname());
+		dictionary.setUser(dialog.getDictionaryUser());
+		dictionary.setPassword(dialog.getDictionaryPassword());
+		dictionary.setSchema(dialog.getDictionarySchema());
+		try {
+			dictionary.toFile(dictionaryFolder);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			MessageDialog.openError(getShell(), "Error while saving dictionary data", 
+									t.getMessage());
+		}
+		initializeTable(dictionary);
+		enableAndDisable();
 	}
 
 	@Override
@@ -52,45 +103,62 @@ public class DictionaryPreferencePage extends PreferencePage implements
 		lblDefinedDictionaries.setText("Dictionaries from which you want to import items:");
 		
 		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				enableAndDisable();
+			}
+		});
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 4));
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
 		TableColumn tblclmnId = new TableColumn(table, SWT.NONE);
-		tblclmnId.setWidth(75);
+		tblclmnId.setWidth(250);
 		tblclmnId.setText("Id");
 		
-		TableColumn tblclmnHostname = new TableColumn(table, SWT.NONE);
-		tblclmnHostname.setWidth(75);
-		tblclmnHostname.setText("Host:port");
+		btnAddDictionary = new Button(container, SWT.NONE);
+		btnAddDictionary.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addDictionary();
+			}
+		});
+		btnAddDictionary.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
+		btnAddDictionary.setText("Add...");
 		
-		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn.setWidth(75);
-		tblclmnNewColumn.setText("DICTNAME");
+		btnDeleteDictionary = new Button(container, SWT.NONE);
+		btnDeleteDictionary.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				deleteDictionary();
+			}
+		});
+		btnDeleteDictionary.setEnabled(false);
+		btnDeleteDictionary.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1));
+		btnDeleteDictionary.setText("Delete");
 		
-		TableColumn tblclmnSchema = new TableColumn(table, SWT.NONE);
-		tblclmnSchema.setWidth(75);
-		tblclmnSchema.setText("Schema");
+		btnEditDictionary = new Button(container, SWT.NONE);
+		btnEditDictionary.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				editDictionary();
+			}
+		});
+		btnEditDictionary.setEnabled(false);
+		btnEditDictionary.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1));
+		btnEditDictionary.setText("Edit...");
 		
-		Button btnNewButton_3 = new Button(container, SWT.NONE);
-		btnNewButton_3.setEnabled(false);
-		btnNewButton_3.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, true, 1, 1));
-		btnNewButton_3.setText("Add...");
-		
-		Button btnNewButton_2 = new Button(container, SWT.NONE);
-		btnNewButton_2.setEnabled(false);
-		btnNewButton_2.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1));
-		btnNewButton_2.setText("Delete");
-		
-		Button btnNewButton = new Button(container, SWT.NONE);
-		btnNewButton.setEnabled(false);
-		btnNewButton.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1));
-		btnNewButton.setText("Edit...");
-		
-		Button btnNewButton_1 = new Button(container, SWT.NONE);
-		btnNewButton_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnNewButton_1.setEnabled(false);
-		btnNewButton_1.setText("Test Conn.");
+		btnTestConnection = new Button(container, SWT.NONE);
+		btnTestConnection.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				testConnection();
+			}
+		});
+		btnTestConnection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnTestConnection.setEnabled(false);
+		btnTestConnection.setText("Test Conn.");
 		
 		Label lblDefaultCatalogSchema = new Label(container, SWT.WRAP);
 		GridData gd_lblDefaultCatalogSchema = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -99,24 +167,131 @@ public class DictionaryPreferencePage extends PreferencePage implements
 		lblDefaultCatalogSchema.setLayoutData(gd_lblDefaultCatalogSchema);
 		lblDefaultCatalogSchema.setText("Default name for catalog schemas that map to IDMSNTWK (SYSDIRL):");
 		
-		text = new Text(container, SWT.BORDER);
-		GridData gd_text = new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1);
+		textDefaultSchema = new Text(container, SWT.BORDER);
+		GridData gd_text = new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1);
 		gd_text.verticalIndent = 10;
-		gd_text.widthHint = 75;
-		text.setLayoutData(gd_text);
+		textDefaultSchema.setLayoutData(gd_text);
 		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
+		
+		initializeValues();
 		
 		return container;
 		
 	}
+	
+	private void deleteDictionary() {
+		Dictionary dictionary = dictionaries.get(table.getSelectionIndex());
+		String message = "Are you sure you want to delete dictionary " + dictionary.getId() + "?";
+		if (!MessageDialog.openConfirm(getShell(), "Delete Dictionary", message)) {
+			return;
+		}		
+		if (!dictionary.remove(dictionaryFolder)) {
+			MessageDialog.openError(getShell(), "Delete Dictionary", 
+									"Dictionary could NOT be deleted.");
+		}
+		initializeTable(null);
+		enableAndDisable();
+		
+	}
+
+	@Override
+	protected IPreferenceStore doGetPreferenceStore() {		
+		return Plugin.getDefault().getPreferenceStore();
+	}
+
+	private void editDictionary() {
+		Dictionary dictionary = dictionaries.get(table.getSelectionIndex());
+		EditDictionaryDialog dialog = new EditDictionaryDialog(getShell(), dictionary);
+		if (dialog.open() == IDialogConstants.CANCEL_ID) {
+			return;
+		}
+		dictionary.setId(dialog.getDictionaryId());
+		dictionary.setHostname(dialog.getDictionaryHostname());
+		dictionary.setPort(dialog.getDictionaryPort());
+		dictionary.setDictname(dialog.getDictionaryDictname());
+		dictionary.setUser(dialog.getDictionaryUser());
+		dictionary.setPassword(dialog.getDictionaryPassword());
+		dictionary.setSchema(dialog.getDictionarySchema());
+		try {
+			dictionary.toFile(dictionaryFolder);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			MessageDialog.openError(getShell(), "Error while saving dictionary data", 
+									t.getMessage());
+		}
+		initializeTable(dictionary);
+		enableAndDisable();
+	}
+
+	private void enableAndDisable() {
+		btnDeleteDictionary.setEnabled(table.getSelectionCount() > 0);
+		btnEditDictionary.setEnabled(table.getSelectionCount() > 0);
+		btnTestConnection.setEnabled(Plugin.getDefault().isDriverInstalled() && 
+									 table.getSelectionCount() > 0);
+	}
 
 	@Override
 	public void init(IWorkbench workbench) {
+		dictionaryFolder = Plugin.getDefault().getDictionaryFolder();
 	}
 
+	private void initializeDefaults() {	
+		IPreferenceStore store = getPreferenceStore();
+		String defaultSchema = store.getDefaultString(PreferenceConstants.DEFAULT_SCHEMA);
+		textDefaultSchema.setText(defaultSchema);
+	}
+
+	private void initializeTable(Dictionary dictionaryToSelect) {
+		table.removeAll();
+		try {
+			dictionaries = Dictionary.list(dictionaryFolder);
+			for (Dictionary dictionary : dictionaries) {
+				TableItem tableItem = new TableItem(table, SWT.NONE);
+				tableItem.setText(0, dictionary.getId());
+			}
+			if (dictionaryToSelect != null) {
+				int rowToSelect = dictionaries.indexOf(dictionaryToSelect);
+				table.select(rowToSelect);
+			}
+		} catch (Throwable t) {
+			throw new RuntimeException(t);
+		}
+	}
+
+	private void initializeValues() {		
+		
+		initializeTable(null);
+		
+		IPreferenceStore store = getPreferenceStore();
+		String defaultSchema = store.getString(PreferenceConstants.DEFAULT_SCHEMA);
+		textDefaultSchema.setText(defaultSchema);
+		
+		enableAndDisable();
+		
+	}
+	
+	@Override
+	protected void performApply() {
+		storeValues();
+	}
+	
+	@Override
+	protected void performDefaults() {
+		super.performDefaults();
+		initializeDefaults();
+	}
+
+	private boolean storeValues() {
+		IPreferenceStore store = getPreferenceStore();
+		store.setValue(PreferenceConstants.DEFAULT_SCHEMA, textDefaultSchema.getText().trim());
+		return true;
+	}
+
+	private void testConnection() {
+		Dictionary dictionary = dictionaries.get(table.getSelectionIndex());
+		JdbcTools.testConnection(getShell(), dictionary);
+		initializeTable(dictionary); // the password might be added, so refresh the dictionary
+		enableAndDisable();
+	}
+	
 }
