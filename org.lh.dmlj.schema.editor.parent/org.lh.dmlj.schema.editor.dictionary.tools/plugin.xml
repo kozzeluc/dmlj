@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.lh.dmlj.schema.editor.preference.ImportPage"
+            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.DictionaryPreferencePage"
+            id="org.lh.dmlj.schema.editor.dictionary.tools.main.page"
+            name="Dictionary">
+      </page>
+      <page
+            category="org.lh.dmlj.schema.editor.dictionary.tools.main.page"
+            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.DriverInformationPage"
+            id="org.lh.dmlj.schema.editor.dictionary.tools.driver.page"
+            name="Driver">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>

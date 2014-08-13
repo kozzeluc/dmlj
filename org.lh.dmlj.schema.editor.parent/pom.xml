@@ -13,6 +13,7 @@
     </properties>
     <modules>
         <module>org.lh.dmlj.schema.editor.core</module>
+        <module>org.lh.dmlj.schema.editor.dictionary.tools</module>
         <module>org.lh.dmlj.schema.editor.model</module>
         <module>org.lh.dmlj.schema.editor.service</module>
         <module>org.lh.dmlj.schema.editor.service.api</module>
