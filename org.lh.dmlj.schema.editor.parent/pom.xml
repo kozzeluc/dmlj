@@ -38,7 +38,17 @@
 	                	<addMavenDescriptor>false</addMavenDescriptor>
 	            	</archive>
 	        	</configuration>
-	    	</plugin>            
+	    	</plugin>
+	    	<plugin>
+    			<groupId>org.eclipse.tycho</groupId>
+    			<artifactId>target-platform-configuration</artifactId>
+    			<version>${tycho-version}</version>
+    			<configuration>
+      				<dependency-resolution>
+        				<optionalDependencies>ignore</optionalDependencies>
+      				</dependency-resolution>
+    			</configuration>
+  			</plugin>            
         </plugins>
     </build>
     <repositories>
