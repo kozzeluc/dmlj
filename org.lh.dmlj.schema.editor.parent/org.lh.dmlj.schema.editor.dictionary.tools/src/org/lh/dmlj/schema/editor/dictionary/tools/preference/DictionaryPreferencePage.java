@@ -289,7 +289,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 
 	private void testConnection() {
 		Dictionary dictionary = dictionaries.get(table.getSelectionIndex());
-		JdbcTools.testConnection(getShell(), dictionary);
+		JdbcTools.testConnection(dictionary);
 		initializeTable(dictionary); // the password might be added, so refresh the dictionary
 		enableAndDisable();
 	}

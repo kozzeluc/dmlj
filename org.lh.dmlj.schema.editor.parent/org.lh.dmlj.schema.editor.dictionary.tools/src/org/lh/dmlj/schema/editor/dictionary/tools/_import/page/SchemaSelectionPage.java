@@ -16,23 +16,173 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools._import.page;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.lh.dmlj.schema.editor.dictionary.tools._import.common.ContextAttributeKeys;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
+import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
 public class SchemaSelectionPage extends AbstractDataEntryPage {
-
+	
+	private Composite composite;
+	private Table table;
+	
+	private boolean fillTable = false;
+	
 	public SchemaSelectionPage() {
 		super();
 	}
+	
+	@Override
+	public void aboutToShow() {	
+		// defer getting the schema list until the user actually presses the Next button (avoid that
+		// the user is constantly being prompted for a password when he clicks a dictionary in the
+		// dictionary selection page)
+		fillTable = true;		
+	}	
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	@Override
 	public Control createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout(1, false));
-		return container;
+		
+		composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
+		composite.addPaintListener(new PaintListener() {
+			@Override
+			public void paintControl(PaintEvent e) {
+				if (fillTable) {
+					fillTable();
+					fillTable = false;
+				}
+			}			
+		});
+		
+		table = new Table(composite, SWT.BORDER | SWT.FULL_SELECTION);
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				validatePage(null);
+			}
+		});
+		GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_table.heightHint = 175;
+		table.setLayoutData(gd_table);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		
+		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
+		tblclmnName.setWidth(100);
+		tblclmnName.setText("Name");
+		
+		TableColumn tblclmnVersion = new TableColumn(table, SWT.RIGHT);
+		tblclmnVersion.setWidth(75);
+		tblclmnVersion.setText("Version");
+		
+		TableColumn tblclmnDescription = new TableColumn(table, SWT.NONE);
+		tblclmnDescription.setWidth(250);
+		tblclmnDescription.setText("Description");		
+		
+		return composite;
+		
+	}
+
+	protected void fillTable() {
+		
+		List<TableEntry> tableEntries = new ArrayList<>();
+		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
+		Throwable throwableToPass = null;
+		try {
+			Connection connection = JdbcTools.connect(dictionary);	
+			PreparedStatement ps = 
+				connection.prepareStatement(JdbcTools.buildQueryForValidSchemas(dictionary));
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String sNam_010 = rs.getString("S_NAM_010");
+				int sSer_010 = rs.getInt("S_SER_010");
+				String descr_010 = rs.getString("DESCR_010");
+				tableEntries.add(new TableEntry(sNam_010, sSer_010, descr_010));				
+			}
+			ps.close();
+			connection.close();
+		} catch (Throwable t) {
+			throwableToPass = t;
+		}		
+		Collections.sort(tableEntries);
+		
+		table.removeAll();
+		for (TableEntry tableEntry : tableEntries) {
+			TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(0, tableEntry.schemaName);
+			item.setText(1, String.valueOf(tableEntry.schemaVersion));
+			item.setText(2, String.valueOf(tableEntry.description));
+		}	
+		table.redraw();	
+		
+		validatePage(throwableToPass);
+		
+	}
+
+	private void validatePage(Throwable throwableToPass) {		
+		getController().setPageComplete(false);
+		String errorMessage = throwableToPass != null ? throwableToPass.getMessage() : null;
+		getController().setErrorMessage(errorMessage);
+		
+		if (table.getSelectionCount() > 0) {			
+			TableItem[] selection = table.getSelection();
+			getContext().setAttribute(IDataEntryContext.SCHEMA_NAME, 
+								 	  selection[0].getText(0));
+			getContext().setAttribute(IDataEntryContext.SCHEMA_VERSION,
+								 	  Short.valueOf(selection[0].getText(1)));			
+			getController().setPageComplete(true);
+		} else {
+			getContext().clearAttribute(IDataEntryContext.SCHEMA_NAME);
+			getContext().clearAttribute(IDataEntryContext.SCHEMA_VERSION);			
+		}		
+	}	
+	
+	private static class TableEntry implements Comparable<TableEntry> {
+		
+		private String description;
+		private String schemaName;
+		private int schemaVersion; 		
+		
+		private TableEntry(String schemaName, int schemaVersion, String description) {
+			super();
+			this.schemaName = schemaName;
+			this.schemaVersion = schemaVersion;
+			this.description = description;
+		}
+
+		@Override
+		public int compareTo(TableEntry other) {
+			if (schemaName.equals(other.schemaName)) {
+				return schemaVersion - other.schemaVersion;
+			} else {
+				return schemaName.compareTo(other.schemaName);
+			}
+		}
+		
 	}
 
 }

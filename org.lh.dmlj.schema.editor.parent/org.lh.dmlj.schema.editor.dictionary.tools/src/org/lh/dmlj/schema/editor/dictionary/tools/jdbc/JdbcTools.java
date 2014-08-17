@@ -23,30 +23,36 @@ import java.sql.SQLException;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
 public abstract class JdbcTools {
 	
-	private static final String TEST_CONNECTION_SQL_PART_1 = 
-		"SELECT * FROM \"";
-	private static final String TEST_CONNECTION_SQL_PART_2 = 
-		"\".\"S-010\" ORDER BY S_NAM_010, S_SER_010";
+	private static final String SYSDIRL_SCHEMA = "<sysdirl-schema>";
 	
-	public static Connection connect(String url, String userid, String password) 
+	private static final String SQL_VALID_SCHEMAS = 
+		"SELECT * FROM \"" + SYSDIRL_SCHEMA + "\".\"S-010\" " +
+		"WHERE S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0 " +
+		"ORDER BY S_NAM_010, S_SER_010";	
+	
+	public static String buildQueryForValidSchemas(Dictionary dictionary) {
+		return SQL_VALID_SCHEMAS.replace(SYSDIRL_SCHEMA, dictionary.getSchema());
+	}
+
+	private static Connection connect(String url, String userid, String password) 
 		throws SQLException {
         
 		return DriverManager.getConnection(url, userid, password);
     }
 	
-	public static void testConnection(Shell shell, Dictionary dictionary) {			
-		
+	public static Connection connect(Dictionary dictionary) throws Throwable {	
 		String password;
 		if (dictionary.getPassword() == null) {
-			PromptForPasswordDialog dialog = new PromptForPasswordDialog(shell, dictionary);
+			PromptForPasswordDialog dialog = 
+				new PromptForPasswordDialog(Display.getCurrent().getActiveShell(), dictionary);
 			if (dialog.open() == IDialogConstants.CANCEL_ID) {
-				return;
+				throw new RuntimeException("Password required for dictionary " + dictionary.getId());
 			}
 			password = dialog.getPassword();
 			if (dialog.isStorePassword()) {
@@ -54,41 +60,40 @@ public abstract class JdbcTools {
 				try {
 					dictionary.toFile(Plugin.getDefault().getDictionaryFolder());
 				} catch (Throwable t) {
-					t.printStackTrace();
-					MessageDialog.openError(shell, "Error while saving dictionary data", 
-											t.getMessage());
+					throw new RuntimeException("Error while saving dictionary data", t);
 				}
 			}
 		} else {
 			password = dictionary.getPassword();
-		}
-			
-		String message = null;
+		}		
+		return connect(dictionary.getConnectionUrl(), dictionary.getUser(), password);		
+	}
+	
+	public static void testConnection(Dictionary dictionary) {			
+		String title = "Test Connection";
+		Connection connection = null;
 		try {
-			Connection connection = JdbcTools.connect(dictionary.getConnectionUrl(), 
-													  dictionary.getUser(), password);
-			String sql = 
-				TEST_CONNECTION_SQL_PART_1 + dictionary.getSchema() + TEST_CONNECTION_SQL_PART_2;
+			connection = connect(dictionary);
+			String sql = buildQueryForValidSchemas(dictionary);
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.executeQuery();
-			connection.close();
-		} catch (SQLException e) {
-			message = e.getMessage();
-		}
-		
-		String title = "Test Connection";
-		if (message != null) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), title, 
+										  "Connection was successful for dictionary " +
+										  dictionary.getId() + ".");
+		} catch (Throwable t) {
 			StringBuilder fullMessage = 
 				new StringBuilder("Connection was NOT successful for dictionary ");
 			fullMessage.append(dictionary.getId());
 			fullMessage.append(":\n\n");
-			fullMessage.append(message);
-			MessageDialog.openError(shell, title, fullMessage.toString());
-		} else {
-			MessageDialog.openInformation(shell, title, "Connection was successful for dictionary " +
-					 					  dictionary.getId() + ".");
+			fullMessage.append(t.getMessage());
+			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, 
+									fullMessage.toString());
+		} finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+			}
 		}
-		
 	}	
 	
 }
