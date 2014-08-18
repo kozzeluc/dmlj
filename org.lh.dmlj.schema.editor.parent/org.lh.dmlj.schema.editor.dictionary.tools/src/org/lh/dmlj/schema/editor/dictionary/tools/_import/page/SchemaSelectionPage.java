@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -127,8 +126,7 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 			connection.close();
 		} catch (Throwable t) {
 			throwableToPass = t;
-		}		
-		Collections.sort(tableEntries);
+		}
 		
 		table.removeAll();
 		for (TableEntry tableEntry : tableEntries) {

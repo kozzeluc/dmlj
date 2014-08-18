@@ -32,8 +32,8 @@ public abstract class JdbcTools {
 	private static final String SYSDIRL_SCHEMA = "<sysdirl-schema>";
 	
 	private static final String SQL_VALID_SCHEMAS = 
-		"SELECT * FROM \"" + SYSDIRL_SCHEMA + "\".\"S-010\" " +
-		"WHERE S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0 " +
+		"SELECT * FROM \"" + SYSDIRL_SCHEMA + "\".OOAK-012\", \"" + SYSDIRL_SCHEMA + "\".\"S-010\" " +
+		"WHERE OOAK_KEY_012 = 'OOAK' AND \"OOAK-S\" AND S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0 " +
 		"ORDER BY S_NAM_010, S_SER_010";	
 	
 	public static String buildQueryForValidSchemas(Dictionary dictionary) {
