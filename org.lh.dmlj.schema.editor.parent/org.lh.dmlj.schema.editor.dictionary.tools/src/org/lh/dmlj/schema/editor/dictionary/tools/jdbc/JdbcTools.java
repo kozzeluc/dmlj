@@ -31,13 +31,22 @@ public abstract class JdbcTools {
 	
 	private static final String SYSDIRL_SCHEMA = "<sysdirl-schema>";
 	
-	private static final String SQL_VALID_SCHEMAS = 
-		"SELECT * FROM \"" + SYSDIRL_SCHEMA + "\".OOAK-012\", \"" + SYSDIRL_SCHEMA + "\".\"S-010\" " +
+	private static final String SQL_VALID_SCHEMAS_NON_SYSDIRL = 
+		"SELECT S_NAM_010, S_SER_010, DESCR_010 FROM \"" + SYSDIRL_SCHEMA + "\".\"OOAK-012\", \"" + 
+		SYSDIRL_SCHEMA + "\".\"S-010\" " +
 		"WHERE OOAK_KEY_012 = 'OOAK' AND \"OOAK-S\" AND S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0 " +
-		"ORDER BY S_NAM_010, S_SER_010";	
+		"ORDER BY S_NAM_010, S_SER_010";
+	private static final String SQL_VALID_SCHEMAS_SYSDIRL = 
+		"SELECT S_NAM_010, S_SER_010, DESCR_010 FROM \"" + SYSDIRL_SCHEMA + "\".\"S-010\" " +
+		"WHERE S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0 " +
+		"ORDER BY S_NAM_010, S_SER_010";
 	
 	public static String buildQueryForValidSchemas(Dictionary dictionary) {
-		return SQL_VALID_SCHEMAS.replace(SYSDIRL_SCHEMA, dictionary.getSchema());
+		if (dictionary.isSysdirl()) {
+			return SQL_VALID_SCHEMAS_SYSDIRL.replace(SYSDIRL_SCHEMA, dictionary.getSchema());
+		} else {
+			return SQL_VALID_SCHEMAS_NON_SYSDIRL.replace(SYSDIRL_SCHEMA, dictionary.getSchema());
+		}
 	}
 
 	private static Connection connect(String url, String userid, String password) 

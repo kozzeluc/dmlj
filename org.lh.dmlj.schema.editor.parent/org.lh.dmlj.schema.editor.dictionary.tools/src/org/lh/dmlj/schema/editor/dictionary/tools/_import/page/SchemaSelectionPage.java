@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.lh.dmlj.schema.editor.dictionary.tools._import.common.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.S_010;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
@@ -117,9 +118,9 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 				connection.prepareStatement(JdbcTools.buildQueryForValidSchemas(dictionary));
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				String sNam_010 = rs.getString("S_NAM_010");
-				int sSer_010 = rs.getInt("S_SER_010");
-				String descr_010 = rs.getString("DESCR_010");
+				String sNam_010 = rs.getString(S_010.S_NAM_010);
+				int sSer_010 = rs.getInt(S_010.S_SER_010);
+				String descr_010 = rs.getString(S_010.DESCR_010);
 				tableEntries.add(new TableEntry(sNam_010, sSer_010, descr_010));				
 			}
 			ps.close();

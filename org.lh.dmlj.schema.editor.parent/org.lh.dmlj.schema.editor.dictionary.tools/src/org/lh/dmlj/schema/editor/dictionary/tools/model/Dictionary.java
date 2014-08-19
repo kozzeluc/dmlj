@@ -58,6 +58,7 @@ public class Dictionary implements Comparable<Dictionary> {
 	private String user;
 	private String password;
 	private String schema;
+	private boolean sysdirl;
 	
 	private static Dictionary fromFile(File file) throws Throwable {
 		
@@ -177,6 +178,11 @@ public class Dictionary implements Comparable<Dictionary> {
 		return user;
 	}
 
+	public boolean isSysdirl() {
+		//return sysdirl;
+		return id.toUpperCase().endsWith(".SYSDIRL"); // TODO complete dictionary configuration
+	}
+
 	public boolean remove(File containingFolder) {
 		File file = new File(containingFolder, "Dictionary_" + internalId + ".properties");
 		return file.delete();
@@ -204,6 +210,10 @@ public class Dictionary implements Comparable<Dictionary> {
 
 	public void setSchema(String schema) {
 		this.schema = schema;
+	}
+	
+	public void setSysdirl(boolean sysdirl) {
+		this.sysdirl = sysdirl;
 	}
 
 	public void setUser(String user) {
