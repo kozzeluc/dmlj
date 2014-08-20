@@ -80,6 +80,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		dictionary.setUser(dialog.getDictionaryUser());
 		dictionary.setPassword(dialog.getDictionaryPassword());
 		dictionary.setSchema(dialog.getDictionarySchema());
+		dictionary.setSysdirl(dialog.isDictionarySysdirl());
 		try {
 			dictionary.toFile(dictionaryFolder);
 		} catch (Throwable t) {
@@ -114,8 +115,12 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		table.setLinesVisible(true);
 		
 		TableColumn tblclmnId = new TableColumn(table, SWT.NONE);
-		tblclmnId.setWidth(250);
+		tblclmnId.setWidth(200);
 		tblclmnId.setText("Id");
+		
+		TableColumn tblclmnSysdirl = new TableColumn(table, SWT.CENTER);
+		tblclmnSysdirl.setWidth(65);
+		tblclmnSysdirl.setText("SYSDIRL ?");
 		
 		btnAddDictionary = new Button(container, SWT.NONE);
 		btnAddDictionary.addSelectionListener(new SelectionAdapter() {
@@ -212,6 +217,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		dictionary.setUser(dialog.getDictionaryUser());
 		dictionary.setPassword(dialog.getDictionaryPassword());
 		dictionary.setSchema(dialog.getDictionarySchema());
+		dictionary.setSysdirl(dialog.isDictionarySysdirl());
 		try {
 			dictionary.toFile(dictionaryFolder);
 		} catch (Throwable t) {
@@ -248,6 +254,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 			for (Dictionary dictionary : dictionaries) {
 				TableItem tableItem = new TableItem(table, SWT.NONE);
 				tableItem.setText(0, dictionary.getId());
+				tableItem.setText(1, (dictionary.isSysdirl() ? "Yes" : "No"));
 			}
 			if (dictionaryToSelect != null) {
 				int rowToSelect = dictionaries.indexOf(dictionaryToSelect);

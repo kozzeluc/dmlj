@@ -3,6 +3,8 @@ package org.lh.dmlj.schema.editor.dictionary.tools.preference;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
@@ -19,8 +21,6 @@ import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 
 public class EditDictionaryDialog extends TitleAreaDialog {
 	
@@ -30,7 +30,8 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 	private Text textDictname;
 	private Text textUser;
 	private Text textPassword;
-	private Text textSchema;	
+	private Text textSchema;
+	private Button btnSysdirl;
 	private Button btnTestConnection;
 	
 	private Dictionary dictionary;
@@ -42,6 +43,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 	private String dictionaryUser;
 	private String dictionaryPassword;
 	private String dictionarySchema;
+	private boolean dictionarySysdirl;
 	
 	private boolean idTouched;
 	private boolean hostnameTouched;
@@ -209,7 +211,9 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		textPassword.setLayoutData(gd_textPassword);
 		
 		Label lblpromptWhenEmpty = new Label(container, SWT.NONE);
-		lblpromptWhenEmpty.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		GridData gd_lblpromptWhenEmpty = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblpromptWhenEmpty.horizontalIndent = 10;
+		lblpromptWhenEmpty.setLayoutData(gd_lblpromptWhenEmpty);
 		lblpromptWhenEmpty.setText("(prompt when empty)");
 		
 		Label lblNewLabel_6 = new Label(container, SWT.NONE);
@@ -230,9 +234,33 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validateAndMoveToNextFieldWhenApplicable(e);
 			}
 		});
-		GridData gd_textSchema = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		GridData gd_textSchema = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_textSchema.widthHint = 100;
 		textSchema.setLayoutData(gd_textSchema);
+		new Label(container, SWT.NONE);
+		
+		btnSysdirl = new Button(container, SWT.CHECK);
+		btnSysdirl.addTraverseListener(new TraverseListener() {
+			public void keyTraversed(TraverseEvent e) {
+				validateAndMoveToNextFieldWhenApplicable(e);
+			}
+		});
+		btnSysdirl.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				validate();
+			}
+		});
+		btnSysdirl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				validate();
+			}
+		});
+		GridData gd_btnSysdirl = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
+		gd_btnSysdirl.verticalIndent = 10;
+		btnSysdirl.setLayoutData(gd_btnSysdirl);
+		btnSysdirl.setText("This is a SYSDIRL dictionary");
 		
 		btnTestConnection = new Button(container, SWT.NONE);
 		btnTestConnection.setEnabled(false);
@@ -287,7 +315,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(350, 400);
+		return new Point(350, 425);
 	}
 	
 	private void initializeValues() {
@@ -305,6 +333,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				textPassword.setText(dictionary.getPassword());
 			}
 			textSchema.setText(dictionary.getSchema());
+			btnSysdirl.setSelection(dictionary.isSysdirl());
 		} else {
 			textPort.setText("3709");
 			String defaultSchema = 
@@ -317,6 +346,10 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		btnTestConnection.setEnabled(validateInput().validationOK &&
 									 Plugin.getDefault().isDriverInstalled());
 		
+	}
+
+	public boolean isDictionarySysdirl() {
+		return dictionarySysdirl;
 	}
 
 	private void setFocusAndSelectText(Text field) {
@@ -333,6 +366,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		tmpDictionary.setUser(dictionaryUser);
 		tmpDictionary.setPassword(dictionaryPassword);
 		tmpDictionary.setSchema(dictionarySchema);
+		tmpDictionary.setSysdirl(dictionarySysdirl);
 		JdbcTools.testConnection(tmpDictionary);
 	}
 
@@ -353,6 +387,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				dictionaryPassword = null;
 			}
 			dictionarySchema = textSchema.getText().trim();
+			dictionarySysdirl = btnSysdirl.getSelection();
 		}
 		
 		btnTestConnection.setEnabled(inputValidationResult.validationOK && 
@@ -383,6 +418,12 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		} else if (e.getSource() == textPassword) {
 			setFocusAndSelectText(textSchema);
 		} else if (e.getSource() == textSchema) {
+			if (inputValidationResult.fieldInError != null) {
+				setFocusAndSelectText(inputValidationResult.fieldInError);
+			} else {				
+				btnSysdirl.setFocus();
+			}
+		} else if (e.getSource() == btnSysdirl) {
 			if (inputValidationResult.fieldInError != null) {
 				setFocusAndSelectText(inputValidationResult.fieldInError);
 			} else {

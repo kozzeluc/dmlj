@@ -100,7 +100,7 @@ public abstract class JdbcTools {
 		} finally {
 			try {
 				connection.close();
-			} catch (SQLException e) {
+			} catch (Throwable t) {
 			}
 		}
 	}	
