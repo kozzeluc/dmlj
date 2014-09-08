@@ -41,6 +41,7 @@ public class Dictionary implements Comparable<Dictionary> {
 	private static final String KEY_USER = "user";
 	private static final String KEY_PASSWORD = "password";
 	private static final String KEY_SCHEMA = "schema";
+	private static final String KEY_SYSDIRL = "sysdirl";
 	
 	private static final FilenameFilter FILENAME_FILTER = new FilenameFilter() {
 		@Override
@@ -58,6 +59,7 @@ public class Dictionary implements Comparable<Dictionary> {
 	private String user;
 	private String password;
 	private String schema;
+	private boolean sysdirl;
 	
 	private static Dictionary fromFile(File file) throws Throwable {
 		
@@ -84,6 +86,9 @@ public class Dictionary implements Comparable<Dictionary> {
 			dictionary.setPassword(password);
 		}
 		dictionary.setSchema(properties.getProperty(KEY_SCHEMA));
+		if (properties.containsKey(KEY_SYSDIRL)) {
+			dictionary.setSysdirl(Boolean.valueOf(properties.getProperty(KEY_SYSDIRL)).booleanValue());
+		}
 		return dictionary;
 		
 	}
@@ -177,6 +182,10 @@ public class Dictionary implements Comparable<Dictionary> {
 		return user;
 	}
 
+	public boolean isSysdirl() {
+		return sysdirl;
+	}
+
 	public boolean remove(File containingFolder) {
 		File file = new File(containingFolder, "Dictionary_" + internalId + ".properties");
 		return file.delete();
@@ -205,6 +214,10 @@ public class Dictionary implements Comparable<Dictionary> {
 	public void setSchema(String schema) {
 		this.schema = schema;
 	}
+	
+	public void setSysdirl(boolean sysdirl) {
+		this.sysdirl = sysdirl;
+	}
 
 	public void setUser(String user) {
 		this.user = user;
@@ -224,6 +237,7 @@ public class Dictionary implements Comparable<Dictionary> {
 			properties.put(KEY_PASSWORD, encodedAndEncryptedAsHex);
 		}
 		properties.put(KEY_SCHEMA, schema);
+		properties.put(KEY_SYSDIRL, String.valueOf(sysdirl));
 		return properties;
 	}
 	

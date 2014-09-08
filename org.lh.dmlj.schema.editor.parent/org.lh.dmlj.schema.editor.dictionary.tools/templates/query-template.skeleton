@@ -1,0 +1,9 @@
+import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
+
+public class CLASS implements IQueryTemplate {
+
+	public String generate(Object argument) {
+    	return "";
+	}
+	
+}

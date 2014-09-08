@@ -18,6 +18,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .
 Bundle-Vendor: Luc Hermans
-Export-Package: org.lh.dmlj.schema.editor.importtool
+Export-Package: org.lh.dmlj.schema.editor,
+ org.lh.dmlj.schema.editor.importtool
 Import-Package: org.lh.dmlj.schema.editor.service,
  org.lh.dmlj.schema.editor.service.api

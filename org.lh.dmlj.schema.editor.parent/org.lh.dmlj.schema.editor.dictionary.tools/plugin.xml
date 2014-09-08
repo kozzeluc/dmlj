@@ -2,6 +2,12 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.lh.dmlj.schema.editor.preference.ImportPage"
@@ -17,10 +23,38 @@
       </page>
    </extension>
    <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceInitializer">
-      </initializer>
+         point="org.lh.dmlj.schema.editor.core.import">
+      <importTools>
+         <importTool
+               class="org.lh.dmlj.schema.editor.dictionary.tools._import.tool.SchemaImportTool"
+               description="Import or update a CA IDMS/DB schema from an IDMS dictionary on your mainframe."
+               id="org.lh.dmlj.schema.editor.dictionary.tools.import.importTool1"
+               name="schemaImportTool"
+               source="an IDMS dictionary on your mainframe">
+            <preOptionsPages>
+               <dataEntryPage
+                     class="org.lh.dmlj.schema.editor.dictionary.tools._import.page.DictionarySelectionPage"
+                     id="org.lh.dmlj.schema.editor.dictionary.tools.import.dataEntryPage1"
+                     message="Select a dictionary"
+                     name="dictionarySelectionPage">
+               </dataEntryPage>
+               <dataEntryPage
+                     class="org.lh.dmlj.schema.editor.dictionary.tools._import.page.SchemaSelectionPage"
+                     id="org.lh.dmlj.schema.editor.dictionary.tools.import.dataEntryPage2"
+                     message="Select a schema from the dictionary"
+                     name="schemaSelectionPage">
+               </dataEntryPage>
+            </preOptionsPages>
+            <options>
+               <option
+                     checkButtonLabel="Add missing catalog records and sets (areas DDLCAT, DDLCATLOD and DDLCATX)"
+                     idmsntwkOnly="true"
+                     initialValue="false"
+                     name="addMissingCatalogComponents">
+               </option></options>
+            <postOptionsPages></postOptionsPages>
+         </importTool>
+      </importTools>
    </extension>
 
 </plugin>
