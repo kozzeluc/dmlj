@@ -16,9 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools._import.page;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.lh.dmlj.schema.editor.dictionary.tools._import.common.ContextAttributeKeys;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.S_010;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
@@ -109,22 +110,23 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 
 	protected void fillTable() {
 		
-		List<TableEntry> tableEntries = new ArrayList<>();
+		final List<TableEntry> tableEntries = new ArrayList<>();
 		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
 		Throwable throwableToPass = null;
 		try {
-			Connection connection = JdbcTools.connect(dictionary);	
-			PreparedStatement ps = 
-				connection.prepareStatement(JdbcTools.buildQueryForValidSchemas(dictionary));
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				String sNam_010 = rs.getString(S_010.S_NAM_010);
-				int sSer_010 = rs.getInt(S_010.S_SER_010);
-				String descr_010 = rs.getString(S_010.DESCR_010);
-				tableEntries.add(new TableEntry(sNam_010, sSer_010, descr_010));				
-			}
-			ps.close();
-			connection.close();
+			ImportSession session = new ImportSession(dictionary);
+			session.open();	
+			Query query = new Query.Builder().forValidSchemaList(session).build();
+			session.runQuery(query, new IRowProcessor() {
+				@Override
+				public void processRow(ResultSet row) throws SQLException {
+					String sNam_010 = row.getString(S_010.S_NAM_010);
+					int sSer_010 = row.getInt(S_010.S_SER_010);
+					String descr_010 = row.getString(S_010.DESCR_010);
+					tableEntries.add(new TableEntry(sNam_010, sSer_010, descr_010));				
+				}
+			});
+			session.close();
 		} catch (Throwable t) {
 			throwableToPass = t;
 		}

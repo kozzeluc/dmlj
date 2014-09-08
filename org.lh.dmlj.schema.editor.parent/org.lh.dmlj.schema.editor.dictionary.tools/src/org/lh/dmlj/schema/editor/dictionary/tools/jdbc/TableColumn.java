@@ -14,18 +14,15 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.table;
+package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public abstract class S_010 {
-
-	@TableColumn public static final String S_NAM_010 = "S_010.S_NAM_010";
-	@TableColumn public static final String S_SER_010 = "S_010.S_SER_010";
-	@TableColumn public static final String DESCR_010 = "S_010.DESCR_010";
-	@TableColumn public static final String S_DT_010 = "S_010.S_DT_010";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(S_010.class);
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TableColumn {
 	
 }

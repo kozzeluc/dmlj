@@ -19,13 +19,12 @@ package org.lh.dmlj.schema.editor.dictionary.tools.table;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
-public abstract class S_010 {
+public abstract class Schemacmt_181 {
 
-	@TableColumn public static final String S_NAM_010 = "S_010.S_NAM_010";
-	@TableColumn public static final String S_SER_010 = "S_010.S_SER_010";
-	@TableColumn public static final String DESCR_010 = "S_010.DESCR_010";
-	@TableColumn public static final String S_DT_010 = "S_010.S_DT_010";
+	@TableColumn public static final String CMT_ID_181 = "SCHEMACMT_181.CMT_ID_181";
+	@TableColumn public static final String CMD_INFO_181_01 = "SCHEMACMT_181.CMD_INFO_181_01";
+	@TableColumn public static final String CMD_INFO_181_02 = "SCHEMACMT_181.CMD_INFO_181_02";
 	
-	public static final String COLUMNS = JdbcTools.columnsFor(S_010.class);
+	public static final String COLUMNS = JdbcTools.columnsFor(Schemacmt_181.class);
 	
 }

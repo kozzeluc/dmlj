@@ -19,6 +19,8 @@ package org.lh.dmlj.schema.editor;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -181,6 +183,12 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		return folder;
 	}	
 
+	public DateFormat getDateFormat() {
+		String pattern = 
+			getPreferenceStore().getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		return new SimpleDateFormat(pattern);
+	}
+	
 	public Font getFigureFont() {
 		return figureFont;
 	}

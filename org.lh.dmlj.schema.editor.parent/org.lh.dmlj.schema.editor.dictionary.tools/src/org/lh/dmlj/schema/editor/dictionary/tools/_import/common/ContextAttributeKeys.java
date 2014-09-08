@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.dictionary.tools._import.common;
 
 public abstract class ContextAttributeKeys {
 	
-	public static final String DICTIONARY = "dictionary";
+	public static final String ADD_MISSING_CATALOG_COMPONENTS = "addMissingCatalogComponents";
+	public static final String DICTIONARY = "dictionary";	
 
 }

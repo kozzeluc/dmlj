@@ -19,13 +19,34 @@ package org.lh.dmlj.schema.editor.dictionary.tools.table;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
-public abstract class S_010 {
+public class Constkey_1030 {
 
-	@TableColumn public static final String S_NAM_010 = "S_010.S_NAM_010";
-	@TableColumn public static final String S_SER_010 = "S_010.S_SER_010";
-	@TableColumn public static final String DESCR_010 = "S_010.DESCR_010";
-	@TableColumn public static final String S_DT_010 = "S_010.S_DT_010";
+	@TableColumn public static final String NAME_1030 = "CONSTKEY.NAME";
+	@TableColumn public static final String NUMBER_1030 = "CONSTKEY.NUMBER";
 	
-	public static final String COLUMNS = JdbcTools.columnsFor(S_010.class);
+	public static final String COLUMNS = JdbcTools.columnsFor(Constkey_1030.class);
+	
+	private String name_1030;
+	private short number_1030;
+
+	public Constkey_1030() {
+		super();
+	}
+
+	public String getName_1030() {
+		return name_1030;
+	}
+
+	public short getNumber_1030() {
+		return number_1030;
+	}
+
+	public void setName_1030(String name_1030) {
+		this.name_1030 = JdbcTools.removeTrailingSpaces(name_1030);
+	}
+
+	public void setNumber_1030(short number_1030) {
+		this.number_1030 = number_1030;
+	}
 	
 }

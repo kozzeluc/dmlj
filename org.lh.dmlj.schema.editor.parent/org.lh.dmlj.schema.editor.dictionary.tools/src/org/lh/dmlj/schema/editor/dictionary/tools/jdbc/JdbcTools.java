@@ -16,76 +16,69 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.nio.ByteBuffer;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
 public abstract class JdbcTools {
 	
-	private static final String SYSDIRL_SCHEMA = "<sysdirl-schema>";
-	
-	private static final String SQL_VALID_SCHEMAS_NON_SYSDIRL = 
-		"SELECT S_NAM_010, S_SER_010, DESCR_010 FROM \"" + SYSDIRL_SCHEMA + "\".\"OOAK-012\", \"" + 
-		SYSDIRL_SCHEMA + "\".\"S-010\" " +
-		"WHERE OOAK_KEY_012 = 'OOAK' AND \"OOAK-S\" AND S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0 " +
-		"ORDER BY S_NAM_010, S_SER_010";
-	private static final String SQL_VALID_SCHEMAS_SYSDIRL = 
-		"SELECT S_NAM_010, S_SER_010, DESCR_010 FROM \"" + SYSDIRL_SCHEMA + "\".\"S-010\" " +
-		"WHERE S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0 " +
-		"ORDER BY S_NAM_010, S_SER_010";
-	
-	public static String buildQueryForValidSchemas(Dictionary dictionary) {
-		if (dictionary.isSysdirl()) {
-			return SQL_VALID_SCHEMAS_SYSDIRL.replace(SYSDIRL_SCHEMA, dictionary.getSchema());
-		} else {
-			return SQL_VALID_SCHEMAS_NON_SYSDIRL.replace(SYSDIRL_SCHEMA, dictionary.getSchema());
-		}
-	}
-
-	private static Connection connect(String url, String userid, String password) 
-		throws SQLException {
-        
-		return DriverManager.getConnection(url, userid, password);
-    }
-	
-	public static Connection connect(Dictionary dictionary) throws Throwable {	
-		String password;
-		if (dictionary.getPassword() == null) {
-			PromptForPasswordDialog dialog = 
-				new PromptForPasswordDialog(Display.getCurrent().getActiveShell(), dictionary);
-			if (dialog.open() == IDialogConstants.CANCEL_ID) {
-				throw new RuntimeException("Password required for dictionary " + dictionary.getId());
-			}
-			password = dialog.getPassword();
-			if (dialog.isStorePassword()) {
-				dictionary.setPassword(password);
-				try {
-					dictionary.toFile(Plugin.getDefault().getDictionaryFolder());
-				} catch (Throwable t) {
-					throw new RuntimeException("Error while saving dictionary data", t);
+	public static String columnsFor(Class<?> tableClass) {
+		StringBuilder columns = new StringBuilder();
+		try {
+			for (Field field : tableClass.getFields()) {
+				if (field.getType() == String.class &&
+					Modifier.isStatic(field.getModifiers()) &&
+					field.isAnnotationPresent(TableColumn.class)) {
+				
+					if (columns.length() > 0) {
+						columns.append(", ");
+					}
+					columns.append((String) field.get(null));
 				}
 			}
-		} else {
-			password = dictionary.getPassword();
-		}		
-		return connect(dictionary.getConnectionUrl(), dictionary.getUser(), password);		
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+		if (columns.length() == 0) {
+			throw new IllegalArgumentException("class without @TableColumn fields: " + 
+											   tableClass.getName());
+		}
+		return columns.toString();
 	}
 	
+	public static long getDbkey(ResultSet resultSet, String rowIdColumnLabel) throws SQLException {
+		byte[] rid = resultSet.getBytes(rowIdColumnLabel);		
+		return ByteBuffer.wrap(new byte[] {0, 0, 0, 0, rid[0], rid[1], rid[2], rid[3]}).getLong();
+	}
+	
+	public static String removeTrailingSpaces(String aString) {
+		StringBuilder p = new StringBuilder(aString);
+		while (p.length() > 0 && p.charAt(p.length() - 1) == ' ') {
+			p.setLength(p.length() - 1);
+		}
+		return p.toString();
+	}
+
 	public static void testConnection(Dictionary dictionary) {			
 		String title = "Test Connection";
-		Connection connection = null;
+		ImportSession session = null;
 		try {
-			connection = connect(dictionary);
-			String sql = buildQueryForValidSchemas(dictionary);
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.executeQuery();
+			session = new ImportSession(dictionary);
+			session.open();
+			String context = "Test connection; dictionary='" + dictionary.getId() + "'";
+			Query query = 
+				new Query.Builder().forValidSchemaList(session).withContext(context).build();
+			session.runQuery(query, new IRowProcessor() {
+				@Override
+				public void processRow(ResultSet row) throws SQLException {					
+				}				
+			});
 			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), title, 
 										  "Connection was successful for dictionary " +
 										  dictionary.getId() + ".");
@@ -99,10 +92,18 @@ public abstract class JdbcTools {
 									fullMessage.toString());
 		} finally {
 			try {
-				connection.close();
+				session.close();
 			} catch (Throwable t) {
 			}
 		}
+	}
+
+	public static String toHexString(long dbkey) {
+		StringBuilder p = new StringBuilder(Long.toHexString(dbkey));
+		while (p.length() < 8) {
+			p.insert(0, '0');
+		}
+		return p.toString();
 	}	
 	
 }

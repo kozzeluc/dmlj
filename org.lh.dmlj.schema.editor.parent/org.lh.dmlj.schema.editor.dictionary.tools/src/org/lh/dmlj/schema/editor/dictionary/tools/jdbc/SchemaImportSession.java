@@ -14,18 +14,35 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.table;
+package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
+import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
-public abstract class S_010 {
-
-	@TableColumn public static final String S_NAM_010 = "S_010.S_NAM_010";
-	@TableColumn public static final String S_SER_010 = "S_010.S_SER_010";
-	@TableColumn public static final String DESCR_010 = "S_010.DESCR_010";
-	@TableColumn public static final String S_DT_010 = "S_010.S_DT_010";
+public class SchemaImportSession extends ImportSession {
 	
-	public static final String COLUMNS = JdbcTools.columnsFor(S_010.class);
+	private String schemaName;
+	private int schemaVersion;
+
+	public SchemaImportSession(Dictionary dictionary, String schemaName, int schemaVersion) {
+		super(dictionary);
+		this.schemaName = schemaName;
+		this.schemaVersion = schemaVersion;
+	}
+
+	public String getSchemaName() {
+		return schemaName;
+	}
+
+	public int getSchemaVersion() {
+		return schemaVersion;
+	}	
 	
+	public String getSchemaVersionAsString() {
+		return String.valueOf(schemaVersion);
+	}
+	
+	public boolean isIdmsntwkVersion1() {
+		return schemaName.equals("IDMSNTWK") && schemaVersion == 1;
+	}
+
 }

@@ -16,16 +16,45 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
-public abstract class S_010 {
+public class Sa_018 {
+	
+	@TableColumn public static final String ROWID = "SA_018.ROWID";
+	@TableColumn public static final String SA_NAM_018 = "SA_018.SA_NAM_018";
+	
+	public static final String COLUMNS = JdbcTools.columnsFor(Sa_018.class);
+	
+	private long dbkey;
+	private String saNam_018;
+	private List<Sacall_020> sacall_020s = new ArrayList<>();
+	
+	public Sa_018() {
+		super();
+	}
 
-	@TableColumn public static final String S_NAM_010 = "S_010.S_NAM_010";
-	@TableColumn public static final String S_SER_010 = "S_010.S_SER_010";
-	@TableColumn public static final String DESCR_010 = "S_010.DESCR_010";
-	@TableColumn public static final String S_DT_010 = "S_010.S_DT_010";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(S_010.class);
-	
+	public long getDbkey() {
+		return dbkey;
+	}
+
+	public List<Sacall_020> getSacall_020s() {
+		return sacall_020s;
+	}
+
+	public String getSaNam_018() {
+		return saNam_018;
+	}
+
+	public void setDbkey(long dbkey) {
+		this.dbkey = dbkey;
+	}
+
+	public void setSaNam_018(String saNam_018) {
+		this.saNam_018 = JdbcTools.removeTrailingSpaces(saNam_018);
+	}
+
 }

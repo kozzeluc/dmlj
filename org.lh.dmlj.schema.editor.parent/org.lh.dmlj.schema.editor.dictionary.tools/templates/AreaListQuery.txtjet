@@ -1,3 +1,4 @@
+<%
 /**
  * Copyright (C) 2014  Luc Hermans
  * 
@@ -14,18 +15,20 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.table;
-
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
-
-public abstract class S_010 {
-
-	@TableColumn public static final String S_NAM_010 = "S_010.S_NAM_010";
-	@TableColumn public static final String S_SER_010 = "S_010.S_SER_010";
-	@TableColumn public static final String DESCR_010 = "S_010.DESCR_010";
-	@TableColumn public static final String S_DT_010 = "S_010.S_DT_010";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(S_010.class);
-	
-}
+%>
+<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
+        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+        class="AreaListQueryTemplate"
+        skeleton="query-template.skeleton"%>
+<%
+Object[] args = (Object[]) argument;
+String sysdirlSchema = (String) args[0];
+String schemaName = (String) args[1];
+int schemaVersion = ((Integer) args[2]).intValue();
+%>
+SELECT <%= S_010.COLUMNS %>,
+       <%= Sa_018.COLUMNS %> 
+FROM "<%= sysdirlSchema %>"."S-010",
+     "<%= sysdirlSchema %>"."SA-018"
+WHERE S_NAM_010 = '<%= schemaName %>' AND S_SER_010 = <%= schemaVersion %> AND 
+      "S-SA"

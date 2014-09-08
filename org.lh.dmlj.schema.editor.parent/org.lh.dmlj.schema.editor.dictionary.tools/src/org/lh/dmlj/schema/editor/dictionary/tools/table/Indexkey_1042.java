@@ -19,13 +19,34 @@ package org.lh.dmlj.schema.editor.dictionary.tools.table;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
-public abstract class S_010 {
+public class Indexkey_1042 {
 
-	@TableColumn public static final String S_NAM_010 = "S_010.S_NAM_010";
-	@TableColumn public static final String S_SER_010 = "S_010.S_SER_010";
-	@TableColumn public static final String DESCR_010 = "S_010.DESCR_010";
-	@TableColumn public static final String S_DT_010 = "S_010.S_DT_010";
+	@TableColumn public static final String COLUMN_1042 = "INDEXKEY.COLUMN";
+	@TableColumn public static final String SORTORDER_1042 = "INDEXKEY.SORTORDER";
 	
-	public static final String COLUMNS = JdbcTools.columnsFor(S_010.class);
+	public static final String COLUMNS = JdbcTools.columnsFor(Indexkey_1042.class);
+	
+	private String column_1042;
+	private String sortorder_1042;
+
+	public Indexkey_1042() {
+		super();
+	}
+
+	public String getColumn_1042() {
+		return column_1042;
+	}
+
+	public String getSortorder_1042() {
+		return sortorder_1042;
+	}
+
+	public void setColumn_1042(String column_1042) {
+		this.column_1042 = JdbcTools.removeTrailingSpaces(column_1042);
+	}
+
+	public void setSortorder_1042(String sortorder_1042) {
+		this.sortorder_1042 = JdbcTools.removeTrailingSpaces(sortorder_1042);
+	}
 	
 }
