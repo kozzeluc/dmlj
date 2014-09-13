@@ -30,8 +30,8 @@ public class Sor_046 {
 	@TableColumn public static final String NXT_DBK_046 = "NXT_DBK_046";
 	@TableColumn public static final String ORD_046 = "ORD_046";
 	@TableColumn public static final String PAGE_COUNT_046 = "PAGE_COUNT_046";
-	@TableColumn public static final String PAGE_COUNT_PERCENT_046 = "PAGE_COUNT_046";
-	@TableColumn public static final String PAGE_OFFSET_046 = "PAGE_OFFSET_PERCENT_046";
+	@TableColumn public static final String PAGE_COUNT_PERCENT_046 = "PAGE_COUNT_PERCENT_046";
+	@TableColumn public static final String PAGE_OFFSET_046 = "PAGE_OFFSET_046";
 	@TableColumn public static final String PAGE_OFFSET_PERCENT_046 = "PAGE_OFFSET_PERCENT_046";
 	@TableColumn public static final String PRI_DBK_046 = "PRI_DBK_046";
 	@TableColumn public static final String SA_NAM_046 = "SA_NAM_046";
