@@ -24,9 +24,9 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Rcdsyn_079 {
 	
-	@TableColumn public static final String ROWID = "RCDSYN_079.ROWID";
-	@TableColumn public static final String RSYN_NAME_079 = "RCDSYN_079.RSYN_NAME_079";
-	@TableColumn public static final String RSYN_VER_079 = "RCDSYN_079.RSYN_VER_079";
+	@TableColumn public static final String ROWID = "RCDSYN_079_ROWID";
+	@TableColumn public static final String RSYN_NAME_079 = "RSYN_NAME_079";
+	@TableColumn public static final String RSYN_VER_079 = "RSYN_VER_079";
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Rcdsyn_079.class);
 	

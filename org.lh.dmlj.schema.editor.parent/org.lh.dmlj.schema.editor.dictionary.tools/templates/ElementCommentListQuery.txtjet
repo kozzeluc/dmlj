@@ -29,12 +29,12 @@ SELECT <%= Rcdsyn_079.COLUMNS %>,
        <%= Namesyn_083.COLUMNS %>,
        <%= Sdr_042.COLUMNS %>,
        <%= Sdes_044.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."RCDSYN-079",
-     "<%= sysdirlSchema %>"."NAMESYN-083",
-     "<%= sysdirlSchema %>"."SDR-042",
-     "<%= sysdirlSchema %>"."SDES-044"
+FROM "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,
+     "<%= sysdirlSchema %>"."NAMESYN-083" AS NAMESYN_083,
+     "<%= sysdirlSchema %>"."SDR-042" AS SDR_042,
+     "<%= sysdirlSchema %>"."SDES-044" AS SDES_044
 WHERE RCDSYN_079.ROWID = X'<%= hexDbkeyRcdsyn_079 %>' AND 
       "RCDSYN-NAMESYN" AND
       "SDR-NAMESYN" AND
       "SDR-SDES" AND
-      SDES_044.CMT_ID_044() = -3
+      (SDES_044.CMT_ID_044 = -3 OR SDES_044.CMT_ID_044 = -11)

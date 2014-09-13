@@ -30,10 +30,10 @@ SELECT <%= S_010.COLUMNS %>,
        <%= Sor_046.COLUMNS %>,
        <%= Smr_052.COLUMNS %>,
        <%= Srcd_113.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."S-010",  
-	 "<%= sysdirlSchema %>"."SOR-046",
-	 "<%= sysdirlSchema %>"."SMR-052"
-	 "<%= sysdirlSchema %>"."SRCD-113"
+FROM "<%= sysdirlSchema %>"."S-010" AS S_010,  
+	 "<%= sysdirlSchema %>"."SOR-046" AS SOR_046,
+	 "<%= sysdirlSchema %>"."SMR-052" AS SMR_052,
+	 "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113
 WHERE S_010.S_NAM_010 = '<%= schemaName %>' AND S_010.S_SER_010 = <%= schemaVersion %>  AND
 	  "S-SOR" AND SET_NAM_046 <> 'CALC' AND
 	  "SOR-SMR" AND

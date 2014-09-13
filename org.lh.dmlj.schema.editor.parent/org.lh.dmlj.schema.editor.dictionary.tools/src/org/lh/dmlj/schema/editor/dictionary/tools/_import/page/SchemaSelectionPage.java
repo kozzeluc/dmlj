@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.lh.dmlj.schema.editor.dictionary.tools._import.common.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.S_010;
@@ -120,9 +121,11 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 			session.runQuery(query, new IRowProcessor() {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {
-					String sNam_010 = row.getString(S_010.S_NAM_010);
+					String sNam_010 = 
+						JdbcTools.removeTrailingSpaces(row.getString(S_010.S_NAM_010));
 					int sSer_010 = row.getInt(S_010.S_SER_010);
-					String descr_010 = row.getString(S_010.DESCR_010);
+					String descr_010 = 
+						JdbcTools.removeTrailingSpaces(row.getString(S_010.DESCR_010));
 					tableEntries.add(new TableEntry(sNam_010, sSer_010, descr_010));				
 				}
 			});

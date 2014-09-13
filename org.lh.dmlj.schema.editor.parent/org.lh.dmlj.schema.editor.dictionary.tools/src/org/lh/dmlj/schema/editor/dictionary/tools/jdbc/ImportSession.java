@@ -70,6 +70,10 @@ public class ImportSession {
 	private static void logDebug(String message) {
 		org.lh.dmlj.schema.editor.Plugin.logDebug(message);
 	}
+	
+	private static void logError(String message, Throwable t) {
+		org.lh.dmlj.schema.editor.Plugin.logError(message, t);
+	}
 
 	private static void logInfo(String message) {
 		org.lh.dmlj.schema.editor.Plugin.logInfo(message);
@@ -122,7 +126,7 @@ public class ImportSession {
 	}
 
 	public final void runQuery(Query query, IRowProcessor rowProcessor) {
-		if (connectionOpened != -1) {
+		if (connectionOpened == -1) {
 			throw new RuntimeException("session not open");
 		}
 		if (connectionClosed != -1) {
@@ -152,9 +156,10 @@ public class ImportSession {
 					 "'");
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, null));
 		} catch (Throwable t) {
-			String message = "exception while executing query '" + query.getDescription() + "'";
-			logDebug("Exception while running query '" + query.getDescription() + "': " +
-					 t.getClass().getName() + " (" + t.getMessage() + ")");
+			String message = "Exception while executing query '" + query.getDescription() + 
+							 "'; see log for details.";
+			logError("Exception while running query '" + query.getDescription() + "': " +
+					 t.getClass().getName() + " (" + t.getMessage() + ")", t);
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, t));
 			throw new RuntimeException(message, t);
 		}
@@ -182,7 +187,7 @@ public class ImportSession {
 
 		private String format(long date, DateFormat dateFormat) {
 			if (date < 0) {
-				return "N/A";
+				return "[N/A]";
 			} else {
 				return "'" + dateFormat.format(date) + "'";
 			}
@@ -191,7 +196,7 @@ public class ImportSession {
 		public String toString() {
 			DateFormat dateFormat = org.lh.dmlj.schema.editor.Plugin.getDefault().getDateFormat();
 			return "query='" + query.getDescription() + "', " + 
-				   "context=" + (query.getContext() != null ? "'" + query.getContext() + "', " : "N/A, ") + 
+				   "context=" + (query.getContext() != null ? "'" + query.getContext() + "', " : "[N/A], ") + 
 				   "start=" + format(start, dateFormat) + ", " + 
 				   "end1=" + format(end1, dateFormat) + ", " + 
 				   "end2=" + format(end2, dateFormat) + ", " +

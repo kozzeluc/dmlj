@@ -28,9 +28,9 @@ String hexDbkeyRcdsyn_079 = (String) args[1];
 SELECT <%= Rcdsyn_079.COLUMNS %>,
        <%= Namesyn_083.COLUMNS %>,
        <%= Sdr_042.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."RCDSYN-079",            
-     "<%= sysdirlSchema %>"."NAMESYN-083",
-	 "<%= sysdirlSchema %>"."SDR-042"                         
+FROM "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,            
+     "<%= sysdirlSchema %>"."NAMESYN-083" AS NAMESYN_083,
+     "<%= sysdirlSchema %>"."SDR-042" AS SDR_042                         
 WHERE RCDSYN_079.ROWID = X'<%= hexDbkeyRcdsyn_079 %>' AND 
       "RCDSYN-NAMESYN" AND
       "SDR-NAMESYN"

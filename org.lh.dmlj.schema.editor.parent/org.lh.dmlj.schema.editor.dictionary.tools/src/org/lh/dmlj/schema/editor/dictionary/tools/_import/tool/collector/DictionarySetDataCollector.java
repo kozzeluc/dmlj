@@ -61,7 +61,7 @@ public class DictionarySetDataCollector implements ISetDataCollector<Sor_046> {
 		 SortSequence.DESCENDING};		// 1	
 
 	private SchemaImportSession session;
-	private Map<String, Smr_052> sortKeyElementsMap;
+	private Map<Long, Smr_052> sortKeyElementsMap;
 	
 	private static short getAdjustedDbkeyPosition(Srcd_113 srcd_113, short dbkeyPosition) {
 		if (dbkeyPosition == -1) {
@@ -101,16 +101,15 @@ public class DictionarySetDataCollector implements ISetDataCollector<Sor_046> {
 		session.runQuery(sortKeyElementListQuery, new IRowProcessor() {			
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				String srNam_056 = 
-					JdbcTools.removeTrailingSpaces(row.getString(Sam_056.SR_NAM_056));
-				if (!sortKeyElementsMap.containsKey(srNam_056)) {
+				Long dbkeyOfSmr_052 = JdbcTools.getDbkey(row, Smr_052.ROWID);
+				if (!sortKeyElementsMap.containsKey(Long.valueOf(dbkeyOfSmr_052))) {
 					Smr_052 smr_052 = new Smr_052();
 					// we only care about collecting the sort key elements, so ignore most of the
 					// SMR-052's fields
 					smr_052.setDbkey(JdbcTools.getDbkey(row, Smr_052.ROWID));
-					sortKeyElementsMap.put(srNam_056, smr_052);
+					sortKeyElementsMap.put(Long.valueOf(dbkeyOfSmr_052), smr_052);
 				}
-				Smr_052 smr_052 = sortKeyElementsMap.get(srNam_056);
+				Smr_052 smr_052 = sortKeyElementsMap.get(Long.valueOf(dbkeyOfSmr_052));
 				Scr_054 scr_054 = new Scr_054();
 				scr_054.setIndex_054(row.getShort(Scr_054.INDEX_054));
 				scr_054.setScrNam_054(row.getString(Scr_054.SCR_NAM_054));

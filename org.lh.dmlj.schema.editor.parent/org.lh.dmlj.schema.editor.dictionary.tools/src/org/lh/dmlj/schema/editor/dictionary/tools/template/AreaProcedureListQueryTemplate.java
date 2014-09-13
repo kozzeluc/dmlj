@@ -20,9 +20,9 @@ public class AreaProcedureListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_2 = ",";
   protected final String TEXT_3 = NL + "       ";
   protected final String TEXT_4 = " " + NL + "FROM \"";
-  protected final String TEXT_5 = "\".\"SA-018\"," + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SACALL-020\"                         " + NL + "WHERE SA_018.ROWID = X'";
-  protected final String TEXT_7 = "'";
+  protected final String TEXT_5 = "\".\"SA-018\" AS SA_018," + NL + "     \"";
+  protected final String TEXT_6 = "\".\"SACALL-020\" AS SACALL_020                         " + NL + "WHERE SA_018.ROWID = X'";
+  protected final String TEXT_7 = "' AND" + NL + "      \"SA-SACALL\"";
 
 	public String generate(Object argument)
   {

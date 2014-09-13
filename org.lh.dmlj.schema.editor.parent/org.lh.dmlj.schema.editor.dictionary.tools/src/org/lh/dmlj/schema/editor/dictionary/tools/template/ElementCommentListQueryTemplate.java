@@ -24,11 +24,11 @@ public class ElementCommentListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_6 = ",";
   protected final String TEXT_7 = NL + "       ";
   protected final String TEXT_8 = " " + NL + "FROM \"";
-  protected final String TEXT_9 = "\".\"RCDSYN-079\"," + NL + "     \"";
-  protected final String TEXT_10 = "\".\"NAMESYN-083\"," + NL + "     \"";
-  protected final String TEXT_11 = "\".\"SDR-042\"," + NL + "     \"";
-  protected final String TEXT_12 = "\".\"SDES-044\"" + NL + "WHERE RCDSYN_079.ROWID = X'";
-  protected final String TEXT_13 = "' AND " + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"SDR-NAMESYN\" AND" + NL + "      \"SDR-SDES\" AND" + NL + "      SDES_044.CMT_ID_044() = -3";
+  protected final String TEXT_9 = "\".\"RCDSYN-079\" AS RCDSYN_079," + NL + "     \"";
+  protected final String TEXT_10 = "\".\"NAMESYN-083\" AS NAMESYN_083," + NL + "     \"";
+  protected final String TEXT_11 = "\".\"SDR-042\" AS SDR_042," + NL + "     \"";
+  protected final String TEXT_12 = "\".\"SDES-044\" AS SDES_044" + NL + "WHERE RCDSYN_079.ROWID = X'";
+  protected final String TEXT_13 = "' AND " + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"SDR-NAMESYN\" AND" + NL + "      \"SDR-SDES\" AND" + NL + "      (SDES_044.CMT_ID_044 = -3 OR SDES_044.CMT_ID_044 = -11)";
 
 	public String generate(Object argument)
   {

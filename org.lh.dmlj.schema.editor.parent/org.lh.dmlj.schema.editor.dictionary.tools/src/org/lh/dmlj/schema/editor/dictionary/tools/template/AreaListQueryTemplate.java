@@ -20,8 +20,8 @@ public class AreaListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_2 = ",";
   protected final String TEXT_3 = NL + "       ";
   protected final String TEXT_4 = " " + NL + "FROM \"";
-  protected final String TEXT_5 = "\".\"S-010\"," + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SA-018\"" + NL + "WHERE S_NAM_010 = '";
+  protected final String TEXT_5 = "\".\"S-010\" AS S_010," + NL + "     \"";
+  protected final String TEXT_6 = "\".\"SA-018\" AS SA_018" + NL + "WHERE S_NAM_010 = '";
   protected final String TEXT_7 = "' AND S_SER_010 = ";
   protected final String TEXT_8 = " AND " + NL + "      \"S-SA\"";
 

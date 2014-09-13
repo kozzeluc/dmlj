@@ -27,7 +27,7 @@ String hexDbkeyNamesyn_083 = (String) args[1];
 %> 
 SELECT <%= Namesyn_083.COLUMNS %>,
        <%= Namedes_186.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."NAMESYN_083",
-	 "<%= sysdirlSchema %>"."NAMEDES-186"                                   
+FROM "<%= sysdirlSchema %>"."NAMESYN_083" AS NAMESYN_083,
+	 "<%= sysdirlSchema %>"."NAMEDES-186" AS NAMEDES_186                                   
 WHERE NAMESYN_083.ROWID = X'<%= hexDbkeyNamesyn_083 %>' AND 
       "NAMESYN-NAMEDES"

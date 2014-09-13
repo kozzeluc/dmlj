@@ -39,6 +39,10 @@ public abstract class JdbcTools {
 					if (columns.length() > 0) {
 						columns.append(", ");
 					}
+					if (field.getName().equals("ROWID")) {
+						columns.append(tableClass.getSimpleName().toUpperCase());
+						columns.append(".ROWID AS ");						
+					}
 					columns.append((String) field.get(null));
 				}
 			}

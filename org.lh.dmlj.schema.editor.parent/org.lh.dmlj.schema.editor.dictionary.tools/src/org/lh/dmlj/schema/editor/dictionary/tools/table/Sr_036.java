@@ -21,9 +21,9 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sr_036 {
 	
-	@TableColumn public static final String ROWID = "SR_036.ROWID";
-	@TableColumn public static final String SR_NAM_036 = "SR_036.SR_NAM_036";
-	@TableColumn public static final String RCD_VERS_036 = "SR_036.RCD_VERS_036";
+	@TableColumn public static final String ROWID = "SR_036_ROWID";
+	@TableColumn public static final String SR_NAM_036 = "SR_NAM_036";
+	@TableColumn public static final String RCD_VERS_036 = "RCD_VERS_036";
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Sr_036.class);
 	

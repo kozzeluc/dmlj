@@ -24,12 +24,12 @@ public class ViaSetListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_6 = ",";
   protected final String TEXT_7 = NL + "       ";
   protected final String TEXT_8 = " " + NL + "FROM \"";
-  protected final String TEXT_9 = "\".\"S-010\" AS S_010," + NL + "\t \"";
+  protected final String TEXT_9 = "\".\"S-010\" AS S_010," + NL + "     \"";
   protected final String TEXT_10 = "\".\"SRCD-113\" AS SRCD_113," + NL + "     \"";
-  protected final String TEXT_11 = "\".\"SAM-056\" AS SAM_056" + NL + "\t \"";
+  protected final String TEXT_11 = "\".\"SAM-056\" AS SAM_056," + NL + "     \"";
   protected final String TEXT_12 = "\".\"SMR-052\" AS SMR_052" + NL + "WHERE S_010.S_NAM_010 = '";
   protected final String TEXT_13 = "' AND" + NL + "      S_010.S_SER_010 = ";
-  protected final String TEXT_14 = " AND" + NL + "      FIRST \"SRCD-SAM\" AND" + NL + "      \"SRCD-SMR\" AND" + NL + "      SMR_052.VIA_052 = 1";
+  protected final String TEXT_14 = " AND" + NL + "      \"S-SRCD\" AND" + NL + "      FIRST \"SRCD-SAM\" AND" + NL + "      \"SRCD-SMR\" AND" + NL + "      SMR_052.VIA_052 = 1 AND SMR_052.SET_NAM_052 <> 'CALC'";
 
 	public String generate(Object argument)
   {

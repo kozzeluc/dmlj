@@ -24,23 +24,23 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sor_046 {
 	
-	@TableColumn public static final String ROWID = "SOR_046.ROWID";
-	@TableColumn public static final String INDEX_DISP_046 = "SOR_046.INDEX_DISP_046";
-	@TableColumn public static final String INDEX_MEMBERS_046 = "SOR_046.INDEX_MEMBERS_046";
-	@TableColumn public static final String NXT_DBK_046 = "SOR_046.NXT_DBK_046";
-	@TableColumn public static final String ORD_046 = "SOR_046.ORD_046";
-	@TableColumn public static final String PAGE_COUNT_046 = "SOR_046.PAGE_COUNT_046";
-	@TableColumn public static final String PAGE_COUNT_PERCENT_046 = "SOR_046.PAGE_COUNT_046";
-	@TableColumn public static final String PAGE_OFFSET_046 = "SOR_046.PAGE_OFFSET_PERCENT_046";
-	@TableColumn public static final String PAGE_OFFSET_PERCENT_046 = "SOR_046.PAGE_OFFSET_PERCENT_046";
-	@TableColumn public static final String PRI_DBK_046 = "SOR_046.PRI_DBK_046";
-	@TableColumn public static final String SA_NAM_046 = "SOR_046.SA_NAM_046";
-	@TableColumn public static final String SET_MODE_046 = "SOR_046.SET_MODE_046";
-	@TableColumn public static final String SET_NAM_046 = "SOR_046.SET_NAM_046";
-	@TableColumn public static final String SET_ORD_046 = "SOR_046.SET_ORD_046";
-	@TableColumn public static final String SOR_ID_046 = "SOR_046.SOR_ID_046";
-	@TableColumn public static final String SUBAREA_046 = "SOR_046.SUBAREA_046";
-	@TableColumn public static final String SYMBOL_INDEX_046 = "SOR_046.SYMBOL_INDEX_046";
+	@TableColumn public static final String ROWID = "SOR_046_ROWID";
+	@TableColumn public static final String INDEX_DISP_046 = "INDEX_DISP_046";
+	@TableColumn public static final String INDEX_MEMBERS_046 = "INDEX_MEMBERS_046";
+	@TableColumn public static final String NXT_DBK_046 = "NXT_DBK_046";
+	@TableColumn public static final String ORD_046 = "ORD_046";
+	@TableColumn public static final String PAGE_COUNT_046 = "PAGE_COUNT_046";
+	@TableColumn public static final String PAGE_COUNT_PERCENT_046 = "PAGE_COUNT_046";
+	@TableColumn public static final String PAGE_OFFSET_046 = "PAGE_OFFSET_PERCENT_046";
+	@TableColumn public static final String PAGE_OFFSET_PERCENT_046 = "PAGE_OFFSET_PERCENT_046";
+	@TableColumn public static final String PRI_DBK_046 = "PRI_DBK_046";
+	@TableColumn public static final String SA_NAM_046 = "SA_NAM_046";
+	@TableColumn public static final String SET_MODE_046 = "SET_MODE_046";
+	@TableColumn public static final String SET_NAM_046 = "SET_NAM_046";
+	@TableColumn public static final String SET_ORD_046 = "SET_ORD_046";
+	@TableColumn public static final String SOR_ID_046 = "SOR_ID_046";
+	@TableColumn public static final String SUBAREA_046 = "SUBAREA_046";
+	@TableColumn public static final String SYMBOL_INDEX_046 = "SYMBOL_INDEX_046";
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Sor_046.class);
 	

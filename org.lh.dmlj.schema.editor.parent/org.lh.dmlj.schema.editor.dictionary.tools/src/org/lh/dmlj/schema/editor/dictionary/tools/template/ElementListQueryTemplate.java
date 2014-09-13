@@ -22,9 +22,9 @@ public class ElementListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_4 = ",";
   protected final String TEXT_5 = NL + "       ";
   protected final String TEXT_6 = " " + NL + "FROM \"";
-  protected final String TEXT_7 = "\".\"RCDSYN-079\",            " + NL + "     \"";
-  protected final String TEXT_8 = "\".\"NAMESYN-083\"," + NL + "\t \"";
-  protected final String TEXT_9 = "\".\"SDR-042\"                         " + NL + "WHERE RCDSYN_079.ROWID = X'";
+  protected final String TEXT_7 = "\".\"RCDSYN-079\" AS RCDSYN_079,            " + NL + "     \"";
+  protected final String TEXT_8 = "\".\"NAMESYN-083\" AS NAMESYN_083," + NL + "     \"";
+  protected final String TEXT_9 = "\".\"SDR-042\" AS SDR_042                         " + NL + "WHERE RCDSYN_079.ROWID = X'";
   protected final String TEXT_10 = "' AND " + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"SDR-NAMESYN\"";
 
 	public String generate(Object argument)

@@ -20,9 +20,9 @@ public class RecordProcedureListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_2 = ",";
   protected final String TEXT_3 = NL + "       ";
   protected final String TEXT_4 = " " + NL + "FROM \"";
-  protected final String TEXT_5 = "\".\"SRCD-113\"," + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SRCALL-040\"                      " + NL + "WHERE SRCD_113.ROWID = X'";
-  protected final String TEXT_7 = "'";
+  protected final String TEXT_5 = "\".\"SRCD-113\" AS SRCD_113," + NL + "     \"";
+  protected final String TEXT_6 = "\".\"SRCALL-040\" AS SRCALL_040                      " + NL + "WHERE SRCD_113.ROWID = X'";
+  protected final String TEXT_7 = "' AND" + NL + "      \"SRCD-SRCALL\"";
 
 	public String generate(Object argument)
   {

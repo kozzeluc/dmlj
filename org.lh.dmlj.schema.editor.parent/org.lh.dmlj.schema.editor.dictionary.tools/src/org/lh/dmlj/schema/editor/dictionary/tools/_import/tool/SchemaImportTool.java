@@ -93,7 +93,9 @@ public class SchemaImportTool implements ISchemaImportTool {
 				sa_018.setDbkey(JdbcTools.getDbkey(row, Sa_018.ROWID));
 				sa_018.setSaNam_018(row.getString(Sa_018.SA_NAM_018));
 				Query areaProcedureListQuery = 
-					new Query.Builder().forAreaProcedureList(session, sa_018.getDbkey()).build();
+					new Query.Builder().forAreaProcedureList(session, sa_018.getDbkey())
+									   .withContext("area " + sa_018.getSaNam_018())
+									   .build();
 				session.runQuery(areaProcedureListQuery, new IRowProcessor() {
 					@Override
 					public void processRow(ResultSet row) throws SQLException {
@@ -161,7 +163,11 @@ public class SchemaImportTool implements ISchemaImportTool {
 				// locate the base record synonym and hook it to the SR-036 when different from the
 				// record synonym referenced by the schema
 				Query baseRecordSynonymQuery = 
-					new Query.Builder().forBaseRecordSynonym(session, sr_036.getDbkey()).build();
+					new Query.Builder()
+							 .forBaseRecordSynonym(session, sr_036.getDbkey())
+							 .withContext(rcdsyn_079.getRsynName_079() + " version " + 
+										  rcdsyn_079.getRsynVer_079())
+							 .build();
 				session.runQuery(baseRecordSynonymQuery, new IRowProcessor() {
 					@Override
 					public void processRow(ResultSet row) throws SQLException {
@@ -180,7 +186,11 @@ public class SchemaImportTool implements ISchemaImportTool {
 				
 				// record procedures
 				Query recordProcedureListQuery =
-					new Query.Builder().forRecordProcedureList(session, srcd_113.getDbkey()).build();
+					new Query.Builder()
+				     	     .forRecordProcedureList(session, srcd_113.getDbkey())
+				     	     .withContext(rcdsyn_079.getRsynName_079() + " version " + 
+										  rcdsyn_079.getRsynVer_079())
+							 .build();
 				session.runQuery(recordProcedureListQuery, new IRowProcessor() {
 					@Override
 					public void processRow(ResultSet row) throws SQLException {
@@ -236,7 +246,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 			
 			// regular record
 			
-			// get all elements for once and for all
+			// get ALL elements for once and for all
 			Srcd_113 srcd_113 = (Srcd_113) recordContext;
 			final Rcdsyn_079 rcdsyn_079 = srcd_113.getRcdsyn_079();
 			Query elementListQuery = 
@@ -251,6 +261,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 					Namesyn_083 namesyn_083 = new Namesyn_083();	
 					namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
 					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
+					namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
 					namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
 					namesyn_083.setRcdsyn_079(rcdsyn_079);
 					rcdsyn_079.getNamesyn_083s().add(namesyn_083);
@@ -260,6 +271,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 					sdr_042.setDrLvl_042(row.getShort(Sdr_042.DR_LVL_042));
 					sdr_042.setDrNam_042(row.getString(Sdr_042.DR_NAM_042));
 					sdr_042.setOcc_042(row.getShort(Sdr_042.OCC_042));
+					sdr_042.setPic_042(row.getString(Sdr_042.PIC_042));
 					sdr_042.setUse_042(row.getShort(Sdr_042.USE_042));
 					namesyn_083.setSdr_042(sdr_042);
 				
@@ -276,11 +288,9 @@ public class SchemaImportTool implements ISchemaImportTool {
 					Sdr_042 sdr_042 = 
 						rcdsyn_079.getNamesyn_083(JdbcTools.getDbkey(row, Sdr_042.ROWID)).getSdr_042();					
 					Sdes_044 sdes_044 = new Sdes_044();
-					sdes_044.setAsfFieldName_044(row.getString(Sdes_044.ASF_FIELD_NAME_044));
 					sdes_044.setCmtId_044(row.getInt(Sdes_044.CMT_ID_044));
-					sdes_044.setVal1_044(row.getString(Sdes_044.VAL1_044));
-					sdes_044.setVal2_044(row.getString(Sdes_044.VAL2_044));
-					sdes_044.setValLgth2_044(row.getShort(Sdes_044.VAL_LGTH2_044));
+					sdes_044.setCmtInfo_044_1(row.getString(Sdes_044.CMT_INFO_044_1));
+					sdes_044.setCmtInfo_044_1(row.getString(Sdes_044.CMT_INFO_044_1));
 					sdr_042.getSdes_044s().add(sdes_044);
 				}				
 			});
@@ -298,6 +308,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 						Namesyn_083 namesyn_083 = new Namesyn_083();	
 						namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
 						namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
+						namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
 						namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
 						namesyn_083.setRcdsyn_079(rcdsyn_079b);
 						rcdsyn_079b.getNamesyn_083s().add(namesyn_083);
@@ -318,8 +329,6 @@ public class SchemaImportTool implements ISchemaImportTool {
 					list.add(namesyn_083);
 				}
 			}			
-			
-			// we need the information from the base record as well
 			
 			return list;			
 			
@@ -402,6 +411,17 @@ public class SchemaImportTool implements ISchemaImportTool {
 					sor_046.setSubarea_046(row.getString(Sor_046.SUBAREA_046));
 					sor_046s.put(Long.valueOf(dbkeyOfSor_046), sor_046);
 					
+					// defer the creation of "AREA-INDEX", "AREA-TABLE" and "TABLE-INDEX" since they are 
+					// stored in the catalog too...
+					if (!session.isIdmsntwkVersion1() || !addMissingCatalogComponents ||  
+						!sor_046.getSetNam_046().equals("AREA-INDEX") &&
+						!sor_046.getSetNam_046().equals("AREA-TABLE") &&
+						!sor_046.getSetNam_046().equals("TABLE-INDEX")) {
+						
+						list.add(sor_046);
+						regularSets.add(sor_046.getSetNam_046());
+					}
+					
 				} else {
 					sor_046 = sor_046s.get(Long.valueOf(dbkeyOfSor_046));
 				}
@@ -416,20 +436,11 @@ public class SchemaImportTool implements ISchemaImportTool {
 				smr_052.setMrCntrl_052(row.getShort(Smr_052.MR_CNTRL_052));
 				smr_052.setNxtDbk_052(row.getShort(Smr_052.NXT_DBK_052));
 				smr_052.setOwnDbk_052(row.getShort(Smr_052.OWN_DBK_052));
+				smr_052.setPriDbk_052(row.getShort(Smr_052.PRI_DBK_052));
 				smr_052.setSetNam_052(row.getString(Smr_052.SET_NAM_052));
 				smr_052.setSort_052(row.getShort(Smr_052.SORT_052));
 				sor_046.getSmr_052s().add(smr_052);
 				
-				// defer the creation of "AREA-INDEX", "AREA-TABLE" and "TABLE-INDEX" since they are 
-				// stored in the catalog too...
-				if (!session.isIdmsntwkVersion1() || !addMissingCatalogComponents ||  
-					!sor_046.getSetNam_046().equals("AREA-INDEX") &&
-					!sor_046.getSetNam_046().equals("AREA-TABLE") &&
-					!sor_046.getSetNam_046().equals("TABLE-INDEX")) {
-					
-					list.add(sor_046);
-					regularSets.add(sor_046.getSetNam_046());
-				}
 			}
 		});
 		
@@ -512,7 +523,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 			boolean active = false;
 			for (Namesyn_083 namesyn_083b : rcdsyn_079.getNamesyn_083s()) {				
 				if (active) {
-					sdr_042 = namesyn_083.getSdr_042();
+					sdr_042 = namesyn_083b.getSdr_042();
 					short level = sdr_042.getDrLvl_042();					
 					if (level <= ourLevel) {
 						// a level number smaller than or equal to ours means we're done

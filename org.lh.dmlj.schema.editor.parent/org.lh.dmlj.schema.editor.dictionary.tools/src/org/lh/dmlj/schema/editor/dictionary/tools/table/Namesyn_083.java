@@ -21,10 +21,10 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Namesyn_083 {
 	
-	@TableColumn public static final String ROWID = "NAMESYN_083.ROWID";
-	@TableColumn public static final String DEPEND_ON_083 = "NAMESYN_083.DEPEND_ON_083";
-	@TableColumn public static final String SYN_NAME_083 = "NAMESYN_083.SYN_NAME_083";
-	@TableColumn public static final String RDF_NAM_083 = "NAMESYN_083.RDF_NAM_083";
+	@TableColumn public static final String ROWID = "NAMESYN_083_ROWID";
+	@TableColumn public static final String DEPEND_ON_083 = "DEPEND_ON_083";
+	@TableColumn public static final String SYN_NAME_083 = "SYN_NAME_083";
+	@TableColumn public static final String RDF_NAM_083 = "RDF_NAM_083";
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Namesyn_083.class);
 	

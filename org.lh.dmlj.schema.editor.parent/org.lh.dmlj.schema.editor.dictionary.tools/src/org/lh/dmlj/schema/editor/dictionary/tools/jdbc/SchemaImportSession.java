@@ -35,10 +35,6 @@ public class SchemaImportSession extends ImportSession {
 
 	public int getSchemaVersion() {
 		return schemaVersion;
-	}	
-	
-	public String getSchemaVersionAsString() {
-		return String.valueOf(schemaVersion);
 	}
 	
 	public boolean isIdmsntwkVersion1() {

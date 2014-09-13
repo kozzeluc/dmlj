@@ -21,11 +21,11 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sacall_020 {
 	
-	@TableColumn public static String CALL_PROC_020 = "SACALL_020.CALL_PROC_020";
-	@TableColumn public static String CALL_TIME_020 = "SACALL_020.CALL_TIME_020";
-	@TableColumn public static String DBP_ACCESS_020 = "SACALL_020.DBP_ACCESS_020";
-	@TableColumn public static String DBP_FUNC_020 = "SACALL_020.DBP_FUNC_020";
-	@TableColumn public static String DBP_MODE_020 = "SACALL_020.DBP_MODE_020";
+	@TableColumn public static String CALL_PROC_020 = "CALL_PROC_020";
+	@TableColumn public static String CALL_TIME_020 = "CALL_TIME_020";
+	@TableColumn public static String DBP_ACCESS_020 = "DBP_ACCESS_020";
+	@TableColumn public static String DBP_FUNC_020 = "DBP_FUNC_020";
+	@TableColumn public static String DBP_MODE_020 = "DBP_MODE_020";
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Sacall_020.class);
 	

@@ -24,12 +24,12 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sdr_042 {
 	
-	@TableColumn public static final String ROWID = "SDR_042.ROWID";
-	@TableColumn public static final String DR_NAM_042 = "SDR_042.DR_NAM_042";
-	@TableColumn public static final String DR_LVL_042 = "SDR_042.DR_LVL_042";
-	@TableColumn public static final String OCC_042 = "SDR_042.OCC_042";
-	@TableColumn public static final String PIC_042 = "SDR_042.PIC_042";
-	@TableColumn public static final String USE_042 = "SDR_042.USE_042";	
+	@TableColumn public static final String ROWID = "SDR_042_ROWID";
+	@TableColumn public static final String DR_NAM_042 = "DR_NAM_042";
+	@TableColumn public static final String DR_LVL_042 = "DR_LVL_042";
+	@TableColumn public static final String OCC_042 = "OCC_042";
+	@TableColumn public static final String PIC_042 = "PIC_042";
+	@TableColumn public static final String USE_042 = "USE_042";	
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Sdr_042.class);
 	

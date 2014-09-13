@@ -26,11 +26,11 @@ public class SortKeyElementListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_8 = ",";
   protected final String TEXT_9 = NL + "       ";
   protected final String TEXT_10 = " " + NL + "FROM \"";
-  protected final String TEXT_11 = "\".\"S-010\", " + NL + "\t \"";
-  protected final String TEXT_12 = "\".\"SRCD-113\"," + NL + "\t \"";
-  protected final String TEXT_13 = "\".\"SAM-056\", " + NL + "\t \"";
-  protected final String TEXT_14 = "\".\"SMR-052\"," + NL + "\t \"";
-  protected final String TEXT_15 = "\".\"SCR-054\"" + NL + "WHERE S_010.S_NAM_010 = '";
+  protected final String TEXT_11 = "\".\"S-010\" AS S_010, " + NL + "\t \"";
+  protected final String TEXT_12 = "\".\"SRCD-113\" AS SRCD_113," + NL + "\t \"";
+  protected final String TEXT_13 = "\".\"SAM-056\" AS SAM_056, " + NL + "\t \"";
+  protected final String TEXT_14 = "\".\"SMR-052\" AS SMR_052," + NL + "\t \"";
+  protected final String TEXT_15 = "\".\"SCR-054\" AS SCR_054" + NL + "WHERE S_010.S_NAM_010 = '";
   protected final String TEXT_16 = "' AND S_010.S_SER_010 = ";
   protected final String TEXT_17 = " AND" + NL + "      \"S-SRCD\" AND SRCD_113.SR_ID_113 > 9 AND" + NL + "      FIRST \"SRCD-SAM\" AND" + NL + "      \"SRCD-SMR\" AND SMR_052.SET_NAM_052 <> 'CALC' AND" + NL + "      \"SMR-SCR\"";
 

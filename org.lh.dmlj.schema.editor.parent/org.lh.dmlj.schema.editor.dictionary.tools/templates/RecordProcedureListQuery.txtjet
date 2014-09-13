@@ -27,6 +27,7 @@ String hexDbkeySrcd_113 = (String) args[1];
 %>
 SELECT <%= Srcd_113.COLUMNS %>,
        <%= Srcall_040.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."SRCD-113",
-     "<%= sysdirlSchema %>"."SRCALL-040"                      
-WHERE SRCD_113.ROWID = X'<%= hexDbkeySrcd_113 %>'
+FROM "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,
+     "<%= sysdirlSchema %>"."SRCALL-040" AS SRCALL_040                      
+WHERE SRCD_113.ROWID = X'<%= hexDbkeySrcd_113 %>' AND
+      "SRCD-SRCALL"

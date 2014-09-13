@@ -104,8 +104,8 @@ public class Query {
 	}
 	
 	public String toString() {
-		return "Query - description=" + description + ", context=" + context + 
-			   " sql=[see below]\n" + sql;
+		return "Query - description='" + description + "', context=" + 
+			   (context != null ? "'" + context + "'" : "[N/A]") + " sql=[see below]\n" + sql;
 	}
 
 	public static class Builder {
@@ -240,7 +240,7 @@ public class Query {
 			IQueryTemplate template = recordListQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
 								 				  session.getSchemaName(),
-								 				  session.getSchemaVersionAsString()});
+								 				  session.getSchemaVersion()});
 			return this;
 		}		
 		
@@ -257,7 +257,7 @@ public class Query {
 			IQueryTemplate template = schemaDescriptionAndCommentListQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
 												  session.getSchemaName(),
-												  session.getSchemaVersionAsString()});
+												  session.getSchemaVersion()});
 			return this;
 		}
 
@@ -288,13 +288,12 @@ public class Query {
 		}
 
 		public Builder forValidSchemaList(ImportSession session) {
-			description = "valid schema list";
 			IQueryTemplate template;
 			if (session.getDictionary().isSysdirl()) {
-				description = "schema list (SYSDIRL)";
+				description = "valid schema list (SYSDIRL)";
 				template = validSchemaListForSysdirlDictionariesQueryTemplate;
 			} else {
-				description = "schema list";
+				description = "valid schema list";
 				template = validSchemaListForNonSysdirlDictionariesQueryTemplate;
 			}
 			sql = template.generate(new Object[] {session.getDictionary().getSchema()});

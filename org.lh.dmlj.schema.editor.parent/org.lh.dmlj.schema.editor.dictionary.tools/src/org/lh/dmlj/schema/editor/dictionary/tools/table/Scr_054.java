@@ -21,10 +21,10 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Scr_054 {
 	
-	@TableColumn public static final String SCR_NAM_054 = "SCR_054.SCR_NAM_054";
-	@TableColumn public static final String SCR_POS_054 = "SCR_054.SCR_POS_054";
-	@TableColumn public static final String INDEX_054 = "SCR_054.INDEX_054";
-	@TableColumn public static final String SORT_054 = "SCR_054.SORT_054";
+	@TableColumn public static final String SCR_NAM_054 = "SCR_NAM_054";
+	@TableColumn public static final String SCR_POS_054 = "SCR_POS_054";
+	@TableColumn public static final String INDEX_054 = "INDEX_054";
+	@TableColumn public static final String SORT_054 = "SORT_054";
 
 	public static final String COLUMNS = JdbcTools.columnsFor(Scr_054.class);
 	

@@ -21,9 +21,9 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public abstract class Schemacmt_181 {
 
-	@TableColumn public static final String CMT_ID_181 = "SCHEMACMT_181.CMT_ID_181";
-	@TableColumn public static final String CMD_INFO_181_01 = "SCHEMACMT_181.CMD_INFO_181_01";
-	@TableColumn public static final String CMD_INFO_181_02 = "SCHEMACMT_181.CMD_INFO_181_02";
+	@TableColumn public static final String CMT_ID_181 = "CMT_ID_181";
+	@TableColumn public static final String CMT_INFO_181_1 = "CMT_INFO_181_1";
+	@TableColumn public static final String CMT_INFO_181_2 = "CMT_INFO_181_2";
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Schemacmt_181.class);
 	

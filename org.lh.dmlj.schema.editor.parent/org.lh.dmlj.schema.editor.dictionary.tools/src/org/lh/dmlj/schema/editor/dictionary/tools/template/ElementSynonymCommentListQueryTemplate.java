@@ -20,8 +20,8 @@ public class ElementSynonymCommentListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_2 = ",";
   protected final String TEXT_3 = NL + "       ";
   protected final String TEXT_4 = " " + NL + "FROM \"";
-  protected final String TEXT_5 = "\".\"NAMESYN_083\"," + NL + "\t \"";
-  protected final String TEXT_6 = "\".\"NAMEDES-186\"                                   " + NL + "WHERE NAMESYN_083.ROWID = X'";
+  protected final String TEXT_5 = "\".\"NAMESYN_083\" AS NAMESYN_083," + NL + "\t \"";
+  protected final String TEXT_6 = "\".\"NAMEDES-186\" AS NAMEDES_186                                   " + NL + "WHERE NAMESYN_083.ROWID = X'";
   protected final String TEXT_7 = "' AND " + NL + "      \"NAMESYN-NAMEDES\"";
 
 	public String generate(Object argument)

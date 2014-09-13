@@ -22,11 +22,11 @@ public class SetOwnerListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_4 = ",";
   protected final String TEXT_5 = NL + "       ";
   protected final String TEXT_6 = " " + NL + "FROM \"";
-  protected final String TEXT_7 = "\".\"S-010\",  " + NL + "\t \"";
-  protected final String TEXT_8 = "\".\"SOR-046\"," + NL + "\t \"";
-  protected final String TEXT_9 = "\".\"SRCD-113\"" + NL + "WHERE S_010.S_NAM_010 = '";
+  protected final String TEXT_7 = "\".\"S-010\" AS S_010,  " + NL + "\t \"";
+  protected final String TEXT_8 = "\".\"SOR-046\" AS SOR_046," + NL + "\t \"";
+  protected final String TEXT_9 = "\".\"SRCD-113\" AS SRCD_113" + NL + "WHERE S_010.S_NAM_010 = '";
   protected final String TEXT_10 = "' AND S_010.S_SER_010 = ";
-  protected final String TEXT_11 = "  AND" + NL + "\t  \"S-SOR\" AND SET_NAM_046 <> 'CALC' AND" + NL + "\t  \"SRCD-SOR\"";
+  protected final String TEXT_11 = " AND" + NL + "\t  \"S-SOR\" AND SET_NAM_046 <> 'CALC' AND" + NL + "\t  \"SRCD-SOR\"";
 
 	public String generate(Object argument)
   {

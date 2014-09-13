@@ -1,4 +1,4 @@
-%
+<%
 /**
  * Copyright (C) 2014  Luc Hermans
  * 
@@ -25,8 +25,8 @@ Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
 %>
 SELECT <%= S_010.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."OOAK-012",  
-	 "<%= sysdirlSchema %>"."S-010"
+FROM "<%= sysdirlSchema %>"."OOAK-012" AS OOAK_012,  
+     "<%= sysdirlSchema %>"."S-010" AS S_010
 WHERE OOAK_KEY_012 = 'OOAK' AND 
       "OOAK-S" AND S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0
 ORDER BY S_NAM_010, S_SER_010 

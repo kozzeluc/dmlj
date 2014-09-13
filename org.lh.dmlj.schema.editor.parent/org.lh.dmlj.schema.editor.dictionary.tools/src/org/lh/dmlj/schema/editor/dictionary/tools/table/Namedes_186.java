@@ -21,8 +21,8 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public abstract class Namedes_186 {
 
-	@TableColumn public static final String CMT_ID_186 = "NAMEDES_186.CMT_ID_186";
-	@TableColumn public static final String IX_NAME_186 = "NAMEDES_186.IX_NAME_186";
+	@TableColumn public static final String CMT_ID_186 = "CMT_ID_186";
+	@TableColumn public static final String IX_NAME_186 = "IX_NAME_186";
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Namedes_186.class);
 	

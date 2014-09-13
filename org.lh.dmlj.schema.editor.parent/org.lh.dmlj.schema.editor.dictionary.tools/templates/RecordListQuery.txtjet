@@ -1,4 +1,4 @@
-%
+<%
 /**
  * Copyright (C) 2014  Luc Hermans
  * 
@@ -31,11 +31,11 @@ SELECT <%= S_010.COLUMNS %>,
        <%= Sam_056.COLUMNS %>,  
        <%= Sr_036.COLUMNS %>,
        <%= Rcdsyn_079.COLUMNS %>  
-FROM "<%= sysdirlSchema %>"."S-010", 
-	 "<%= sysdirlSchema %>"."SRCD-113",
-	 "<%= sysdirlSchema %>"."SAM-056", 
-	 "<%= sysdirlSchema %>"."SR_036", 
-	 "<%= sysdirlSchema %>"."RCDSYN_079"
+FROM "<%= sysdirlSchema %>"."S-010" AS S_010, 
+	 "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,
+	 "<%= sysdirlSchema %>"."SAM-056" AS SAM_056, 
+	 "<%= sysdirlSchema %>"."SR-036" AS SR_036, 
+	 "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079
 WHERE S_NAM_010 = '<%= schemaName %>' AND S_SER_010 = <%= schemaVersion %> AND 
       "S-SRCD" AND SR_ID_113 > 9 AND 
       "SRCD-SAM" AND 

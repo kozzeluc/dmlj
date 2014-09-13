@@ -84,11 +84,13 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 		if (viaSetNames != null) {
 			return;
 		}
+		viaSetNames = new HashMap<>();
 		Query viaSetListQuery = new Query.Builder().forViaSetList(session).build();
 		session.runQuery(viaSetListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				String srNam_056 = row.getString(Sam_056.SR_NAM_056);
+				String srNam_056 = 
+					JdbcTools.removeTrailingSpaces(row.getString(Sam_056.SR_NAM_056));
 				String setNam_052 = 
 					JdbcTools.removeTrailingSpaces(row.getString(Smr_052.SET_NAM_052));
 				viaSetNames.put(srNam_056, setNam_052);

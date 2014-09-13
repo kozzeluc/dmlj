@@ -27,6 +27,7 @@ String hexDbkeySa_018 = (String) args[1];
 %>
 SELECT <%= Sa_018.COLUMNS %>,
        <%= Sacall_020.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."SA-018",
-     "<%= sysdirlSchema %>"."SACALL-020"                         
-WHERE SA_018.ROWID = X'<%= hexDbkeySa_018 %>'
+FROM "<%= sysdirlSchema %>"."SA-018" AS SA_018,
+     "<%= sysdirlSchema %>"."SACALL-020" AS SACALL_020                         
+WHERE SA_018.ROWID = X'<%= hexDbkeySa_018 %>' AND
+      "SA-SACALL"

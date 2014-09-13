@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
@@ -30,7 +31,7 @@ import org.lh.dmlj.schema.editor.importtool.ISchemaDataCollector;
 
 public class SchemaDataCollector implements ISchemaDataCollector {
 	
-	private List<String> comments;
+	private List<String> comments = new ArrayList<>();
 	private String schemaDescription;
 	private String schemaMemoDate;	
 
@@ -64,10 +65,10 @@ public class SchemaDataCollector implements ISchemaDataCollector {
 				int cmtId_181 = row.getInt(Schemacmt_181.CMT_ID_181);
 				if (cmtId_181 == -1) {
 					StringBuilder line = new StringBuilder();
-					String cmtInfo_181_01 = row.getString(Schemacmt_181.CMD_INFO_181_01);
+					String cmtInfo_181_01 = row.getString(Schemacmt_181.CMT_INFO_181_1);
 					String line1 = JdbcTools.removeTrailingSpaces(cmtInfo_181_01);
 					line.append(line1);
-					String cmtInfo_181_02 = row.getString(Schemacmt_181.CMD_INFO_181_02);
+					String cmtInfo_181_02 = row.getString(Schemacmt_181.CMT_INFO_181_2);
 					String line2 = JdbcTools.removeTrailingSpaces(cmtInfo_181_02); 
 					if (!line2.equals("") && line1.length() < 50) {
 						// line1 shouldn't have been right trimmed, so restore that part of the line 

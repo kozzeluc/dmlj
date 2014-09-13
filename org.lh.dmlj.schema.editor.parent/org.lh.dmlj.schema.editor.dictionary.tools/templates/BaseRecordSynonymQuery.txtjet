@@ -1,4 +1,8 @@
-* This program is free software: you can redistribute it and/or modify it under the terms of the
+<%
+/**
+ * Copyright (C) 2014  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
  * 
@@ -23,8 +27,8 @@ String hexDbkeySr_036 = (String) args[1];
 %>
 SELECT <%= Sr_036.COLUMNS %>,
        <%= Rcdsyn_079.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."SR-036", 
-     "<%= sysdirlSchema %>"."RCDSYN_079"
+FROM "<%= sysdirlSchema %>"."SR-036" AS SR_036, 
+     "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079
 WHERE SR_036.ROWID = X'<%= hexDbkeySr_036 %>' AND 
       "SR-RCDSYN" AND
       RCDSYN_079.RSYN_NAME_079 = SR_036.SR_NAM_036 AND

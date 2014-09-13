@@ -31,11 +31,11 @@ SELECT <%= S_010.COLUMNS %>,
        <%= Sam_056.COLUMNS %>,
        <%= Smr_052.COLUMNS %>,
        <%= Scr_054.COLUMNS %>
-FROM "<%= sysdirlSchema %>"."S-010", 
-	 "<%= sysdirlSchema %>"."SRCD-113",
-	 "<%= sysdirlSchema %>"."SAM-056", 
-	 "<%= sysdirlSchema %>"."SMR-052",
-	 "<%= sysdirlSchema %>"."SCR-054"
+FROM "<%= sysdirlSchema %>"."S-010" AS S_010, 
+	 "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,
+	 "<%= sysdirlSchema %>"."SAM-056" AS SAM_056, 
+	 "<%= sysdirlSchema %>"."SMR-052" AS SMR_052,
+	 "<%= sysdirlSchema %>"."SCR-054" AS SCR_054
 WHERE S_010.S_NAM_010 = '<%= schemaName %>' AND S_010.S_SER_010 = <%= schemaVersion %> AND
       "S-SRCD" AND SRCD_113.SR_ID_113 > 9 AND SRCD_113.MODE_113 = 1 AND
       FIRST "SRCD-SAM" AND

@@ -28,7 +28,7 @@ int schemaVersion = ((Integer) args[2]).intValue();
 %>
 SELECT <%= S_010.COLUMNS %>,
        <%= Sa_018.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."S-010",
-     "<%= sysdirlSchema %>"."SA-018"
+FROM "<%= sysdirlSchema %>"."S-010" AS S_010,
+     "<%= sysdirlSchema %>"."SA-018" AS SA_018
 WHERE S_NAM_010 = '<%= schemaName %>' AND S_SER_010 = <%= schemaVersion %> AND 
       "S-SA"

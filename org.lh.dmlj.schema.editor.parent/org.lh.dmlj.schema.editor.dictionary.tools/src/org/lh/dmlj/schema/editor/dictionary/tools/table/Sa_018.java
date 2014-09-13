@@ -24,8 +24,8 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sa_018 {
 	
-	@TableColumn public static final String ROWID = "SA_018.ROWID";
-	@TableColumn public static final String SA_NAM_018 = "SA_018.SA_NAM_018";
+	@TableColumn public static final String ROWID = "SA_18_ROWID";
+	@TableColumn public static final String SA_NAM_018 = "SA_NAM_018";
 	
 	public static final String COLUMNS = JdbcTools.columnsFor(Sa_018.class);
 	

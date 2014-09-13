@@ -24,10 +24,10 @@ public class SetListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_6 = ",";
   protected final String TEXT_7 = NL + "       ";
   protected final String TEXT_8 = " " + NL + "FROM \"";
-  protected final String TEXT_9 = "\".\"S-010\",  " + NL + "\t \"";
-  protected final String TEXT_10 = "\".\"SOR-046\"," + NL + "\t \"";
-  protected final String TEXT_11 = "\".\"SMR-052\"" + NL + "\t \"";
-  protected final String TEXT_12 = "\".\"SRCD-113\"" + NL + "WHERE S_010.S_NAM_010 = '";
+  protected final String TEXT_9 = "\".\"S-010\" AS S_010,  " + NL + "\t \"";
+  protected final String TEXT_10 = "\".\"SOR-046\" AS SOR_046," + NL + "\t \"";
+  protected final String TEXT_11 = "\".\"SMR-052\" AS SMR_052," + NL + "\t \"";
+  protected final String TEXT_12 = "\".\"SRCD-113\" AS SRCD_113" + NL + "WHERE S_010.S_NAM_010 = '";
   protected final String TEXT_13 = "' AND S_010.S_SER_010 = ";
   protected final String TEXT_14 = "  AND" + NL + "\t  \"S-SOR\" AND SET_NAM_046 <> 'CALC' AND" + NL + "\t  \"SOR-SMR\" AND" + NL + "\t  \"SRCD-SMR\"";
 
