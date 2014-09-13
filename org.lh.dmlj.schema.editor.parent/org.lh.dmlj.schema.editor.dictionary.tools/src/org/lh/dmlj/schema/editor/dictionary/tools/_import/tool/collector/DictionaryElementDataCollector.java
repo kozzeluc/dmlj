@@ -50,7 +50,7 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 		}		
 		Rcdsyn_079 rcdsyn_079b = namesyn_083.getRcdsyn_079().getSr_036().getRcdsyn_079b();		
 		if (rcdsyn_079b == null) {
-			return sdr_042.getDrNam_042();
+			return namesyn_083.getSynName_083();
 		} else {
 			Namesyn_083 aNamesyn_083 = rcdsyn_079b.getNamesyn_083(sdr_042.getDbkey());
 			return aNamesyn_083.getSynName_083();
