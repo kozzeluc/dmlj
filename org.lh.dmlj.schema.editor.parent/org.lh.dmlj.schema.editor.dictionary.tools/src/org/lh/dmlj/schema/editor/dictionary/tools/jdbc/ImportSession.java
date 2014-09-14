@@ -35,6 +35,7 @@ public class ImportSession {
 	protected Connection connection;
 	private long connectionClosed = -1;
 	private long connectionOpened = -1;
+	private DateFormat dateFormat;
 	protected Dictionary dictionary;
 	private List<QueryStatistics> statistics = new ArrayList<>();
 	
@@ -86,8 +87,13 @@ public class ImportSession {
 	public ImportSession(Dictionary dictionary) {
 		super();
 		this.dictionary = dictionary;
+		dateFormat = org.lh.dmlj.schema.editor.Plugin.getDefault().getDateFormat();
 	}
 	
+	private String format(long date) {
+		return dateFormat.format(date);
+	}
+
 	public Dictionary getDictionary() {
 		return dictionary;
 	}
@@ -104,11 +110,14 @@ public class ImportSession {
 			throw new RuntimeException("Error while closing the JDBC connection", e);
 		}
 		StringBuilder p = new StringBuilder();
-		p.append("Import session opened on: " + connectionOpened + "\n");
-		p.append("               closed on: " + connectionOpened + "\n");
-		p.append("#Queries executed:        " + statistics.size() + ":\n");
+		p.append("Import session opened on: " + format(connectionOpened) + "\n");
+		p.append("                        closed on: " + format(connectionClosed) + "\n");
+		long elapseTimeInMilliseconds = connectionClosed - connectionOpened;
+		p.append("                      elapse time: " + elapseTimeInMilliseconds + " milliseconds\n");
+		p.append("                #Queries executed: " + statistics.size() + "\n");
 		for (QueryStatistics queryStatistics : statistics) {
 			p.append(queryStatistics.toString());
+			p.append("\n");
 		}
 		logInfo(p.toString());
 	}
@@ -185,23 +194,15 @@ public class ImportSession {
 			this.t = t;
 		}
 
-		private String format(long date, DateFormat dateFormat) {
-			if (date < 0) {
-				return "[N/A]";
-			} else {
-				return "'" + dateFormat.format(date) + "'";
-			}
-		}
-		
 		public String toString() {
-			DateFormat dateFormat = org.lh.dmlj.schema.editor.Plugin.getDefault().getDateFormat();
 			return "query='" + query.getDescription() + "', " + 
-				   "context=" + (query.getContext() != null ? "'" + query.getContext() + "', " : "[N/A], ") + 
-				   "start=" + format(start, dateFormat) + ", " + 
-				   "end1=" + format(end1, dateFormat) + ", " + 
-				   "end2=" + format(end2, dateFormat) + ", " +
+				   "context=" + (query.getContext() != null ? "'" + query.getContext() + 
+				   "', " : "[N/A], ") + 
+				   "elapseTimeQuery=" + (end1 - start) + ", " + 
+				   "elapseTimeRowProcessing=" + (end2 - end1) + ", " +
 				   "rowsProcessed=" + rowsProcessed + 
-				   (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + " (" + t.getMessage() + ")'" : "");
+				   (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + " (" + 
+				   t.getMessage() + ")'" : "");
 		}
 		
 	}
