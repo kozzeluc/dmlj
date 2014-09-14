@@ -160,9 +160,10 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 			if (sdes_044.getCmtId_044() == -3) {
 				StringBuilder p = new StringBuilder();
 				p.append(sdes_044.getVal1_044());
-				if (sdes_044.getValLgth2_044() != -1) {
+				String val2_044 = sdes_044.getVal2_044();
+				if (!val2_044.equals("")) {
 					p.append(" THRU ");					
-					p.append(sdes_044.getVal2_044().substring(0, sdes_044.getValLgth2_044()));
+					p.append(val2_044);
 				}
 				return p.toString();
 			}

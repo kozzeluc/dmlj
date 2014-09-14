@@ -290,7 +290,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 					Sdes_044 sdes_044 = new Sdes_044();
 					sdes_044.setCmtId_044(row.getInt(Sdes_044.CMT_ID_044));
 					sdes_044.setCmtInfo_044_1(row.getString(Sdes_044.CMT_INFO_044_1));
-					sdes_044.setCmtInfo_044_1(row.getString(Sdes_044.CMT_INFO_044_1));
+					sdes_044.setCmtInfo_044_2(row.getString(Sdes_044.CMT_INFO_044_2));
 					sdr_042.getSdes_044s().add(sdes_044);
 				}				
 			});
