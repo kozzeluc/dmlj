@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class CatalogElementListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -17,11 +15,8 @@ public class CatalogElementListQueryTemplate implements IQueryTemplate {
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = " ";
-  protected final String TEXT_2 = NL + "SELECT ";
-  protected final String TEXT_3 = ",";
-  protected final String TEXT_4 = NL + "       ";
-  protected final String TEXT_5 = " " + NL + "FROM SYSTEM.TABLE, " + NL + "     SYSTEM.COLUMN" + NL + "WHERE TABLE.ROWID = X'";
-  protected final String TEXT_6 = "' " + NL + "      COLUMN.SCHEMA = TABLE.SCHEMA AND" + NL + "\t  COLUMN.TABLE = TABLE.NAME" + NL + "ORDER BY NUMBER";
+  protected final String TEXT_2 = NL + "SELECT TABLE.ROWID AS TABLE_1050_ROWID," + NL + "       COLUMN.ROWID AS COLUMN_1028_ROWID," + NL + "       TABLE.AREA AS TABLE_1050_AREA," + NL + "\t   TABLE.LOCMODE AS TABLE_1050_LOCMODE," + NL + "\t   TABLE.NAME AS TABLE_1050_NAME," + NL + "\t   TABLE.TABLEID AS TABLE_1050_TABLEID," + NL + "\t   COLUMN.NAME AS COLUMN_1028_NAME," + NL + "\t   COLUMN.NULLS AS COLUMN_1028_NULLS," + NL + "\t   COLUMN.NUMBER AS COLUMN_1028_NUMBER," + NL + "\t   COLUMN.TYPE AS COLUMN_1028_TYPE," + NL + "\t   COLUMN.VLENGTH AS COLUMN_1028_VLENGTH " + NL + "FROM SYSTEM.TABLE AS TABLE_1050, " + NL + "     SYSTEM.COLUMN AS COLUMN_1028" + NL + "WHERE TABLE.ROWID = X'";
+  protected final String TEXT_3 = "' AND " + NL + "      COLUMN.SCHEMA = TABLE.SCHEMA AND" + NL + "\t  COLUMN.TABLE = TABLE.NAME" + NL + "ORDER BY NUMBER";
 
 	public String generate(Object argument)
   {
@@ -50,13 +45,8 @@ Object[] args = (Object[]) argument;
 String hexDbkeyTable_1050 = (String) args[0];
 
     stringBuffer.append(TEXT_2);
-    stringBuffer.append( Table_1050.COLUMNS );
-    stringBuffer.append(TEXT_3);
-    stringBuffer.append(TEXT_4);
-    stringBuffer.append( Column_1028.COLUMNS );
-    stringBuffer.append(TEXT_5);
     stringBuffer.append( hexDbkeyTable_1050 );
-    stringBuffer.append(TEXT_6);
+    stringBuffer.append(TEXT_3);
     return stringBuffer.toString();
   }
 }

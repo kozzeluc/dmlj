@@ -16,8 +16,7 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="SetListQueryTemplate"
         skeleton="query-template.skeleton"%>
 <%
@@ -26,10 +25,11 @@ String sysdirlSchema = (String) args[0];
 String schemaName = (String) args[1];
 int schemaVersion = ((Integer) args[2]).intValue();
 %>
-SELECT <%= S_010.COLUMNS %>,
-       <%= Sor_046.COLUMNS %>,
-       <%= Smr_052.COLUMNS %>,
-       <%= Srcd_113.COLUMNS %> 
+SELECT S_010.ROWID AS S_010_ROWID,
+       SOR_046.ROWID AS SOR_046_ROWID,
+       SMR_052.ROWID AS SMR_052_ROWID,
+       SRCD_113.ROWID AS SRCD_113_ROWID,
+       * 
 FROM "<%= sysdirlSchema %>"."S-010" AS S_010,  
 	 "<%= sysdirlSchema %>"."SOR-046" AS SOR_046,
 	 "<%= sysdirlSchema %>"."SMR-052" AS SMR_052,

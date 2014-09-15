@@ -16,8 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,34 +25,6 @@ import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
 public abstract class JdbcTools {
-	
-	public static String columnsFor(Class<?> tableClass) {
-		StringBuilder columns = new StringBuilder();
-		try {
-			for (Field field : tableClass.getFields()) {
-				if (field.getType() == String.class &&
-					Modifier.isStatic(field.getModifiers()) &&
-					field.isAnnotationPresent(TableColumn.class)) {
-				
-					if (columns.length() > 0) {
-						columns.append(", ");
-					}
-					if (field.getName().equals("ROWID")) {
-						columns.append(tableClass.getSimpleName().toUpperCase());
-						columns.append(".ROWID AS ");						
-					}
-					columns.append((String) field.get(null));
-				}
-			}
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-		if (columns.length() == 0) {
-			throw new IllegalArgumentException("class without @TableColumn fields: " + 
-											   tableClass.getName());
-		}
-		return columns.toString();
-	}
 	
 	public static long getDbkey(ResultSet resultSet, String rowIdColumnLabel) throws SQLException {
 		byte[] rid = resultSet.getBytes(rowIdColumnLabel);		

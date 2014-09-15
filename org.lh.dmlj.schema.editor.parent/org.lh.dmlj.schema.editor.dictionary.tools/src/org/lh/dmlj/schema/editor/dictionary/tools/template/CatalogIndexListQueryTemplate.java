@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class CatalogIndexListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,8 +14,7 @@ public class CatalogIndexListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = NL + "FROM SYSTEM.INDEX " + NL + "WHERE INDEX.SCHEMA = 'SYSTEM' AND " + NL + "      INDEX.NAME <> 'HASH'" + NL + "ORDER BY INDEX.NAME";
+  protected final String TEXT_1 = "SELECT INDEX.ROWID AS INDEX_1041_ROWID," + NL + "       TABLE.ROWID AS TABLE_1050_ROWID," + NL + "       INDEX.AREA AS INDEX_1041_AREA," + NL + "\t   INDEX.COMPRESS AS INDEX_1041_COMPRESS," + NL + "\t   INDEX.DISPLACEMENT AS INDEX_1041_DISPLACEMENT," + NL + "\t   INDEX.IXBLKCONTAINS AS INDEX_1041_IXBLKCONTAINS," + NL + "\t   INDEX.NAME AS INDEX_1041_NAME," + NL + "\t   INDEX.UNIQUE AS INDEX_1041_UNIQUE\t" + NL + "FROM SYSTEM.INDEX AS INDEX_1041," + NL + "     SYSTEM.TABLE AS TABLE_1050 " + NL + "WHERE INDEX.SCHEMA = 'SYSTEM' AND " + NL + "      INDEX.NAME <> 'HASH' AND" + NL + "      TABLE.SCHEMA = 'SYSTEM' AND" + NL + "      INDEX.TABLE = TABLE.NAME" + NL + "ORDER BY INDEX.NAME";
 
 	public String generate(Object argument)
   {
@@ -41,8 +38,6 @@ public class CatalogIndexListQueryTemplate implements IQueryTemplate {
  */
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Index_1041.COLUMNS );
-    stringBuffer.append(TEXT_2);
     return stringBuffer.toString();
   }
 }

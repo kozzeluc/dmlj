@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class CatalogCalcKeyElementListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,12 +14,7 @@ public class CatalogCalcKeyElementListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = ",";
-  protected final String TEXT_5 = NL + "       ";
-  protected final String TEXT_6 = " " + NL + "FROM SYSTEM.TABLE, " + NL + "\t SYSTEM.INDEX," + NL + "\t SYSTEM.INDEXKEY_1042" + NL + "WHERE TABLE.SCHEMA = 'SYSTEM' AND " + NL + "      INDEX.SCHEMA = 'SYSTEM AND" + NL + "      INDEX.TABLE = TABLE.NAME AND" + NL + "      INDEX.NAME = 'HASH' AND" + NL + "      INDEXKEY.SCHEMA = 'SYSTEM' AND" + NL + "      INDEXKEY.TABLE = TABLE.NAME AND" + NL + "      INDEXKEY.NAME = INDEX.NAME" + NL + "ORDER BY TABLE.NAME," + NL + "\t\t INDEXKEY.SEQUENCE";
+  protected final String TEXT_1 = "SELECT TABLE.ROWID AS TABLE_1050_ROWID," + NL + "       INDEX.ROWID AS INDEX_1041_ROWID," + NL + "       INDEXKEY.ROWID AS INDEXKEY_1042_ROWID," + NL + "       TABLE.AREA AS TABLE_1050_AREA," + NL + "\t   TABLE.LOCMODE AS TABLE_1050_LOCMODE," + NL + "\t   TABLE.NAME AS TABLE_1050_NAME," + NL + "\t   TABLE.TABLEID AS TABLE_1050_TABLEID," + NL + "\t   INDEX.AREA AS INDEX_1041_AREA," + NL + "\t   INDEX.COMPRESS AS INDEX_1041_COMPRESS," + NL + "\t   INDEX.DISPLACEMENT AS INDEX_1041_DISPLACEMENT," + NL + "\t   INDEX.IXBLKCONTAINS AS INDEX_1041_IXBLKCONTAINS," + NL + "\t   INDEX.NAME AS INDEX_1041_NAME," + NL + "\t   INDEX.UNIQUE AS INDEX_1041_UNIQUE,\t" + NL + "\t   INDEXKEY.COLUMN AS INDEXKEY_1042_COLUMN," + NL + "\t   INDEXKEY.SORTORDER AS INDEXKEY_1042_SORTORDER " + NL + "FROM SYSTEM.TABLE AS TABLE_1050, " + NL + "\t SYSTEM.INDEX AS INDEX_1041," + NL + "\t SYSTEM.INDEXKEY AS INDEXKEY_1042" + NL + "WHERE TABLE.SCHEMA = 'SYSTEM' AND " + NL + "      INDEX.SCHEMA = 'SYSTEM' AND" + NL + "      INDEX.TABLE = TABLE.NAME AND" + NL + "      INDEX.NAME = 'HASH' AND" + NL + "      INDEXKEY.SCHEMA = 'SYSTEM' AND" + NL + "      INDEXKEY.TABLE = TABLE.NAME AND" + NL + "      INDEXKEY.NAME = INDEX.NAME" + NL + "ORDER BY TABLE.NAME," + NL + "\t\t INDEXKEY.SEQUENCE";
 
 	public String generate(Object argument)
   {
@@ -45,14 +38,6 @@ public class CatalogCalcKeyElementListQueryTemplate implements IQueryTemplate {
  */
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Table_1050.COLUMNS );
-    stringBuffer.append(TEXT_2);
-    stringBuffer.append(TEXT_3);
-    stringBuffer.append( Index_1041.COLUMNS );
-    stringBuffer.append(TEXT_4);
-    stringBuffer.append(TEXT_5);
-    stringBuffer.append( Indexkey_1042.COLUMNS );
-    stringBuffer.append(TEXT_6);
     return stringBuffer.toString();
   }
 }

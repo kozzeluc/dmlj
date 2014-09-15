@@ -17,15 +17,12 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sr_036 {
 	
-	@TableColumn public static final String ROWID = "SR_036_ROWID";
-	@TableColumn public static final String SR_NAM_036 = "SR_NAM_036";
-	@TableColumn public static final String RCD_VERS_036 = "RCD_VERS_036";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Sr_036.class);
+	public static final String ROWID = "SR_036_ROWID";
+	public static final String SR_NAM_036 = "SR_NAM_036";
+	public static final String RCD_VERS_036 = "RCD_VERS_036";
 	
 	private Rcdsyn_079 rcdsyn_079;	// record synonym referenced by schema
 	private Rcdsyn_079 rcdsyn_079b; // base record synonym

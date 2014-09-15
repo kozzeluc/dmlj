@@ -20,25 +20,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Srcd_113 {
 	
-	@TableColumn public static final String ROWID = "SRCD_113_ROWID";
-	@TableColumn public static final String DSPL_113 = "DSPL_113";
-	@TableColumn public static final String MIN_FRAG_113 = "MIN_FRAG_113";
-	@TableColumn public static final String MIN_ROOT_113 = "MIN_ROOT_113";
-	@TableColumn public static final String MODE_113 = "MODE_113";
-	@TableColumn public static final String PAGE_COUNT_113 = "PAGE_COUNT_113";
-	@TableColumn public static final String PAGE_COUNT_PERCENT_113 = "PAGE_COUNT_PERCENT_113";
-	@TableColumn public static final String PAGE_OFFSET_113 = "PAGE_OFFSET_113";
-	@TableColumn public static final String PAGE_OFFSET_PERCENT_113 = "PAGE_OFFSET_PERCENT_113";
-	@TableColumn public static final String REC_TYPE_113 = "REC_TYPE_113";
-	@TableColumn public static final String SR_ID_113 = "SR_ID_113";
-	@TableColumn public static final String SUBAREA_113 = "SUBAREA_113";
-	@TableColumn public static final String SYMBOL_DISPLACE_113 = "SYMBOL_DISPLACE_113";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Srcd_113.class);
+	public static final String ROWID = "SRCD_113_ROWID";
+	public static final String DSPL_113 = "DSPL_113";
+	public static final String MIN_FRAG_113 = "MIN_FRAG_113";
+	public static final String MIN_ROOT_113 = "MIN_ROOT_113";
+	public static final String MODE_113 = "MODE_113";
+	public static final String PAGE_COUNT_113 = "PAGE_COUNT_113";
+	public static final String PAGE_COUNT_PERCENT_113 = "PAGE_COUNT_PERCENT_113";
+	public static final String PAGE_OFFSET_113 = "PAGE_OFFSET_113";
+	public static final String PAGE_OFFSET_PERCENT_113 = "PAGE_OFFSET_PERCENT_113";
+	public static final String REC_TYPE_113 = "REC_TYPE_113";
+	public static final String SR_ID_113 = "SR_ID_113";
+	public static final String SUBAREA_113 = "SUBAREA_113";
+	public static final String SYMBOL_DISPLACE_113 = "SYMBOL_DISPLACE_113";
 	
 	private long dbkey;
 	private Rcdsyn_079 rcdsyn_079;

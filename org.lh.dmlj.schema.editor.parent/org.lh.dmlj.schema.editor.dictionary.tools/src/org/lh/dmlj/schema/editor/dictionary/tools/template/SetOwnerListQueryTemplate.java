@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class SetOwnerListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,17 +14,12 @@ public class SetOwnerListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = ",";
-  protected final String TEXT_5 = NL + "       ";
-  protected final String TEXT_6 = " " + NL + "FROM \"";
-  protected final String TEXT_7 = "\".\"S-010\" AS S_010,  " + NL + "\t \"";
-  protected final String TEXT_8 = "\".\"SOR-046\" AS SOR_046," + NL + "\t \"";
-  protected final String TEXT_9 = "\".\"SRCD-113\" AS SRCD_113" + NL + "WHERE S_010.S_NAM_010 = '";
-  protected final String TEXT_10 = "' AND S_010.S_SER_010 = ";
-  protected final String TEXT_11 = " AND" + NL + "\t  \"S-SOR\" AND SET_NAM_046 <> 'CALC' AND" + NL + "\t  \"SRCD-SOR\"";
+  protected final String TEXT_1 = "SELECT S_010.ROWID AS S_010_ROWID," + NL + "       SOR_046.ROWID AS SOR_046_ROWID," + NL + "       SRCD_113.ROWID AS SRCD_113_ROWID," + NL + "       * " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"S-010\" AS S_010,  " + NL + "\t \"";
+  protected final String TEXT_3 = "\".\"SOR-046\" AS SOR_046," + NL + "\t \"";
+  protected final String TEXT_4 = "\".\"SRCD-113\" AS SRCD_113" + NL + "WHERE S_010.S_NAM_010 = '";
+  protected final String TEXT_5 = "' AND S_010.S_SER_010 = ";
+  protected final String TEXT_6 = " AND" + NL + "\t  \"S-SOR\" AND SET_NAM_046 <> 'CALC' AND" + NL + "\t  \"SRCD-SOR\"";
 
 	public String generate(Object argument)
   {
@@ -56,24 +49,16 @@ String schemaName = (String) args[1];
 int schemaVersion = ((Integer) args[2]).intValue();
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( S_010.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( Sor_046.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_4);
-    stringBuffer.append(TEXT_5);
-    stringBuffer.append( Srcd_113.COLUMNS );
-    stringBuffer.append(TEXT_6);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_7);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_8);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_9);
     stringBuffer.append( schemaName );
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_5);
     stringBuffer.append( schemaVersion );
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_6);
     return stringBuffer.toString();
   }
 }

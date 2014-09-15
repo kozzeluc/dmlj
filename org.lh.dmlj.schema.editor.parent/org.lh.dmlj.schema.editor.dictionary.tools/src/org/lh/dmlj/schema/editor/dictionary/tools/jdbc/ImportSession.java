@@ -37,6 +37,8 @@ public class ImportSession {
 	private long connectionOpened = -1;
 	private DateFormat dateFormat;
 	protected Dictionary dictionary;
+	private int queryNumber = 0;
+	private int runningQueryCount = 0;
 	private List<QueryStatistics> statistics = new ArrayList<>();
 	
 	private static Connection connect(String url, String userid, String password) 
@@ -113,7 +115,7 @@ public class ImportSession {
 		p.append("Import session opened on: " + format(connectionOpened) + "\n");
 		p.append("                        closed on: " + format(connectionClosed) + "\n");
 		long elapseTimeInMilliseconds = connectionClosed - connectionOpened;
-		p.append("                      elapse time: " + elapseTimeInMilliseconds + " milliseconds\n");
+		p.append("                      elapse time: " + elapseTimeInMilliseconds + "ms\n");
 		p.append("                #Queries executed: " + statistics.size() + "\n");
 		for (QueryStatistics queryStatistics : statistics) {
 			p.append(queryStatistics.toString());
@@ -135,12 +137,21 @@ public class ImportSession {
 	}
 
 	public final void runQuery(Query query, IRowProcessor rowProcessor) {
+		
 		if (connectionOpened == -1) {
 			throw new RuntimeException("session not open");
 		}
 		if (connectionClosed != -1) {
 			throw new RuntimeException("session closed");
+		}		
+		if (runningQueryCount > 0) {
+			// we don't allow nested queries for performance reasons; we might blow-up the CV with
+			// not even that big result sets
+			throw new RuntimeException("nested queries are NOT allowed");
 		}
+		runningQueryCount += 1;
+		
+		query.setNumber(++queryNumber);		
 		long end1 = -1;
 		long end2 = -1;
 		int rowsProcessed = 0;
@@ -164,14 +175,16 @@ public class ImportSession {
 			logDebug("Processed " + rowsProcessed + " rows for query '" + query.getDescription() + 
 					 "'");
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, null));
+			runningQueryCount -= 1;
 		} catch (Throwable t) {
 			String message = "Exception while executing query '" + query.getDescription() + 
 							 "'; see log for details.";
 			logError("Exception while running query '" + query.getDescription() + "': " +
 					 t.getClass().getName() + " (" + t.getMessage() + ")", t);
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, t));
+			runningQueryCount -= 1;
 			throw new RuntimeException(message, t);
-		}
+		}	
 	}
 	
 	public static class QueryStatistics {
@@ -195,14 +208,12 @@ public class ImportSession {
 		}
 
 		public String toString() {
-			return "query='" + query.getDescription() + "', " + 
-				   "context=" + (query.getContext() != null ? "'" + query.getContext() + 
-				   "', " : "[N/A], ") + 
-				   "elapseTimeQuery=" + (end1 - start) + ", " + 
-				   "elapseTimeRowProcessing=" + (end2 - end1) + ", " +
-				   "rowsProcessed=" + rowsProcessed + 
-				   (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + " (" + 
-				   t.getMessage() + ")'" : "");
+			return "query #" + query.getNumber() + ", description='" + query.getDescription() + 
+				   "', " + "context=" + (query.getContext() != null ? "'" + query.getContext() + 
+				   "', " : "[N/A], ") + "elapseTimeQuery=" + (end1 - start) + ", " + 
+				   "elapseTimeRowProcessing=" + (end2 - end1) + ", " + "rowsProcessed=" + 
+				   rowsProcessed + (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + 
+						   			" (" + t.getMessage() + ")'" : "");
 		}
 		
 	}

@@ -181,8 +181,7 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 		List<String> list = new ArrayList<>();
 		Table_1050 table_1050 = constraint_1029.getReferencingTable_1050();
 		String recordName = 
-			table_1050.getName_1050().replaceAll("_", "-") + "-" + 
-			table_1050.getTableid_1050();
+			table_1050.getName_1050().replaceAll("_", "-") + "-" + table_1050.getTableid_1050();
 		list.add(recordName);
 		return list;
 	}
@@ -194,14 +193,14 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 
 	@Override
 	public short getOwnerNextDbkeyPosition(Constraint_1029 constraint_1029) {
-		Table_1050 table_1050 = constraint_1029.getReferencingTable_1050();
+		Table_1050 table_1050 = constraint_1029.getReferencedTable_1050();
 		short i = (short) (constraint_1029.getRefnext_1029() / 4 );		
 		return getAdjustedDbkeyPosition(table_1050, i);
 	}
 
 	@Override
 	public Short getOwnerPriorDbkeyPosition(Constraint_1029 constraint_1029) {
-		Table_1050 table_1050 = constraint_1029.getReferencingTable_1050();
+		Table_1050 table_1050 = constraint_1029.getReferencedTable_1050();
 		short i = (short) (constraint_1029.getRefprior_1029() / 4 );
 		if (i > -1) {
 			return getAdjustedDbkeyPosition(table_1050, i);
@@ -212,9 +211,9 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 
 	@Override
 	public String getOwnerRecordName(Constraint_1029 constraint_1029) {
-		Table_1050 table_1050 = constraint_1029.getReferencingTable_1050();
-		String recordName = table_1050.getName_1050().replaceAll("_", "-") + 
-							"-" + table_1050.getTableid_1050();
+		Table_1050 table_1050 = constraint_1029.getReferencedTable_1050();
+		String recordName = 
+			table_1050.getName_1050().replaceAll("_", "-") + "-" + table_1050.getTableid_1050();
 		return recordName;
 	}
 
@@ -230,7 +229,10 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 		// elements map here...
 		Table_1050 table_1050 = constraint_1029.getReferencingTable_1050();
 		boolean nullableColumnEncountered = false;		
-		for (Constkey_1030 constkey_1030 : constraint_1029.getConstkey_1030s()) {	
+		// mind that we use the Constraint_1029 copy of the sort key elements map here...
+		for (Constkey_1030 constkey_1030 : 
+			 sortKeyElementsMap.get(constraint_1029.getName_1029()).getConstkey_1030s()) {	
+			
 			short columnNumber = constkey_1030.getNumber_1030();
 			Column_1028 column_1028 = table_1050.getColumn_1028(columnNumber);			
 			if (column_1028.getNulls_1028().equals("Y")) {
@@ -268,7 +270,7 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 		
 		buildSortKeyElementsMapIfNeeded();
 		List<String> list = new ArrayList<>();
-		Table_1050 table_1050= constraint_1029.getReferencingTable_1050();
+		Table_1050 table_1050 = constraint_1029.getReferencingTable_1050();
 		// mind that we use the Constraint_1029 copy of the sort key elements map here...
 		for (Orderkey_1044 orderkey_1044 : 
 			 sortKeyElementsMap.get(constraint_1029.getName_1029()).getOrderkey_1044s()) {	
@@ -281,7 +283,9 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 	}
 
 	@Override
-	public boolean getSortKeyIsNaturalSequence(Constraint_1029 constraint_1029, String memberRecordName) {
+	public boolean getSortKeyIsNaturalSequence(Constraint_1029 constraint_1029, 
+											   String memberRecordName) {
+		
 		return !constraint_1029.getName_1029().equals("AREA-TABLE") &&
 			   !constraint_1029.getName_1029().equals("AREA-INDEX");
 	}
@@ -290,7 +294,7 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 	public SortSequence getSortSequence(Constraint_1029 constraint_1029, String memberRecordName, 
 										String keyElementName) {
 		
-		Table_1050 table_1050= constraint_1029.getReferencingTable_1050();
+		Table_1050 table_1050 = constraint_1029.getReferencingTable_1050();
 		// mind that we use the Constraint_1029 copy of the sort key elements map here...
 		for (Orderkey_1044 orderkey_1044 : 
 			 sortKeyElementsMap.get(constraint_1029.getName_1029()).getOrderkey_1044s()) {

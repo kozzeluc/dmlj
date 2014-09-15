@@ -16,22 +16,20 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Table_1050 {
 
-	@TableColumn public static final String ROWID = "TABLE.ROWID";
-	@TableColumn public static final String AREA_1050 = "TABLE.AREA";
-	@TableColumn public static final String LOCMODE_1050 = "TABLE.LOCMODE";
-	@TableColumn public static final String NAME_1050 = "TABLE.NAME";
-	@TableColumn public static final String TABLEID_1050 = "TABLE.TABLEID";	
+	public static final String ROWID = "TABLE_1050_ROWID";
+	public static final String AREA_1050 = "TABLE_1050_AREA";
+	public static final String LOCMODE_1050 = "TABLE_1050_LOCMODE";
+	public static final String NAME_1050 = "TABLE_1050_NAME";
+	public static final String TABLEID_1050 = "TABLE_1050_TABLEID";	
 		
-	public static final String COLUMNS = JdbcTools.columnsFor(Table_1050.class);
-	
-	private List<Column_1028> column_1028s;
+	private List<Column_1028> column_1028s = new ArrayList<>();;
 	
 	private long dbkey;
 	private String area_1050;

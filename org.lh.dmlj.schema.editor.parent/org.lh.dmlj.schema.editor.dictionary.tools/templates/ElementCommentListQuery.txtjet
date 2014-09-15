@@ -16,8 +16,7 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="ElementCommentListQueryTemplate"
         skeleton="query-template.skeleton"%>
 <%
@@ -25,10 +24,11 @@ Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
 String hexDbkeyRcdsyn_079 = (String) args[1];
 %>
-SELECT <%= Rcdsyn_079.COLUMNS %>,
-       <%= Namesyn_083.COLUMNS %>,
-       <%= Sdr_042.COLUMNS %>,
-       <%= Sdes_044.COLUMNS %> 
+SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,
+       NAMESYN_083.ROWID AS NAMESYN_083_ROWID,
+       SDR_042.ROWID AS SDR_042_ROWID,
+       SDES_044.ROWID AS SDES_044_ROWID,
+       * 
 FROM "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,
      "<%= sysdirlSchema %>"."NAMESYN-083" AS NAMESYN_083,
      "<%= sysdirlSchema %>"."SDR-042" AS SDR_042,

@@ -16,15 +16,15 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="ValidSchemaListForNonSysdirlDictionariesQueryTemplate"
         skeleton="query-template.skeleton"%>
 <%
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
 %>
-SELECT <%= S_010.COLUMNS %> 
+SELECT S_010.ROWID AS S_010_ROWID,
+       * 
 FROM "<%= sysdirlSchema %>"."OOAK-012" AS OOAK_012,  
      "<%= sysdirlSchema %>"."S-010" AS S_010
 WHERE OOAK_KEY_012 = 'OOAK' AND 

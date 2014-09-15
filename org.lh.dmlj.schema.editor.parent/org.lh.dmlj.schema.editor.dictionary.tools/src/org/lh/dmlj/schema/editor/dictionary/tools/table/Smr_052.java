@@ -20,20 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Smr_052 {
 	
-	@TableColumn public static final String ROWID = "SMR_052_ROWID";
-	@TableColumn public static final String DUP_052 = "DUP_052";
-	@TableColumn public static final String MR_CNTRL_052 = "MR_CNTRL_052";
-	@TableColumn public static final String NXT_DBK_052 = "NXT_DBK_052";
-	@TableColumn public static final String OWN_DBK_052 = "OWN_DBK_052";
-	@TableColumn public static final String PRI_DBK_052 = "PRI_DBK_052";
-	@TableColumn public static final String SET_NAM_052 = "SET_NAM_052";
-	@TableColumn public static final String SORT_052 = "SORT_052";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Smr_052.class);
+	public static final String ROWID = "SMR_052_ROWID";
+	public static final String DUP_052 = "DUP_052";
+	public static final String MR_CNTRL_052 = "MR_CNTRL_052";
+	public static final String NXT_DBK_052 = "NXT_DBK_052";
+	public static final String OWN_DBK_052 = "OWN_DBK_052";
+	public static final String PRI_DBK_052 = "PRI_DBK_052";
+	public static final String SET_NAM_052 = "SET_NAM_052";
+	public static final String SORT_052 = "SORT_052";
 	
 	private List<Scr_054> scr_054s = new ArrayList<>();
 	

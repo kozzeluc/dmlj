@@ -16,12 +16,21 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="CatalogIndexListQueryTemplate"
         skeleton="query-template.skeleton"%>
-SELECT <%= Index_1041.COLUMNS %>
-FROM SYSTEM.INDEX 
+SELECT INDEX.ROWID AS INDEX_1041_ROWID,
+       TABLE.ROWID AS TABLE_1050_ROWID,
+       INDEX.AREA AS INDEX_1041_AREA,
+	   INDEX.COMPRESS AS INDEX_1041_COMPRESS,
+	   INDEX.DISPLACEMENT AS INDEX_1041_DISPLACEMENT,
+	   INDEX.IXBLKCONTAINS AS INDEX_1041_IXBLKCONTAINS,
+	   INDEX.NAME AS INDEX_1041_NAME,
+	   INDEX.UNIQUE AS INDEX_1041_UNIQUE	
+FROM SYSTEM.INDEX AS INDEX_1041,
+     SYSTEM.TABLE AS TABLE_1050 
 WHERE INDEX.SCHEMA = 'SYSTEM' AND 
-      INDEX.NAME <> 'HASH'
+      INDEX.NAME <> 'HASH' AND
+      TABLE.SCHEMA = 'SYSTEM' AND
+      INDEX.TABLE = TABLE.NAME
 ORDER BY INDEX.NAME

@@ -2,26 +2,28 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-public class CalcKeyElementListQueryTemplate implements IQueryTemplate {
+public class BaseRecordSynonymsQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
-  public static synchronized CalcKeyElementListQueryTemplate create(String lineSeparator)
+  public static synchronized BaseRecordSynonymsQueryTemplate create(String lineSeparator)
   {
     nl = lineSeparator;
-    CalcKeyElementListQueryTemplate result = new CalcKeyElementListQueryTemplate();
+    BaseRecordSynonymsQueryTemplate result = new BaseRecordSynonymsQueryTemplate();
     nl = null;
     return result;
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT S_010.ROWID AS S_010_ROWID," + NL + "       SRCD_113.ROWID AS SRCD_113_ROWID," + NL + "       SAM_056.ROWID AS SAM_056_ROWID," + NL + "       SMR_052.ROWID AS SMR_052_ROWID," + NL + "       SCR_054.ROWID AS SCR_054_ROWID," + NL + "       *" + NL + "FROM \"";
-  protected final String TEXT_2 = "\".\"S-010\" AS S_010, " + NL + "\t \"";
-  protected final String TEXT_3 = "\".\"SRCD-113\" AS SRCD_113," + NL + "\t \"";
-  protected final String TEXT_4 = "\".\"SAM-056\" AS SAM_056, " + NL + "\t \"";
-  protected final String TEXT_5 = "\".\"SMR-052\" AS SMR_052," + NL + "\t \"";
-  protected final String TEXT_6 = "\".\"SCR-054\" AS SCR_054" + NL + "WHERE S_010.S_NAM_010 = '";
-  protected final String TEXT_7 = "' AND S_010.S_SER_010 = ";
-  protected final String TEXT_8 = " AND" + NL + "      \"S-SRCD\" AND SRCD_113.SR_ID_113 > 9 AND SRCD_113.MODE_113 = 1 AND" + NL + "      FIRST \"SRCD-SAM\" AND" + NL + "      \"SRCD-SMR\" AND SMR_052.SET_NAM_052 = 'CALC' AND" + NL + "      \"SMR-SCR\"";
+  protected final String TEXT_1 = "SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID," + NL + "       SR_036.ROWID AS SR_036_ROWID," + NL + "       *      " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"OOAK-012\" AS OOAK_012," + NL + "     \"";
+  protected final String TEXT_3 = "\".\"SR-036\" AS SR_036," + NL + "     \"";
+  protected final String TEXT_4 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + " WHERE OOAK_KEY_012 = 'OOAK' AND" + NL + "       \"OOAK-SR\" AND" + NL + "       \"SR-RCDSYN\" AND" + NL + "       RSYN_NAME_079 = SR_NAM_036 AND" + NL + "       RSYN_VER_079 = RCD_VERS_036 AND" + NL + "       SR_036.ROWID IN" + NL + "          (SELECT SR_036.ROWID" + NL + "           FROM \"";
+  protected final String TEXT_5 = "\".\"S-010\" AS S_010," + NL + "                \"";
+  protected final String TEXT_6 = "\".\"SRCD-113\" AS SRCD_113," + NL + "                \"";
+  protected final String TEXT_7 = "\".\"RCDSYN-079\" AS RCDSYN_079," + NL + "                \"";
+  protected final String TEXT_8 = "\".\"SR-036\" AS SR_036" + NL + "           WHERE S_NAM_010 = '";
+  protected final String TEXT_9 = "' AND S_SER_010 = ";
+  protected final String TEXT_10 = " AND" + NL + "                 \"S-SRCD\" AND SR_ID_113 > 9 AND" + NL + "                 \"RCDSYN-SRCD\" AND" + NL + "                 \"SR-RCDSYN\")";
 
 	public String generate(Object argument)
   {
@@ -61,10 +63,14 @@ int schemaVersion = ((Integer) args[2]).intValue();
     stringBuffer.append(TEXT_5);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_6);
-    stringBuffer.append( schemaName );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_7);
-    stringBuffer.append( schemaVersion );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_8);
+    stringBuffer.append( schemaName );
+    stringBuffer.append(TEXT_9);
+    stringBuffer.append( schemaVersion );
+    stringBuffer.append(TEXT_10);
     return stringBuffer.toString();
   }
 }

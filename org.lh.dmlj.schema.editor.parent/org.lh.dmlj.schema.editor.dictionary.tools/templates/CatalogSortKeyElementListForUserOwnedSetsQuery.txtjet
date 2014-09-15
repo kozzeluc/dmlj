@@ -16,13 +16,14 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="CatalogSortKeyElementListForUserOwnedSetsQueryTemplate"
         skeleton="query-template.skeleton"%>
-SELECT <%= Orderkey_1044.COLUMNS %> 
-FROM SYSTEM.ORDERKEY
-WHERE ORDERKEY.SCHEMA = 'SYSTEM' AND
-      ORDERKEY.CONSTRAINT = CONSTRAINT.NAME
+SELECT ORDERKEY.ROWID AS ORDERKEY_1044_ROWID,
+       ORDERKEY.COLUMN AS ORDERKEY_1044_COLUMN,
+	   ORDERKEY.CONSTRAINT AS ORDERKEY_1044_CONSTRAINT,
+	   ORDERKEY.SORTORDER AS ORDERKEY_1044_SORTORDER
+FROM SYSTEM.ORDERKEY AS ORDERKEY_1044
+WHERE ORDERKEY.SCHEMA = 'SYSTEM'
 ORDER BY ORDERKEY.CONSTRAINT,
-		 ORDERKEY_1044.SEQUENCE
+         ORDERKEY_1044.SEQUENCE

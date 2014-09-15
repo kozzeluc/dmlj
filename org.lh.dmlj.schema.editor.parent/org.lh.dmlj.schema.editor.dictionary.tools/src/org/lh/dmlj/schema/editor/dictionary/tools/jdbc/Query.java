@@ -18,7 +18,7 @@ package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaProcedureListQueryTemplate;
-import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymQueryTemplate;
+import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymsQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.CalcKeyElementListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.CatalogCalcKeyElementListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.CatalogElementListQueryTemplate;
@@ -48,7 +48,7 @@ public class Query {
 	
 	private static final IQueryTemplate areaListQueryTemplate = new AreaListQueryTemplate();
 	private static final IQueryTemplate areaProcedureListQueryTemplate = new AreaProcedureListQueryTemplate();
-	private static final IQueryTemplate baseRecordSynonymQueryTemplate = new BaseRecordSynonymQueryTemplate();
+	private static final IQueryTemplate baseRecordSynonymsQueryTemplate = new BaseRecordSynonymsQueryTemplate();
 	private static final IQueryTemplate calcKeyElementListQueryTemplate = new CalcKeyElementListQueryTemplate();
 	private static final IQueryTemplate catalogCalcKeyElementListQueryTemplate = new CatalogCalcKeyElementListQueryTemplate();
 	private static final IQueryTemplate catalogElementListQueryTemplate = new CatalogElementListQueryTemplate();
@@ -74,6 +74,7 @@ public class Query {
 	
 	private String context;
 	private String description;
+	private int number;
 	private String sql;
 
 	private Query(Builder builder) {
@@ -91,6 +92,10 @@ public class Query {
 		return description;
 	}
 
+	public int getNumber() {
+		return number;
+	}
+
 	public String getSql() {
 		return sql;
 	}
@@ -99,12 +104,16 @@ public class Query {
 		this.description = description;
 	}
 
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
 	public void setSql(String sql) {
 		this.sql = sql;
 	}
 	
 	public String toString() {
-		return "Query - description='" + description + "', context=" + 
+		return "Query #" + number + " - description='" + description + "', context=" + 
 			   (context != null ? "'" + context + "'" : "[N/A]") + " sql=[see below]\n" + sql;
 	}
 
@@ -124,27 +133,28 @@ public class Query {
 
 		public Builder forAreaList(SchemaImportSession session) {
 			description = "area list";
-			sql = areaListQueryTemplate.generate(new Object[] {session.getDictionary().getSchema(),
-					   								   		   session.getSchemaName(),
-					   								   		   session.getSchemaVersion()});
+			IQueryTemplate template = areaListQueryTemplate; 
+			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+												  session.getSchemaName(), 
+												  session.getSchemaVersion()});
 			return this;
 		}
 		
-		public Builder forAreaProcedureList(ImportSession session, long dbkeyOfSa_018) {
+		public Builder forAreaProcedureList(SchemaImportSession session) {
 			description = "area procedure list";
 			IQueryTemplate template = areaProcedureListQueryTemplate; 
 			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
-												  JdbcTools.toHexString(dbkeyOfSa_018)});
+												  session.getSchemaName(), 
+												  session.getSchemaVersion()});
 			return this;
 		}
 		
-		public Builder forBaseRecordSynonym(ImportSession session, long dbkeyOfSr_036) {
-			// TODO make this query returning a list and have it invoked only once for the whole 
-			// schema (this will be better from a performance point of view)
-			description = "base record synonym";
-			IQueryTemplate template = baseRecordSynonymQueryTemplate;
+		public Builder forBaseRecordSynonyms(SchemaImportSession session) {
+			description = "base record synonyms";
+			IQueryTemplate template = baseRecordSynonymsQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
-												  JdbcTools.toHexString(dbkeyOfSr_036)});
+												  session.getSchemaName(),
+												  session.getSchemaVersion()});
 			return this;
 		}
 
@@ -244,11 +254,12 @@ public class Query {
 			return this;
 		}		
 		
-		public Builder forRecordProcedureList(ImportSession session, long dbkeyOfSrcd_113) {
+		public Builder forRecordProcedureList(SchemaImportSession session) {
 			description = "record procedure list";
 			IQueryTemplate template = recordProcedureListQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
-						  						  JdbcTools.toHexString(dbkeyOfSrcd_113)}); 
+						  						  session.getSchemaName(),
+						  						  session.getSchemaVersion()}); 
 			return this;
 		}
 

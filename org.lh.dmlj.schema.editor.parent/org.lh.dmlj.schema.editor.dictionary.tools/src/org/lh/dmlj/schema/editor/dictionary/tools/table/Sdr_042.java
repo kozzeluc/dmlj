@@ -20,18 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sdr_042 {
 	
-	@TableColumn public static final String ROWID = "SDR_042_ROWID";
-	@TableColumn public static final String DR_NAM_042 = "DR_NAM_042";
-	@TableColumn public static final String DR_LVL_042 = "DR_LVL_042";
-	@TableColumn public static final String OCC_042 = "OCC_042";
-	@TableColumn public static final String PIC_042 = "PIC_042";
-	@TableColumn public static final String USE_042 = "USE_042";	
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Sdr_042.class);
+	public static final String ROWID = "SDR_042_ROWID";
+	public static final String DR_NAM_042 = "DR_NAM_042";
+	public static final String DR_LVL_042 = "DR_LVL_042";
+	public static final String OCC_042 = "OCC_042";
+	public static final String PIC_042 = "PIC_042";
+	public static final String USE_042 = "USE_042";	
 	
 	private List<Sdes_044> Sdes_044s = new ArrayList<>();
 	

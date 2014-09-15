@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class AreaProcedureListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,13 +14,12 @@ public class AreaProcedureListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = " " + NL + "FROM \"";
-  protected final String TEXT_5 = "\".\"SA-018\" AS SA_018," + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SACALL-020\" AS SACALL_020                         " + NL + "WHERE SA_018.ROWID = X'";
-  protected final String TEXT_7 = "' AND" + NL + "      \"SA-SACALL\"";
+  protected final String TEXT_1 = "SELECT S_010.ROWID AS S_010_ROWID," + NL + "       SA_018.ROWID AS SA_018_ROWID," + NL + "       SACALL_020.ROWID AS SACALL_020_ROWID," + NL + "       * " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"S-010\" AS S_010," + NL + "     \"";
+  protected final String TEXT_3 = "\".\"SA-018\" AS SA_018," + NL + "     \"";
+  protected final String TEXT_4 = "\".\"SACALL-020\" AS SACALL_020" + NL + "WHERE S_NAM_010 = '";
+  protected final String TEXT_5 = "' AND S_SER_010 = ";
+  protected final String TEXT_6 = " AND " + NL + "      \"S-SA\" AND" + NL + "      \"SA-SACALL\"";
 
 	public String generate(Object argument)
   {
@@ -48,20 +45,20 @@ public class AreaProcedureListQueryTemplate implements IQueryTemplate {
     
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
-String hexDbkeySa_018 = (String) args[1];
+String schemaName = (String) args[1];
+int schemaVersion = ((Integer) args[2]).intValue();
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Sa_018.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( Sacall_020.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_4);
-    stringBuffer.append( sysdirlSchema );
+    stringBuffer.append( schemaName );
     stringBuffer.append(TEXT_5);
-    stringBuffer.append( sysdirlSchema );
+    stringBuffer.append( schemaVersion );
     stringBuffer.append(TEXT_6);
-    stringBuffer.append( hexDbkeySa_018 );
-    stringBuffer.append(TEXT_7);
     return stringBuffer.toString();
   }
 }

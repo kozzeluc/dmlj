@@ -16,15 +16,15 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="ValidSchemaListForSysdirlDictionariesQueryTemplate"
         skeleton="query-template.skeleton"%>
 <%
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
 %>
-SELECT <%= S_010.COLUMNS %>
+SELECT S_010.ROWID AS S_010_ROWID,
+       *
 FROM "<%= sysdirlSchema %>"."S-010" AS S_010
 WHERE S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0
 ORDER BY S_NAM_010, S_SER_010

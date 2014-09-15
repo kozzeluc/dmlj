@@ -16,19 +16,27 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="CatalogElementListQueryTemplate"
         skeleton="query-template.skeleton"%> 
 <%
 Object[] args = (Object[]) argument;
 String hexDbkeyTable_1050 = (String) args[0];
 %>
-SELECT <%= Table_1050.COLUMNS %>,
-       <%= Column_1028.COLUMNS %> 
-FROM SYSTEM.TABLE, 
-     SYSTEM.COLUMN
-WHERE TABLE.ROWID = X'<%= hexDbkeyTable_1050 %>' 
+SELECT TABLE.ROWID AS TABLE_1050_ROWID,
+       COLUMN.ROWID AS COLUMN_1028_ROWID,
+       TABLE.AREA AS TABLE_1050_AREA,
+	   TABLE.LOCMODE AS TABLE_1050_LOCMODE,
+	   TABLE.NAME AS TABLE_1050_NAME,
+	   TABLE.TABLEID AS TABLE_1050_TABLEID,
+	   COLUMN.NAME AS COLUMN_1028_NAME,
+	   COLUMN.NULLS AS COLUMN_1028_NULLS,
+	   COLUMN.NUMBER AS COLUMN_1028_NUMBER,
+	   COLUMN.TYPE AS COLUMN_1028_TYPE,
+	   COLUMN.VLENGTH AS COLUMN_1028_VLENGTH 
+FROM SYSTEM.TABLE AS TABLE_1050, 
+     SYSTEM.COLUMN AS COLUMN_1028
+WHERE TABLE.ROWID = X'<%= hexDbkeyTable_1050 %>' AND 
       COLUMN.SCHEMA = TABLE.SCHEMA AND
 	  COLUMN.TABLE = TABLE.NAME
 ORDER BY NUMBER

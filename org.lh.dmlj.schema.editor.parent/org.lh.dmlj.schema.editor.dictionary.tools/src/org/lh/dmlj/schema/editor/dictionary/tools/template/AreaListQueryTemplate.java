@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class AreaListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,14 +14,11 @@ public class AreaListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = " " + NL + "FROM \"";
-  protected final String TEXT_5 = "\".\"S-010\" AS S_010," + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SA-018\" AS SA_018" + NL + "WHERE S_NAM_010 = '";
-  protected final String TEXT_7 = "' AND S_SER_010 = ";
-  protected final String TEXT_8 = " AND " + NL + "      \"S-SA\"";
+  protected final String TEXT_1 = "SELECT S_010.ROWID AS S_010_ROWID," + NL + "       SA_018.ROWID AS SA_018_ROWID," + NL + "       * " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"S-010\" AS S_010," + NL + "     \"";
+  protected final String TEXT_3 = "\".\"SA-018\" AS SA_018" + NL + "WHERE S_NAM_010 = '";
+  protected final String TEXT_4 = "' AND S_SER_010 = ";
+  protected final String TEXT_5 = " AND " + NL + "      \"S-SA\"";
 
 	public String generate(Object argument)
   {
@@ -53,19 +48,14 @@ String schemaName = (String) args[1];
 int schemaVersion = ((Integer) args[2]).intValue();
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( S_010.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( Sa_018.COLUMNS );
-    stringBuffer.append(TEXT_4);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_5);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_6);
     stringBuffer.append( schemaName );
-    stringBuffer.append(TEXT_7);
+    stringBuffer.append(TEXT_4);
     stringBuffer.append( schemaVersion );
-    stringBuffer.append(TEXT_8);
+    stringBuffer.append(TEXT_5);
     return stringBuffer.toString();
   }
 }

@@ -20,29 +20,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sor_046 {
 	
-	@TableColumn public static final String ROWID = "SOR_046_ROWID";
-	@TableColumn public static final String INDEX_DISP_046 = "INDEX_DISP_046";
-	@TableColumn public static final String INDEX_MEMBERS_046 = "INDEX_MEMBERS_046";
-	@TableColumn public static final String NXT_DBK_046 = "NXT_DBK_046";
-	@TableColumn public static final String ORD_046 = "ORD_046";
-	@TableColumn public static final String PAGE_COUNT_046 = "PAGE_COUNT_046";
-	@TableColumn public static final String PAGE_COUNT_PERCENT_046 = "PAGE_COUNT_PERCENT_046";
-	@TableColumn public static final String PAGE_OFFSET_046 = "PAGE_OFFSET_046";
-	@TableColumn public static final String PAGE_OFFSET_PERCENT_046 = "PAGE_OFFSET_PERCENT_046";
-	@TableColumn public static final String PRI_DBK_046 = "PRI_DBK_046";
-	@TableColumn public static final String SA_NAM_046 = "SA_NAM_046";
-	@TableColumn public static final String SET_MODE_046 = "SET_MODE_046";
-	@TableColumn public static final String SET_NAM_046 = "SET_NAM_046";
-	@TableColumn public static final String SET_ORD_046 = "SET_ORD_046";
-	@TableColumn public static final String SOR_ID_046 = "SOR_ID_046";
-	@TableColumn public static final String SUBAREA_046 = "SUBAREA_046";
-	@TableColumn public static final String SYMBOL_INDEX_046 = "SYMBOL_INDEX_046";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Sor_046.class);
+	public static final String ROWID = "SOR_046_ROWID";
+	public static final String INDEX_DISP_046 = "INDEX_DISP_046";
+	public static final String INDEX_MEMBERS_046 = "INDEX_MEMBERS_046";
+	public static final String NXT_DBK_046 = "NXT_DBK_046";
+	public static final String ORD_046 = "ORD_046";
+	public static final String PAGE_COUNT_046 = "PAGE_COUNT_046";
+	public static final String PAGE_COUNT_PERCENT_046 = "PAGE_COUNT_PERCENT_046";
+	public static final String PAGE_OFFSET_046 = "PAGE_OFFSET_046";
+	public static final String PAGE_OFFSET_PERCENT_046 = "PAGE_OFFSET_PERCENT_046";
+	public static final String PRI_DBK_046 = "PRI_DBK_046";
+	public static final String SA_NAM_046 = "SA_NAM_046";
+	public static final String SET_MODE_046 = "SET_MODE_046";
+	public static final String SET_NAM_046 = "SET_NAM_046";
+	public static final String SET_ORD_046 = "SET_ORD_046";
+	public static final String SOR_ID_046 = "SOR_ID_046";
+	public static final String SUBAREA_046 = "SUBAREA_046";
+	public static final String SYMBOL_INDEX_046 = "SYMBOL_INDEX_046";
 	
 	private Srcd_113 srcd_113;
 	private List<Smr_052> smr_052s = new ArrayList<>();

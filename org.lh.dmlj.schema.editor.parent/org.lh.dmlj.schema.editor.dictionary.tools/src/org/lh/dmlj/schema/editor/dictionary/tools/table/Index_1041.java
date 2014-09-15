@@ -20,19 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Index_1041 {
 
-	@TableColumn public static final String AREA_1041 = "INDEX.AREA";
-	@TableColumn public static final String COMPRESS_1041 = "INDEX.COMPRESS";
-	@TableColumn public static final String DISPLACEMENT_1041 = "INDEX.DISPLACEMENT";
-	@TableColumn public static final String IXBLKCONTAINS_1041 = "INDEX.IXBLKCONTAINS";
-	@TableColumn public static final String NAME_1041 = "INDEX.NAME";
-	@TableColumn public static final String UNIQUE_1041 = "INDEX.UNIQUE";
+	public static final String AREA_1041 = "INDEX_1041_AREA";
+	public static final String COMPRESS_1041 = "INDEX_1041_COMPRESS";
+	public static final String DISPLACEMENT_1041 = "INDEX_1041_DISPLACEMENT";
+	public static final String IXBLKCONTAINS_1041 = "INDEX_1041_IXBLKCONTAINS";
+	public static final String NAME_1041 = "INDEX_1041_NAME";
+	public static final String UNIQUE_1041 = "INDEX_1041_UNIQUE";
 
-	public static final String COLUMNS = JdbcTools.columnsFor(Index_1041.class);
-	
 	private Table_1050 table_1050;
 	private List<Indexkey_1042> indexkey_1042s = new ArrayList<>();
 	

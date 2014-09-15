@@ -16,18 +16,22 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="RecordProcedureListQueryTemplate"
         skeleton="query-template.skeleton"%>
 <%
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
-String hexDbkeySrcd_113 = (String) args[1];
+String schemaName = (String) args[1];
+int schemaVersion = ((Integer) args[2]).intValue();
 %>
-SELECT <%= Srcd_113.COLUMNS %>,
-       <%= Srcall_040.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,
+SELECT S_010.ROWID AS S_010_ROWID, 
+       SRCD_113.ROWID AS SRCD_113_ROWID,
+       SRCALL_040.ROWID AS SRCALL_040_ROWID, 
+       * 
+FROM "<%= sysdirlSchema %>"."S-010" AS S_010,
+     "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,
      "<%= sysdirlSchema %>"."SRCALL-040" AS SRCALL_040                      
-WHERE SRCD_113.ROWID = X'<%= hexDbkeySrcd_113 %>' AND
+WHERE S_NAM_010 = '<%= schemaName %>' AND S_SER_010 = <%= schemaVersion %> AND
+      "S-SRCD" AND
       "SRCD-SRCALL"

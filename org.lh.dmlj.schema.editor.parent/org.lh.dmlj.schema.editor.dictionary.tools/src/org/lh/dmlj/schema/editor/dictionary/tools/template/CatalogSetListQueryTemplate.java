@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class CatalogSetListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,10 +14,7 @@ public class CatalogSetListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = " " + NL + "FROM SYSTEM.TABLE," + NL + "     SYSTEM.CONSTRAINT " + NL + "WHERE TABLE.SCHEMA = 'SYSTEM' AND" + NL + "      CONSTRAINT.REFSCHEMA = 'SYSTEM' AND" + NL + "      CONSTRAINT.REFTABLE = TABLE.NAME";
+  protected final String TEXT_1 = "SELECT TABLE.ROWID AS TABLE_1050_ROWID," + NL + "       CONSTRAINT.ROWID AS CONSTRAINT_1029_ROWID," + NL + "       TABLE.AREA AS TABLE_1050_AREA," + NL + "\t   TABLE.LOCMODE AS TABLE_1050_LOCMODE," + NL + "\t   TABLE.NAME AS TABLE_1050_NAME," + NL + "\t   TABLE.TABLEID AS TABLE_1050_TABLEID," + NL + "\t   CONSTRAINT.COMPRESS AS CONSTRAINT_1029_COMPRESS," + NL + "\t   CONSTRAINT.DISPLACEMENT AS CONSTRAINT_1029_DISPLACEMENT," + NL + "\t   CONSTRAINT.IXBLKCONTAINS AS CONSTRAINT_1029_IXBLKCONTAINS," + NL + "\t   CONSTRAINT.NAME AS CONSTRAINT_1029_NAME," + NL + "\t   CONSTRAINT.NEXT AS CONSTRAINT_1029_NEXT," + NL + "\t   CONSTRAINT.OWNER AS CONSTRAINT_1029_OWNER," + NL + "\t   CONSTRAINT.PRIOR AS CONSTRAINT_1029_PRIOR," + NL + "\t   CONSTRAINT.REFNEXT AS CONSTRAINT_1029_REFNEXT," + NL + "\t   CONSTRAINT.REFPRIOR AS CONSTRAINT_1029_REFPRIOR," + NL + "\t   CONSTRAINT.SORTORDER AS CONSTRAINT_1029_SORTORDER," + NL + "\t   CONSTRAINT.TABLE AS CONSTRAINT_1029_TABLE," + NL + "\t   CONSTRAINT.TYPE AS CONSTRAINT_1029_TYPE," + NL + "\t   CONSTRAINT.UNIQUE AS CONSTRAINT_1029_UNIQUE " + NL + "FROM SYSTEM.TABLE AS TABLE_1050," + NL + "     SYSTEM.CONSTRAINT AS CONSTRAINT_1029 " + NL + "WHERE TABLE.SCHEMA = 'SYSTEM' AND" + NL + "      CONSTRAINT.REFSCHEMA = 'SYSTEM' AND" + NL + "      CONSTRAINT.REFTABLE = TABLE.NAME";
 
 	public String generate(Object argument)
   {
@@ -43,11 +38,6 @@ public class CatalogSetListQueryTemplate implements IQueryTemplate {
  */
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Table_1050.COLUMNS );
-    stringBuffer.append(TEXT_2);
-    stringBuffer.append(TEXT_3);
-    stringBuffer.append( Constraint_1029.COLUMNS );
-    stringBuffer.append(TEXT_4);
     return stringBuffer.toString();
   }
 }

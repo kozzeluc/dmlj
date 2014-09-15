@@ -17,14 +17,11 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sam_056 {
 
-	@TableColumn public static final String SA_NAM_056 = "SA_NAM_056";
-	@TableColumn public static final String SR_NAM_056 = "SR_NAM_056";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Sam_056.class);
+	public static final String SA_NAM_056 = "SA_NAM_056";
+	public static final String SR_NAM_056 = "SR_NAM_056";
 	
 	private String saNam_056;
 	private String srNam_056;

@@ -16,13 +16,13 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="CatalogForeignKeyListQueryTemplate"
         skeleton="query-template.skeleton"%>
-SELECT <%= Constkey_1030.COLUMNS %> 
-FROM SYSTEM.CONSTKEY
-WHERE CONSTKEY.SCHEMA = 'SYSTEM' AND
-      CONSTKEY.CONSTRAINT = CONSTRAINT.NAME
+SELECT CONSTKEY.ROWID AS CONSTKEY_1030_ROWID,
+       CONSTKEY.NAME AS CONSTKEY_1030_NAME,
+	   CONSTKEY.NUMBER AS CONSTKEY_1030_NUMBER 
+FROM SYSTEM.CONSTKEY AS CONSTKEY_1030
+WHERE CONSTKEY.SCHEMA = 'SYSTEM'
 ORDER BY CONSTKEY.NAME,
 		 CONSTKEY.SEQUENCE

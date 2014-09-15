@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class RecordProcedureListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,13 +14,12 @@ public class RecordProcedureListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = " " + NL + "FROM \"";
-  protected final String TEXT_5 = "\".\"SRCD-113\" AS SRCD_113," + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SRCALL-040\" AS SRCALL_040                      " + NL + "WHERE SRCD_113.ROWID = X'";
-  protected final String TEXT_7 = "' AND" + NL + "      \"SRCD-SRCALL\"";
+  protected final String TEXT_1 = "SELECT S_010.ROWID AS S_010_ROWID, " + NL + "       SRCD_113.ROWID AS SRCD_113_ROWID," + NL + "       SRCALL_040.ROWID AS SRCALL_040_ROWID, " + NL + "       * " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"S-010\" AS S_010," + NL + "     \"";
+  protected final String TEXT_3 = "\".\"SRCD-113\" AS SRCD_113," + NL + "     \"";
+  protected final String TEXT_4 = "\".\"SRCALL-040\" AS SRCALL_040                      " + NL + "WHERE S_NAM_010 = '";
+  protected final String TEXT_5 = "' AND S_SER_010 = ";
+  protected final String TEXT_6 = " AND" + NL + "      \"S-SRCD\" AND" + NL + "      \"SRCD-SRCALL\"";
 
 	public String generate(Object argument)
   {
@@ -48,20 +45,20 @@ public class RecordProcedureListQueryTemplate implements IQueryTemplate {
     
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
-String hexDbkeySrcd_113 = (String) args[1];
+String schemaName = (String) args[1];
+int schemaVersion = ((Integer) args[2]).intValue();
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Srcd_113.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( Srcall_040.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_4);
-    stringBuffer.append( sysdirlSchema );
+    stringBuffer.append( schemaName );
     stringBuffer.append(TEXT_5);
-    stringBuffer.append( sysdirlSchema );
+    stringBuffer.append( schemaVersion );
     stringBuffer.append(TEXT_6);
-    stringBuffer.append( hexDbkeySrcd_113 );
-    stringBuffer.append(TEXT_7);
     return stringBuffer.toString();
   }
 }

@@ -17,14 +17,11 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Indexkey_1042 {
 
-	@TableColumn public static final String COLUMN_1042 = "INDEXKEY.COLUMN";
-	@TableColumn public static final String SORTORDER_1042 = "INDEXKEY.SORTORDER";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Indexkey_1042.class);
+	public static final String COLUMN_1042 = "INDEXKEY_1042_COLUMN";
+	public static final String SORTORDER_1042 = "INDEXKEY_1042_SORTORDER";
 	
 	private String column_1042;
 	private String sortorder_1042;

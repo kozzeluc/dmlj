@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class ElementListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,16 +14,11 @@ public class ElementListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = ",";
-  protected final String TEXT_5 = NL + "       ";
-  protected final String TEXT_6 = " " + NL + "FROM \"";
-  protected final String TEXT_7 = "\".\"RCDSYN-079\" AS RCDSYN_079,            " + NL + "     \"";
-  protected final String TEXT_8 = "\".\"NAMESYN-083\" AS NAMESYN_083," + NL + "     \"";
-  protected final String TEXT_9 = "\".\"SDR-042\" AS SDR_042                         " + NL + "WHERE RCDSYN_079.ROWID = X'";
-  protected final String TEXT_10 = "' AND " + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"SDR-NAMESYN\"";
+  protected final String TEXT_1 = "SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID," + NL + "       NAMESYN_083.ROWID AS NAMESYN_083_ROWID," + NL + "       SDR_042.ROWID AS SDR_042_ROWID," + NL + "       * " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"RCDSYN-079\" AS RCDSYN_079,            " + NL + "     \"";
+  protected final String TEXT_3 = "\".\"NAMESYN-083\" AS NAMESYN_083," + NL + "     \"";
+  protected final String TEXT_4 = "\".\"SDR-042\" AS SDR_042                         " + NL + "WHERE RCDSYN_079.ROWID = X'";
+  protected final String TEXT_5 = "' AND " + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"SDR-NAMESYN\"";
 
 	public String generate(Object argument)
   {
@@ -54,22 +47,14 @@ String sysdirlSchema = (String) args[0];
 String hexDbkeyRcdsyn_079 = (String) args[1];
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Rcdsyn_079.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( Namesyn_083.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_4);
-    stringBuffer.append(TEXT_5);
-    stringBuffer.append( Sdr_042.COLUMNS );
-    stringBuffer.append(TEXT_6);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_7);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_8);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_9);
     stringBuffer.append( hexDbkeyRcdsyn_079 );
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_5);
     return stringBuffer.toString();
   }
 }

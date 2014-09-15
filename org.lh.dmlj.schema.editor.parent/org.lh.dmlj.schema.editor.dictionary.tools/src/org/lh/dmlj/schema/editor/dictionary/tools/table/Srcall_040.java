@@ -17,15 +17,12 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Srcall_040 {
 	
-	@TableColumn public static String CALL_PROC_040 = "CALL_PROC_040";
-	@TableColumn public static String CALL_TIME_040 = "CALL_TIME_040";
-	@TableColumn public static String DBP_FUNC_040 = "DBP_FUNC_040";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Srcall_040.class);
+	public static String CALL_PROC_040 = "CALL_PROC_040";
+	public static String CALL_TIME_040 = "CALL_TIME_040";
+	public static String DBP_FUNC_040 = "DBP_FUNC_040";
 	
 	private String callProc_040;
 	private String callTime_040;

@@ -16,11 +16,13 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="CatalogRecordListQueryTemplate"
         skeleton="query-template.skeleton"%>
-SELECT <%= Table_1050.COLUMNS %> 
-FROM SYSTEM.TABLE 
-WHERE TABLE.SCHEMA = 'SYSTEM' 
-ORDER BY TABLE.NAME
+SELECT TABLE.ROWID AS TABLE_1050_ROWID,
+       TABLE.AREA AS TABLE_1050_AREA,
+	   TABLE.LOCMODE AS TABLE_1050_LOCMODE,
+	   TABLE.NAME AS TABLE_1050_NAME,
+	   TABLE.TABLEID AS TABLE_1050_TABLEID 
+FROM SYSTEM.TABLE AS TABLE_1050 
+WHERE TABLE.SCHEMA = 'SYSTEM'

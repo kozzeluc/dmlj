@@ -16,8 +16,7 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet imports="org.lh.dmlj.schema.editor.dictionary.tools.table.*"
-        package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="SchemaDescriptionAndCommentListQueryTemplate"
         skeleton="query-template.skeleton"%>
 <%
@@ -26,9 +25,11 @@ String sysdirlSchema = (String) args[0];
 String schemaName = (String) args[1];
 int schemaVersion = ((Integer) args[2]).intValue();
 %> 
-SELECT <%= S_010.COLUMNS %>,
-       <%= Schemacmt_181.COLUMNS %> 
-FROM "<%= sysdirlSchema %>"."S-010",  
-     "<%= sysdirlSchema %>"."SCHEMACMT-181"
+SELECT S_010.ROWID AS S_010_ROWID,
+       SCHEMACMT_181.ROWID AS SCHEMACMT_181_ROWID,
+       * 
+FROM "<%= sysdirlSchema %>"."S-010" AS S_010,  
+     "<%= sysdirlSchema %>"."SCHEMACMT-181" AS SCHEMACMT_181
 WHERE S_NAM_010 = '<%= schemaName %>' AND S_SER_010 = <%= schemaVersion %> AND 
       "S-SCHEMACMT"
+PRESERVE S_010

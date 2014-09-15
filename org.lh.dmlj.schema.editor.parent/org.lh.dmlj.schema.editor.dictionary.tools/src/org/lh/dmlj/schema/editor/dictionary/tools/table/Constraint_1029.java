@@ -20,27 +20,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Constraint_1029 {
 
-	@TableColumn public static final String COMPRESS_1029 = "CONSTRAINT.COMPRESS";
-	@TableColumn public static final String DISPLACEMENT_1029 = "CONSTRAINT.DISPLACEMENT";
-	@TableColumn public static final String IXBLKCONTAINS_1029 = "CONSTRAINT.IXBLKCONTAINS";
-	@TableColumn public static final String NAME_1029 = "CONSTRAINT.NAME";
-	@TableColumn public static final String NEXT_1029 = "CONSTRAINT.NEXT";
-	@TableColumn public static final String OWNER_1029 = "CONSTRAINT.OWNER";
-	@TableColumn public static final String PRIOR_1029 = "CONSTRAINT.PRIOR";
-	@TableColumn public static final String REFNEXT_1029 = "CONSTRAINT.REFNEXT";
-	@TableColumn public static final String REFPRIOR_1029 = "CONSTRAINT.REFPRIOR";
-	@TableColumn public static final String SORTORDER_1029 = "CONSTRAINT.SORTORDER";
-	@TableColumn public static final String TYPE_1029 = "CONSTRAINT.TYPE";
-	@TableColumn public static final String UNIQUE_1029 = "CONSTRAINT.UNIQUE";
+	public static final String COMPRESS_1029 = "CONSTRAINT_1029_COMPRESS";
+	public static final String DISPLACEMENT_1029 = "CONSTRAINT_1029_DISPLACEMENT";
+	public static final String IXBLKCONTAINS_1029 = "CONSTRAINT_1029_IXBLKCONTAINS";
+	public static final String NAME_1029 = "CONSTRAINT_1029_NAME";
+	public static final String NEXT_1029 = "CONSTRAINT_1029_NEXT";
+	public static final String OWNER_1029 = "CONSTRAINT_1029_OWNER";
+	public static final String PRIOR_1029 = "CONSTRAINT_1029_PRIOR";
+	public static final String REFNEXT_1029 = "CONSTRAINT_1029_REFNEXT";
+	public static final String REFPRIOR_1029 = "CONSTRAINT_1029_REFPRIOR";
+	public static final String SORTORDER_1029 = "CONSTRAINT_1029_SORTORDER";
+	public static final String TABLE_1029 = "CONSTRAINT_1029_TABLE";
+	public static final String TYPE_1029 = "CONSTRAINT_1029_TYPE";
+	public static final String UNIQUE_1029 = "CONSTRAINT_1029_UNIQUE";
 	
-	public static final String COLUMNS = JdbcTools.columnsFor(Constraint_1029.class);
-	
-	private List<Constkey_1030> constkey_1030s;
+	private List<Constkey_1030> constkey_1030s = new ArrayList<>();
 	private List<Orderkey_1044> orderkey_1044s = new ArrayList<>();
+	private Table_1050 referencedTable_1050;
 	private Table_1050 referencingTable_1050;
 
 	private String compress_1029;
@@ -96,6 +95,10 @@ public class Constraint_1029 {
 		return prior_1029;
 	}
 
+	public Table_1050 getReferencedTable_1050() {
+		return referencedTable_1050;
+	}
+
 	public Table_1050 getReferencingTable_1050() {
 		return referencingTable_1050;
 	}
@@ -118,10 +121,6 @@ public class Constraint_1029 {
 
 	public String getUnique_1029() {
 		return unique_1029;
-	}
-
-	public void setReferencingTable_1050(Table_1050 referencingTable_1050) {
-		this.referencingTable_1050 = referencingTable_1050;
 	}
 
 	public void setCompress_1029(String compress_1029) {
@@ -150,6 +149,14 @@ public class Constraint_1029 {
 
 	public void setPrior_1029(short prior_1029) {
 		this.prior_1029 = prior_1029;
+	}
+
+	public void setReferencedTable_1050(Table_1050 referencedTable_1050) {
+		this.referencedTable_1050 = referencedTable_1050;
+	}
+
+	public void setReferencingTable_1050(Table_1050 referencingTable_1050) {
+		this.referencingTable_1050 = referencingTable_1050;
 	}
 
 	public void setRefnext_1029(short refnext_1029) {

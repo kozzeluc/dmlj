@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class CatalogRecordListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,8 +14,7 @@ public class CatalogRecordListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = " " + NL + "FROM SYSTEM.TABLE " + NL + "WHERE TABLE.SCHEMA = 'SYSTEM' " + NL + "ORDER BY TABLE.NAME";
+  protected final String TEXT_1 = "SELECT TABLE.ROWID AS TABLE_1050_ROWID," + NL + "       TABLE.AREA AS TABLE_1050_AREA," + NL + "\t   TABLE.LOCMODE AS TABLE_1050_LOCMODE," + NL + "\t   TABLE.NAME AS TABLE_1050_NAME," + NL + "\t   TABLE.TABLEID AS TABLE_1050_TABLEID " + NL + "FROM SYSTEM.TABLE AS TABLE_1050 " + NL + "WHERE TABLE.SCHEMA = 'SYSTEM'";
 
 	public String generate(Object argument)
   {
@@ -41,8 +38,6 @@ public class CatalogRecordListQueryTemplate implements IQueryTemplate {
  */
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Table_1050.COLUMNS );
-    stringBuffer.append(TEXT_2);
     return stringBuffer.toString();
   }
 }

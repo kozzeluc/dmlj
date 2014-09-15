@@ -17,17 +17,14 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Column_1028 {
 	
-	@TableColumn public static final String NAME_1028 = "COLUMN.NAME";
-	@TableColumn public static final String NULLS_1028 = "COLUMN.NULLS";
-	@TableColumn public static final String NUMBER_1028 = "COLUMN.NUMBER";
-	@TableColumn public static final String TYPE_1028 = "COLUMN.TYPE";
-	@TableColumn public static final String V_LENGTH_1028 = "COLUMN.V_LENGTH";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Column_1028.class);
+	public static final String NAME_1028 = "COLUMN_1028_NAME";
+	public static final String NULLS_1028 = "COLUMN_1028_NULLS";
+	public static final String NUMBER_1028 = "COLUMN_1028_NUMBER";
+	public static final String TYPE_1028 = "COLUMN_1028_TYPE";
+	public static final String VLENGTH_1028 = "COLUMN_1028_VLENGTH";
 	
 	private Table_1050 table_1050;
 	

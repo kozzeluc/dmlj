@@ -17,15 +17,12 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Sdes_044 {
 
-	@TableColumn public static final String CMT_ID_044 = "CMT_ID_044";
-	@TableColumn public static final String CMT_INFO_044_1 = "CMT_INFO_044_1";
-	@TableColumn public static final String CMT_INFO_044_2 = "CMT_INFO_044_2";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Sdes_044.class);
+	public static final String CMT_ID_044 = "CMT_ID_044";
+	public static final String CMT_INFO_044_1 = "CMT_INFO_044_1";
+	public static final String CMT_INFO_044_2 = "CMT_INFO_044_2";
 	
 	private int cmtId_044;
 	private String cmtInfo_044_1;

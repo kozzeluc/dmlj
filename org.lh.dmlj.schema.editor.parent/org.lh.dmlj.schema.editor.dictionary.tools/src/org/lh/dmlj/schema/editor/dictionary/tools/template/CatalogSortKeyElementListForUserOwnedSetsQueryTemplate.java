@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class CatalogSortKeyElementListForUserOwnedSetsQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,8 +14,7 @@ public class CatalogSortKeyElementListForUserOwnedSetsQueryTemplate implements I
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = " " + NL + "FROM SYSTEM.ORDERKEY" + NL + "WHERE ORDERKEY.SCHEMA = 'SYSTEM' AND" + NL + "      ORDERKEY.CONSTRAINT = CONSTRAINT.NAME" + NL + "ORDER BY ORDERKEY.CONSTRAINT," + NL + "\t\t ORDERKEY_1044.SEQUENCE";
+  protected final String TEXT_1 = "SELECT ORDERKEY.ROWID AS ORDERKEY_1044_ROWID," + NL + "       ORDERKEY.COLUMN AS ORDERKEY_1044_COLUMN," + NL + "\t   ORDERKEY.CONSTRAINT AS ORDERKEY_1044_CONSTRAINT," + NL + "\t   ORDERKEY.SORTORDER AS ORDERKEY_1044_SORTORDER" + NL + "FROM SYSTEM.ORDERKEY AS ORDERKEY_1044" + NL + "WHERE ORDERKEY.SCHEMA = 'SYSTEM'" + NL + "ORDER BY ORDERKEY.CONSTRAINT," + NL + "         ORDERKEY_1044.SEQUENCE";
 
 	public String generate(Object argument)
   {
@@ -41,8 +38,6 @@ public class CatalogSortKeyElementListForUserOwnedSetsQueryTemplate implements I
  */
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Orderkey_1044.COLUMNS );
-    stringBuffer.append(TEXT_2);
     return stringBuffer.toString();
   }
 }

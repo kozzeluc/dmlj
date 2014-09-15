@@ -59,17 +59,16 @@ public class CatalogSystemOwnedIndexDataCollector implements ISetDataCollector<I
 		session.runQuery(catalogSortKeyElementListForSystemOwnedSetsQuery, new IRowProcessor() {			
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				String name_1050 = 
-					JdbcTools.removeTrailingSpaces(row.getString(Table_1050.NAME_1050)); 				
+				String name_1041 = JdbcTools.removeTrailingSpaces(row.getString(Index_1041.NAME_1041)); 				
 				Index_1041 index_1041;
-				if (!sortKeyElementsMap.containsKey(name_1050)) {
+				if (!sortKeyElementsMap.containsKey(name_1041)) {
 					index_1041 = new Index_1041();
-					index_1041.setName_1041(row.getString(Index_1041.NAME_1041));
+					index_1041.setName_1041(name_1041);
 					index_1041.setUnique_1041(row.getString(Index_1041.UNIQUE_1041));
 					// we don't need a reference from the Index_1041 to a Table_1050
-					sortKeyElementsMap.put(name_1050, index_1041);
+					sortKeyElementsMap.put(name_1041, index_1041);
 				} else {
-					index_1041 = sortKeyElementsMap.get(name_1050);							
+					index_1041 = sortKeyElementsMap.get(name_1041);							
 				}
 				Indexkey_1042 indexkey_1042 = new Indexkey_1042();
 				indexkey_1042.setColumn_1042(row.getString(Indexkey_1042.COLUMN_1042));

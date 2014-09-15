@@ -17,15 +17,12 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Orderkey_1044 {
 
-	@TableColumn public static final String COLUMN_1044 = "ORDERKEY.COLUMN";
-	@TableColumn public static final String CONSTRAINT_1044 = "ORDERKEY.CONSTRAINT";
-	@TableColumn public static final String SORTORDER_1044 = "ORDERKEY.SORTORDER";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Orderkey_1044.class);
+	public static final String COLUMN_1044 = "ORDERKEY_1044_COLUMN";
+	public static final String CONSTRAINT_1044 = "ORDERKEY_1044_CONSTRAINT";
+	public static final String SORTORDER_1044 = "ORDERKEY_1044_SORTORDER";
 	
 	private String column_1044;
 	private String constraint_1044;

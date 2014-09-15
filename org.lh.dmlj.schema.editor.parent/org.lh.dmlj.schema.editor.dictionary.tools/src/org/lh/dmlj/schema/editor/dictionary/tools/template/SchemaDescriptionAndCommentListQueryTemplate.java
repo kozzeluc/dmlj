@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class SchemaDescriptionAndCommentListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,14 +14,11 @@ public class SchemaDescriptionAndCommentListQueryTemplate implements IQueryTempl
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = " " + NL + "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = " " + NL + "FROM \"";
-  protected final String TEXT_5 = "\".\"S-010\",  " + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SCHEMACMT-181\"" + NL + "WHERE S_NAM_010 = '";
-  protected final String TEXT_7 = "' AND S_SER_010 = ";
-  protected final String TEXT_8 = " AND " + NL + "      \"S-SCHEMACMT\"";
+  protected final String TEXT_1 = " " + NL + "SELECT S_010.ROWID AS S_010_ROWID," + NL + "       SCHEMACMT_181.ROWID AS SCHEMACMT_181_ROWID," + NL + "       * " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"S-010\" AS S_010,  " + NL + "     \"";
+  protected final String TEXT_3 = "\".\"SCHEMACMT-181\" AS SCHEMACMT_181" + NL + "WHERE S_NAM_010 = '";
+  protected final String TEXT_4 = "' AND S_SER_010 = ";
+  protected final String TEXT_5 = " AND " + NL + "      \"S-SCHEMACMT\"" + NL + "PRESERVE S_010";
 
 	public String generate(Object argument)
   {
@@ -53,19 +48,14 @@ String schemaName = (String) args[1];
 int schemaVersion = ((Integer) args[2]).intValue();
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( S_010.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( Schemacmt_181.COLUMNS );
-    stringBuffer.append(TEXT_4);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_5);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_6);
     stringBuffer.append( schemaName );
-    stringBuffer.append(TEXT_7);
+    stringBuffer.append(TEXT_4);
     stringBuffer.append( schemaVersion );
-    stringBuffer.append(TEXT_8);
+    stringBuffer.append(TEXT_5);
     return stringBuffer.toString();
   }
 }

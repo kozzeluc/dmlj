@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class CatalogForeignKeyListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,8 +14,7 @@ public class CatalogForeignKeyListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = " " + NL + "FROM SYSTEM.CONSTKEY" + NL + "WHERE CONSTKEY.SCHEMA = 'SYSTEM' AND" + NL + "      CONSTKEY.CONSTRAINT = CONSTRAINT.NAME" + NL + "ORDER BY CONSTKEY.NAME," + NL + "\t\t CONSTKEY.SEQUENCE";
+  protected final String TEXT_1 = "SELECT CONSTKEY.ROWID AS CONSTKEY_1030_ROWID," + NL + "       CONSTKEY.NAME AS CONSTKEY_1030_NAME," + NL + "\t   CONSTKEY.NUMBER AS CONSTKEY_1030_NUMBER " + NL + "FROM SYSTEM.CONSTKEY AS CONSTKEY_1030" + NL + "WHERE CONSTKEY.SCHEMA = 'SYSTEM'" + NL + "ORDER BY CONSTKEY.NAME," + NL + "\t\t CONSTKEY.SEQUENCE";
 
 	public String generate(Object argument)
   {
@@ -41,8 +38,6 @@ public class CatalogForeignKeyListQueryTemplate implements IQueryTemplate {
  */
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( Constkey_1030.COLUMNS );
-    stringBuffer.append(TEXT_2);
     return stringBuffer.toString();
   }
 }

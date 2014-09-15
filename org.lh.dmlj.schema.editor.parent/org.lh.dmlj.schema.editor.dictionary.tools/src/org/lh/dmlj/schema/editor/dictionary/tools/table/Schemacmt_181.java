@@ -16,15 +16,11 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public abstract class Schemacmt_181 {
 
-	@TableColumn public static final String CMT_ID_181 = "CMT_ID_181";
-	@TableColumn public static final String CMT_INFO_181_1 = "CMT_INFO_181_1";
-	@TableColumn public static final String CMT_INFO_181_2 = "CMT_INFO_181_2";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Schemacmt_181.class);
+	public static final String CMT_ID_181 = "CMT_ID_181";
+	public static final String CMT_INFO_181_1 = "CMT_INFO_181_1";
+	public static final String CMT_INFO_181_2 = "CMT_INFO_181_2";
 	
 }

@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class SetListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,20 +14,13 @@ public class SetListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = ",";
-  protected final String TEXT_5 = NL + "       ";
-  protected final String TEXT_6 = ",";
-  protected final String TEXT_7 = NL + "       ";
-  protected final String TEXT_8 = " " + NL + "FROM \"";
-  protected final String TEXT_9 = "\".\"S-010\" AS S_010,  " + NL + "\t \"";
-  protected final String TEXT_10 = "\".\"SOR-046\" AS SOR_046," + NL + "\t \"";
-  protected final String TEXT_11 = "\".\"SMR-052\" AS SMR_052," + NL + "\t \"";
-  protected final String TEXT_12 = "\".\"SRCD-113\" AS SRCD_113" + NL + "WHERE S_010.S_NAM_010 = '";
-  protected final String TEXT_13 = "' AND S_010.S_SER_010 = ";
-  protected final String TEXT_14 = "  AND" + NL + "\t  \"S-SOR\" AND SET_NAM_046 <> 'CALC' AND" + NL + "\t  \"SOR-SMR\" AND" + NL + "\t  \"SRCD-SMR\"";
+  protected final String TEXT_1 = "SELECT S_010.ROWID AS S_010_ROWID," + NL + "       SOR_046.ROWID AS SOR_046_ROWID," + NL + "       SMR_052.ROWID AS SMR_052_ROWID," + NL + "       SRCD_113.ROWID AS SRCD_113_ROWID," + NL + "       * " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"S-010\" AS S_010,  " + NL + "\t \"";
+  protected final String TEXT_3 = "\".\"SOR-046\" AS SOR_046," + NL + "\t \"";
+  protected final String TEXT_4 = "\".\"SMR-052\" AS SMR_052," + NL + "\t \"";
+  protected final String TEXT_5 = "\".\"SRCD-113\" AS SRCD_113" + NL + "WHERE S_010.S_NAM_010 = '";
+  protected final String TEXT_6 = "' AND S_010.S_SER_010 = ";
+  protected final String TEXT_7 = "  AND" + NL + "\t  \"S-SOR\" AND SET_NAM_046 <> 'CALC' AND" + NL + "\t  \"SOR-SMR\" AND" + NL + "\t  \"SRCD-SMR\"";
 
 	public String generate(Object argument)
   {
@@ -59,29 +50,18 @@ String schemaName = (String) args[1];
 int schemaVersion = ((Integer) args[2]).intValue();
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( S_010.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( Sor_046.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_4);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_5);
-    stringBuffer.append( Smr_052.COLUMNS );
-    stringBuffer.append(TEXT_6);
-    stringBuffer.append(TEXT_7);
-    stringBuffer.append( Srcd_113.COLUMNS );
-    stringBuffer.append(TEXT_8);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_9);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_10);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_11);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_12);
     stringBuffer.append( schemaName );
-    stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_6);
     stringBuffer.append( schemaVersion );
-    stringBuffer.append(TEXT_14);
+    stringBuffer.append(TEXT_7);
     return stringBuffer.toString();
   }
 }

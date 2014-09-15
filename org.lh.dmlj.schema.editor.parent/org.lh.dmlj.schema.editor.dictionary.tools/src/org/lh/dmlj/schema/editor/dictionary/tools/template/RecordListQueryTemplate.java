@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class RecordListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,23 +14,14 @@ public class RecordListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = " " + NL + "SELECT ";
-  protected final String TEXT_2 = ",";
-  protected final String TEXT_3 = NL + "       ";
-  protected final String TEXT_4 = ",";
-  protected final String TEXT_5 = NL + "       ";
-  protected final String TEXT_6 = ",  ";
-  protected final String TEXT_7 = NL + "       ";
-  protected final String TEXT_8 = ",";
-  protected final String TEXT_9 = NL + "       ";
-  protected final String TEXT_10 = "  " + NL + "FROM \"";
-  protected final String TEXT_11 = "\".\"S-010\" AS S_010, " + NL + "\t \"";
-  protected final String TEXT_12 = "\".\"SRCD-113\" AS SRCD_113," + NL + "\t \"";
-  protected final String TEXT_13 = "\".\"SAM-056\" AS SAM_056, " + NL + "\t \"";
-  protected final String TEXT_14 = "\".\"SR-036\" AS SR_036, " + NL + "\t \"";
-  protected final String TEXT_15 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + "WHERE S_NAM_010 = '";
-  protected final String TEXT_16 = "' AND S_SER_010 = ";
-  protected final String TEXT_17 = " AND " + NL + "      \"S-SRCD\" AND SR_ID_113 > 9 AND " + NL + "      \"SRCD-SAM\" AND " + NL + "      \"RCDSYN-SRCD\" AND" + NL + "      \"SR-RCDSYN\"";
+  protected final String TEXT_1 = " " + NL + "SELECT S_010.ROWID AS S_010_ROWID," + NL + "       SRCD_113.ROWID AS SRCD_113_ROWID," + NL + "       SAM_056.ROWID AS SAM_056_ROWID,  " + NL + "       SR_036.ROWID AS SR_036_ROWID," + NL + "       RCDSYN_079.ROWID AS RCDSYN_079_ROWID," + NL + "       *  " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"S-010\" AS S_010, " + NL + "\t \"";
+  protected final String TEXT_3 = "\".\"SRCD-113\" AS SRCD_113," + NL + "\t \"";
+  protected final String TEXT_4 = "\".\"SAM-056\" AS SAM_056, " + NL + "\t \"";
+  protected final String TEXT_5 = "\".\"SR-036\" AS SR_036, " + NL + "\t \"";
+  protected final String TEXT_6 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + "WHERE S_NAM_010 = '";
+  protected final String TEXT_7 = "' AND S_SER_010 = ";
+  protected final String TEXT_8 = " AND " + NL + "      \"S-SRCD\" AND SR_ID_113 > 9 AND " + NL + "      \"SRCD-SAM\" AND " + NL + "      \"RCDSYN-SRCD\" AND" + NL + "      \"SR-RCDSYN\"";
 
 	public String generate(Object argument)
   {
@@ -62,34 +51,20 @@ String schemaName = (String) args[1];
 int schemaVersion = ((Integer) args[2]).intValue();
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( S_010.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( Srcd_113.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_4);
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_5);
-    stringBuffer.append( Sam_056.COLUMNS );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_6);
-    stringBuffer.append(TEXT_7);
-    stringBuffer.append( Sr_036.COLUMNS );
-    stringBuffer.append(TEXT_8);
-    stringBuffer.append(TEXT_9);
-    stringBuffer.append( Rcdsyn_079.COLUMNS );
-    stringBuffer.append(TEXT_10);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_11);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_12);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_13);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_14);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_15);
     stringBuffer.append( schemaName );
-    stringBuffer.append(TEXT_16);
+    stringBuffer.append(TEXT_7);
     stringBuffer.append( schemaVersion );
-    stringBuffer.append(TEXT_17);
+    stringBuffer.append(TEXT_8);
     return stringBuffer.toString();
   }
 }

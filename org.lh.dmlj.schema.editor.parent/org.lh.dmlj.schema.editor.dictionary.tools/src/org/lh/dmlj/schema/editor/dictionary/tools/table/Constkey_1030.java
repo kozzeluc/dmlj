@@ -17,14 +17,11 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.TableColumn;
 
 public class Constkey_1030 {
 
-	@TableColumn public static final String NAME_1030 = "CONSTKEY.NAME";
-	@TableColumn public static final String NUMBER_1030 = "CONSTKEY.NUMBER";
-	
-	public static final String COLUMNS = JdbcTools.columnsFor(Constkey_1030.class);
+	public static final String NAME_1030 = "CONSTKEY_1030_NAME";
+	public static final String NUMBER_1030 = "CONSTKEY_1030_NUMBER";
 	
 	private String name_1030;
 	private short number_1030;

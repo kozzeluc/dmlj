@@ -2,8 +2,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
-
 public class ValidSchemaListForSysdirlDictionariesQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -16,9 +14,8 @@ public class ValidSchemaListForSysdirlDictionariesQueryTemplate implements IQuer
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "SELECT ";
-  protected final String TEXT_2 = NL + "FROM \"";
-  protected final String TEXT_3 = "\".\"S-010\" AS S_010" + NL + "WHERE S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0" + NL + "ORDER BY S_NAM_010, S_SER_010";
+  protected final String TEXT_1 = "SELECT S_010.ROWID AS S_010_ROWID," + NL + "       *" + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"S-010\" AS S_010" + NL + "WHERE S_NAM_010 <> 'NON IDMS' AND ERR_010 = 0" + NL + "ORDER BY S_NAM_010, S_SER_010";
 
 	public String generate(Object argument)
   {
@@ -46,10 +43,8 @@ Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append( S_010.COLUMNS );
-    stringBuffer.append(TEXT_2);
     stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_3);
+    stringBuffer.append(TEXT_2);
     return stringBuffer.toString();
   }
 }

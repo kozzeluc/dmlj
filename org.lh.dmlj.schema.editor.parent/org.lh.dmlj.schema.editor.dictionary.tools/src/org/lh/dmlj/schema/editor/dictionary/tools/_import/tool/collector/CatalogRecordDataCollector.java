@@ -85,12 +85,15 @@ public class CatalogRecordDataCollector implements IRecordDataCollector<Table_10
 		if (viaSetNames != null) {
 			return;
 		}
+		viaSetNames = new HashMap<>();
 		Query catalogViaSetListQuery = new Query.Builder().forCatalogViaSetList(session).build();
 		session.runQuery(catalogViaSetListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				String name_1050 = row.getString(Table_1050.NAME_1050);
-				String name_1029 = row.getString(Constraint_1029.NAME_1029);
+				String name_1050 = 
+					JdbcTools.removeTrailingSpaces(row.getString(Table_1050.NAME_1050));
+				String name_1029 = 
+					JdbcTools.removeTrailingSpaces(row.getString(Constraint_1029.NAME_1029));
 				viaSetNames.put(name_1050, name_1029);
 			}
 		});				
@@ -240,7 +243,7 @@ public class CatalogRecordDataCollector implements IRecordDataCollector<Table_10
 	@Override
 	public String getViaSetName(Table_1050 table_1050) {
 		buildViaSetNamesMapIfNeeded();
-		return viaSetNames.get(getName(table_1050));
+		return viaSetNames.get(table_1050.getName_1050());
 	}
 
 	@Override
