@@ -135,6 +135,8 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		final List<Object> list = new ArrayList<>();
 		final Map<Long, Sr_036> sr_036s = new HashMap<>();
+		final Map<Long, Rcdsyn_079> rcdsyn_079s = new HashMap<>();
+		final Map<Long, Rcdsyn_079> rcdsyn_079bs = new HashMap<>();		
 		
 		// regular records
 		final List<String> regularRecords = new ArrayList<>();
@@ -155,6 +157,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 				rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
 				rcdsyn_079.setSr_036(sr_036);
 				sr_036.setRcdsyn_079(rcdsyn_079);
+				rcdsyn_079s.put(Long.valueOf(rcdsyn_079.getDbkey()), rcdsyn_079);
 								
 				Sam_056 sam_056 = new Sam_056();
 				sam_056.setSrNam_056(row.getString(Sam_056.SR_NAM_056));
@@ -193,8 +196,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		// locate the base record synonym and hook it to the SR-036 when different from the record 
 		// synonym referenced by the schema
-		Query baseRecordSynonymQuery = 
-			new Query.Builder().forBaseRecordSynonyms(session).build();
+		Query baseRecordSynonymQuery = new Query.Builder().forBaseRecordSynonymList(session).build();
 		session.runQuery(baseRecordSynonymQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
@@ -209,10 +211,74 @@ public class SchemaImportTool implements ISchemaImportTool {
 						rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
 						rcdsyn_079.setSr_036(sr_036);
 						sr_036.setRcdsyn_079b(rcdsyn_079);
+						rcdsyn_079bs.put(Long.valueOf(dbkeyRcdsyn_079b), rcdsyn_079);
 					}
 				}
 			}					
+		});		
+		
+		// get ALL elements for ALL regular records
+		Query elementListQuery = new Query.Builder().forElementList(session).build();
+		session.runQuery(elementListQuery, new IRowProcessor() {
+			@Override
+			public void processRow(ResultSet row) throws SQLException {				
+				long dbkeyOfRcdsyn_079 = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);
+				if (rcdsyn_079s.containsKey(Long.valueOf(dbkeyOfRcdsyn_079))) {					
+					Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(Long.valueOf(dbkeyOfRcdsyn_079));					
+					Namesyn_083 namesyn_083 = new Namesyn_083();	
+					namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
+					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
+					namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
+					namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
+					namesyn_083.setRcdsyn_079(rcdsyn_079);
+					rcdsyn_079.getNamesyn_083s().add(namesyn_083);					
+					Sdr_042 sdr_042 = new Sdr_042();					
+					sdr_042.setDbkey(JdbcTools.getDbkey(row, Sdr_042.ROWID));
+					sdr_042.setDrLvl_042(row.getShort(Sdr_042.DR_LVL_042));
+					sdr_042.setDrNam_042(row.getString(Sdr_042.DR_NAM_042));
+					sdr_042.setOcc_042(row.getShort(Sdr_042.OCC_042));
+					sdr_042.setPic_042(row.getString(Sdr_042.PIC_042));
+					sdr_042.setUse_042(row.getShort(Sdr_042.USE_042));
+					namesyn_083.setSdr_042(sdr_042);					
+				} else if (rcdsyn_079bs.containsKey(Long.valueOf(dbkeyOfRcdsyn_079))) {					
+					Rcdsyn_079 rcdsyn_079b = rcdsyn_079bs.get(Long.valueOf(dbkeyOfRcdsyn_079));
+					Rcdsyn_079 rcdsyn_079 = rcdsyn_079b.getSr_036().getRcdsyn_079();					
+					Namesyn_083 namesyn_083 = new Namesyn_083();	
+					namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
+					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
+					namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
+					namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
+					namesyn_083.setRcdsyn_079(rcdsyn_079b);
+					rcdsyn_079b.getNamesyn_083s().add(namesyn_083);					
+					long dbkeyOfSdr_042 = JdbcTools.getDbkey(row, Sdr_042.ROWID);
+					Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(dbkeyOfSdr_042).getSdr_042();
+					namesyn_083.setSdr_042(sdr_042);					
+				} else {
+					throw new RuntimeException("unexpected row; dbkey of RCDSYN-079=X'" +
+											   JdbcTools.toHexString(dbkeyOfRcdsyn_079) + "'");
+				}			
+			}				
 		});
+		Query elementCommentListQuery = new Query.Builder().forElementCommentList(session).build();
+		session.runQuery(elementCommentListQuery, new IRowProcessor() {
+			@Override
+			public void processRow(ResultSet row) throws SQLException {				
+				long dbkeyOfRcdsyn_079 = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);				
+				if (rcdsyn_079s.containsKey(Long.valueOf(dbkeyOfRcdsyn_079))) {	
+					Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(Long.valueOf(dbkeyOfRcdsyn_079));				
+					Sdr_042 sdr_042 = 
+						rcdsyn_079.getNamesyn_083(JdbcTools.getDbkey(row, Sdr_042.ROWID)).getSdr_042();					
+					Sdes_044 sdes_044 = new Sdes_044();
+					sdes_044.setCmtId_044(row.getInt(Sdes_044.CMT_ID_044));
+					sdes_044.setCmtInfo_044_1(row.getString(Sdes_044.CMT_INFO_044_1));
+					sdes_044.setCmtInfo_044_2(row.getString(Sdes_044.CMT_INFO_044_2));
+					sdr_042.getSdes_044s().add(sdes_044);				
+				} else {
+					throw new RuntimeException("unexpected row; dbkey of RCDSYN-079=X'" +
+											   JdbcTools.toHexString(dbkeyOfRcdsyn_079) + "'");
+				}				
+			}				
+		});	
 		
 		// record procedures
 		Query recordProcedureListQuery =
@@ -270,84 +336,12 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		if (recordContext instanceof Srcd_113) {
 			
+			Srcd_113 srcd_113 = (Srcd_113) recordContext;
+			
 			// regular record
 			
-			// get ALL elements for once and for all
-			Srcd_113 srcd_113 = (Srcd_113) recordContext;
-			final Rcdsyn_079 rcdsyn_079 = srcd_113.getRcdsyn_079();
-			Query elementListQuery = 
-				new Query.Builder().forElementList(session, rcdsyn_079.getDbkey())
-								   .withContext(rcdsyn_079.getRsynName_079() + " version " + 
-										   		rcdsyn_079.getRsynVer_079())
-								   .build();
-			session.runQuery(elementListQuery, new IRowProcessor() {
-				@Override
-				public void processRow(ResultSet row) throws SQLException {
-					
-					Namesyn_083 namesyn_083 = new Namesyn_083();	
-					namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
-					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
-					namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
-					namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
-					namesyn_083.setRcdsyn_079(rcdsyn_079);
-					rcdsyn_079.getNamesyn_083s().add(namesyn_083);
-					
-					Sdr_042 sdr_042 = new Sdr_042();					
-					sdr_042.setDbkey(JdbcTools.getDbkey(row, Sdr_042.ROWID));
-					sdr_042.setDrLvl_042(row.getShort(Sdr_042.DR_LVL_042));
-					sdr_042.setDrNam_042(row.getString(Sdr_042.DR_NAM_042));
-					sdr_042.setOcc_042(row.getShort(Sdr_042.OCC_042));
-					sdr_042.setPic_042(row.getString(Sdr_042.PIC_042));
-					sdr_042.setUse_042(row.getShort(Sdr_042.USE_042));
-					namesyn_083.setSdr_042(sdr_042);
-				
-				}				
-			});
-			Query elementCommentListQuery = 
-				new Query.Builder().forElementCommentList(session, rcdsyn_079.getDbkey())
-							 	   .withContext(rcdsyn_079.getRsynName_079() + " version " + 
-							 			   		rcdsyn_079.getRsynVer_079())
-							 	   .build();
-			session.runQuery(elementCommentListQuery, new IRowProcessor() {
-				@Override
-				public void processRow(ResultSet row) throws SQLException {				
-					Sdr_042 sdr_042 = 
-						rcdsyn_079.getNamesyn_083(JdbcTools.getDbkey(row, Sdr_042.ROWID)).getSdr_042();					
-					Sdes_044 sdes_044 = new Sdes_044();
-					sdes_044.setCmtId_044(row.getInt(Sdes_044.CMT_ID_044));
-					sdes_044.setCmtInfo_044_1(row.getString(Sdes_044.CMT_INFO_044_1));
-					sdes_044.setCmtInfo_044_2(row.getString(Sdes_044.CMT_INFO_044_2));
-					sdr_042.getSdes_044s().add(sdes_044);
-				}				
-			});
-			final Rcdsyn_079 rcdsyn_079b = rcdsyn_079.getSr_036().getRcdsyn_079b();
-			if (rcdsyn_079b != null) {				
-				elementListQuery = 
-					new Query.Builder().forElementList(session, rcdsyn_079b.getDbkey())
-									   .withContext(rcdsyn_079b.getRsynName_079() + " version " + 
-										   			rcdsyn_079b.getRsynVer_079())
-									   .build();
-				session.runQuery(elementListQuery, new IRowProcessor() {
-					@Override
-					public void processRow(ResultSet row) throws SQLException {
-						
-						Namesyn_083 namesyn_083 = new Namesyn_083();	
-						namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
-						namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
-						namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
-						namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
-						namesyn_083.setRcdsyn_079(rcdsyn_079b);
-						rcdsyn_079b.getNamesyn_083s().add(namesyn_083);
-						
-						long dbkeyOfSdr_042 = JdbcTools.getDbkey(row, Sdr_042.ROWID);
-						Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(dbkeyOfSdr_042).getSdr_042();
-						namesyn_083.setSdr_042(sdr_042);
-					}				
-				});				
-			}
-			
-			// now filter out the root elements
 			List<Namesyn_083> list = new ArrayList<>();
+			Rcdsyn_079 rcdsyn_079 = srcd_113.getRcdsyn_079();
 			short topLevel = rcdsyn_079.getNamesyn_083s().get(0).getSdr_042().getDrLvl_042();
 			for (Namesyn_083 namesyn_083 : rcdsyn_079.getNamesyn_083s()) {
 				Sdr_042 sdr_042 = namesyn_083.getSdr_042();

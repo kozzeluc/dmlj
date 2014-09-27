@@ -18,7 +18,7 @@ package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaProcedureListQueryTemplate;
-import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymsQueryTemplate;
+import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.CalcKeyElementListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.CatalogCalcKeyElementListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.CatalogElementListQueryTemplate;
@@ -48,7 +48,7 @@ public class Query {
 	
 	private static final IQueryTemplate areaListQueryTemplate = new AreaListQueryTemplate();
 	private static final IQueryTemplate areaProcedureListQueryTemplate = new AreaProcedureListQueryTemplate();
-	private static final IQueryTemplate baseRecordSynonymsQueryTemplate = new BaseRecordSynonymsQueryTemplate();
+	private static final IQueryTemplate baseRecordSynonymListQueryTemplate = new BaseRecordSynonymListQueryTemplate();
 	private static final IQueryTemplate calcKeyElementListQueryTemplate = new CalcKeyElementListQueryTemplate();
 	private static final IQueryTemplate catalogCalcKeyElementListQueryTemplate = new CatalogCalcKeyElementListQueryTemplate();
 	private static final IQueryTemplate catalogElementListQueryTemplate = new CatalogElementListQueryTemplate();
@@ -148,10 +148,10 @@ public class Query {
 												  session.getSchemaVersion()});
 			return this;
 		}
-		
-		public Builder forBaseRecordSynonyms(SchemaImportSession session) {
-			description = "base record synonyms";
-			IQueryTemplate template = baseRecordSynonymsQueryTemplate;
+
+		public Builder forBaseRecordSynonymList(SchemaImportSession session) {
+			description = "base record synonym list";
+			IQueryTemplate template = baseRecordSynonymListQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
 												  session.getSchemaName(),
 												  session.getSchemaVersion()});
@@ -222,18 +222,20 @@ public class Query {
 			return this;
 		}
 
-		public Builder forElementCommentList(ImportSession session, long dbkeyOfRcdsyn_079) {
+		public Builder forElementCommentList(SchemaImportSession session) {
 			description = "element comment list";
 			sql = elementCommentListQueryTemplate.generate(new Object[] {session.getDictionary().getSchema(),
-								  	  						  	 JdbcTools.toHexString(dbkeyOfRcdsyn_079)});			
+	  				  									   session.getSchemaName(), 
+	  				  									   session.getSchemaVersion()});			
 			return this;
 		}		
 		
-		public Builder forElementList(SchemaImportSession session, long dbkeyOfRcdsyn_079) {
+		public Builder forElementList(SchemaImportSession session) {
 			description = "element list";
 			IQueryTemplate template = elementListQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
-								  				  JdbcTools.toHexString(dbkeyOfRcdsyn_079)});			
+								  				  session.getSchemaName(), 
+								  				  session.getSchemaVersion()});			
 			return this;
 		}
 		
@@ -241,7 +243,7 @@ public class Query {
 			description = "element synonym comment list";
 			IQueryTemplate template = elementSynonymCommentsListQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
-								  	  		  	  JdbcTools.toHexString(dbkeyOfNamesyn_083)});			
+												  JdbcTools.toHexString(dbkeyOfNamesyn_083)});			
 			return this;
 		}		
 		

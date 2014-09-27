@@ -22,15 +22,43 @@
 <%
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
-String hexDbkeyRcdsyn_079 = (String) args[1];
-%>
-SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,
-       NAMESYN_083.ROWID AS NAMESYN_083_ROWID,
-       SDR_042.ROWID AS SDR_042_ROWID,
-       * 
-FROM "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,            
-     "<%= sysdirlSchema %>"."NAMESYN-083" AS NAMESYN_083,
-     "<%= sysdirlSchema %>"."SDR-042" AS SDR_042                         
-WHERE RCDSYN_079.ROWID = X'<%= hexDbkeyRcdsyn_079 %>' AND 
-      "RCDSYN-NAMESYN" AND
-      "SDR-NAMESYN"
+String schemaName = (String) args[1];
+int schemaVersion = ((Integer) args[2]).intValue();
+%>     
+SELECT SR_036.ROWID AS SR_036_ROWID,                         
+       RCDSYN_079.ROWID AS RCDSYN_079_ROWID,                 
+       NAMESYN_083.ROWID AS NAMESYN_083_ROWID,               
+       SDR_042.ROWID AS SDR_042_ROWID,                       
+       *                                                     
+FROM "<%= sysdirlSchema %>"."OOAK-012" AS OOAK_079,                       
+     "<%= sysdirlSchema %>"."SR-036" AS SR_036,                           
+     "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,                   
+     "<%= sysdirlSchema %>"."NAMESYN-083" AS NAMESYN_083,                 
+     "<%= sysdirlSchema %>"."SDR-042" AS SDR_042                          
+WHERE OOAK_KEY_012 = 'OOAK' AND                              
+      "OOAK-SR" AND                                          
+      "SR-RCDSYN" AND                                        
+      "RCDSYN-NAMESYN" AND                                   
+      "SDR-NAMESYN" AND                                      
+      (RCDSYN_079.ROWID IN                                    
+           (SELECT RCDSYN_079.ROWID                               
+            FROM "<%= sysdirlSchema %>"."S-010" AS S_010,                  
+                 "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,            
+                 "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,        
+                 "<%= sysdirlSchema %>"."SR-036" AS SR_036                 
+            WHERE S_NAM_010 = '<%= schemaName %>' AND S_SER_010 = <%= schemaVersion %> AND
+                  "S-SRCD" AND SR_ID_113 > 9 AND              
+                  "RCDSYN-SRCD" AND
+                  "SR-RCDSYN") OR
+       RSYN_NAME_079 = SR_NAM_036 AND
+       RSYN_VER_079 = RCD_VERS_036 AND
+       SR_036.ROWID IN
+           (SELECT SR_036.ROWID
+            FROM "<%= sysdirlSchema %>"."S-010" AS S_010,
+                 "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,
+                 "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,
+                 "<%= sysdirlSchema %>"."SR-036" AS SR_036
+            WHERE S_NAM_010 = '<%= schemaName %>' AND S_SER_010 = <%= schemaVersion %> AND
+                  "S-SRCD" AND SR_ID_113 > 9 AND
+                  "RCDSYN-SRCD" AND
+                  "SR-RCDSYN"))        

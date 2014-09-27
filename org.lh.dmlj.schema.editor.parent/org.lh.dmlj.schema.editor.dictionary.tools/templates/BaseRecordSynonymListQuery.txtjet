@@ -17,7 +17,7 @@
  */
 %>
 <%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
-        class="BaseRecordSynonymsQueryTemplate"
+        class="BaseRecordSynonymListQueryTemplate"
         skeleton="query-template.skeleton"%>
 <%
 Object[] args = (Object[]) argument;

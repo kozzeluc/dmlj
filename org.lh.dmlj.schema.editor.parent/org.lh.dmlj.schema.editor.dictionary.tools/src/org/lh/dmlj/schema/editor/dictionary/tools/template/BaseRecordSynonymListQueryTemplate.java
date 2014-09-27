@@ -2,13 +2,13 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
-public class BaseRecordSynonymsQueryTemplate implements IQueryTemplate {
+public class BaseRecordSynonymListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
-  public static synchronized BaseRecordSynonymsQueryTemplate create(String lineSeparator)
+  public static synchronized BaseRecordSynonymListQueryTemplate create(String lineSeparator)
   {
     nl = lineSeparator;
-    BaseRecordSynonymsQueryTemplate result = new BaseRecordSynonymsQueryTemplate();
+    BaseRecordSynonymListQueryTemplate result = new BaseRecordSynonymListQueryTemplate();
     nl = null;
     return result;
   }
