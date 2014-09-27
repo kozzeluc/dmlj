@@ -81,6 +81,9 @@ public final class SchemaImportToolProxy {
 	// the list of procedures that are used to compress records
 	private List<String> compressionProcedures;
 
+	// an indicator to track whether the import tool's dispose() method was called
+	private boolean importToolIsDisposed = false;
+
 	public SchemaImportToolProxy(ISchemaImportTool tool,
 								 IDataEntryContext dataEntryContext,
 								 Properties importToolParameters) {
@@ -106,6 +109,14 @@ public final class SchemaImportToolProxy {
 			}
 		}
 		return false;
+	}
+	
+	public void disposeImportTool() {
+		if (isImportToolDisposed()) {
+			throw new IllegalStateException("import tool is already disposed");
+		}
+		tool.dispose();
+		importToolIsDisposed = true;
 	}
 
 	private StorageMode getStorageMode(SchemaRecord record) {
@@ -1348,12 +1359,16 @@ public final class SchemaImportToolProxy {
 			
 		}
 		
-		// dispose of the import tool
-		tool.dispose();
+		// the sooner the import tool is disposed of, the better
+		disposeImportTool();
 		
 		// return the schema to the caller
 		return schema;
 		
+	}
+	
+	public boolean isImportToolDisposed() {
+		return importToolIsDisposed;
 	}
 
 	private boolean isIdmsntwk() {

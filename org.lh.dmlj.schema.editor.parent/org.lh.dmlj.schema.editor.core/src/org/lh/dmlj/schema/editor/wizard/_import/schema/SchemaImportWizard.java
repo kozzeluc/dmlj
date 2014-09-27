@@ -732,6 +732,10 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 					
 				}
 				finally {
+					if (!proxy.isImportToolDisposed()) {
+						// make sure the import tool is ALWAYS disposed of
+						proxy.disposeImportTool();
+					}
 					progressMonitor.done();
 				}
 			}
