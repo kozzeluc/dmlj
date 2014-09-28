@@ -15,7 +15,7 @@ public class ElementSynonymCommentListQueryTemplate implements IQueryTemplate {
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = " " + NL + "SELECT NAMESYN_083.ROWID AS NAMESYN_083_ROWID," + NL + "       NAMEDES_186.ROWID AS NAMEDES_186_ROWID," + NL + "       * " + NL + "FROM \"";
-  protected final String TEXT_2 = "\".\"NAMESYN_083\" AS NAMESYN_083," + NL + "\t \"";
+  protected final String TEXT_2 = "\".\"NAMESYN-083\" AS NAMESYN_083," + NL + "\t \"";
   protected final String TEXT_3 = "\".\"NAMEDES-186\" AS NAMEDES_186                                   " + NL + "WHERE NAMESYN_083.ROWID = X'";
   protected final String TEXT_4 = "' AND " + NL + "      \"NAMESYN-NAMEDES\"";
 
