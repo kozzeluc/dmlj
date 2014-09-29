@@ -51,6 +51,14 @@ public class Sr_036 {
 		return rcdVers_036;
 	}
 
+	public String getSrNam_036() {
+		return srNam_036;
+	}
+
+	public void setDbkey(long dbkey) {
+		this.dbkey = dbkey;
+	}
+
 	public void setRcdsyn_079(Rcdsyn_079 rcdsyn_079) {
 		this.rcdsyn_079 = rcdsyn_079;
 	}
@@ -61,14 +69,6 @@ public class Sr_036 {
 
 	public void setRcdVers_036(short rcdVers_036) {
 		this.rcdVers_036 = rcdVers_036;
-	}
-
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
-	}
-
-	public String getSrNam_036() {
-		return srNam_036;
 	}
 
 	public void setSrNam_036(String srNam_036) {
