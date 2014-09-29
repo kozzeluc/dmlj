@@ -2,6 +2,10 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
+import java.util.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.*;
+
 public class ElementListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -14,24 +18,14 @@ public class ElementListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "     " + NL + "SELECT SR_036.ROWID AS SR_036_ROWID,                         " + NL + "       RCDSYN_079.ROWID AS RCDSYN_079_ROWID,                 " + NL + "       NAMESYN_083.ROWID AS NAMESYN_083_ROWID,               " + NL + "       SDR_042.ROWID AS SDR_042_ROWID,                       " + NL + "       *                                                     " + NL + "FROM \"";
+  protected final String TEXT_1 = "SELECT SR_036.ROWID AS SR_036_ROWID,                         " + NL + "       RCDSYN_079.ROWID AS RCDSYN_079_ROWID,                 " + NL + "       NAMESYN_083.ROWID AS NAMESYN_083_ROWID,               " + NL + "       SDR_042.ROWID AS SDR_042_ROWID,                       " + NL + "       *                                                     " + NL + "FROM \"";
   protected final String TEXT_2 = "\".\"OOAK-012\" AS OOAK_079,                       " + NL + "     \"";
   protected final String TEXT_3 = "\".\"SR-036\" AS SR_036,                           " + NL + "     \"";
   protected final String TEXT_4 = "\".\"RCDSYN-079\" AS RCDSYN_079,                   " + NL + "     \"";
   protected final String TEXT_5 = "\".\"NAMESYN-083\" AS NAMESYN_083,                 " + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SDR-042\" AS SDR_042                          " + NL + "WHERE OOAK_KEY_012 = 'OOAK' AND                              " + NL + "      \"OOAK-SR\" AND                                          " + NL + "      \"SR-RCDSYN\" AND                                        " + NL + "      \"RCDSYN-NAMESYN\" AND                                   " + NL + "      \"SDR-NAMESYN\" AND                                      " + NL + "      (RCDSYN_079.ROWID IN                                    " + NL + "           (SELECT RCDSYN_079.ROWID                               " + NL + "            FROM \"";
-  protected final String TEXT_7 = "\".\"S-010\" AS S_010,                  " + NL + "                 \"";
-  protected final String TEXT_8 = "\".\"SRCD-113\" AS SRCD_113,            " + NL + "                 \"";
-  protected final String TEXT_9 = "\".\"RCDSYN-079\" AS RCDSYN_079,        " + NL + "                 \"";
-  protected final String TEXT_10 = "\".\"SR-036\" AS SR_036                 " + NL + "            WHERE S_NAM_010 = '";
-  protected final String TEXT_11 = "' AND S_SER_010 = ";
-  protected final String TEXT_12 = " AND" + NL + "                  \"S-SRCD\" AND SR_ID_113 > 9 AND              " + NL + "                  \"RCDSYN-SRCD\" AND" + NL + "                  \"SR-RCDSYN\") OR" + NL + "       RSYN_NAME_079 = SR_NAM_036 AND" + NL + "       RSYN_VER_079 = RCD_VERS_036 AND" + NL + "       SR_036.ROWID IN" + NL + "           (SELECT SR_036.ROWID" + NL + "            FROM \"";
-  protected final String TEXT_13 = "\".\"S-010\" AS S_010," + NL + "                 \"";
-  protected final String TEXT_14 = "\".\"SRCD-113\" AS SRCD_113," + NL + "                 \"";
-  protected final String TEXT_15 = "\".\"RCDSYN-079\" AS RCDSYN_079," + NL + "                 \"";
-  protected final String TEXT_16 = "\".\"SR-036\" AS SR_036" + NL + "            WHERE S_NAM_010 = '";
-  protected final String TEXT_17 = "' AND S_SER_010 = ";
-  protected final String TEXT_18 = " AND" + NL + "                  \"S-SRCD\" AND SR_ID_113 > 9 AND" + NL + "                  \"RCDSYN-SRCD\" AND" + NL + "                  \"SR-RCDSYN\"))        ";
+  protected final String TEXT_6 = "\".\"SDR-042\" AS SDR_042                          " + NL + "WHERE OOAK_KEY_012 = 'OOAK' AND                              " + NL + "      \"OOAK-SR\" AND                                          " + NL + "      \"SR-RCDSYN\" AND                                        " + NL + "      \"RCDSYN-NAMESYN\" AND                                   " + NL + "      \"SDR-NAMESYN\" AND                                      " + NL + "      RCDSYN_079.ROWID IN";
+  protected final String TEXT_7 = NL + "        ";
+  protected final String TEXT_8 = "        ";
 
 	public String generate(Object argument)
   {
@@ -57,8 +51,26 @@ public class ElementListQueryTemplate implements IQueryTemplate {
     
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
-String schemaName = (String) args[1];
-int schemaVersion = ((Integer) args[2]).intValue();
+List<Rcdsyn_079> rcdsyn_079s = (List<Rcdsyn_079>) args[1];
+List<String> rcdsyn_079_hexDbkeys = new ArrayList<>();
+for (int i = 0; i < rcdsyn_079s.size(); i++) {
+    Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(i);
+	StringBuilder rcdsyn_079_hexDbkey = new StringBuilder();
+	if (i == 0) {
+		rcdsyn_079_hexDbkey.append("(");    
+	} else {
+		rcdsyn_079_hexDbkey.append(" ");
+	}
+	rcdsyn_079_hexDbkey.append("X'");
+	rcdsyn_079_hexDbkey.append(JdbcTools.toHexString(rcdsyn_079.getDbkey()));
+	rcdsyn_079_hexDbkey.append("'");
+	if (i == (rcdsyn_079s.size() - 1)) {
+		rcdsyn_079_hexDbkey.append(")");    
+	} else {
+		rcdsyn_079_hexDbkey.append(",");    
+	}
+	rcdsyn_079_hexDbkeys.add(rcdsyn_079_hexDbkey.toString());	
+}
 
     stringBuffer.append(TEXT_1);
     stringBuffer.append( sysdirlSchema );
@@ -71,30 +83,15 @@ int schemaVersion = ((Integer) args[2]).intValue();
     stringBuffer.append(TEXT_5);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_6);
-    stringBuffer.append( sysdirlSchema );
+    
+for (String rcdsyn_079_hexDbkey : rcdsyn_079_hexDbkeys) {
+
     stringBuffer.append(TEXT_7);
-    stringBuffer.append( sysdirlSchema );
+    stringBuffer.append( rcdsyn_079_hexDbkey );
+    
+}
+
     stringBuffer.append(TEXT_8);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_9);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_10);
-    stringBuffer.append( schemaName );
-    stringBuffer.append(TEXT_11);
-    stringBuffer.append( schemaVersion );
-    stringBuffer.append(TEXT_12);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_13);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_14);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_15);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_16);
-    stringBuffer.append( schemaName );
-    stringBuffer.append(TEXT_17);
-    stringBuffer.append( schemaVersion );
-    stringBuffer.append(TEXT_18);
     return stringBuffer.toString();
   }
 }

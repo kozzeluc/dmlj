@@ -55,7 +55,7 @@ public class Rcdsyn_079 {
 		}
 		throw new RuntimeException("internal error: no NAMESYN-083 for an SDR-042 with dbkey X'" + 
 								   JdbcTools.toHexString(dbkey) + "' under RCDSYN-079=X'" + 
-								   JdbcTools.toHexString(this.dbkey));
+								   JdbcTools.toHexString(this.dbkey) + "'");
 	}
 
 	public Sr_036 getSr_036() {

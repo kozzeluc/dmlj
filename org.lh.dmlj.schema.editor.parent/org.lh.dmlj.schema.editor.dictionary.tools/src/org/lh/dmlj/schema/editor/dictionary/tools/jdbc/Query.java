@@ -16,6 +16,9 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
+import java.util.List;
+
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn_079;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaProcedureListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymListQueryTemplate;
@@ -230,12 +233,10 @@ public class Query {
 			return this;
 		}		
 		
-		public Builder forElementList(SchemaImportSession session) {
+		public Builder forElementList(SchemaImportSession session, List<Rcdsyn_079> rcdsyn_079s) {
 			description = "element list";
 			IQueryTemplate template = elementListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
-								  				  session.getSchemaName(), 
-								  				  session.getSchemaVersion()});			
+			sql = template.generate(new Object[] {session.getDictionary().getSchema(), rcdsyn_079s});			
 			return this;
 		}
 		
