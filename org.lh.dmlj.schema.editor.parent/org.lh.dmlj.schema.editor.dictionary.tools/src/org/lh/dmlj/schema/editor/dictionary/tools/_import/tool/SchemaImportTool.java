@@ -197,9 +197,12 @@ public class SchemaImportTool implements ISchemaImportTool {
 		});
 		
 		// locate the base record synonym and hook it to the SR-036 when different from the record 
-		// synonym referenced by the schema
-		Query baseRecordSynonymQuery = new Query.Builder().forBaseRecordSynonymList(session).build();
-		session.runQuery(baseRecordSynonymQuery, new IRowProcessor() {
+		// synonym referenced by the schema		
+		Query baseRecordSynonymListQuery = 
+			new Query.Builder()
+					 .forBaseRecordSynonymList(session, new ArrayList<>(sr_036s.values()))
+					 .build();
+		session.runQuery(baseRecordSynonymListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
 				long dbkeySr_036 = JdbcTools.getDbkey(row, Sr_036.ROWID);

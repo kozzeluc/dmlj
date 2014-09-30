@@ -18,12 +18,43 @@
 %>
 <%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="BaseRecordSynonymListQueryTemplate"
-        skeleton="query-template.skeleton"%>
+        skeleton="query-template.skeleton"
+        imports="java.util.*
+                 org.lh.dmlj.schema.editor.dictionary.tools.table.*  
+                 org.lh.dmlj.schema.editor.dictionary.tools.jdbc.*"%>
 <%
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
-String schemaName = (String) args[1];
-int schemaVersion = ((Integer) args[2]).intValue();
+@SuppressWarnings("unchecked")
+List<Sr_036> sr_036s = new ArrayList<>((List<Sr_036>) args[1]);
+Collections.sort(sr_036s, new Comparator<Sr_036>() {
+	@Override
+	public int compare(Sr_036 r1, Sr_036 r2) {
+		if (r1.getSrNam_036().equals(r2.getSrNam_036())) {
+			return r1.getRcdVers_036() - r2.getRcdVers_036();
+		} else {
+			return r1.getSrNam_036().compareTo(r2.getSrNam_036());
+		}
+	}			
+});
+List<String> sr_036_hexDbkeys = new ArrayList<>();
+for (int i = 0; i < sr_036s.size(); i++) {    
+	StringBuilder sr_036_hexDbkey = new StringBuilder();
+	if (i == 0) {
+		sr_036_hexDbkey.append("(");    
+	} else {
+		sr_036_hexDbkey.append(" ");
+	}
+	sr_036_hexDbkey.append("X'");
+	sr_036_hexDbkey.append(JdbcTools.toHexString(sr_036s.get(i).getDbkey()));
+	sr_036_hexDbkey.append("'");
+	if (i == (sr_036s.size() - 1)) {
+		sr_036_hexDbkey.append(")");    
+	} else {
+		sr_036_hexDbkey.append(",");    
+	}
+	sr_036_hexDbkeys.add(sr_036_hexDbkey.toString());	
+}
 %>
 SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,
        SR_036.ROWID AS SR_036_ROWID,
@@ -37,12 +68,10 @@ FROM "<%= sysdirlSchema %>"."OOAK-012" AS OOAK_012,
        RSYN_NAME_079 = SR_NAM_036 AND
        RSYN_VER_079 = RCD_VERS_036 AND
        SR_036.ROWID IN
-          (SELECT SR_036.ROWID
-           FROM "<%= sysdirlSchema %>"."S-010" AS S_010,
-                "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,
-                "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,
-                "<%= sysdirlSchema %>"."SR-036" AS SR_036
-           WHERE S_NAM_010 = '<%= schemaName %>' AND S_SER_010 = <%= schemaVersion %> AND
-                 "S-SRCD" AND SR_ID_113 > 9 AND
-                 "RCDSYN-SRCD" AND
-                 "SR-RCDSYN")
+<%
+for (String sr_036_hexDbkey : sr_036_hexDbkeys) {
+%>
+        <%= sr_036_hexDbkey %>
+<%
+}
+%>
