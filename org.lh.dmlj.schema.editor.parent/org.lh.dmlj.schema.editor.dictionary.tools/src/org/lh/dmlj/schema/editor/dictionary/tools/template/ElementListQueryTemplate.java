@@ -23,11 +23,11 @@ public class ElementListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_3 = "\".\"SR-036\" AS SR_036,                           " + NL + "     \"";
   protected final String TEXT_4 = "\".\"RCDSYN-079\" AS RCDSYN_079,                   " + NL + "     \"";
   protected final String TEXT_5 = "\".\"NAMESYN-083\" AS NAMESYN_083,                 " + NL + "     \"";
-  protected final String TEXT_6 = "\".\"SDR-042\" AS SDR_042                          " + NL + "WHERE OOAK_KEY_012 = 'OOAK' AND                              " + NL + "      \"OOAK-SR\" AND                                          " + NL + "      \"SR-RCDSYN\" AND                                        " + NL + "      \"RCDSYN-NAMESYN\" AND                                   " + NL + "      \"SDR-NAMESYN\" AND" + NL + "      SR_036.ROWID IN";
-  protected final String TEXT_7 = NL + "        ";
-  protected final String TEXT_8 = "                                            " + NL + "      RCDSYN_079.ROWID IN";
-  protected final String TEXT_9 = NL + "        ";
-  protected final String TEXT_10 = "        ";
+  protected final String TEXT_6 = "\".\"SDR-042\" AS SDR_042                          " + NL + "WHERE OOAK_KEY_012 = 'OOAK' AND                              " + NL + "      \"OOAK-SR\" AND" + NL + "      SR_036.ROWID IN";
+  protected final String TEXT_7 = NL + "       ";
+  protected final String TEXT_8 = " " + NL + "      \"SR-RCDSYN\" AND" + NL + "      RCDSYN_079.ROWID IN";
+  protected final String TEXT_9 = NL + "       ";
+  protected final String TEXT_10 = NL + "      \"RCDSYN-NAMESYN\" AND                                   " + NL + "      \"SDR-NAMESYN\"        ";
 
 	public String generate(Object argument)
   {
@@ -70,7 +70,7 @@ for (int i = 0; i < rcdsyn_079s.size(); i++) {
 	rcdsyn_079_hexDbkey.append(JdbcTools.toHexString(rcdsyn_079.getDbkey()));
 	rcdsyn_079_hexDbkey.append("'");
 	if (i == (rcdsyn_079s.size() - 1)) {
-		rcdsyn_079_hexDbkey.append(")");    
+		rcdsyn_079_hexDbkey.append(") AND");    
 	} else {
 		rcdsyn_079_hexDbkey.append(",");    
 	}

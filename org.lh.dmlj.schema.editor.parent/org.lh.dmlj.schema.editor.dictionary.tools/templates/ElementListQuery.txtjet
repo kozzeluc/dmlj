@@ -42,7 +42,7 @@ for (int i = 0; i < rcdsyn_079s.size(); i++) {
 	rcdsyn_079_hexDbkey.append(JdbcTools.toHexString(rcdsyn_079.getDbkey()));
 	rcdsyn_079_hexDbkey.append("'");
 	if (i == (rcdsyn_079s.size() - 1)) {
-		rcdsyn_079_hexDbkey.append(")");    
+		rcdsyn_079_hexDbkey.append(") AND");    
 	} else {
 		rcdsyn_079_hexDbkey.append(",");    
 	}
@@ -94,23 +94,23 @@ FROM "<%= sysdirlSchema %>"."OOAK-012" AS OOAK_079,
      "<%= sysdirlSchema %>"."NAMESYN-083" AS NAMESYN_083,                 
      "<%= sysdirlSchema %>"."SDR-042" AS SDR_042                          
 WHERE OOAK_KEY_012 = 'OOAK' AND                              
-      "OOAK-SR" AND                                          
-      "SR-RCDSYN" AND                                        
-      "RCDSYN-NAMESYN" AND                                   
-      "SDR-NAMESYN" AND
+      "OOAK-SR" AND
       SR_036.ROWID IN
 <%
 for (String sr_036_hexDbkey : sr_036_hexDbkeys) {
 %>
-        <%= sr_036_hexDbkey %>
+       <%= sr_036_hexDbkey %>
 <%
 }
-%>                                            
+%> 
+      "SR-RCDSYN" AND
       RCDSYN_079.ROWID IN
 <%
 for (String rcdsyn_079_hexDbkey : rcdsyn_079_hexDbkeys) {
 %>
-        <%= rcdsyn_079_hexDbkey %>
+       <%= rcdsyn_079_hexDbkey %>
 <%
 }
-%>        
+%>
+      "RCDSYN-NAMESYN" AND                                   
+      "SDR-NAMESYN"        

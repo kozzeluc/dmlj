@@ -21,8 +21,9 @@ public class BaseRecordSynonymListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_1 = "SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID," + NL + "       SR_036.ROWID AS SR_036_ROWID," + NL + "       *      " + NL + "FROM \"";
   protected final String TEXT_2 = "\".\"OOAK-012\" AS OOAK_012," + NL + "     \"";
   protected final String TEXT_3 = "\".\"SR-036\" AS SR_036," + NL + "     \"";
-  protected final String TEXT_4 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + " WHERE OOAK_KEY_012 = 'OOAK' AND" + NL + "       \"OOAK-SR\" AND" + NL + "       \"SR-RCDSYN\" AND" + NL + "       RSYN_NAME_079 = SR_NAM_036 AND" + NL + "       RSYN_VER_079 = RCD_VERS_036 AND" + NL + "       SR_036.ROWID IN";
-  protected final String TEXT_5 = NL + "        ";
+  protected final String TEXT_4 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + "WHERE OOAK_KEY_012 = 'OOAK' AND" + NL + "      \"OOAK-SR\" AND" + NL + "      SR_036.ROWID IN";
+  protected final String TEXT_5 = NL + "       ";
+  protected final String TEXT_6 = "       " + NL + "      \"SR-RCDSYN\" AND" + NL + "      RSYN_NAME_079 = SR_NAM_036 AND" + NL + "      RSYN_VER_079 = RCD_VERS_036";
 
 	public String generate(Object argument)
   {
@@ -72,7 +73,7 @@ for (int i = 0; i < sr_036s.size(); i++) {
 	sr_036_hexDbkey.append(JdbcTools.toHexString(sr_036s.get(i).getDbkey()));
 	sr_036_hexDbkey.append("'");
 	if (i == (sr_036s.size() - 1)) {
-		sr_036_hexDbkey.append(")");    
+		sr_036_hexDbkey.append(") AND");    
 	} else {
 		sr_036_hexDbkey.append(",");    
 	}
@@ -94,6 +95,7 @@ for (String sr_036_hexDbkey : sr_036_hexDbkeys) {
     
 }
 
+    stringBuffer.append(TEXT_6);
     return stringBuffer.toString();
   }
 }

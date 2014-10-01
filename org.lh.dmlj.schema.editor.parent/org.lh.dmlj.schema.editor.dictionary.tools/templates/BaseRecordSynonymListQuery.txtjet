@@ -49,7 +49,7 @@ for (int i = 0; i < sr_036s.size(); i++) {
 	sr_036_hexDbkey.append(JdbcTools.toHexString(sr_036s.get(i).getDbkey()));
 	sr_036_hexDbkey.append("'");
 	if (i == (sr_036s.size() - 1)) {
-		sr_036_hexDbkey.append(")");    
+		sr_036_hexDbkey.append(") AND");    
 	} else {
 		sr_036_hexDbkey.append(",");    
 	}
@@ -62,16 +62,16 @@ SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,
 FROM "<%= sysdirlSchema %>"."OOAK-012" AS OOAK_012,
      "<%= sysdirlSchema %>"."SR-036" AS SR_036,
      "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079
- WHERE OOAK_KEY_012 = 'OOAK' AND
-       "OOAK-SR" AND
-       "SR-RCDSYN" AND
-       RSYN_NAME_079 = SR_NAM_036 AND
-       RSYN_VER_079 = RCD_VERS_036 AND
-       SR_036.ROWID IN
+WHERE OOAK_KEY_012 = 'OOAK' AND
+      "OOAK-SR" AND
+      SR_036.ROWID IN
 <%
 for (String sr_036_hexDbkey : sr_036_hexDbkeys) {
 %>
-        <%= sr_036_hexDbkey %>
+       <%= sr_036_hexDbkey %>
 <%
 }
-%>
+%>       
+      "SR-RCDSYN" AND
+      RSYN_NAME_079 = SR_NAM_036 AND
+      RSYN_VER_079 = RCD_VERS_036
