@@ -26,17 +26,7 @@
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
 @SuppressWarnings("unchecked")
-List<Sr_036> sr_036s = new ArrayList<>((List<Sr_036>) args[1]);
-Collections.sort(sr_036s, new Comparator<Sr_036>() {
-	@Override
-	public int compare(Sr_036 r1, Sr_036 r2) {
-		if (r1.getSrNam_036().equals(r2.getSrNam_036())) {
-			return r1.getRcdVers_036() - r2.getRcdVers_036();
-		} else {
-			return r1.getSrNam_036().compareTo(r2.getSrNam_036());
-		}
-	}			
-});
+List<Sr_036> sr_036s = (List<Sr_036>) args[1];
 List<String> sr_036_hexDbkeys = new ArrayList<>();
 for (int i = 0; i < sr_036s.size(); i++) {    
 	StringBuilder sr_036_hexDbkey = new StringBuilder();
@@ -59,12 +49,9 @@ for (int i = 0; i < sr_036s.size(); i++) {
 SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,
        SR_036.ROWID AS SR_036_ROWID,
        *      
-FROM "<%= sysdirlSchema %>"."OOAK-012" AS OOAK_012,
-     "<%= sysdirlSchema %>"."SR-036" AS SR_036,
+FROM "<%= sysdirlSchema %>"."SR-036" AS SR_036,
      "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079
-WHERE OOAK_KEY_012 = 'OOAK' AND
-      "OOAK-SR" AND
-      SR_036.ROWID IN
+WHERE SR_036.ROWID IN
 <%
 for (String sr_036_hexDbkey : sr_036_hexDbkeys) {
 %>

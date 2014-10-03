@@ -224,11 +224,10 @@ public class Query {
 			return this;
 		}
 
-		public Builder forElementCommentList(SchemaImportSession session) {
+		public Builder forElementCommentList(SchemaImportSession session, List<Rcdsyn_079> rcdsyn_079s) {
 			description = "element comment list";
 			sql = elementCommentListQueryTemplate.generate(new Object[] {session.getDictionary().getSchema(),
-	  				  									   session.getSchemaName(), 
-	  				  									   session.getSchemaVersion()});			
+																		 rcdsyn_079s});			
 			return this;
 		}		
 		

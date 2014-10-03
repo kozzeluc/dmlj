@@ -305,7 +305,10 @@ public class SchemaImportTool implements ISchemaImportTool {
 				namesyn_083.setSdr_042(sdr_042);
 			}
 		}
-		Query elementCommentListQuery = new Query.Builder().forElementCommentList(session).build();
+		Query elementCommentListQuery = 
+			new Query.Builder()
+					 .forElementCommentList(session, new ArrayList<>(rcdsyn_079s.values()))
+					 .build();
 		session.runQuery(elementCommentListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {				

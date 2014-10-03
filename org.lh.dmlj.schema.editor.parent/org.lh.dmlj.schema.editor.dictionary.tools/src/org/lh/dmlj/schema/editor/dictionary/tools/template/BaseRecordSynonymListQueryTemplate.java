@@ -19,11 +19,10 @@ public class BaseRecordSynonymListQueryTemplate implements IQueryTemplate {
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID," + NL + "       SR_036.ROWID AS SR_036_ROWID," + NL + "       *      " + NL + "FROM \"";
-  protected final String TEXT_2 = "\".\"OOAK-012\" AS OOAK_012," + NL + "     \"";
-  protected final String TEXT_3 = "\".\"SR-036\" AS SR_036," + NL + "     \"";
-  protected final String TEXT_4 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + "WHERE OOAK_KEY_012 = 'OOAK' AND" + NL + "      \"OOAK-SR\" AND" + NL + "      SR_036.ROWID IN";
-  protected final String TEXT_5 = NL + "       ";
-  protected final String TEXT_6 = "       " + NL + "      \"SR-RCDSYN\" AND" + NL + "      RSYN_NAME_079 = SR_NAM_036 AND" + NL + "      RSYN_VER_079 = RCD_VERS_036";
+  protected final String TEXT_2 = "\".\"SR-036\" AS SR_036," + NL + "     \"";
+  protected final String TEXT_3 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + "WHERE SR_036.ROWID IN";
+  protected final String TEXT_4 = NL + "       ";
+  protected final String TEXT_5 = "       " + NL + "      \"SR-RCDSYN\" AND" + NL + "      RSYN_NAME_079 = SR_NAM_036 AND" + NL + "      RSYN_VER_079 = RCD_VERS_036";
 
 	public String generate(Object argument)
   {
@@ -50,17 +49,7 @@ public class BaseRecordSynonymListQueryTemplate implements IQueryTemplate {
 Object[] args = (Object[]) argument;
 String sysdirlSchema = (String) args[0];
 @SuppressWarnings("unchecked")
-List<Sr_036> sr_036s = new ArrayList<>((List<Sr_036>) args[1]);
-Collections.sort(sr_036s, new Comparator<Sr_036>() {
-	@Override
-	public int compare(Sr_036 r1, Sr_036 r2) {
-		if (r1.getSrNam_036().equals(r2.getSrNam_036())) {
-			return r1.getRcdVers_036() - r2.getRcdVers_036();
-		} else {
-			return r1.getSrNam_036().compareTo(r2.getSrNam_036());
-		}
-	}			
-});
+List<Sr_036> sr_036s = (List<Sr_036>) args[1];
 List<String> sr_036_hexDbkeys = new ArrayList<>();
 for (int i = 0; i < sr_036s.size(); i++) {    
 	StringBuilder sr_036_hexDbkey = new StringBuilder();
@@ -85,17 +74,15 @@ for (int i = 0; i < sr_036s.size(); i++) {
     stringBuffer.append(TEXT_2);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( sysdirlSchema );
-    stringBuffer.append(TEXT_4);
     
 for (String sr_036_hexDbkey : sr_036_hexDbkeys) {
 
-    stringBuffer.append(TEXT_5);
+    stringBuffer.append(TEXT_4);
     stringBuffer.append( sr_036_hexDbkey );
     
 }
 
-    stringBuffer.append(TEXT_6);
+    stringBuffer.append(TEXT_5);
     return stringBuffer.toString();
   }
 }
