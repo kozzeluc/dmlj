@@ -16,12 +16,16 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
 public abstract class JdbcTools {
@@ -39,8 +43,7 @@ public abstract class JdbcTools {
 		return p.toString();
 	}
 
-	public static void testConnection(Dictionary dictionary) {			
-		String title = "Test Connection";
+	private static TestConnectionResult testConnection(Dictionary dictionary) {			
 		ImportSession session = null;
 		try {
 			session = new ImportSession(dictionary);
@@ -53,22 +56,44 @@ public abstract class JdbcTools {
 				public void processRow(ResultSet row) throws SQLException {					
 				}				
 			});
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), title, 
-										  "Connection was successful for dictionary " +
-										  dictionary.getId() + ".");
+			return new TestConnectionResult();
 		} catch (Throwable t) {
 			StringBuilder fullMessage = 
 				new StringBuilder("Connection was NOT successful for dictionary ");
 			fullMessage.append(dictionary.getId());
 			fullMessage.append(":\n\n");
 			fullMessage.append(t.getMessage());
-			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, 
-									fullMessage.toString());
+			return new TestConnectionResult(fullMessage.toString());
 		} finally {
 			try {
 				session.close();
 			} catch (Throwable t) {
 			}
+		}
+	}
+	
+	public static void testConnectionWithOperationInProgressIndicator(final Dictionary dictionary) {
+		final TestConnectionResult[] result = new TestConnectionResult[1];
+		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
+			@Override
+			public void run(IProgressMonitor monitor) 
+				throws InvocationTargetException, InterruptedException {
+				
+				result[0] = testConnection(dictionary);
+			}};
+		Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
+		// display the result after making sure the 'Operation in progress' window is no longer 
+		// visible (note that the 'Password required' dialog will be presented while the 'Operation
+		// in progress' window IS visible, but behind that dialog; hopefully people will get 
+		// anoyed sooner or later with that dialog and decide to have the (encrypted) password 
+		// stored in the workspace so that this 'ugly stack of windows and dialogs' disappears)
+		String title = "Test Connection";
+		if (result[0].ok) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), title, 
+					  					  "Connection was successful for dictionary " +
+					  					  dictionary.getId() + ".");
+		} else {
+			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, result[0].message);
 		}
 	}
 
@@ -79,5 +104,23 @@ public abstract class JdbcTools {
 		}
 		return p.toString();
 	}	
+	
+	public static class TestConnectionResult {
+		
+		private boolean ok;
+		private String message;
+
+		public TestConnectionResult() {
+			super();
+			this.ok = true;
+		}
+		
+		public TestConnectionResult(String message) {
+			super();
+			this.ok = false;
+			this.message = message;
+		}
+		
+	}
 	
 }

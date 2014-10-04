@@ -16,11 +16,14 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools._import.page;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -33,6 +36,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools._import.common.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ImportSession;
@@ -74,7 +78,7 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 			@Override
 			public void paintControl(PaintEvent e) {
 				if (fillTable) {
-					fillTable();
+					fillTableWithCursorBusy();
 					fillTable = false;
 				}
 			}			
@@ -109,7 +113,7 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		
 	}
 
-	protected void fillTable() {
+	private void fillTable() {
 		
 		final List<TableEntry> tableEntries = new ArrayList<>();
 		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
@@ -145,6 +149,17 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		
 		validatePage(throwableToPass);
 		
+	}
+
+	private void fillTableWithCursorBusy() {
+		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
+			@Override
+			public void run(IProgressMonitor monitor) 
+				throws InvocationTargetException, InterruptedException {
+				
+				fillTable();
+			}};
+		Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 	}
 
 	private void validatePage(Throwable throwableToPass) {		

@@ -367,7 +367,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		tmpDictionary.setPassword(dictionaryPassword);
 		tmpDictionary.setSchema(dictionarySchema);
 		tmpDictionary.setSysdirl(dictionarySysdirl);
-		JdbcTools.testConnection(tmpDictionary);
+		JdbcTools.testConnectionWithOperationInProgressIndicator(tmpDictionary);
 	}
 
 	private InputValidationResult validate() {
