@@ -22,5 +22,6 @@ public abstract class PreferenceConstants {
 	public static final String PERSONAL_INITIALIZATION_VECTOR = "personalInitializationVector";
 	
 	public static final String DEFAULT_SCHEMA = "defaultSchema";
+	public static final String DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM = "defaultQueryDbkeyListSizeMaximum";
 	
 }
