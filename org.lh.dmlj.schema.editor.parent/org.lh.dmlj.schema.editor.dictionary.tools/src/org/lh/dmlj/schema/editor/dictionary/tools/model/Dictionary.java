@@ -30,8 +30,12 @@ import java.util.Properties;
 import javax.xml.bind.DatatypeConverter;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.encryption.EncDec;
+import org.lh.dmlj.schema.editor.dictionary.tools.preference.IDefaultDictionaryPropertyProvider;
 
 public class Dictionary implements Comparable<Dictionary> {
+	
+	public static final String USE_DEFAULT_SCHEMA_INDICATOR = "%default%";
+	public static final int USE_DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM_INDICATOR = Integer.MIN_VALUE; 
 	
 	private static final String KEY_INTERNAL_ID = "internalId";
 	private static final String KEY_ID = "id";
@@ -41,7 +45,8 @@ public class Dictionary implements Comparable<Dictionary> {
 	private static final String KEY_USER = "user";
 	private static final String KEY_PASSWORD = "password";
 	private static final String KEY_SCHEMA = "schema";
-	private static final String KEY_SYSDIRL = "sysdirl";
+	private static final String KEY_QUERY_DBKEY_LIST_SIZE_MAXIMUM = "queryDbkeyListSizeMaximum";
+	private static final String KEY_SYSDIRL = "sysdirl";	
 	
 	private static final FilenameFilter FILENAME_FILTER = new FilenameFilter() {
 		@Override
@@ -59,6 +64,7 @@ public class Dictionary implements Comparable<Dictionary> {
 	private String user;
 	private String password;
 	private String schema;
+	private int queryDbkeyListSizeMaximum;
 	private boolean sysdirl;
 	
 	private static Dictionary fromFile(File file) throws Throwable {
@@ -85,7 +91,18 @@ public class Dictionary implements Comparable<Dictionary> {
 			}
 			dictionary.setPassword(password);
 		}
-		dictionary.setSchema(properties.getProperty(KEY_SCHEMA));
+		if (properties.containsKey(KEY_SCHEMA)) {
+			dictionary.setSchema(properties.getProperty(KEY_SCHEMA));
+		} else {
+			dictionary.setSchema(USE_DEFAULT_SCHEMA_INDICATOR);
+		}
+		if (properties.containsKey(KEY_QUERY_DBKEY_LIST_SIZE_MAXIMUM)) {
+			int queryDbkeyListSizeMaximum = 
+				Integer.valueOf(properties.getProperty(KEY_QUERY_DBKEY_LIST_SIZE_MAXIMUM));
+			dictionary.setQueryDbkeyListSizeMaximum(queryDbkeyListSizeMaximum);
+		} else {
+			dictionary.setQueryDbkeyListSizeMaximum(USE_DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM_INDICATOR);
+		}
 		if (properties.containsKey(KEY_SYSDIRL)) {
 			dictionary.setSysdirl(Boolean.valueOf(properties.getProperty(KEY_SYSDIRL)).booleanValue());
 		}
@@ -174,12 +191,40 @@ public class Dictionary implements Comparable<Dictionary> {
 		return port;
 	}
 
+	public int getQueryDbkeyListSizeMaximum() {
+		return queryDbkeyListSizeMaximum;
+	}
+	
+	public int getQueryDbkeyListSizeMaximumWithDefault(IDefaultDictionaryPropertyProvider defaultPropertyProvider) {
+		if (isCustomQueryDbkeyListSizeMaximumSet()) {
+			return queryDbkeyListSizeMaximum;
+		} else {
+			return defaultPropertyProvider.getDefaultQueryDbkeyListSizeMaximum();					
+		}
+	}
+	
 	public String getSchema() {
 		return schema;
+	}
+	
+	public String getSchemaWithDefault(IDefaultDictionaryPropertyProvider defaultPropertyProvider) {
+		if (isCustomSchemaSet()) {		
+			return schema;
+		} else {
+			return defaultPropertyProvider.getDefaultSchema();
+		}
 	}
 
 	public String getUser() {
 		return user;
+	}
+
+	private boolean isCustomQueryDbkeyListSizeMaximumSet() {
+		return queryDbkeyListSizeMaximum != USE_DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM_INDICATOR;
+	}
+
+	private boolean isCustomSchemaSet() {
+		return !schema.equals(USE_DEFAULT_SCHEMA_INDICATOR);
 	}
 
 	public boolean isSysdirl() {
@@ -211,6 +256,10 @@ public class Dictionary implements Comparable<Dictionary> {
 		this.port = port;
 	}
 
+	public void setQueryDbkeyListSizeMaximum(int queryDbkeyListSizeMaximum) {
+		this.queryDbkeyListSizeMaximum = queryDbkeyListSizeMaximum;
+	}
+
 	public void setSchema(String schema) {
 		this.schema = schema;
 	}
@@ -236,7 +285,12 @@ public class Dictionary implements Comparable<Dictionary> {
 				DatatypeConverter.printHexBinary(EncDec.encodeAndEncrypt(password));
 			properties.put(KEY_PASSWORD, encodedAndEncryptedAsHex);
 		}
-		properties.put(KEY_SCHEMA, schema);
+		if (isCustomSchemaSet()) {
+			properties.put(KEY_SCHEMA, schema);
+		} 
+		if (isCustomQueryDbkeyListSizeMaximumSet()) {
+			properties.put(KEY_QUERY_DBKEY_LIST_SIZE_MAXIMUM, String.valueOf(queryDbkeyListSizeMaximum));
+		}
 		properties.put(KEY_SYSDIRL, String.valueOf(sysdirl));
 		return properties;
 	}

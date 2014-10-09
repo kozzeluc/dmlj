@@ -81,6 +81,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		dictionary.setUser(dialog.getDictionaryUser());
 		dictionary.setPassword(dialog.getDictionaryPassword());
 		dictionary.setSchema(dialog.getDictionarySchema());
+		dictionary.setQueryDbkeyListSizeMaximum(dialog.getDictionaryQueryDbkeyListSizeMaximum());
 		dictionary.setSysdirl(dialog.isDictionarySysdirl());
 		try {
 			dictionary.toFile(dictionaryFolder);
@@ -174,10 +175,10 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		lblDefaultCatalogSchema.setText("Default name for catalog schemas that map to IDMSNTWK (SYSDIRL):");
 		
 		textDefaultSchema = new Text(container, SWT.BORDER);
-		GridData gd_text = new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1);
+		GridData gd_text = new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1);
+		gd_text.widthHint = 100;
 		gd_text.verticalIndent = 10;
 		textDefaultSchema.setLayoutData(gd_text);
-		new Label(container, SWT.NONE);
 		
 		Label lblDefaultMaximumDbkeyList = new Label(container, SWT.WRAP);
 		GridData gd_lblDefaultMaximumDbkeyList = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -230,6 +231,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		dictionary.setUser(dialog.getDictionaryUser());
 		dictionary.setPassword(dialog.getDictionaryPassword());
 		dictionary.setSchema(dialog.getDictionarySchema());
+		dictionary.setQueryDbkeyListSizeMaximum(dialog.getDictionaryQueryDbkeyListSizeMaximum());
 		dictionary.setSysdirl(dialog.isDictionarySysdirl());
 		try {
 			dictionary.toFile(dictionaryFolder);

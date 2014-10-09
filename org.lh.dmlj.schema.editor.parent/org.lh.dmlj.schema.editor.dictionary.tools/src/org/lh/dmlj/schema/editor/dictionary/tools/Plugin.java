@@ -26,12 +26,13 @@ import javax.xml.bind.DatatypeConverter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.encryption.EncDec;
+import org.lh.dmlj.schema.editor.dictionary.tools.preference.IDefaultDictionaryPropertyProvider;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceConstants;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
-public class Plugin extends AbstractUIPlugin {
+public class Plugin extends AbstractUIPlugin implements IDefaultDictionaryPropertyProvider {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.lh.dmlj.schema.editor.dictionary.tools";
@@ -85,6 +86,16 @@ public class Plugin extends AbstractUIPlugin {
 
 	public static Plugin getDefault() {
 		return plugin;
+	}
+
+	@Override
+	public int getDefaultQueryDbkeyListSizeMaximum() {
+		return getPreferenceStore().getInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM);
+	}
+
+	@Override
+	public String getDefaultSchema() {
+		return getPreferenceStore().getString(PreferenceConstants.DEFAULT_SCHEMA);
 	}
 
 	public File getDictionaryFolder() {
