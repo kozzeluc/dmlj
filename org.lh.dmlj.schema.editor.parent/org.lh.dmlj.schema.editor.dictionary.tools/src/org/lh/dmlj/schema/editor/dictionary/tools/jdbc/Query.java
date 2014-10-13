@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
 import java.util.List;
 
+import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn_079;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr_036;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaListQueryTemplate;
@@ -138,7 +139,7 @@ public class Query {
 		public Builder forAreaList(SchemaImportSession session) {
 			description = "area list";
 			IQueryTemplate template = areaListQueryTemplate; 
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  session.getSchemaName(), 
 												  session.getSchemaVersion()});
 			return this;
@@ -147,7 +148,7 @@ public class Query {
 		public Builder forAreaProcedureList(SchemaImportSession session) {
 			description = "area procedure list";
 			IQueryTemplate template = areaProcedureListQueryTemplate; 
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  session.getSchemaName(), 
 												  session.getSchemaVersion()});
 			return this;
@@ -156,14 +157,14 @@ public class Query {
 		public Builder forBaseRecordSynonymList(SchemaImportSession session, List<Sr_036> sr_036s) {
 			description = "base record synonym list";
 			IQueryTemplate template = baseRecordSynonymListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(), sr_036s});
+			sql = template.generate(new Object[] {session.getDictionary(), sr_036s});
 			return this;
 		}
 
 		public Builder forCalcKeyElementList(SchemaImportSession session) {
 			description = "CALC key element list";
 			IQueryTemplate template = calcKeyElementListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  session.getSchemaName(), 
 												  session.getSchemaVersion()});
 			return this;
@@ -226,7 +227,7 @@ public class Query {
 
 		public Builder forElementCommentList(SchemaImportSession session, List<Rcdsyn_079> rcdsyn_079s) {
 			description = "element comment list";
-			sql = elementCommentListQueryTemplate.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = elementCommentListQueryTemplate.generate(new Object[] {session.getDictionary(),
 																		 rcdsyn_079s});			
 			return this;
 		}		
@@ -234,14 +235,14 @@ public class Query {
 		public Builder forElementList(SchemaImportSession session, List<Rcdsyn_079> rcdsyn_079s) {
 			description = "element list";
 			IQueryTemplate template = elementListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(), rcdsyn_079s});			
+			sql = template.generate(new Object[] {session.getDictionary(), rcdsyn_079s});			
 			return this;
 		}
 		
 		public Builder forElementSynonymCommentList(SchemaImportSession session, long dbkeyOfNamesyn_083) {
 			description = "element synonym comment list";
 			IQueryTemplate template = elementSynonymCommentsListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  JdbcTools.toHexString(dbkeyOfNamesyn_083)});			
 			return this;
 		}		
@@ -249,7 +250,7 @@ public class Query {
 		public Builder forRecordList(SchemaImportSession session) {
 			description = "record list";
 			IQueryTemplate template = recordListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 								 				  session.getSchemaName(),
 								 				  session.getSchemaVersion()});
 			return this;
@@ -258,7 +259,7 @@ public class Query {
 		public Builder forRecordProcedureList(SchemaImportSession session) {
 			description = "record procedure list";
 			IQueryTemplate template = recordProcedureListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 						  						  session.getSchemaName(),
 						  						  session.getSchemaVersion()}); 
 			return this;
@@ -267,7 +268,7 @@ public class Query {
 		public Builder forSchemaDescriptionAndCommentList(SchemaImportSession session) {			
 			description = "schema description and comment list";
 			IQueryTemplate template = schemaDescriptionAndCommentListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  session.getSchemaName(),
 												  session.getSchemaVersion()});
 			return this;
@@ -275,7 +276,7 @@ public class Query {
 
 		public Builder forSetList(SchemaImportSession session) {
 			description = "set list";
-			sql = setListQueryTemplate.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = setListQueryTemplate.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 					  								  		  session.getSchemaName(),
 					  								  		  session.getSchemaVersion()});
 			return this;
@@ -284,7 +285,7 @@ public class Query {
 		public Builder forSetOwnerList(SchemaImportSession session) {
 			description = "set owner list";
 			IQueryTemplate template = setOwnerListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  session.getSchemaName(),
 												  session.getSchemaVersion()});
 			return this;
@@ -293,7 +294,7 @@ public class Query {
 		public Builder forSortKeyElementList(SchemaImportSession session) {
 			description = "sort key element list";
 			IQueryTemplate template = sortKeyElementListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  session.getSchemaName(), 
 												  session.getSchemaVersion()});
 			return this;
@@ -308,14 +309,14 @@ public class Query {
 				description = "valid schema list";
 				template = validSchemaListForNonSysdirlDictionariesQueryTemplate;
 			}
-			sql = template.generate(new Object[] {session.getDictionary().getSchema()});
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault())});
 			return this;
 		}
 
 		public Builder forViaSetList(SchemaImportSession session) {
 			description = "VIA set list";
 			IQueryTemplate template = viaSetListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchema(),
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  session.getSchemaName(),
 												  session.getSchemaVersion()});
 			return this;

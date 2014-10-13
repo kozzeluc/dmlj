@@ -1,3 +1,4 @@
+<%
 /**
  * Copyright (C) 2014  Luc Hermans
  * 
@@ -14,23 +15,32 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.preference;
-
-import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
-
-public class PreferenceInitializer extends AbstractPreferenceInitializer {
-
-	public PreferenceInitializer() {
-		super();
+%>
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+        class="DbkeyListTemplate"
+        imports="java.util.*
+        		 org.lh.dmlj.schema.editor.dictionary.tools.jdbc.*"%>
+<%
+Object[] args = (Object[]) argument;
+@SuppressWarnings("unchecked")
+List<Long> dbkeys = (List<Long>) args[0];
+for (int i = 0; i < dbkeys.size(); i++) {    
+	StringBuilder hexDbkey = new StringBuilder();
+	if (i == 0) {
+		hexDbkey.append("(");    
+	} else {
+		hexDbkey.append(" ");
 	}
-
-	@Override
-	public void initializeDefaultPreferences() {
-		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
-		store.setDefault(PreferenceConstants.DEFAULT_SCHEMA, "SYSDICT");
-		store.setDefault(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM, 47);
+	hexDbkey.append("X'");
+	hexDbkey.append(JdbcTools.toHexString(Long.valueOf(dbkeys.get(i))));
+	hexDbkey.append("'");
+	if (i == (dbkeys.size() - 1)) {
+		hexDbkey.append(")");    
+	} else {
+		hexDbkey.append(",");    
 	}
-
+%>
+<%= hexDbkey %>
+<%
 }
+%>

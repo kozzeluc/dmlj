@@ -14,14 +14,10 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.preference;
+package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
-public abstract class PreferenceConstants {
-	
-	public static final String PERSONAL_ENCRYPTION_KEY = "personalEncryptionKey";
-	public static final String PERSONAL_INITIALIZATION_VECTOR = "personalInitializationVector";
-	
-	public static final String DEFAULT_SCHEMA = "defaultSchema";
-	public static final String DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM = "defaultQueryDbkeyListSizeMaximum";
+public interface IDbkeyProvider {
+
+	long getDbkey();
 	
 }

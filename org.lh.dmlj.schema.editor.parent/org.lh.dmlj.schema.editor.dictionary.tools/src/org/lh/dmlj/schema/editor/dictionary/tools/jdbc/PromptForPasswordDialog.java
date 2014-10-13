@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -127,7 +128,7 @@ public class PromptForPasswordDialog extends Dialog {
 		
 		textDictionary.setText(dictionary.getId());
 		textConnectionUrl.setText(dictionary.getConnectionUrl());
-		textSchema.setText(dictionary.getSchema());
+		textSchema.setText(dictionary.getSchemaWithDefault(Plugin.getDefault()));
 		textPassword.setFocus();
 		btnStorePassword.setEnabled(dictionary.getInternalId() > -1);
 

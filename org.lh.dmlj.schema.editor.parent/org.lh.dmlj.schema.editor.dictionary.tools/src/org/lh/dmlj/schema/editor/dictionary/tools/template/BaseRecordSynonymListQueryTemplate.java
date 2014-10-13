@@ -3,6 +3,8 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
 import java.util.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.*;
 
@@ -20,9 +22,8 @@ public class BaseRecordSynonymListQueryTemplate implements IQueryTemplate {
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID," + NL + "       SR_036.ROWID AS SR_036_ROWID," + NL + "       *      " + NL + "FROM \"";
   protected final String TEXT_2 = "\".\"SR-036\" AS SR_036," + NL + "     \"";
-  protected final String TEXT_3 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + "WHERE SR_036.ROWID IN";
-  protected final String TEXT_4 = NL + "       ";
-  protected final String TEXT_5 = "       " + NL + "      \"SR-RCDSYN\" AND" + NL + "      RSYN_NAME_079 = SR_NAM_036 AND" + NL + "      RSYN_VER_079 = RCD_VERS_036";
+  protected final String TEXT_3 = "\".\"RCDSYN-079\" AS RCDSYN_079" + NL + "WHERE SR_036.ROWID IN ";
+  protected final String TEXT_4 = " AND       " + NL + "      \"SR-RCDSYN\" AND" + NL + "      RSYN_NAME_079 = SR_NAM_036 AND" + NL + "      RSYN_VER_079 = RCD_VERS_036";
 
 	public String generate(Object argument)
   {
@@ -47,42 +48,31 @@ public class BaseRecordSynonymListQueryTemplate implements IQueryTemplate {
 
     
 Object[] args = (Object[]) argument;
-String sysdirlSchema = (String) args[0];
+Dictionary dictionary = (Dictionary) args[0];
 @SuppressWarnings("unchecked")
-List<Sr_036> sr_036s = (List<Sr_036>) args[1];
-List<String> sr_036_hexDbkeys = new ArrayList<>();
-for (int i = 0; i < sr_036s.size(); i++) {    
-	StringBuilder sr_036_hexDbkey = new StringBuilder();
-	if (i == 0) {
-		sr_036_hexDbkey.append("(");    
-	} else {
-		sr_036_hexDbkey.append(" ");
-	}
-	sr_036_hexDbkey.append("X'");
-	sr_036_hexDbkey.append(JdbcTools.toHexString(sr_036s.get(i).getDbkey()));
-	sr_036_hexDbkey.append("'");
-	if (i == (sr_036s.size() - 1)) {
-		sr_036_hexDbkey.append(") AND");    
-	} else {
-		sr_036_hexDbkey.append(",");    
-	}
-	sr_036_hexDbkeys.add(sr_036_hexDbkey.toString());	
-}
+List<IDbkeyProvider> sr_036s = (List<IDbkeyProvider>) args[1];
+String sysdirlSchema = dictionary.getSchemaWithDefault(Plugin.getDefault());
+List<List<Long>> splitQueryDbkeyList = JdbcTools.getSplitQueryDbkeyList(sr_036s, dictionary);
+DbkeyListTemplate dbkeyListTemplate = new DbkeyListTemplate();
+boolean first = true;
+for (List<Long> dbkeys : splitQueryDbkeyList) {
+    String dbkeyList = dbkeyListTemplate.generate(new Object[] {dbkeys});
+    if (first) {
+        first = false;
+    } else {
+		stringBuffer.append("\nUNION\n");        
+    }
 
     stringBuffer.append(TEXT_1);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    
-for (String sr_036_hexDbkey : sr_036_hexDbkeys) {
-
+    stringBuffer.append( dbkeyList );
     stringBuffer.append(TEXT_4);
-    stringBuffer.append( sr_036_hexDbkey );
     
 }
 
-    stringBuffer.append(TEXT_5);
     return stringBuffer.toString();
   }
 }

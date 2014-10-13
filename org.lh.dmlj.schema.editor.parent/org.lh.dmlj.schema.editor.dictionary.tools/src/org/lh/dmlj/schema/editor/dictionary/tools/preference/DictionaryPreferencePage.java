@@ -46,6 +46,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 	
 	private Table table;
 	private Text textDefaultSchema;
+	private Text textDefaultQueryDbkeyListSizeMaximum;
 	private Button btnAddDictionary;
 	private Button btnDeleteDictionary;
 	private Button btnEditDictionary;
@@ -80,6 +81,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		dictionary.setUser(dialog.getDictionaryUser());
 		dictionary.setPassword(dialog.getDictionaryPassword());
 		dictionary.setSchema(dialog.getDictionarySchema());
+		dictionary.setQueryDbkeyListSizeMaximum(dialog.getDictionaryQueryDbkeyListSizeMaximum());
 		dictionary.setSysdirl(dialog.isDictionarySysdirl());
 		try {
 			dictionary.toFile(dictionaryFolder);
@@ -173,9 +175,21 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		lblDefaultCatalogSchema.setText("Default name for catalog schemas that map to IDMSNTWK (SYSDIRL):");
 		
 		textDefaultSchema = new Text(container, SWT.BORDER);
-		GridData gd_text = new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1);
+		GridData gd_text = new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1);
+		gd_text.widthHint = 100;
 		gd_text.verticalIndent = 10;
 		textDefaultSchema.setLayoutData(gd_text);
+		
+		Label lblDefaultMaximumDbkeyList = new Label(container, SWT.WRAP);
+		GridData gd_lblDefaultMaximumDbkeyList = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblDefaultMaximumDbkeyList.widthHint = 200;
+		lblDefaultMaximumDbkeyList.setLayoutData(gd_lblDefaultMaximumDbkeyList);
+		lblDefaultMaximumDbkeyList.setText("Default maximum dbkey list size in queries:");
+		
+		textDefaultQueryDbkeyListSizeMaximum = new Text(container, SWT.BORDER | SWT.RIGHT);
+		GridData gd_textQueryMaxdbkeylistsize = new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1);
+		gd_textQueryMaxdbkeylistsize.widthHint = 25;
+		textDefaultQueryDbkeyListSizeMaximum.setLayoutData(gd_textQueryMaxdbkeylistsize);
 		new Label(container, SWT.NONE);
 		
 		initializeValues();
@@ -217,6 +231,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		dictionary.setUser(dialog.getDictionaryUser());
 		dictionary.setPassword(dialog.getDictionaryPassword());
 		dictionary.setSchema(dialog.getDictionarySchema());
+		dictionary.setQueryDbkeyListSizeMaximum(dialog.getDictionaryQueryDbkeyListSizeMaximum());
 		dictionary.setSysdirl(dialog.isDictionarySysdirl());
 		try {
 			dictionary.toFile(dictionaryFolder);
@@ -245,6 +260,9 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		IPreferenceStore store = getPreferenceStore();
 		String defaultSchema = store.getDefaultString(PreferenceConstants.DEFAULT_SCHEMA);
 		textDefaultSchema.setText(defaultSchema);
+		int defaultQueryDbkeyListSizeMaximum = 
+			store.getDefaultInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM);
+		textDefaultQueryDbkeyListSizeMaximum.setText(String.valueOf(defaultQueryDbkeyListSizeMaximum));
 	}
 
 	private void initializeTable(Dictionary dictionaryToSelect) {
@@ -272,6 +290,9 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		IPreferenceStore store = getPreferenceStore();
 		String defaultSchema = store.getString(PreferenceConstants.DEFAULT_SCHEMA);
 		textDefaultSchema.setText(defaultSchema);
+		int defaultQueryDbkeyListSizeMaximum = 
+			store.getInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM);
+		textDefaultQueryDbkeyListSizeMaximum.setText(String.valueOf(defaultQueryDbkeyListSizeMaximum));		
 		
 		enableAndDisable();
 		
@@ -287,10 +308,48 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		super.performDefaults();
 		initializeDefaults();
 	}
+	
+	@Override
+	public boolean performOk() {
+		return storeValues();		
+	}
 
 	private boolean storeValues() {
+		
 		IPreferenceStore store = getPreferenceStore();
+		
+		// deal with the 'default schema'
+		if (textDefaultSchema.getText().trim().isEmpty()) {
+			// set the schema name to 'SYSDICT' if it is not filled in
+			textDefaultSchema.setText("SYSDICT");
+		} else if (textDefaultSchema.getText().trim().length() > 18) {
+			// make sure the schema name is no longer than 18 characters
+			StringBuilder p = new StringBuilder(textDefaultSchema.getText().trim());
+			p.setLength(18);
+			textDefaultSchema.setText(p.toString());
+		}
 		store.setValue(PreferenceConstants.DEFAULT_SCHEMA, textDefaultSchema.getText().trim());
+		
+		// deal with the 'default query debkey list size maximum'
+		int defaultQueryDbkeyListSizeMaximum = Integer.MIN_VALUE;	
+		try {
+			defaultQueryDbkeyListSizeMaximum = 
+				Integer.valueOf(textDefaultQueryDbkeyListSizeMaximum.getText().trim());
+			if (defaultQueryDbkeyListSizeMaximum < 1 || defaultQueryDbkeyListSizeMaximum > 1000) {
+				defaultQueryDbkeyListSizeMaximum = Integer.MIN_VALUE;
+			}
+		} catch (NumberFormatException e) {
+		}
+		if (defaultQueryDbkeyListSizeMaximum == Integer.MIN_VALUE) {
+			// the value of the 'default query debkey list size maximum' is invalid; restore it from
+			// the preference store
+			textDefaultQueryDbkeyListSizeMaximum.setText(String.valueOf(store.getInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM)));
+		} else {
+			// the value of the 'default query debkey list size maximum' is valid
+			store.setValue(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM, 
+						   defaultQueryDbkeyListSizeMaximum);
+		}
+		
 		return true;
 	}
 

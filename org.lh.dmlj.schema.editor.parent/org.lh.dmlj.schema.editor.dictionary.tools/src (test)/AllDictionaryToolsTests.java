@@ -14,14 +14,23 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.preference;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+import org.lh.dmlj.schema.editor.dictionary.tools.JdbcToolsTest;
+import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymListQueryTemplateTest;
+import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementCommentListQueryTemplateTest;
+import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementListQueryTemplateTest;
 
-public abstract class PreferenceConstants {
+
+@RunWith(Suite.class)
+@SuiteClasses({
 	
-	public static final String PERSONAL_ENCRYPTION_KEY = "personalEncryptionKey";
-	public static final String PERSONAL_INITIALIZATION_VECTOR = "personalInitializationVector";
+	JdbcToolsTest.class,
+	BaseRecordSynonymListQueryTemplateTest.class,
+	ElementListQueryTemplateTest.class,
+	ElementCommentListQueryTemplateTest.class
 	
-	public static final String DEFAULT_SCHEMA = "defaultSchema";
-	public static final String DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM = "defaultQueryDbkeyListSizeMaximum";
-	
+})
+public class AllDictionaryToolsTests {	
 }

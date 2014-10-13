@@ -20,47 +20,37 @@
         class="ElementListQueryTemplate"
         skeleton="query-template.skeleton"
         imports="java.util.* 
+                 org.lh.dmlj.schema.editor.dictionary.tools.*
+       			 org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary
                  org.lh.dmlj.schema.editor.dictionary.tools.table.*  
                  org.lh.dmlj.schema.editor.dictionary.tools.jdbc.*"%>
 <%
 Object[] args = (Object[]) argument;
-String sysdirlSchema = (String) args[0];
+Dictionary dictionary = (Dictionary) args[0];
 @SuppressWarnings("unchecked")
-List<Rcdsyn_079> rcdsyn_079s = (List<Rcdsyn_079>) args[1];
-List<String> rcdsyn_079_hexDbkeys = new ArrayList<>();
-for (int i = 0; i < rcdsyn_079s.size(); i++) {    
-    Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(i);    
-	StringBuilder rcdsyn_079_hexDbkey = new StringBuilder();
-	if (i == 0) {
-		rcdsyn_079_hexDbkey.append("(");    
-	} else {
-		rcdsyn_079_hexDbkey.append(" ");
-	}
-	rcdsyn_079_hexDbkey.append("X'");
-	rcdsyn_079_hexDbkey.append(JdbcTools.toHexString(rcdsyn_079.getDbkey()));
-	rcdsyn_079_hexDbkey.append("'");
-	if (i == (rcdsyn_079s.size() - 1)) {
-		rcdsyn_079_hexDbkey.append(") AND");    
-	} else {
-		rcdsyn_079_hexDbkey.append(",");    
-	}
-	rcdsyn_079_hexDbkeys.add(rcdsyn_079_hexDbkey.toString());	
-}
-%>
-SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,                 
+List<IDbkeyProvider> rcdsyn_079s = (List<IDbkeyProvider>) args[1];
+String sysdirlSchema = dictionary.getSchemaWithDefault(Plugin.getDefault());
+List<List<Long>> splitQueryDbkeyList = JdbcTools.getSplitQueryDbkeyList(rcdsyn_079s, dictionary);
+DbkeyListTemplate dbkeyListTemplate = new DbkeyListTemplate();
+boolean first = true;
+for (List<Long> dbkeys : splitQueryDbkeyList) {
+    String dbkeyList = dbkeyListTemplate.generate(new Object[] {dbkeys});    
+    if (first) {
+        first = false;
+    } else {
+		stringBuffer.append("\nUNION\n");        
+    }
+%>SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,                 
        NAMESYN_083.ROWID AS NAMESYN_083_ROWID,               
        SDR_042.ROWID AS SDR_042_ROWID,                       
        *                                                     
 FROM "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,                   
      "<%= sysdirlSchema %>"."NAMESYN-083" AS NAMESYN_083,                 
-     "<%= sysdirlSchema %>"."SDR-042" AS SDR_042                          
-WHERE RCDSYN_079.ROWID IN
-<%
-for (String rcdsyn_079_hexDbkey : rcdsyn_079_hexDbkeys) {
-%>
-       <%= rcdsyn_079_hexDbkey %>
+     "<%= sysdirlSchema %>"."SDR-042" AS SDR_042                               
+WHERE RCDSYN_079.ROWID IN <%= dbkeyList %> AND
+      "RCDSYN-NAMESYN" AND                                   
+      "SDR-NAMESYN"
 <%
 }
-%> 
-      "RCDSYN-NAMESYN" AND                                   
-      "SDR-NAMESYN"        
+%>
+ORDER BY RCDSYN_079.ROWID, SEQ_042

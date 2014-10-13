@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 
-public class Rcdsyn_079 {
+public class Rcdsyn_079 implements IDbkeyProvider {
 	
 	public static final String ROWID = "RCDSYN_079_ROWID";
 	public static final String RSYN_NAME_079 = "RSYN_NAME_079";
@@ -38,6 +38,7 @@ public class Rcdsyn_079 {
 		super();
 	}
 	
+	@Override
 	public long getDbkey() {
 		return dbkey;
 	}
