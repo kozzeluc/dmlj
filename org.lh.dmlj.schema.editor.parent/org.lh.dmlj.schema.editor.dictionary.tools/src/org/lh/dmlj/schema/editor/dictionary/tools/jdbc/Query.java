@@ -157,7 +157,7 @@ public class Query {
 		public Builder forBaseRecordSynonymList(SchemaImportSession session, List<Sr_036> sr_036s) {
 			description = "base record synonym list";
 			IQueryTemplate template = baseRecordSynonymListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()), sr_036s});
+			sql = template.generate(new Object[] {session.getDictionary(), sr_036s});
 			return this;
 		}
 
@@ -227,7 +227,7 @@ public class Query {
 
 		public Builder forElementCommentList(SchemaImportSession session, List<Rcdsyn_079> rcdsyn_079s) {
 			description = "element comment list";
-			sql = elementCommentListQueryTemplate.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+			sql = elementCommentListQueryTemplate.generate(new Object[] {session.getDictionary(),
 																		 rcdsyn_079s});			
 			return this;
 		}		
@@ -235,7 +235,7 @@ public class Query {
 		public Builder forElementList(SchemaImportSession session, List<Rcdsyn_079> rcdsyn_079s) {
 			description = "element list";
 			IQueryTemplate template = elementListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()), rcdsyn_079s});			
+			sql = template.generate(new Object[] {session.getDictionary(), rcdsyn_079s});			
 			return this;
 		}
 		

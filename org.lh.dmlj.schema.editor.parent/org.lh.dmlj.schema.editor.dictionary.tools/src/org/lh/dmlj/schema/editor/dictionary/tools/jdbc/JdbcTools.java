@@ -20,13 +20,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
-import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
 
 public abstract class JdbcTools {
 	
@@ -35,6 +39,28 @@ public abstract class JdbcTools {
 		return ByteBuffer.wrap(new byte[] {0, 0, 0, 0, rid[0], rid[1], rid[2], rid[3]}).getLong();
 	}
 	
+	public static List<List<Long>> getSplitQueryDbkeyList(List<IDbkeyProvider> dbkeyProviders,
+										 				  Dictionary dictionary) {		
+		int queryDbkeyListSizeMaximum = 
+			dictionary.getQueryDbkeyListSizeMaximumWithDefault(Plugin.getDefault());
+		List<List<Long>> splitQueryDbkeyList = new ArrayList<>();
+		List<Long> queryDbkeyList = new ArrayList<>();
+		splitQueryDbkeyList.add(queryDbkeyList);
+		for (IDbkeyProvider dbkeyProvider : dbkeyProviders) {
+			long dbkey = dbkeyProvider.getDbkey();
+			if (queryDbkeyList.size() == queryDbkeyListSizeMaximum) {
+				queryDbkeyList = new ArrayList<>();
+				splitQueryDbkeyList.add(queryDbkeyList);
+			}
+			queryDbkeyList.add(Long.valueOf(dbkey));
+		}
+		if (splitQueryDbkeyList.size() == 1 && splitQueryDbkeyList.get(0).isEmpty()) {
+			return Collections.emptyList();
+		} else {
+			return splitQueryDbkeyList;
+		}
+	}
+
 	public static String removeTrailingSpaces(String aString) {
 		StringBuilder p = new StringBuilder(aString);
 		while (p.length() > 0 && p.charAt(p.length() - 1) == ' ') {
@@ -81,7 +107,7 @@ public abstract class JdbcTools {
 				
 				result[0] = testConnection(dictionary);
 			}};
-		Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
+		org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 		// display the result after making sure the 'Operation in progress' window is no longer 
 		// visible (note that the 'Password required' dialog will be presented while the 'Operation
 		// in progress' window IS visible, but behind that dialog; hopefully people will get 

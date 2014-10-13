@@ -20,45 +20,35 @@
         class="BaseRecordSynonymListQueryTemplate"
         skeleton="query-template.skeleton"
         imports="java.util.*
+       			 org.lh.dmlj.schema.editor.dictionary.tools.*
+       			 org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary
                  org.lh.dmlj.schema.editor.dictionary.tools.table.*  
                  org.lh.dmlj.schema.editor.dictionary.tools.jdbc.*"%>
 <%
 Object[] args = (Object[]) argument;
-String sysdirlSchema = (String) args[0];
+Dictionary dictionary = (Dictionary) args[0];
 @SuppressWarnings("unchecked")
-List<Sr_036> sr_036s = (List<Sr_036>) args[1];
-List<String> sr_036_hexDbkeys = new ArrayList<>();
-for (int i = 0; i < sr_036s.size(); i++) {    
-	StringBuilder sr_036_hexDbkey = new StringBuilder();
-	if (i == 0) {
-		sr_036_hexDbkey.append("(");    
-	} else {
-		sr_036_hexDbkey.append(" ");
-	}
-	sr_036_hexDbkey.append("X'");
-	sr_036_hexDbkey.append(JdbcTools.toHexString(sr_036s.get(i).getDbkey()));
-	sr_036_hexDbkey.append("'");
-	if (i == (sr_036s.size() - 1)) {
-		sr_036_hexDbkey.append(") AND");    
-	} else {
-		sr_036_hexDbkey.append(",");    
-	}
-	sr_036_hexDbkeys.add(sr_036_hexDbkey.toString());	
-}
-%>
-SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,
+List<IDbkeyProvider> sr_036s = (List<IDbkeyProvider>) args[1];
+String sysdirlSchema = dictionary.getSchemaWithDefault(Plugin.getDefault());
+List<List<Long>> splitQueryDbkeyList = JdbcTools.getSplitQueryDbkeyList(sr_036s, dictionary);
+DbkeyListTemplate dbkeyListTemplate = new DbkeyListTemplate();
+boolean first = true;
+for (List<Long> dbkeys : splitQueryDbkeyList) {
+    String dbkeyList = dbkeyListTemplate.generate(new Object[] {dbkeys});
+    if (first) {
+        first = false;
+    } else {
+		stringBuffer.append("\nUNION\n");        
+    }
+%>SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,
        SR_036.ROWID AS SR_036_ROWID,
        *      
 FROM "<%= sysdirlSchema %>"."SR-036" AS SR_036,
      "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079
-WHERE SR_036.ROWID IN
-<%
-for (String sr_036_hexDbkey : sr_036_hexDbkeys) {
-%>
-       <%= sr_036_hexDbkey %>
-<%
-}
-%>       
+WHERE SR_036.ROWID IN <%= dbkeyList %> AND       
       "SR-RCDSYN" AND
       RSYN_NAME_079 = SR_NAM_036 AND
       RSYN_VER_079 = RCD_VERS_036
+<%
+}
+%>

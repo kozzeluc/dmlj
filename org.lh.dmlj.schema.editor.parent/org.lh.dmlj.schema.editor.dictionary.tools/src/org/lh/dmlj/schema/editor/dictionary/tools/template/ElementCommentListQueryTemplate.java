@@ -3,6 +3,8 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
 import java.util.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.*;
 
@@ -22,9 +24,9 @@ public class ElementCommentListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_2 = "\".\"RCDSYN-079\" AS RCDSYN_079," + NL + "     \"";
   protected final String TEXT_3 = "\".\"NAMESYN-083\" AS NAMESYN_083," + NL + "     \"";
   protected final String TEXT_4 = "\".\"SDR-042\" AS SDR_042," + NL + "     \"";
-  protected final String TEXT_5 = "\".\"SDES-044\" AS SDES_044" + NL + "WHERE RCDSYN_079.ROWID IN                                    ";
-  protected final String TEXT_6 = NL + "       ";
-  protected final String TEXT_7 = " " + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"SDR-NAMESYN\" AND" + NL + "      \"SDR-SDES\" AND" + NL + "      (SDES_044.CMT_ID_044 = -3 OR SDES_044.CMT_ID_044 = -11)";
+  protected final String TEXT_5 = "\".\"SDES-044\" AS SDES_044" + NL + "WHERE RCDSYN_079.ROWID IN ";
+  protected final String TEXT_6 = " AND " + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"SDR-NAMESYN\" AND" + NL + "      \"SDR-SDES\" AND" + NL + "      (SDES_044.CMT_ID_044 = -3 OR SDES_044.CMT_ID_044 = -11)";
+  protected final String TEXT_7 = NL + "ORDER BY RCDSYN_079.ROWID, SEQ_042";
 
 	public String generate(Object argument)
   {
@@ -49,28 +51,20 @@ public class ElementCommentListQueryTemplate implements IQueryTemplate {
 
     
 Object[] args = (Object[]) argument;
-String sysdirlSchema = (String) args[0];
+Dictionary dictionary = (Dictionary) args[0];
 @SuppressWarnings("unchecked")
-List<Rcdsyn_079> rcdsyn_079s = (List<Rcdsyn_079>) args[1];
-List<String> rcdsyn_079_hexDbkeys = new ArrayList<>();
-for (int i = 0; i < rcdsyn_079s.size(); i++) {    
-    Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(i);    
-	StringBuilder rcdsyn_079_hexDbkey = new StringBuilder();
-	if (i == 0) {
-		rcdsyn_079_hexDbkey.append("(");    
-	} else {
-		rcdsyn_079_hexDbkey.append(" ");
-	}
-	rcdsyn_079_hexDbkey.append("X'");
-	rcdsyn_079_hexDbkey.append(JdbcTools.toHexString(rcdsyn_079.getDbkey()));
-	rcdsyn_079_hexDbkey.append("'");
-	if (i == (rcdsyn_079s.size() - 1)) {
-		rcdsyn_079_hexDbkey.append(") AND");    
-	} else {
-		rcdsyn_079_hexDbkey.append(",");    
-	}
-	rcdsyn_079_hexDbkeys.add(rcdsyn_079_hexDbkey.toString());	
-}
+List<IDbkeyProvider> rcdsyn_079s = (List<IDbkeyProvider>) args[1];
+String sysdirlSchema = dictionary.getSchemaWithDefault(Plugin.getDefault());
+List<List<Long>> splitQueryDbkeyList = JdbcTools.getSplitQueryDbkeyList(rcdsyn_079s, dictionary);
+DbkeyListTemplate dbkeyListTemplate = new DbkeyListTemplate();
+boolean first = true;
+for (List<Long> dbkeys : splitQueryDbkeyList) {
+    String dbkeyList = dbkeyListTemplate.generate(new Object[] {dbkeys});    
+    if (first) {
+        first = false;
+    } else {
+		stringBuffer.append("\nUNION\n");        
+    }
 
     stringBuffer.append(TEXT_1);
     stringBuffer.append( sysdirlSchema );
@@ -81,11 +75,8 @@ for (int i = 0; i < rcdsyn_079s.size(); i++) {
     stringBuffer.append(TEXT_4);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_5);
-    
-for (String rcdsyn_079_hexDbkey : rcdsyn_079_hexDbkeys) {
-
+    stringBuffer.append( dbkeyList );
     stringBuffer.append(TEXT_6);
-    stringBuffer.append( rcdsyn_079_hexDbkey );
     
 }
 

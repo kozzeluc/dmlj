@@ -18,7 +18,7 @@ package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 
-public class Sr_036 {
+public class Sr_036 implements IDbkeyProvider {
 	
 	public static final String ROWID = "SR_036_ROWID";
 	public static final String SR_NAM_036 = "SR_NAM_036";
@@ -35,6 +35,7 @@ public class Sr_036 {
 		super();
 	}
 
+	@Override
 	public long getDbkey() {
 		return dbkey;
 	}
