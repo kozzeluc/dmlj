@@ -26,7 +26,6 @@ public class ElementCommentListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_4 = "\".\"SDR-042\" AS SDR_042," + NL + "     \"";
   protected final String TEXT_5 = "\".\"SDES-044\" AS SDES_044" + NL + "WHERE RCDSYN_079.ROWID IN ";
   protected final String TEXT_6 = " AND " + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"SDR-NAMESYN\" AND" + NL + "      \"SDR-SDES\" AND" + NL + "      (SDES_044.CMT_ID_044 = -3 OR SDES_044.CMT_ID_044 = -11)";
-  protected final String TEXT_7 = NL + "ORDER BY RCDSYN_079.ROWID, SEQ_042";
 
 	public String generate(Object argument)
   {
@@ -80,7 +79,6 @@ for (List<Long> dbkeys : splitQueryDbkeyList) {
     
 }
 
-    stringBuffer.append(TEXT_7);
     return stringBuffer.toString();
   }
 }
