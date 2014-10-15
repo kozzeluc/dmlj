@@ -239,11 +239,12 @@ public class Query {
 			return this;
 		}
 		
-		public Builder forElementSynonymCommentList(SchemaImportSession session, long dbkeyOfNamesyn_083) {
+		public Builder forElementSynonymCommentList(SchemaImportSession session, 
+													List<Rcdsyn_079> rcdsyn_079s) {
+			
 			description = "element synonym comment list";
 			IQueryTemplate template = elementSynonymCommentsListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-												  JdbcTools.toHexString(dbkeyOfNamesyn_083)});			
+			sql = template.generate(new Object[] {session.getDictionary(), rcdsyn_079s});			
 			return this;
 		}		
 		

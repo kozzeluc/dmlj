@@ -17,9 +17,36 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 
-public abstract class Namedes_186 {
+public class Namedes_186 {
 
 	public static final String CMT_ID_186 = "CMT_ID_186";
-	public static final String IX_NAME_186 = "IX_NAME_186";
+	public static final String CMT_INFO_186_1 = "CMT_INFO_186_1";
+	
+	private int cmtId_186;
+	private String cmtInfo_186_1;
+	
+	public Namedes_186() {
+		super();
+	}
+
+	public int getCmtId_186() {
+		return cmtId_186;
+	}
+
+	public String getCmtInfo_186_1() {
+		return cmtInfo_186_1;
+	}
+
+	public String getIxName_186() {
+		return cmtInfo_186_1.substring(0, 32).trim();
+	}
+
+	public void setCmtId_186(int cmtId_186) {
+		this.cmtId_186 = cmtId_186;
+	}
+
+	public void setCmtInfo_186_1(String cmtInfo_1_186) {
+		this.cmtInfo_186_1 = cmtInfo_1_186; // trailing spaces are NOT removed
+	}
 	
 }

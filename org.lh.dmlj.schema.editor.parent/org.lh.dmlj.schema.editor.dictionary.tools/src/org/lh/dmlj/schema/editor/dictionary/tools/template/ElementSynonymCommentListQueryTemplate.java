@@ -2,6 +2,12 @@ package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 
+import java.util.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.*;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.*;
+
 public class ElementSynonymCommentListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;
@@ -14,10 +20,11 @@ public class ElementSynonymCommentListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = " " + NL + "SELECT NAMESYN_083.ROWID AS NAMESYN_083_ROWID," + NL + "       NAMEDES_186.ROWID AS NAMEDES_186_ROWID," + NL + "       * " + NL + "FROM \"";
-  protected final String TEXT_2 = "\".\"NAMESYN-083\" AS NAMESYN_083," + NL + "\t \"";
-  protected final String TEXT_3 = "\".\"NAMEDES-186\" AS NAMEDES_186                                   " + NL + "WHERE NAMESYN_083.ROWID = X'";
-  protected final String TEXT_4 = "' AND " + NL + "      \"NAMESYN-NAMEDES\"";
+  protected final String TEXT_1 = "SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID," + NL + "       NAMESYN_083.ROWID AS NAMESYN_083_ROWID," + NL + "       NAMEDES_186.ROWID AS NAMEDES_186_ROWID," + NL + "       * " + NL + "FROM \"";
+  protected final String TEXT_2 = "\".\"RCDSYN-079\" AS RCDSYN_079," + NL + "     \"";
+  protected final String TEXT_3 = "\".\"NAMESYN-083\" AS NAMESYN_083," + NL + "\t \"";
+  protected final String TEXT_4 = "\".\"NAMEDES-186\" AS NAMEDES_186                                   " + NL + "WHERE RCDSYN_079.ROWID IN ";
+  protected final String TEXT_5 = " AND" + NL + "      \"RCDSYN-NAMESYN\" AND" + NL + "      \"NAMESYN-NAMEDES\" AND" + NL + "      NAMEDES_186.CMT_ID_186 = -11";
 
 	public String generate(Object argument)
   {
@@ -42,16 +49,33 @@ public class ElementSynonymCommentListQueryTemplate implements IQueryTemplate {
 
     
 Object[] args = (Object[]) argument;
-String sysdirlSchema = (String) args[0];
-String hexDbkeyNamesyn_083 = (String) args[1];
+Dictionary dictionary = (Dictionary) args[0];
+@SuppressWarnings("unchecked")
+List<IDbkeyProvider> rcdsyn_079s = (List<IDbkeyProvider>) args[1];
+String sysdirlSchema = dictionary.getSchemaWithDefault(Plugin.getDefault());
+List<List<Long>> splitQueryDbkeyList = JdbcTools.getSplitQueryDbkeyList(rcdsyn_079s, dictionary);
+DbkeyListTemplate dbkeyListTemplate = new DbkeyListTemplate();
+boolean first = true;
+for (List<Long> dbkeys : splitQueryDbkeyList) {
+    String dbkeyList = dbkeyListTemplate.generate(new Object[] {dbkeys});    
+    if (first) {
+        first = false;
+    } else {
+		stringBuffer.append("\nUNION\n");        
+    }
 
     stringBuffer.append(TEXT_1);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_2);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( hexDbkeyNamesyn_083 );
+    stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_4);
+    stringBuffer.append( dbkeyList );
+    stringBuffer.append(TEXT_5);
+    
+}
+
     return stringBuffer.toString();
   }
 }

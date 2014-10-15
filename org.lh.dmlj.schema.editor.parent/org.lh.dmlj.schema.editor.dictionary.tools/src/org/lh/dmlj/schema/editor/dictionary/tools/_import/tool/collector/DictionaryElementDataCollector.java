@@ -20,10 +20,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lh.dmlj.schema.Usage;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Namedes_186;
@@ -35,6 +39,8 @@ import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;
 
 public class DictionaryElementDataCollector implements IElementDataCollector<Namesyn_083> {
 
+	private Map<Long, List<Namedes_186>> namedes_186Map;
+	private List<Rcdsyn_079> rcdsyn_079s;
 	private SchemaImportSession session;
 	
 	public DictionaryElementDataCollector(SchemaImportSession session) {
@@ -42,6 +48,32 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 		this.session = session;
 	}
 
+	private void buildNamedes_186MapIfNeeded() {
+		if (namedes_186Map != null) {
+			return;
+		}
+		namedes_186Map = new HashMap<>();
+		Query elementSynonymCommentListQuery = 
+			new Query.Builder().forElementSynonymCommentList(session, rcdsyn_079s).build();
+		session.runQuery(elementSynonymCommentListQuery, new IRowProcessor() {			
+			@Override
+			public void processRow(ResultSet row) throws SQLException {	
+				long dbkeyOfNamesyn_083 = JdbcTools.getDbkey(row, Namesyn_083.ROWID);
+				List<Namedes_186> namedes_186s;
+				if (namedes_186Map.containsKey(Long.valueOf(dbkeyOfNamesyn_083))) {
+					namedes_186s = namedes_186Map.get(Long.valueOf(dbkeyOfNamesyn_083));
+				} else {
+					namedes_186s = new ArrayList<>();
+					namedes_186Map.put(Long.valueOf(dbkeyOfNamesyn_083), namedes_186s);
+				}
+				Namedes_186 namedes_186 = new Namedes_186();
+				namedes_186.setCmtId_186(row.getInt(Namedes_186.CMT_ID_186));
+				namedes_186.setCmtInfo_186_1(row.getString(Namedes_186.CMT_INFO_186_1));
+				namedes_186s.add(namedes_186);
+			}
+		});
+	}
+	
 	@Override
 	public String getBaseName(Namesyn_083 namesyn_083) {
 		Sdr_042 sdr_042 = namesyn_083.getSdr_042();
@@ -82,22 +114,14 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 
 	@Override
 	public Collection<String> getIndexElementNames(Namesyn_083 namesyn_083) {
-		final List<String> list = new ArrayList<>();
-		Query elementSynonymCommentListQuery = 
-			new Query.Builder()
-					 .forElementSynonymCommentList(session, namesyn_083.getDbkey())
-					 .build();
-		session.runQuery(elementSynonymCommentListQuery, new IRowProcessor() {			
-			@Override
-			public void processRow(ResultSet row) throws SQLException {	
-				// CMT-ID-186 == -11: INDEXED BY (SDES-044 and NAMEDES-186 only)
-				int cmtId_186 = row.getInt(Namedes_186.CMT_ID_186);
-				if (cmtId_186 == -11) {
-					String ixName_186 = row.getString(Namedes_186.IX_NAME_186);
-					list.add(ixName_186);
-				}
-			}
-		});
+		buildNamedes_186MapIfNeeded();
+		if (!namedes_186Map.containsKey(Long.valueOf(namesyn_083.getDbkey()))) {
+			return Collections.emptyList();
+		}
+		List<String> list = new ArrayList<>();
+		for (Namedes_186 namedes_186 : namedes_186Map.get(Long.valueOf(namesyn_083.getDbkey()))) {
+			list.add(namedes_186.getIxName_186());
+		}
 		return list;
 	}
 
@@ -169,6 +193,10 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 			}
 		}
 		return null;
+	}
+
+	public void setRcdsyn_079s(List<Rcdsyn_079> rcdsyn_079s) {
+		this.rcdsyn_079s = rcdsyn_079s;
 	}
 
 }

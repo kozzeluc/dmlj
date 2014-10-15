@@ -72,6 +72,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 
 	private boolean addMissingCatalogComponents = false;
 	private IDataCollectorRegistry dataCollectorRegistry;
+	private DictionaryElementDataCollector dictionaryElementDataCollector;
 	private SchemaImportSession session;
 	private Map<Long, Srcd_113> srcd_113s = new HashMap<>();
 	private Map<Long, Table_1050> table_1050s = new HashMap<>();
@@ -195,6 +196,8 @@ public class SchemaImportTool implements ISchemaImportTool {
 				}				
 			}			
 		});
+		// pass the list of RCDSYN-079 occurrences to the (dictionary) element data collector
+		dictionaryElementDataCollector.setRcdsyn_079s(new ArrayList<>(rcdsyn_079s.values()));
 		
 		// locate the base record synonym and hook it to the SR-036 when different from the record 
 		// synonym referenced by the schema		
@@ -680,8 +683,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		dataCollectorRegistry.registerRecordDataCollector(Srcd_113.class, 
 														  dictionaryRecordDataCollector);
 		
-		IElementDataCollector<Namesyn_083> dictionaryElementDataCollector = 
-			new DictionaryElementDataCollector(session);	
+		dictionaryElementDataCollector = new DictionaryElementDataCollector(session);	
 		dataCollectorRegistry.registerElementDataCollector(Namesyn_083.class, 
 														   dictionaryElementDataCollector);
 		

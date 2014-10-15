@@ -21,6 +21,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.JdbcToolsTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymListQueryTemplateTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementCommentListQueryTemplateTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementListQueryTemplateTest;
+import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementSynonymCommentListQueryTemplateTest;
 
 
 @RunWith(Suite.class)
@@ -29,7 +30,8 @@ import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementListQueryTempl
 	JdbcToolsTest.class,
 	BaseRecordSynonymListQueryTemplateTest.class,
 	ElementListQueryTemplateTest.class,
-	ElementCommentListQueryTemplateTest.class
+	ElementCommentListQueryTemplateTest.class,
+	ElementSynonymCommentListQueryTemplateTest.class
 	
 })
 public class AllDictionaryToolsTests {	
