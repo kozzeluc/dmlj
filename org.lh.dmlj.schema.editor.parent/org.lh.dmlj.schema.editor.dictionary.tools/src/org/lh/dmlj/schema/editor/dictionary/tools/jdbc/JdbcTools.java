@@ -74,9 +74,7 @@ public abstract class JdbcTools {
 		try {
 			session = new ImportSession(dictionary);
 			session.open();
-			String context = "Test connection; dictionary='" + dictionary.getId() + "'";
-			Query query = 
-				new Query.Builder().forValidSchemaList(session).withContext(context).build();
+			Query query = new Query.Builder().forValidSchemaList(session).build();
 			session.runQuery(query, new IRowProcessor() {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {					

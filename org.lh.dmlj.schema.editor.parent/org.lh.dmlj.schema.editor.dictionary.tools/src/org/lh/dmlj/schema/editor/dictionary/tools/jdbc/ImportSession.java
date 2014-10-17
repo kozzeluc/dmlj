@@ -209,11 +209,9 @@ public class ImportSession {
 
 		public String toString() {
 			return "query #" + query.getNumber() + ", description='" + query.getDescription() + 
-				   "', " + "context=" + (query.getContext() != null ? "'" + query.getContext() + 
-				   "', " : "[N/A], ") + "elapseTimeQuery=" + (end1 - start) + ", " + 
-				   "elapseTimeRowProcessing=" + (end2 - end1) + ", " + "rowsProcessed=" + 
-				   rowsProcessed + (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + 
-						   			" (" + t.getMessage() + ")'" : "");
+				   "', elapseTimeQuery=" + (end1 - start) + ", " + "elapseTimeRowProcessing=" + 
+				   (end2 - end1) + ", " + "rowsProcessed=" + rowsProcessed + 
+				   (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + " (" + t.getMessage() + ")'" : "");
 		}
 		
 	}

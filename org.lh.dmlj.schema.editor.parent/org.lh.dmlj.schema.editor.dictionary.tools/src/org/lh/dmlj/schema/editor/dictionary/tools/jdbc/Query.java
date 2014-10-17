@@ -77,7 +77,6 @@ public class Query {
 	private static final IQueryTemplate validSchemaListForSysdirlDictionariesQueryTemplate = new ValidSchemaListForSysdirlDictionariesQueryTemplate();
 	private static final IQueryTemplate viaSetListQueryTemplate = new ViaSetListQueryTemplate();
 	
-	private String context;
 	private String description;
 	private int number;
 	private String sql;
@@ -86,11 +85,6 @@ public class Query {
 		super();
 		this.setDescription(builder.description);
 		this.setSql(builder.sql);
-		this.context = builder.context;
-	}
-	
-	public String getContext() {
-		return context;
 	}
 	
 	public String getDescription() {
@@ -118,13 +112,11 @@ public class Query {
 	}
 	
 	public String toString() {
-		return "Query #" + number + " - description='" + description + "', context=" + 
-			   (context != null ? "'" + context + "'" : "[N/A]") + " sql=[see below]\n" + sql;
+		return "Query #" + number + " - description='" + description + "', sql=[see below]\n" + sql;
 	}
 
 	public static class Builder {
 		
-		private String context;
 		private String description;
 		private String sql;
 		
@@ -320,11 +312,6 @@ public class Query {
 			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 												  session.getSchemaName(),
 												  session.getSchemaVersion()});
-			return this;
-		}
-		
-		public Builder withContext(String context) {
-			this.context = context;
 			return this;
 		}
 		
