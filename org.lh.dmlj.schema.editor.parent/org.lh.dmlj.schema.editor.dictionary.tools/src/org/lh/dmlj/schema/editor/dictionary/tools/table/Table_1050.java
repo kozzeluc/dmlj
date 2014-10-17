@@ -29,7 +29,7 @@ public class Table_1050 {
 	public static final String NAME_1050 = "TABLE_1050_NAME";
 	public static final String TABLEID_1050 = "TABLE_1050_TABLEID";	
 		
-	private List<Column_1028> column_1028s = new ArrayList<>();;
+	private List<Column_1028> column_1028s = new ArrayList<>();
 	
 	private long dbkey;
 	private String area_1050;

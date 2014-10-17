@@ -375,7 +375,27 @@ public class SchemaImportTool implements ISchemaImportTool {
 						list.add(table_1050);	
 					}
 				}				
-			});						
+			});	
+			
+			// get ALL elements for ALL catalog records; these are all root elements
+			Query catalogElementListQuery = new Query.Builder().forCatalogElementList().build();
+			session.runQuery(catalogElementListQuery, new IRowProcessor() {
+				@Override
+				public void processRow(ResultSet row) throws SQLException {
+					
+					long dbkeyOfTable_1050 = JdbcTools.getDbkey(row, Table_1050.ROWID);
+					Table_1050 table_1050 = table_1050s.get(Long.valueOf(dbkeyOfTable_1050));
+					
+					Column_1028 column_1028 = new Column_1028();
+					column_1028.setName_1028(row.getString(Column_1028.NAME_1028));
+					column_1028.setNulls_1028(row.getString(Column_1028.NULLS_1028));
+					column_1028.setNumber_1028(row.getShort(Column_1028.NUMBER_1028));
+					column_1028.setType_1028(row.getString(Column_1028.TYPE_1028));
+					column_1028.setVlength_1028(row.getShort(Column_1028.VLENGTH_1028));
+					column_1028.setTable_1050(table_1050);
+					table_1050.getColumn_1028s().add(column_1028);
+				}				
+			});			
 			
 		}		
 		
@@ -404,28 +424,10 @@ public class SchemaImportTool implements ISchemaImportTool {
 			
 			return list;			
 			
-		} else if (recordContext instanceof Table_1050) {	
-			
-			// catalog derived record
-			final List<Column_1028> list = new ArrayList<>();
-			final Table_1050 table_1050 = (Table_1050) recordContext;
-			Query catalogElementListQuery = 
-				new Query.Builder().forCatalogElementList(table_1050.getDbkey()).build();
-			session.runQuery(catalogElementListQuery, new IRowProcessor() {
-				@Override
-				public void processRow(ResultSet row) throws SQLException {
-					Column_1028 column_1028 = new Column_1028();
-					column_1028.setName_1028(row.getString(Column_1028.NAME_1028));
-					column_1028.setNulls_1028(row.getString(Column_1028.NULLS_1028));
-					column_1028.setNumber_1028(row.getShort(Column_1028.NUMBER_1028));
-					column_1028.setType_1028(row.getString(Column_1028.TYPE_1028));
-					column_1028.setVlength_1028(row.getShort(Column_1028.VLENGTH_1028));
-					column_1028.setTable_1050(table_1050);
-					table_1050.getColumn_1028s().add(column_1028);
-					list.add(column_1028);
-				}				
-			});
-			return list;			
+		} else if (recordContext instanceof Table_1050) {				
+			// catalog derived record			
+			Table_1050 table_1050 = (Table_1050) recordContext;
+			return table_1050.getColumn_1028s();			
 		} else {
 			throw new IllegalArgumentException("unknown record context type: " +
 											   recordContext.getClass().getName());

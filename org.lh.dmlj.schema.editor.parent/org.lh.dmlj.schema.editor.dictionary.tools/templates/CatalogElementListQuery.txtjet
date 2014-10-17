@@ -19,10 +19,6 @@
 <%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
         class="CatalogElementListQueryTemplate"
         skeleton="query-template.skeleton"%> 
-<%
-Object[] args = (Object[]) argument;
-String hexDbkeyTable_1050 = (String) args[0];
-%>
 SELECT TABLE.ROWID AS TABLE_1050_ROWID,
        COLUMN.ROWID AS COLUMN_1028_ROWID,
        TABLE.AREA AS TABLE_1050_AREA,
@@ -36,7 +32,7 @@ SELECT TABLE.ROWID AS TABLE_1050_ROWID,
 	   COLUMN.VLENGTH AS COLUMN_1028_VLENGTH 
 FROM SYSTEM.TABLE AS TABLE_1050, 
      SYSTEM.COLUMN AS COLUMN_1028
-WHERE TABLE.ROWID = X'<%= hexDbkeyTable_1050 %>' AND 
+WHERE TABLE.SCHEMA = 'SYSTEM' AND 
       COLUMN.SCHEMA = TABLE.SCHEMA AND
 	  COLUMN.TABLE = TABLE.NAME
-ORDER BY NUMBER
+ORDER BY TABLE.ROWID, NUMBER

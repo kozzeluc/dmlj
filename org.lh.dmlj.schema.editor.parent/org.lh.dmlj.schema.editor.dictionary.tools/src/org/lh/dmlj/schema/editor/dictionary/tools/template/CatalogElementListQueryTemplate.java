@@ -14,9 +14,7 @@ public class CatalogElementListQueryTemplate implements IQueryTemplate {
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = " ";
-  protected final String TEXT_2 = NL + "SELECT TABLE.ROWID AS TABLE_1050_ROWID," + NL + "       COLUMN.ROWID AS COLUMN_1028_ROWID," + NL + "       TABLE.AREA AS TABLE_1050_AREA," + NL + "\t   TABLE.LOCMODE AS TABLE_1050_LOCMODE," + NL + "\t   TABLE.NAME AS TABLE_1050_NAME," + NL + "\t   TABLE.TABLEID AS TABLE_1050_TABLEID," + NL + "\t   COLUMN.NAME AS COLUMN_1028_NAME," + NL + "\t   COLUMN.NULLS AS COLUMN_1028_NULLS," + NL + "\t   COLUMN.NUMBER AS COLUMN_1028_NUMBER," + NL + "\t   COLUMN.TYPE AS COLUMN_1028_TYPE," + NL + "\t   COLUMN.VLENGTH AS COLUMN_1028_VLENGTH " + NL + "FROM SYSTEM.TABLE AS TABLE_1050, " + NL + "     SYSTEM.COLUMN AS COLUMN_1028" + NL + "WHERE TABLE.ROWID = X'";
-  protected final String TEXT_3 = "' AND " + NL + "      COLUMN.SCHEMA = TABLE.SCHEMA AND" + NL + "\t  COLUMN.TABLE = TABLE.NAME" + NL + "ORDER BY NUMBER";
+  protected final String TEXT_1 = " " + NL + "SELECT TABLE.ROWID AS TABLE_1050_ROWID," + NL + "       COLUMN.ROWID AS COLUMN_1028_ROWID," + NL + "       TABLE.AREA AS TABLE_1050_AREA," + NL + "\t   TABLE.LOCMODE AS TABLE_1050_LOCMODE," + NL + "\t   TABLE.NAME AS TABLE_1050_NAME," + NL + "\t   TABLE.TABLEID AS TABLE_1050_TABLEID," + NL + "\t   COLUMN.NAME AS COLUMN_1028_NAME," + NL + "\t   COLUMN.NULLS AS COLUMN_1028_NULLS," + NL + "\t   COLUMN.NUMBER AS COLUMN_1028_NUMBER," + NL + "\t   COLUMN.TYPE AS COLUMN_1028_TYPE," + NL + "\t   COLUMN.VLENGTH AS COLUMN_1028_VLENGTH " + NL + "FROM SYSTEM.TABLE AS TABLE_1050, " + NL + "     SYSTEM.COLUMN AS COLUMN_1028" + NL + "WHERE TABLE.SCHEMA = 'SYSTEM' AND " + NL + "      COLUMN.SCHEMA = TABLE.SCHEMA AND" + NL + "\t  COLUMN.TABLE = TABLE.NAME" + NL + "ORDER BY TABLE.ROWID, NUMBER";
 
 	public String generate(Object argument)
   {
@@ -40,13 +38,6 @@ public class CatalogElementListQueryTemplate implements IQueryTemplate {
  */
 
     stringBuffer.append(TEXT_1);
-    
-Object[] args = (Object[]) argument;
-String hexDbkeyTable_1050 = (String) args[0];
-
-    stringBuffer.append(TEXT_2);
-    stringBuffer.append( hexDbkeyTable_1050 );
-    stringBuffer.append(TEXT_3);
     return stringBuffer.toString();
   }
 }

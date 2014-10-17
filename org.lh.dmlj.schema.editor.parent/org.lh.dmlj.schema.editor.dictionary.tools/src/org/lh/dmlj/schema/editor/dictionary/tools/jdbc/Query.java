@@ -176,10 +176,10 @@ public class Query {
 			return this;
 		}
 
-		public Builder forCatalogElementList(long dbkeyOfTable_1050) {		
-			description = "record element list (catalog)";
+		public Builder forCatalogElementList() {		
+			description = "element list (catalog)";
 			IQueryTemplate template = catalogElementListQueryTemplate;
-			sql = template.generate(new Object[] {JdbcTools.toHexString(dbkeyOfTable_1050)});
+			sql = template.generate(new Object[] {});
 			return this;
 		}
 		
