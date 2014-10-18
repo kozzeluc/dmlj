@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.DuplicatesOption;
@@ -1161,8 +1162,9 @@ public final class SchemaImportToolProxy {
 		
 	}
 
-	public Schema invokeImportTool() {
+	public Schema invokeImportTool(IProgressMonitor progressMonitor) {
 		
+		progressMonitor.subTask("(Schema)");
 		Plugin.logDebug("importing schema...");
 		
 		// create the model factory
@@ -1232,21 +1234,28 @@ public final class SchemaImportToolProxy {
 			}
 			schema.getComments().addAll(comments);
 		}
+		progressMonitor.worked(10);
 		
 		// import areas
+		progressMonitor.subTask("(Areas)");
 		for (Object areaContext : tool.getAreaContexts()) {			
 			handleArea(areaContext);
 		}
+		progressMonitor.worked(10);
 		
 		// import records and elements
+		progressMonitor.subTask("(Records)");
 		for (Object recordContext : tool.getRecordContexts()) {			
 			handleRecord(recordContext);
 		}
+		progressMonitor.worked(30);
 		
 		// import sets
+		progressMonitor.subTask("(Sets)");
 		for (Object setContext : tool.getSetContexts()) {
 			handleSet(setContext);
 		}	
+		progressMonitor.worked(30);
 		
 		// add the DDLCATLOD entities when we're importing IDMSNTWK version 1 if
 		// the schema does not contain a DDLCATLOD area AND the user has 
@@ -1254,8 +1263,12 @@ public final class SchemaImportToolProxy {
 		if (isIdmsntwk() && schema.getArea("DDLCATLOD") == null &&
 			isOptionAddDDLCATLOD()) {
 			
+			progressMonitor.subTask("(DDLCATLOD)");
 			handleDDLCATLOD();
 		}
+		progressMonitor.worked(10);
+		
+		progressMonitor.subTask("(Integrity checks)");
 		
 		// make sure all VIA sets are resolved
 		if (!modelFactory.isAllViaSetsResolved()) {
@@ -1358,9 +1371,12 @@ public final class SchemaImportToolProxy {
 			}			
 			
 		}
+		progressMonitor.worked(5);
 		
 		// the sooner the import tool is disposed of, the better
+		progressMonitor.subTask("(Cleanup)");
 		disposeImportTool();
+		progressMonitor.worked(5);
 		
 		// return the schema to the caller
 		return schema;

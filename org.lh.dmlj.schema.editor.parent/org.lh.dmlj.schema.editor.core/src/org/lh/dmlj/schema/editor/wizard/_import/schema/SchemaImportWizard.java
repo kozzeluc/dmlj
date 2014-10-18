@@ -47,6 +47,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -657,10 +658,13 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 			
 			@Override
 			protected void execute(IProgressMonitor progressMonitor) {
+				
+				progressMonitor.beginTask(updateMode ? "Update Schema" : "Import Schema", 100);				
+				
 				try {
 											
 					// create the schema and perform validations as we go
-					Schema schema = proxy.invokeImportTool();					
+					Schema schema = proxy.invokeImportTool(progressMonitor);					
 					
 					// create a layout manager and invoke its layout() method to 
 					// set the diagram location for all records, system owners
@@ -736,13 +740,15 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 						// make sure the import tool is ALWAYS disposed of
 						proxy.disposeImportTool();
 					}
-					progressMonitor.done();
 				}
+				
+				progressMonitor.done();
+				
 			}
 		};		
 			
 		try {
-			getContainer().run(false, false, operation);
+			new ProgressMonitorDialog(getShell()).run(false, false, operation);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			Throwable cause = e.getCause();
