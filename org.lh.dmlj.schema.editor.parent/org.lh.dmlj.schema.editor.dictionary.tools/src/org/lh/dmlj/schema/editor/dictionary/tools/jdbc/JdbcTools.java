@@ -72,7 +72,8 @@ public abstract class JdbcTools {
 	private static TestConnectionResult testConnection(Dictionary dictionary) {			
 		ImportSession session = null;
 		try {
-			session = new ImportSession(dictionary);
+			session = 
+				new ImportSession(dictionary, "Test connection to dictionary " + dictionary.getId());
 			session.open();
 			Query query = new Query.Builder().forValidSchemaList(session).build();
 			session.runQuery(query, new IRowProcessor() {

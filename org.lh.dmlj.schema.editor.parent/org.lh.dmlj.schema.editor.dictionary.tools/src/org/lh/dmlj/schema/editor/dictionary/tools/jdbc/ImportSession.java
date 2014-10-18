@@ -36,6 +36,7 @@ public class ImportSession {
 	private long connectionClosed = -1;
 	private long connectionOpened = -1;
 	private DateFormat dateFormat;
+	private String description;
 	protected Dictionary dictionary;
 	private int queryNumber = 0;
 	private int runningQueryCount = 0;
@@ -86,14 +87,19 @@ public class ImportSession {
 	private ImportSession() {
 	}
 	
-	public ImportSession(Dictionary dictionary) {
+	public ImportSession(Dictionary dictionary, String description) {
 		super();
 		this.dictionary = dictionary;
+		this.description = description;
 		dateFormat = org.lh.dmlj.schema.editor.Plugin.getDefault().getDateFormat();
 	}
 	
 	private String format(long date) {
 		return dateFormat.format(date);
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public Dictionary getDictionary() {
@@ -112,11 +118,12 @@ public class ImportSession {
 			throw new RuntimeException("Error while closing the JDBC connection", e);
 		}
 		StringBuilder p = new StringBuilder();
-		p.append("Import session opened on: " + format(connectionOpened) + "\n");
-		p.append("                        closed on: " + format(connectionClosed) + "\n");
+		p.append("***** Statistics for import session '" + description + "' *****\n");
+		p.append("        Opened on: " + format(connectionOpened) + "\n");
+		p.append("        Closed on: " + format(connectionClosed) + "\n");
 		long elapseTimeInMilliseconds = connectionClosed - connectionOpened;
-		p.append("                      elapse time: " + elapseTimeInMilliseconds + "ms\n");
-		p.append("                #Queries executed: " + statistics.size() + "\n");
+		p.append("      Elapse time: " + elapseTimeInMilliseconds + "ms\n");
+		p.append("#Queries executed: " + statistics.size() + "\n");
 		for (QueryStatistics queryStatistics : statistics) {
 			p.append(queryStatistics.toString());
 			p.append("\n");
@@ -208,7 +215,7 @@ public class ImportSession {
 		}
 
 		public String toString() {
-			return "query #" + query.getNumber() + ", description='" + query.getDescription() + 
+			return "  query #" + query.getNumber() + ", description='" + query.getDescription() + 
 				   "', elapseTimeQuery=" + (end1 - start) + ", " + "elapseTimeRowProcessing=" + 
 				   (end2 - end1) + ", " + "rowsProcessed=" + rowsProcessed + 
 				   (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + " (" + t.getMessage() + ")'" : "");

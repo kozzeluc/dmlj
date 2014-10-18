@@ -119,7 +119,9 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
 		Throwable throwableToPass = null;
 		try {
-			ImportSession session = new ImportSession(dictionary);
+			ImportSession session = 
+				new ImportSession(dictionary, "Retrieve valid schema list from dictionary " + 
+								  dictionary.getId());
 			session.open();	
 			Query query = new Query.Builder().forValidSchemaList(session).build();
 			session.runQuery(query, new IRowProcessor() {

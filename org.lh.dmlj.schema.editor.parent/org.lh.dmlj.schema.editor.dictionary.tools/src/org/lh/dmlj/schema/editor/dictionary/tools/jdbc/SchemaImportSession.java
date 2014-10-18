@@ -24,7 +24,8 @@ public class SchemaImportSession extends ImportSession {
 	private int schemaVersion;
 
 	public SchemaImportSession(Dictionary dictionary, String schemaName, int schemaVersion) {
-		super(dictionary);
+		super(dictionary, "Import schema " + schemaName + " version " + schemaVersion + 
+			  " from dictionary " + dictionary.getId());
 		this.schemaName = schemaName;
 		this.schemaVersion = schemaVersion;
 	}
