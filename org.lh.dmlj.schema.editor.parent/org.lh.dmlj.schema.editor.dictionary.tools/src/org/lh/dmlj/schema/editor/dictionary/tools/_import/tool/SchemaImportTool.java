@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools._import.common.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.CatalogElementDataCollector;
 import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.CatalogRecordDataCollector;
@@ -241,16 +240,6 @@ public class SchemaImportTool implements ISchemaImportTool {
 				}
 			}			
 		});
-		StringBuilder debugMessage = new StringBuilder();
-		for (Rcdsyn_079 rcdsyn_079 : listOfRcdsyn_079sInvolved) {
-			if (debugMessage.length() > 0) {
-				debugMessage.append("\n");
-			}
-			debugMessage.append(rcdsyn_079.getRsynName_079() + " version " + 
-								rcdsyn_079.getRsynVer_079());
-		}
-		debugMessage.insert(0, "RCDSYN-079 occurrences involved:\n");
-		Plugin.logDebug(debugMessage.toString());
 		
 		// get ALL elements for ALL regular records
 		final Map<Long, Long> sdr_042_dbkeys = new HashMap<>(); // for postprocessing RCDSYN-079bs
