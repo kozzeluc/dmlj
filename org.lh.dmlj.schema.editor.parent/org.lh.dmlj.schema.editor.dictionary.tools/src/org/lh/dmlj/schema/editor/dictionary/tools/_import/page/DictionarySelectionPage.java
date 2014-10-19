@@ -101,7 +101,7 @@ public class DictionarySelectionPage extends AbstractDataEntryPage {
 				tableItem.setText(1, dictionary.getHostname());
 				tableItem.setText(2, String.valueOf(dictionary.getPort()));
 				tableItem.setText(3, dictionary.getDictname());
-				tableItem.setText(4, dictionary.getSchema());
+				tableItem.setText(4, dictionary.getSchemaWithDefault(Plugin.getDefault()));
 			}
 		} catch (Throwable t) {
 			throw new RuntimeException(t);
