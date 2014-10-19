@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools;
+package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,15 +24,15 @@ import org.junit.Test;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
-import org.lh.dmlj.schema.editor.dictionary.tools.template.AbstractQueryTest;
+import org.lh.dmlj.schema.editor.dictionary.tools.template.AbstractQueryTestCase;
 
 public class JdbcToolsTest {
 
 	@Test
 	public void testGetSplitQueryDbkeyList() {
 		
-		List<IDbkeyProvider> dbkeyProviders = AbstractQueryTest.getDbkeyProviders(10);		
-		Dictionary dictionary = AbstractQueryTest.getDictionary("SYSDICT", 3);
+		List<IDbkeyProvider> dbkeyProviders = AbstractQueryTestCase.getDbkeyProviders(10);		
+		Dictionary dictionary = AbstractQueryTestCase.getDictionary("SYSDICT", 3);
 		
 		// have the list of dbkey providers split into several lists, each containing at most 3
 		// items (as specified in the mock dictionary above); each list will contain 3 elements, 
@@ -63,8 +63,8 @@ public class JdbcToolsTest {
 	
 	@Test
 	public void testGetSplitQueryDbkeyList_EmptyList() {
-		List<IDbkeyProvider> dbkeyProviders = AbstractQueryTest.getDbkeyProviders(0);		
-		Dictionary dictionary = AbstractQueryTest.getDictionary("SYSDICT", 3);
+		List<IDbkeyProvider> dbkeyProviders = AbstractQueryTestCase.getDbkeyProviders(0);		
+		Dictionary dictionary = AbstractQueryTestCase.getDictionary("SYSDICT", 3);
 		List<List<Long>> splitQueryDbkeyList = 
 			JdbcTools.getSplitQueryDbkeyList(dbkeyProviders, dictionary);
 		assertEquals(0, splitQueryDbkeyList.size());

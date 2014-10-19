@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector;
+package org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector;
 
 import java.util.ArrayList;
 import java.util.Collection;

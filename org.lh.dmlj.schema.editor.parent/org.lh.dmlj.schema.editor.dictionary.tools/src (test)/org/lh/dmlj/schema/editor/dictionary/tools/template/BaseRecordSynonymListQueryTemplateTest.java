@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
 
-public class BaseRecordSynonymListQueryTemplateTest extends AbstractQueryTest {
+public class BaseRecordSynonymListQueryTemplateTest extends AbstractQueryTestCase {
 
 	private static IQueryTemplate template = new BaseRecordSynonymListQueryTemplate();
 	

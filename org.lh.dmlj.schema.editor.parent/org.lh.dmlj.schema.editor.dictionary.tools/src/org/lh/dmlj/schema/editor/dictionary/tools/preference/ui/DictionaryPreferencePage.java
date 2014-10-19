@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.preference;
+package org.lh.dmlj.schema.editor.dictionary.tools.preference.ui;
 
 import java.io.File;
 import java.util.List;
@@ -41,6 +41,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
+import org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceConstants;
 
 public class DictionaryPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	

@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools._import.common;
+package org.lh.dmlj.schema.editor.dictionary.tools.importtool.context;
 
 public abstract class ContextAttributeKeys {
 	

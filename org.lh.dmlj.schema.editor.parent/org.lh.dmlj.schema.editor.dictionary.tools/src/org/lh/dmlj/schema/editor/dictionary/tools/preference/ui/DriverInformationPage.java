@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.preference;
+package org.lh.dmlj.schema.editor.dictionary.tools.preference.ui;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
 
-public class ElementSynonymCommentListQueryTemplateTest extends AbstractQueryTest {
+public class ElementSynonymCommentListQueryTemplateTest extends AbstractQueryTestCase {
 
 	private static IQueryTemplate template = new ElementSynonymCommentListQueryTemplate();
 	

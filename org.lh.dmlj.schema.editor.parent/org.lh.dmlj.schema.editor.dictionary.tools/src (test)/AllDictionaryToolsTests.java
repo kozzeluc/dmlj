@@ -17,7 +17,7 @@
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.lh.dmlj.schema.editor.dictionary.tools.JdbcToolsTest;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcToolsTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymListQueryTemplateTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementCommentListQueryTemplateTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementListQueryTemplateTest;

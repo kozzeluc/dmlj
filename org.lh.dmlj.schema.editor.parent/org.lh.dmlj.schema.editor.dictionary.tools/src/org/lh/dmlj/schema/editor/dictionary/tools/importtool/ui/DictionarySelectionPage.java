@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools._import.page;
+package org.lh.dmlj.schema.editor.dictionary.tools.importtool.ui;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.common.ContextAttributeKeys;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 

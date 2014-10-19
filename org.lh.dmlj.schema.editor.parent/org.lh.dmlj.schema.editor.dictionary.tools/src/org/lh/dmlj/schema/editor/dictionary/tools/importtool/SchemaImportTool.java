@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools._import.tool;
+package org.lh.dmlj.schema.editor.dictionary.tools.importtool;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,16 +27,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.lh.dmlj.schema.editor.dictionary.tools._import.common.ContextAttributeKeys;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.CatalogElementDataCollector;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.CatalogRecordDataCollector;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.CatalogSystemOwnedIndexDataCollector;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.CatalogUserOwnedSetDataCollector;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.DictionaryAreaDataCollector;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.DictionaryElementDataCollector;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.DictionaryRecordDataCollector;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.DictionarySetDataCollector;
-import org.lh.dmlj.schema.editor.dictionary.tools._import.tool.collector.SchemaDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.CatalogElementDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.CatalogRecordDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.CatalogSystemOwnedIndexDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.CatalogUserOwnedSetDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.DictionaryAreaDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.DictionaryElementDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.DictionaryRecordDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.DictionarySetDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.SchemaDataCollector;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;

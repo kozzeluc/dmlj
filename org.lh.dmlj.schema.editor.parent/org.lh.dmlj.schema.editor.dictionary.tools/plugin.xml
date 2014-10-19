@@ -11,13 +11,13 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.lh.dmlj.schema.editor.preference.ImportPage"
-            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.DictionaryPreferencePage"
+            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.ui.DictionaryPreferencePage"
             id="org.lh.dmlj.schema.editor.dictionary.tools.main.page"
             name="Dictionary">
       </page>
       <page
             category="org.lh.dmlj.schema.editor.dictionary.tools.main.page"
-            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.DriverInformationPage"
+            class="org.lh.dmlj.schema.editor.dictionary.tools.preference.ui.DriverInformationPage"
             id="org.lh.dmlj.schema.editor.dictionary.tools.driver.page"
             name="Driver">
       </page>
@@ -26,20 +26,20 @@
          point="org.lh.dmlj.schema.editor.core.import">
       <importTools>
          <importTool
-               class="org.lh.dmlj.schema.editor.dictionary.tools._import.tool.SchemaImportTool"
+               class="org.lh.dmlj.schema.editor.dictionary.tools.importtool.SchemaImportTool"
                description="Import or update a CA IDMS/DB schema from an IDMS dictionary on your mainframe."
                id="org.lh.dmlj.schema.editor.dictionary.tools.import.importTool1"
                name="schemaImportTool"
                source="an IDMS dictionary on your mainframe">
             <preOptionsPages>
                <dataEntryPage
-                     class="org.lh.dmlj.schema.editor.dictionary.tools._import.page.DictionarySelectionPage"
+                     class="org.lh.dmlj.schema.editor.dictionary.tools.importtool.ui.DictionarySelectionPage"
                      id="org.lh.dmlj.schema.editor.dictionary.tools.import.dataEntryPage1"
                      message="Select a dictionary"
                      name="dictionarySelectionPage">
                </dataEntryPage>
                <dataEntryPage
-                     class="org.lh.dmlj.schema.editor.dictionary.tools._import.page.SchemaSelectionPage"
+                     class="org.lh.dmlj.schema.editor.dictionary.tools.importtool.ui.SchemaSelectionPage"
                      id="org.lh.dmlj.schema.editor.dictionary.tools.import.dataEntryPage2"
                      message="Select a schema from the dictionary"
                      name="schemaSelectionPage">

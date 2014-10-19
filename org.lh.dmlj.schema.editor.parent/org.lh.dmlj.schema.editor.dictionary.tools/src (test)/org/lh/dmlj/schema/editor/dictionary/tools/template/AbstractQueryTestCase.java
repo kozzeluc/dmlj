@@ -1,21 +1,3 @@
-package org.lh.dmlj.schema.editor.dictionary.tools.template;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
-import org.lh.dmlj.schema.editor.dictionary.tools.preference.IDefaultDictionaryPropertyProvider;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
-
 /**
  * Copyright (C) 2014  Luc Hermans
  * 
@@ -33,7 +15,26 @@ import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
  * Contact information: kozzeluc@gmail.com.
  */
 
-public abstract class AbstractQueryTest {
+package org.lh.dmlj.schema.editor.dictionary.tools.template;
+
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
+import org.lh.dmlj.schema.editor.dictionary.tools.preference.IDefaultDictionaryPropertyProvider;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
+
+public abstract class AbstractQueryTestCase {
 
 	public static void assertEquals(List<String> expectedLines, List<String> actualLines) {
 		for (int i = 0; i < expectedLines.size() && i < actualLines.size(); i++) {

@@ -28,6 +28,7 @@ import java.util.List;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ui.PromptForPasswordDialog;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
 public class ImportSession {
