@@ -47,7 +47,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -61,7 +61,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
 import org.lh.dmlj.schema.ConnectionLabel;
@@ -653,11 +652,11 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		final IWorkbenchWindow workbenchWindow = 
 			workbench.getActiveWorkbenchWindow();				
-		WorkspaceModifyOperation operation =
-			new WorkspaceModifyOperation() {
+		
+		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
 			
 			@Override
-			protected void execute(IProgressMonitor progressMonitor) {
+			public void run(IProgressMonitor progressMonitor) {
 				
 				progressMonitor.beginTask(updateMode ? "Update Schema" : "Import Schema", 100);				
 				
@@ -748,7 +747,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		};		
 			
 		try {
-			new ProgressMonitorDialog(getShell()).run(false, false, operation);
+			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			Throwable cause = e.getCause();
