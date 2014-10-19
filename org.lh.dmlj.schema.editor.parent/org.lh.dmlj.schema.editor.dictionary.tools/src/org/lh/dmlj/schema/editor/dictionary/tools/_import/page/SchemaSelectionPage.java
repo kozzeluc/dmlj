@@ -154,12 +154,16 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 	}
 
 	private void fillTableWithCursorBusy() {
+		final Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
 		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
 			@Override
 			public void run(IProgressMonitor monitor) 
 				throws InvocationTargetException, InterruptedException {
 				
+				monitor.beginTask("Building valid schema list for dictionary " + 
+								  dictionary.getId() + "...", IProgressMonitor.UNKNOWN);
 				fillTable();
+				monitor.done();
 			}};
 		Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 	}

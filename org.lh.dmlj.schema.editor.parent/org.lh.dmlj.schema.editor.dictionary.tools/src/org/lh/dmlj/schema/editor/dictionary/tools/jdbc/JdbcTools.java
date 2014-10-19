@@ -104,7 +104,10 @@ public abstract class JdbcTools {
 			public void run(IProgressMonitor monitor) 
 				throws InvocationTargetException, InterruptedException {
 				
+				monitor.beginTask("Testing connection for dictionary " + 
+								  dictionary.getId() + "...", IProgressMonitor.UNKNOWN);
 				result[0] = testConnection(dictionary);
+				monitor.done();
 			}};
 		org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 		// display the result after making sure the 'Operation in progress' window is no longer 
