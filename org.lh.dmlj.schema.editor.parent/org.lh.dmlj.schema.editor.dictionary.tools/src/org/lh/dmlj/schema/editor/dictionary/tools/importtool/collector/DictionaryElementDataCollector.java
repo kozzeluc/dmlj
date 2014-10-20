@@ -106,7 +106,7 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 			// CMT-ID-044 == -11: INDEXED BY (SDES-044 and NAMEDES-186 only)
 			if (sdes_044.getCmtId_044() == -11) {
 				// the index name appears to be in the ASF-FIELD-NAME-044 field (position 5)
-				list.add(sdes_044.getAsfFieldName_044());
+				list.add(JdbcTools.removeTrailingSpaces(sdes_044.getAsfFieldName_044()));
 			}							
 		}
 		return list;
