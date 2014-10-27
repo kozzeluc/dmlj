@@ -1,0 +1,42 @@
+<%
+/**
+ * Copyright (C) 2014  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program.  If
+ * not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contact information: kozzeluc@gmail.com.
+ */
+%>
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+        class="ViaSetListQueryTemplate"
+        skeleton="query-template.skeleton"%>
+<%
+Object[] args = (Object[]) argument;
+String sysdirlSchema = (String) args[0];
+String schemaName = (String) args[1];
+int schemaVersion = ((Integer) args[2]).intValue();
+%>
+SELECT S_010.ROWID AS S_010_ROWID,
+       SRCD_113.ROWID AS SRCD_113_ROWID,
+       SAM_056.ROWID AS SAM_056_ROWID,
+       SMR_052.ROWID AS SMR_052_ROWID,
+       * 
+FROM "<%= sysdirlSchema %>"."S-010" AS S_010,
+     "<%= sysdirlSchema %>"."SRCD-113" AS SRCD_113,
+     "<%= sysdirlSchema %>"."SAM-056" AS SAM_056,
+     "<%= sysdirlSchema %>"."SMR-052" AS SMR_052
+WHERE S_010.S_NAM_010 = '<%= schemaName %>' AND
+      S_010.S_SER_010 = <%= schemaVersion %> AND
+      "S-SRCD" AND
+      FIRST "SRCD-SAM" AND
+      "SRCD-SMR" AND
+      SMR_052.VIA_052 = 1 AND SMR_052.SET_NAM_052 <> 'CALC'

@@ -17,14 +17,18 @@
 package org.lh.dmlj.schema.editor;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -32,7 +36,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.IProgressService;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.service.ServicesPlugin;
@@ -181,6 +187,12 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		return folder;
 	}	
 
+	public DateFormat getDateFormat() {
+		String pattern = 
+			getPreferenceStore().getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		return new SimpleDateFormat(pattern);
+	}
+	
 	public Font getFigureFont() {
 		return figureFont;
 	}
@@ -218,6 +230,16 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		return logDebugMessages;
 	}
 	
+	public void runWithOperationInProgressIndicator(IRunnableWithProgress runnableWithProgress) {
+		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+		try {
+			progressService.runInUI(progressService, runnableWithProgress, null);
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES)) {
 			logDebugMessages = ((Boolean) event.getNewValue()).booleanValue();
@@ -281,6 +303,6 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		
 		plugin = null;
 		super.stop(context);
-	}
+	}	
 
 }

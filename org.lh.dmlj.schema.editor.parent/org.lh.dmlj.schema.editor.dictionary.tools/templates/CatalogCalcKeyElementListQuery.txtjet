@@ -1,0 +1,48 @@
+<%
+/**
+ * Copyright (C) 2014  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program.  If
+ * not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contact information: kozzeluc@gmail.com.
+ */
+%>
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+        class="CatalogCalcKeyElementListQueryTemplate"
+        skeleton="query-template.skeleton"%>
+SELECT TABLE.ROWID AS TABLE_1050_ROWID,
+       INDEX.ROWID AS INDEX_1041_ROWID,
+       INDEXKEY.ROWID AS INDEXKEY_1042_ROWID,
+       TABLE.AREA AS TABLE_1050_AREA,
+	   TABLE.LOCMODE AS TABLE_1050_LOCMODE,
+	   TABLE.NAME AS TABLE_1050_NAME,
+	   TABLE.TABLEID AS TABLE_1050_TABLEID,
+	   INDEX.AREA AS INDEX_1041_AREA,
+	   INDEX.COMPRESS AS INDEX_1041_COMPRESS,
+	   INDEX.DISPLACEMENT AS INDEX_1041_DISPLACEMENT,
+	   INDEX.IXBLKCONTAINS AS INDEX_1041_IXBLKCONTAINS,
+	   INDEX.NAME AS INDEX_1041_NAME,
+	   INDEX.UNIQUE AS INDEX_1041_UNIQUE,	
+	   INDEXKEY.COLUMN AS INDEXKEY_1042_COLUMN,
+	   INDEXKEY.SORTORDER AS INDEXKEY_1042_SORTORDER 
+FROM SYSTEM.TABLE AS TABLE_1050, 
+	 SYSTEM.INDEX AS INDEX_1041,
+	 SYSTEM.INDEXKEY AS INDEXKEY_1042
+WHERE TABLE.SCHEMA = 'SYSTEM' AND 
+      INDEX.SCHEMA = 'SYSTEM' AND
+      INDEX.TABLE = TABLE.NAME AND
+      INDEX.NAME = 'HASH' AND
+      INDEXKEY.SCHEMA = 'SYSTEM' AND
+      INDEXKEY.TABLE = TABLE.NAME AND
+      INDEXKEY.NAME = INDEX.NAME
+ORDER BY TABLE.NAME,
+		 INDEXKEY.SEQUENCE
