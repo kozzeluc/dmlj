@@ -44,6 +44,7 @@ public class Plugin extends AbstractUIPlugin implements IDefaultDictionaryProper
 	private static final String DRIVER_NOT_INSTALLED = "NOT INSTALLED";
 	
 	private String driverVersion = DRIVER_NOT_INSTALLED;
+	private boolean driverInstalledInThisSession = false;
 	
 	private String driverBundleId ="N/A";
 	private String driverBundleVersion ="N/A";
@@ -128,6 +129,7 @@ public class Plugin extends AbstractUIPlugin implements IDefaultDictionaryProper
 			driverBundleName = bundle.getHeaders().get("Bundle-Name");
 			driverBundleVendor = bundle.getHeaders().get("Bundle-Vendor");
 		} catch (Throwable t) {
+			org.lh.dmlj.schema.editor.Plugin.logError("IDMS JDBC Driver could not be loaded", t);
 		}
 	}
 
@@ -145,6 +147,10 @@ public class Plugin extends AbstractUIPlugin implements IDefaultDictionaryProper
 
 	public boolean isDriverInstalled() {
 		return !driverVersion.equals(DRIVER_NOT_INSTALLED);
+	}
+	
+	public boolean isDriverInstalledInThisSession() {
+		return driverInstalledInThisSession;
 	}
 
 	private void prepareDictionaryFolder() {
@@ -210,6 +216,10 @@ public class Plugin extends AbstractUIPlugin implements IDefaultDictionaryProper
 		} catch (Throwable t) {
 			throw new RuntimeException(t);
 		}
+	}
+	
+	public void setDriverInstalledInThisSession(boolean driverInstalledInThisSession) {
+		this.driverInstalledInThisSession = driverInstalledInThisSession;
 	}
 
 	public void start(BundleContext context) throws Exception {

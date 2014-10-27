@@ -17,10 +17,13 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.preference.ui;
 
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -38,23 +41,28 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
+import org.lh.dmlj.schema.editor.dictionary.tools.jar.JarHelper;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceConstants;
 
 public class DictionaryPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	
-	private Table table;
-	private Text textDefaultSchema;
-	private Text textDefaultQueryDbkeyListSizeMaximum;
 	private Button btnAddDictionary;
 	private Button btnDeleteDictionary;
 	private Button btnEditDictionary;
-	private Button btnTestConnection;
+	private Button btnInstallDriver;
+	private Button btnTestConnection;	
+	private Label lblIdmsJdbcDriverNotAvailable;
+	private Table table;
 	
-	private File dictionaryFolder;
 	private List<Dictionary> dictionaries;
+	private File dictionaryFolder;
+	private Text textDefaultQueryDbkeyListSizeMaximum;
+	private Text textDefaultSchema;
 
 	public DictionaryPreferencePage() {
 		super();
@@ -101,6 +109,33 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		final Composite container = new Composite(parent, SWT.NONE);		
 		GridLayout layout = new GridLayout(3, false);
 		container.setLayout(layout);
+		
+		if (!Plugin.getDefault().isDriverInstalled()) {
+			
+			lblIdmsJdbcDriverNotAvailable = new Label(container, SWT.NONE);
+			lblIdmsJdbcDriverNotAvailable.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+			lblIdmsJdbcDriverNotAvailable.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+			lblIdmsJdbcDriverNotAvailable.setText("IDMS JDBC driver is NOT available ----->");
+		
+			btnInstallDriver = new Button(container, SWT.NONE);
+			btnInstallDriver.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (btnInstallDriver.getText().contains("Install") && installDriver()) {
+						btnInstallDriver.setText("Please restart your workbench !");
+					} else if (btnInstallDriver.getText().contains("restart")) {
+						restartWorkbench();
+					}
+				}
+			});
+			btnInstallDriver.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+			if (Plugin.getDefault().isDriverInstalledInThisSession()) {
+				btnInstallDriver.setText("Please restart your workbench !");
+			} else {
+				btnInstallDriver.setText("Install Driver NOW...");
+			}
+			btnInstallDriver.setFocus();
+		}		
 		
 		Label lblDefinedDictionaries = new Label(container, SWT.NONE);
 		lblDefinedDictionaries.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
@@ -299,11 +334,48 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		
 	}
 	
+	private boolean installDriver() {
+		final UploadDriverDialog dialog = new UploadDriverDialog(getShell());
+		if (dialog.open() == IDialogConstants.CANCEL_ID) {
+			return false;
+		}
+		IRunnableWithProgress task = new IRunnableWithProgress() {		
+			@Override
+			public void run(IProgressMonitor progressMonitor) {
+				try {
+					progressMonitor.beginTask("Installing IDMS JDBC driver...", 
+											  IProgressMonitor.UNKNOWN);
+					File src = dialog.getSelectedJarFile();
+					URI uri = new URI(System.getProperty("eclipse.home.location"));
+					File dest = new File(new File(new File(uri), "dropins"), src.getName());
+					JarHelper.copyAndAddOSGiHeadersToManifest(src, dest);
+					Plugin.getDefault().setDriverInstalledInThisSession(true);
+					progressMonitor.done();
+				} catch (Throwable t) {
+					throw new RuntimeException(t);
+				}
+			}
+		};
+		try {
+			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(task);
+			return true;
+		} catch (Throwable e) {
+			e.printStackTrace();
+			Throwable cause = e.getCause();
+			if (cause != null) {
+				MessageDialog.openError(getShell(), "Install IDMS JDBC Driver", cause.getMessage());
+			} else {
+				MessageDialog.openError(getShell(), "File Creation", e.getMessage());
+			}
+			return false;
+		}	
+	}
+
 	@Override
 	protected void performApply() {
 		storeValues();
 	}
-	
+
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
@@ -313,6 +385,10 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 	@Override
 	public boolean performOk() {
 		return storeValues();		
+	}
+
+	private void restartWorkbench() {
+		PlatformUI.getWorkbench().restart();		
 	}
 
 	private boolean storeValues() {
