@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Diagrams" link_to="toc/toc_main.xml#diagrams"> 
+ <topic href="html/diagrams/new_diagram.html" label="Creating a new Diagram">
+ </topic>
+</toc>
