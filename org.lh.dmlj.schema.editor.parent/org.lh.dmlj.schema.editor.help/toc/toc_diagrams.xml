@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Diagrams" link_to="toc/toc_main.xml#diagrams"> 
+<toc label="Diagrams" link_to="toc/toc_main.xml#diagrams">
+   <topic href="html/diagrams/schema_editor.html" label="Schema Editor">
+      <topic href="html/diagrams/schema_editor.html#opening" label="Opening the Schema Editor">
+      </topic>
+      <topic href="html/diagrams/schema_editor.html#schema_properties" label="Schema properties">
+         <topic href="html/diagrams/schema_editor.html#rulers_and_guides" label="Rulers and Guides">
+         </topic>
+         <topic href="html/diagrams/schema_editor.html#grid" label="Grid">
+         </topic>
+         <topic href="html/diagrams/schema_editor.html#snap_to_geo" label="Snap to Geometry">
+         </topic>
+      </topic>
+      <topic href="html/diagrams/schema_editor.html#zooming" label="Zooming">
+      </topic>
+      <topic href="html/diagrams/schema_editor.html#undo_redo" label="Undo/Redo">
+      </topic>
+      <topic href="html/diagrams/schema_editor.html#saving" label="Saving the diagram">
+      </topic>
+      <topic href="html/diagrams/schema_editor.html#palette" label="The Palette">
+      </topic>
+      <topic href="html/diagrams/schema_editor.html#figures" label="Working with Figures">
+      </topic>
+      <topic href="html/diagrams/schema_editor.html#connections" label="Working with Connections">
+      </topic>
+   </topic> 
  <topic href="html/diagrams/new_diagram.html" label="Creating a new Diagram">
  </topic>
 </toc>
