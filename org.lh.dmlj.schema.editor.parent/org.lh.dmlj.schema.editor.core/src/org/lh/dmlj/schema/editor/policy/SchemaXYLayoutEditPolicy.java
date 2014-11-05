@@ -30,6 +30,7 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommand;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
@@ -78,33 +79,41 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		
-		if (request.getNewObjectType() != DiagramLabel.class ||
+		if (request.getNewObjectType() != DiagramLabel.class && 
+			request.getNewObjectType() != SchemaRecord.class ||
+			request.getNewObjectType() == DiagramLabel.class && 
 			schema.getDiagramData().getLabel() != null) {
 			
 			return null;
 		}	
 		
-		String organisation = Plugin.getDefault()
-									.getPreferenceStore()
-									.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
-		String lastModified = null;
-		if (Plugin.getDefault()
-				  .getPreferenceStore()
-				  .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
-			
-			String pattern = 
-				Plugin.getDefault()
+		if (request.getNewObjectType() == DiagramLabel.class) {
+			String organisation = Plugin.getDefault()
+										.getPreferenceStore()
+										.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
+			String lastModified = null;
+			if (Plugin.getDefault()
 					  .getPreferenceStore()
-					  .getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
-			DateFormat format = new SimpleDateFormat(pattern);
-			lastModified = 
-				"Last modified: " + format.format(System.currentTimeMillis()) + " (not saved)";
+					  .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
+				
+				String pattern = 
+					Plugin.getDefault()
+						  .getPreferenceStore()
+						  .getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+				DateFormat format = new SimpleDateFormat(pattern);
+				lastModified = 
+					"Last modified: " + format.format(System.currentTimeMillis()) + " (not saved)";
+			}
+			Dimension size = 
+				DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(), 
+												  schema.getDescription(), lastModified); 
+			return new CreateDiagramLabelCommand(schema, request.getLocation(), size);
+		} else if (request.getNewObjectType() == SchemaRecord.class) {
+			// TODO create a CreateRecordCommand (constructor arguments: schema and 
+			//      request.getLocation()) and return it
+			System.out.println("a CreateRecordCommand will be created in the future");
 		}
-		Dimension size = 
-			DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(), 
-											  schema.getDescription(), lastModified); 
-		
-		return new CreateDiagramLabelCommand(schema, request.getLocation(), size);
+		return null;
 	}	
 	
 }

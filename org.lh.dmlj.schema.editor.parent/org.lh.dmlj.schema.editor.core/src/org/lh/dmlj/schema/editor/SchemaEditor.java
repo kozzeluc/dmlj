@@ -124,6 +124,7 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
@@ -751,7 +752,18 @@ public class SchemaEditor
         									  new SimpleFactory(DiagramLabel.class), 
         									  label16, 
         									  label24);
-	        
+	    
+        // record creation tool
+        ImageDescriptor record16 = 
+        	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/record16.gif"));
+        ImageDescriptor record24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/record24.gif"));
+        CombinedTemplateCreationEntry recordCreationTool = 
+        	new CombinedTemplateCreationEntry("Record", "Add record", 
+        									  new SimpleFactory(SchemaRecord.class), record16, 
+        									  record24);
+        recordCreationTool.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);
+        
         // chained set creation tool
         ImageDescriptor chainedSet16 = 
         	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/chainedSet16.gif"));
@@ -821,6 +833,11 @@ public class SchemaEditor
         PaletteDrawer createGeneralItemsDrawer = new PaletteDrawer("General");
         createGeneralItemsDrawer.add(labelCreationTool);
         palette.add(createGeneralItemsDrawer);
+        
+        // Records drawer
+        PaletteDrawer createRecordItemsDrawer = new PaletteDrawer("Records");
+        createRecordItemsDrawer.add(recordCreationTool);
+        palette.add(createRecordItemsDrawer);
         
         // Sets drawer
         PaletteDrawer createSetItemsDrawer = new PaletteDrawer("Sets");
