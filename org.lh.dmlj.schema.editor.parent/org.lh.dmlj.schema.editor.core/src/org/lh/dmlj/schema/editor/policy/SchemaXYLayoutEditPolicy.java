@@ -33,6 +33,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommand;
+import org.lh.dmlj.schema.editor.command.CreateRecordCommand;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
 import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
 import org.lh.dmlj.schema.editor.part.AbstractDiagramNodeEditPart;
@@ -109,9 +110,7 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 												  schema.getDescription(), lastModified); 
 			return new CreateDiagramLabelCommand(schema, request.getLocation(), size);
 		} else if (request.getNewObjectType() == SchemaRecord.class) {
-			// TODO create a CreateRecordCommand (constructor arguments: schema and 
-			//      request.getLocation()) and return it
-			System.out.println("a CreateRecordCommand will be created in the future");
+			return new CreateRecordCommand(schema, request.getLocation());
 		}
 		return null;
 	}	

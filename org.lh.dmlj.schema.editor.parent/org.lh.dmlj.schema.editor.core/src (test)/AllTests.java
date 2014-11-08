@@ -29,6 +29,7 @@ import org.lh.dmlj.schema.editor.command.CreateConnectorCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateIndexCommandTest;
+import org.lh.dmlj.schema.editor.command.CreateRecordCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateSetCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorCommandTest;
@@ -86,6 +87,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	CreateDiagramLabelCommandTest.class,
 	CreateGuideCommandTest.class,
 	CreateIndexCommandTest.class,
+	CreateRecordCommandTest.class,
 	CreateSetCommandTest.class,
 	DeleteBendpointCommandTest.class,
 	DeleteConnectorCommandTest.class,
