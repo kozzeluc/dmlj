@@ -42,6 +42,19 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 	@Override
 	public void afterAddItem(EObject owner, EReference reference, Object item) {
 		if (owner == getModel().getSchema() && 
+			reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
+			
+			// a record is added; create a child edit part for it if the record is stored in the 
+			// model area
+			SchemaRecord record = (SchemaRecord) item;			
+			SchemaArea area = record.getAreaSpecification().getArea();
+			if (area == getModel()) {					
+				EditPart child = SchemaTreeEditPartFactory.createEditPart(record, modelChangeProvider);					
+				int index = getInsertionIndex(getChildren(), record, getChildNodeTextProviderOrder());					
+				addChild(child, index);					
+			}
+			
+		} else if (owner == getModel().getSchema() && 
 			reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {
 			
 			// a set is added; if it is a system owned indexed set, make sure we create a child 
