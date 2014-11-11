@@ -69,13 +69,15 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			EditPart child = SchemaTreeEditPartFactory.createEditPart(record, modelChangeProvider);
 			addChild(child, i);
 			
-			// second, when a record is added, an AREA is also created and added; create an edit  
-			// part for the record's area and add it as a child as well - THIS MAY CHANGE IN THE 
-			// FUTURE
-			SchemaArea area = record.getAreaSpecification().getArea();
-			i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());
-			EditPart child2 = SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
-			addChild(child2, i);			
+			// second, when a record is added, an AREA might also have been created and added (this
+			// is the case when the schema has exactly 1 area and exactly 1 record at this point); 
+			// create an edit part for the record's area and add it as a child as well
+			if (getModel().getAreas().size() == 1 && getModel().getRecords().size() == 1) {
+				SchemaArea area = record.getAreaSpecification().getArea();
+				i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());
+				EditPart child2 = SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
+				addChild(child2, i);
+			}
 		
 		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
 			
