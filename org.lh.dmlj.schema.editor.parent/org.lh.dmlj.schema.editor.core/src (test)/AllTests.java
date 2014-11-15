@@ -52,6 +52,7 @@ import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetShortAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommandTest;
+import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRoleTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRoleTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
@@ -121,6 +122,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	SetObjectAttributeCommandTest.class,
 	SetShortAttributeCommandTest.class,
 	SetZoomLevelCommandTest.class,
+	SwapRecordElementsCommandTest.class,
 	
 	// edit part tests
 	AbstractSchemaTreeEditPartTest.class,
