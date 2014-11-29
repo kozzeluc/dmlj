@@ -651,25 +651,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSchemaRecord_Name() {
-		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSchemaRecord_Id() {
-		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSchemaRecord_ControlLength() {
+	public EAttribute getSchemaRecord_Calc() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -678,16 +660,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSchemaRecord_DataLength() {
-		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSchemaRecord_StorageMode() {
+	public EAttribute getSchemaRecord_Name() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -696,25 +669,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSchemaRecord_LocationMode() {
-		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSchemaRecord_MinimumRootLength() {
-		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSchemaRecord_MinimumFragmentLength() {
+	public EAttribute getSchemaRecord_Id() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -723,8 +678,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSchemaRecord_PrefixLength() {
-		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(10);
+	public EAttribute getSchemaRecord_ControlLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -732,7 +687,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSchemaRecord_Fragmented() {
+	public EAttribute getSchemaRecord_DataLength() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -741,88 +696,70 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getSchemaRecord_Direct() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_StorageMode() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_LocationMode() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_MinimumRootLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_MinimumFragmentLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_PrefixLength() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_Fragmented() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getSchemaRecord_CalcKey() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(13);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSchemaRecord_Schema() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(21);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSchemaRecord_SynonymName() {
-		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(22);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSchemaRecord_SynonymVersion() {
-		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(23);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSchemaRecord_ViaSpecification() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(24);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSchemaRecord_OwnerRoles() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(17);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSchemaRecord_MemberRoles() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(16);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSchemaRecord_RootElements() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(20);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSchemaRecord_Procedures() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(18);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSchemaRecord_Keys() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(15);
 	}
 
@@ -831,8 +768,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSchemaRecord_AreaSpecification() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(12);
+	public EReference getSchemaRecord_Schema() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(23);
 	}
 
 	/**
@@ -840,7 +777,88 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSchemaRecord_Elements() {
+	public EAttribute getSchemaRecord_SynonymName() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(24);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_SynonymVersion() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(25);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSchemaRecord_Via() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(26);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_ViaSpecification() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(27);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_OwnerRoles() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(19);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_MemberRoles() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(18);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_RootElements() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(22);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_Procedures() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(20);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_Keys() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(17);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_AreaSpecification() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(14);
 	}
 
@@ -849,8 +867,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getSchemaRecord_Elements() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(16);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getSchemaRecord_Roles() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(19);
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(21);
 	}
 
 	/**
@@ -868,7 +895,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getSet_Name() {
-		return (EAttribute)setEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)setEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -885,8 +912,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getSet_MultipleMember() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getSet_Order() {
-		return (EAttribute)setEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)setEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -895,7 +931,16 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getSet_Schema() {
-		return (EReference)setEClass.getEStructuralFeatures().get(6);
+		return (EReference)setEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSet_Sorted() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -904,7 +949,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getSet_Owner() {
-		return (EReference)setEClass.getEStructuralFeatures().get(5);
+		return (EReference)setEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -913,7 +958,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getSet_SystemOwner() {
-		return (EReference)setEClass.getEStructuralFeatures().get(7);
+		return (EReference)setEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -931,7 +976,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getSet_ViaMembers() {
-		return (EReference)setEClass.getEStructuralFeatures().get(8);
+		return (EReference)setEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -2569,8 +2614,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		schemaRecordEClass = createEClass(SCHEMA_RECORD);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__BASE_NAME);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__BASE_VERSION);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__CALC);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__CONTROL_LENGTH);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__DATA_LENGTH);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__DIRECT);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__FRAGMENTED);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__ID);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__LOCATION_MODE);
@@ -2591,16 +2638,19 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(schemaRecordEClass, SCHEMA_RECORD__SCHEMA);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__SYNONYM_NAME);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__SYNONYM_VERSION);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__VIA);
 		createEReference(schemaRecordEClass, SCHEMA_RECORD__VIA_SPECIFICATION);
 
 		setEClass = createEClass(SET);
 		createEReference(setEClass, SET__INDEXED_SET_MODE_SPECIFICATION);
 		createEReference(setEClass, SET__MEMBERS);
 		createEAttribute(setEClass, SET__MODE);
+		createEAttribute(setEClass, SET__MULTIPLE_MEMBER);
 		createEAttribute(setEClass, SET__NAME);
 		createEAttribute(setEClass, SET__ORDER);
 		createEReference(setEClass, SET__OWNER);
 		createEReference(setEClass, SET__SCHEMA);
+		createEAttribute(setEClass, SET__SORTED);
 		createEReference(setEClass, SET__SYSTEM_OWNER);
 		createEReference(setEClass, SET__VIA_MEMBERS);
 
@@ -2906,8 +2956,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEClass(schemaRecordEClass, SchemaRecord.class, "SchemaRecord", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSchemaRecord_BaseName(), ecorePackage.getEString(), "baseName", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_BaseVersion(), ecorePackage.getEShort(), "baseVersion", "0", 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_Calc(), ecorePackage.getEBoolean(), "calc", null, 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_ControlLength(), ecorePackage.getEShort(), "controlLength", "-1", 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_DataLength(), ecorePackage.getEShort(), "dataLength", "-1", 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_Direct(), ecorePackage.getEBoolean(), "direct", null, 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_Fragmented(), ecorePackage.getEBoolean(), "fragmented", null, 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_Id(), ecorePackage.getEShort(), "id", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_LocationMode(), this.getLocationMode(), "locationMode", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2928,6 +2980,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getSchemaRecord_Schema(), this.getSchema(), this.getSchema_Records(), "schema", null, 1, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_SynonymName(), ecorePackage.getEString(), "synonymName", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_SynonymVersion(), ecorePackage.getEShort(), "synonymVersion", "0", 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_Via(), ecorePackage.getEBoolean(), "via", null, 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_ViaSpecification(), this.getViaSpecification(), this.getViaSpecification_Record(), "viaSpecification", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(schemaRecordEClass, this.getElement(), "getElement", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -2940,10 +2993,12 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getSet_IndexedSetModeSpecification(), this.getIndexedSetModeSpecification(), this.getIndexedSetModeSpecification_Set(), "indexedSetModeSpecification", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_Members(), this.getMemberRole(), this.getMemberRole_Set(), "members", null, 1, -1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSet_Mode(), this.getSetMode(), "mode", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSet_MultipleMember(), ecorePackage.getEBoolean(), "multipleMember", null, 0, 1, Set.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSet_Name(), ecorePackage.getEString(), "name", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSet_Order(), this.getSetOrder(), "order", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_Owner(), this.getOwnerRole(), this.getOwnerRole_Set(), "owner", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_Schema(), this.getSchema(), this.getSchema_Sets(), "schema", null, 1, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSet_Sorted(), ecorePackage.getEBoolean(), "sorted", null, 0, 1, Set.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_SystemOwner(), this.getSystemOwner(), this.getSystemOwner_Set(), "systemOwner", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_ViaMembers(), this.getViaSpecification(), this.getViaSpecification_Set(), "viaMembers", null, 0, -1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

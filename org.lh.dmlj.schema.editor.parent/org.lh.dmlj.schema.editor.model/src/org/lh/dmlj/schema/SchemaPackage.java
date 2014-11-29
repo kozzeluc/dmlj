@@ -1930,13 +1930,22 @@ public interface SchemaPackage extends EPackage {
 	int SCHEMA_RECORD__BASE_VERSION = DIAGRAM_NODE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Calc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__CALC = DIAGRAM_NODE_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Control Length</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__CONTROL_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 3;
+	int SCHEMA_RECORD__CONTROL_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Data Length</b></em>' attribute.
@@ -1945,7 +1954,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__DATA_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 4;
+	int SCHEMA_RECORD__DATA_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Direct</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__DIRECT = DIAGRAM_NODE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Fragmented</b></em>' attribute.
@@ -1954,7 +1972,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__FRAGMENTED = DIAGRAM_NODE_FEATURE_COUNT + 5;
+	int SCHEMA_RECORD__FRAGMENTED = DIAGRAM_NODE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -1963,7 +1981,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__ID = DIAGRAM_NODE_FEATURE_COUNT + 6;
+	int SCHEMA_RECORD__ID = DIAGRAM_NODE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Location Mode</b></em>' attribute.
@@ -1972,7 +1990,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__LOCATION_MODE = DIAGRAM_NODE_FEATURE_COUNT + 7;
+	int SCHEMA_RECORD__LOCATION_MODE = DIAGRAM_NODE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Minimum Fragment Length</b></em>' attribute.
@@ -1981,7 +1999,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__MINIMUM_FRAGMENT_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 8;
+	int SCHEMA_RECORD__MINIMUM_FRAGMENT_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Minimum Root Length</b></em>' attribute.
@@ -1990,7 +2008,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__MINIMUM_ROOT_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 9;
+	int SCHEMA_RECORD__MINIMUM_ROOT_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1999,7 +2017,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__NAME = DIAGRAM_NODE_FEATURE_COUNT + 10;
+	int SCHEMA_RECORD__NAME = DIAGRAM_NODE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Prefix Length</b></em>' attribute.
@@ -2008,7 +2026,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__PREFIX_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 11;
+	int SCHEMA_RECORD__PREFIX_LENGTH = DIAGRAM_NODE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Storage Mode</b></em>' attribute.
@@ -2017,7 +2035,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__STORAGE_MODE = DIAGRAM_NODE_FEATURE_COUNT + 12;
+	int SCHEMA_RECORD__STORAGE_MODE = DIAGRAM_NODE_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Area Specification</b></em>' reference.
@@ -2026,7 +2044,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__AREA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 13;
+	int SCHEMA_RECORD__AREA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Calc Key</b></em>' reference.
@@ -2035,7 +2053,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__CALC_KEY = DIAGRAM_NODE_FEATURE_COUNT + 14;
+	int SCHEMA_RECORD__CALC_KEY = DIAGRAM_NODE_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -2044,7 +2062,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__ELEMENTS = DIAGRAM_NODE_FEATURE_COUNT + 15;
+	int SCHEMA_RECORD__ELEMENTS = DIAGRAM_NODE_FEATURE_COUNT + 17;
 
 	/**
 	 * The feature id for the '<em><b>Keys</b></em>' containment reference list.
@@ -2053,7 +2071,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__KEYS = DIAGRAM_NODE_FEATURE_COUNT + 16;
+	int SCHEMA_RECORD__KEYS = DIAGRAM_NODE_FEATURE_COUNT + 18;
 
 	/**
 	 * The feature id for the '<em><b>Member Roles</b></em>' reference list.
@@ -2062,7 +2080,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__MEMBER_ROLES = DIAGRAM_NODE_FEATURE_COUNT + 17;
+	int SCHEMA_RECORD__MEMBER_ROLES = DIAGRAM_NODE_FEATURE_COUNT + 19;
 
 	/**
 	 * The feature id for the '<em><b>Owner Roles</b></em>' reference list.
@@ -2071,7 +2089,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__OWNER_ROLES = DIAGRAM_NODE_FEATURE_COUNT + 18;
+	int SCHEMA_RECORD__OWNER_ROLES = DIAGRAM_NODE_FEATURE_COUNT + 20;
 
 	/**
 	 * The feature id for the '<em><b>Procedures</b></em>' containment reference list.
@@ -2080,7 +2098,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__PROCEDURES = DIAGRAM_NODE_FEATURE_COUNT + 19;
+	int SCHEMA_RECORD__PROCEDURES = DIAGRAM_NODE_FEATURE_COUNT + 21;
 
 	/**
 	 * The feature id for the '<em><b>Roles</b></em>' reference list.
@@ -2089,7 +2107,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__ROLES = DIAGRAM_NODE_FEATURE_COUNT + 20;
+	int SCHEMA_RECORD__ROLES = DIAGRAM_NODE_FEATURE_COUNT + 22;
 
 	/**
 	 * The feature id for the '<em><b>Root Elements</b></em>' reference list.
@@ -2098,7 +2116,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__ROOT_ELEMENTS = DIAGRAM_NODE_FEATURE_COUNT + 21;
+	int SCHEMA_RECORD__ROOT_ELEMENTS = DIAGRAM_NODE_FEATURE_COUNT + 23;
 
 	/**
 	 * The feature id for the '<em><b>Schema</b></em>' container reference.
@@ -2107,7 +2125,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__SCHEMA = DIAGRAM_NODE_FEATURE_COUNT + 22;
+	int SCHEMA_RECORD__SCHEMA = DIAGRAM_NODE_FEATURE_COUNT + 24;
 
 	/**
 	 * The feature id for the '<em><b>Synonym Name</b></em>' attribute.
@@ -2116,7 +2134,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__SYNONYM_NAME = DIAGRAM_NODE_FEATURE_COUNT + 23;
+	int SCHEMA_RECORD__SYNONYM_NAME = DIAGRAM_NODE_FEATURE_COUNT + 25;
 
 	/**
 	 * The feature id for the '<em><b>Synonym Version</b></em>' attribute.
@@ -2125,7 +2143,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__SYNONYM_VERSION = DIAGRAM_NODE_FEATURE_COUNT + 24;
+	int SCHEMA_RECORD__SYNONYM_VERSION = DIAGRAM_NODE_FEATURE_COUNT + 26;
+
+	/**
+	 * The feature id for the '<em><b>Via</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__VIA = DIAGRAM_NODE_FEATURE_COUNT + 27;
 
 	/**
 	 * The feature id for the '<em><b>Via Specification</b></em>' containment reference.
@@ -2134,7 +2161,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__VIA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 25;
+	int SCHEMA_RECORD__VIA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 28;
 
 	/**
 	 * The number of structural features of the '<em>Record</em>' class.
@@ -2143,7 +2170,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 26;
+	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 29;
 
 	/**
 	 * The feature id for the '<em><b>Node Text</b></em>' attribute.
@@ -2182,13 +2209,22 @@ public interface SchemaPackage extends EPackage {
 	int SET__MODE = INODE_TEXT_PROVIDER_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Multiple Member</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__MULTIPLE_MEMBER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SET__NAME = INODE_TEXT_PROVIDER_FEATURE_COUNT + 3;
+	int SET__NAME = INODE_TEXT_PROVIDER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Order</b></em>' attribute.
@@ -2197,7 +2233,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__ORDER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 4;
+	int SET__ORDER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Owner</b></em>' containment reference.
@@ -2206,7 +2242,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__OWNER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 5;
+	int SET__OWNER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Schema</b></em>' container reference.
@@ -2215,7 +2251,16 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__SCHEMA = INODE_TEXT_PROVIDER_FEATURE_COUNT + 6;
+	int SET__SCHEMA = INODE_TEXT_PROVIDER_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Sorted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__SORTED = INODE_TEXT_PROVIDER_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>System Owner</b></em>' containment reference.
@@ -2224,7 +2269,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__SYSTEM_OWNER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 7;
+	int SET__SYSTEM_OWNER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Via Members</b></em>' reference list.
@@ -2233,7 +2278,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__VIA_MEMBERS = INODE_TEXT_PROVIDER_FEATURE_COUNT + 8;
+	int SET__VIA_MEMBERS = INODE_TEXT_PROVIDER_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>Set</em>' class.
@@ -2242,7 +2287,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET_FEATURE_COUNT = INODE_TEXT_PROVIDER_FEATURE_COUNT + 9;
+	int SET_FEATURE_COUNT = INODE_TEXT_PROVIDER_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
@@ -2687,6 +2732,17 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getSchemaRecord_BaseVersion();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#isCalc <em>Calc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Calc</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#isCalc()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_Calc();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2729,6 +2785,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSchemaRecord_DataLength();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#isDirect <em>Direct</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Direct</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#isDirect()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_Direct();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#getStorageMode <em>Storage Mode</em>}'.
@@ -2839,6 +2906,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSchemaRecord_SynonymVersion();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#isVia <em>Via</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Via</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#isVia()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_Via();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.SchemaRecord#getViaSpecification <em>Via Specification</em>}'.
@@ -2972,6 +3050,17 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getSet_Mode();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Set#isMultipleMember <em>Multiple Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Multiple Member</em>'.
+	 * @see org.lh.dmlj.schema.Set#isMultipleMember()
+	 * @see #getSet()
+	 * @generated
+	 */
+	EAttribute getSet_MultipleMember();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Set#getOrder <em>Order</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2992,6 +3081,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getSet_Schema();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Set#isSorted <em>Sorted</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Sorted</em>'.
+	 * @see org.lh.dmlj.schema.Set#isSorted()
+	 * @see #getSet()
+	 * @generated
+	 */
+	EAttribute getSet_Sorted();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.Set#getOwner <em>Owner</em>}'.
@@ -4931,6 +5031,14 @@ public interface SchemaPackage extends EPackage {
 		EAttribute SCHEMA_RECORD__BASE_VERSION = eINSTANCE.getSchemaRecord_BaseVersion();
 
 		/**
+		 * The meta object literal for the '<em><b>Calc</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__CALC = eINSTANCE.getSchemaRecord_Calc();
+
+		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4961,6 +5069,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SCHEMA_RECORD__DATA_LENGTH = eINSTANCE.getSchemaRecord_DataLength();
+
+		/**
+		 * The meta object literal for the '<em><b>Direct</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__DIRECT = eINSTANCE.getSchemaRecord_Direct();
 
 		/**
 		 * The meta object literal for the '<em><b>Storage Mode</b></em>' attribute feature.
@@ -5041,6 +5157,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SCHEMA_RECORD__SYNONYM_VERSION = eINSTANCE.getSchemaRecord_SynonymVersion();
+
+		/**
+		 * The meta object literal for the '<em><b>Via</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__VIA = eINSTANCE.getSchemaRecord_Via();
 
 		/**
 		 * The meta object literal for the '<em><b>Via Specification</b></em>' containment reference feature.
@@ -5141,6 +5265,14 @@ public interface SchemaPackage extends EPackage {
 		EAttribute SET__MODE = eINSTANCE.getSet_Mode();
 
 		/**
+		 * The meta object literal for the '<em><b>Multiple Member</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SET__MULTIPLE_MEMBER = eINSTANCE.getSet_MultipleMember();
+
+		/**
 		 * The meta object literal for the '<em><b>Order</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5155,6 +5287,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SET__SCHEMA = eINSTANCE.getSet_Schema();
+
+		/**
+		 * The meta object literal for the '<em><b>Sorted</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SET__SORTED = eINSTANCE.getSet_Sorted();
 
 		/**
 		 * The meta object literal for the '<em><b>Owner</b></em>' containment reference feature.

@@ -28,8 +28,10 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getBaseVersion <em>Base Version</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isCalc <em>Calc</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getControlLength <em>Control Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getDataLength <em>Data Length</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isDirect <em>Direct</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isFragmented <em>Fragmented</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getId <em>Id</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getLocationMode <em>Location Mode</em>}</li>
@@ -50,6 +52,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getSchema <em>Schema</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getSynonymName <em>Synonym Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getSynonymVersion <em>Synonym Version</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isVia <em>Via</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getViaSpecification <em>Via Specification</em>}</li>
  * </ul>
  * </p>
@@ -111,6 +114,21 @@ public interface SchemaRecord extends DiagramNode, INodeTextProvider<SchemaRecor
 	 * @generated
 	 */
 	void setBaseVersion(short value);
+
+	/**
+	 * Returns the value of the '<em><b>Calc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Calc</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Calc</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_Calc()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isCalc();
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -195,6 +213,21 @@ public interface SchemaRecord extends DiagramNode, INodeTextProvider<SchemaRecor
 	 * @generated
 	 */
 	short getDataLength();
+
+	/**
+	 * Returns the value of the '<em><b>Direct</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Direct</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Direct</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_Direct()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isDirect();
 
 	/**
 	 * Returns the value of the '<em><b>Storage Mode</b></em>' attribute.
@@ -442,6 +475,21 @@ public interface SchemaRecord extends DiagramNode, INodeTextProvider<SchemaRecor
 	 * @generated
 	 */
 	void setSynonymVersion(short value);
+
+	/**
+	 * Returns the value of the '<em><b>Via</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Via</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Via</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_Via()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isVia();
 
 	/**
 	 * Returns the value of the '<em><b>Via Specification</b></em>' containment reference.

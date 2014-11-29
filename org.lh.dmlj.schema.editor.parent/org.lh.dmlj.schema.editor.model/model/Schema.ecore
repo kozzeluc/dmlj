@@ -359,12 +359,16 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
         defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="calc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="controlLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
         changeable="false" volatile="true" transient="true" defaultValueLiteral="-1"
         derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
         changeable="false" volatile="true" transient="true" defaultValueLiteral="-1"
         derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="direct" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fragmented" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
@@ -398,6 +402,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="synonymName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="synonymVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
         defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="via" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="viaSpecification" eType="#//ViaSpecification"
         containment="true" eOpposite="#//ViaSpecification/record"/>
     <eGenericSuperTypes eClassifier="#//DiagramNode"/>
@@ -411,12 +417,16 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="members" lowerBound="1"
         upperBound="-1" eType="#//MemberRole" containment="true" eOpposite="#//MemberRole/set"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode" eType="#//SetMode"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multipleMember" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="order" eType="#//SetOrder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//OwnerRole"
         containment="true" eOpposite="#//OwnerRole/set"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="schema" lowerBound="1"
         eType="#//Schema" eOpposite="#//Schema/sets"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sorted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="systemOwner" eType="#//SystemOwner"
         containment="true" eOpposite="#//SystemOwner/set"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="viaMembers" upperBound="-1"
