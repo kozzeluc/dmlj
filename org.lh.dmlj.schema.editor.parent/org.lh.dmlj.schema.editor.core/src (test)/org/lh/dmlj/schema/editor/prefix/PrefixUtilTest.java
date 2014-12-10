@@ -117,6 +117,46 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 	}
 	
 	@Test
+	public void testGetPointer() {
+		
+		Schema schema = TestTools.getEmpschmSchema();
+		SchemaRecord record = schema.getRecord("HOSPITAL-CLAIM");
+		List<Pointer<?>> pointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
+		
+		// existing pointer
+		PointerDescription pointerDescription = 
+			new PointerDescription("COVERAGE-CLAIMS", PointerType.MEMBER_NEXT);
+		Pointer<?> pointer = PrefixUtil.getPointer(pointers, pointerDescription);
+		assertNotNull(pointer);
+		assertEquals("COVERAGE-CLAIMS", pointer.getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointer.getType());
+		
+		// try a pointer that isn't there
+		pointerDescription = new PointerDescription("COVERAGE-CLAIMS", PointerType.MEMBER_OWNER);
+		try {
+			PrefixUtil.getPointer(pointers, pointerDescription);
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("not found: COVERAGE-CLAIMS, MEMBER_OWNER", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetPointerDescriptions() {
+		
+		Schema schema = TestTools.getEmpschmSchema();
+		SchemaRecord record = schema.getRecord("HOSPITAL-CLAIM");
+		
+		List<PointerDescription> pointerDescriptions = PrefixUtil.getPointerDescriptions(record);
+		assertNotNull(pointerDescriptions);
+		assertEquals(2, pointerDescriptions.size());
+		assertEquals("COVERAGE-CLAIMS", pointerDescriptions.get(0).getSetName());
+		assertSame(PointerType.MEMBER_NEXT,pointerDescriptions.get(0).getPointerType());
+		assertEquals("COVERAGE-CLAIMS", pointerDescriptions.get(1).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR,pointerDescriptions.get(1).getPointerType());		
+	}
+	
+	@Test
 	public void testGetPositionInPrefix_WrongPointerTypes() {
 		
 		assertWrongPointerTypeWhenGettingPositionInPrefix(mockOwnerRoleWithNoPointersSet("A", "B"), 
@@ -652,4 +692,29 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 	}
 	
+	@Test
+	public void testReorder() {
+		
+		Schema schema = TestTools.getEmpschmSchema();
+		SchemaRecord record = schema.getRecord("HOSPITAL-CLAIM");
+		
+		List<Pointer<?>> pointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
+		assertEquals(2, pointers.size());
+		assertEquals("COVERAGE-CLAIMS", pointers.get(0).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointers.get(0).getType());
+		assertEquals("COVERAGE-CLAIMS", pointers.get(1).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR, pointers.get(1).getType());
+		
+		List<PointerDescription> desiredOrder = new ArrayList<>();
+		desiredOrder.add(new PointerDescription("COVERAGE-CLAIMS", PointerType.MEMBER_PRIOR));
+		desiredOrder.add(new PointerDescription("COVERAGE-CLAIMS", PointerType.MEMBER_NEXT));
+		
+		PrefixUtil.reorder(pointers, desiredOrder);
+		
+		assertEquals(2, pointers.size());
+		assertEquals("COVERAGE-CLAIMS", pointers.get(0).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR, pointers.get(0).getType());
+		assertEquals("COVERAGE-CLAIMS", pointers.get(1).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, pointers.get(1).getType());
+	}
 }

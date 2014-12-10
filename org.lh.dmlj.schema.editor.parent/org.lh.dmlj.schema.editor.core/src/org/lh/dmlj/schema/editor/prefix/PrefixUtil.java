@@ -79,6 +79,27 @@ public class PrefixUtil {
 		return pointersToRemoveAsArray;
 	}	
 	
+	static Pointer<?> getPointer(List<Pointer<?>> pointers, PointerDescription desired) {
+		for (Pointer<?> pointer : pointers) {
+			if (pointer.getSetName().equals(desired.getSetName()) &&
+				pointer.getType() == desired.getPointerType()) {
+				
+				return pointer;
+			}
+		}
+		throw new IllegalArgumentException("not found: " + desired.toString());
+	}
+	
+	public static List<PointerDescription> getPointerDescriptions(SchemaRecord record) {
+		List<PointerDescription> pointerDescriptions = new ArrayList<>();
+		for (Pointer<?> pointer : PrefixFactory.newPrefixForInquiry(record).getPointers()) {
+			PointerDescription pointerDescription = 
+				new PointerDescription(pointer.getSetName(), pointer.getType());
+			pointerDescriptions.add(pointerDescription);
+		}
+		return pointerDescriptions;
+	}
+	
 	static List<Pointer<?>> getPointersForRecord(SchemaRecord record) {
 		List<Pointer<?>> pointers = new ArrayList<>();
 		for (OwnerRole ownerRole : record.getOwnerRoles()) {
@@ -159,6 +180,15 @@ public class PrefixUtil {
 	
 	static boolean isPositionInPrefixValid(short positionInPrefix) {
 		return positionInPrefix > 0 && positionInPrefix < 8181;
+	}
+	
+	public static void reorder(List<Pointer<?>> pointers, List<PointerDescription> desiredOrder) {
+		List<Pointer<?>> newPointerOrder = new ArrayList<>();
+		for (PointerDescription pointerDescription : desiredOrder) {
+			newPointerOrder.add(getPointer(pointers, pointerDescription));
+		}
+		pointers.clear();
+		pointers.addAll(newPointerOrder);
 	}
 	
 	static <T extends Role> void setPositionInPrefix(T role, PointerType type,
