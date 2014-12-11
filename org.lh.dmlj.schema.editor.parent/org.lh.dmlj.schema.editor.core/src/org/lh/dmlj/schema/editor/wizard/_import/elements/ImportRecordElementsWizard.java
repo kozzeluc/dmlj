@@ -28,6 +28,8 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,6 +40,8 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.SchemaEditor;
+import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssistant;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.extension.DataEntryPageExtensionElement;
 import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
@@ -60,6 +64,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	private ImportToolSelectionPage importToolSelectionPage;
 	private SchemaRecord record;
 	private boolean initOK;
+	private SchemaEditor editor;
 	
 	private static SchemaRecord extractRecord(IStructuredSelection selection) {
 		EditPart editPart = (EditPart) selection.getFirstElement();
@@ -209,6 +214,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		editor = (SchemaEditor) workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		record = extractRecord(selection);
 		context.setAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD, record);
 		importToolExtensionElements = 
@@ -256,11 +262,11 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 			public void run(IProgressMonitor progressMonitor) {
 				progressMonitor.beginTask("Import RecordElements", IProgressMonitor.UNKNOWN);								
 				try {											
-					// create the list of root elements from the import tool
-					List<Element> rootElements = proxy.invokeImportTool();										
-					// TODO create a command and execute it to swap the record elements; for now, we
-					// just print out the record structure to standard out
-					print(rootElements, "");
+					List<Element> newRootElements = proxy.invokeImportTool();										
+					Command command = 
+						SwapRecordElementsCommandCreationAssistant.getCommand(record, newRootElements);
+					CommandStack commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
+					commandStack.execute(command);
 				} catch (Throwable t) {
 					throw new RuntimeException(t);					
 				}
@@ -289,14 +295,6 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 		}		
 		
 		return true;
-	}
-
-	@Deprecated
-	protected void print(List<Element> elements, String indent) {
-		for (Element element : elements) {
-			System.out.println(indent + element.getName() + "(level=" + element.getLevel());
-			print(element.getChildren(), indent + "  ");
-		}
 	}
 
 }
