@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -33,15 +33,28 @@ public class CreateBendpointCommand extends AbstractBendpointCommand {
 	@Owner 	   private ConnectionPart 	connectionPart;
 	@Item  	   private DiagramLocation 	bendpoint;
 	@Reference private EReference 		reference = 
-		SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations();	
+		SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations();
+	protected ISupplier<ConnectionPart> connectionPartSupplier;	
 	
 	public CreateBendpointCommand(ConnectionPart connectionPart, int index, int x, int y) {
 		super(connectionPart, index, x, y);
 		this.connectionPart = connectionPart;
 	}
 	
+	public CreateBendpointCommand(ISupplier<ConnectionPart> connectionPartSupplier, int index, 
+								  int x, int y) {
+		
+		super(null, index, x, y); // we'll set the connectionPart and super.connectionPart when 
+								  // execute() is invoked
+		this.connectionPartSupplier = connectionPartSupplier;
+	}	
+	
 	@Override
 	public void execute() {
+		if (connectionPartSupplier != null) {
+			super.connectionPart = connectionPartSupplier.supply();
+			connectionPart = super.connectionPart;
+		}
 		bendpoint = insertBendpoint(connectionPartIndex, x, y);		
 	}
 	

@@ -192,5 +192,87 @@ public class ChangePointerOrderCommandTest {
 		checkXmi(touchedXmi);
 		
 	}
-
+	
+	@Test
+	public void testPointerSupplierConstructor() {
+		
+		SchemaRecord record = TestTools.getRecord(schema, "EMPLOYEE");
+		Prefix originalPrefix = PrefixFactory.newPrefixForInquiry(record);
+		List<Pointer<?>> originalPointers = originalPrefix.getPointers();
+		final List<Pointer<?>> newPointerOrder = new ArrayList<>(originalPointers);
+		Assert.assertEquals(1, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getNextDbkeyPosition().intValue());
+		Assert.assertEquals(2, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(3, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getOwnerDbkeyPosition().intValue());
+		Assert.assertEquals(4, ((MemberRole) record.getRole("EMP-NAME-NDX")).getIndexDbkeyPosition().intValue());
+		Assert.assertEquals(5, ((MemberRole) record.getRole("OFFICE-EMPLOYEE")).getIndexDbkeyPosition().intValue());
+		Assert.assertEquals(6, ((MemberRole) record.getRole("OFFICE-EMPLOYEE")).getOwnerDbkeyPosition().intValue());
+		Assert.assertEquals(7, ((OwnerRole) record.getRole("EMP-COVERAGE")).getNextDbkeyPosition());
+		Assert.assertEquals(8, ((OwnerRole) record.getRole("EMP-COVERAGE")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(9, ((OwnerRole) record.getRole("EMP-EMPOSITION")).getNextDbkeyPosition());
+		Assert.assertEquals(10, ((OwnerRole) record.getRole("EMP-EMPOSITION")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(11, ((OwnerRole) record.getRole("EMP-EXPERTISE")).getNextDbkeyPosition());
+		Assert.assertEquals(12, ((OwnerRole) record.getRole("EMP-EXPERTISE")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(13, ((OwnerRole) record.getRole("MANAGES")).getNextDbkeyPosition());
+		Assert.assertEquals(14, ((OwnerRole) record.getRole("MANAGES")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(15, ((OwnerRole) record.getRole("REPORTS-TO")).getNextDbkeyPosition());
+		Assert.assertEquals(16, ((OwnerRole) record.getRole("REPORTS-TO")).getPriorDbkeyPosition().intValue());		
+		// switch some order positions:
+		Collections.swap(newPointerOrder, 0, 3);
+		Collections.swap(newPointerOrder, 12, 14);
+		Collections.swap(newPointerOrder, 13, 15);
+		assertEquals("EMP-NAME-NDX", newPointerOrder.get(0).getSetName());
+		assertSame(PointerType.MEMBER_INDEX, newPointerOrder.get(0).getType());
+		assertEquals("DEPT-EMPLOYEE", newPointerOrder.get(3).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, newPointerOrder.get(3).getType());
+		assertEquals("REPORTS-TO", newPointerOrder.get(12).getSetName());
+		assertSame(PointerType.OWNER_NEXT, newPointerOrder.get(12).getType());
+		assertEquals("REPORTS-TO", newPointerOrder.get(13).getSetName());
+		assertSame(PointerType.OWNER_PRIOR, newPointerOrder.get(13).getType());
+		assertEquals("MANAGES", newPointerOrder.get(14).getSetName());
+		assertSame(PointerType.OWNER_NEXT, newPointerOrder.get(14).getType());
+		assertEquals("MANAGES", newPointerOrder.get(15).getSetName());
+		assertSame(PointerType.OWNER_PRIOR, newPointerOrder.get(15).getType());
+		
+		ISupplier<List<Pointer<?>>> pointerSupplier = new ISupplier<List<Pointer<?>>>() {
+			@Override
+			public List<Pointer<?>> supply() {
+				return newPointerOrder;
+			}			
+		};
+		ChangePointerOrderCommand command = new ChangePointerOrderCommand(record, pointerSupplier);
+		assertSame(record, command.record);
+		assertSame(pointerSupplier, command.pointerSupplier);
+		
+		
+		command.execute();
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
+		Assert.assertEquals(1, ((MemberRole) record.getRole("EMP-NAME-NDX")).getIndexDbkeyPosition().intValue());		
+		Assert.assertEquals(2, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(3, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getOwnerDbkeyPosition().intValue());
+		Assert.assertEquals(4, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getNextDbkeyPosition().intValue());		
+		Assert.assertEquals(5, ((MemberRole) record.getRole("OFFICE-EMPLOYEE")).getIndexDbkeyPosition().intValue());
+		Assert.assertEquals(6, ((MemberRole) record.getRole("OFFICE-EMPLOYEE")).getOwnerDbkeyPosition().intValue());
+		Assert.assertEquals(7, ((OwnerRole) record.getRole("EMP-COVERAGE")).getNextDbkeyPosition());
+		Assert.assertEquals(8, ((OwnerRole) record.getRole("EMP-COVERAGE")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(9, ((OwnerRole) record.getRole("EMP-EMPOSITION")).getNextDbkeyPosition());
+		Assert.assertEquals(10, ((OwnerRole) record.getRole("EMP-EMPOSITION")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(11, ((OwnerRole) record.getRole("EMP-EXPERTISE")).getNextDbkeyPosition());
+		Assert.assertEquals(12, ((OwnerRole) record.getRole("EMP-EXPERTISE")).getPriorDbkeyPosition().intValue());
+		Assert.assertEquals(13, ((OwnerRole) record.getRole("REPORTS-TO")).getNextDbkeyPosition());
+		Assert.assertEquals(14, ((OwnerRole) record.getRole("REPORTS-TO")).getPriorDbkeyPosition().intValue());		
+		Assert.assertEquals(15, ((OwnerRole) record.getRole("MANAGES")).getNextDbkeyPosition());
+		Assert.assertEquals(16, ((OwnerRole) record.getRole("MANAGES")).getPriorDbkeyPosition().intValue());
+		
+		
+		command.undo();
+		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
+		
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
+	}
+	
 }

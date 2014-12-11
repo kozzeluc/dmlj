@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -50,9 +50,11 @@ public class CreateConnectorCommand extends Command {
 		
 	private Connector[]    	  connector = new Connector[2];
 	private DiagramLocation[] diagramLocation = new DiagramLocation[2];	
-	private Point 		   	  location; // absolute, unscaled
+	protected Point 		  location; // absolute, unscaled
 	private List<Point[]> 	  absoluteLineCoordinates;
 	private int				  insertionIndex;
+	
+	protected ISupplier<MemberRole> memberRoleSupplier;
 	
 	// compute the absolute deltaX and deltaY; if deltaX is bigger than or equal deltaY, the layout
 	// is horizontal, else vertical
@@ -157,10 +159,22 @@ public class CreateConnectorCommand extends Command {
 		super("Add connectors to connection");
 		this.memberRole = memberRole;
 		this.location = location;		
-	}	
+	}
+	
+	public CreateConnectorCommand(ISupplier<MemberRole> memberRoleSupplier, Point location) {
+		super("Add connectors to connection");
+		this.memberRoleSupplier = memberRoleSupplier;
+		this.location = location;		
+	}
 	
 	@Override
 	public void execute() {
+		
+		if (memberRoleSupplier != null) {
+			// only when a member role supplier is available, obtain the member role from that 
+			// supplier (and assume that the supplied member role is not null)
+			memberRole = memberRoleSupplier.supply();
+		}
 		
 		Assert.isTrue(memberRole.getConnectionParts().size() == 1);
 		

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -43,8 +43,10 @@ public class MoveDiagramNodeCommand extends Command {
 	private DiagramNode diagramNode;
 	private int 		oldX;
 	private int 		oldY;
-	private int 		x;
-	private int 		y;
+	protected int 		x;
+	protected int 		y;
+	
+	protected ISupplier<? extends DiagramNode> diagramNodeSupplier;
 	
 	@SuppressWarnings("unused")
 	private MoveDiagramNodeCommand() {
@@ -79,8 +81,19 @@ public class MoveDiagramNodeCommand extends Command {
 		}
 	}
 	
+	public MoveDiagramNodeCommand(ISupplier<? extends DiagramNode> diagramNodeSupplier, int x, int y) {
+		super();		
+		this.diagramNodeSupplier = diagramNodeSupplier;
+		this.x = x;
+		this.y = y;		
+		setLabel("Move connection label");
+	}
+	
 	@Override
 	public void execute() {
+		if (diagramNodeSupplier != null) {
+			diagramNode = diagramNodeSupplier.supply();
+		}
 		diagramLocation = diagramNode.getDiagramLocation();
 		oldX = diagramLocation.getX();
 		oldY = diagramLocation.getY();

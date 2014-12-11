@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
+import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 @ModelChange(category=SET_FEATURES)
 public class SetObjectAttributeCommand extends Command {
@@ -33,7 +33,9 @@ public class SetObjectAttributeCommand extends Command {
 	@Features private EStructuralFeature[] features;
 	
 	private Object oldValue;
-	private Object newValue;
+	protected Object newValue;
+	
+	protected ISupplier<EObject> eObjectSupplier;
 	
 	private static String getLabel(EAttribute attribute, Object value, String attributeLabel) {		
 		if (value != null) {
@@ -54,17 +56,34 @@ public class SetObjectAttributeCommand extends Command {
 		super(getLabel(attribute, newValue, attributeLabel));
 		this.owner = owner;
 		this.features = new EStructuralFeature[] {attribute};
-		oldValue = owner.eGet(attribute);
 		this.newValue = newValue;		
 	}
 	
+	public SetObjectAttributeCommand(ISupplier<EObject> eObjectSupplier, EAttribute attribute, 
+									 Object newValue, String attributeLabel) {
+
+		super(getLabel(attribute, newValue, attributeLabel));
+		this.eObjectSupplier = eObjectSupplier;
+		this.features = new EStructuralFeature[] {attribute};
+		this.newValue = newValue;		
+	}	
+	
 	@Override
 	public void execute() {
+		if (eObjectSupplier != null) {
+			owner = eObjectSupplier.supply();
+		}
+		oldValue = owner.eGet(features[0]);
 		owner.eSet(features[0], newValue);
 	}	
 			
 	@Override
 	public void undo() {
 		owner.eSet(features[0], oldValue);
+	}
+	
+	@Override
+	public void redo() {
+		owner.eSet(features[0], newValue);
 	}
 }

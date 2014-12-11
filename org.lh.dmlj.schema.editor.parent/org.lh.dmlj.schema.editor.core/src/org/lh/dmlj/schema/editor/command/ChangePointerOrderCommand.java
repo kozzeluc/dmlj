@@ -34,7 +34,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixForPointerReordering;
 public class ChangePointerOrderCommand extends Command {
 
 	@Owner 
-	private SchemaRecord record;
+	protected SchemaRecord record;
 	
 	@Features 
 	private EStructuralFeature[] features = {
@@ -49,14 +49,25 @@ public class ChangePointerOrderCommand extends Command {
 	private List<Pointer<?>> newPointerOrder;
 	private PrefixForPointerReordering prefix;
 	
+	protected ISupplier<List<Pointer<?>>> pointerSupplier;
+	
 	public ChangePointerOrderCommand(SchemaRecord record, List<Pointer<?>> newPointerOrder) {
 		super("Reorder pointers");
 		this.record = record;
 		this.newPointerOrder = newPointerOrder;
 	}
 	
+	public ChangePointerOrderCommand(SchemaRecord record, ISupplier<List<Pointer<?>>> pointerSupplier) {		
+		super("Reorder pointers");
+		this.record = record;
+		this.pointerSupplier = pointerSupplier;
+	}
+	
 	@Override
 	public void execute() {
+		if (pointerSupplier != null) {
+			newPointerOrder = pointerSupplier.supply();
+		}
 		createPrefix();
 		reorderPointers();
 	}

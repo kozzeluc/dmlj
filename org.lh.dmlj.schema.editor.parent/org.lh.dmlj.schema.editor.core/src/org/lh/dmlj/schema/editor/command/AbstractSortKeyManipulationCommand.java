@@ -34,7 +34,7 @@ import org.lh.dmlj.schema.SetMode;
 
 public abstract class AbstractSortKeyManipulationCommand extends Command {
 
-	private Set 				    set;
+	protected Set 				    set;
 	private StashedDataSlot[]	    stashedDataSlots = new StashedDataSlot[2];	
 	protected ISortKeyDescription[] sortKeyDescriptions; // null if newOrder != SetOrder.SORTED
 	
@@ -47,9 +47,9 @@ public abstract class AbstractSortKeyManipulationCommand extends Command {
 	protected AbstractSortKeyManipulationCommand(Set set, 
 												 ISortKeyDescription[] sortKeyDescriptions) {
 		super();
-		this.set = set;
+		this.set = set; // might be null at this point
 		this.sortKeyDescriptions = sortKeyDescriptions;
-		if (sortKeyDescriptions != null) {
+		if (set != null && sortKeyDescriptions != null) {
 			Assert.isTrue(set.getMembers().size() == sortKeyDescriptions.length, 
 					  	  "the number of sort key descriptions does NOT match the number of set " +
 					  	  "members: " + set.getName() + " " + Arrays.asList(sortKeyDescriptions));

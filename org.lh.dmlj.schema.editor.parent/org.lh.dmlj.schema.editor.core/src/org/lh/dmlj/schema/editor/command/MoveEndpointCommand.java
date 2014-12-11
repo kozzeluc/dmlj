@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,13 +35,14 @@ public class MoveEndpointCommand extends Command {
 	@Owner 	  private ConnectionPart 		connectionPart;
 	@Features private EStructuralFeature[] 	features;
 	
-	private int newX;
-	private int newY;
+	protected int newX;
+	protected int newY;
 	
-	private boolean 		source;		
+	protected boolean 		source;		
 	private DiagramLocation oldLocation;
 	private int 			oldLocationIndex;
-	private DiagramLocation newLocation;	
+	private DiagramLocation newLocation;
+	protected ISupplier<ConnectionPart> connectionPartSupplier;	
 	
 	public MoveEndpointCommand(ConnectionPart connectionPart, int newX, int newY, boolean source) {
 		super();
@@ -51,8 +52,21 @@ public class MoveEndpointCommand extends Command {
 		this.source = source;		
 	}
 	
+	public MoveEndpointCommand(ISupplier<ConnectionPart> connectionPartSupplier, int newX, int newY, 
+							   boolean source) {
+		super();
+		this.connectionPartSupplier = connectionPartSupplier;
+		this.newX = newX;
+		this.newY = newY; 
+		this.source = source;		
+	}	
+	
 	@Override
 	public void execute() {		
+		
+		if (connectionPartSupplier != null) {
+			connectionPart = connectionPartSupplier.supply();
+		}
 		
 		DiagramData diagramData = 
 			connectionPart.getMemberRole().getSet().getSchema().getDiagramData();

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -41,13 +41,15 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 @ModelChange(category=SET_FEATURES)
 public class MakeRecordCalcCommand extends AbstractChangeLocationModeCommand {
 
-	@Owner 	  private SchemaRecord 		   record;
+	@Owner 	  protected SchemaRecord 	   record;
 	@Features private EStructuralFeature[] features = new EStructuralFeature[] {
 		SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()
 	};
 	
 	private List<Element> 	 calcKeyElements;
-	private DuplicatesOption duplicatesOption;
+	protected DuplicatesOption duplicatesOption;
+	
+	protected ISupplier<List<Element>> calcKeyElementSupplier;
 	
 	public MakeRecordCalcCommand(SchemaRecord record,
 								 List<Element> calcKeyElements,
@@ -56,11 +58,23 @@ public class MakeRecordCalcCommand extends AbstractChangeLocationModeCommand {
 		this.record = record;
 		this.calcKeyElements = new ArrayList<>(calcKeyElements);
 		this.duplicatesOption = duplicatesOption;
+	}
+	
+	public MakeRecordCalcCommand(SchemaRecord record, ISupplier<List<Element>> calcKeyElementSupplier,
+			 					 DuplicatesOption duplicatesOption) {
+		
+		super("Set 'Location mode' to 'CALC'", record);
+		this.record = record;
+		this.calcKeyElementSupplier = calcKeyElementSupplier;
+		this.duplicatesOption = duplicatesOption;
 	}	
 	
 	@Override
-	public void execute() {
+	public void execute() {		
 		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");
+		if (calcKeyElementSupplier != null) {
+			calcKeyElements = new ArrayList<>(calcKeyElementSupplier.supply());
+		}
 		createCalcKey(calcKeyElements, null, duplicatesOption, false, -1);		
 		record.setLocationMode(LocationMode.CALC);
 		stash(0);

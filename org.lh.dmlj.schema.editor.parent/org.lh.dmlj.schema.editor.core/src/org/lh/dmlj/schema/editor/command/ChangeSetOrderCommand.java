@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import java.util.Arrays;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -33,13 +35,15 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 @ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class ChangeSetOrderCommand extends AbstractSortKeyManipulationCommand {
 
-	@Owner	  private Set 		   		   set;
+	@Owner	  protected Set 		   	   set;
 	@Features private EStructuralFeature[] features = {
 		SchemaPackage.eINSTANCE.getSet_Order()
 	};
 	
+	protected ISupplier<Set> setSupplier;
+	
 	private SetOrder oldOrder;
-	private SetOrder newOrder;				
+	protected SetOrder newOrder;	
 	
 	public ChangeSetOrderCommand(Set set, SetOrder order) {
 		super(set, null);
@@ -55,9 +59,25 @@ public class ChangeSetOrderCommand extends AbstractSortKeyManipulationCommand {
 		this.set = set;
 		newOrder = SetOrder.SORTED;		
 	}
+	
+	public ChangeSetOrderCommand(ISupplier<Set> setSupplier, ISortKeyDescription[] sortKeyDescriptions) {
+		super(null, sortKeyDescriptions);
+		this.setSupplier = setSupplier;
+		newOrder = SetOrder.SORTED;		
+	}	
 
 	@Override
 	public void execute() {
+		
+		if (setSupplier != null) {
+			super.set = setSupplier.supply();
+			this.set = super.set;
+			if (sortKeyDescriptions != null) {
+				Assert.isTrue(set.getMembers().size() == sortKeyDescriptions.length, 
+						  	  "the number of sort key descriptions does NOT match the number of set " +
+						  	  "members: " + set.getName() + " " + Arrays.asList(sortKeyDescriptions));
+			}
+		}
 		
 		// remember the current set order
 		oldOrder = set.getOrder();

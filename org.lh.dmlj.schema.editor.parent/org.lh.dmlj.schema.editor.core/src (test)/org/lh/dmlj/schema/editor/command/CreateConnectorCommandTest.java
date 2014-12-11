@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,12 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import java.util.List;
@@ -1249,5 +1244,30 @@ public class CreateConnectorCommandTest {
 		assertNull(connector2.getLabel());
 				
 	}	
+	
+	@Test
+	public void testAlternativeConstructor() {
+		// use the alternative constructor (accepting as its arguments 'memberRoleProvider' 
+		// (IMemberRoleProvider) and 'location' (Point) when the memberRole instance (see the other 
+		// constructor) is NOT yet known at command construction time
+		Schema schema = TestTools.getSchema("testdata/BendpointsAndConnectors.schema");
+		Set set = schema.getSet("DEPT-EMPLOYEE");
+		final MemberRole memberRole = set.getMembers().get(0);
+		ISupplier<MemberRole> memberRoleSupplier = new ISupplier<MemberRole>() {			
+			@Override
+			public MemberRole supply() {
+				return memberRole;
+			}
+		};
+		Command command = new CreateConnectorCommand(memberRoleSupplier, new Point(1, 2));
+		command.execute();
+		MemberRole owner = ModelChangeDispatcher.getAnnotatedFieldValue(
+			command, 
+			Owner.class, 
+			ModelChangeDispatcher.Availability.MANDATORY);
+		assertTrue(owner == memberRole);
+		command.undo();
+		command.redo();
+	}
 
 }

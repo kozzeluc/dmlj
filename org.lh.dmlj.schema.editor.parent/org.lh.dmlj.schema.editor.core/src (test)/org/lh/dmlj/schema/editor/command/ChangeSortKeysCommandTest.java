@@ -533,5 +533,31 @@ public class ChangeSortKeysCommandTest {
 		checkXmi(touchedXmi);
 		
 	}
+	
+	@Test
+	public void testSetSupplierConstructor() {
+		final Set set = schema.getSet("SKILL-NAME-NDX");
+		
+		ISortKeyDescription sortKeyDescription = mock(ISortKeyDescription.class);
+		when(sortKeyDescription.getElementNames()).thenReturn(new String[] {"SKILL-NAME-0455"});
+		when(sortKeyDescription.getSortSequences()).thenReturn(new SortSequence[] {SortSequence.DESCENDING});
+		when(sortKeyDescription.getDuplicatesOption()).thenReturn(DuplicatesOption.LAST);
+		when(sortKeyDescription.isNaturalSequence()).thenReturn(false);
+		when(sortKeyDescription.isCompressed()).thenReturn(true);		
+		
+		ISupplier<Set> setSupplier = new ISupplier<Set>() {
+			@Override
+			public Set supply() {
+				return set;
+			}
+		};
+		
+		ISortKeyDescription[] sortKeyDescriptions = new ISortKeyDescription[] {sortKeyDescription};
+		ChangeSortKeysCommand command = new ChangeSortKeysCommand(setSupplier, sortKeyDescriptions);
+		command.execute();
+		assertSame(setSupplier, command.setSupplier);
+		assertSame(set, command.set);
+		assertSame(sortKeyDescriptions, command.sortKeyDescriptions);
+	}
 
 }

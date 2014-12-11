@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,10 +18,13 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.gef.commands.Command;
 import org.junit.Test;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaFactory;
@@ -118,6 +121,32 @@ public class SetObjectAttributeCommandTest {
 		assertEquals(1, attributes.length);
 		assertTrue(attributes[0] == attribute);
 		
+	}
+	
+	@Test
+	public void testAlternativeConstructor() {
+		// use the alternative constructor (accepting as its arguments 'eObjectSupplier' 
+		// (IEObjectSupplier), 'attribute' (EAttribute), newValue (Object) and attributeLabel 
+		// (String) when the owner EObject instance (see the other constructor) is NOT yet known at 
+		// command construction time
+		final Schema schema = SchemaFactory.eINSTANCE.createSchema();
+		ISupplier<EObject> eObjectSupplier = new ISupplier<EObject>() {			
+			@Override
+			public EObject supply() {
+				return schema;
+			}
+		};
+		Command command = 
+			new SetObjectAttributeCommand(eObjectSupplier, SchemaPackage.eINSTANCE.getSchema_Name(), 
+										  "EMPSCHM", "test");
+		command.execute();
+		Schema owner = ModelChangeDispatcher.getAnnotatedFieldValue(
+			command, 
+			Owner.class, 
+			ModelChangeDispatcher.Availability.MANDATORY);
+		assertSame(schema, owner);
+		command.undo();
+		command.redo();
 	}
 
 }

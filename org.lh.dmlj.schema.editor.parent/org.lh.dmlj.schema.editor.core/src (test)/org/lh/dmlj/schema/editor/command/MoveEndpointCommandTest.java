@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -370,6 +371,33 @@ public class MoveEndpointCommandTest {
 		Xmi xmi4 = TestTools.asXmi(schema);
 		assertEquals(xmi2, xmi4);
 		
-	}	
+	}
+	
+	@Test
+	public void testAlternativeConstructor() {
+		// use the alternative constructor (accepting as its arguments 'connectionPartProvider' 
+		// (IConnectionPartProvider), newX (int), newY (int) and 'source' (boolean) when the 
+		// connection part instance (see the other constructor) is NOT yet known at command 
+		// construction time
+		Schema schema = TestTools.getSchema("testdata/BendpointsAndConnectors.schema");
+		Set set = schema.getSet("DEPT-EMPLOYEE");
+		final ConnectionPart connectionPart = set.getMembers().get(0).getConnectionParts().get(0);
+		assertNotNull(connectionPart);
+		ISupplier<ConnectionPart> connectionPartSupplier = new ISupplier<ConnectionPart>() {
+			@Override
+			public ConnectionPart supply() {
+				return connectionPart;
+			}		
+		};
+		Command command = new MoveEndpointCommand(connectionPartSupplier, 0, 0, true);
+		command.execute();
+		ConnectionPart owner = ModelChangeDispatcher.getAnnotatedFieldValue(
+			command, 
+			Owner.class, 
+			ModelChangeDispatcher.Availability.MANDATORY);
+		assertTrue(owner == connectionPart);
+		command.undo();
+		command.redo();
+	}
 
 }

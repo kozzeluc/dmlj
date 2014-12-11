@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -410,6 +410,32 @@ public class CreateBendpointCommandTest {
 		assertEquals("bendpoint [2] set DEPT-EMPLOYEE (EMPLOYEE)", 
 				 	 originalBendpoint2.getEyecatcher());		
 		
-	}	
+	}
+	
+	@Test
+	public void testAlternativeConstructor() {
+		// use the alternative constructor (accepting as its arguments connectionPartSupplier 
+		// (IConnectionPartSupplier), index (int), x (int) and y (int) when the connection part 
+		// instance (see the other constructor) is NOT yet known at command construction time
+		Schema schema = TestTools.getSchema("testdata/BendpointsAndConnectors.schema");
+		Set set = schema.getSet("DEPT-EMPLOYEE");
+		final ConnectionPart connectionPart = set.getMembers().get(0).getConnectionParts().get(0);
+		assertNotNull(connectionPart);
+		ISupplier<ConnectionPart> connectionPartSupplier = new ISupplier<ConnectionPart>() {
+			@Override
+			public ConnectionPart supply() {
+				return connectionPart;
+			}		
+		};
+		Command command = new CreateBendpointCommand(connectionPartSupplier, 1, 50, 100);
+		command.execute();
+		ConnectionPart owner = ModelChangeDispatcher.getAnnotatedFieldValue(
+			command, 
+			Owner.class, 
+			ModelChangeDispatcher.Availability.MANDATORY);
+		assertTrue(owner == connectionPart);
+		command.undo();
+		command.redo();
+	}
 
 }

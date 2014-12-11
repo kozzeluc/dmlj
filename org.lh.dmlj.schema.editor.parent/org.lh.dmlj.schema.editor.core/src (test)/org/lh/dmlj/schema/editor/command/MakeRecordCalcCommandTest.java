@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -163,6 +163,34 @@ public class MakeRecordCalcCommandTest {
 		assertEquals(1, features.length);
 		assertTrue(features[0] == SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode());		
 		
+	}
+	
+	@Test
+	public void testAlternativeConstructor() {
+		// use the alternative constructor (accepting as its arguments 'calcKeyElementProvider' 
+		// (ICalcKeyElementProvider) and 'duplicatesOption' (DuplicatesOption) when the calc key 
+		// element instances (see the other constructor) are NOT yet known at command construction 
+		// time
+		Schema schema = TestTools.getIdmsntwkSchema();
+		SchemaRecord record = schema.getRecord("LOGREC-143");
+		final List<Element> calcKeyElements = new ArrayList<>();
+		calcKeyElements.add(record.getElements().get(0));
+		ISupplier<List<Element>> calcKeyElementSupplier = new ISupplier<List<Element>>() {			
+			@Override
+			public List<Element> supply() {
+				return calcKeyElements;
+			}
+		};
+		Command command = 
+			new MakeRecordCalcCommand(record, calcKeyElementSupplier, DuplicatesOption.NOT_ALLOWED);
+		command.execute();
+		assertSame(LocationMode.CALC, record.getLocationMode());
+		assertSame(record.getElements().get(0), record.getCalcKey().getElements().get(0).getElement());
+		command.undo();
+		assertSame(LocationMode.DIRECT, record.getLocationMode());
+		command.redo();
+		assertSame(LocationMode.CALC, record.getLocationMode());
+		assertSame(record.getElements().get(0), record.getCalcKey().getElements().get(0).getElement());
 	}
 
 }
