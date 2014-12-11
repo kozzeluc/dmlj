@@ -130,7 +130,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		assertEquals(4, originalRootElements.size());
 		List<Element> newRootElements = getSingleElementList();
 		Command command = 
-			SwapRecordElementsCommandCreationAssistant.getCommand(record, newRootElements);
+			(Command) SwapRecordElementsCommandCreationAssistant.getCommand(record, newRootElements);
 		assertTrue(command instanceof SwapRecordElementsCommand);
 		
 		// check the swap record elements command

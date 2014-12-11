@@ -41,7 +41,11 @@ import org.eclipse.ui.IWorkbench;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.SchemaEditor;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssistant;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.extension.DataEntryPageExtensionElement;
 import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
@@ -263,10 +267,14 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 				progressMonitor.beginTask("Import RecordElements", IProgressMonitor.UNKNOWN);								
 				try {											
 					List<Element> newRootElements = proxy.invokeImportTool();										
-					Command command = 
+					ModelChangeContext context = 
+						new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
+					context.getContextData().put(IContextDataKeys.RECORD_NAME, getRecordName());
+					IModelChangeCommand command = 
 						SwapRecordElementsCommandCreationAssistant.getCommand(record, newRootElements);
+					command.setContext(context);
 					CommandStack commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
-					commandStack.execute(command);
+					commandStack.execute((Command) command);
 				} catch (Throwable t) {
 					throw new RuntimeException(t);					
 				}

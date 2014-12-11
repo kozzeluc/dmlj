@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -31,7 +30,7 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 @ModelChange(category=SET_FEATURES)
-public class SwapRecordElementsCommand extends Command {
+public class SwapRecordElementsCommand extends ModelChangeBasicCommand {
 	
 	@Owner protected SchemaRecord record;
 	@Features private EStructuralFeature[] features = {

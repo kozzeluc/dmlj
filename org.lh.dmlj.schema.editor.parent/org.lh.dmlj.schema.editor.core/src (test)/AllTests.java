@@ -56,6 +56,7 @@ import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssist
 import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRoleTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRoleTest;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContextTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
 import org.lh.dmlj.schema.editor.common.ToolsTest;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
@@ -75,6 +76,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	
 	// command infrastructure tests
 	ModelChangeDispatcherTest.class,
+	ModelChangeContextTest.class,
 	
 	// command tests
 	AddMemberToSetCommandTest.class,

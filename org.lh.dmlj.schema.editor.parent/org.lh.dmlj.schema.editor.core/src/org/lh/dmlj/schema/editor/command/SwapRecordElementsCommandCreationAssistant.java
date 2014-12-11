@@ -54,7 +54,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtil;
  */
 public abstract class SwapRecordElementsCommandCreationAssistant {
 	
-	public static Command getCommand(SchemaRecord record, List<Element> newRootElements) {
+	public static IModelChangeCommand getCommand(SchemaRecord record, List<Element> newRootElements) {
 		
 		List<Command> commands = new ArrayList<>();	
 		List<Element> newAllElements = computeAllNewElements(newRootElements);
@@ -86,13 +86,13 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		// create a compound command or return the swap record elements command if that is the only
 		// command we have
 		if (commands.size() > 1) {
-			CompoundCommand cc = new CompoundCommand("Import Record Elements");
+			ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand("Import Record Elements");
 			for (Command command : commands) {
 				cc.add(command);
 			}
 			return cc;
 		} else {
-			return commands.get(0);
+			return (IModelChangeCommand) commands.get(0);
 		}
 	}
 
