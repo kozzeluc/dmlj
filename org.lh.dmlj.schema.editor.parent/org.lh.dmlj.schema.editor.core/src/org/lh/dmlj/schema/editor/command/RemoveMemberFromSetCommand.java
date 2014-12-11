@@ -33,9 +33,9 @@ import org.lh.dmlj.schema.editor.common.Tools;
 @ModelChange(category=REMOVE_ITEM)
 public class RemoveMemberFromSetCommand extends Command {
 		
-	@Owner 	   private Set 		  set;
-	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSet_Members();
-	@Item 	   private MemberRole memberRole;
+	@Owner 	   private Set 		  	set;
+	@Reference private EReference 	reference = SchemaPackage.eINSTANCE.getSet_Members();
+	@Item 	   protected MemberRole memberRole;
 	
 	private RemovableMemberRole memberRoleToBecomeObsolete;
 

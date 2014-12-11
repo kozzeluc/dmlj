@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.editor.command.annotation.Reference;
 @ModelChange(category=REMOVE_ITEM)
 public class DeleteBendpointCommand extends AbstractBendpointCommand {	
 	
-	@Owner 	   private ConnectionPart 	connectionPart;
+	@Owner 	   protected ConnectionPart connectionPart;
 	@Item  	   private DiagramLocation 	bendpoint;
 	@Reference private EReference 		reference = 
 		SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations();	
@@ -41,7 +41,6 @@ public class DeleteBendpointCommand extends AbstractBendpointCommand {
 	public DeleteBendpointCommand(ConnectionPart connectionPart, int connectionPartIndex) {
 		super(connectionPart, connectionPartIndex);
 		this.connectionPart = connectionPart;
-		
 	}
 	
 	@Override

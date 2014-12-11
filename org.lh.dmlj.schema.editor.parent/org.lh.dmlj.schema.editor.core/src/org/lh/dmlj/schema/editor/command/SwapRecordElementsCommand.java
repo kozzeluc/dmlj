@@ -33,13 +33,13 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 @ModelChange(category=SET_FEATURES)
 public class SwapRecordElementsCommand extends Command {
 	
-	@Owner private SchemaRecord record;
+	@Owner protected SchemaRecord record;
 	@Features private EStructuralFeature[] features = {
 		SchemaPackage.eINSTANCE.getSchemaRecord_Elements(),
 		SchemaPackage.eINSTANCE.getSchemaRecord_RootElements()
 	};
 	
-	private List<Element> newRootElements;
+	protected List<Element> newRootElements;
 	private List<Element> newAllElements = new ArrayList<>();
 	
 	private List<Element> oldRootElements = new ArrayList<>();

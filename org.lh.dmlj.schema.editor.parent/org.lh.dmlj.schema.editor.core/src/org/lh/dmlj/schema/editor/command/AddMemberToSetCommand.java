@@ -18,6 +18,9 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
 import org.lh.dmlj.schema.ConnectionLabel;
@@ -47,13 +50,15 @@ import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendage;
 @ModelChange(category=ADD_ITEM)
 public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 
-	@Owner 	   private Set 		  set;
+	@Owner 	   protected Set 	  set;
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSet_Members();
 	@Item	   private MemberRole memberRole;
 			
-	private SchemaRecord 			  memberRecord;
+	protected SchemaRecord 			  memberRecord;
 	private PrefixForPointerAppendage memberPrefix;
-	private DiagramData	    		  diagramData;	
+	private DiagramData	    		  diagramData;
+	protected PointerType[] pointerTypes = 
+		{PointerType.MEMBER_NEXT, PointerType.MEMBER_PRIOR, PointerType.MEMBER_OWNER};	
 	
 	public AddMemberToSetCommand(Set set) {
 		super(set, null);
@@ -62,6 +67,26 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 		this.set = set;
 		this.diagramData = set.getSchema().getDiagramData();				
 		setLabel("Add member record type to set " + set.getName());
+	}
+	
+	public AddMemberToSetCommand(Set set, PointerType[] pointerTypes) {
+		this(set);
+		List<PointerType> filteredPointerTypes = new ArrayList<>();
+		boolean nextPointerOk = false;
+		for (PointerType pointerType : pointerTypes) {
+			if (pointerType == PointerType.MEMBER_NEXT) {
+				nextPointerOk = true;
+			} else if (pointerType != PointerType.MEMBER_PRIOR &&
+					   pointerType != PointerType.MEMBER_OWNER) {
+				
+				throw new IllegalArgumentException("invalid pointer type: " + pointerType);
+			}
+			filteredPointerTypes.add(pointerType);
+		}
+		if (!nextPointerOk) {
+			throw new IllegalArgumentException("NEXT pointer is mandatory");
+		}
+		this.pointerTypes = filteredPointerTypes.toArray(new PointerType[] {});
 	}
 	
 	@Override
@@ -110,16 +135,8 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 		memberRole.setSet(set);
 		
 		if (memberPrefix == null) {
-			if (set.getMode() == SetMode.CHAINED) {
-				memberPrefix = 
-					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_NEXT, 
-															   PointerType.MEMBER_PRIOR, 
-															   PointerType.MEMBER_OWNER);
-			} else {
-				memberPrefix = 
-					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_INDEX, 
-															   PointerType.MEMBER_OWNER);			
-			}
+			memberPrefix = 
+				PrefixFactory.newPrefixForPointerAppendage(memberRole, pointerTypes);			
 		}
 		memberPrefix.appendPointers();
 		

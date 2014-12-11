@@ -50,6 +50,7 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
+import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 import org.lh.dmlj.schema.editor.testtool.Xmi;
@@ -243,6 +244,71 @@ public class AddMemberToSetCommandTest {
 	}
 	
 	@Test
+	public void testUnsortedChainedSet_ExplicitPointerTypes() {
+		
+		Set set = schema.getSet("JOB-EMPOSITION");
+		assertEquals(1, set.getMembers().size());
+		SchemaRecord jobRecord = schema.getRecord("JOB");
+		SchemaRecord employeeRecord = schema.getRecord("EMPLOYEE");
+		
+		AddMemberToSetCommand command = 
+			new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT, 
+															  PointerType.MEMBER_PRIOR});
+		command.setMemberRecord(employeeRecord);
+		
+		
+		command.execute();
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
+		
+		assertEquals(2, set.getMembers().size());
+		MemberRole newMemberRole = set.getMembers().get(1);
+		assertSame(set, newMemberRole.getSet());
+		assertSame(employeeRecord, newMemberRole.getRecord());
+		assertEquals(1, newMemberRole.getConnectionParts().size());		
+		assertEquals(Short.valueOf((short) 17), (Short) newMemberRole.getNextDbkeyPosition());
+		assertEquals(Short.valueOf((short) 18), (Short) newMemberRole.getPriorDbkeyPosition());
+		assertNull(newMemberRole.getOwnerDbkeyPosition());
+		assertNull(newMemberRole.getIndexDbkeyPosition());
+		assertSame(SetMembershipOption.MANDATORY_AUTOMATIC, newMemberRole.getMembershipOption());
+		
+		ConnectionPart connectionPart = newMemberRole.getConnectionParts().get(0);
+		assertNotNull(connectionPart);
+		assertEquals(0, connectionPart.getBendpointLocations().size());
+		assertNull(connectionPart.getConnector());
+		assertNull(connectionPart.getSourceEndpointLocation());
+		assertNull(connectionPart.getTargetEndpointLocation());
+		assertEquals(schema.getDiagramData().getConnectionParts().size() - 1, 
+					 schema.getDiagramData().getConnectionParts().indexOf(connectionPart));
+		
+		ConnectionLabel connectionLabel = newMemberRole.getConnectionLabel();
+		assertNotNull(connectionLabel);
+		assertSame(LabelAlignment.LEFT, connectionLabel.getAlignment());
+		assertEquals(schema.getDiagramData().getConnectionLabels().size() - 1, 
+				 	 schema.getDiagramData().getConnectionLabels().indexOf(connectionLabel));
+		
+		DiagramLocation diagramLocation = connectionLabel.getDiagramLocation();
+		assertNotNull(diagramLocation);
+		assertEquals(schema.getDiagramData().getLocations().size() - 1,
+				 	 schema.getDiagramData().getLocations().indexOf(diagramLocation));
+		assertEquals("set label JOB-EMPOSITION (EMPLOYEE)", diagramLocation.getEyecatcher());
+		assertEquals(jobRecord.getDiagramLocation().getX() + RecordFigure.UNSCALED_WIDTH + 5, 
+					 diagramLocation.getX());
+		assertEquals(jobRecord.getDiagramLocation().getY(), diagramLocation.getY());
+		
+		
+		command.undo();
+		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
+		
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
+		
+	}
+
+	@Test
 	public void testSortedChainedSet() {
 		
 		Set set = schema.getSet("DEPT-EMPLOYEE");
@@ -314,8 +380,52 @@ public class AddMemberToSetCommandTest {
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
-		checkXmi(touchedXmi);
+		checkXmi(touchedXmi);	
+	}
+	
+	@Test
+	public void testPointerTypes() {
 		
-	}	
+		Set set = schema.getSet("COVERAGE-CLAIMS");
+		
+		// invalid pointer type specifications
+		try {
+			new AddMemberToSetCommand(set, new PointerType[] {});
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("NEXT pointer is mandatory", e.getMessage());
+		}
+		try {
+			new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+															  PointerType.OWNER_NEXT});
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("invalid pointer type: OWNER_NEXT", e.getMessage());
+		}
+		try {
+			new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+															  PointerType.OWNER_PRIOR});
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("invalid pointer type: OWNER_PRIOR", e.getMessage());
+		}
+		try {
+			new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+															  PointerType.MEMBER_INDEX});
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("invalid pointer type: MEMBER_INDEX", e.getMessage());
+		}
+		
+		// ALL valid pointer specifiations (the order in which they are specified does NOT matter)
+		new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT});
+		new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+				  										  PointerType.MEMBER_PRIOR});
+		new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+				  										  PointerType.MEMBER_OWNER});
+		new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+				  										  PointerType.MEMBER_PRIOR,
+				  										  PointerType.MEMBER_OWNER});
+	}
 
 }

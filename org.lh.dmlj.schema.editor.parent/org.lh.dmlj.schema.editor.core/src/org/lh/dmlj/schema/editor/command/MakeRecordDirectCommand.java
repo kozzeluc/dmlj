@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -34,7 +34,7 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 @ModelChange(category=SET_FEATURES)
 public class MakeRecordDirectCommand extends AbstractChangeLocationModeCommand {
 	
-	@Owner 	  private SchemaRecord 		   record;
+	@Owner 	  protected SchemaRecord 	   record;
 	@Features private EStructuralFeature[] features = new EStructuralFeature[] {
 		SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()
 	};	
