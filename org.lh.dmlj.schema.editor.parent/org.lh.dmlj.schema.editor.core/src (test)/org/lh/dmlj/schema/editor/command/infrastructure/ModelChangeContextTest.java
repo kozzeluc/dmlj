@@ -29,12 +29,14 @@ public class ModelChangeContextTest {
 		context.getContextData().put("key1", "value1");
 		context.getContextData().put("key2", "value2");
 		context.setListenerData("listener data");
+		context.setCommandExecutionMode(CommandExecutionMode.UNDO);
 		
 		assertSame(ModelChangeType.SWAP_RECORD_ELEMENTS, context.getModelChangeType());
 		assertEquals(2, context.getContextData().size());
 		assertEquals("value1", context.getContextData().get("key1"));
 		assertEquals("value2", context.getContextData().get("key2"));
 		assertEquals("listener data", context.getListenerData());
+		assertSame(CommandExecutionMode.UNDO, context.getCommandExecutionMode());
 		
 		ModelChangeContext copy = context.copy();
 		assertSame(ModelChangeType.SWAP_RECORD_ELEMENTS, copy.getModelChangeType());
@@ -43,6 +45,7 @@ public class ModelChangeContextTest {
 		assertEquals("value1", copy.getContextData().get("key1"));
 		assertEquals("value2", copy.getContextData().get("key2"));
 		assertNull("listener data should be erased for copies", copy.getListenerData());
+		assertNull("command execution mode should be erased for copies", copy.getCommandExecutionMode());
 		
 	}
 

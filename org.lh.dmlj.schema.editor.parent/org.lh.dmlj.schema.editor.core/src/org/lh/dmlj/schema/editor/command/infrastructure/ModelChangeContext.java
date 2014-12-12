@@ -21,6 +21,7 @@ import java.util.Map;
 
 public class ModelChangeContext {
 
+	private CommandExecutionMode commandExecutionMode;
 	private Map<String, String> contextData = new HashMap<>();
 	private Object listenerData;
 	private ModelChangeType modelChangeType;
@@ -35,8 +36,12 @@ public class ModelChangeContext {
 		for (String key : contextData.keySet()) {
 			copy.getContextData().put(key, contextData.get(key));
 		}
-		// don't copy the listener data
+		// don't copy the listener data and command execution mode
 		return copy;
+	}
+
+	public CommandExecutionMode getCommandExecutionMode() {
+		return commandExecutionMode;
 	}
 
 	public Map<String, String> getContextData() {
@@ -51,8 +56,32 @@ public class ModelChangeContext {
 		return modelChangeType;
 	}
 
+	/**
+	 * This attribute should only be set by the model change dispatcher and NOT by the component 
+	 * that creates the initial context before handling a model change command to the command stack.
+	 * @param commandExecutionMode the command execution mode during which the context is passed to 
+	 *        model change listeners
+	 */
+	public void setCommandExecutionMode(CommandExecutionMode commandExecutionMode) {
+		this.commandExecutionMode = commandExecutionMode;
+	}
+
+	/**
+	 * This attribute should NOT be set by the component that creates the initial context before 
+	 * handling a model change command to the command stack.  It is intended <i>only</i> for model  
+	 * change listeners, that can add a 'listener object' to the context <i>before</i> the model 
+	 * change is carried out, which can then be retrieved <i>after</i> the model has been changed.
+	 * @param listenerData an object containing listener specific data 
+	 */
 	public void setListenerData(Object listenerData) {
 		this.listenerData = listenerData;
+	}
+	
+	public String toString() {
+		return "ModelChangeContext [modelChangeType=" + modelChangeType + 
+			   ", commandExecutionMode=" + commandExecutionMode + 
+			   ", contextData=" + contextData + 
+			   ", listenerData=" + listenerData + "]";
 	}
 	
 }
