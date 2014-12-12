@@ -129,6 +129,7 @@ import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
@@ -440,6 +441,10 @@ public class SchemaEditor
 			}
 
 			@Override
+			public void afterModelChange(ModelChangeContext context) {				
+			}
+			
+			@Override
 			public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
 									  EObject newOwner) {								
 			}
@@ -478,6 +483,10 @@ public class SchemaEditor
 						manager.setZoom(schema.getDiagramData().getZoomLevel());
 					}
 				}				
+			}
+			
+			@Override
+			public void beforeModelChange(ModelChangeContext context) {				
 			}
 			
 		};

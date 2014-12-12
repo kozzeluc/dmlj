@@ -33,6 +33,7 @@ import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.common.Tools;
 
 public abstract class AbstractSchemaTreeEditPart<T extends EObject> 
@@ -199,6 +200,10 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	@Override
 	public void afterAddItem(EObject owner, EReference reference, Object item) {		
 	}
+	
+	@Override
+	public void afterModelChange(ModelChangeContext context) {		
+	}
 
 	@Override
 	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
@@ -210,6 +215,10 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	
 	@Override
 	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {				
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {		
 	}
 
 	protected EditPart childFor(Object model) {

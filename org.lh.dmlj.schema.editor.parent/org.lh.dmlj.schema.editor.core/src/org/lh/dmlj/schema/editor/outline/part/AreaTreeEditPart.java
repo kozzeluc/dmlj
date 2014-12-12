@@ -32,6 +32,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 
 public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 	
@@ -72,6 +73,10 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 		}
 	}
 	
+	@Override
+	public void afterModelChange(ModelChangeContext context) {		
+	}
+
 	@Override
 	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
 							  EObject newOwner) {
@@ -150,6 +155,10 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 			// disrupted, so we have to inform that edit part of this fact
 			nodeTextChanged();						
 		}
+	}
+
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {		
 	}
 
 	@Override

@@ -39,6 +39,7 @@ import org.lh.dmlj.schema.editor.command.DeleteGuideCommand;
 import org.lh.dmlj.schema.editor.command.MoveGuideCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.preference.Unit;
 
@@ -88,6 +89,10 @@ public class SchemaEditorRulerProvider
 	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
 							  EObject newOwner) {				
 	}
+	
+	@Override
+	public void afterModelChange(ModelChangeContext context) {		
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -122,6 +127,10 @@ public class SchemaEditorRulerProvider
 			}
 			
 		}
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {		
 	}
 
 	/**

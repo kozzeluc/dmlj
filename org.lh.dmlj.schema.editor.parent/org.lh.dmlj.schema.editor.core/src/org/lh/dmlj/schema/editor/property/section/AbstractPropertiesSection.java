@@ -40,6 +40,7 @@ import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.property.IGraphicalEditorProvider;
 
 /**
@@ -125,6 +126,10 @@ public abstract class AbstractPropertiesSection
 	}
 	
 	@Override
+	public void afterModelChange(ModelChangeContext context) {	
+	}
+	
+	@Override
 	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
 							  EObject newOwner) {
 		
@@ -142,6 +147,10 @@ public abstract class AbstractPropertiesSection
 	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
 		// whatever model change, just refresh the properties section
 		doRefresh();
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {		
 	}
 	
 	private void clearGlobalActionHandlers() {

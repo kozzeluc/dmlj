@@ -52,6 +52,7 @@ import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.policy.SchemaXYLayoutEditPolicy;
 
 public class SchemaEditPart 
@@ -202,6 +203,10 @@ public class SchemaEditPart
 			
 		}		
 		
+	}
+	
+	@Override
+	public void afterModelChange(ModelChangeContext context) {		
 	}
 
 	@Override
@@ -392,6 +397,10 @@ public class SchemaEditPart
 
 	@Override
 	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {		
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {		
 	}
 
 	@Override

@@ -910,6 +910,10 @@ public class ModelChangeDispatcherTest {
 				assertTrue(dispatcher.isObsolete(listener2));
 			}			
 			@Override
+			public void afterModelChange(ModelChangeContext context) {
+				throw new RuntimeException("method should not be called: afterModelChange");
+			}
+			@Override
 			public void afterMoveItem(EObject oldOwner, EReference reference,  Object item, 
 									  EObject newOwner) {
 				throw new RuntimeException("method should not be called: afterMoveItem");				
@@ -921,6 +925,10 @@ public class ModelChangeDispatcherTest {
 			@Override
 			public void afterSetFeatures(EObject owner, EStructuralFeature[] attributes) {
 				throw new RuntimeException("method should not be called: afterSetFeatures");				
+			}
+			@Override
+			public void beforeModelChange(ModelChangeContext context) {
+				throw new RuntimeException("method should not be called: beforeModelChange");
 			}
 		};
 		dispatcher.addModelChangeListener(listener1);
@@ -978,7 +986,11 @@ public class ModelChangeDispatcherTest {
 				assertSame(listener2, listeners.get(1));
 				assertFalse(dispatcher.isObsolete(this));
 				assertFalse(dispatcher.isObsolete(listener2));				
-			}			
+			}	
+			@Override
+			public void afterModelChange(ModelChangeContext context) {
+				throw new RuntimeException("method should not be called: afterModelChange");
+			}
 			@Override
 			public void afterRemoveItem(EObject owner, EReference reference, Object item) {
 				throw new RuntimeException("method should not be called: afterAddItem");				
@@ -991,6 +1003,10 @@ public class ModelChangeDispatcherTest {
 			@Override
 			public void afterSetFeatures(EObject owner, EStructuralFeature[] attributes) {
 				throw new RuntimeException("method should not be called: afterSetFeatures");				
+			}
+			@Override
+			public void beforeModelChange(ModelChangeContext context) {
+				throw new RuntimeException("method should not be called: beforeModelChange");
 			}
 		};
 		dispatcher.addModelChangeListener(listener1); // only add the first listener !		

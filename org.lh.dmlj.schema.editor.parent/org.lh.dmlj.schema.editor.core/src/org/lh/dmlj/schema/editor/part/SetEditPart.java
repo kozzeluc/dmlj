@@ -48,6 +48,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
@@ -111,6 +112,10 @@ public class SetEditPart
 			refreshVisuals();						
 		}
 	}
+	
+	@Override
+	public void afterModelChange(ModelChangeContext context) {		
+	}
 
 	@Override
 	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
@@ -145,6 +150,10 @@ public class SetEditPart
 		}
 	}
 
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {		
+	}
+	
 	@Override
 	protected void createEditPolicies() {
 		

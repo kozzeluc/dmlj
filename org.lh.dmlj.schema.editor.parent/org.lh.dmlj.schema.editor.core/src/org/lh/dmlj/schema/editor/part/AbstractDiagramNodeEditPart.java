@@ -34,6 +34,7 @@ import org.lh.dmlj.schema.ResizableDiagramNode;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 
 
 /**
@@ -83,6 +84,10 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	}
 
 	@Override
+	public void afterModelChange(ModelChangeContext context) {		
+	}
+	
+	@Override
 	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
 							  EObject newOwner) {		
 	}
@@ -126,6 +131,10 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 			
 		}		
 	}	
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {		
+	}
 
 	@Override
 	protected void createEditPolicies() {		
