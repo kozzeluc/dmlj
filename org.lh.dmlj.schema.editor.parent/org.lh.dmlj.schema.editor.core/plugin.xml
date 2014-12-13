@@ -158,7 +158,13 @@
                label="General">
          </propertyTab>
          <propertyTab
-               afterTab="org.lh.dmlj.schema.editor.propertyTabSortedSet"
+               afterTab="org.lh.dmlj.schema.editor.propertyTabGeneral"
+               category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabDictionary"
+               label="Dictionary">
+         </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabDictionary"
                category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabRecordLength"
                label="Length">
@@ -176,7 +182,7 @@
                label="CALC">
          </propertyTab>
          <propertyTab
-               afterTab="org.lh.dmlj.schema.editor.propertyTabLengt"
+               afterTab="org.lh.dmlj.schema.editor.propertyTabLength"
                category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabVia"
                label="VIA">
@@ -393,6 +399,14 @@
                tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
             <input
                   type="org.lh.dmlj.schema.MemberRole">
+            </input>
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.section.RecordDictionaryPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordDictionary"
+               tab="org.lh.dmlj.schema.editor.propertyTabDictionary">
+            <input
+                  type="org.lh.dmlj.schema.SchemaRecord">
             </input>
          </propertySection>
       </propertySections>
