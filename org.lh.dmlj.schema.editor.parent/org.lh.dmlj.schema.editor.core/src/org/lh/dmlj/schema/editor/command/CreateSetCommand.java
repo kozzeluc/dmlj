@@ -20,7 +20,6 @@ import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.A
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
@@ -44,7 +43,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendage;
 
 @ModelChange(category=ADD_ITEM)
-public class CreateSetCommand extends Command {
+public class CreateSetCommand extends ModelChangeBasicCommand {
 	
 	private static final String SET_NAME_PREFIX = "NEW-SET-";
 

@@ -19,7 +19,6 @@ package org.lh.dmlj.schema.editor.command;
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -28,7 +27,7 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 @ModelChange(category=SET_FEATURES)
-public class MoveBendpointCommand extends Command {	
+public class MoveBendpointCommand extends ModelChangeBasicCommand {	
 	
 	@Owner    private DiagramLocation 	   bendpoint;	
 	@Features private EStructuralFeature[] features = {

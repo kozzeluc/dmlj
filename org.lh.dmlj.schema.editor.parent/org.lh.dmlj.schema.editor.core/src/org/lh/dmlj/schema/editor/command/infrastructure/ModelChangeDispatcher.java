@@ -22,8 +22,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
@@ -36,6 +38,8 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.annotation.Features;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
@@ -192,6 +196,18 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		
 	}
 	
+	private static CommandExecutionMode getCommandExecutionMode(CommandStackEvent event) {
+		if (event.getDetail() == CommandStack.POST_EXECUTE) {
+			return CommandExecutionMode.EXECUTE;
+		} else if (event.getDetail() == CommandStack.POST_UNDO) {
+			return CommandExecutionMode.UNDO;
+		} else if (event.getDetail() == CommandStack.POST_REDO) {
+			return CommandExecutionMode.REDO;
+		}
+		throw new IllegalArgumentException("cannot derive command execution mode: " + 
+										   event.getDetail()); 
+	}
+
 	private static String getEventDetailDescription(int eventDetail) {
 		if (eventDetail == CommandStack.PRE_EXECUTE) {
 			return "PRE_EXECUTE";		
@@ -302,21 +318,36 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		// we don't expect to be in dispatching mode
 		Assert.isTrue(!dispatching, "already dispatching; check for previous exceptions");		
 		
-		// the event's command is possibly a compound command - build a list of commands to process
-		Command eventCommand = event.getCommand();
+		// we need to extract the model change context from the command that was put on the command
+		// stack
+		ModelChangeContext context;		
+		
+		// the event's command is possibly a compound command - build a list of commands to process		
+		Command eventCommand = event.getCommand();		
 		List<Command> commands = new ArrayList<>();
 		if (eventCommand instanceof CompoundCommand) {
 			// the event command is a compound command
 			CompoundCommand compoundCommand = (CompoundCommand) eventCommand;
 			List<Command> compoundCommandCommands = compoundCommand.getCommands();			
 			if (compoundCommandCommands.size() == 1 &&
-				compoundCommandCommands.get(0) instanceof CompoundCommand) {
+				compoundCommandCommands.get(0) instanceof ModelChangeCompoundCommand) {
 				
 				// in some cases, compound commands that we create are wrapped themselves in a
 				// compound command, so make sure we can handle this situation
-				CompoundCommand wrappedCompoundCommand = 
-					(CompoundCommand) compoundCommandCommands.get(0);
+				ModelChangeCompoundCommand wrappedCompoundCommand = 
+					(ModelChangeCompoundCommand) compoundCommandCommands.get(0);
+				// ignore non model change commands
+				if (!(wrappedCompoundCommand instanceof IModelChangeCommand)) {
+					return;
+				}
 				compoundCommandCommands = wrappedCompoundCommand.getCommands();
+				context = wrappedCompoundCommand.getContext();
+			} else {
+				// ignore non model change commands
+				if (!(eventCommand instanceof IModelChangeCommand)) {
+					return;
+				}
+				context = ((IModelChangeCommand) eventCommand).getContext();
 			}
 			if (isExecuteOrRedo(event.getDetail())) {
 				// add the individual commands in the order they are listed in the compound command,
@@ -346,15 +377,63 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 			}
 			logDebug(debugMessage.toString());			
 		} else {
-			// the event command is a simple command
+			// the event command is a basic command; ignore non model change commands
+			if (!(eventCommand instanceof IModelChangeCommand)) {
+				return;
+			} 
 			commands.add(eventCommand);
+			context = ((IModelChangeCommand) eventCommand).getContext();
+		}
+		
+		// invoke the beforeModelChangeListener(ModelChangeContext context) method on all listeners
+		// and set aside the listener data; if no context is set, bypass this step (note that we 
+		// should avoid this situation but are allowing it to be able to move gradually to the new 
+		// dispatching methods
+		CommandExecutionMode commandExecutionMode = null; // to be derived later
+		List<IModelChangeListener> allListeners = new ArrayList<>();
+		allListeners.addAll(listeners);
+ 		Map<Integer, Object> listenerDataMap = new HashMap<>();
+		if (context != null) {
+			commandExecutionMode = getCommandExecutionMode(event);
+	 		for (int i = 0; i < allListeners.size(); i++) {
+				
+				ModelChangeContext contextCopy = context.copy();
+				contextCopy.setCommandExecutionMode(commandExecutionMode);
+				
+				IModelChangeListener listener = allListeners.get(i);
+				listener.beforeModelChange(contextCopy);
+				
+				Object listenerData = contextCopy.getListenerData();
+				if (listenerData != null) {
+					listenerDataMap.put(Integer.valueOf(i), listenerData);
+				}
+			}
 		}
 		
 		// perform the dispatch for each command
 		for (Command command : commands) {
 			dispatch(command, event.getDetail());
 		}
+		
+		// invoke the afterModelChangeListener(ModelChangeContext context) method on ALL listeners
+		// (we don't work with the notion of 'obsolete listeners' here); if no context is set, 
+		// bypass this step (note that we should avoid this situation but are allowing it to be able
+		// to move gradually to the new dispatching methods
+		if (context != null) {
+			for (int i = 0; i < allListeners.size(); i++) {
 				
+				ModelChangeContext contextCopy = context.copy();
+				contextCopy.setCommandExecutionMode(commandExecutionMode);
+				Object listenerData = listenerDataMap.get(Integer.valueOf(i));
+				if (listenerData != null) {
+					contextCopy.setListenerData(listenerData);
+				}
+				
+				IModelChangeListener listener = allListeners.get(i);
+				listener.afterModelChange(contextCopy);
+			}
+		}
+
 	}
 
 	private void dispatch(Command command, int eventDetail) {		

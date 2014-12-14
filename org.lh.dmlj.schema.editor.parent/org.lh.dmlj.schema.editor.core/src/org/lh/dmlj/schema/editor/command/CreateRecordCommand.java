@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Element;
@@ -46,7 +45,7 @@ import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.common.ValidationResult.Status;
 
 @ModelChange(category=ADD_ITEM)
-public class CreateRecordCommand extends Command {
+public class CreateRecordCommand extends ModelChangeBasicCommand {
 	
 	private static final String NEW_AREA_NAME = "RECORD-1-AREA";
 	private static final String RECORD_NAME_PREFIX = "NEW-RECORD-";

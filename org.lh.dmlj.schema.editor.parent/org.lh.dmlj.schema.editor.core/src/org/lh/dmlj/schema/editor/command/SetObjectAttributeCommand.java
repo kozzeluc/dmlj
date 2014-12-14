@@ -21,13 +21,12 @@ import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.S
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.editor.command.annotation.Features;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 @ModelChange(category=SET_FEATURES)
-public class SetObjectAttributeCommand extends Command {
+public class SetObjectAttributeCommand extends ModelChangeBasicCommand {
 	
 	@Owner	  private EObject      		   owner;
 	@Features private EStructuralFeature[] features;

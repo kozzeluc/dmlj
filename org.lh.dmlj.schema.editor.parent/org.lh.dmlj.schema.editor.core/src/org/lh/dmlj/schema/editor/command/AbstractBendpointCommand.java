@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,12 +16,11 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.SchemaFactory;
 
-public abstract class AbstractBendpointCommand extends Command {
+public abstract class AbstractBendpointCommand extends ModelChangeBasicCommand {
 
 	protected ConnectionPart connectionPart;
 	protected int 		 	 connectionPartIndex;	

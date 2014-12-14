@@ -22,7 +22,6 @@ import java.util.MissingResourceException;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.AreaSpecification;
@@ -32,6 +31,7 @@ import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
 import org.lh.dmlj.schema.editor.command.ChangeAreaSpecificationCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.MoveRecordOrIndexToOtherAreaCommand;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
 import org.lh.dmlj.schema.editor.common.Tools;
@@ -155,8 +155,8 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 			if (commands.isEmpty()) {
 				throw new RuntimeException("logic error: no commands created");				
 			} else if (commands.size() > 1) {
-				CompoundCommand cc = 
-					new CompoundCommand("Change area specification");				
+				ModelChangeCompoundCommand cc = 
+					new ModelChangeCompoundCommand("Change area specification");				
 				for (Command command : commands) {
 					cc.add(command);
 				}
@@ -208,7 +208,7 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 													   dialog.getPercent());				
 				
 				// create the compound command and return it			
-				CompoundCommand cc = new CompoundCommand(ccLabel);				
+				ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(ccLabel);				
 				cc.add(moveRecordOrIndexToOtherAreaCommand);
 				cc.add(changeAreaSpecificationCommand);
 				return cc;

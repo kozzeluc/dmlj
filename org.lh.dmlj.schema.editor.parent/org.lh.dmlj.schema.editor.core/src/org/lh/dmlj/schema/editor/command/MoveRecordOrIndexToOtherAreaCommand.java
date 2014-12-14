@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,7 +22,6 @@ import static org.lh.dmlj.schema.editor.command.annotation.OwnerType.OLD;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
@@ -46,7 +45,7 @@ import org.lh.dmlj.schema.editor.common.Tools;
  * specification can be changed as well.
  */
 @ModelChange(category=MOVE_ITEM)
-public class MoveRecordOrIndexToOtherAreaCommand extends Command {
+public class MoveRecordOrIndexToOtherAreaCommand extends ModelChangeBasicCommand {
 	
 	@Owner(type=OLD) private SchemaArea		   oldArea;
 	@Owner(type=NEW) private SchemaArea 	   newArea;

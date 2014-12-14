@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,6 @@ import static org.lh.dmlj.schema.SetMembershipOption.MANDATORY_AUTOMATIC;
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
 
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
@@ -39,13 +38,13 @@ import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
 
 @ModelChange(category=ADD_ITEM)
-public class CreateIndexCommand extends Command {
+public class CreateIndexCommand extends ModelChangeBasicCommand {
 	
 	private static final String AREA_NAME_SUFFIX = "-AREA";
 	private static final String SET_NAME_PREFIX = "NEW-INDEX-";

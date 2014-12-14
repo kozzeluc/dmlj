@@ -19,7 +19,6 @@ package org.lh.dmlj.schema.editor.command;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.command.annotation.Features;
@@ -31,7 +30,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerReordering;
 
 @ModelChange(category=ModelChangeCategory.SET_FEATURES)
-public class ChangePointerOrderCommand extends Command {
+public class ChangePointerOrderCommand extends ModelChangeBasicCommand {
 
 	@Owner 
 	protected SchemaRecord record;

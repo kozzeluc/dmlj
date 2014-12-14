@@ -24,7 +24,6 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
@@ -39,7 +38,7 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
 
 @ModelChange(category=ADD_ITEM)
-public class CreateConnectorCommand extends Command {
+public class CreateConnectorCommand extends ModelChangeBasicCommand {
 	
 	static enum ConnectorLayout {HORIZONTAL, VERTICAL}
 	

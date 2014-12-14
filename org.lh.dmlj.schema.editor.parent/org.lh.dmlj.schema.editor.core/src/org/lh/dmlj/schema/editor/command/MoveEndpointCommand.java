@@ -19,7 +19,6 @@ package org.lh.dmlj.schema.editor.command;
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
@@ -30,7 +29,7 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 @ModelChange(category=SET_FEATURES)
-public class MoveEndpointCommand extends Command {
+public class MoveEndpointCommand extends ModelChangeBasicCommand {
 		
 	@Owner 	  private ConnectionPart 		connectionPart;
 	@Features private EStructuralFeature[] 	features;

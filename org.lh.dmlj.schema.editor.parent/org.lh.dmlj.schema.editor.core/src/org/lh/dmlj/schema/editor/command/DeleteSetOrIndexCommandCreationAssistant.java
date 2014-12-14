@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.LocationMode;
@@ -114,7 +113,7 @@ public abstract class DeleteSetOrIndexCommandCreationAssistant {
 				ccLabel = "Delete set";
 			}			
 			
-			CompoundCommand cc = new CompoundCommand(ccLabel);
+			ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(ccLabel);
 			for (Command command : commands) {
 				cc.add(command);
 			}

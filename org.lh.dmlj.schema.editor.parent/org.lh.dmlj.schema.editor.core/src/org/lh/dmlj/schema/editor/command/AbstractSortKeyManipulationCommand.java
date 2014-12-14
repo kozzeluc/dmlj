@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
@@ -32,7 +31,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 
-public abstract class AbstractSortKeyManipulationCommand extends Command {
+public abstract class AbstractSortKeyManipulationCommand extends ModelChangeBasicCommand {
 
 	protected Set 				    set;
 	private StashedDataSlot[]	    stashedDataSlots = new StashedDataSlot[2];	

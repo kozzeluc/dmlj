@@ -18,6 +18,8 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -45,7 +47,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.junit.Test;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.DiagramData;
@@ -54,6 +55,8 @@ import org.lh.dmlj.schema.ResizableDiagramNode;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.annotation.Features;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
 import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
@@ -244,19 +247,27 @@ public class ModelChangeDispatcherTest {
 		IModelChangeListener listener = mock(IModelChangeListener.class);
 		dispatcher.addModelChangeListener(listener);
 		
+		// create a mock ModelChangeContext
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
+		
 		// simulate a PRE_EXECUTE command stack notification using a real CompoundCommand (composed
-		// of 2 mock commands) and a mock CommandStackEvent...
-		Command command1 = mock(Command.class);
-		Command command2 = mock(Command.class);
-		CompoundCommand compoundCommand = new CompoundCommand("test compound command");
+		// of 2 mock commands), a mock CommandStackEvent and a real ModelChangeContext...
+		ModelChangeBasicCommand command1 = mock(ModelChangeBasicCommand.class);
+		ModelChangeBasicCommand command2 = mock(ModelChangeBasicCommand.class);
+		ModelChangeCompoundCommand compoundCommand = 
+			new ModelChangeCompoundCommand("test compound command");
 		compoundCommand.add(command1);
 		compoundCommand.add(command2);
+		compoundCommand.setContext(context);
+		
 		CommandStackEvent event = mock(CommandStackEvent.class);
 		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
 		when(event.getCommand()).thenReturn(compoundCommand);
 		dispatcher.dispatch(event);		
 		
 		// ...no listener method should have been called
+		verify(listener, never()).beforeModelChange(any(ModelChangeContext.class));	
+		verify(listener, never()).afterModelChange(any(ModelChangeContext.class));	
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 				   							   any(EObject.class));		
 		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
@@ -270,6 +281,8 @@ public class ModelChangeDispatcherTest {
 		dispatcher.dispatch(event);
 
 		// ...no listener method should have been called
+		verify(listener, never()).beforeModelChange(any(ModelChangeContext.class));	
+		verify(listener, never()).afterModelChange(any(ModelChangeContext.class));	
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
 		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
@@ -283,6 +296,8 @@ public class ModelChangeDispatcherTest {
 		dispatcher.dispatch(event);
 
 		// ...no listener method should have been called
+		verify(listener, never()).beforeModelChange(any(ModelChangeContext.class));	
+		verify(listener, never()).afterModelChange(any(ModelChangeContext.class));	
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
 		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
@@ -296,8 +311,13 @@ public class ModelChangeDispatcherTest {
 		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
 		dispatcher.dispatch(event);
 
-		// ...no listener method should have been called (because all commands are missing the
-		// @ModelChange annotation)
+		// the following listener methods should have been called once; mind that the context passed
+		// will NOT be the same instance as the original one (but we don't check the context here)
+		verify(listener, times(1)).beforeModelChange(any(ModelChangeContext.class));	
+		verify(listener, times(1)).afterModelChange(any(ModelChangeContext.class));	
+		
+		// ...none of the following listener methods should have been called (because all commands 
+		// are missing the @ModelChange annotation)
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
 		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
@@ -312,12 +332,19 @@ public class ModelChangeDispatcherTest {
 		// @ModelChange(category=SET_ATTRIBUTES)...
 		MoveItemCommand moveItemCommand = new MoveItemCommand();
 		SetFeaturesCommand setAttributeCommand = new SetFeaturesCommand();		
-		compoundCommand = new CompoundCommand("test compound command");
+		compoundCommand = new ModelChangeCompoundCommand("test compound command");
 		compoundCommand.add(moveItemCommand);
 		compoundCommand.add(setAttributeCommand);
+		compoundCommand.setContext(context);
 		when(event.getCommand()).thenReturn(compoundCommand);
 		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
 		dispatcher.dispatch(event);
+		
+		// the following listener methods should have been called once agin; mind that the context 
+		// passed will NOT be the same instance as the original one (but we don't check the context 
+		// here)
+		verify(listener, times(2)).beforeModelChange(any(ModelChangeContext.class));	
+		verify(listener, times(2)).afterModelChange(any(ModelChangeContext.class));
 
 		// ...and verify that the right listener methods have been called (we cannot check the 
 		// order in which they were called but this order is not really relevant since the model
@@ -334,6 +361,12 @@ public class ModelChangeDispatcherTest {
 		// simulate a POST_UNDO command stack notification using the same compound command		
 		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);		
 		dispatcher.dispatch(event);
+		
+		// the following listener methods should have been called once again; mind that the context 
+		// passed will NOT be the same instance as the original one (but we don't check the context 
+		// here)
+		verify(listener, times(3)).beforeModelChange(any(ModelChangeContext.class));	
+		verify(listener, times(3)).afterModelChange(any(ModelChangeContext.class));
 
 		// ...and verify that the right listener methods have been called (we cannot check the 
 		// order in which they were called but this order is not really relevant since the model
@@ -352,6 +385,12 @@ public class ModelChangeDispatcherTest {
 		// simulate a POST_REDO command stack notification using the same compound command		
 		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);		
 		dispatcher.dispatch(event);
+
+		// the following listener methods should have been called once again; mind that the context 
+		// passed will NOT be the same instance as the original one (but we don't check the context 
+		// here)
+		verify(listener, times(4)).beforeModelChange(any(ModelChangeContext.class));	
+		verify(listener, times(4)).afterModelChange(any(ModelChangeContext.class));
 
 		// ...and verify that the right listener methods have been called (we cannot check the 
 		// order in which they were called but this order is not really relevant since the model
@@ -387,12 +426,14 @@ public class ModelChangeDispatcherTest {
 		// simulate a PRE_EXECUTE command stack notification using a real CompoundCommand (composed 
 		// of another compund command that is composed of 2 mock commands) and a mock 
 		// CommandStackEvent...
-		Command command1 = mock(Command.class);
-		Command command2 = mock(Command.class);
-		CompoundCommand innerCompoundCommand = new CompoundCommand("inner compound command");
+		ModelChangeBasicCommand command1 = mock(ModelChangeBasicCommand.class);
+		ModelChangeBasicCommand command2 = mock(ModelChangeBasicCommand.class);
+		ModelChangeCompoundCommand innerCompoundCommand = 
+			new ModelChangeCompoundCommand("inner compound command");
 		innerCompoundCommand.add(command1);
 		innerCompoundCommand.add(command2);
-		CompoundCommand outerCompoundCommand = new CompoundCommand("outer compound command");
+		ModelChangeCompoundCommand outerCompoundCommand = 
+			new ModelChangeCompoundCommand("outer compound command");
 		outerCompoundCommand.add(innerCompoundCommand);
 		CommandStackEvent event = mock(CommandStackEvent.class);
 		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
@@ -455,9 +496,11 @@ public class ModelChangeDispatcherTest {
 		// @ModelChange(category=SET_ATTRIBUTES)...
 		MoveItemCommand moveItemCommand = new MoveItemCommand();
 		SetFeaturesCommand setAttributeCommand = new SetFeaturesCommand();		
-		outerCompoundCommand = new CompoundCommand("test compound command");
-		outerCompoundCommand.add(moveItemCommand);
-		outerCompoundCommand.add(setAttributeCommand);
+		innerCompoundCommand = new ModelChangeCompoundCommand("inner compound command");
+		innerCompoundCommand.add(moveItemCommand);
+		innerCompoundCommand.add(setAttributeCommand);		
+		outerCompoundCommand = new ModelChangeCompoundCommand("test compound command");
+		outerCompoundCommand.add(innerCompoundCommand);
 		when(event.getCommand()).thenReturn(outerCompoundCommand);
 		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
 		dispatcher.dispatch(event);
@@ -1258,8 +1301,162 @@ public class ModelChangeDispatcherTest {
 		
 	}
 	
+	@Test
+	public void testContextPassing() {
+		
+		final ModelChangeContext context = 
+			new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
+		context.getContextData().put("a", "b");
+		
+		final CommandExecutionMode[] expectedCommandExecutionMode = new CommandExecutionMode[1];
+		
+		final ModelChangeContext[] savedListenerContext1 = new ModelChangeContext[1];
+		final boolean[] listener1MethodCallsOK = {false, false};
+		IModelChangeListener listener1 = new ModelChangelChangeAdapter() {		
+			public void beforeModelChange(ModelChangeContext listenerContext1) {
+				
+				assertNotSame(context, listenerContext1);
+				
+				assertSame(expectedCommandExecutionMode[0], 
+						   listenerContext1.getCommandExecutionMode());
+				assertNotSame(context.getContextData(), listenerContext1.getContextData());
+				assertEquals(1, listenerContext1.getContextData().size());
+				assertEquals("b", context.getContextData().get("a"));
+				assertNull(listenerContext1.getListenerData());
+				
+				listenerContext1.setListenerData("listener1 data");
+				
+				listener1MethodCallsOK[0] = true;
+			}			
+			public void afterModelChange(ModelChangeContext listenerContext2) {
+				
+				assertNotSame(context, listenerContext2);
+				assertNotSame(savedListenerContext1[0], listenerContext2);
+				
+				assertSame(expectedCommandExecutionMode[0], 
+						   listenerContext2.getCommandExecutionMode());
+				assertNotSame(context.getContextData(), listenerContext2.getContextData());
+				assertEquals(1, listenerContext2.getContextData().size());
+				assertEquals("b", context.getContextData().get("a"));
+				assertEquals("listener1 data", listenerContext2.getListenerData());
+				
+				listener1MethodCallsOK[1] = true;
+			}			
+		};
+		
+		final ModelChangeContext[] savedListenerContext2 = new ModelChangeContext[1];
+		final boolean[] listener2MethodCallsOK = {false, false};
+		IModelChangeListener listener2 = new ModelChangelChangeAdapter() {		
+			public void beforeModelChange(ModelChangeContext listenerContext1) {
+				
+				assertNotSame(context, listenerContext1);
+				
+				assertSame(expectedCommandExecutionMode[0], 
+						   listenerContext1.getCommandExecutionMode());
+				assertNotSame(context.getContextData(), listenerContext1.getContextData());
+				assertSame(expectedCommandExecutionMode[0], 
+						   listenerContext1.getCommandExecutionMode());
+				assertEquals("b", context.getContextData().get("a"));
+				assertNull(listenerContext1.getListenerData());
+				
+				listenerContext1.setListenerData("listener2 data");
+				
+				listener2MethodCallsOK[0] = true;
+			}			
+			public void afterModelChange(ModelChangeContext listenerContext2) {
+				
+				assertNotSame(context, listenerContext2);
+				assertNotSame(savedListenerContext2[0], listenerContext2);
+				
+				assertSame(expectedCommandExecutionMode[0], 
+						   listenerContext2.getCommandExecutionMode());
+				assertNotSame(context.getContextData(), listenerContext2.getContextData());
+				assertSame(expectedCommandExecutionMode[0], 
+						   listenerContext2.getCommandExecutionMode());
+				assertEquals("b", context.getContextData().get("a"));
+				assertEquals("listener2 data", listenerContext2.getListenerData());
+				
+				listener2MethodCallsOK[1] = true;
+			}			
+		};		
+		
+		ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();	
+		dispatcher.addModelChangeListener(listener1);
+		dispatcher.addModelChangeListener(listener2);
+		
+		ModelChangeBasicCommand command = new ModelChangeBasicCommand("test command");
+		command.setContext(context);
+				
+		expectedCommandExecutionMode[0] = CommandExecutionMode.EXECUTE;
+		CommandStackEvent event = mock(CommandStackEvent.class);
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);	
+		when(event.getCommand()).thenReturn(command);
+		dispatcher.dispatch(event);
+		
+		assertEquals(true, listener1MethodCallsOK[0]);
+		assertEquals(true, listener1MethodCallsOK[1]);
+		assertEquals(true, listener2MethodCallsOK[0]);
+		assertEquals(true, listener2MethodCallsOK[1]);
+		
+		
+		listener1MethodCallsOK[0] = false;
+		listener1MethodCallsOK[1] = false;
+		listener2MethodCallsOK[0] = false;
+		listener2MethodCallsOK[1] = false;
+		
+		expectedCommandExecutionMode[0] = CommandExecutionMode.UNDO;
+		event = mock(CommandStackEvent.class);
+		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);	
+		when(event.getCommand()).thenReturn(command);
+		dispatcher.dispatch(event);
+		
+		assertEquals(true, listener1MethodCallsOK[0]);
+		assertEquals(true, listener1MethodCallsOK[1]);
+		assertEquals(true, listener2MethodCallsOK[0]);
+		assertEquals(true, listener2MethodCallsOK[1]);
+		
+		
+		listener1MethodCallsOK[0] = false;
+		listener1MethodCallsOK[1] = false;
+		listener2MethodCallsOK[0] = false;
+		listener2MethodCallsOK[1] = false;
+		
+		expectedCommandExecutionMode[0] = CommandExecutionMode.REDO;
+		event = mock(CommandStackEvent.class);
+		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);	
+		when(event.getCommand()).thenReturn(command);
+		dispatcher.dispatch(event);
+		
+		assertEquals(true, listener1MethodCallsOK[0]);
+		assertEquals(true, listener1MethodCallsOK[1]);
+		assertEquals(true, listener2MethodCallsOK[0]);
+		assertEquals(true, listener2MethodCallsOK[1]);
+		
+	}
+	
+	public static abstract class ModelChangelChangeAdapter implements IModelChangeListener {		
+
+		@Override
+		public void afterAddItem(EObject owner, EReference reference, Object item) {			
+		}
+
+		@Override
+		public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+								  EObject newOwner) {			
+		}
+
+		@Override
+		public void afterRemoveItem(EObject owner, EReference reference, Object item) {			
+		}
+
+		@Override
+		public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {			
+		}		
+		
+	}
+	
 	@ModelChange(category=ADD_ITEM)
-	private static class AddItemCommand extends Command {
+	private static class AddItemCommand extends ModelChangeBasicCommand {
 		
 		@Owner 	   private DiagramData  owner = SchemaFactory.eINSTANCE.createDiagramData();
 		@Item  	   private DiagramLabel item = SchemaFactory.eINSTANCE.createDiagramLabel();			   	   
@@ -1268,7 +1465,7 @@ public class ModelChangeDispatcherTest {
 	}
 	
 	@ModelChange(category=MOVE_ITEM)
-	private static class MoveItemCommand extends Command {
+	private static class MoveItemCommand extends ModelChangeBasicCommand {
 		
 		@Owner(type=OwnerType.OLD) private SchemaArea		 oldOwner = 
 			SchemaFactory.eINSTANCE.createSchemaArea();
@@ -1282,7 +1479,7 @@ public class ModelChangeDispatcherTest {
 	}
 
 	@ModelChange(category=REMOVE_ITEM)
-	private static class RemoveItemCommand extends Command {
+	private static class RemoveItemCommand extends ModelChangeBasicCommand {
 		
 		@Owner 	   private DiagramData  owner = SchemaFactory.eINSTANCE.createDiagramData();
 		@Item  	   private DiagramLabel item = SchemaFactory.eINSTANCE.createDiagramLabel();			   	   
@@ -1291,7 +1488,7 @@ public class ModelChangeDispatcherTest {
 	}	
 	
 	@ModelChange(category=SET_FEATURES)
-	private static class SetFeaturesCommand extends Command {
+	private static class SetFeaturesCommand extends ModelChangeBasicCommand {
 		@Owner	  private ResizableDiagramNode owner = SchemaFactory.eINSTANCE.createDiagramLabel();
 		@Features private EStructuralFeature[] 	features = {
 			SchemaPackage.eINSTANCE.getResizableDiagramNode_Width(),

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,6 @@ import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.S
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.MemberRole;
@@ -31,7 +30,7 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 @ModelChange(category=SET_FEATURES)
-public class LockEndpointsCommand extends Command {
+public class LockEndpointsCommand extends ModelChangeBasicCommand {
 
 	@Owner	  private MemberRole 			memberRole;
 	@Features private EStructuralFeature[] 	features = new EStructuralFeature[] {

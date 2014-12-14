@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,7 +19,6 @@ package org.lh.dmlj.schema.editor.command;
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.ResizableDiagramNode;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -28,7 +27,7 @@ import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 @ModelChange(category=SET_FEATURES)
-public class ResizeDiagramNodeCommand extends Command {
+public class ResizeDiagramNodeCommand extends ModelChangeBasicCommand {
 	
 	@Owner	  private ResizableDiagramNode diagramNode;
 	@Features private EStructuralFeature[] features = {

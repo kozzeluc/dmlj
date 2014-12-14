@@ -21,10 +21,10 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.IMemberRoleProvider;
 import org.lh.dmlj.schema.editor.property.ui.IndexedSetPointersDialog;
@@ -109,7 +109,7 @@ public class IndexedSetPointersHandler
 				"Change pointers for set '" + 
 				Tools.removeTrailingUnderscore(memberRole.getSet().getName()) + 
 				"'";			
-			CompoundCommand cc = new CompoundCommand(label);
+			ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(label);
 			for (Command command : commands) {
 				cc.add(command);
 			}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,7 +18,6 @@ package org.lh.dmlj.schema.editor.command;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.SchemaFactory;
@@ -33,7 +32,7 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
  * OffsetExpression.
  */
 @ModelChange(category=ModelChangeCategory.SET_FEATURES)
-public class ChangeAreaSpecificationCommand extends Command {
+public class ChangeAreaSpecificationCommand extends ModelChangeBasicCommand {
 	
 	@Owner 	  private AreaSpecification 	areaSpecification;
 	@Features private EStructuralFeature[] 	features = {

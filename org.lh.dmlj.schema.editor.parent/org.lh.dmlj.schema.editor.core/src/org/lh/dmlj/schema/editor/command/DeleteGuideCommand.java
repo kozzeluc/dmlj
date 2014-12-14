@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,17 +19,16 @@ package org.lh.dmlj.schema.editor.command;
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
 
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
+import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 
 @ModelChange(category=REMOVE_ITEM)
-public class DeleteGuideCommand extends Command {
+public class DeleteGuideCommand extends ModelChangeBasicCommand {
 
 	@Owner 	   private Ruler 	  ruler;
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getRuler_Guides();

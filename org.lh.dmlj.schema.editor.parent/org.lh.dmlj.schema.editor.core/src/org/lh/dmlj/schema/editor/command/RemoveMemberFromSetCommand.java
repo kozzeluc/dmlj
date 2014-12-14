@@ -19,7 +19,6 @@ package org.lh.dmlj.schema.editor.command;
 import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
 
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
@@ -31,7 +30,7 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
 import org.lh.dmlj.schema.editor.common.Tools;
 
 @ModelChange(category=REMOVE_ITEM)
-public class RemoveMemberFromSetCommand extends Command {
+public class RemoveMemberFromSetCommand extends ModelChangeBasicCommand {
 		
 	@Owner 	   private Set 		  	set;
 	@Reference private EReference 	reference = SchemaPackage.eINSTANCE.getSet_Members();

@@ -21,7 +21,6 @@ import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.R
 import java.util.ArrayList;
 
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
@@ -34,7 +33,7 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.command.annotation.Reference;
 
 @ModelChange(category=REMOVE_ITEM)
-public class DeleteConnectorsCommand extends Command {
+public class DeleteConnectorsCommand extends ModelChangeBasicCommand {
 
 	@Owner 	   protected MemberRole   memberRole;
 	@Item	   private ConnectionPart connectionPart2;

@@ -28,7 +28,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallSpecification;
@@ -46,7 +45,7 @@ import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
 
 @ModelChange(category=REMOVE_ITEM)
-public class DeleteIndexCommand extends Command {	
+public class DeleteIndexCommand extends ModelChangeBasicCommand {	
 	
 	@Owner private Schema schema;
 	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
