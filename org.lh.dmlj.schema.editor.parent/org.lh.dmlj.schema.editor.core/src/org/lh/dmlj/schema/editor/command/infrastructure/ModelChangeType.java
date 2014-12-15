@@ -18,6 +18,8 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 
 public enum ModelChangeType {
 
+	ADD_RECORD,
+	
 	SWAP_RECORD_ELEMENTS
 	
 }

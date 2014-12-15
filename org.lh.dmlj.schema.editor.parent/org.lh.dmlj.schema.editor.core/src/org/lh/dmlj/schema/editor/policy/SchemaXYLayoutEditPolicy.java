@@ -34,7 +34,10 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommand;
 import org.lh.dmlj.schema.editor.command.CreateRecordCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
 import org.lh.dmlj.schema.editor.part.AbstractDiagramNodeEditPart;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
@@ -110,7 +113,10 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 												  schema.getDescription(), lastModified); 
 			return new CreateDiagramLabelCommand(schema, request.getLocation(), size);
 		} else if (request.getNewObjectType() == SchemaRecord.class) {
-			return new CreateRecordCommand(schema, request.getLocation());
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+			ModelChangeBasicCommand command = new CreateRecordCommand(schema, request.getLocation());
+			command.setContext(context);
+			return command;
 		}
 		return null;
 	}	

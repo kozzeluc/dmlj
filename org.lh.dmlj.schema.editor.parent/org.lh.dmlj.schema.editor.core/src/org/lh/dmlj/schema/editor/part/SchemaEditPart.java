@@ -93,11 +93,7 @@ public class SchemaEditPart
 		} else if (owner == getModel() && 
 				   reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
 			
-			// a RECORD was added
-			SchemaRecord record = (SchemaRecord) item;			
-			EditPart child = 
-				SchemaDiagramEditPartFactory.createEditPart(record, modelChangeProvider, schemaEditor);
-			addChild(child, getChildren().size());
+			// a RECORD was added --> MIGRATED
 		
 		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
 			
@@ -206,7 +202,13 @@ public class SchemaEditPart
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {	
-		if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleAddRecord(context);
+			} else {
+				handleAddRecordUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				handleSwapRecordElements(context);
 			} else {
@@ -407,7 +409,11 @@ public class SchemaEditPart
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {	
-		if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
+			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				prepareForAddRecordUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				prepareForSwapRecordElements(context);
 			} else {
@@ -530,6 +536,16 @@ public class SchemaEditPart
 		return allObjects;
 	}
 
+	private void handleAddRecord(ModelChangeContext context) {
+		SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);			
+		createAndAddChild(record);
+	}
+
+	private void handleAddRecordUndo(ModelChangeContext context) {
+		SchemaRecord record = (SchemaRecord) context.getListenerData();
+		findAndRemoveChild(record);
+	}
+
 	private void handleSwapRecordElements(ModelChangeContext context) {
 		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
 		// member sets in which it participates as a member; it is only added as a member again if
@@ -616,6 +632,11 @@ public class SchemaEditPart
 		RecordEditPart memberRecordEditPart = 
 			(RecordEditPart) getViewer().getEditPartRegistry().get(memberRecord);
 		memberRecordEditPart.refresh();
+	}
+
+	private void prepareForAddRecordUndo(ModelChangeContext context) {
+		SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);
+		context.setListenerData(record);
 	}
 
 	private void prepareForSwapRecordElements(ModelChangeContext context) {
