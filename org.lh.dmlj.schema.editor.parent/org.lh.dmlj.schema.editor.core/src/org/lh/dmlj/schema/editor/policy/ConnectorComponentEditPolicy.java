@@ -24,6 +24,10 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorsCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.part.ConnectorEditPart;
 
 public class ConnectorComponentEditPolicy extends ComponentEditPolicy {
@@ -42,7 +46,12 @@ public class ConnectorComponentEditPolicy extends ComponentEditPolicy {
 		}
 		Connector connector = ((ConnectorEditPart)editParts.get(0)).getModel();
 		MemberRole memberRole = connector.getConnectionPart().getMemberRole();
-		return new DeleteConnectorsCommand(memberRole);				
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_CONNECTORS);
+		context.getContextData().put(IContextDataKeys.SET_NAME, memberRole.getSet().getName());
+		context.getContextData().put(IContextDataKeys.RECORD_NAME, memberRole.getRecord().getName());
+		ModelChangeBasicCommand command = new DeleteConnectorsCommand(memberRole);	
+		command.setContext(context);
+		return command;
 	}
 	
 }

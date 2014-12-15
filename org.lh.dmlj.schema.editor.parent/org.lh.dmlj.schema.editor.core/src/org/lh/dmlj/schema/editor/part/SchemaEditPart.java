@@ -159,40 +159,7 @@ public class SchemaEditPart
 		} else if (owner instanceof MemberRole && 
 				   reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts()) {			
 		
-			// connectors created
-			
-			MemberRole memberRole = (MemberRole) owner;
-			
-			// create and add the 2 connector edit parts
-			for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
-				Connector model = connectionPart.getConnector();
-				EditPart connectorEditPart =
-					SchemaDiagramEditPartFactory.createEditPart(model, modelChangeProvider,
-																schemaEditor);
-				addChild(connectorEditPart, getChildren().size());					
-			}
-			
-			// find and refresh the owner edit part
-			GraphicalEditPart ownerEditPart;
-			if (memberRole.getSet().getOwner() != null) {
-				// user owned set
-				SchemaRecord ownerRecord = memberRole.getSet().getOwner().getRecord();
-				ownerEditPart = (GraphicalEditPart) getViewer().getEditPartRegistry()
-															   .get(ownerRecord);
-			} else {
-				// system owned set
-				SystemOwner systemOwner = memberRole.getSet().getSystemOwner();
-				ownerEditPart = (GraphicalEditPart) getViewer().getEditPartRegistry()
-						   						   			   .get(systemOwner);
-			}
-			ownerEditPart.refresh();
-			
-			// find and refresh the member record edit part
-			SchemaRecord memberRecord = memberRole.getRecord();
-			GraphicalEditPart memberRecordEditPart = 
-				(GraphicalEditPart) getViewer().getEditPartRegistry()
-									  		   .get(memberRecord);
-			memberRecordEditPart.refresh();			
+			// connectors created --> MIGRATED			
 			
 		}*/		
 		
@@ -217,6 +184,12 @@ public class SchemaEditPart
 				handleAddRecord(context);
 			} else {
 				handleAddRecordUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleDeleteConnectors(context);
+			} else {
+				handleDeleteConnectorsUndo(context);
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
@@ -360,62 +333,7 @@ public class SchemaEditPart
 		} else if (owner instanceof MemberRole && 
 				   reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts()) {			
 		
-			// connectors removed (possibly because the set is being removed too)
-			
-			MemberRole memberRole = (MemberRole) owner;
-			Assert.isTrue(memberRole.getConnectionParts().size() == 1);
-			
-			// find and remove both connector edit parts
-			List<ConnectionPart> connectionParts = new ArrayList<>();
-			connectionParts.add(memberRole.getConnectionParts().get(0));
-			connectionParts.add((ConnectionPart) item); // the removed connection part
-			List<ConnectorEditPart> connectorEditParts = new ArrayList<>();
-			GraphicalEditPart memberRecordEditPart = null;
-			for (Object object : getViewer().getEditPartRegistry().entrySet()) {
-				Entry<?, ?> entry = (Entry<?, ?>) object;																
-				if (entry.getKey() instanceof ConnectionPart) {
-					// set connection edit part...					
-					ConnectionPart connectionPart = (ConnectionPart) entry.getKey();
-					if (connectionParts.indexOf(connectionPart) > -1) {
-						// ... that is involved
-						SetEditPart setEditPart = (SetEditPart) entry.getValue();
-						Assert.isTrue(setEditPart.getSource() instanceof ConnectorEditPart ||
-									  setEditPart.getTarget() instanceof ConnectorEditPart);
-						if (setEditPart.getSource() instanceof ConnectorEditPart) {
-							// second connector edit part
-							connectorEditParts.add((ConnectorEditPart) setEditPart.getSource());
-							memberRecordEditPart = (RecordEditPart) setEditPart.getTarget();
-						} else {
-							// first connector edit part
-							connectorEditParts.add((ConnectorEditPart) setEditPart.getTarget());
-						}						
-					}
-				}
-			}
-			Assert.isTrue(connectorEditParts.size() == 2);
-			for (EditPart editPart : connectorEditParts) {
-				removeChild(editPart);
-			}
-
-			// refresh the owner edit part
-			GraphicalEditPart ownerEditPart;
-			if (memberRole.getSet().getOwner() != null) {
-				// user owned set
-				SchemaRecord ownerRecord = memberRole.getSet().getOwner().getRecord();
-				ownerEditPart = (GraphicalEditPart) getViewer().getEditPartRegistry()
-				  		   						   			   .get(ownerRecord);
-			} else {
-				// system owned set
-				SystemOwner systemOwner = memberRole.getSet().getSystemOwner();
-				ownerEditPart = (GraphicalEditPart) getViewer().getEditPartRegistry()
-						   						   			   .get(systemOwner);
-			}
-			ownerEditPart.refresh();
-			
-			// refresh the member record edit part (the only remaining connection edit part will be 
-			// created again, provided the set isn't removed together with the connectors)
-			Assert.isNotNull(memberRecordEditPart);			
-			memberRecordEditPart.refresh();			
+			// connectors removed --> MIGRATED			
 		
 		}*/		
 		
@@ -438,6 +356,10 @@ public class SchemaEditPart
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 				prepareForAddRecordUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				prepareForDeleteConnectors(context);
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
@@ -628,6 +550,37 @@ public class SchemaEditPart
 		findAndRemoveChild(record);
 	}
 
+	private void handleDeleteConnectors(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		Set set = memberRole.getSet();
+		EObject owner = 
+			set.getSystemOwner() != null ? set.getSystemOwner() : set.getOwner().getRecord();
+		@SuppressWarnings("unchecked")
+		List<EObject> objectsToBecomeObsolete = (List<EObject>) context.getListenerData();
+		for (EObject model : objectsToBecomeObsolete) {
+			findAndRemoveChild(model);
+		}
+		findAndRefreshChild(owner);
+		findAndRefreshChild(memberRecord);
+	}
+
+	private void handleDeleteConnectorsUndo(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		Set set = memberRole.getSet();
+		EObject owner = 
+			set.getSystemOwner() != null ? set.getSystemOwner() : set.getOwner().getRecord();
+		createAndAddChild(memberRole.getConnectionParts().get(0).getConnector());
+		createAndAddChild(memberRole.getConnectionParts().get(1).getConnector());
+		findAndRefreshChild(owner);
+		findAndRefreshChild(memberRecord);
+	}
+
 	private void handleDeleteDiagramLabel(ModelChangeContext context) {
 		DiagramLabel diagramLabel = (DiagramLabel) context.getListenerData();
 		findAndRemoveChild(diagramLabel);
@@ -757,6 +710,18 @@ public class SchemaEditPart
 	private void prepareForAddRecordUndo(ModelChangeContext context) {
 		SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);
 		context.setListenerData(record);
+	}
+
+	private void prepareForDeleteConnectors(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		List<EObject> objectsToBecomeObsolete = new ArrayList<>();
+		context.setListenerData(objectsToBecomeObsolete);
+		objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(0).getConnector());
+		objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(1).getConnector());
+		objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(1));		
 	}
 
 	private void prepareForDeleteDiagramLabel(ModelChangeContext context) {
