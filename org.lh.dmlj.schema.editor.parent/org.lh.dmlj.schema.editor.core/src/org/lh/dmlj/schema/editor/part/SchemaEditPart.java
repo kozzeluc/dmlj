@@ -40,6 +40,7 @@ import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -85,10 +86,7 @@ public class SchemaEditPart
 		/*if (owner == getModel().getDiagramData() && 
 			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
 			
-			// a DIAGRAM LABEL was added
-			EditPart child = 
-				SchemaDiagramEditPartFactory.createEditPart(item, modelChangeProvider, schemaEditor);
-			addChild(child, getChildren().size());			
+			// a DIAGRAM LABEL was added --> MIGRATED			
 		
 		} else if (owner == getModel() && 
 				   reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
@@ -202,7 +200,13 @@ public class SchemaEditPart
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {	
-		if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleAddDiagramLabel(context);
+			} else {
+				handleAddDiagramLabelUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				handleAddRecord(context);
 			} else {
@@ -413,7 +417,11 @@ public class SchemaEditPart
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {	
-		if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
+			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				prepareForAddDiagramLabelUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 				prepareForAddRecordUndo(context);
 			}
@@ -544,6 +552,16 @@ public class SchemaEditPart
 		return allObjects;
 	}
 
+	private void handleAddDiagramLabel(ModelChangeContext context) {
+		DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
+		createAndAddChild(diagramLabel);
+	}
+
+	private void handleAddDiagramLabelUndo(ModelChangeContext context) {
+		DiagramLabel diagramLabel = (DiagramLabel) context.getListenerData();
+		findAndRemoveChild(diagramLabel);
+	}
+
 	private void handleAddRecord(ModelChangeContext context) {
 		SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);			
 		createAndAddChild(record);
@@ -655,6 +673,11 @@ public class SchemaEditPart
 		RecordEditPart memberRecordEditPart = 
 			(RecordEditPart) getViewer().getEditPartRegistry().get(memberRecord);
 		memberRecordEditPart.refresh();
+	}
+
+	private void prepareForAddDiagramLabelUndo(ModelChangeContext context) {
+		DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
+		context.setListenerData(diagramLabel);
 	}
 
 	private void prepareForAddRecordUndo(ModelChangeContext context) {

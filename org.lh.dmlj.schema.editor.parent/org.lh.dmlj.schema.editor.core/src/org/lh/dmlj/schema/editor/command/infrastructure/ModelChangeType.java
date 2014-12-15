@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 
 public enum ModelChangeType {
 
+	ADD_DIAGRAM_LABEL,
 	ADD_RECORD,
 	
 	DELETE_RECORD,

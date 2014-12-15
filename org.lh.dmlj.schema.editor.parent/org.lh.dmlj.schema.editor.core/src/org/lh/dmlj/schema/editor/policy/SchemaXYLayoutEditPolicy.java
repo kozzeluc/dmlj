@@ -111,7 +111,11 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			Dimension size = 
 				DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(), 
 												  schema.getDescription(), lastModified); 
-			return new CreateDiagramLabelCommand(schema, request.getLocation(), size);
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_DIAGRAM_LABEL);
+			ModelChangeBasicCommand command =
+				new CreateDiagramLabelCommand(schema, request.getLocation(), size);
+			command.setContext(context);
+			return command;
 		} else if (request.getNewObjectType() == SchemaRecord.class) {
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
 			ModelChangeBasicCommand command = new CreateRecordCommand(schema, request.getLocation());
