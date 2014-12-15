@@ -133,28 +133,7 @@ public class SchemaEditPart
 			
 		} else if (reference == SchemaPackage.eINSTANCE.getSet_Members()) {			
 			
-			// a member record type was added to an existing (user-owned chained) set
-			Set set = (Set) owner;
-			MemberRole memberRole = (MemberRole) item;
-											
-			// refresh the owner record edit part
-			SchemaRecord ownerRecord = set.getOwner().getRecord();
-			GraphicalEditPart ownerRecordEditPart = 
-				(GraphicalEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
-			ownerRecordEditPart.refresh();			
-			
-			// refresh the member record edit part
-			SchemaRecord memberRecord = memberRole.getRecord();
-			GraphicalEditPart memberRecordEditPart = 
-				(GraphicalEditPart) getViewer().getEditPartRegistry().get(memberRecord);
-			memberRecordEditPart.refresh();
-			
-			// create the set label edit part and add it as a child
-			ConnectionLabel connectionLabel = memberRole.getConnectionLabel();
-			EditPart setDescriptionEditPart = 
-				SchemaDiagramEditPartFactory.createEditPart(connectionLabel, modelChangeProvider,
-															schemaEditor);
-			addChild(setDescriptionEditPart, getChildren().size());			
+			// a member record type was added to an existing (user-owned chained) set --> MIGRATED			
 			
 		} else if (owner instanceof MemberRole && 
 				   reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts()) {			
@@ -178,6 +157,12 @@ public class SchemaEditPart
 				handleAddDiagramLabel(context);
 			} else {
 				handleAddDiagramLabelUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleAddMemberToSet(context);
+			} else {
+				handleAddMemberToSetUndo(context);
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
@@ -352,6 +337,10 @@ public class SchemaEditPart
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
 			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 				prepareForAddDiagramLabelUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET) {
+			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				prepareForAddMemberToSetUndo(context);
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
@@ -540,6 +529,30 @@ public class SchemaEditPart
 		findAndRemoveChild(diagramLabel);
 	}
 
+	private void handleAddMemberToSet(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		Set set = memberRole.getSet();
+		SchemaRecord ownerRecord = set.getOwner().getRecord();			
+		findAndRefreshChild(ownerRecord);		
+		findAndRefreshChild(memberRecord);		
+		createAndAddChild(memberRole.getConnectionLabel());		
+	}
+
+	private void handleAddMemberToSetUndo(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		Set set = getModel().getSet(setName);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		SchemaRecord ownerRecord = set.getOwner().getRecord();			
+		ConnectionLabel connectionLabel = (ConnectionLabel) context.getListenerData();
+		findAndRefreshChild(ownerRecord);		
+		findAndRefreshChild(memberRecord);
+		findAndRemoveChild(connectionLabel);		
+	}
+
 	private void handleAddRecord(ModelChangeContext context) {
 		SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);			
 		createAndAddChild(record);
@@ -705,6 +718,14 @@ public class SchemaEditPart
 	private void prepareForAddDiagramLabelUndo(ModelChangeContext context) {
 		DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
 		context.setListenerData(diagramLabel);
+	}
+
+	private void prepareForAddMemberToSetUndo(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		context.setListenerData(memberRole.getConnectionLabel());		
 	}
 
 	private void prepareForAddRecordUndo(ModelChangeContext context) {

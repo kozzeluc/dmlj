@@ -43,6 +43,9 @@ import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
 import org.lh.dmlj.schema.editor.command.AddMemberToSetCommand;
 import org.lh.dmlj.schema.editor.command.CreateSetCommand;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
@@ -105,6 +108,11 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				// supply the member record type to the command since we couldn't do this at command
 				// construction time
 				command.setMemberRecord(record);
+				// create the model change context and pass it to the command
+				ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_MEMBER_TO_SET);
+				context.getContextData().put(IContextDataKeys.SET_NAME, set.getName());
+				context.getContextData().put(IContextDataKeys.RECORD_NAME, record.getName());
+				command.setContext(context);
 				return command;
 			}
 		}
