@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,6 +24,10 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.editor.command.CreateConnectorCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 /**
  * An edit policy that enables creating connectors.
@@ -56,7 +60,15 @@ public class SetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         									  request.getLocation().y); 				
         figure.translateToRelative(p);
 		
-		return new CreateConnectorCommand(connectionPart.getMemberRole(), p);
+        ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_CONNECTORS);
+        context.getContextData().put(IContextDataKeys.SET_NAME, 
+        							 connectionPart.getMemberRole().getSet().getName());
+        context.getContextData().put(IContextDataKeys.RECORD_NAME, 
+        							 connectionPart.getMemberRole().getRecord().getName());
+		ModelChangeBasicCommand command = 
+			new CreateConnectorCommand(connectionPart.getMemberRole(), p);
+		command.setContext(context);
+		return command;
 	}
 	
 }

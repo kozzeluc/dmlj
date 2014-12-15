@@ -200,7 +200,13 @@ public class SchemaEditPart
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {	
-		if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_CONNECTORS) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleAddConnectors(context);
+			} else {
+				handleAddConnectorsUndo(context);
+			}
+		} if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				handleAddDiagramLabel(context);
 			} else {
@@ -421,7 +427,11 @@ public class SchemaEditPart
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {	
-		if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_CONNECTORS) {
+			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {			
+				prepareForAddConnectorsUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
 			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 				prepareForAddDiagramLabelUndo(context);
 			}
@@ -472,6 +482,13 @@ public class SchemaEditPart
 		return figure;
 	}
 	
+	private void findAndRefreshChild(EObject model) {
+		Assert.isNotNull(model, "model is null");
+		EditPart child = (EditPart) getViewer().getEditPartRegistry().get(model);
+		Assert.isNotNull(child, "missing child edit part: " + model);
+		child.refresh();
+	}
+
 	private void findAndRemoveChild(EObject model) {
 		Assert.isNotNull(model, "model is null");
 		EditPart obsoleteChild = (EditPart) getViewer().getEditPartRegistry().get(model);
@@ -558,6 +575,37 @@ public class SchemaEditPart
 		}
 		
 		return allObjects;
+	}
+
+	private void handleAddConnectors(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		Set set = memberRole.getSet();
+		EObject owner = 
+			set.getSystemOwner() != null ? set.getSystemOwner() : set.getOwner().getRecord();
+		createAndAddChild(memberRole.getConnectionParts().get(0).getConnector());
+		createAndAddChild(memberRole.getConnectionParts().get(1).getConnector());
+		findAndRefreshChild(owner);
+		findAndRefreshChild(memberRecord);
+	}
+
+	private void handleAddConnectorsUndo(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		Set set = memberRole.getSet();
+		EObject owner = 
+			set.getSystemOwner() != null ? set.getSystemOwner() : set.getOwner().getRecord();
+		@SuppressWarnings("unchecked")
+		List<EObject> objectsToBecomeObsolete = (List<EObject>) context.getListenerData();
+		for (EObject model : objectsToBecomeObsolete) {
+			findAndRemoveChild(model);
+		}
+		findAndRefreshChild(owner);
+		findAndRefreshChild(memberRecord);
 	}
 
 	private void handleAddDiagramLabel(ModelChangeContext context) {
@@ -648,14 +696,10 @@ public class SchemaEditPart
 			// refresh the owner record edit part			
 			Set set = getModel().getSet(obsoleteObjectCollection.setName);
 			SchemaRecord ownerRecord = set.getOwner().getRecord();
-			RecordEditPart ownerRecordEditPart = 
-				(RecordEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
-			ownerRecordEditPart.refresh();			
+			findAndRefreshChild(ownerRecord);
 		}		
 		// refresh the member record edit part
-		RecordEditPart memberRecordEditPart = 
-			(RecordEditPart) getViewer().getEditPartRegistry().get(memberRecord);
-		memberRecordEditPart.refresh();		
+		findAndRefreshChild(memberRecord);
 	}
 	
 	private void handleSwapRecordElementsUndo(ModelChangeContext context) {
@@ -691,6 +735,18 @@ public class SchemaEditPart
 		RecordEditPart memberRecordEditPart = 
 			(RecordEditPart) getViewer().getEditPartRegistry().get(memberRecord);
 		memberRecordEditPart.refresh();
+	}
+
+	private void prepareForAddConnectorsUndo(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		List<EObject> objectsToBecomeObsolete = new ArrayList<>();
+		context.setListenerData(objectsToBecomeObsolete);
+		objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(0).getConnector());
+		objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(1).getConnector());
+		objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(1));
 	}
 
 	private void prepareForAddDiagramLabelUndo(ModelChangeContext context) {
@@ -762,7 +818,7 @@ public class SchemaEditPart
 			listenerData.add(set);
 		}
 	}
-
+	
 	@Override
 	public final void removeNotify() {		
 		// note: this method doesn't seem to be called at all
