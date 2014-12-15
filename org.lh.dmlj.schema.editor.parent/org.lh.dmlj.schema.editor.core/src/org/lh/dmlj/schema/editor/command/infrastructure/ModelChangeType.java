@@ -20,6 +20,8 @@ public enum ModelChangeType {
 
 	ADD_RECORD,
 	
+	DELETE_RECORD,
+	
 	SWAP_RECORD_ELEMENTS
 	
 }

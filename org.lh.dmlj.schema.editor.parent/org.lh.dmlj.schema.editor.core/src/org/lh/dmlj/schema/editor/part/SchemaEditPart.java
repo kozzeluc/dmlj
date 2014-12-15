@@ -208,6 +208,12 @@ public class SchemaEditPart
 			} else {
 				handleAddRecordUndo(context);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleDeleteRecord(context);
+			} else {
+				handleDeleteRecordUndo(context);
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				handleSwapRecordElements(context);
@@ -235,9 +241,7 @@ public class SchemaEditPart
 		} else if (owner == getModel() && 
 				   reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
 			
-			// a record was removed
-			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
-			removeChild(child);				
+			// a record was removed --> MIGRATED			
 			
 		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
 			
@@ -413,6 +417,10 @@ public class SchemaEditPart
 			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 				prepareForAddRecordUndo(context);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				prepareForDeleteRecord(context);
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				prepareForSwapRecordElements(context);
@@ -546,6 +554,21 @@ public class SchemaEditPart
 		findAndRemoveChild(record);
 	}
 
+	private void handleDeleteRecord(ModelChangeContext context) {
+		// NOTE: it is assumed that the deleted record did NOT participate in any sets; this 
+		// condition is probably about to change in the future.
+		SchemaRecord record = (SchemaRecord) context.getListenerData();
+		findAndRemoveChild(record);
+	}
+
+	private void handleDeleteRecordUndo(ModelChangeContext context) {
+		// NOTE: it is assumed that the deleted record did NOT participate in any sets; this 
+		// condition is probably about to change in the future.
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord record = getModel().getRecord(recordName);
+		createAndAddChild(record);
+	}
+
 	private void handleSwapRecordElements(ModelChangeContext context) {
 		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
 		// member sets in which it participates as a member; it is only added as a member again if
@@ -636,6 +659,14 @@ public class SchemaEditPart
 
 	private void prepareForAddRecordUndo(ModelChangeContext context) {
 		SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);
+		context.setListenerData(record);
+	}
+
+	private void prepareForDeleteRecord(ModelChangeContext context) {
+		// NOTE: it is assumed that the deleted record does NOT participate in any sets; this 
+		// condition is probably about to change in the future.
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord record = getModel().getRecord(recordName);
 		context.setListenerData(record);
 	}
 
