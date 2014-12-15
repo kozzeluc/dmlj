@@ -56,7 +56,16 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 										 connectionLabel.getMemberRole().getRecord().getName());
 			command.setContext(context);
 		} else {
-			// TODO set the command's context
+			ModelChangeType modelChangeType;
+			if (connectionLabel.getMemberRole().getSet().getSystemOwner() != null) {
+				modelChangeType = ModelChangeType.DELETE_SYSTEM_OWNED_SET;
+			} else {
+				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
+			}
+			ModelChangeContext context = new ModelChangeContext(modelChangeType);
+			context.getContextData().put(IContextDataKeys.SET_NAME, 
+										 connectionLabel.getMemberRole().getSet().getName());
+			command.setContext(context);
 		}
 		return (Command) command;
 	}

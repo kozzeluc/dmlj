@@ -44,7 +44,18 @@ public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 		}
 		if (removingLastMember() && allowRemovalOfSet) {			
 			// create a command to remove the set
-			return (Command) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+			ModelChangeType modelChangeType;
+			if (memberRole.getSet().getSystemOwner() != null) {
+				modelChangeType = ModelChangeType.DELETE_SYSTEM_OWNED_SET;
+			} else {
+				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
+			}
+			ModelChangeContext context = new ModelChangeContext(modelChangeType);
+			context.getContextData().put(IContextDataKeys.SET_NAME, memberRole.getSet().getName());
+			IModelChangeCommand command = 
+				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+			command.setContext(context);
+			return (Command) command;
 		} else if (!removingLastMember()) {	
 			// create a command to remove the member record type from the set
 			ModelChangeContext context = 

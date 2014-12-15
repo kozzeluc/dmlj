@@ -25,6 +25,10 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class IndexComponentEditPolicy extends ComponentEditPolicy {
 
@@ -40,8 +44,13 @@ public class IndexComponentEditPolicy extends ComponentEditPolicy {
 			return null;
 		}
 		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
-		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);		
-		return (Command) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_SYSTEM_OWNED_SET);
+		context.getContextData().put(IContextDataKeys.SET_NAME, memberRole.getSet().getName());
+		IModelChangeCommand command = 
+			DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		command.setContext(context);
+		return (Command) command;
 	}
 	
 }
