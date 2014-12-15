@@ -39,6 +39,7 @@ import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.annotation.Features;
 import org.lh.dmlj.schema.editor.command.annotation.Item;
@@ -348,6 +349,16 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 				}
 				compoundCommandCommands = wrappedCompoundCommand.getCommands();
 				context = wrappedCompoundCommand.getContext();
+			} else if (compoundCommandCommands.size() == 1 &&
+					   compoundCommandCommands.get(0) instanceof ModelChangeBasicCommand) {
+				
+				// in some cases, basic commands that we create are wrapped themselves in a compound 
+				// command, so make sure we can handle this situation
+				ModelChangeBasicCommand wrappedBasicCommand = 
+					(ModelChangeBasicCommand) compoundCommandCommands.get(0);
+				compoundCommandCommands = new ArrayList<>();
+				compoundCommandCommands.add(wrappedBasicCommand);
+				context = wrappedBasicCommand.getContext();
 			} else {
 				// ignore non model change commands
 				if (!(eventCommand instanceof IModelChangeCommand)) {

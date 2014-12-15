@@ -212,6 +212,12 @@ public class SchemaEditPart
 			} else {
 				handleAddRecordUndo(context);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleDeleteDiagramLabel(context);
+			} else {
+				handleDeleteDiagramLabelUndo(context);
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				handleDeleteRecord(context);
@@ -238,9 +244,7 @@ public class SchemaEditPart
 		/*if (owner == getModel().getDiagramData() && 
 			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
 			
-			// the diagram label was removed
-			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
-			removeChild(child);
+			// the diagram label was removed --> MIGRATED
 		
 		} else if (owner == getModel() && 
 				   reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
@@ -425,6 +429,10 @@ public class SchemaEditPart
 			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 				prepareForAddRecordUndo(context);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				prepareForDeleteDiagramLabel(context);
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				prepareForDeleteRecord(context);
@@ -572,6 +580,16 @@ public class SchemaEditPart
 		findAndRemoveChild(record);
 	}
 
+	private void handleDeleteDiagramLabel(ModelChangeContext context) {
+		DiagramLabel diagramLabel = (DiagramLabel) context.getListenerData();
+		findAndRemoveChild(diagramLabel);
+	}
+
+	private void handleDeleteDiagramLabelUndo(ModelChangeContext context) {
+		DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
+		createAndAddChild(diagramLabel);
+	}
+
 	private void handleDeleteRecord(ModelChangeContext context) {
 		// NOTE: it is assumed that the deleted record did NOT participate in any sets; this 
 		// condition is probably about to change in the future.
@@ -683,6 +701,11 @@ public class SchemaEditPart
 	private void prepareForAddRecordUndo(ModelChangeContext context) {
 		SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);
 		context.setListenerData(record);
+	}
+
+	private void prepareForDeleteDiagramLabel(ModelChangeContext context) {
+		DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
+		context.setListenerData(diagramLabel);
 	}
 
 	private void prepareForDeleteRecord(ModelChangeContext context) {
