@@ -238,13 +238,11 @@ public class ModelChangeDispatcherTest {
 	}	
 	
 	@Test
-	public void testDispatch_CompoundCommand() {
-		
-		// create the ModelChangeDispatcher
-		ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();	
+	public void testDispatch_CompoundCommand() {	
 		
 		// create a mock IModelChangeListener and add it to the model change dispatcher's listeners
 		IModelChangeListener listener = mock(IModelChangeListener.class);
+		ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();		
 		dispatcher.addModelChangeListener(listener);
 		
 		// create a mock ModelChangeContext
@@ -263,10 +261,15 @@ public class ModelChangeDispatcherTest {
 		CommandStackEvent event = mock(CommandStackEvent.class);
 		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
 		when(event.getCommand()).thenReturn(compoundCommand);
+		dispatcher = new ModelChangeDispatcher();
+		dispatcher.addModelChangeListener(listener);
 		dispatcher.dispatch(event);		
 		
-		// ...no listener method should have been called
-		verify(listener, never()).beforeModelChange(any(ModelChangeContext.class));	
+		// the following listener method should have been called once; mind that the context passed
+		// will NOT be the same instance as the original one (but we don't check the context here)
+		verify(listener, times(1)).beforeModelChange(any(ModelChangeContext.class));	
+		
+		// ...no other listener method should have been called
 		verify(listener, never()).afterModelChange(any(ModelChangeContext.class));	
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 				   							   any(EObject.class));		
@@ -278,10 +281,16 @@ public class ModelChangeDispatcherTest {
 
 		// simulate a PRE_REDO command stack notification
 		when(event.getDetail()).thenReturn(CommandStack.PRE_REDO);		
+		dispatcher = new ModelChangeDispatcher();
+		dispatcher.addModelChangeListener(listener);
 		dispatcher.dispatch(event);
 
-		// ...no listener method should have been called
-		verify(listener, never()).beforeModelChange(any(ModelChangeContext.class));	
+		// the following listener method should have been called once again; mind that the context 
+		// passed will NOT be the same instance as the original one (but we don't check the context 
+		// here)
+		verify(listener, times(2)).beforeModelChange(any(ModelChangeContext.class));
+		
+		// ...no other listener method should have been called
 		verify(listener, never()).afterModelChange(any(ModelChangeContext.class));	
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
@@ -292,11 +301,17 @@ public class ModelChangeDispatcherTest {
 		verify(listener, never()).afterSetFeatures(any(EObject.class), any(EStructuralFeature[].class));
 
 		// simulate a PRE_UNDO command stack notification
-		when(event.getDetail()).thenReturn(CommandStack.PRE_UNDO);		
+		when(event.getDetail()).thenReturn(CommandStack.PRE_UNDO);
+		dispatcher = new ModelChangeDispatcher();
+		dispatcher.addModelChangeListener(listener);
 		dispatcher.dispatch(event);
 
-		// ...no listener method should have been called
-		verify(listener, never()).beforeModelChange(any(ModelChangeContext.class));	
+		// the following listener method should have been called once again; mind that the context 
+		// passed will NOT be the same instance as the original one (but we don't check the context 
+		// here)
+		verify(listener, times(3)).beforeModelChange(any(ModelChangeContext.class));
+		
+		// ...no other listener method should have been called
 		verify(listener, never()).afterModelChange(any(ModelChangeContext.class));	
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
@@ -305,19 +320,26 @@ public class ModelChangeDispatcherTest {
 		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
 				  								  any(EObject.class));
 		verify(listener, never()).afterSetFeatures(any(EObject.class), any(EStructuralFeature[].class));
-
+		
+		// prepare for the next test; we need a new dispatcher and make sure it is first past a 
+		// pre-change event
+		dispatcher = new ModelChangeDispatcher();
+		dispatcher.addModelChangeListener(listener);
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);
+		dispatcher.dispatch(event);
 		
 		// simulate a POST_EXECUTE command stack notification				
 		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
 		dispatcher.dispatch(event);
+		verify(listener, times(4)).beforeModelChange(any(ModelChangeContext.class));
 
-		// the following listener methods should have been called once; mind that the context passed
+		// the following listener method should have been called once; mind that the context passed
 		// will NOT be the same instance as the original one (but we don't check the context here)
-		verify(listener, times(1)).beforeModelChange(any(ModelChangeContext.class));	
 		verify(listener, times(1)).afterModelChange(any(ModelChangeContext.class));	
 		
-		// ...none of the following listener methods should have been called (because all commands 
-		// are missing the @ModelChange annotation)
+		// ...none of the following listener methods should have been called (because it either only
+		// applies to pre-change events or the commands are missing the @ModelChange annotation)
+		verify(listener, times(4)).beforeModelChange(any(ModelChangeContext.class));
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
 		verify(listener, never()).afterMoveItem(any(EObject.class), any(EReference.class), 
@@ -325,30 +347,38 @@ public class ModelChangeDispatcherTest {
 		verify(listener, never()).afterRemoveItem(any(EObject.class), any(EReference.class), 
 				  								  any(EObject.class));
 		verify(listener, never()).afterSetFeatures(any(EObject.class), any(EStructuralFeature[].class));
-		
-		
-		// simulate a POST_EXECUTE command stack notification using a compound command containing a
-		// command annotated with @ModelChange(category=MOVE_ITEM) and a command annotated with
-		// @ModelChange(category=SET_ATTRIBUTES)...
+				
+		// prepare for the next test; we need a new dispatcher and make sure it is first passed a 
+		// pre-change event
 		MoveItemCommand moveItemCommand = new MoveItemCommand();
 		SetFeaturesCommand setAttributeCommand = new SetFeaturesCommand();		
 		compoundCommand = new ModelChangeCompoundCommand("test compound command");
 		compoundCommand.add(moveItemCommand);
 		compoundCommand.add(setAttributeCommand);
 		compoundCommand.setContext(context);
+		dispatcher = new ModelChangeDispatcher();
+		dispatcher.addModelChangeListener(listener);
+		when(event.getCommand()).thenReturn(compoundCommand);
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);
+		dispatcher.dispatch(event);
+		verify(listener, times(5)).beforeModelChange(any(ModelChangeContext.class));
+		
+		// simulate a POST_EXECUTE command stack notification using a compound command containing a
+		// command annotated with @ModelChange(category=MOVE_ITEM) and a command annotated with
+		// @ModelChange(category=SET_ATTRIBUTES)...
 		when(event.getCommand()).thenReturn(compoundCommand);
 		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
 		dispatcher.dispatch(event);
 		
-		// the following listener methods should have been called once agin; mind that the context 
+		// the following listener method should have been called once again; mind that the context 
 		// passed will NOT be the same instance as the original one (but we don't check the context 
 		// here)
-		verify(listener, times(2)).beforeModelChange(any(ModelChangeContext.class));	
 		verify(listener, times(2)).afterModelChange(any(ModelChangeContext.class));
 
 		// ...and verify that the right listener methods have been called (we cannot check the 
 		// order in which they were called but this order is not really relevant since the model
 		// will contain the changes from BOTH commands on either method call)
+		verify(listener, times(5)).beforeModelChange(any(ModelChangeContext.class));
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
 		verify(listener, times(1)).afterMoveItem(moveItemCommand.oldOwner, moveItemCommand.reference, 
@@ -358,19 +388,27 @@ public class ModelChangeDispatcherTest {
 		verify(listener, times(1)).afterSetFeatures(setAttributeCommand.owner, 
 													  setAttributeCommand.features);
 		
+		// prepare for the next test; we need a new dispatcher and make sure it is first past a 
+		// pre-change event
+		dispatcher = new ModelChangeDispatcher();
+		dispatcher.addModelChangeListener(listener);
+		when(event.getDetail()).thenReturn(CommandStack.PRE_UNDO);
+		dispatcher.dispatch(event);
+		verify(listener, times(6)).beforeModelChange(any(ModelChangeContext.class));
+		
 		// simulate a POST_UNDO command stack notification using the same compound command		
 		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);		
 		dispatcher.dispatch(event);
 		
-		// the following listener methods should have been called once again; mind that the context 
+		// the following listener method should have been called once again; mind that the context 
 		// passed will NOT be the same instance as the original one (but we don't check the context 
 		// here)
-		verify(listener, times(3)).beforeModelChange(any(ModelChangeContext.class));	
 		verify(listener, times(3)).afterModelChange(any(ModelChangeContext.class));
 
 		// ...and verify that the right listener methods have been called (we cannot check the 
 		// order in which they were called but this order is not really relevant since the model
 		// will contain the changes from BOTH commands on either method call)
+		verify(listener, times(6)).beforeModelChange(any(ModelChangeContext.class));
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
 		verify(listener, times(1)).afterMoveItem(moveItemCommand.oldOwner, moveItemCommand.reference, 
@@ -382,19 +420,27 @@ public class ModelChangeDispatcherTest {
 		verify(listener, times(2)).afterSetFeatures(setAttributeCommand.owner, 
 													  setAttributeCommand.features);
 		
+		// prepare for the next test; we need a new dispatcher and make sure it is first past a 
+		// pre-change event
+		dispatcher = new ModelChangeDispatcher();
+		dispatcher.addModelChangeListener(listener);
+		when(event.getDetail()).thenReturn(CommandStack.PRE_REDO);
+		dispatcher.dispatch(event);
+		verify(listener, times(7)).beforeModelChange(any(ModelChangeContext.class));
+		
 		// simulate a POST_REDO command stack notification using the same compound command		
-		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);		
+		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);				
 		dispatcher.dispatch(event);
 
-		// the following listener methods should have been called once again; mind that the context 
+		// the following listener method should have been called once again; mind that the context 
 		// passed will NOT be the same instance as the original one (but we don't check the context 
 		// here)
-		verify(listener, times(4)).beforeModelChange(any(ModelChangeContext.class));	
 		verify(listener, times(4)).afterModelChange(any(ModelChangeContext.class));
 
 		// ...and verify that the right listener methods have been called (we cannot check the 
 		// order in which they were called but this order is not really relevant since the model
 		// will contain the changes from BOTH commands on either method call)
+		verify(listener, times(7)).beforeModelChange(any(ModelChangeContext.class));
 		verify(listener, never()).afterAddItem(any(EObject.class), any(EReference.class), 
 											   any(EObject.class));		
 		verify(listener, times(2)).afterMoveItem(moveItemCommand.oldOwner, moveItemCommand.reference, 
@@ -1387,49 +1433,88 @@ public class ModelChangeDispatcherTest {
 		ModelChangeBasicCommand command = new ModelChangeBasicCommand("test command");
 		command.setContext(context);
 				
+		// before model change (EXECUTE)...
 		expectedCommandExecutionMode[0] = CommandExecutionMode.EXECUTE;
 		CommandStackEvent event = mock(CommandStackEvent.class);
-		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);	
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
 		assertEquals(true, listener1MethodCallsOK[0]);
-		assertEquals(true, listener1MethodCallsOK[1]);
+		assertEquals(false, listener1MethodCallsOK[1]);
 		assertEquals(true, listener2MethodCallsOK[0]);
+		assertEquals(false, listener2MethodCallsOK[1]);
+		
+		// after model change (EXECUTE)...
+		listener1MethodCallsOK[0] = false;
+		listener2MethodCallsOK[0] = false;
+		expectedCommandExecutionMode[0] = CommandExecutionMode.EXECUTE;
+		event = mock(CommandStackEvent.class);
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);	
+		when(event.getCommand()).thenReturn(command);
+		dispatcher.dispatch(event);
+		
+		assertEquals(false, listener1MethodCallsOK[0]);
+		assertEquals(true, listener1MethodCallsOK[1]);
+		assertEquals(false, listener2MethodCallsOK[0]);
 		assertEquals(true, listener2MethodCallsOK[1]);
 		
 		
-		listener1MethodCallsOK[0] = false;
+		// before model change (UNDO)...
 		listener1MethodCallsOK[1] = false;
-		listener2MethodCallsOK[0] = false;
-		listener2MethodCallsOK[1] = false;
+		listener2MethodCallsOK[1] = false;	
+		expectedCommandExecutionMode[0] = CommandExecutionMode.UNDO;
+		event = mock(CommandStackEvent.class);
+		when(event.getDetail()).thenReturn(CommandStack.PRE_UNDO);	
+		when(event.getCommand()).thenReturn(command);
+		dispatcher.dispatch(event);
 		
+		assertEquals(true, listener1MethodCallsOK[0]);
+		assertEquals(false, listener1MethodCallsOK[1]);
+		assertEquals(true, listener2MethodCallsOK[0]);
+		assertEquals(false, listener2MethodCallsOK[1]);
+		
+		// after model change (UNDO)...
+		listener1MethodCallsOK[0] = false;
+		listener2MethodCallsOK[0] = false;	
 		expectedCommandExecutionMode[0] = CommandExecutionMode.UNDO;
 		event = mock(CommandStackEvent.class);
 		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);	
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
-		assertEquals(true, listener1MethodCallsOK[0]);
+		assertEquals(false, listener1MethodCallsOK[0]);
 		assertEquals(true, listener1MethodCallsOK[1]);
-		assertEquals(true, listener2MethodCallsOK[0]);
+		assertEquals(false, listener2MethodCallsOK[0]);
 		assertEquals(true, listener2MethodCallsOK[1]);
 		
 		
-		listener1MethodCallsOK[0] = false;
+		// before model change (REDO)...
 		listener1MethodCallsOK[1] = false;
-		listener2MethodCallsOK[0] = false;
-		listener2MethodCallsOK[1] = false;
+		listener2MethodCallsOK[1] = false;		
+		expectedCommandExecutionMode[0] = CommandExecutionMode.REDO;
+		event = mock(CommandStackEvent.class);
+		when(event.getDetail()).thenReturn(CommandStack.PRE_REDO);	
+		when(event.getCommand()).thenReturn(command);
+		dispatcher.dispatch(event);
 		
+		assertEquals(true, listener1MethodCallsOK[0]);
+		assertEquals(false, listener1MethodCallsOK[1]);
+		assertEquals(true, listener2MethodCallsOK[0]);
+		assertEquals(false, listener2MethodCallsOK[1]);
+		
+		// after model change (REDO)...
+		listener1MethodCallsOK[0] = false;
+		listener2MethodCallsOK[0] = false;		
 		expectedCommandExecutionMode[0] = CommandExecutionMode.REDO;
 		event = mock(CommandStackEvent.class);
 		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);	
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
-		assertEquals(true, listener1MethodCallsOK[0]);
+		assertEquals(false, listener1MethodCallsOK[0]);
 		assertEquals(true, listener1MethodCallsOK[1]);
-		assertEquals(true, listener2MethodCallsOK[0]);
+		assertEquals(false, listener2MethodCallsOK[0]);
 		assertEquals(true, listener2MethodCallsOK[1]);
 		
 	}

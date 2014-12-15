@@ -56,6 +56,11 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	private boolean disposed = false;
 	private List<IModelChangeListener> listeners = new ArrayList<>();
 	private Set<IModelChangeListener> obsoleteListeners = new HashSet<>();
+	
+	// things to carry from a pre-change to a post-change event:
+	private Command previousCommand;
+	private List<IModelChangeListener> allListeners;
+	private Map<Integer, Object> listenerDataMap;
 
 	private static <T extends Annotation> Field getAnnotatedField(
 		Object object, 
@@ -197,11 +202,17 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	}
 	
 	private static CommandExecutionMode getCommandExecutionMode(CommandStackEvent event) {
-		if (event.getDetail() == CommandStack.POST_EXECUTE) {
+		if (event.getDetail() == CommandStack.PRE_EXECUTE || 
+			event.getDetail() == CommandStack.POST_EXECUTE) {
+			
 			return CommandExecutionMode.EXECUTE;
-		} else if (event.getDetail() == CommandStack.POST_UNDO) {
+		} else if (event.getDetail() == CommandStack.PRE_UNDO ||
+				   event.getDetail() == CommandStack.POST_UNDO) {
+			
 			return CommandExecutionMode.UNDO;
-		} else if (event.getDetail() == CommandStack.POST_REDO) {
+		} else if (event.getDetail() == CommandStack.PRE_REDO ||
+				   event.getDetail() == CommandStack.POST_REDO) {
+			
 			return CommandExecutionMode.REDO;
 		}
 		throw new IllegalArgumentException("cannot derive command execution mode: " + 
@@ -310,11 +321,6 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	 						event.getDetail() + ")");
 		logDebug(debugMessage.toString());
 		
-		// we don't care about pre-change events
-		if (event.isPreChangeEvent()) {
-			return;
-		}
-		
 		// we don't expect to be in dispatching mode
 		Assert.isTrue(!dispatching, "already dispatching; check for previous exceptions");		
 		
@@ -385,20 +391,22 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 			context = ((IModelChangeCommand) eventCommand).getContext();
 		}
 		
-		// invoke the beforeModelChangeListener(ModelChangeContext context) method on all listeners
-		// and set aside the listener data; if no context is set, bypass this step (note that we 
-		// should avoid this situation but are allowing it to be able to move gradually to the new 
-		// dispatching methods
-		CommandExecutionMode commandExecutionMode = null; // to be derived later
-		List<IModelChangeListener> allListeners = new ArrayList<>();
-		allListeners.addAll(listeners);
- 		Map<Integer, Object> listenerDataMap = new HashMap<>();
-		if (context != null) {
-			commandExecutionMode = getCommandExecutionMode(event);
-	 		for (int i = 0; i < allListeners.size(); i++) {
+		// in the case of a pre-change event, (only) invoke the beforeModelChangeListener(context) 
+		// method on all current listeners and set aside the listener data; if no context is set, 
+		// bypass this step (note that we should avoid this situation but are allowing it to be able 
+		// to move gradually to the new dispatching methods				
+		if (context != null && event.isPreChangeEvent()) {
+			Assert.isTrue(previousCommand == null, "previousCommand is already set");
+			Assert.isTrue(allListeners == null, "allListeners is already set");
+			Assert.isTrue(listenerDataMap == null, "allListeners is already set");
+			// initialize the things we need to carry from the pre-change to the post-change event:						
+			previousCommand = eventCommand;
+			allListeners = new ArrayList<>(listeners);
+			listenerDataMap = new HashMap<>();
+			for (int i = 0; i < allListeners.size(); i++) {
 				
 				ModelChangeContext contextCopy = context.copy();
-				contextCopy.setCommandExecutionMode(commandExecutionMode);
+				contextCopy.setCommandExecutionMode(getCommandExecutionMode(event));
 				
 				IModelChangeListener listener = allListeners.get(i);
 				listener.beforeModelChange(contextCopy);
@@ -410,20 +418,31 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 			}
 		}
 		
+		// we're done in case of pre-change events because the afterAddItem, afterRemoveItem,
+		// afterMoveItem and afterSetAttributes methods shouldn't be called for those events
+		if (event.isPreChangeEvent()) {
+			return;
+		}
+		
 		// perform the dispatch for each command
 		for (Command command : commands) {
 			dispatch(command, event.getDetail());
 		}
 		
-		// invoke the afterModelChangeListener(ModelChangeContext context) method on ALL listeners
-		// (we don't work with the notion of 'obsolete listeners' here); if no context is set, 
-		// bypass this step (note that we should avoid this situation but are allowing it to be able
-		// to move gradually to the new dispatching methods
-		if (context != null) {
+		// in the case of a post-change event, (only) invoke the afterModelChangeListener(context) 
+		// method on the same listeners as the corresponding pre-change event (we don't work with 
+		// the notion of 'obsolete listeners' here); if no context is set, bypass this step (note 
+		// that we should avoid this situation but are allowing it to be able to move gradually to 
+		// the new dispatching methods
+		if (context != null && event.isPostChangeEvent()) {
+			Assert.isTrue(eventCommand == previousCommand, 
+						  "eventCommand does NOT match previousCommand");
+			Assert.isNotNull(allListeners, "allListeners not set during pre-change event");
+			Assert.isNotNull(listenerDataMap, "allListeners not set during pre-change event");
 			for (int i = 0; i < allListeners.size(); i++) {
 				
 				ModelChangeContext contextCopy = context.copy();
-				contextCopy.setCommandExecutionMode(commandExecutionMode);
+				contextCopy.setCommandExecutionMode(getCommandExecutionMode(event));
 				Object listenerData = listenerDataMap.get(Integer.valueOf(i));
 				if (listenerData != null) {
 					contextCopy.setListenerData(listenerData);
@@ -432,6 +451,10 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 				IModelChangeListener listener = allListeners.get(i);
 				listener.afterModelChange(contextCopy);
 			}
+			// nullify the things we needed to carry from the pre-change to the post-change event:
+			previousCommand = null;
+			allListeners = null;
+			listenerDataMap = null;
 		}
 
 	}
