@@ -41,7 +41,7 @@ public class IndexComponentEditPolicy extends ComponentEditPolicy {
 		}
 		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
 		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);		
-		return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		return (Command) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 	}
 	
 }

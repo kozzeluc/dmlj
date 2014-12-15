@@ -34,19 +34,19 @@ import org.lh.dmlj.schema.editor.common.Tools;
  */
 public abstract class DeleteSetOrIndexCommandCreationAssistant {
 
-	public static Command getCommand(Set set) {
+	public static IModelChangeCommand getCommand(Set set) {
 		return getCommand(set.getMembers());
 	}
 	
-	public static Command getCommand(MemberRole memberRole) {
+	public static IModelChangeCommand getCommand(MemberRole memberRole) {
 		List<MemberRole> memberRoles = new ArrayList<>();
 		memberRoles.add(memberRole);
 		return getCommand(memberRoles);
 	}
 	
-	public static Command getCommand(List<MemberRole> memberRoles) {
+	public static IModelChangeCommand getCommand(List<MemberRole> memberRoles) {
 		
-		List<Command> commands = new ArrayList<>();								
+		List<IModelChangeCommand> commands = new ArrayList<>();								
 		
 		for (int i = 0; i < memberRoles.size(); i++) {
 		
@@ -114,8 +114,8 @@ public abstract class DeleteSetOrIndexCommandCreationAssistant {
 			}			
 			
 			ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(ccLabel);
-			for (Command command : commands) {
-				cc.add(command);
+			for (IModelChangeCommand command : commands) {
+				cc.add((Command) command);
 			}
 			return cc;
 			

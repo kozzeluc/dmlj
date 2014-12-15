@@ -22,8 +22,6 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
@@ -56,7 +54,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 	
 	public static IModelChangeCommand getCommand(SchemaRecord record, List<Element> newRootElements) {
 		
-		List<Command> commands = new ArrayList<>();	
+		List<ModelChangeBasicCommand> commands = new ArrayList<>();	
 		List<Element> newAllElements = computeAllNewElements(newRootElements);
 		
 		// add the commands to remove all keys from the given record; this includes removing the
@@ -87,7 +85,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		// command we have
 		if (commands.size() > 1) {
 			ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand("Import Record Elements");
-			for (Command command : commands) {
+			for (ModelChangeBasicCommand command : commands) {
 				cc.add(command);
 			}
 			return cc;
@@ -111,7 +109,8 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		}
 	}
 
-	private static void addMakeRecordDirectCommand(List<Command> commands, SchemaRecord record) {		
+	private static void addMakeRecordDirectCommand(List<ModelChangeBasicCommand> commands, 
+												   SchemaRecord record) {		
 		if (record.isCalc()) {			
 			// if the record is CALC, add a command to make it DIRECT 
 			commands.add(new MakeRecordDirectCommand(record));
@@ -130,7 +129,8 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		return calcKeyElements;
 	}
 
-	private static void addChangeSetOrderToLastCommands(List<Command> commands, SchemaRecord record) {		
+	private static void addChangeSetOrderToLastCommands(List<ModelChangeBasicCommand> commands, 
+														SchemaRecord record) {		
 		for (MemberRole memberRole : record.getMemberRoles()) {
 			if (!memberRole.getSet().isMultipleMember() && memberRole.getSet().isSorted()) {
 				// add a command for each sorted single-member set in which the record participates 
@@ -141,25 +141,28 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void addRemoveMemberFromSetCommands(List<Command> commands, SchemaRecord record) {				
+	private static void addRemoveMemberFromSetCommands(List<ModelChangeBasicCommand> commands, 
+													   SchemaRecord record) {				
 		for (MemberRole memberRole : record.getMemberRoles()) {
 			if (memberRole.getSet().isMultipleMember() && memberRole.getSet().isSorted()) {
 				// add the necessary command(s) for each sorted multiple-member set in which the
 				// record participates as a member
-				Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-				if (command instanceof CompoundCommand) {
+				IModelChangeCommand command = 
+					DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+				if (command instanceof ModelChangeCompoundCommand) {
 					// we need to avoid nested compound commands because the model change dispatcher
 					// will not handle them correctly
-					CompoundCommand cc = (CompoundCommand) command;
+					ModelChangeCompoundCommand cc = (ModelChangeCompoundCommand) command;
 					commands.addAll(cc.getCommands());
 				} else {
-					commands.add(command);
+					commands.add((ModelChangeBasicCommand) command);
 				}
 			}
 		}	
 	}
 
-	private static void addSwapRecordElementsCommand(List<Command> commands, SchemaRecord record, 
+	private static void addSwapRecordElementsCommand(List<ModelChangeBasicCommand> commands, 
+													 SchemaRecord record, 
 													 List<Element> newRootElements) {
 		
 		// add the command that will effectively swap the record elements (but needs some
@@ -167,7 +170,8 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		commands.add(new SwapRecordElementsCommand(record, newRootElements));
 	}
 
-	private static void addAddMemberToSetCommands(List<Command> commands, SchemaRecord record,
+	private static void addAddMemberToSetCommands(List<ModelChangeBasicCommand> commands, 
+												  SchemaRecord record,
 												  List<Element> newAllElements) {
 		
 		for (MemberRole memberRole : record.getMemberRoles()) {
@@ -188,7 +192,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		}
 	}
 
-	private static void addSetMembershipOptionCommand(List<Command> commands, 
+	private static void addSetMembershipOptionCommand(List<ModelChangeBasicCommand> commands, 
 													  final SchemaRecord record, 
 													  List<Element> newAllElements) {
 		
@@ -215,7 +219,8 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		}
 	}
 
-	private static void addMoveEndpointCommands(List<Command> commands, final SchemaRecord record,
+	private static void addMoveEndpointCommands(List<ModelChangeBasicCommand> commands, 
+												final SchemaRecord record,
 												List<Element> newAllElements) {
 		
 		for (final MemberRole memberRole : record.getMemberRoles()) {
@@ -238,10 +243,9 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 				};
 				// source endpoint location
 				if (sourceEndpointLocation != null) {						
-					Command command = new MoveEndpointCommand(connectionPartSupplier,
-															  sourceEndpointLocation.getX(), 
-											    			  sourceEndpointLocation.getY(), 
-											    			  true);
+					MoveEndpointCommand command = 
+						new MoveEndpointCommand(connectionPartSupplier,	sourceEndpointLocation.getX(), 
+											    sourceEndpointLocation.getY(), true);
 					commands.add(command);
 				}
 				// target endpoint location
@@ -250,17 +254,17 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 						  	  .get(memberRole.getConnectionParts().size() - 1)
 						  	  .getTargetEndpointLocation();
 				if (targetEndpointLocation != null) {
-					Command command = new MoveEndpointCommand(connectionPartSupplier,
-															  targetEndpointLocation.getX(), 
-															  targetEndpointLocation.getY(), 
-															  false);
+					MoveEndpointCommand command = 
+						new MoveEndpointCommand(connectionPartSupplier, targetEndpointLocation.getX(), 
+												targetEndpointLocation.getY(), false);
 					commands.add(command);
 				}				
 			}
 		}		
 	}
 
-	private static void addCreateBendpointCommands(List<Command> commands, final SchemaRecord record,
+	private static void addCreateBendpointCommands(List<ModelChangeBasicCommand> commands, 
+												   final SchemaRecord record,
 												   List<Element> newAllElements) {
 		
 		for (final MemberRole memberRole : record.getMemberRoles()) {
@@ -283,9 +287,10 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 				int i = 0;				
 				for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
 					for (DiagramLocation bendpointLocation : connectionPart.getBendpointLocations()) {
-						Command command = new CreateBendpointCommand(connectionPartSupplier, i++, 
-													   				 bendpointLocation.getX(), 
-													   				 bendpointLocation.getY());
+						CreateBendpointCommand command = 
+							new CreateBendpointCommand(connectionPartSupplier, i++, 
+													   bendpointLocation.getX(), 
+													   bendpointLocation.getY());
 						commands.add(command);
 					}
 				}				
@@ -293,7 +298,8 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		}
 	}
 
-	private static void addCreateConnectorCommands(List<Command> commands, final SchemaRecord record,
+	private static void addCreateConnectorCommands(List<ModelChangeBasicCommand> commands, 
+												   final SchemaRecord record,
 												   List<Element> newAllElements) {
 
 		for (final MemberRole memberRole : record.getMemberRoles()) {
@@ -312,7 +318,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 						return (MemberRole) record.getRole(setName);
 					}
 				};
-				Command command = 
+				CreateConnectorCommand command = 
 					new CreateConnectorCommand(memberRoleSupplier, 
 											   new Point(connector.getDiagramLocation().getX(), 
 													     connector.getDiagramLocation().getY()));
@@ -321,7 +327,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		}		
 	}
 
-	private static void addChangeSetOrderToSortedCommands(List<Command> commands, 
+	private static void addChangeSetOrderToSortedCommands(List<ModelChangeBasicCommand> commands, 
 														  final SchemaRecord record,
 		 	   											  List<Element> newAllElements) {
 
@@ -351,7 +357,8 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		}
 	}	
 	
-	private static void addChangeSortKeysCommands(List<Command> commands, final SchemaRecord record,
+	private static void addChangeSortKeysCommands(List<ModelChangeBasicCommand> commands, 
+												  final SchemaRecord record,
 				  								  List<Element> newAllElements) {
 		
 		for (MemberRole memberRole : record.getMemberRoles()) {
@@ -390,7 +397,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 				// have to be supplied changes...
 				Assert.isNotNull(lastSortKeyDescription, "logic error: lastSortKeyDescription is null");
 				sortKeyDescriptions.add(lastSortKeyDescription);
-				Command command = 
+				ChangeSortKeysCommand command = 
 					new ChangeSortKeysCommand(setSupplier, 
 											  sortKeyDescriptions.toArray(new ISortKeyDescription[] {}));
 				commands.add(command);
@@ -398,7 +405,8 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		}		
 	}
 
-	private static void addMakeRecordCalcCommand(List<Command> commands, SchemaRecord record,
+	private static void addMakeRecordCalcCommand(List<ModelChangeBasicCommand> commands, 
+												 SchemaRecord record,
 												 List<Element> newAllElements) {
 		
 		if (record.isCalc() && canRetainInWholeOrPartly(record.getCalcKey(), newAllElements)) {			
@@ -412,14 +420,15 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 					return calcKeyElements;
 				}
 			};
-			Command command = 
+			MakeRecordCalcCommand command = 
 				new MakeRecordCalcCommand(record, calcKeyElementSupplier, 
 										  record.getCalcKey().getDuplicatesOption());
 			commands.add(command);
 		}
 	}
 	
-	private static void addMakeRecordViaCommand(List<Command> commands, SchemaRecord record, 
+	private static void addMakeRecordViaCommand(List<ModelChangeBasicCommand> commands, 
+												SchemaRecord record, 
 												List<Element> newAllElements) {
 		
 		if (record.isVia() && record.getViaSpecification().getSet().isMultipleMember() && 
@@ -441,7 +450,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		}
 	}
 
-	private static void addChangePointerOrderCommand(List<Command> commands, 
+	private static void addChangePointerOrderCommand(List<ModelChangeBasicCommand> commands, 
 													 final SchemaRecord record, 
 													 List<Element> newAllElements) {
 		
@@ -475,7 +484,8 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 		
 	}
 
-	private static void addMoveDiagramNodeCommands(List<Command> commands, final SchemaRecord record, 
+	private static void addMoveDiagramNodeCommands(List<ModelChangeBasicCommand> commands, 
+												   final SchemaRecord record, 
 												   List<Element> newAllElements) {
 		
 		for (MemberRole memberRole : record.getMemberRoles()) {
@@ -496,7 +506,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 				};
 				DiagramLocation diagramLocation = 
 					memberRole.getConnectionLabel().getDiagramLocation();
-				Command command = 
+				MoveDiagramNodeCommand command = 
 					new MoveDiagramNodeCommand(connectionLabelSupplier, diagramLocation.getX(), 
 											   diagramLocation.getY());
 				commands.add(command);				

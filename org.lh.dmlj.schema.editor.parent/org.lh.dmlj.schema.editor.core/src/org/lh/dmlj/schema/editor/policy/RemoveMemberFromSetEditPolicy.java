@@ -40,10 +40,10 @@ public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 		}
 		if (removingLastMember() && allowRemovalOfSet) {			
 			// create a command to remove the set
-			return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+			return (Command) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		} else if (!removingLastMember()) {	
 			// create a command to remove the member record type from the set
-			return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);			
+			return (Command) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);			
 		}
 		return null;
 	}

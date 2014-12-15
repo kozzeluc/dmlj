@@ -36,7 +36,7 @@ public class DeleteSetEditPolicy extends ComponentEditPolicy {
 		if (deleteRequest.getEditParts().size() > 1) {						
 			return null;
 		}
-		return DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
+		return (Command) DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 	}
 	
 }

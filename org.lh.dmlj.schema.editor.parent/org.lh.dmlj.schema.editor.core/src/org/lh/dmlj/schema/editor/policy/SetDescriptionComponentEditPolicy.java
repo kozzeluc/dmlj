@@ -41,7 +41,7 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 		}
 		// get the connection label and have the right command created
 		ConnectionLabel connectionLabel = (ConnectionLabel) editParts.get(0).getModel();
-		return DeleteSetOrIndexCommandCreationAssistant.getCommand(connectionLabel.getMemberRole());
+		return (Command) DeleteSetOrIndexCommandCreationAssistant.getCommand(connectionLabel.getMemberRole());
 	}
 	
 }
