@@ -18,7 +18,6 @@ package org.lh.dmlj.schema.editor.part;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
@@ -32,7 +31,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.SnapToGuides;
@@ -44,15 +42,16 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
-import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.SchemaEditor;
+import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.policy.SchemaXYLayoutEditPolicy;
 
 public class SchemaEditPart 
@@ -83,7 +82,7 @@ public class SchemaEditPart
 	@Override
 	public void afterAddItem(EObject owner, EReference reference, Object item) {
 		
-		if (owner == getModel().getDiagramData() && 
+		/*if (owner == getModel().getDiagramData() && 
 			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
 			
 			// a DIAGRAM LABEL was added
@@ -201,12 +200,19 @@ public class SchemaEditPart
 									  		   .get(memberRecord);
 			memberRecordEditPart.refresh();			
 			
-		}		
+		}*/		
 		
 	}
 	
 	@Override
-	public void afterModelChange(ModelChangeContext context) {		
+	public void afterModelChange(ModelChangeContext context) {	
+		if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleSwapRecordElements(context);
+			} else {
+				handleSwapRecordElementsUndo(context);
+			}
+		}
 	}
 
 	@Override
@@ -217,7 +223,7 @@ public class SchemaEditPart
 	@Override
 	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
 		
-		if (owner == getModel().getDiagramData() && 
+		/*if (owner == getModel().getDiagramData() && 
 			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
 			
 			// the diagram label was removed
@@ -391,7 +397,7 @@ public class SchemaEditPart
 			Assert.isNotNull(memberRecordEditPart);			
 			memberRecordEditPart.refresh();			
 		
-		}		
+		}*/		
 		
 	}
 
@@ -400,7 +406,20 @@ public class SchemaEditPart
 	}
 	
 	@Override
-	public void beforeModelChange(ModelChangeContext context) {		
+	public void beforeModelChange(ModelChangeContext context) {	
+		if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				prepareForSwapRecordElements(context);
+			} else {
+				prepareForSwapRecordElementsUndo(context);
+			}
+		}		
+	}
+	
+	private void createAndAddChild(EObject model) {
+		EditPart newChild = 
+			SchemaDiagramEditPartFactory.createEditPart(model, modelChangeProvider, schemaEditor);
+		addChild(newChild, getChildren().size());		
 	}
 
 	@Override
@@ -421,6 +440,13 @@ public class SchemaEditPart
 		figure.setBorder(new MarginBorder(3));
 		figure.setLayoutManager(new FreeformLayout());
 		return figure;
+	}
+	
+	private void findAndRemoveChild(EObject model) {
+		Assert.isNotNull(model, "model is null");
+		EditPart obsoleteChild = (EditPart) getViewer().getEditPartRegistry().get(model);
+		Assert.isNotNull(obsoleteChild, "missing obsolete child edit part: " + model);
+		removeChild(obsoleteChild);
 	}
 	
 	@Override
@@ -504,11 +530,162 @@ public class SchemaEditPart
 		return allObjects;
 	}
 
+	private void handleSwapRecordElements(ModelChangeContext context) {
+		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
+		// member sets in which it participates as a member; it is only added as a member again if
+		// at least 1 element of the sort key can be retained; make sure to remove the edit parts
+		// for model objects that have become obsolete after the model change and create new edit
+		// parts for their replacements
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(recordName);		
+		@SuppressWarnings("unchecked")
+		List<MultipleMemberSetObsoleteObjectCollection> listenerData = 
+			(List<MultipleMemberSetObsoleteObjectCollection>) context.getListenerData();
+		for (MultipleMemberSetObsoleteObjectCollection obsoleteObjectCollection : listenerData) {
+			
+			// remove the obsolete connection label, set (connection part) and connector edit parts
+			findAndRemoveChild(obsoleteObjectCollection.connectionLabel);
+			for (ConnectionPart connectionPart : obsoleteObjectCollection.connectionParts) {
+				findAndRemoveChild(connectionPart);
+			}
+			for (Connector connector : obsoleteObjectCollection.connectors) {
+				findAndRemoveChild(connector);
+			}
+			
+			// add a new connection label edit part and, if applicable, new connector edit parts, if 
+			// and only if the record is still a member of the given multiple-member set - the edit
+			// part for the connection part will be created automatically by refreshing both owner
+			// and member record edit parts
+			MemberRole memberRole = (MemberRole) memberRecord.getRole(obsoleteObjectCollection.setName);
+			if (memberRole != null) {
+				
+				// create a new connection label edit part
+				createAndAddChild(memberRole.getConnectionLabel());
+				
+				// if applicable, create the new connector edit parts
+				if (memberRole.getConnectionParts().size() > 1) {
+					for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {					
+						createAndAddChild(connectionPart.getConnector());
+					}
+				}
+			}
+				
+			// refresh the owner record edit part			
+			Set set = getModel().getSet(obsoleteObjectCollection.setName);
+			SchemaRecord ownerRecord = set.getOwner().getRecord();
+			RecordEditPart ownerRecordEditPart = 
+				(RecordEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
+			ownerRecordEditPart.refresh();			
+		}		
+		// refresh the member record edit part
+		RecordEditPart memberRecordEditPart = 
+			(RecordEditPart) getViewer().getEditPartRegistry().get(memberRecord);
+		memberRecordEditPart.refresh();		
+	}
+	
+	private void handleSwapRecordElementsUndo(ModelChangeContext context) {
+		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
+		// member sets in which it participates as a member; it is only added as a member again if
+		// at least 1 element of the sort key can be retained
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(recordName);		
+		@SuppressWarnings("unchecked")
+		List<Set> listenerData = (List<Set>) context.getListenerData();
+		for (MemberRole memberRole : memberRecord.getMemberRoles()) {
+			Set set = memberRole.getSet();
+			if (!listenerData.contains(set)) {
+				
+				// create the set label edit part and add it as a child
+				createAndAddChild(memberRole.getConnectionLabel());
+				
+				// create and add the 2 connector edit parts if necessary
+				if (memberRole.getConnectionParts().size() > 1) {
+					for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
+						createAndAddChild(connectionPart.getConnector());
+					}
+				}
+				
+				// refresh the owner record edit part			
+				SchemaRecord ownerRecord = set.getOwner().getRecord();
+				RecordEditPart ownerRecordEditPart = 
+						(RecordEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
+				ownerRecordEditPart.refresh();
+			}
+		}
+		// refresh the member record edit part
+		RecordEditPart memberRecordEditPart = 
+			(RecordEditPart) getViewer().getEditPartRegistry().get(memberRecord);
+		memberRecordEditPart.refresh();
+	}
+
+	private void prepareForSwapRecordElements(ModelChangeContext context) {
+		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
+		// member sets in which it participates as a member; it is only added as a member again if
+		// at least 1 element of the sort key can be retained; build a list with the model objects
+		// that will have become obsolete after the model change
+		List<MultipleMemberSetObsoleteObjectCollection> listenerData = new ArrayList<>();
+		context.setListenerData(listenerData);
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord record = getModel().getRecord(recordName);
+		for (MemberRole memberRole : record.getMemberRoles()) {
+			Set set = memberRole.getSet();
+			if (set.isMultipleMember() && set.isSorted()) {
+				// THE thing to watch for in case a record's elements are swapped, are the SORTED 
+				// multiple-member sets of which the record is a member, there will ALWAYS be 
+				// something to do so let's just prepare by collecting all model objects that will
+				// be removed and possibly replaced after the model change
+				MultipleMemberSetObsoleteObjectCollection obsoleteObjectCollection = 
+					new MultipleMemberSetObsoleteObjectCollection(set.getName(), 
+																  memberRole.getConnectionLabel());
+				listenerData.add(obsoleteObjectCollection);
+				for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
+					obsoleteObjectCollection.connectionParts.add(connectionPart);
+					Connector connector = connectionPart.getConnector();
+					if (connector != null) {
+						obsoleteObjectCollection.connectors.add(connector);
+					}
+				}
+			}
+		}
+	}
+	
+	private void prepareForSwapRecordElementsUndo(ModelChangeContext context) {
+		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
+		// member sets in which it participates as a member; it is only added as a member again if
+		// at least 1 element of the sort key can be retained; build a list with the names of the
+		// sets in which the record participates as a member immediately before the swap elements
+		// operation is undone
+		List<Set> listenerData = new ArrayList<>();
+		context.setListenerData(listenerData);
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord record = getModel().getRecord(recordName);
+		for (MemberRole memberRole : record.getMemberRoles()) {
+			Set set = memberRole.getSet();
+			listenerData.add(set);
+		}
+	}
+
 	@Override
 	public final void removeNotify() {		
 		// note: this method doesn't seem to be called at all
 		modelChangeProvider.removeModelChangeListener(this);
 		super.removeNotify();
+	}
+	
+	public static class MultipleMemberSetObsoleteObjectCollection {
+		
+		private String setName;
+		private ConnectionLabel connectionLabel;
+		private List<ConnectionPart> connectionParts = new ArrayList<>();
+		private List<Connector> connectors = new ArrayList<>();
+		
+		public MultipleMemberSetObsoleteObjectCollection(String setName, 
+														 ConnectionLabel connectionLabel) {
+			super();
+			this.setName = setName;
+			this.connectionLabel = connectionLabel;
+		}
+		
 	}
 	
 }
