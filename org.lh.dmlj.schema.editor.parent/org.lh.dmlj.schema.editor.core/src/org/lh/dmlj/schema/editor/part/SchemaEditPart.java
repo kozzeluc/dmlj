@@ -95,7 +95,7 @@ public class SchemaEditPart
 		
 		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
 			
-			// a SET was added
+			// a SET was added -- partly MIGRATED (TODO: system-owned sets)
 			Set set = (Set) item;
 			
 			// create an edit part for the SYSTEM OWNER or refresh the owner record edit part
@@ -169,6 +169,12 @@ public class SchemaEditPart
 				handleAddRecord(context);
 			} else {
 				handleAddRecordUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleAddUserOwnedSet(context);
+			} else {
+				handleAddUserOwnedSetUndo(context);
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
@@ -321,6 +327,10 @@ public class SchemaEditPart
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 				prepareForAddRecordUndo(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
+			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				prepareForAddUserOwnedSetUndo(context);
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
@@ -550,6 +560,30 @@ public class SchemaEditPart
 		findAndRemoveChild(record);
 	}
 
+	private void handleAddUserOwnedSet(ModelChangeContext context) {
+		Set set = getModel().getSets().get(getModel().getSets().size() - 1);			
+		SchemaRecord ownerRecord = set.getOwner().getRecord();
+		MemberRole memberRole = set.getMembers().get(0);
+		SchemaRecord memberRecord = memberRole.getRecord();
+		createAndAddChild(memberRole.getConnectionLabel());
+		findAndRefreshChild(ownerRecord);
+		findAndRefreshChild(memberRecord);
+	}
+
+	private void handleAddUserOwnedSetUndo(ModelChangeContext context) {
+		@SuppressWarnings("unchecked")
+		List<EObject> obsoleteOrToRefreshObjects = (List<EObject>) context.getListenerData();
+		for (EObject obsoleteOrToRefreshObject : obsoleteOrToRefreshObjects) {
+			if (obsoleteOrToRefreshObject instanceof SchemaRecord) {
+				findAndRefreshChild(obsoleteOrToRefreshObject); // owner or member record
+			} else if (obsoleteOrToRefreshObject instanceof ConnectionLabel || 
+					   obsoleteOrToRefreshObject instanceof ConnectionPart) {
+				
+				findAndRemoveChild(obsoleteOrToRefreshObject);
+			}
+		}
+	}
+
 	private void handleDeleteConnectors(ModelChangeContext context) {
 		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
 		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
@@ -744,6 +778,19 @@ public class SchemaEditPart
 	private void prepareForAddRecordUndo(ModelChangeContext context) {
 		SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);
 		context.setListenerData(record);
+	}
+
+	private void prepareForAddUserOwnedSetUndo(ModelChangeContext context) {
+		Set set = getModel().getSets().get(getModel().getSets().size() - 1);			
+		SchemaRecord ownerRecord = set.getOwner().getRecord();
+		MemberRole memberRole = set.getMembers().get(0);
+		SchemaRecord memberRecord = memberRole.getRecord();
+		List<EObject> obsoleteOrToRefreshObjects = new ArrayList<EObject>();
+		context.setListenerData(obsoleteOrToRefreshObjects);
+		obsoleteOrToRefreshObjects.add(memberRole.getConnectionParts().get(0)); // to become obsolete
+		obsoleteOrToRefreshObjects.add(memberRole.getConnectionLabel());		// to become obsolete
+		obsoleteOrToRefreshObjects.add(ownerRecord);	// to refresh
+		obsoleteOrToRefreshObjects.add(memberRecord);	// to refresh
 	}
 
 	private void prepareForDeleteConnectors(ModelChangeContext context) {

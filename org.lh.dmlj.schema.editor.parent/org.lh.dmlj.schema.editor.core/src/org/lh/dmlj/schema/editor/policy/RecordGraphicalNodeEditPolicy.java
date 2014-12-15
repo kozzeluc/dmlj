@@ -141,7 +141,10 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				mode = SetMode.INDEXED;
 			} 
 			Assert.isNotNull(mode, "cannot determine set mode");	
-			request.setStartCommand(new CreateSetCommand(record, mode));
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_USER_OWNED_SET);
+			CreateSetCommand command = new CreateSetCommand(record, mode);
+			command.setContext(context);
+			request.setStartCommand(command);
 		}
 		return request.getStartCommand();
 	}
