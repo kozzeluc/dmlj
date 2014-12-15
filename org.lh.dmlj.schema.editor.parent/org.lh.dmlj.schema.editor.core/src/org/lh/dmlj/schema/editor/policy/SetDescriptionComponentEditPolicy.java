@@ -24,6 +24,10 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 
 public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
@@ -41,7 +45,20 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 		}
 		// get the connection label and have the right command created
 		ConnectionLabel connectionLabel = (ConnectionLabel) editParts.get(0).getModel();
-		return (Command) DeleteSetOrIndexCommandCreationAssistant.getCommand(connectionLabel.getMemberRole());
+		IModelChangeCommand command = 
+			DeleteSetOrIndexCommandCreationAssistant.getCommand(connectionLabel.getMemberRole());
+		if (connectionLabel.getMemberRole().getSet().isMultipleMember()) {
+			ModelChangeContext context = 
+				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
+			context.getContextData().put(IContextDataKeys.SET_NAME, 
+										 connectionLabel.getMemberRole().getSet().getName());
+			context.getContextData().put(IContextDataKeys.RECORD_NAME, 
+										 connectionLabel.getMemberRole().getRecord().getName());
+			command.setContext(context);
+		} else {
+			// TODO set the command's context
+		}
+		return (Command) command;
 	}
 	
 }

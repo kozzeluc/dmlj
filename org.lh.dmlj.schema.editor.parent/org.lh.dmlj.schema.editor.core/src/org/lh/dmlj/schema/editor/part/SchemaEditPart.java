@@ -188,6 +188,12 @@ public class SchemaEditPart
 			} else {
 				handleDeleteRecordUndo(context);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				handleRemoveMemberFromSet(context);
+			} else {
+				handleRemoveMemberFromSetUndo(context);
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				handleSwapRecordElements(context);
@@ -283,37 +289,7 @@ public class SchemaEditPart
 		
 		} else if (reference == SchemaPackage.eINSTANCE.getSet_Members()) {
 			
-			// a record was removed as a member record type from a set; remove the set description
-			// edit part first - we don't expect any connectors to be present (i.e. connectors
-			// should be removed before a member record type is removed from a set) 
-			MemberRole memberRole = (MemberRole) item;
-			Assert.isTrue(memberRole.getConnectionParts().size() == 1, 
-					  	  "expected exactly 1 connection part: " + 
-					  	  memberRole.getConnectionParts().size());
-			EditPart child = 
-				(EditPart) getViewer().getEditPartRegistry().get(memberRole.getConnectionLabel());
-			removeChild(child);
-			
-			// identify the owner and member record edit parts (we might not always find these
-			// because the model update might be done in a composite command)
-			SetEditPart setEditPart =
-				(SetEditPart) getViewer().getEditPartRegistry()
-				  	   					 .get(memberRole.getConnectionParts().get(0));
-			List<EditPart> recordEditParts = new ArrayList<>();
-			if (setEditPart.getSource() != null) {
-				recordEditParts.add(setEditPart.getSource()); // owner record edit part
-			}
-			if (setEditPart.getTarget() != null) {
-				recordEditParts.add(setEditPart.getTarget()); // member record edit part
-			}
-			
-			// remove the connection edit part
-			removeChild(setEditPart);				
-			
-			// refresh the owner and member record edit parts if we were able to find them
-			for (EditPart editPart : recordEditParts) {
-				editPart.refresh();				
-			}						
+			// a record was removed as a member record type from a set --> MIGRATED						
 						
 		} else if (owner instanceof MemberRole && 
 				   reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts()) {			
@@ -357,6 +333,10 @@ public class SchemaEditPart
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 				prepareForDeleteRecord(context);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+				prepareForRemoveMemberFromSet(context);
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
 			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
@@ -405,6 +385,15 @@ public class SchemaEditPart
 		EditPart obsoleteChild = (EditPart) getViewer().getEditPartRegistry().get(model);
 		Assert.isNotNull(obsoleteChild, "missing obsolete child edit part: " + model);
 		removeChild(obsoleteChild);
+	}
+	
+	private void findAndRemoveChildren(List<EObject> models) {
+		if (models == null || models.isEmpty()) {
+			return;
+		}
+		for (EObject model : models) {
+			findAndRemoveChild(model);
+		}
 	}
 	
 	@Override
@@ -511,10 +500,8 @@ public class SchemaEditPart
 		EObject owner = 
 			set.getSystemOwner() != null ? set.getSystemOwner() : set.getOwner().getRecord();
 		@SuppressWarnings("unchecked")
-		List<EObject> objectsToBecomeObsolete = (List<EObject>) context.getListenerData();
-		for (EObject model : objectsToBecomeObsolete) {
-			findAndRemoveChild(model);
-		}
+		List<EObject> obsoleteObjects = (List<EObject>) context.getListenerData();
+		findAndRemoveChildren(obsoleteObjects);
 		findAndRefreshChild(owner);
 		findAndRefreshChild(memberRecord);
 	}
@@ -572,10 +559,8 @@ public class SchemaEditPart
 		EObject owner = 
 			set.getSystemOwner() != null ? set.getSystemOwner() : set.getOwner().getRecord();
 		@SuppressWarnings("unchecked")
-		List<EObject> objectsToBecomeObsolete = (List<EObject>) context.getListenerData();
-		for (EObject model : objectsToBecomeObsolete) {
-			findAndRemoveChild(model);
-		}
+		List<EObject> obsoleteObjects = (List<EObject>) context.getListenerData();
+		findAndRemoveChildren(obsoleteObjects);
 		findAndRefreshChild(owner);
 		findAndRefreshChild(memberRecord);
 	}
@@ -617,6 +602,34 @@ public class SchemaEditPart
 		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
 		SchemaRecord record = getModel().getRecord(recordName);
 		createAndAddChild(record);
+	}
+
+	private void handleRemoveMemberFromSet(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		Set set = getModel().getSet(setName);
+		SchemaRecord ownerRecord = set.getOwner().getRecord();
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		@SuppressWarnings("unchecked")
+		List<EObject> obsoleteObjects = (List<EObject>) context.getListenerData();
+		findAndRemoveChildren(obsoleteObjects);
+		findAndRefreshChild(ownerRecord);
+		findAndRefreshChild(memberRecord);		
+	}
+
+	private void handleRemoveMemberFromSetUndo(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);		
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);
+		SchemaRecord ownerRecord = memberRole.getSet().getOwner().getRecord();
+		createAndAddChild(memberRole.getConnectionLabel());
+		if (memberRole.getConnectionParts().size() > 1) {
+			createAndAddChild(memberRole.getConnectionParts().get(0).getConnector());
+			createAndAddChild(memberRole.getConnectionParts().get(1).getConnector());
+		}
+		findAndRefreshChild(ownerRecord);
+		findAndRefreshChild(memberRecord);		
 	}
 
 	private void handleSwapRecordElements(ModelChangeContext context) {
@@ -756,6 +769,22 @@ public class SchemaEditPart
 		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
 		SchemaRecord record = getModel().getRecord(recordName);
 		context.setListenerData(record);
+	}
+
+	private void prepareForRemoveMemberFromSet(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord memberRecord = getModel().getRecord(memberRecordName);
+		MemberRole memberRole = (MemberRole) memberRecord.getRole(setName);		
+		List<EObject> objectsToBecomeObsolete = new ArrayList<>();
+		context.setListenerData(objectsToBecomeObsolete);
+		objectsToBecomeObsolete.add(memberRole.getConnectionLabel());
+		objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(0));
+		if (memberRole.getConnectionParts().size() > 1) {			
+			objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(0).getConnector());
+			objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(1).getConnector());
+			objectsToBecomeObsolete.add(memberRole.getConnectionParts().get(1));
+		}	
 	}
 
 	private void prepareForSwapRecordElements(ModelChangeContext context) {
