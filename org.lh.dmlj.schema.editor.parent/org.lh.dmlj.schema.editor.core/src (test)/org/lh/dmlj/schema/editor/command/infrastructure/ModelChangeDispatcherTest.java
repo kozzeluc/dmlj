@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -52,6 +52,7 @@ import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.ResizableDiagramNode;
+import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -1348,10 +1349,13 @@ public class ModelChangeDispatcherTest {
 	}
 	
 	@Test
-	public void testContextPassing() {
+	public void testContextPassingAndSchemaHandling() {
+		
+		final Schema schema = mock(Schema.class);
 		
 		final ModelChangeContext context = 
 			new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
+		// don't set the schema because our model change dispatcher should do this for us
 		context.getContextData().put("a", "b");
 		
 		final CommandExecutionMode[] expectedCommandExecutionMode = new CommandExecutionMode[1];
@@ -1360,8 +1364,9 @@ public class ModelChangeDispatcherTest {
 		final boolean[] listener1MethodCallsOK = {false, false};
 		IModelChangeListener listener1 = new ModelChangelChangeAdapter() {		
 			public void beforeModelChange(ModelChangeContext listenerContext1) {
-				
+								
 				assertNotSame(context, listenerContext1);
+				assertSame(schema, listenerContext1.getSchema());
 				
 				assertSame(expectedCommandExecutionMode[0], 
 						   listenerContext1.getCommandExecutionMode());
@@ -1378,6 +1383,7 @@ public class ModelChangeDispatcherTest {
 				
 				assertNotSame(context, listenerContext2);
 				assertNotSame(savedListenerContext1[0], listenerContext2);
+				assertSame(schema, listenerContext2.getSchema());
 				
 				assertSame(expectedCommandExecutionMode[0], 
 						   listenerContext2.getCommandExecutionMode());
@@ -1396,6 +1402,7 @@ public class ModelChangeDispatcherTest {
 			public void beforeModelChange(ModelChangeContext listenerContext1) {
 				
 				assertNotSame(context, listenerContext1);
+				assertSame(schema, listenerContext1.getSchema());
 				
 				assertSame(expectedCommandExecutionMode[0], 
 						   listenerContext1.getCommandExecutionMode());
@@ -1413,6 +1420,7 @@ public class ModelChangeDispatcherTest {
 				
 				assertNotSame(context, listenerContext2);
 				assertNotSame(savedListenerContext2[0], listenerContext2);
+				assertSame(schema, listenerContext2.getSchema());
 				
 				assertSame(expectedCommandExecutionMode[0], 
 						   listenerContext2.getCommandExecutionMode());
@@ -1427,6 +1435,7 @@ public class ModelChangeDispatcherTest {
 		};		
 		
 		ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();	
+		dispatcher.setSchema(schema);
 		dispatcher.addModelChangeListener(listener1);
 		dispatcher.addModelChangeListener(listener2);
 		

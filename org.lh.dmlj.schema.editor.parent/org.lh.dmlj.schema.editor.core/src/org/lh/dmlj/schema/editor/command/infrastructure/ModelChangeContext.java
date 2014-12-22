@@ -19,12 +19,15 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.lh.dmlj.schema.Schema;
+
 public class ModelChangeContext {
 
 	private CommandExecutionMode commandExecutionMode;
 	private Map<String, String> contextData = new HashMap<>();
 	private Object listenerData;
 	private ModelChangeType modelChangeType;
+	private Schema schema;
 	
 	public ModelChangeContext(ModelChangeType modelChangeType) {
 		super();
@@ -33,6 +36,7 @@ public class ModelChangeContext {
 
 	public ModelChangeContext copy() {
 		ModelChangeContext copy = new ModelChangeContext(modelChangeType);
+		copy.setSchema(schema);
 		for (String key : contextData.keySet()) {
 			copy.getContextData().put(key, contextData.get(key));
 		}
@@ -56,6 +60,10 @@ public class ModelChangeContext {
 		return modelChangeType;
 	}
 
+	public Schema getSchema() {
+		return schema;
+	}
+
 	/**
 	 * This attribute should only be set by the model change dispatcher and NOT by the component 
 	 * that creates the initial context before handling a model change command to the command stack.
@@ -77,6 +85,10 @@ public class ModelChangeContext {
 		this.listenerData = listenerData;
 	}
 	
+	public void setSchema(Schema schema) {
+		this.schema = schema;
+	}
+
 	public String toString() {
 		return "ModelChangeContext [modelChangeType=" + modelChangeType + 
 			   ", commandExecutionMode=" + commandExecutionMode + 

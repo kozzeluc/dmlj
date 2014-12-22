@@ -37,6 +37,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
@@ -57,12 +58,13 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	private boolean disposed = false;
 	private List<IModelChangeListener> listeners = new ArrayList<>();
 	private Set<IModelChangeListener> obsoleteListeners = new HashSet<>();
+	private Schema schema;
 	
 	// things to carry from a pre-change to a post-change event:
 	private Command previousCommand;
 	private List<IModelChangeListener> allListeners;
 	private Map<Integer, Object> listenerDataMap;
-
+	
 	private static <T extends Annotation> Field getAnnotatedField(
 		Object object, 
 		Class<T> annotationType) {	
@@ -402,6 +404,13 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 			context = ((IModelChangeCommand) eventCommand).getContext();
 		}
 		
+		// make sure the context's schema is set
+		if (context != null) {
+			// the schema should be set, but we do NOT enforce it; just copy whatever we have or not
+			// to the context
+			context.setSchema(getSchema());
+		}
+		
 		// in the case of a pre-change event, (only) invoke the beforeModelChangeListener(context) 
 		// method on all current listeners and set aside the listener data; if no context is set, 
 		// bypass this step (note that we should avoid this situation but are allowing it to be able 
@@ -666,6 +675,10 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		
 	}
 	
+	public Schema getSchema() {
+		return schema;
+	}
+
 	IModelChangeNotifier getSetFeaturesNotifier(
 		Command command,
 		int eventDetail) {
@@ -766,6 +779,10 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		}
 		debugMessage.append("The listener count is now " + listeners.size());			
 		logDebug(debugMessage.toString());		
+	}
+
+	public void setSchema(Schema schema) {
+		this.schema = schema;
 	}
 	
 }

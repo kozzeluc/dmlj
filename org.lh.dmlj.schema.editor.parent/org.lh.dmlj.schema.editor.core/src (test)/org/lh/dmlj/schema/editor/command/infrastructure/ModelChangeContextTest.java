@@ -16,22 +16,31 @@
  */
 package org.lh.dmlj.schema.editor.command.infrastructure;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
+import org.lh.dmlj.schema.Schema;
 
 public class ModelChangeContextTest {
 
 	@Test
 	public void test() {
 		
+		Schema schema = mock(Schema.class);
+		
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
+		context.setSchema(schema);
 		context.getContextData().put("key1", "value1");
 		context.getContextData().put("key2", "value2");
 		context.setListenerData("listener data");
 		context.setCommandExecutionMode(CommandExecutionMode.UNDO);
 		
 		assertSame(ModelChangeType.SWAP_RECORD_ELEMENTS, context.getModelChangeType());
+		assertSame(schema, context.getSchema());
 		assertEquals(2, context.getContextData().size());
 		assertEquals("value1", context.getContextData().get("key1"));
 		assertEquals("value2", context.getContextData().get("key2"));
@@ -40,6 +49,7 @@ public class ModelChangeContextTest {
 		
 		ModelChangeContext copy = context.copy();
 		assertSame(ModelChangeType.SWAP_RECORD_ELEMENTS, copy.getModelChangeType());
+		assertSame(schema, copy.getSchema());
 		assertNotSame(context.getContextData(), copy.getContextData());
 		assertEquals(2, copy.getContextData().size());
 		assertEquals("value1", copy.getContextData().get("key1"));

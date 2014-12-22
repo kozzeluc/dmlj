@@ -308,7 +308,8 @@ public class SchemaEditor
 	}
 	
 	@Override
-	public void stackChanged(CommandStackEvent event) {												
+	public void stackChanged(CommandStackEvent event) {
+		modelChangeDispatcher.setSchema(schema);
 		modelChangeDispatcher.dispatch(event);				
 	}
 	
