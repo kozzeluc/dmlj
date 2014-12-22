@@ -314,6 +314,11 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	public void dispatch(CommandStackEvent event) {		
 		
 		Assert.isTrue(!isDisposed(), "model change dispatcher is disposed");
+		Class<? extends Command> commandClass = event.getCommand().getClass();
+		Assert.isTrue(!(commandClass.getSimpleName().endsWith("ChainedCompoundCommand") &&
+				commandClass.getPackage().getName().equals("org.eclipse.gef.commands")), 
+					  "don't chain commands together but create a compound command of type " +
+					  ModelChangeCompoundCommand.class.getName());
 		
 		// log every event when in debug mode
 		StringBuilder debugMessage = new StringBuilder();

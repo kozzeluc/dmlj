@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,6 +30,7 @@ import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.editor.command.CreateBendpointCommand;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.MoveBendpointCommand;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.part.SetEditPart;
@@ -152,11 +153,14 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
         
         // create the create bendpoint command...
         CreateBendpointCommand createBendpointCommand = 
-			new CreateBendpointCommand(connectionPart, request.getIndex(), p.x, 
-									   p.y);
+			new CreateBendpointCommand(connectionPart, request.getIndex(), p.x, p.y);
         
-        // chain both commands together, forming the final command...
-        return lockEndpointsCommand.chain(createBendpointCommand);
+        // create a compound command...
+        ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand("Create bendpoint");
+        // TODO set the compound command's context
+        cc.add(lockEndpointsCommand);
+        cc.add(createBendpointCommand);
+        return cc;
 	}
 
 	@Override
