@@ -35,6 +35,7 @@ import org.lh.dmlj.schema.editor.command.ChangeViaSpecificationCommand;
 import org.lh.dmlj.schema.editor.command.MakeRecordCalcCommand;
 import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommand;
 import org.lh.dmlj.schema.editor.command.MakeRecordViaCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
 import org.lh.dmlj.schema.editor.property.IRecordProvider;
 import org.lh.dmlj.schema.editor.property.ui.LocationModeDialog;
@@ -128,10 +129,13 @@ public class LocationModeHandler implements IHyperlinkHandler<EAttribute, Comman
 					new MakeRecordViaCommand(record, dialog.getViaSetName(), 
 							 				 dialog.getSymbolicDisplacementName(), 
 							 				 dialog.getDisplacementPageCount());						
-				Command theCommand = 
-					makeRecordDirectCommand.chain(makeRecordViaCommand);
-			    theCommand.setLabel(makeRecordViaCommand.getLabel());
-			    return theCommand;
+				ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand();
+			    cc.setLabel(makeRecordViaCommand.getLabel());
+			    // TODO set the compound command's context
+		        cc.add(makeRecordDirectCommand);
+			    cc.add(makeRecordViaCommand);
+			    
+			    return cc;
 			}
 		} else if (record.getLocationMode() == LocationMode.DIRECT) {
 			// the record is currently DIRECT, its location mode must be 
@@ -163,10 +167,14 @@ public class LocationModeHandler implements IHyperlinkHandler<EAttribute, Comman
 					new MakeRecordCalcCommand(record, 
 											  dialog.getCalcKeyElements(), 
 											  dialog.getDuplicatesOption());						
-				Command theCommand = 
-					makeRecordDirectCommand.chain(makeRecordCalcCommand);
-			    theCommand.setLabel(makeRecordCalcCommand.getLabel());
-			    return theCommand;
+				
+			    ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand();
+			    cc.setLabel(makeRecordCalcCommand.getLabel());
+			    // TODO set the compound command's context
+		        cc.add(makeRecordDirectCommand);
+			    cc.add(makeRecordCalcCommand);
+			    
+			    return cc;
 			} else if (dialog.getLocationMode() == LocationMode.DIRECT) {
 				// the record has to be made DIRECT
 				return new MakeRecordDirectCommand(record);
