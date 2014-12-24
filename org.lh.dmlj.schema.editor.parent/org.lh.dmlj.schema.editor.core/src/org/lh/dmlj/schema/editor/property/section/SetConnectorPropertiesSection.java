@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
 
@@ -81,12 +82,16 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 		command[1] = new SetObjectAttributeCommand(connector[1], attribute, 
 												   value, label);
 		
-		// chain the 2 commands and wrap the result in an IEditHandler
-		final Command theCommand = command[0].chain(command[1]);		
+		// chreate a compound command containing the 2 commands and wrap the result in an IEditHandler
+		final ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(); 
+		cc.setLabel(command[0].getLabel());
+		// TODO set the compound command's context
+		cc.add(command[0]);
+		cc.add(command[1]);
 		return new IEditHandler() {	
 			@Override
 			public Command getEditCommand() {
-				return theCommand;
+				return cc;
 			}
 			@Override
 			public String getMessage() {
