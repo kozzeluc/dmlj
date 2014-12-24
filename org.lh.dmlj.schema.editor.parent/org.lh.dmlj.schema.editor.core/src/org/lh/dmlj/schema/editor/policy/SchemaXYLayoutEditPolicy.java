@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -111,14 +112,17 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			Dimension size = 
 				DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(), 
 												  schema.getDescription(), lastModified); 
+			PrecisionPoint p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
+			getHostFigure().translateToRelative(p);
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_DIAGRAM_LABEL);
-			ModelChangeBasicCommand command =
-				new CreateDiagramLabelCommand(schema, request.getLocation(), size);
+			ModelChangeBasicCommand command = new CreateDiagramLabelCommand(schema, p, size);
 			command.setContext(context);
 			return command;
 		} else if (request.getNewObjectType() == SchemaRecord.class) {
+			PrecisionPoint p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
+			getHostFigure().translateToRelative(p);
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-			ModelChangeBasicCommand command = new CreateRecordCommand(schema, request.getLocation());
+			ModelChangeBasicCommand command = new CreateRecordCommand(schema, p);
 			command.setContext(context);
 			return command;
 		}
