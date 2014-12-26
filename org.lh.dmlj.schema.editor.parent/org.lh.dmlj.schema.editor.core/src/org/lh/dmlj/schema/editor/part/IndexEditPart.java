@@ -19,11 +19,13 @@ package org.lh.dmlj.schema.editor.part;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -33,7 +35,10 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
 import org.lh.dmlj.schema.editor.policy.IndexComponentEditPolicy;
 
@@ -46,6 +51,34 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	public IndexEditPart(SystemOwner systemOwner, IModelChangeProvider modelChangeProvider) {
 		super(systemOwner, modelChangeProvider);
 	}	
+	
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+	}
+
+	@Override
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() != ModelChangeType.MOVE_INDEX) {
+			return;
+		}
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		if (setName.equals(getModel().getSet().getName())) {
+			refreshVisuals();			
+			refreshConnections();
+		}
+	}
+	
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
+	}
+
+	@Override
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {		
+	}
+	
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
+	}
 
 	@Override
 	protected void createEditPolicies() {			
@@ -80,28 +113,6 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 		ConnectionPart connectionPart = memberRole.getConnectionParts().get(0);					
 		connectionParts.add(connectionPart);
 		return connectionParts;
-	}
-
-	/**
-	 * Finds the index's member record edit part by following the source connection to it.  This 
-	 * can be useful when an index was deleted and its member record edit part needs to be 
-	 * refreshed.  This method will only work if no connectors are put between index and record, so
-	 * first remove the connectors before ever removing an index.
-	 * @return the index's member record edit part
-	 */
-	@Deprecated
-	public RecordEditPart getRecordEditPart() {
-		List<?> sourceConnections = getSourceConnections();
-		Assert.isTrue(sourceConnections.size() == 1, 
-					  "expected only 1 source target connection: " + sourceConnections.size());
-		Assert.isTrue(sourceConnections.get(0) instanceof SetEditPart,
-					  "expected an org.lh.dmlj.schema.editor.part.SetEditPart: " +
-					  sourceConnections.get(0).getClass().getName());
-		SetEditPart setEditPart = (SetEditPart) sourceConnections.get(0);
-		Assert.isTrue(setEditPart.getTarget() instanceof RecordEditPart,
-				  	  "expected an org.lh.dmlj.schema.editor.part.RecordEditPart: " +
-					  setEditPart.getTarget().getClass().getName());
-		return (RecordEditPart) setEditPart.getTarget();
 	}
 
 	@Override

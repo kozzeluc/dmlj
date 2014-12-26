@@ -28,15 +28,20 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
+import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommand;
 import org.lh.dmlj.schema.editor.command.CreateRecordCommand;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
@@ -62,7 +67,13 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			// move request, so create the move command...
 			Rectangle box = (Rectangle)constraint;
 			DiagramNode locationProvider = (DiagramNode) child.getModel();
-			return new MoveDiagramNodeCommand(locationProvider, box.x, box.y);
+			MoveDiagramNodeData moveDiagramNodeData = new MoveDiagramNodeData(locationProvider);
+			ModelChangeContext context = 
+				new ModelChangeContext(moveDiagramNodeData.getModelChangeType());
+			moveDiagramNodeData.setModelChangeContextData(context);
+			IModelChangeCommand command = new MoveDiagramNodeCommand(locationProvider, box.x, box.y);
+			command.setContext(context);
+			return (Command) command;
 		} else {
 			// not a DiagramNode or user is trying to resize, make
 			// sure he/she gets the right feedback
@@ -128,5 +139,60 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		}
 		return null;
 	}	
+	
+	public static class MoveDiagramNodeData {
+		
+		private DiagramNode diagramNode;
+		
+		public MoveDiagramNodeData(DiagramNode diagramNode) {
+			super();
+			this.diagramNode = diagramNode;
+		}
+		
+		public ModelChangeType getModelChangeType() {
+			if (diagramNode instanceof ConnectionLabel) {
+				return ModelChangeType.MOVE_SET_OR_INDEX_LABEL;
+			} else if (diagramNode instanceof Connector) {
+				return ModelChangeType.MOVE_CONNECTOR;
+			} else if (diagramNode instanceof DiagramLabel) {
+				return ModelChangeType.MOVE_DIAGRAM_LABEL;
+			} else if (diagramNode instanceof SchemaRecord) {
+				return ModelChangeType.MOVE_RECORD;
+			} else if (diagramNode instanceof SystemOwner) {
+				return ModelChangeType.MOVE_INDEX;
+			} else {
+				throw new IllegalStateException("Unexpected diagram node: " + diagramNode);
+			}
+		}
+
+		public void setModelChangeContextData(ModelChangeContext context) {
+			if (diagramNode instanceof ConnectionLabel) {
+				ConnectionLabel connectionLabel = (ConnectionLabel) diagramNode;
+				String setName = connectionLabel.getMemberRole().getSet().getName();
+				String recordName = connectionLabel.getMemberRole().getRecord().getName();
+				context.getContextData().put(IContextDataKeys.SET_NAME, setName);
+				context.getContextData().put(IContextDataKeys.RECORD_NAME, recordName);
+			} else if (diagramNode instanceof Connector) {
+				Connector connector = (Connector) diagramNode;
+				String setName = connector.getConnectionPart().getMemberRole().getSet().getName();
+				String recordName = 
+					connector.getConnectionPart().getMemberRole().getRecord().getName();
+				context.getContextData().put(IContextDataKeys.SET_NAME, setName);
+				context.getContextData().put(IContextDataKeys.RECORD_NAME, recordName);
+			} else if (diagramNode instanceof DiagramLabel) {
+				// no context data to be set
+			} else if (diagramNode instanceof SchemaRecord) {
+				SchemaRecord record = (SchemaRecord) diagramNode;
+				context.getContextData().put(IContextDataKeys.RECORD_NAME, record.getName());
+			} else if (diagramNode instanceof SystemOwner) {
+				SystemOwner systemOwner = (SystemOwner) diagramNode;
+				String setName = systemOwner.getSet().getName();
+				context.getContextData().put(IContextDataKeys.SET_NAME, setName);
+			} else {
+				throw new IllegalStateException("Unexpected diagram node: " + diagramNode);
+			}
+		}
+		
+	}
 	
 }
