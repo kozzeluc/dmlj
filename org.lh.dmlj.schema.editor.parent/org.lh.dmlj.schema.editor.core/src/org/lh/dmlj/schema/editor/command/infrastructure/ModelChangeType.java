@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 
 public enum ModelChangeType {
 
+    ADD_BENDPOINT,
 	ADD_CONNECTORS,
 	ADD_DIAGRAM_LABEL,
 	ADD_MEMBER_TO_SET,
@@ -25,7 +26,8 @@ public enum ModelChangeType {
     ADD_SYSTEM_OWNED_SET,
     ADD_USER_OWNED_SET,
 	
-	DELETE_CONNECTORS,
+    DELETE_BENDPOINT,
+    DELETE_CONNECTORS,
 	DELETE_DIAGRAM_LABEL,
 	DELETE_RECORD,				// not yet hooked
 	DELETE_SYSTEM_OWNED_SET,

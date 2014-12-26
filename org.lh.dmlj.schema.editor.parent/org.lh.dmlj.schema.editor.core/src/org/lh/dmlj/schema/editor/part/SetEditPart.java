@@ -46,9 +46,11 @@ import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
@@ -105,16 +107,22 @@ public class SetEditPart
 
 	@Override
 	public void afterAddItem(EObject owner, EReference reference, Object item) {
-		if (owner == getModel() &&
-			reference == SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations()) {
-			
-			// a bendpoint was added
-			refreshVisuals();						
-		}
 	}
 	
 	@Override
-	public void afterModelChange(ModelChangeContext context) {		
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() != ModelChangeType.ADD_BENDPOINT &&
+			context.getModelChangeType() != ModelChangeType.DELETE_BENDPOINT) {
+			
+			return;
+		}
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		if (setName.equals(memberRole.getSet().getName()) && 
+			recordName.equals(memberRole.getRecord().getName())) {
+			
+			refreshVisuals();
+		}
 	}
 
 	@Override
@@ -124,12 +132,6 @@ public class SetEditPart
 
 	@Override
 	public void afterRemoveItem(EObject owner, EReference reference, Object item) {	
-		if (owner == getModel() &&
-			reference == SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations()) {
-			
-			// a bendpoint was removed
-			refreshVisuals();						
-		}
 	}
 
 	@Override

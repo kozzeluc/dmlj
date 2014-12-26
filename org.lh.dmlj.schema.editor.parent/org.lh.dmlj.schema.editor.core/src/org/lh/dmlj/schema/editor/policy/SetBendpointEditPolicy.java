@@ -32,6 +32,9 @@ import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.MoveBendpointCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.part.SetEditPart;
 
@@ -156,8 +159,13 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 			new CreateBendpointCommand(connectionPart, request.getIndex(), p.x, p.y);
         
         // create a compound command...
+        ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_BENDPOINT);
+        context.getContextData().put(IContextDataKeys.SET_NAME, 
+        							 connectionPart.getMemberRole().getSet().getName());
+        context.getContextData().put(IContextDataKeys.RECORD_NAME, 
+        							 connectionPart.getMemberRole().getRecord().getName());
         ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand("Create bendpoint");
-        // TODO set the compound command's context
+        cc.setContext(context);
         cc.add(lockEndpointsCommand);
         cc.add(createBendpointCommand);
         return cc;
@@ -165,8 +173,14 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 
 	@Override
 	protected Command getDeleteBendpointCommand(BendpointRequest request) {
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_BENDPOINT);
+		context.getContextData().put(IContextDataKeys.SET_NAME, 
+									 connectionPart.getMemberRole().getSet().getName());
+		context.getContextData().put(IContextDataKeys.RECORD_NAME, 
+									 connectionPart.getMemberRole().getRecord().getName());
 		DeleteBendpointCommand command = 
 			new DeleteBendpointCommand(connectionPart, request.getIndex());
+		command.setContext(context);
 		return command;
 	}
 
