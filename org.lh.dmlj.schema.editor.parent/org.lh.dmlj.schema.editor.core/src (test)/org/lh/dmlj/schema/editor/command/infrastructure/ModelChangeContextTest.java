@@ -24,6 +24,7 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaPackage;
 
 public class ModelChangeContextTest {
 
@@ -57,6 +58,13 @@ public class ModelChangeContextTest {
 		assertNull("listener data should be erased for copies", copy.getListenerData());
 		assertNull("command execution mode should be erased for copies", copy.getCommandExecutionMode());
 		
+	}
+	
+	@Test
+	public void testGetQualifiedFeatureName() {
+		String qualifiedFeatureName = 
+			ModelChangeContext.getQualifiedFeatureName(SchemaPackage.eINSTANCE.getConnector_Label());
+		assertEquals("Connector.label", qualifiedFeatureName);
 	}
 
 }

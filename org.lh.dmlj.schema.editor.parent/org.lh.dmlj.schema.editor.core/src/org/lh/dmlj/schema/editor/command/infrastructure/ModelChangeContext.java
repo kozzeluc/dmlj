@@ -19,6 +19,7 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.Schema;
 
 public class ModelChangeContext {
@@ -28,6 +29,10 @@ public class ModelChangeContext {
 	private Object listenerData;
 	private ModelChangeType modelChangeType;
 	private Schema schema;
+	
+	public static String getQualifiedFeatureName(EStructuralFeature feature) {
+		return feature.getContainerClass().getSimpleName() + "." + feature.getName();
+	}
 	
 	public ModelChangeContext(ModelChangeType modelChangeType) {
 		super();

@@ -26,6 +26,7 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
@@ -39,13 +40,19 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
 
 public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<Connector> {
 
+	private static final String FEATURE_LABEL = 
+		ModelChangeContext.getQualifiedFeatureName(SchemaPackage.eINSTANCE.getConnector_Label());
+	
 	private MemberRole memberRole;
 	
 	private ConnectorEditPart() {
@@ -58,19 +65,44 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 		// reference to that MemberRole will be nullified in the ConnectionPart
 		this.memberRole = connector.getConnectionPart().getMemberRole();
 	}	
+	
+	@Override
+	public void afterAddItem(EObject owner, EReference reference, Object item) {
+	}
+	
+	@Override
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.MOVE_CONNECTOR) {
+			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			if (setName.equals(getModel().getConnectionPart().getMemberRole().getSet().getName())) {
+				refreshVisuals();			
+				refreshConnections();
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE) {
+			String featureName = context.getContextData().get(IContextDataKeys.FEATURE_NAME);
+			if (featureName.equals(FEATURE_LABEL)) {
+				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				if (setName.equals(memberRole.getSet().getName()) &&
+					recordName.equals(memberRole.getRecord().getName())) {
+					
+					// the connector label is set; refresh the edit part's visuals
+					refreshVisuals();
+				}
+			}
+		}		
+	}
+	
+	@Override
+	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
+	}
 
 	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		
-		super.afterSetFeatures(owner, features);
-		
-		if (owner == getModel() && 
-			isFeatureSet(features, SchemaPackage.eINSTANCE.getConnector_Label())) {
-			
-			// the connector label is set; refresh the edit part's visuals
-			refreshVisuals();					
-		}
-		
+	public void afterRemoveItem(EObject owner, EReference reference, Object item) {		
+	}	
+
+	@Override
+	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {		
 	}
 	
 	@Override
