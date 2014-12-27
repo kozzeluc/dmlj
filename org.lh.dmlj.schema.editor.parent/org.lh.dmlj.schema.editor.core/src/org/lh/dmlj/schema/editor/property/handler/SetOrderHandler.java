@@ -25,6 +25,9 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommand;
 import org.lh.dmlj.schema.editor.command.ChangeSortKeysCommand;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.property.ISetProvider;
 import org.lh.dmlj.schema.editor.property.ui.SetOrderDialog;
 
@@ -54,25 +57,31 @@ public class SetOrderHandler implements IHyperlinkHandler<EAttribute, Command> {
 		Set set = setProvider.getSet();
 		
 		// create the appropriate command
-		Command command = null;
+		IModelChangeCommand command = null;
 		if (dialog.getSetOrder() != set.getOrder()) {
 			// the set order has changed; things are slightly more complicated when the set becomes
 			// sorted because a description for each member record's sort key has to be assembled
 			// (fortunately, the set order dialog can do this for us)
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.CHANGE_SET_ORDER);
+			context.putContextData(set);
 			if (dialog.getSetOrder() == SetOrder.SORTED) {
 				command = new ChangeSetOrderCommand(set, dialog.getSortKeyDescriptions());
 			} else {
 				command = new ChangeSetOrderCommand(set, dialog.getSetOrder());
 			}
+			command.setContext(context);
 		} else {
 			// the set order did not change which means the sortkey for at least 1 member record has
 			// to be modified
 			Assert.isTrue(set.getOrder() == SetOrder.SORTED, "expected a sorted set");
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.CHANGE_SORTKEYS);
+			context.putContextData(set);
 			command = new ChangeSortKeysCommand(set, dialog.getSortKeyDescriptions());
+			command.setContext(context);
 		}
 		
 		
-		return command; 		
+		return (Command) command; 		
 		
 	}
 

@@ -25,7 +25,6 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
@@ -50,10 +49,7 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 		if (connectionLabel.getMemberRole().getSet().isMultipleMember()) {
 			ModelChangeContext context = 
 				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
-			context.getContextData().put(IContextDataKeys.SET_NAME, 
-										 connectionLabel.getMemberRole().getSet().getName());
-			context.getContextData().put(IContextDataKeys.RECORD_NAME, 
-										 connectionLabel.getMemberRole().getRecord().getName());
+			context.putContextData(connectionLabel.getMemberRole());
 			command.setContext(context);
 		} else {
 			ModelChangeType modelChangeType;
@@ -63,8 +59,11 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 			}
 			ModelChangeContext context = new ModelChangeContext(modelChangeType);
-			context.getContextData().put(IContextDataKeys.SET_NAME, 
-										 connectionLabel.getMemberRole().getSet().getName());
+			if (modelChangeType == ModelChangeType.DELETE_SYSTEM_OWNED_SET) {
+				context.putContextData(connectionLabel.getMemberRole().getSet().getSystemOwner());
+			} else {
+				context.putContextData(connectionLabel.getMemberRole().getSet());
+			}
 			command.setContext(context);
 		}
 		return (Command) command;

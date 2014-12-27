@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,7 +25,6 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorsCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.part.ConnectorEditPart;
@@ -47,8 +46,7 @@ public class ConnectorComponentEditPolicy extends ComponentEditPolicy {
 		Connector connector = ((ConnectorEditPart)editParts.get(0)).getModel();
 		MemberRole memberRole = connector.getConnectionPart().getMemberRole();
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_CONNECTORS);
-		context.getContextData().put(IContextDataKeys.SET_NAME, memberRole.getSet().getName());
-		context.getContextData().put(IContextDataKeys.RECORD_NAME, memberRole.getRecord().getName());
+		context.putContextData(memberRole);
 		ModelChangeBasicCommand command = new DeleteConnectorsCommand(memberRole);	
 		command.setContext(context);
 		return command;

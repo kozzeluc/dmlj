@@ -25,7 +25,6 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.editor.command.CreateConnectorCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
@@ -61,11 +60,8 @@ public class SetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         figure.translateToRelative(p);
 		
         ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_CONNECTORS);
-        context.getContextData().put(IContextDataKeys.SET_NAME, 
-        							 connectionPart.getMemberRole().getSet().getName());
-        context.getContextData().put(IContextDataKeys.RECORD_NAME, 
-        							 connectionPart.getMemberRole().getRecord().getName());
-		ModelChangeBasicCommand command = 
+        context.putContextData(connectionPart.getMemberRole());
+        ModelChangeBasicCommand command = 
 			new CreateConnectorCommand(connectionPart.getMemberRole(), p);
 		command.setContext(context);
 		return command;

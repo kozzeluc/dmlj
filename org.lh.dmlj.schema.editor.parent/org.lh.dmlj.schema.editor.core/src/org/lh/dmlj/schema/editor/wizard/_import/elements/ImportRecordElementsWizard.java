@@ -43,7 +43,6 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssistant;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
@@ -269,7 +268,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 					List<Element> newRootElements = proxy.invokeImportTool();										
 					ModelChangeContext context = 
 						new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
-					context.getContextData().put(IContextDataKeys.RECORD_NAME, getRecordName());
+					context.putContextData(record);
 					IModelChangeCommand command = 
 						SwapRecordElementsCommandCreationAssistant.getCommand(record, newRootElements);
 					command.setContext(context);

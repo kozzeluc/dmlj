@@ -160,10 +160,7 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
         
         // create a compound command...
         ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_BENDPOINT);
-        context.getContextData().put(IContextDataKeys.SET_NAME, 
-        							 connectionPart.getMemberRole().getSet().getName());
-        context.getContextData().put(IContextDataKeys.RECORD_NAME, 
-        							 connectionPart.getMemberRole().getRecord().getName());
+        context.putContextData(connectionPart.getMemberRole());
         ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand("Create bendpoint");
         cc.setContext(context);
         cc.add(lockEndpointsCommand);
@@ -174,10 +171,7 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 	@Override
 	protected Command getDeleteBendpointCommand(BendpointRequest request) {
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_BENDPOINT);
-		context.getContextData().put(IContextDataKeys.SET_NAME, 
-									 connectionPart.getMemberRole().getSet().getName());
-		context.getContextData().put(IContextDataKeys.RECORD_NAME, 
-									 connectionPart.getMemberRole().getRecord().getName());
+		context.putContextData(connectionPart.getMemberRole());
 		DeleteBendpointCommand command = 
 			new DeleteBendpointCommand(connectionPart, request.getIndex());
 		command.setContext(context);

@@ -22,7 +22,6 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
@@ -51,7 +50,7 @@ public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 			}
 			ModelChangeContext context = new ModelChangeContext(modelChangeType);
-			context.getContextData().put(IContextDataKeys.SET_NAME, memberRole.getSet().getName());
+			context.putContextData(memberRole.getSet());
 			IModelChangeCommand command = 
 				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 			command.setContext(context);
@@ -60,9 +59,7 @@ public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 			// create a command to remove the member record type from the set
 			ModelChangeContext context = 
 				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
-			context.getContextData().put(IContextDataKeys.SET_NAME, memberRole.getSet().getName());
-			context.getContextData().put(IContextDataKeys.RECORD_NAME, 
-										 memberRole.getRecord().getName());
+			context.putContextData(memberRole);
 			IModelChangeCommand command = 
 				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 			command.setContext(context);

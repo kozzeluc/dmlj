@@ -22,7 +22,6 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
@@ -47,7 +46,7 @@ public class DeleteSetEditPolicy extends ComponentEditPolicy {
 			modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 		}
 		ModelChangeContext context = new ModelChangeContext(modelChangeType);
-		context.getContextData().put(IContextDataKeys.SET_NAME, set.getName());
+		context.putContextData(set);
 		IModelChangeCommand command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 		command.setContext(context); 
 		return (Command) command;

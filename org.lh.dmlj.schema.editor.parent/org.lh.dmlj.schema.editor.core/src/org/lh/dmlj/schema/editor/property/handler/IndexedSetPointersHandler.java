@@ -24,7 +24,10 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.IMemberRoleProvider;
 import org.lh.dmlj.schema.editor.property.ui.IndexedSetPointersDialog;
@@ -60,7 +63,7 @@ public class IndexedSetPointersHandler
 		// the user pressed the OK button, which means something has to be
 		// changed (regarding the member record's pointers); build a list of 
 		// commands to execute on the command stack...
-		List<Command> commands = new ArrayList<>();
+		List<IModelChangeCommand> commands = new ArrayList<>();
 		
 		// index pointers
 		if (memberRole.getIndexDbkeyPosition() == null && 
@@ -98,7 +101,11 @@ public class IndexedSetPointersHandler
 			commands.addAll(createShiftPointersCommands(memberRole.getRecord(), 
 			  		  									memberRole,
 			  		  									MEMBER_OWNER_POINTER_POSITION));
-		}				
+		}
+		
+		// now is a good time to create the model change context
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_OR_REMOVE_SET_POINTERS);
+		context.putContextData(memberRole);
 		
 		// create a compound command if needed; there should always be at least 
 		// 1 command to add to it
@@ -110,12 +117,15 @@ public class IndexedSetPointersHandler
 				Tools.removeTrailingUnderscore(memberRole.getSet().getName()) + 
 				"'";			
 			ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(label);
-			for (Command command : commands) {
-				cc.add(command);
+			cc.setContext(context);
+			for (IModelChangeCommand command : commands) {
+				cc.add((Command) command);
 			}
 			return cc;
 		} else {
-			return commands.get(0);
+			IModelChangeCommand command = commands.get(0);
+			command.setContext(context);
+			return (Command) command;
 		}
 		
 	}

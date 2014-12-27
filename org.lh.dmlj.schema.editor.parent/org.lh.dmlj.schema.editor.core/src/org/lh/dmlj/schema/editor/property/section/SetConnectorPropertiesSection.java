@@ -26,7 +26,6 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
@@ -87,11 +86,8 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 		
 		// chreate a compound command containing the 2 commands and wrap the result in an IEditHandler
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
-		String featureName = 
-			ModelChangeContext.getQualifiedFeatureName(SchemaPackage.eINSTANCE.getConnector_Label());
-		context.getContextData().put(IContextDataKeys.FEATURE_NAME, featureName);
-		context.getContextData().put(IContextDataKeys.SET_NAME, target.getSet().getName());
-		context.getContextData().put(IContextDataKeys.RECORD_NAME, target.getRecord().getName());
+		context.putContextData(SchemaPackage.eINSTANCE.getConnector_Label());
+		context.putContextData(target);
 		final ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(); 
 		cc.setLabel(command[0].getLabel());
 		cc.setContext(context);

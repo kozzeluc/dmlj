@@ -41,7 +41,6 @@ import org.lh.dmlj.schema.editor.command.CreateRecordCommand;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
@@ -70,7 +69,7 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			MoveDiagramNodeData moveDiagramNodeData = new MoveDiagramNodeData(locationProvider);
 			ModelChangeContext context = 
 				new ModelChangeContext(moveDiagramNodeData.getModelChangeType());
-			moveDiagramNodeData.setModelChangeContextData(context);
+			context.putContextData(locationProvider);
 			IModelChangeCommand command = new MoveDiagramNodeCommand(locationProvider, box.x, box.y);
 			command.setContext(context);
 			return (Command) command;
@@ -160,34 +159,6 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 				return ModelChangeType.MOVE_RECORD;
 			} else if (diagramNode instanceof SystemOwner) {
 				return ModelChangeType.MOVE_INDEX;
-			} else {
-				throw new IllegalStateException("Unexpected diagram node: " + diagramNode);
-			}
-		}
-
-		public void setModelChangeContextData(ModelChangeContext context) {
-			if (diagramNode instanceof ConnectionLabel) {
-				ConnectionLabel connectionLabel = (ConnectionLabel) diagramNode;
-				String setName = connectionLabel.getMemberRole().getSet().getName();
-				String recordName = connectionLabel.getMemberRole().getRecord().getName();
-				context.getContextData().put(IContextDataKeys.SET_NAME, setName);
-				context.getContextData().put(IContextDataKeys.RECORD_NAME, recordName);
-			} else if (diagramNode instanceof Connector) {
-				Connector connector = (Connector) diagramNode;
-				String setName = connector.getConnectionPart().getMemberRole().getSet().getName();
-				String recordName = 
-					connector.getConnectionPart().getMemberRole().getRecord().getName();
-				context.getContextData().put(IContextDataKeys.SET_NAME, setName);
-				context.getContextData().put(IContextDataKeys.RECORD_NAME, recordName);
-			} else if (diagramNode instanceof DiagramLabel) {
-				// no context data to be set
-			} else if (diagramNode instanceof SchemaRecord) {
-				SchemaRecord record = (SchemaRecord) diagramNode;
-				context.getContextData().put(IContextDataKeys.RECORD_NAME, record.getName());
-			} else if (diagramNode instanceof SystemOwner) {
-				SystemOwner systemOwner = (SystemOwner) diagramNode;
-				String setName = systemOwner.getSet().getName();
-				context.getContextData().put(IContextDataKeys.SET_NAME, setName);
 			} else {
 				throw new IllegalStateException("Unexpected diagram node: " + diagramNode);
 			}

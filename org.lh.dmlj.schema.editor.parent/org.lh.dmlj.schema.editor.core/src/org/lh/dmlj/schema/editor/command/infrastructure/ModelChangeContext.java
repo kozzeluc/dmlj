@@ -19,8 +19,18 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.Connector;
+import org.lh.dmlj.schema.DiagramData;
+import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaArea;
+import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SystemOwner;
 
 public class ModelChangeContext {
 
@@ -69,6 +79,78 @@ public class ModelChangeContext {
 		return schema;
 	}
 
+	public boolean isFeatureSet(EStructuralFeature... features) {
+		if (modelChangeType != ModelChangeType.SET_FEATURE) {
+			throw new IllegalStateException("Context has wrong model change type: " + 
+											modelChangeType + " (expected: " + 
+											ModelChangeType.SET_FEATURE + ")");
+		}
+		String featureName = contextData.get(IContextDataKeys.FEATURE_NAME);
+		if (featureName == null) {
+			throw new IllegalStateException("Context has no feature in its context data");
+		}
+		for (EStructuralFeature feature : features) {
+			if (featureName.equals(getQualifiedFeatureName(feature))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void putContextData(EStructuralFeature feature) {
+		if (feature != null) {
+			String featureName = ModelChangeContext.getQualifiedFeatureName(feature);
+			contextData.put(IContextDataKeys.FEATURE_NAME, featureName);
+		} else {
+			throw new IllegalArgumentException("Invalid feature: null");
+		}
+	}
+	
+	public void putContextData(EObject model) {
+		if (model instanceof ConnectionLabel) {
+			ConnectionLabel connectionLabel = (ConnectionLabel) model;
+			String setName = connectionLabel.getMemberRole().getSet().getName();
+			String recordName = connectionLabel.getMemberRole().getRecord().getName();
+			contextData.put(IContextDataKeys.SET_NAME, setName);
+			contextData.put(IContextDataKeys.RECORD_NAME, recordName);
+		} else if (model instanceof Connector) {
+			Connector connector = (Connector) model;
+			String setName = connector.getConnectionPart().getMemberRole().getSet().getName();
+			String recordName = 
+				connector.getConnectionPart().getMemberRole().getRecord().getName();
+			contextData.put(IContextDataKeys.SET_NAME, setName);
+			contextData.put(IContextDataKeys.RECORD_NAME, recordName);
+		} else if (model instanceof DiagramData) {
+			// no context data to be set 
+		} else if (model instanceof DiagramLabel) {
+			// no context data to be set
+		} else if (model instanceof MemberRole) {
+			MemberRole memberRole = (MemberRole) model;
+			String setName = memberRole.getSet().getName();
+			String recordName = memberRole.getRecord().getName();
+			contextData.put(IContextDataKeys.SET_NAME, setName);
+			contextData.put(IContextDataKeys.RECORD_NAME, recordName);
+		} else if (model instanceof Schema) {
+			// no context data to be set
+		} else if (model instanceof SchemaArea) {
+			SchemaArea area = (SchemaArea) model;
+			String areaName = area.getName();
+			contextData.put(IContextDataKeys.AREA_NAME, areaName);
+		} else if (model instanceof SchemaRecord) {
+			SchemaRecord record = (SchemaRecord) model;
+			contextData.put(IContextDataKeys.RECORD_NAME, record.getName());
+		} else if (model instanceof Set) {
+			Set set = (Set) model;
+			contextData.put(IContextDataKeys.SET_NAME, set.getName());
+		} else if (model instanceof SystemOwner) {
+			SystemOwner systemOwner = (SystemOwner) model;
+			String setName = systemOwner.getSet().getName();
+			contextData.put(IContextDataKeys.SET_NAME, setName);
+		} else {
+			throw new IllegalArgumentException("Invalid model type: " + model);
+		}
+	}	
+	
 	/**
 	 * This attribute should only be set by the model change dispatcher and NOT by the component 
 	 * that creates the initial context before handling a model change command to the command stack.
