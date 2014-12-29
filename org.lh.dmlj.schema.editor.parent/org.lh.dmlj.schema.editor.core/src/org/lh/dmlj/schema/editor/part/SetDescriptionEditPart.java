@@ -68,6 +68,7 @@ public class SetDescriptionEditPart
 
 	@Override
 	public void afterModelChange(ModelChangeContext context) {		
+		SystemOwner systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
 		if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
 			context.isFeatureSet(SchemaPackage.eINSTANCE.getSet_Name()) &&
 			context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
@@ -82,7 +83,9 @@ public class SetDescriptionEditPart
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
 			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			if (setName.equals(getModel().getMemberRole().getSet().getName())) {
+			if (setName != null &&
+				setName.equals(getModel().getMemberRole().getSet().getName())) {
+				
 				refreshVisuals();
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SET_ORDER) {
@@ -125,6 +128,16 @@ public class SetDescriptionEditPart
 				// the membership option has changed
 				refreshVisuals();
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   systemOwner != null &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+					
+			String areaName = context.getContextData().get(IContextDataKeys.AREA_NAME);
+			if (areaName.equals(systemOwner.getAreaSpecification().getArea().getName())) {
+				// the system owner's containing area name change was undone
+				refreshVisuals();
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE) {
 			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
@@ -160,7 +173,8 @@ public class SetDescriptionEditPart
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
-				   systemOwner != null) {
+				   systemOwner != null &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
 				
 			String areaName = context.getContextData().get(IContextDataKeys.AREA_NAME);
 			if (areaName.equals(systemOwner.getAreaSpecification().getArea().getName())) {

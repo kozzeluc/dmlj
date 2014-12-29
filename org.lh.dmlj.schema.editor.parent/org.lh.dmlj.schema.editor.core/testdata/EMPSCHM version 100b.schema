@@ -79,7 +79,7 @@
     <connectionParts memberRole="//@sets.3/@members.0"/>
     <connectionParts memberRole="//@sets.4/@members.0"/>
     <connectionParts memberRole="//@sets.5/@members.0"/>
-    <connectionParts memberRole="//@sets.6/@members.0" sourceEndpointLocation="//@diagramData/@locations.57"/>
+    <connectionParts connector="//@diagramData/@connectors.2" memberRole="//@sets.6/@members.0" sourceEndpointLocation="//@diagramData/@locations.57"/>
     <connectionParts memberRole="//@sets.7/@members.0" targetEndpointLocation="//@diagramData/@locations.59"/>
     <connectionParts bendpointLocations="//@diagramData/@locations.46 //@diagramData/@locations.45" memberRole="//@sets.8/@members.0" sourceEndpointLocation="//@diagramData/@locations.35" targetEndpointLocation="//@diagramData/@locations.31"/>
     <connectionParts bendpointLocations="//@diagramData/@locations.42 //@diagramData/@locations.40" memberRole="//@sets.9/@members.0" sourceEndpointLocation="//@diagramData/@locations.41" targetEndpointLocation="//@diagramData/@locations.39"/>
@@ -87,8 +87,11 @@
     <connectionParts memberRole="//@sets.11/@members.0"/>
     <connectionParts memberRole="//@sets.12/@members.0"/>
     <connectionParts connector="//@diagramData/@connectors.1" bendpointLocations="//@diagramData/@locations.50" memberRole="//@sets.0/@members.2" targetEndpointLocation="//@diagramData/@locations.48"/>
+    <connectionParts connector="//@diagramData/@connectors.3" memberRole="//@sets.6/@members.0"/>
     <connectors diagramLocation="//@diagramData/@locations.60" connectionPart="//@diagramData/@connectionParts.2" label="A"/>
     <connectors diagramLocation="//@diagramData/@locations.61" connectionPart="//@diagramData/@connectionParts.15" label="A"/>
+    <connectors diagramLocation="//@diagramData/@locations.62" connectionPart="//@diagramData/@connectionParts.8"/>
+    <connectors diagramLocation="//@diagramData/@locations.63" connectionPart="//@diagramData/@connectionParts.16"/>
     <locations eyecatcher="record COVERAGE" x="285" y="361"/>
     <locations eyecatcher="record DENTAL-CLAIM" x="475" y="475"/>
     <locations eyecatcher="record DEPARTMENT" x="171" y="19"/>
@@ -151,6 +154,8 @@
     <locations eyecatcher="set JOB-TITLE-NDX member endpoint (JOB)" x="20"/>
     <locations eyecatcher="set connector[0] COVERAGE-CLAIMS (DENTAL-CLAIM)" x="445" y="427"/>
     <locations eyecatcher="set connector[1] COVERAGE-CLAIMS (DENTAL-CLAIM)" x="643" y="427"/>
+    <locations eyecatcher="set connector[0] JOB-EMPOSITION (EMPOSITION)" x="92" y="196"/>
+    <locations eyecatcher="set connector[1] JOB-EMPOSITION (EMPOSITION)" x="92" y="216"/>
     <rulers type="VERTICAL"/>
     <rulers/>
   </diagramData>
@@ -525,7 +530,7 @@
     <systemOwner diagramLocation="//@diagramData/@locations.17" areaSpecification="//@areas.0/@areaSpecifications.4"/>
   </sets>
   <sets name="JOB-EMPOSITION" order="NEXT">
-    <members membershipOption="OPTIONAL_MANUAL" nextDbkeyPosition="4" priorDbkeyPosition="5" ownerDbkeyPosition="6" record="//@records.4" connectionParts="//@diagramData/@connectionParts.8" connectionLabel="//@diagramData/@connectionLabels.6"/>
+    <members membershipOption="OPTIONAL_MANUAL" nextDbkeyPosition="4" priorDbkeyPosition="5" ownerDbkeyPosition="6" record="//@records.4" connectionParts="//@diagramData/@connectionParts.8 //@diagramData/@connectionParts.16" connectionLabel="//@diagramData/@connectionLabels.6"/>
     <owner nextDbkeyPosition="2" priorDbkeyPosition="3" record="//@records.8"/>
   </sets>
   <sets mode="INDEXED" name="JOB-TITLE-NDX" order="SORTED">

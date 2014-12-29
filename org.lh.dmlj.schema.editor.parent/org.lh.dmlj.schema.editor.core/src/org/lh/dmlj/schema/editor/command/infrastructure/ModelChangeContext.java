@@ -49,6 +49,100 @@ public class ModelChangeContext {
 		this.modelChangeType = modelChangeType;
 	}
 
+	public boolean appliesTo(EObject model) {
+		
+		if (model == null) {
+			throw new IllegalArgumentException("Invalid model: null");
+		}
+		
+		if (modelChangeType == ModelChangeType.SET_FEATURE &&
+			!contextData.containsKey(IContextDataKeys.FEATURE_NAME)) {
+			
+			throw new IllegalStateException("Feature name NOT found in context data");
+		}
+		if (contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+		    modelChangeType != ModelChangeType.SET_FEATURE) {
+			
+			throw new IllegalStateException("Feature name should NOT be present in context data: " +
+											modelChangeType);
+		}
+		
+		if (model instanceof ConnectionLabel) {
+			ConnectionLabel connectionLabel = (ConnectionLabel) model;
+			Set set = connectionLabel.getMemberRole().getSet();
+			SchemaRecord record = connectionLabel.getMemberRole().getRecord();
+			return contextData.size() == 2 && 
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
+				   contextData.size() == 3 &&
+				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));			
+		} else if (model instanceof Connector) {
+			Connector connector = (Connector) model;
+			Set set = connector.getConnectionPart().getMemberRole().getSet();
+			SchemaRecord record = connector.getConnectionPart().getMemberRole().getRecord();
+			return contextData.size() == 2 && 
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
+				   contextData.size() == 3 &&
+				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));			
+		} else if (model instanceof DiagramData) {
+			return contextData.isEmpty() ||
+				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.FEATURE_NAME);
+		} else if (model instanceof DiagramLabel) {
+			return contextData.isEmpty() ||
+				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.FEATURE_NAME);
+		} else if (model instanceof MemberRole) {
+			MemberRole memberRole = (MemberRole) model;
+			Set set = memberRole.getSet();
+			SchemaRecord record = memberRole.getRecord();
+			return contextData.size() == 2 && 
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
+				   contextData.size() == 3 &&
+				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));
+		} else if (model instanceof Schema) {
+			return contextData.isEmpty() ||
+				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.FEATURE_NAME);
+		} else if (model instanceof SchemaArea) {
+			SchemaArea area = (SchemaArea) model;
+			return contextData.size() == 1 && 
+				   area.getName().equals(contextData.get(IContextDataKeys.AREA_NAME)) ||
+				   contextData.size() == 2 &&
+				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   area.getName().equals(contextData.get(IContextDataKeys.AREA_NAME));
+		} else if (model instanceof SchemaRecord) {
+			SchemaRecord record = (SchemaRecord) model;
+			return contextData.size() == 1 && 
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
+				   contextData.size() == 2 &&
+				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));
+		} else if (model instanceof Set) {
+			Set set = (Set) model;
+			return contextData.size() == 1 && 
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) ||
+				   contextData.size() == 2 &&
+				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME));
+		} else if (model instanceof SystemOwner) {
+			SystemOwner systemOwner = (SystemOwner) model;
+			Set set = systemOwner.getSet();
+			return contextData.size() == 1 && 
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) ||
+				   contextData.size() == 2 &&
+				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME));
+		} else {
+			throw new IllegalArgumentException("Invalid model type: " + model);
+		}
+	}
+
 	public ModelChangeContext copy() {
 		ModelChangeContext copy = new ModelChangeContext(modelChangeType);
 		copy.setSchema(schema);
@@ -149,7 +243,7 @@ public class ModelChangeContext {
 		} else {
 			throw new IllegalArgumentException("Invalid model type: " + model);
 		}
-	}	
+	}
 	
 	/**
 	 * This attribute should only be set by the model change dispatcher and NOT by the component 

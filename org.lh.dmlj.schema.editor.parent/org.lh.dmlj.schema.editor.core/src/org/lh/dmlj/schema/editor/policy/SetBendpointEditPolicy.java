@@ -32,7 +32,6 @@ import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.MoveBendpointCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
