@@ -69,7 +69,7 @@ public class SetDescriptionEditPart
 	@Override
 	public void afterModelChange(ModelChangeContext context) {		
 		SystemOwner systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
-		if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 			context.isFeatureSet(SchemaPackage.eINSTANCE.getSet_Name()) &&
 			context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 			
@@ -117,7 +117,7 @@ public class SetDescriptionEditPart
 				refreshVisuals();			
 				refreshConnections();
 			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getMemberRole_MembershipOption())) {
 			
 			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
@@ -128,7 +128,7 @@ public class SetDescriptionEditPart
 				// the membership option has changed
 				refreshVisuals();
 			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   systemOwner != null &&
 				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
@@ -138,7 +138,7 @@ public class SetDescriptionEditPart
 				// the system owner's containing area name change was undone
 				refreshVisuals();
 			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE) {
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
 			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
 				refreshVisuals();
@@ -161,7 +161,7 @@ public class SetDescriptionEditPart
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
 		SystemOwner systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
-		if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 			context.isFeatureSet(SchemaPackage.eINSTANCE.getSet_Name()) &&
 			context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
 			
@@ -171,7 +171,7 @@ public class SetDescriptionEditPart
 				// which we will pick up again when processing the after model change event
 				context.setListenerData(Boolean.TRUE);
 			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   systemOwner != null &&
 				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {

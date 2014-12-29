@@ -55,13 +55,13 @@ public class ModelChangeContext {
 			throw new IllegalArgumentException("Invalid model: null");
 		}
 		
-		if (modelChangeType == ModelChangeType.SET_FEATURE &&
+		if (modelChangeType == ModelChangeType.SET_PROPERTY &&
 			!contextData.containsKey(IContextDataKeys.FEATURE_NAME)) {
 			
 			throw new IllegalStateException("Feature name NOT found in context data");
 		}
 		if (contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
-		    modelChangeType != ModelChangeType.SET_FEATURE) {
+		    modelChangeType != ModelChangeType.SET_PROPERTY) {
 			
 			throw new IllegalStateException("Feature name should NOT be present in context data: " +
 											modelChangeType);
@@ -174,10 +174,10 @@ public class ModelChangeContext {
 	}
 
 	public boolean isFeatureSet(EStructuralFeature... features) {
-		if (modelChangeType != ModelChangeType.SET_FEATURE) {
+		if (modelChangeType != ModelChangeType.SET_PROPERTY) {
 			throw new IllegalStateException("Context has wrong model change type: " + 
 											modelChangeType + " (expected: " + 
-											ModelChangeType.SET_FEATURE + ")");
+											ModelChangeType.SET_PROPERTY + ")");
 		}
 		String featureName = contextData.get(IContextDataKeys.FEATURE_NAME);
 		if (featureName == null) {

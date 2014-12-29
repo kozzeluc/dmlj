@@ -50,7 +50,7 @@ public enum ModelChangeType {
 	
 	REMOVE_MEMBER_FROM_SET,
 	
-	SET_FEATURE,
+	SET_PROPERTY,
 	
 	SWAP_RECORD_ELEMENTS
 	

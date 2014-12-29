@@ -85,7 +85,7 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 												   value, label);
 		
 		// chreate a compound command containing the 2 commands and wrap the result in an IEditHandler
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getConnector_Label());
 		context.putContextData(target);
 		final ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(); 

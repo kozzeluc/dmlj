@@ -80,7 +80,7 @@ public class DiagramLabelEditPart
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
 			context.isFeatureSet(SchemaPackage.eINSTANCE.getDiagramLabel_Description())) {
 			
 			// the diagram label's description has been set; refresh the edit part's visuals

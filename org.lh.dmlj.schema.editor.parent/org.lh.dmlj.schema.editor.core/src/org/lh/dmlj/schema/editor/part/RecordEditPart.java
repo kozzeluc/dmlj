@@ -85,33 +85,33 @@ public class RecordEditPart
 			
 			refreshVisuals();			
 			refreshConnections();
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
 				   context.appliesTo(getModel().getAreaSpecification().getArea())) {
 								
 			// the record's containing area name change was undone
 			refreshVisuals();			
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
 				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
 				   context.appliesTo(getModel())) {
 			
 			// the record name change was undone
 			refreshVisuals();							
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Id()) &&
 				   context.appliesTo(getModel())) {
 			
 			// the record id was changed
 			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_StorageMode()) &&
 				   context.appliesTo(getModel())) {
 			
 			// the storage mode was changed
 			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE) {
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
 			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
 				refreshVisuals();
@@ -133,7 +133,7 @@ public class RecordEditPart
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 			context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
 			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 			context.appliesTo(getModel())) {
@@ -141,7 +141,7 @@ public class RecordEditPart
 			// the record's name is changing; put a boolean in the listener data, which we will 
 			// pick up again when processing the after model change event
 			context.setListenerData(Boolean.TRUE);
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE &&			 
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 				   context.appliesTo(getModel().getAreaSpecification().getArea())) {

@@ -86,7 +86,7 @@ public class ModelChangeContextTest {
 	@Test
 	public void testPutContextData_Feature() {
 		
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getConnector_Label());
 		assertEquals("Connector.label", context.getContextData().get(IContextDataKeys.FEATURE_NAME));
 		
@@ -104,7 +104,7 @@ public class ModelChangeContextTest {
 		
 		Schema schema = TestTools.getSchema("testdata/EMPSCHM version 100b.schema");
 		
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		
 		// ConnectionLabel: set- and record name
 		ConnectionLabel connectionLabel = 
@@ -183,7 +183,7 @@ public class ModelChangeContextTest {
 	@Test
 	public void testIsFeatureSet() {
 		
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		
 		assertTrue(context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()));		
@@ -205,7 +205,7 @@ public class ModelChangeContextTest {
 						 e.getMessage());
 		}
 		
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		try {
 			context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 			fail("should throw an IllegalStateException");
@@ -218,7 +218,7 @@ public class ModelChangeContextTest {
 	@Test
 	public void testAppliesTo() {
 		
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		try {
 			context.appliesTo(null);
 			fail("should throw an IllegalArgumentException");
@@ -226,7 +226,7 @@ public class ModelChangeContextTest {
 			assertEquals("Invalid model: null", e.getMessage());
 		}
 		
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		try {
 			context.appliesTo(mock(SchemaRecord.class));
 			fail("should throw an IllegalStateException");
@@ -266,7 +266,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getRecord()));
 		
 		// ConnectionLabel (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertFalse(context.appliesTo(connectionLabel1));
 		assertFalse(context.appliesTo(connectionLabel2));
@@ -308,7 +308,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getRecord()));
 		
 		// Connector (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertFalse(context.appliesTo(connector1));
 		assertFalse(context.appliesTo(connector2));
@@ -333,7 +333,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(mock(DiagramData.class)));
 		
 		// DiagramData (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertTrue(context.appliesTo(mock(DiagramData.class)));
 		context.putContextData(connectionLabel1);
@@ -346,7 +346,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(mock(DiagramLabel.class)));
 		
 		// DiagramLabel (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertTrue(context.appliesTo(mock(DiagramLabel.class)));
 		context.putContextData(connectionLabel1);
@@ -371,7 +371,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(memberRole1.getRecord()));
 		
 		// MemberRole (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertFalse(context.appliesTo(memberRole1));
 		assertFalse(context.appliesTo(memberRole2));
@@ -393,7 +393,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(mock(Schema.class)));
 		
 		// Schema (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertTrue(context.appliesTo(mock(Schema.class)));
 		context.putContextData(connectionLabel1);
@@ -410,7 +410,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(area2));
 		
 		// SchemaArea (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertFalse(context.appliesTo(area1));
 		assertFalse(context.appliesTo(area2));
@@ -429,7 +429,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(record2));
 		
 		// SchemaRecord (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertFalse(context.appliesTo(record1));
 		assertFalse(context.appliesTo(record2));
@@ -453,7 +453,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(set1.getMembers().get(0).getRecord()));
 		
 		// Set (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertFalse(context.appliesTo(set1));
 		assertFalse(context.appliesTo(set2));
@@ -481,7 +481,7 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(systemOwner1.getSet().getMembers().get(0).getRecord()));
 		
 		// SystemOwner (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertFalse(context.appliesTo(systemOwner1));
 		assertFalse(context.appliesTo(systemOwner2));

@@ -93,7 +93,7 @@ public class StandardEditHandler implements IEditHandler {
 				message = "unsupported type: " + attribute.getEType().getName();
 			}
 			if (command != null) {
-				ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_FEATURE);
+				ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 				context.putContextData(attribute);
 				context.putContextData(target);
 				command.setContext(context);

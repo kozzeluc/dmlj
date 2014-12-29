@@ -78,7 +78,7 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 				refreshVisuals();			
 				refreshConnections();
 			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_FEATURE) {
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
 			String featureName = context.getContextData().get(IContextDataKeys.FEATURE_NAME);
 			if (featureName.equals(FEATURE_LABEL)) {
 				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
