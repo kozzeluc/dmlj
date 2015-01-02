@@ -22,6 +22,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
@@ -56,11 +57,11 @@ public class ModelChangeContext {
 		}
 		
 		if (modelChangeType == ModelChangeType.SET_PROPERTY &&
-			!contextData.containsKey(IContextDataKeys.FEATURE_NAME)) {
+			!contextData.containsKey(IContextDataKeys.PROPERTY_NAME)) {
 			
 			throw new IllegalStateException("Feature name NOT found in context data");
 		}
-		if (contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+		if (contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 		    modelChangeType != ModelChangeType.SET_PROPERTY) {
 			
 			throw new IllegalStateException("Feature name should NOT be present in context data: " +
@@ -75,26 +76,50 @@ public class ModelChangeContext {
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
 				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
 				   contextData.size() == 3 &&
-				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
 				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));			
+		} else if (model instanceof ConnectionPart) {
+			ConnectionPart connectionPart = (ConnectionPart) model;
+			MemberRole memberRole = connectionPart.getMemberRole();
+			Set set = memberRole.getSet();
+			SchemaRecord record = memberRole.getRecord();
+			int connectionPartIndex = memberRole.getConnectionParts().indexOf(connectionPart);
+			return contextData.size() == 3 && 
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) &&
+				   contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
+				   connectionPartIndex == Integer.valueOf(contextData.get(IContextDataKeys.CONNECTION_PART_INDEX)) ||				   
+				   contextData.size() == 4 &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) &&
+				   contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
+				   connectionPartIndex == Integer.valueOf(contextData.get(IContextDataKeys.CONNECTION_PART_INDEX));
 		} else if (model instanceof Connector) {
 			Connector connector = (Connector) model;
-			Set set = connector.getConnectionPart().getMemberRole().getSet();
-			SchemaRecord record = connector.getConnectionPart().getMemberRole().getRecord();
-			return contextData.size() == 2 && 
+			MemberRole memberRole = connector.getConnectionPart().getMemberRole();
+			Set set = memberRole.getSet();
+			SchemaRecord record = memberRole.getRecord();
+			int connectionPartIndex = 
+				memberRole.getConnectionParts().indexOf(connector.getConnectionPart());
+			return contextData.size() == 3 && 
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
-				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
-				   contextData.size() == 3 &&
-				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) &&
+				   contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
+				   connectionPartIndex == Integer.valueOf(contextData.get(IContextDataKeys.CONNECTION_PART_INDEX)) ||				   
+				   contextData.size() == 4 &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
-				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));			
+				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) &&
+				   contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
+				   connectionPartIndex == Integer.valueOf(contextData.get(IContextDataKeys.CONNECTION_PART_INDEX));			
 		} else if (model instanceof DiagramData) {
 			return contextData.isEmpty() ||
-				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.FEATURE_NAME);
+				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.PROPERTY_NAME);
 		} else if (model instanceof DiagramLabel) {
 			return contextData.isEmpty() ||
-				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.FEATURE_NAME);
+				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.PROPERTY_NAME);
 		} else if (model instanceof MemberRole) {
 			MemberRole memberRole = (MemberRole) model;
 			Set set = memberRole.getSet();
@@ -103,32 +128,32 @@ public class ModelChangeContext {
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
 				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
 				   contextData.size() == 3 &&
-				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
 				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));
 		} else if (model instanceof Schema) {
 			return contextData.isEmpty() ||
-				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.FEATURE_NAME);
+				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.PROPERTY_NAME);
 		} else if (model instanceof SchemaArea) {
 			SchemaArea area = (SchemaArea) model;
 			return contextData.size() == 1 && 
 				   area.getName().equals(contextData.get(IContextDataKeys.AREA_NAME)) ||
 				   contextData.size() == 2 &&
-				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 				   area.getName().equals(contextData.get(IContextDataKeys.AREA_NAME));
 		} else if (model instanceof SchemaRecord) {
 			SchemaRecord record = (SchemaRecord) model;
 			return contextData.size() == 1 && 
 				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
 				   contextData.size() == 2 &&
-				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));
 		} else if (model instanceof Set) {
 			Set set = (Set) model;
 			return contextData.size() == 1 && 
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) ||
 				   contextData.size() == 2 &&
-				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME));
 		} else if (model instanceof SystemOwner) {
 			SystemOwner systemOwner = (SystemOwner) model;
@@ -136,7 +161,7 @@ public class ModelChangeContext {
 			return contextData.size() == 1 && 
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) ||
 				   contextData.size() == 2 &&
-				   contextData.containsKey(IContextDataKeys.FEATURE_NAME) &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME));
 		} else {
 			throw new IllegalArgumentException("Invalid model type: " + model);
@@ -173,13 +198,13 @@ public class ModelChangeContext {
 		return schema;
 	}
 
-	public boolean isFeatureSet(EStructuralFeature... features) {
+	public boolean isPropertySet(EStructuralFeature... features) {
 		if (modelChangeType != ModelChangeType.SET_PROPERTY) {
 			throw new IllegalStateException("Context has wrong model change type: " + 
 											modelChangeType + " (expected: " + 
 											ModelChangeType.SET_PROPERTY + ")");
 		}
-		String featureName = contextData.get(IContextDataKeys.FEATURE_NAME);
+		String featureName = contextData.get(IContextDataKeys.PROPERTY_NAME);
 		if (featureName == null) {
 			throw new IllegalStateException("Context has no feature in its context data");
 		}
@@ -194,7 +219,7 @@ public class ModelChangeContext {
 	public void putContextData(EStructuralFeature feature) {
 		if (feature != null) {
 			String featureName = ModelChangeContext.getQualifiedFeatureName(feature);
-			contextData.put(IContextDataKeys.FEATURE_NAME, featureName);
+			contextData.put(IContextDataKeys.PROPERTY_NAME, featureName);
 		} else {
 			throw new IllegalArgumentException("Invalid feature: null");
 		}
@@ -207,13 +232,27 @@ public class ModelChangeContext {
 			String recordName = connectionLabel.getMemberRole().getRecord().getName();
 			contextData.put(IContextDataKeys.SET_NAME, setName);
 			contextData.put(IContextDataKeys.RECORD_NAME, recordName);
-		} else if (model instanceof Connector) {
-			Connector connector = (Connector) model;
-			String setName = connector.getConnectionPart().getMemberRole().getSet().getName();
-			String recordName = 
-				connector.getConnectionPart().getMemberRole().getRecord().getName();
+		} else if (model instanceof ConnectionPart) {
+			ConnectionPart connectionPart = (ConnectionPart) model;
+			MemberRole memberRole = connectionPart.getMemberRole(); 
+			String setName = memberRole.getSet().getName();
+			String recordName = memberRole.getRecord().getName();
+			int connectionPartIndex = memberRole.getConnectionParts().indexOf(connectionPart);
 			contextData.put(IContextDataKeys.SET_NAME, setName);
 			contextData.put(IContextDataKeys.RECORD_NAME, recordName);
+			contextData.put(IContextDataKeys.CONNECTION_PART_INDEX, 
+							String.valueOf(connectionPartIndex));
+		} else if (model instanceof Connector) {
+			Connector connector = (Connector) model;
+			MemberRole memberRole = connector.getConnectionPart().getMemberRole();
+			String setName = memberRole.getSet().getName();
+			String recordName = memberRole.getRecord().getName();
+			int connectionPartIndex = 
+				memberRole.getConnectionParts().indexOf(connector.getConnectionPart());
+			contextData.put(IContextDataKeys.SET_NAME, setName);
+			contextData.put(IContextDataKeys.RECORD_NAME, recordName);
+			contextData.put(IContextDataKeys.CONNECTION_PART_INDEX, 
+							String.valueOf(connectionPartIndex));
 		} else if (model instanceof DiagramData) {
 			// no context data to be set 
 		} else if (model instanceof DiagramLabel) {

@@ -23,9 +23,6 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
@@ -39,7 +36,6 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -63,82 +59,62 @@ public class SetDescriptionEditPart
 	}
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-	}
-
-	@Override
 	public void afterModelChange(ModelChangeContext context) {		
 		SystemOwner systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
 		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-			context.isFeatureSet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-			context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel().getMemberRole().getSet())) {
 			
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			if (setName.equals(getModel().getMemberRole().getSet().getName())) {
-				// the set name change was undone; note that the context data will ALWAYS contain
-				// the ORIGINAL set name (i.e. the one that was changed during the execute/redo); 
-				// that's why we compare the set name in the context data to the actual value to
-				// determine if we need to refresh the visuals
-				refreshVisuals();
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			if (setName != null &&
-				setName.equals(getModel().getMemberRole().getSet().getName())) {
-				
-				refreshVisuals();
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SET_ORDER) {
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			if (setName.equals(getModel().getMemberRole().getSet().getName())) {
-				refreshVisuals();
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SORTKEYS) {
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			if (setName.equals(getModel().getMemberRole().getSet().getName())) {
-				refreshVisuals();
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_OR_REMOVE_SET_POINTERS) {			
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			String recordName =	// when null, the set pointer change applies to ALL set members 
-				context.getContextData().get(IContextDataKeys.RECORD_NAME);
-			if (setName.equals(getModel().getMemberRole().getSet().getName()) &&
-				(recordName == null || 
-				 recordName.equals(getModel().getMemberRole().getRecord().getName()))) {
-				
-				refreshVisuals();
-			}			
-		} else if (context.getModelChangeType() == ModelChangeType.MOVE_SET_OR_INDEX_LABEL) {
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
-			if (setName.equals(getModel().getMemberRole().getSet().getName()) &&
-				recordName.equals(getModel().getMemberRole().getRecord().getName())) {
-				
-				refreshVisuals();			
-				refreshConnections();
-			}
+			// the set name change was undone; note that the context data will ALWAYS contain the
+			// ORIGINAL set name (i.e. the one that was changed during the execute/redo); that's why 
+			// we compare the set name in the context data to the actual value to determine if we 
+			// need to refresh the visuals
+			refreshVisuals();			
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
+				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
+				   context.appliesTo(getModel().getMemberRole().getSet())) {
+			
+			// the system owner's area specification has changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SET_ORDER &&
+				   context.appliesTo(getModel().getMemberRole().getSet())) {
+			
+			// the set order has changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SORTKEYS &&
+				   context.appliesTo(getModel().getMemberRole().getSet())) {
+			
+			// the sort key has changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_OR_REMOVE_SET_POINTERS &&
+				   context.appliesTo(getModel().getMemberRole()) ||
+				   context.appliesTo(getModel().getMemberRole().getSet())) {			
+			
+			// pointers were added or removed (note that the context can apply to either the member
+			// role OR set)
+			refreshVisuals();			
+		} else if (context.getModelChangeType() == ModelChangeType.MOVE_SET_OR_INDEX_LABEL &&
+				   context.appliesTo(getModel())) {
+	
+			// the connection label was moved
+			refreshVisuals();			
+			refreshConnections();			
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-				   context.isFeatureSet(SchemaPackage.eINSTANCE.getMemberRole_MembershipOption())) {
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getMemberRole_MembershipOption()) &&
+				   context.appliesTo(getModel().getMemberRole())) {
 			
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
-			if (setName.equals(getModel().getMemberRole().getSet().getName()) &&
-				recordName.equals(getModel().getMemberRole().getRecord().getName())) {
-				
-				// the membership option has changed
-				refreshVisuals();
-			}
+			// the membership option has changed
+			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   systemOwner != null &&
-				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				   context.appliesTo(systemOwner.getAreaSpecification().getArea())) {
 					
-			String areaName = context.getContextData().get(IContextDataKeys.AREA_NAME);
-			if (areaName.equals(systemOwner.getAreaSpecification().getArea().getName())) {
-				// the system owner's containing area name change was undone
-				refreshVisuals();
-			}
+			// the system owner's containing area name change was undone
+			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
+			// the set name or the system owner's containing area name has changed (execute/redo)
 			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
 				refreshVisuals();
@@ -147,42 +123,26 @@ public class SetDescriptionEditPart
 	}
 	
 	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {
-	}
-
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {		
-	}	
-	
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {		
-	}
-	
-	@Override
 	public void beforeModelChange(ModelChangeContext context) {
 		SystemOwner systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
 		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-			context.isFeatureSet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel().getMemberRole().getSet())) {
 			
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			if (setName.equals(getModel().getMemberRole().getSet().getName())) {
-				// the set name is changing (execute/redo); put a boolean in the listener data, 
-				// which we will pick up again when processing the after model change event
-				context.setListenerData(Boolean.TRUE);
-			}
+			// the set name is changing (execute/redo); put a boolean in the listener data, which we 
+			// will pick up again when processing the after model change event
+			context.setListenerData(Boolean.TRUE);
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   systemOwner != null &&
-				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				   context.appliesTo(systemOwner.getAreaSpecification().getArea())) {
 				
-			String areaName = context.getContextData().get(IContextDataKeys.AREA_NAME);
-			if (areaName.equals(systemOwner.getAreaSpecification().getArea().getName())) {
-				// the system owner's containing area name is changing; put a boolean in the 
-				// listener data, which we will pick up again when processing the after model change 
-				// event
-				context.setListenerData(Boolean.TRUE);
-			}			
+			// the system owner's containing area name is changing (execute/redo); put a boolean in 
+			// the listener data, which we will pick up again when processing the after model change 
+			// event
+			context.setListenerData(Boolean.TRUE);			
 		}
 	}
 	

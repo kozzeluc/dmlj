@@ -44,16 +44,14 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
-import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
+import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
 import org.lh.dmlj.schema.editor.policy.SetXYLayoutEditPolicy;
 
 /** 
@@ -111,16 +109,25 @@ public class SetEditPart
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() != ModelChangeType.ADD_BENDPOINT &&
-			context.getModelChangeType() != ModelChangeType.DELETE_BENDPOINT) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_BENDPOINT &&
+			context.appliesTo(getModel())) {
+					
+			// a bendpoint was added to the connection part
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_BENDPOINT &&
+				   context.appliesTo(getModel())) {
+						
+			// a bendpoint was removed from the connection part
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.MOVE_BENDPOINT &&
+				   context.appliesTo(getModel())) {
 			
-			return;
-		}
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
-		if (setName.equals(memberRole.getSet().getName()) && 
-			recordName.equals(memberRole.getRecord().getName())) {
+			// a bendpoint was moved on the connection part
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.MOVE_ENDPOINT &&
+				   context.appliesTo(getModel())) {
 			
+			// an endpoint was moved on the connection part
 			refreshVisuals();
 		}
 	}
@@ -136,20 +143,6 @@ public class SetEditPart
 
 	@Override
 	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		if (owner instanceof DiagramLocation &&
-			getModel().getBendpointLocations().indexOf(owner) > -1 &&
-			(isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLocation_X()) ||
-			 isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLocation_Y()))) {
-			
-			// a bendpoint was moved
-			refreshVisuals();
-		} else if (owner == getModel() &&
-				   (isFeatureSet(features, SchemaPackage.eINSTANCE.getConnectionPart_SourceEndpointLocation()) ||
-					isFeatureSet(features, SchemaPackage.eINSTANCE.getConnectionPart_TargetEndpointLocation()))) {
-			
-			// an endpoint was moved
-			refreshVisuals();
-		}
 	}
 
 	@Override

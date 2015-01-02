@@ -25,9 +25,6 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -40,7 +37,6 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -50,9 +46,6 @@ import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
 
 public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<Connector> {
 
-	private static final String FEATURE_LABEL = 
-		ModelChangeContext.getQualifiedFeatureName(SchemaPackage.eINSTANCE.getConnector_Label());
-	
 	private MemberRole memberRole;
 	
 	private ConnectorEditPart() {
@@ -67,49 +60,28 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 	}	
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-	}
-	
-	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.MOVE_CONNECTOR) {
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-			if (setName.equals(getModel().getConnectionPart().getMemberRole().getSet().getName())) {
-				refreshVisuals();			
-				refreshConnections();
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
-			String featureName = context.getContextData().get(IContextDataKeys.FEATURE_NAME);
-			if (featureName.equals(FEATURE_LABEL)) {
-				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
-				if (setName.equals(memberRole.getSet().getName()) &&
-					recordName.equals(memberRole.getRecord().getName())) {
-					
-					// the connector label is set; refresh the edit part's visuals
-					refreshVisuals();
-				}
-			}
+		if (context.getModelChangeType() == ModelChangeType.MOVE_CONNECTOR &&
+			context.appliesTo(getModel())) {
+			
+			// the connector was moved
+			refreshVisuals();			
+			refreshConnections();			
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getConnector_Label()) &&
+				   context.appliesTo((memberRole.getConnectionParts().get(0).getConnector()))) {
+			
+			// the connector label is set; refresh the edit part's visuals (note that the context
+			// data ALWAYS refers to the FIRST connector in this situation, although both connectors
+			// are impacted) 
+			refreshVisuals();			
 		}		
-	}
-	
-	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
-	}
-
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {		
-	}	
-
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {		
 	}
 	
 	@Override
 	protected void createEditPolicies() {
 		// make sure we can delete connectors:
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, 
-						  new ConnectorComponentEditPolicy());
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ConnectorComponentEditPolicy());
 	}
 	
 	@Override

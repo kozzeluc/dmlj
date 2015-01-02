@@ -21,9 +21,6 @@ import java.text.SimpleDateFormat;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -75,32 +72,16 @@ public class DiagramLabelEditPart
 	}
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-	}
-	
-	@Override
 	public void afterModelChange(ModelChangeContext context) {
 		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-			context.isFeatureSet(SchemaPackage.eINSTANCE.getDiagramLabel_Description())) {
+		    context.isPropertySet(SchemaPackage.eINSTANCE.getDiagramLabel_Description())) {
 			
-			// the diagram label's description has been set; refresh the edit part's visuals
+			// the diagram label's description has been set
 			refreshVisuals();
 		}
-		// note that we do NOT have to do anything to refresh the visuals in case the diagram label
-		// is moved; that event is perfectly handled in the propertyChanged(Object source, 
-		// int propId) method, which is called in that situation as well
-	}
-	
-	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {
-	}
-
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
-	}
-	
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {				
+		// note that we do NOT have to do anything here to refresh the visuals in case the diagram 
+		// label is moved or resized; that event is perfectly handled in method  
+		// propertyChanged(Object source, int propId), which is called in that situation as well
 	}
 	
 	@Override
@@ -176,8 +157,8 @@ public class DiagramLabelEditPart
 		if (source == schemaEditor && propId == IEditorPart.PROP_DIRTY && 
 			isDiagramLabelStillPresent()) {
 			
-			// note that when the diagram label is moved, this method is called as well, so the
-			// refresh of the visuals in that situation happens here:
+			// note that when the diagram label is moved or resized, this method is called as well, 
+			/// so the refresh of the visuals in that situation happens here:
 			refreshVisuals();
 		}
 	}

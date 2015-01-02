@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.junit.Test;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
@@ -88,7 +89,7 @@ public class ModelChangeContextTest {
 		
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getConnector_Label());
-		assertEquals("Connector.label", context.getContextData().get(IContextDataKeys.FEATURE_NAME));
+		assertEquals("Connector.label", context.getContextData().get(IContextDataKeys.PROPERTY_NAME));
 		
 		// invalid feature: null
 		context.getContextData().clear();
@@ -114,15 +115,26 @@ public class ModelChangeContextTest {
 		assertEquals("DEPT-EMPLOYEE", context.getContextData().get(IContextDataKeys.SET_NAME));
 		assertEquals("EMPLOYEE", context.getContextData().get(IContextDataKeys.RECORD_NAME));
 		
-		// Connector: set- and record name
-		context.getContextData().clear();
+		// ConnectionPart : set name, record name and connection part index
 		SchemaRecord record = schema.getRecord("DENTAL-CLAIM");
-		Connector connector = 
-			((MemberRole) record.getRole("COVERAGE-CLAIMS")).getConnectionParts().get(0).getConnector();
-		context.putContextData(connector);
-		assertEquals(2, context.getContextData().size());
+		ConnectionPart connectionPart = 
+			((MemberRole) record.getRole("COVERAGE-CLAIMS")).getConnectionParts().get(1);
+		context.putContextData(connectionPart);
+		assertEquals(3, context.getContextData().size());
 		assertEquals("COVERAGE-CLAIMS", context.getContextData().get(IContextDataKeys.SET_NAME));
 		assertEquals("DENTAL-CLAIM", context.getContextData().get(IContextDataKeys.RECORD_NAME));
+		assertEquals("1", context.getContextData().get(IContextDataKeys.CONNECTION_PART_INDEX));
+		
+		// Connector: set name, record name and connection part index
+		context.getContextData().clear();
+		record = schema.getRecord("DENTAL-CLAIM");
+		Connector connector = 
+			((MemberRole) record.getRole("COVERAGE-CLAIMS")).getConnectionParts().get(1).getConnector();
+		context.putContextData(connector);
+		assertEquals(3, context.getContextData().size());
+		assertEquals("COVERAGE-CLAIMS", context.getContextData().get(IContextDataKeys.SET_NAME));
+		assertEquals("DENTAL-CLAIM", context.getContextData().get(IContextDataKeys.RECORD_NAME));
+		assertEquals("1", context.getContextData().get(IContextDataKeys.CONNECTION_PART_INDEX));
 		
 		// DiagramData: nothing
 		context.getContextData().clear();
@@ -181,33 +193,33 @@ public class ModelChangeContextTest {
 	}
 	
 	@Test
-	public void testIsFeatureSet() {
+	public void testIsPropertySet() {
 		
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		
-		assertTrue(context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()));		
-		assertTrue(context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name(),
+		assertTrue(context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()));		
+		assertTrue(context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name(),
 										SchemaPackage.eINSTANCE.getSchemaRecord_BaseName()));
-		assertTrue(context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_BaseName(),
+		assertTrue(context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_BaseName(),
 										SchemaPackage.eINSTANCE.getSchemaRecord_Name()));
 		
-		assertTrue(!context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_BaseName()));
-		assertTrue(!context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_BaseName(),
+		assertTrue(!context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_BaseName()));
+		assertTrue(!context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_BaseName(),
 										 SchemaPackage.eINSTANCE.getSchemaRecord_BaseVersion()));
 		
 		context = new ModelChangeContext(ModelChangeType.ADD_BENDPOINT);
 		try {
-			context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 			fail("should throw an IllegalStateException");
 		} catch (IllegalStateException e) {
-			assertEquals("Context has wrong model change type: ADD_BENDPOINT (expected: SET_FEATURE)", 
+			assertEquals("Context has wrong model change type: ADD_BENDPOINT (expected: SET_PROPERTY)", 
 						 e.getMessage());
 		}
 		
 		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		try {
-			context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 			fail("should throw an IllegalStateException");
 		} catch (IllegalStateException e) {
 			assertEquals("Context has no feature in its context data", e.getMessage());
@@ -257,11 +269,11 @@ public class ModelChangeContextTest {
 		context.putContextData(connectionLabel1);
 		assertTrue(context.appliesTo(connectionLabel1));
 		assertFalse(context.appliesTo(connectionLabel2));
-		// the context will also apply to the member role and both connectors, but not to the set
-		// and the member record
+		// the context will also apply to the member role but not to the set, the member record and
+		// both connectors
 		assertTrue(context.appliesTo(connectionLabel1.getMemberRole()));
-		assertTrue(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(0).getConnector()));
-		assertTrue(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(1).getConnector()));
+		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(0).getConnector()));
+		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(1).getConnector()));
 		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getSet()));
 		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getRecord()));
 		
@@ -273,13 +285,56 @@ public class ModelChangeContextTest {
 		context.putContextData(connectionLabel1);
 		assertTrue(context.appliesTo(connectionLabel1));
 		assertFalse(context.appliesTo(connectionLabel2));
-		// the context will also apply to the member role and both connectors, but not to the set
-		// and the member record
+		// the context will also apply to the member role, but not to the set, the member record and
+		// both connectors
 		assertTrue(context.appliesTo(connectionLabel1.getMemberRole()));
-		assertTrue(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(0).getConnector()));
-		assertTrue(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(1).getConnector()));
+		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(0).getConnector()));
+		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(1).getConnector()));
 		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getSet()));
 		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getRecord()));
+		
+		// ConnectionPart (not SET_FEATURE)
+		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+		ConnectionPart part1 = 
+			((MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS")).getConnectionParts().get(0);
+		ConnectionPart part2 = 
+			((MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS")).getConnectionParts().get(1);
+		ConnectionPart part3 = 
+			((MemberRole) schema.getRecord("EMPOSITION").getRole("JOB-EMPOSITION")).getConnectionParts().get(0);
+		ConnectionPart part4 = 
+			((MemberRole) schema.getRecord("EMPOSITION").getRole("JOB-EMPOSITION")).getConnectionParts().get(1);
+		assertFalse(context.appliesTo(part1));
+		assertFalse(context.appliesTo(part2));
+		assertFalse(context.appliesTo(part3));
+		assertFalse(context.appliesTo(part4));
+		context.putContextData(part2);
+		assertFalse(context.appliesTo(part1));
+		assertTrue(context.appliesTo(part2));
+		assertFalse(context.appliesTo(part3));
+		assertFalse(context.appliesTo(part4));
+		// the context will NOT apply to the member role, connection label, set and member record
+		assertFalse(context.appliesTo(part1.getMemberRole()));
+		assertFalse(context.appliesTo(part1.getMemberRole().getConnectionLabel()));
+		assertFalse(context.appliesTo(part1.getMemberRole().getSet()));
+		assertFalse(context.appliesTo(part1.getMemberRole().getRecord()));
+		
+		// ConnectionPart (SET_FEATURE)
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+		assertFalse(context.appliesTo(part1));
+		assertFalse(context.appliesTo(part2));
+		assertFalse(context.appliesTo(part3));
+		assertFalse(context.appliesTo(part4));
+		context.putContextData(part1);
+		assertTrue(context.appliesTo(part1));
+		assertFalse(context.appliesTo(part2));
+		assertFalse(context.appliesTo(part3));
+		assertFalse(context.appliesTo(part4));
+		// the context will NOT apply to the member role, connection label, set and member record
+		assertFalse(context.appliesTo(part1.getMemberRole()));
+		assertFalse(context.appliesTo(part1.getMemberRole().getConnectionLabel()));
+		assertFalse(context.appliesTo(part1.getMemberRole().getSet()));
+		assertFalse(context.appliesTo(part1.getMemberRole().getRecord()));
 		
 		// Connector (not SET_FEATURE)
 		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
@@ -297,13 +352,12 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(connector4));
 		context.putContextData(connector1);
 		assertTrue(context.appliesTo(connector1));
-		assertTrue(context.appliesTo(connector2));
+		assertFalse(context.appliesTo(connector2));
 		assertFalse(context.appliesTo(connector3));
 		assertFalse(context.appliesTo(connector4));
-		// the context will also apply to the member role and connection label, but not to the set
-		// and the member record
-		assertTrue(context.appliesTo(connector1.getConnectionPart().getMemberRole()));
-		assertTrue(context.appliesTo(connector1.getConnectionPart().getMemberRole().getConnectionLabel()));
+		// the context will NOT apply to the member role, connection label, set and member record
+		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole()));
+		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getConnectionLabel()));
 		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getSet()));
 		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getRecord()));
 		
@@ -316,13 +370,12 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(connector4));
 		context.putContextData(connector1);
 		assertTrue(context.appliesTo(connector1));
-		assertTrue(context.appliesTo(connector2));
+		assertFalse(context.appliesTo(connector2));
 		assertFalse(context.appliesTo(connector3));
 		assertFalse(context.appliesTo(connector4));
-		// the context will also apply to the member role and connection label, but not to the set
-		// and the member record
-		assertTrue(context.appliesTo(connector1.getConnectionPart().getMemberRole()));
-		assertTrue(context.appliesTo(connector1.getConnectionPart().getMemberRole().getConnectionLabel()));
+		// the context will NOT apply to the member role, connection label, set and member record
+		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole()));
+		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getConnectionLabel()));
 		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getSet()));
 		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getRecord()));
 			
@@ -362,11 +415,11 @@ public class ModelChangeContextTest {
 		context.putContextData(memberRole1);
 		assertTrue(context.appliesTo(memberRole1));
 		assertFalse(context.appliesTo(memberRole2));
-		// the context will also apply to the connection label and both connectors, but not to the 
-		// set and the member record
+		// the context will also apply to the connection label, but not to the set, member record
+		// and both connectors
 		assertTrue(context.appliesTo(memberRole1.getConnectionLabel()));
-		assertTrue(context.appliesTo(memberRole1.getConnectionParts().get(0).getConnector()));
-		assertTrue(context.appliesTo(memberRole1.getConnectionParts().get(1).getConnector()));
+		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(0).getConnector()));
+		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(1).getConnector()));
 		assertFalse(context.appliesTo(memberRole1.getSet()));
 		assertFalse(context.appliesTo(memberRole1.getRecord()));
 		
@@ -378,11 +431,11 @@ public class ModelChangeContextTest {
 		context.putContextData(memberRole1);
 		assertTrue(context.appliesTo(memberRole1));
 		assertFalse(context.appliesTo(memberRole2));
-		// the context will also apply to the connection label and both connectors, but not to the 
-		// set and the member record
+		// the context will also apply to the connection label, but not to the set, member record
+				// and both connectors
 		assertTrue(context.appliesTo(memberRole1.getConnectionLabel()));
-		assertTrue(context.appliesTo(memberRole1.getConnectionParts().get(0).getConnector()));
-		assertTrue(context.appliesTo(memberRole1.getConnectionParts().get(1).getConnector()));
+		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(0).getConnector()));
+		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(1).getConnector()));
 		assertFalse(context.appliesTo(memberRole1.getSet()));
 		assertFalse(context.appliesTo(memberRole1.getRecord()));
 				

@@ -23,9 +23,6 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -62,20 +59,21 @@ public class RecordEditPart
 	}
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-	}
-	
-	@Override
 	public void afterModelChange(ModelChangeContext context) {
 		if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
 			context.appliesTo(getModel())) {
 			
+			// the area specification has changed
 			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_CALCKEY &&
 				   context.appliesTo(getModel())) {
+			
+			// the CALC key has changed
 			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_LOCATION_MODE &&
 				   context.appliesTo(getModel())) {
+			
+			// the location mode has changed
 			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_VIA_SPECIFICATION &&
 				   context.appliesTo(getModel())) {
@@ -83,35 +81,37 @@ public class RecordEditPart
 		} else if (context.getModelChangeType() == ModelChangeType.MOVE_RECORD &&
 				   context.appliesTo(getModel())) {
 			
+			// the record was moved
 			refreshVisuals();			
 			refreshConnections();
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
 				   context.appliesTo(getModel().getAreaSpecification().getArea())) {
 								
 			// the record's containing area name change was undone
 			refreshVisuals();			
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
 				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
 				   context.appliesTo(getModel())) {
 			
 			// the record name change was undone
 			refreshVisuals();							
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Id()) &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Id()) &&
 				   context.appliesTo(getModel())) {
 			
 			// the record id was changed
 			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_StorageMode()) &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_StorageMode()) &&
 				   context.appliesTo(getModel())) {
 			
 			// the storage mode was changed
 			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
+			// the record name or containing area name has changed (execute/redo)
 			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
 				refreshVisuals();
@@ -120,34 +120,23 @@ public class RecordEditPart
 	}
 	
 	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
-	}
-	
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
-	}
-	
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {		
-	}
-	
-	@Override
 	public void beforeModelChange(ModelChangeContext context) {
 		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-			context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
 			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 			context.appliesTo(getModel())) {
 							
-			// the record's name is changing; put a boolean in the listener data, which we will 
-			// pick up again when processing the after model change event
+			// the record name is changing (execute/redo); put a boolean in the listener data, 
+			// which we will pick up again when processing the after model change event
 			context.setListenerData(Boolean.TRUE);
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isFeatureSet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 				   context.appliesTo(getModel().getAreaSpecification().getArea())) {
 						
-			// the record's containing area name is changing; put a boolean in the listener data, 
-			// which we will pick up again when processing the after model change event
+			// the record's containing area name is changing (execute/redo); put a boolean in the 
+			// listener data, which we will pick up again when processing the after model change 
+			// event
 			context.setListenerData(Boolean.TRUE);
 		}
 	}

@@ -42,6 +42,7 @@ import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
 import org.lh.dmlj.schema.editor.command.AddMemberToSetCommand;
 import org.lh.dmlj.schema.editor.command.CreateSetCommand;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
@@ -206,8 +207,12 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
 														    request.getLocation(), 
 														    zoomLevel);
-			return new MoveEndpointCommand(connectionPart, location.x, 
-										   location.y, true);					
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_ENDPOINT);
+			context.putContextData(connectionPart);
+			IModelChangeCommand command = 
+				new MoveEndpointCommand(connectionPart, location.x, location.y, true);
+			command.setContext(context);
+			return (Command) command;
 		} else {
 			return null;
 		}
@@ -240,8 +245,12 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
 															request.getLocation(), 
 															zoomLevel);
-			return new MoveEndpointCommand(connectionPart, location.x, 
-										   location.y, false);					
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_ENDPOINT);
+			context.putContextData(connectionPart);
+			IModelChangeCommand command = 
+				new MoveEndpointCommand(connectionPart, location.x, location.y, false);
+			command.setContext(context);
+			return (Command) command;
 		} else {
 			return null;
 		}

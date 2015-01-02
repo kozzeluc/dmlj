@@ -23,9 +23,6 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -35,7 +32,6 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -53,31 +49,14 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	}	
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-	}
-
-	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() != ModelChangeType.MOVE_INDEX) {
-			return;
-		}
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-		if (setName.equals(getModel().getSet().getName())) {
+		if (context.getModelChangeType() == ModelChangeType.MOVE_INDEX &&
+			context.appliesTo(getModel().getSet())) {
+			
+			// the index was moved
 			refreshVisuals();			
 			refreshConnections();
 		}
-	}
-	
-	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
-	}
-
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {		
-	}
-	
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
 	}
 
 	@Override

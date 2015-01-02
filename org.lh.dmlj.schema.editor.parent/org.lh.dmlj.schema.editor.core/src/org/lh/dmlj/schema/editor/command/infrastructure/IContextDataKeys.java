@@ -19,7 +19,8 @@ package org.lh.dmlj.schema.editor.command.infrastructure;
 public interface IContextDataKeys {
 	
 	String AREA_NAME = "areaName";
-	String FEATURE_NAME = "featureName";
+	String CONNECTION_PART_INDEX = "connectionPartIndex";
+	String PROPERTY_NAME = "featureName";
 	String RECORD_NAME = "recordName";
 	String SET_NAME = "setName";
 	
