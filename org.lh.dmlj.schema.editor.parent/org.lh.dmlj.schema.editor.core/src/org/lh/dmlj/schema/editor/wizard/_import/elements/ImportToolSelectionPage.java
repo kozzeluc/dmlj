@@ -154,7 +154,7 @@ public class ImportToolSelectionPage extends WizardPage {
 
 	private void fillRecordStructure() {
 		String ddl = new RecordTemplate().generate(Arrays.asList(new Object[] {record, false}));
-		int i = ddl.indexOf(" . ");
+		int i = ddl.indexOf(" .");
 		String structure = i > -1 ? ddl.substring(i + 2).trim() : "";
 		textCurrentRecordStructure.setText(structure);
 	}
