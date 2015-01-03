@@ -56,6 +56,9 @@ public enum ModelChangeType {
 	
 	SET_PROPERTY,
 	
-	SWAP_RECORD_ELEMENTS
+	SWAP_RECORD_ELEMENTS, 
+	
+	ZOOM_IN,
+	ZOOM_OUT
 	
 }

@@ -131,6 +131,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -149,8 +150,6 @@ public class SchemaEditor
 		SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
 	private static final EAttribute ATTRIBUTE_SHOW_RULERS = 
 		SchemaPackage.eINSTANCE.getDiagramData_ShowRulers();
-	private static final EAttribute ATTRIBUTE_ZOOM_LEVEL =
-		SchemaPackage.eINSTANCE.getDiagramData_ZoomLevel();
 	
 	// This class listens to changes to the file system in the workspace, and
 	// makes changes accordingly.
@@ -410,13 +409,21 @@ public class SchemaEditor
 				getCommandStack().execute(command);				
 			}
 			
-			// make sure we are informed of zoom changes
+			// make sure we are informed of zoom changes (the graphical editor automatically adjusts
+			// the graphics)
 			manager.addZoomListener(new ZoomListener() {
 				@Override
 				public void zoomChanged(double zoom) {
 					if (zoom != schema.getDiagramData().getZoomLevel()) {
-						SetZoomLevelCommand command = 
-							new SetZoomLevelCommand(schema, zoom);
+						ModelChangeType modelChangeType;
+						if (zoom < schema.getDiagramData().getZoomLevel()) {
+							modelChangeType = ModelChangeType.ZOOM_OUT;
+						} else {
+							modelChangeType = ModelChangeType.ZOOM_IN;
+						}
+						ModelChangeContext context = new ModelChangeContext(modelChangeType);
+						SetZoomLevelCommand command = new SetZoomLevelCommand(schema, zoom);
+						command.setContext(context);
 						getCommandStack().execute(command);
 					}
 				}
@@ -442,7 +449,40 @@ public class SchemaEditor
 			}
 
 			@Override
-			public void afterModelChange(ModelChangeContext context) {				
+			public void afterModelChange(ModelChangeContext context) {		
+				if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+					context.isPropertySet(ATTRIBUTE_SHOW_RULERS) &&
+					context.appliesTo(schema.getDiagramData())) {
+					
+					// the rulers are to be shown or hidden
+					boolean showRulers = schema.getDiagramData().isShowRulers();
+					getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
+													 Boolean.valueOf(showRulers));
+				} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+						   context.isPropertySet(ATTRIBUTE_SHOW_GRID) &&
+						   context.appliesTo(schema.getDiagramData())) { 
+					
+					// the grid has to be shown or hidden
+					boolean showGrid = schema.getDiagramData().isShowGrid();					
+					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
+													 Boolean.valueOf(showGrid));
+				} else if ((context.getModelChangeType() == ModelChangeType.ZOOM_IN ||
+						    context.getModelChangeType() == ModelChangeType.ZOOM_OUT) &&
+						   context.appliesTo(schema.getDiagramData())) {
+					
+					// the zoom level has changed; it is important to set the manager's zoom level
+					// only when it's different from the current model value (to avoid assertion
+					// errors regarding the 'dispatching' indicator in the model change dispatcher,
+					// meaning we've put a command on the command stack while dispatching a command
+					// stack event); it turns out that this is only the case when the zoom command
+					// is undone or redone (which makes sense since we are not using the normal zoom
+					// controls in that situation)
+					if (manager != null && 
+						schema.getDiagramData().getZoomLevel() != manager.getZoom()) {
+						
+						manager.setZoom(schema.getDiagramData().getZoomLevel());
+					}
+				}
 			}
 			
 			@Override
@@ -455,35 +495,7 @@ public class SchemaEditor
 			}
 
 			@Override
-			public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-				if (owner == schema.getDiagramData() && 
-					features.length == 1 && features[0] == ATTRIBUTE_SHOW_RULERS) {
-					
-					// the rulers are to be shown or hidden
-					boolean showRulers = schema.getDiagramData().isShowRulers();
-					getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
-													 Boolean.valueOf(showRulers));
-				} else if (owner == schema.getDiagramData() && 
-						   features.length == 1 && features[0] == ATTRIBUTE_SHOW_GRID) {
-					
-					// the grid has to be shown or hidden
-					boolean showGrid = schema.getDiagramData().isShowGrid();					
-					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
-													 Boolean.valueOf(showGrid));
-				} else if (owner == schema.getDiagramData() && 
-						   features.length == 1 && features[0] == ATTRIBUTE_ZOOM_LEVEL) {
-					
-					// the zoom level has changed; it is important to set the manager's zoom level
-					// only when it's different from the current model value (to avoid assertion
-					// errors regarding the 'dispatching' indicator in the model change dispatcher,
-					// meaning we've put a command on the command stack while dispatching a command
-					// stack event)
-					if (manager != null && 
-						schema.getDiagramData().getZoomLevel() != manager.getZoom()) {
-						
-						manager.setZoom(schema.getDiagramData().getZoomLevel());
-					}
-				}				
+			public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {				
 			}
 			
 			@Override
