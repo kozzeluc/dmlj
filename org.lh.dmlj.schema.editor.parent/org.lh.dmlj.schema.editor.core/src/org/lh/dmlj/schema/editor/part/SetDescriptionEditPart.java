@@ -60,7 +60,6 @@ public class SetDescriptionEditPart
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {		
-		SystemOwner systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
 		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
 			context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
@@ -88,8 +87,8 @@ public class SetDescriptionEditPart
 			// the sort key has changed
 			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_OR_REMOVE_SET_POINTERS &&
-				   context.appliesTo(getModel().getMemberRole()) ||
-				   context.appliesTo(getModel().getMemberRole().getSet())) {			
+				   (context.appliesTo(getModel().getMemberRole()) ||
+				    context.appliesTo(getModel().getMemberRole().getSet()))) {			
 			
 			// pointers were added or removed (note that the context can apply to either the member
 			// role OR set)
@@ -108,8 +107,12 @@ public class SetDescriptionEditPart
 			refreshVisuals();
 		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
 				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
-				   systemOwner != null &&
-				   context.appliesTo(systemOwner.getAreaSpecification().getArea())) {
+				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
+				   context.appliesTo(getModel().getMemberRole()
+						   					   .getSet()
+						   					   .getSystemOwner()
+						   					   .getAreaSpecification()
+						   					   .getArea())) {
 					
 			// the system owner's containing area name change was undone
 			refreshVisuals();

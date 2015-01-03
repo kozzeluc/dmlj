@@ -429,16 +429,16 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 			allListeners = new ArrayList<>(listeners);
 			listenerDataMap = new HashMap<>();
 			for (int i = 0; i < allListeners.size(); i++) {
-				
-				ModelChangeContext contextCopy = context.copy();
-				contextCopy.setCommandExecutionMode(getCommandExecutionMode(event));
-				
 				IModelChangeListener listener = allListeners.get(i);
-				listener.beforeModelChange(contextCopy);
-				
-				Object listenerData = contextCopy.getListenerData();
-				if (listenerData != null) {
-					listenerDataMap.put(Integer.valueOf(i), listenerData);
+				if (listeners.contains(listener)) {
+					// only call the before model change method if the listener is still registered
+					ModelChangeContext contextCopy = context.copy();
+					contextCopy.setCommandExecutionMode(getCommandExecutionMode(event));
+					listener.beforeModelChange(contextCopy);
+					Object listenerData = contextCopy.getListenerData();
+					if (listenerData != null) {
+						listenerDataMap.put(Integer.valueOf(i), listenerData);
+					}
 				}
 			}
 		}
@@ -465,16 +465,17 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 			Assert.isNotNull(allListeners, "allListeners not set during pre-change event");
 			Assert.isNotNull(listenerDataMap, "allListeners not set during pre-change event");
 			for (int i = 0; i < allListeners.size(); i++) {
-				
-				ModelChangeContext contextCopy = context.copy();
-				contextCopy.setCommandExecutionMode(getCommandExecutionMode(event));
-				Object listenerData = listenerDataMap.get(Integer.valueOf(i));
-				if (listenerData != null) {
-					contextCopy.setListenerData(listenerData);
-				}
-				
 				IModelChangeListener listener = allListeners.get(i);
-				listener.afterModelChange(contextCopy);
+				if (listeners.contains(listener)) {
+					// only call the after model change method if the listener is still registered
+					ModelChangeContext contextCopy = context.copy();
+					contextCopy.setCommandExecutionMode(getCommandExecutionMode(event));
+					Object listenerData = listenerDataMap.get(Integer.valueOf(i));
+					if (listenerData != null) {
+						contextCopy.setListenerData(listenerData);
+					}				
+					listener.afterModelChange(contextCopy);
+				}
 			}
 			// nullify the things we needed to carry from the pre-change to the post-change event:
 			previousCommand = null;
@@ -740,6 +741,12 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		}
 	}
 	
+	/**
+	 * @deprecated This method should be removed together with the IModelChangeListener's 
+	 * afterAddItem, afterMoveItem, afterRemoveItem and afterSetFeatures methods OR its body should
+	 * be changed to :<pre><code>!listeners.contains(listener)</code></pre>
+	 */
+	@Deprecated 
 	boolean isObsolete(IModelChangeListener listener) {
 		return obsoleteListeners.contains(listener);
 	}	

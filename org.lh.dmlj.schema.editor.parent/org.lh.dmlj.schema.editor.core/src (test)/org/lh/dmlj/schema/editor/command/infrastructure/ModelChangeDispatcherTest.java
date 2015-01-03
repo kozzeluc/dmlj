@@ -976,6 +976,7 @@ public class ModelChangeDispatcherTest {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testDispatch_ObsoleteListener() {
 		
@@ -1053,6 +1054,7 @@ public class ModelChangeDispatcherTest {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testDispatch_DeferredListener() {
 		
@@ -1362,7 +1364,7 @@ public class ModelChangeDispatcherTest {
 		
 		final ModelChangeContext[] savedListenerContext1 = new ModelChangeContext[1];
 		final boolean[] listener1MethodCallsOK = {false, false};
-		IModelChangeListener listener1 = new ModelChangelChangeAdapter() {		
+		IModelChangeListener listener1 = new ModelChangeAdapter() {		
 			public void beforeModelChange(ModelChangeContext listenerContext1) {
 								
 				assertNotSame(context, listenerContext1);
@@ -1398,7 +1400,7 @@ public class ModelChangeDispatcherTest {
 		
 		final ModelChangeContext[] savedListenerContext2 = new ModelChangeContext[1];
 		final boolean[] listener2MethodCallsOK = {false, false};
-		IModelChangeListener listener2 = new ModelChangelChangeAdapter() {		
+		IModelChangeListener listener2 = new ModelChangeAdapter() {		
 			public void beforeModelChange(ModelChangeContext listenerContext1) {
 				
 				assertNotSame(context, listenerContext1);
@@ -1528,7 +1530,97 @@ public class ModelChangeDispatcherTest {
 		
 	}
 	
-	public static abstract class ModelChangelChangeAdapter implements IModelChangeListener {		
+	@Test
+	public void testObsoleteListener_AfterModelChange() {
+		
+		final ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();
+		dispatcher.setSchema(mock(Schema.class));
+		
+		final boolean[] methodsInvoked = {false}; // beforeModelChange
+		IModelChangeListener listener = new ModelChangeAdapter() {			
+			@Override
+			public void beforeModelChange(ModelChangeContext context) {	
+				methodsInvoked[0] = true;
+			}			
+			@Override
+			public void afterModelChange(ModelChangeContext context) {
+				fail("method shouldn't be called");
+			}			
+		};
+		dispatcher.addModelChangeListener(listener);
+		
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
+		ModelChangeBasicCommand command = new ModelChangeBasicCommand("test command");
+		command.setContext(context);
+		CommandStackEvent event = mock(CommandStackEvent.class);
+		when(event.getCommand()).thenReturn(command);
+		
+		// dispatch the pre model change event
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
+		dispatcher.dispatch(event);
+		
+		assertTrue(methodsInvoked[0]);
+		methodsInvoked[0] = false;
+		
+		// remove the listener between the before- and after model change callbacks so that it will
+		// be marked as obsolete during the after model change event callback
+		dispatcher.removeModelChangeListener(listener);
+		
+		// dispatch the after model change event
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);
+		dispatcher.dispatch(event);
+		
+		assertFalse(methodsInvoked[0]);
+		
+	}
+	
+	@Test
+	public void testObsoleteListener_BeforeModelChange() {
+		
+		final ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();
+		dispatcher.setSchema(mock(Schema.class));
+		
+		final boolean[] methodsInvoked = {false}; // beforeModelChange listener2
+		final IModelChangeListener listener1 = new ModelChangeAdapter() {			
+			@Override
+			public void beforeModelChange(ModelChangeContext context) {	
+				fail("method shouldn't be called");
+			}			
+			@Override
+			public void afterModelChange(ModelChangeContext context) {
+				fail("method shouldn't be called");
+			}			
+		};
+		IModelChangeListener listener2 = new ModelChangeAdapter() {			
+			@Override
+			public void beforeModelChange(ModelChangeContext context) {	
+				dispatcher.removeModelChangeListener(listener1);
+				methodsInvoked[0] = true;
+			}			
+			@Override
+			public void afterModelChange(ModelChangeContext context) {
+				fail("method shouldn't be called");
+			}			
+		};
+		// listener2 should receive its callbacks before listener1 so that it can unregister listener1
+		dispatcher.addModelChangeListener(listener2);
+		dispatcher.addModelChangeListener(listener1);		
+		
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
+		ModelChangeBasicCommand command = new ModelChangeBasicCommand("test command");
+		command.setContext(context);
+		CommandStackEvent event = mock(CommandStackEvent.class);
+		when(event.getCommand()).thenReturn(command);
+		
+		// dispatch the pre model change event
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
+		dispatcher.dispatch(event);
+		
+		assertTrue(methodsInvoked[0]);
+		
+	}	
+	
+	public static abstract class ModelChangeAdapter implements IModelChangeListener {		
 
 		@Override
 		public void afterAddItem(EObject owner, EReference reference, Object item) {			
