@@ -120,33 +120,26 @@ public abstract class AbstractPropertiesSection
 	}
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
+	public final void afterAddItem(EObject owner, EReference reference, Object item) {
+	}
+	
+	@Override
+	public void afterModelChange(ModelChangeContext context) {
 		// whatever model change, just refresh the properties section
 		doRefresh();
 	}
 	
 	@Override
-	public void afterModelChange(ModelChangeContext context) {	
+	public final void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
+							  		EObject newOwner) {	
 	}
 	
 	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {
-		
-		// whatever model change, just refresh the properties section
-		doRefresh();
+	public final void afterRemoveItem(EObject owner, EReference reference, Object item) {
 	}
 	
 	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
-		// whatever model change, just refresh the properties section
-		doRefresh();
-	}
-	
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		// whatever model change, just refresh the properties section
-		doRefresh();
+	public final void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
 	}
 	
 	@Override
