@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -98,7 +98,9 @@ public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 	
 	@Override
 	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary()) {
+		if (attribute == SchemaPackage.eINSTANCE.getKey_ElementSummary() ||
+			attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
+			
 			return setOrderHandler;
 		} else {
 			return super.getHyperlinkHandler(attribute);
