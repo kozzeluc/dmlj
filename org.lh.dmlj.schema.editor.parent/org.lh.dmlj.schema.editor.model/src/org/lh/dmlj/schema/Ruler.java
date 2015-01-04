@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -42,6 +42,7 @@ public interface Ruler extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Guides</b></em>' containment reference list.
 	 * The list contents are of type {@link org.lh.dmlj.schema.Guide}.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Guide#getRuler <em>Ruler</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Guides</em>' containment reference list isn't clear,
@@ -50,7 +51,8 @@ public interface Ruler extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Guides</em>' containment reference list.
 	 * @see org.lh.dmlj.schema.SchemaPackage#getRuler_Guides()
-	 * @model containment="true"
+	 * @see org.lh.dmlj.schema.Guide#getRuler
+	 * @model opposite="ruler" containment="true"
 	 * @generated
 	 */
 	EList<Guide> getGuides();

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,7 +21,8 @@ public enum ModelChangeType {
     ADD_BENDPOINT,
 	ADD_CONNECTORS,
 	ADD_DIAGRAM_LABEL,
-	ADD_MEMBER_TO_SET,
+	ADD_GUIDE,
+    ADD_MEMBER_TO_SET,
     ADD_RECORD,
     ADD_SYSTEM_OWNED_SET,
     ADD_USER_OWNED_SET,
@@ -37,7 +38,8 @@ public enum ModelChangeType {
 	
     DELETE_BENDPOINT,
     DELETE_CONNECTORS,
-	DELETE_DIAGRAM_LABEL,
+	DELETE_DIAGRAM_LABEL, 
+	DELETE_GUIDE,
 	DELETE_RECORD,				// not yet hooked
 	DELETE_SYSTEM_OWNED_SET,
 	DELETE_USER_OWNED_SET,
@@ -46,6 +48,7 @@ public enum ModelChangeType {
 	MOVE_CONNECTOR, 
 	MOVE_DIAGRAM_LABEL, 
 	MOVE_ENDPOINT, 
+	MOVE_GUIDE, 
 	MOVE_INDEX,
 	MOVE_RECORD,
 	MOVE_SET_OR_INDEX_LABEL,

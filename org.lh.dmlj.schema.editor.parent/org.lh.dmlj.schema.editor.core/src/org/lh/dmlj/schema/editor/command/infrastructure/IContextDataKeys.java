@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,8 +20,10 @@ public interface IContextDataKeys {
 	
 	String AREA_NAME = "areaName";
 	String CONNECTION_PART_INDEX = "connectionPartIndex";
+	String GUIDE_INDEX = "guideIndex";
 	String PROPERTY_NAME = "featureName";
 	String RECORD_NAME = "recordName";
+	String RULER_INDEX = "rulerIndex";
 	String SET_NAME = "setName";
 	
 }

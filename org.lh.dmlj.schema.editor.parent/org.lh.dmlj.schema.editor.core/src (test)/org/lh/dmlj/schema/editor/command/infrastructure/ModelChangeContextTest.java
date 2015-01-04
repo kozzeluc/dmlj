@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -34,7 +34,9 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
@@ -146,12 +148,27 @@ public class ModelChangeContextTest {
 		context.putContextData(mock(DiagramLabel.class));
 		assertEquals(0, context.getContextData().size());
 		
+		// Guide: ruler- and guide indexes
+		context.getContextData().clear();
+		Guide guide = schema.getDiagramData().getRulers().get(1).getGuides().get(0);
+		context.putContextData(guide);
+		assertEquals(2, context.getContextData().size());
+		assertEquals("1", context.getContextData().get(IContextDataKeys.RULER_INDEX));
+		assertEquals("0", context.getContextData().get(IContextDataKeys.GUIDE_INDEX));
+		
 		// MemberRole: set- and record name
 		context.getContextData().clear();
 		context.putContextData(schema.getRecord("COVERAGE").getRole("EMP-COVERAGE"));
 		assertEquals(2, context.getContextData().size());
 		assertEquals("EMP-COVERAGE", context.getContextData().get(IContextDataKeys.SET_NAME));
 		assertEquals("COVERAGE", context.getContextData().get(IContextDataKeys.RECORD_NAME));
+		
+		// Ruler: ruler index
+		context.getContextData().clear();
+		Ruler ruler = schema.getDiagramData().getRulers().get(0);
+		context.putContextData(ruler);
+		assertEquals(1, context.getContextData().size());
+		assertEquals("0", context.getContextData().get(IContextDataKeys.RULER_INDEX));
 		
 		// Schema: nothing
 		context.getContextData().clear();
@@ -405,6 +422,41 @@ public class ModelChangeContextTest {
 		context.putContextData(connectionLabel1);
 		assertFalse(context.appliesTo(mock(DiagramLabel.class)));
 		
+		// Guide (not SET_FEATURE)
+		context = new ModelChangeContext(ModelChangeType.DELETE_GUIDE);
+		Guide guide1 = schema.getDiagramData().getRulers().get(0).getGuides().get(0);
+		Guide guide2 = schema.getDiagramData().getRulers().get(0).getGuides().get(1);
+		Guide guide3 = schema.getDiagramData().getRulers().get(1).getGuides().get(0);
+		Guide guide4 = schema.getDiagramData().getRulers().get(1).getGuides().get(1);
+		assertFalse(context.appliesTo(guide1));
+		assertFalse(context.appliesTo(guide2));
+		assertFalse(context.appliesTo(guide3));
+		assertFalse(context.appliesTo(guide4));
+		context.putContextData(guide3);
+		assertFalse(context.appliesTo(guide1));
+		assertFalse(context.appliesTo(guide2));
+		assertTrue(context.appliesTo(guide3));
+		assertFalse(context.appliesTo(guide4));
+		// the context does NOT apply to either one of the rulers
+		assertFalse(context.appliesTo(guide1.getRuler()));
+		assertFalse(context.appliesTo(guide3.getRuler()));
+		
+		// Guide (SET_FEATURE)
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+		assertFalse(context.appliesTo(guide1));
+		assertFalse(context.appliesTo(guide2));
+		assertFalse(context.appliesTo(guide3));
+		assertFalse(context.appliesTo(guide4));
+		context.putContextData(guide2);
+		assertFalse(context.appliesTo(guide1));
+		assertTrue(context.appliesTo(guide2));
+		assertFalse(context.appliesTo(guide3));
+		assertFalse(context.appliesTo(guide4));
+		// the context does NOT apply to either one of the rulers
+		assertFalse(context.appliesTo(guide1.getRuler()));
+		assertFalse(context.appliesTo(guide3.getRuler()));
+		
 		// MemberRole (not SET_FEATURE)
 		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
 		MemberRole memberRole1 = 
@@ -432,12 +484,41 @@ public class ModelChangeContextTest {
 		assertTrue(context.appliesTo(memberRole1));
 		assertFalse(context.appliesTo(memberRole2));
 		// the context will also apply to the connection label, but not to the set, member record
-				// and both connectors
+		// and both connectors
 		assertTrue(context.appliesTo(memberRole1.getConnectionLabel()));
 		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(0).getConnector()));
 		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(1).getConnector()));
 		assertFalse(context.appliesTo(memberRole1.getSet()));
 		assertFalse(context.appliesTo(memberRole1.getRecord()));
+		
+		// Ruler (not SET_FEATURE)
+		context = new ModelChangeContext(ModelChangeType.ADD_GUIDE);
+		Ruler ruler1 = schema.getDiagramData().getRulers().get(0);
+		Ruler ruler2 = schema.getDiagramData().getRulers().get(1);
+		assertFalse(context.appliesTo(ruler1));
+		assertFalse(context.appliesTo(ruler2));
+		context.putContextData(ruler2);
+		assertFalse(context.appliesTo(ruler1));
+		assertTrue(context.appliesTo(ruler2));
+		// the context does NOT apply to either one of the guides
+		assertFalse(context.appliesTo(ruler1.getGuides().get(0)));
+		assertFalse(context.appliesTo(ruler1.getGuides().get(1)));
+		assertFalse(context.appliesTo(ruler2.getGuides().get(0)));
+		assertFalse(context.appliesTo(ruler2.getGuides().get(1)));
+		
+		// Ruler (SET_FEATURE)
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+		assertFalse(context.appliesTo(ruler1));
+		assertFalse(context.appliesTo(ruler2));
+		context.putContextData(ruler2);
+		assertFalse(context.appliesTo(ruler1));
+		assertTrue(context.appliesTo(ruler2));
+		// the context does NOT apply to either one of the guides
+		assertFalse(context.appliesTo(ruler1.getGuides().get(0)));
+		assertFalse(context.appliesTo(ruler1.getGuides().get(1)));
+		assertFalse(context.appliesTo(ruler2.getGuides().get(0)));
+		assertFalse(context.appliesTo(ruler2.getGuides().get(1)));
 				
 		// Schema (not SET_FEATURE)
 		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);

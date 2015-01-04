@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,12 +18,16 @@ package org.lh.dmlj.schema.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.lh.dmlj.schema.Guide;
+import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.SchemaPackage;
 
 /**
@@ -34,6 +38,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.GuideImpl#getPosition <em>Position</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.GuideImpl#getRuler <em>Ruler</em>}</li>
  * </ul>
  * </p>
  *
@@ -105,11 +110,98 @@ public class GuideImpl extends EObjectImpl implements Guide {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Ruler getRuler() {
+		if (eContainerFeatureID() != SchemaPackage.GUIDE__RULER) return null;
+		return (Ruler)eInternalContainer();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetRuler(Ruler newRuler, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject)newRuler, SchemaPackage.GUIDE__RULER, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRuler(Ruler newRuler) {
+		if (newRuler != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.GUIDE__RULER && newRuler != null)) {
+			if (EcoreUtil.isAncestor(this, newRuler))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newRuler != null)
+				msgs = ((InternalEObject)newRuler).eInverseAdd(this, SchemaPackage.RULER__GUIDES, Ruler.class, msgs);
+			msgs = basicSetRuler(newRuler, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.GUIDE__RULER, newRuler, newRuler));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.GUIDE__RULER:
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
+				return basicSetRuler((Ruler)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case SchemaPackage.GUIDE__RULER:
+				return basicSetRuler(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case SchemaPackage.GUIDE__RULER:
+				return eInternalContainer().eInverseRemove(this, SchemaPackage.RULER__GUIDES, Ruler.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case SchemaPackage.GUIDE__POSITION:
 				return getPosition();
+			case SchemaPackage.GUIDE__RULER:
+				return getRuler();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -124,6 +216,9 @@ public class GuideImpl extends EObjectImpl implements Guide {
 		switch (featureID) {
 			case SchemaPackage.GUIDE__POSITION:
 				setPosition((Integer)newValue);
+				return;
+			case SchemaPackage.GUIDE__RULER:
+				setRuler((Ruler)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -140,6 +235,9 @@ public class GuideImpl extends EObjectImpl implements Guide {
 			case SchemaPackage.GUIDE__POSITION:
 				setPosition(POSITION_EDEFAULT);
 				return;
+			case SchemaPackage.GUIDE__RULER:
+				setRuler((Ruler)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -154,6 +252,8 @@ public class GuideImpl extends EObjectImpl implements Guide {
 		switch (featureID) {
 			case SchemaPackage.GUIDE__POSITION:
 				return position != POSITION_EDEFAULT;
+			case SchemaPackage.GUIDE__RULER:
+				return getRuler() != null;
 		}
 		return super.eIsSet(featureID);
 	}

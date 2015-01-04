@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -1103,6 +1103,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 */
 	public EAttribute getGuide_Position() {
 		return (EAttribute)guideEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getGuide_Ruler() {
+		return (EReference)guideEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2505,6 +2514,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		guideEClass = createEClass(GUIDE);
 		createEAttribute(guideEClass, GUIDE__POSITION);
+		createEReference(guideEClass, GUIDE__RULER);
 
 		indexedSetModeSpecificationEClass = createEClass(INDEXED_SET_MODE_SPECIFICATION);
 		createEAttribute(indexedSetModeSpecificationEClass, INDEXED_SET_MODE_SPECIFICATION__DISPLACEMENT_PAGE_COUNT);
@@ -2819,6 +2829,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 		initEClass(guideEClass, Guide.class, "Guide", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getGuide_Position(), ecorePackage.getEInt(), "position", null, 0, 1, Guide.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getGuide_Ruler(), this.getRuler(), this.getRuler_Guides(), "ruler", null, 0, 1, Guide.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(indexedSetModeSpecificationEClass, IndexedSetModeSpecification.class, "IndexedSetModeSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIndexedSetModeSpecification_DisplacementPageCount(), ecorePackage.getEShortObject(), "displacementPageCount", null, 0, 1, IndexedSetModeSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2907,7 +2918,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEClass(roleEClass, Role.class, "Role", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(rulerEClass, Ruler.class, "Ruler", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getRuler_Guides(), this.getGuide(), null, "guides", null, 0, -1, Ruler.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRuler_Guides(), this.getGuide(), this.getGuide_Ruler(), "guides", null, 0, -1, Ruler.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRuler_Type(), this.getRulerType(), "type", null, 0, 1, Ruler.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRuler_DiagramData(), this.getDiagramData(), this.getDiagramData_Rulers(), "diagramData", null, 1, 1, Ruler.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

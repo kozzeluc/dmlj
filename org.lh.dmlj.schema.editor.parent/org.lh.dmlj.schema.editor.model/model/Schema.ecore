@@ -138,6 +138,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guide">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ruler" eType="#//Ruler"
+        eOpposite="#//Ruler/guides"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexedSetModeSpecification">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displacementPageCount"
@@ -279,7 +281,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="Role" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Ruler">
     <eStructuralFeatures xsi:type="ecore:EReference" name="guides" upperBound="-1"
-        eType="#//Guide" containment="true"/>
+        eType="#//Guide" containment="true" eOpposite="#//Guide/ruler"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//RulerType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diagramData" lowerBound="1"
         eType="#//DiagramData" eOpposite="#//DiagramData/rulers"/>

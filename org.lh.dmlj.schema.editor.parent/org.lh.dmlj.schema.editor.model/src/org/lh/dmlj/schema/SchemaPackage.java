@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -1081,13 +1081,22 @@ public interface SchemaPackage extends EPackage {
 	int GUIDE__POSITION = 0;
 
 	/**
+	 * The feature id for the '<em><b>Ruler</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GUIDE__RULER = 1;
+
+	/**
 	 * The number of structural features of the '<em>Guide</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GUIDE_FEATURE_COUNT = 1;
+	int GUIDE_FEATURE_COUNT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Displacement Page Count</b></em>' attribute.
@@ -3288,6 +3297,17 @@ public interface SchemaPackage extends EPackage {
 	EAttribute getGuide_Position();
 
 	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.Guide#getRuler <em>Ruler</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Ruler</em>'.
+	 * @see org.lh.dmlj.schema.Guide#getRuler()
+	 * @see #getGuide()
+	 * @generated
+	 */
+	EReference getGuide_Ruler();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Element#getOffset <em>Offset</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5447,6 +5467,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute GUIDE__POSITION = eINSTANCE.getGuide_Position();
+
+		/**
+		 * The meta object literal for the '<em><b>Ruler</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference GUIDE__RULER = eINSTANCE.getGuide_Ruler();
 
 		/**
 		 * The meta object literal for the '<em><b>Offset</b></em>' attribute feature.

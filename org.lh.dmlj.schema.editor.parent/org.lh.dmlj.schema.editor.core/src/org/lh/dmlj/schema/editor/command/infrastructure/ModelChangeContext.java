@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,7 +26,9 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -120,6 +122,22 @@ public class ModelChangeContext {
 		} else if (model instanceof DiagramLabel) {
 			return contextData.isEmpty() ||
 				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.PROPERTY_NAME);
+		} else if (model instanceof Guide) {
+			Guide guide = (Guide) model;
+			Ruler ruler = guide.getRuler();
+			int rulerIndex = ruler.getDiagramData().getRulers().indexOf(ruler);
+			int guideIndex = ruler.getGuides().indexOf(guide);
+			return contextData.size() == 2 &&
+				   contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
+				   rulerIndex == Integer.valueOf(contextData.get(IContextDataKeys.RULER_INDEX)) &&
+				   contextData.containsKey(IContextDataKeys.GUIDE_INDEX) &&
+				   guideIndex == Integer.valueOf(contextData.get(IContextDataKeys.GUIDE_INDEX)) ||
+				   contextData.size() == 3 &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+				   contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
+				   rulerIndex == Integer.valueOf(contextData.get(IContextDataKeys.RULER_INDEX)) &&
+				   contextData.containsKey(IContextDataKeys.GUIDE_INDEX) &&
+				   guideIndex == Integer.valueOf(contextData.get(IContextDataKeys.GUIDE_INDEX));
 		} else if (model instanceof MemberRole) {
 			MemberRole memberRole = (MemberRole) model;
 			Set set = memberRole.getSet();
@@ -131,6 +149,16 @@ public class ModelChangeContext {
 				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
 				   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
 				   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));
+		} else if (model instanceof Ruler) {
+			Ruler ruler = (Ruler) model;
+			int rulerIndex = ruler.getDiagramData().getRulers().indexOf(ruler);
+			return contextData.size() == 1 &&
+				   contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
+				   rulerIndex == Integer.valueOf(contextData.get(IContextDataKeys.RULER_INDEX)) ||
+				   contextData.size() == 2 &&
+				   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+				   contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
+				   rulerIndex == Integer.valueOf(contextData.get(IContextDataKeys.RULER_INDEX));
 		} else if (model instanceof Schema) {
 			return contextData.isEmpty() ||
 				   contextData.size() == 1 && contextData.containsKey(IContextDataKeys.PROPERTY_NAME);
@@ -257,12 +285,25 @@ public class ModelChangeContext {
 			// no context data to be set 
 		} else if (model instanceof DiagramLabel) {
 			// no context data to be set
+		} else if (model instanceof Guide) {
+			Guide guide = (Guide) model;
+			Ruler ruler = guide.getRuler();
+			DiagramData diagramData = ruler.getDiagramData();
+			int rulerIndex = diagramData.getRulers().indexOf(ruler);
+			int guideIndex = ruler.getGuides().indexOf(guide);
+			contextData.put(IContextDataKeys.RULER_INDEX, String.valueOf(rulerIndex));
+			contextData.put(IContextDataKeys.GUIDE_INDEX, String.valueOf(guideIndex));
 		} else if (model instanceof MemberRole) {
 			MemberRole memberRole = (MemberRole) model;
 			String setName = memberRole.getSet().getName();
 			String recordName = memberRole.getRecord().getName();
 			contextData.put(IContextDataKeys.SET_NAME, setName);
 			contextData.put(IContextDataKeys.RECORD_NAME, recordName);
+		} else if (model instanceof Ruler) {
+			Ruler ruler = (Ruler) model;
+			DiagramData diagramData = ruler.getDiagramData();
+			int rulerIndex = diagramData.getRulers().indexOf(ruler);
+			contextData.put(IContextDataKeys.RULER_INDEX, String.valueOf(rulerIndex));
 		} else if (model instanceof Schema) {
 			// no context data to be set
 		} else if (model instanceof SchemaArea) {
