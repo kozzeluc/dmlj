@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -94,7 +94,7 @@ public class SetDescriptionEditPart
 			// role OR set)
 			refreshVisuals();			
 		} else if (context.getModelChangeType() == ModelChangeType.MOVE_SET_OR_INDEX_LABEL &&
-				   context.appliesTo(getModel())) {
+				   context.appliesTo(getModel().getMemberRole())) {
 	
 			// the connection label was moved
 			refreshVisuals();			

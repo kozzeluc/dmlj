@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -228,7 +228,7 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 		Assert.isNotNull(attributeOwner, "attribute owner is null: " +
 					     attribute.getName());
 		Object value = attributeOwner.eGet(attribute);
-		if (value != null) {
+		if (value != null && !value.toString().isEmpty()) {
 			// if the attribute is an enum, replace all underscores by spaces			
 			if (value instanceof Enumerator) {
 				return value.toString().replaceAll("_", " ");
@@ -236,7 +236,11 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 				return value.toString();
 			}
 		} else {
-			return "";
+			if (getHyperlinkHandler(attribute) != null) {
+				return "[...]";
+			} else {
+				return "";
+			}
 		}
 	}	
 

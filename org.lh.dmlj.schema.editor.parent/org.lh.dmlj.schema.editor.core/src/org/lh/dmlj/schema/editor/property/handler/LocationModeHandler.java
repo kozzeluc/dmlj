@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -284,14 +284,30 @@ public class LocationModeHandler implements IHyperlinkHandler<EAttribute, Comman
 						} catch (MissingResourceException e) {
 							throw new RuntimeException(e);
 						}
-						IModelChangeCommand command = 
+						SetObjectAttributeCommand setSymbolicDisplacementCommand = 
 							new SetObjectAttributeCommand(record.getViaSpecification(), 
 														  SchemaPackage.eINSTANCE
 														  		       .getViaSpecification_SymbolicDisplacementName(), 
 														  dialog.getSymbolicDisplacementName(), 
 														  attributeLabel);
-						command.setContext(context);
-						return (Command) command;
+						if (record.getViaSpecification().getDisplacementPageCount() == null) {
+							setSymbolicDisplacementCommand.setContext(context);
+							return (Command) setSymbolicDisplacementCommand;
+						} else {
+							// the displacement page count is currently set, so we need to nullify
+							// it
+							SetObjectAttributeCommand nullifyDisplacementCountCommand = 
+								new SetObjectAttributeCommand(record.getViaSpecification(), 
+															  SchemaPackage.eINSTANCE
+															  		       .getViaSpecification_DisplacementPageCount(), 
+															  null, null);
+							ModelChangeCompoundCommand compoundCommand =
+								new ModelChangeCompoundCommand(setSymbolicDisplacementCommand.getLabel());
+							compoundCommand.setContext(context);
+							compoundCommand.add(nullifyDisplacementCountCommand);
+							compoundCommand.add(setSymbolicDisplacementCommand);
+							return (Command) compoundCommand;
+						}
 					} else if (dialog.getDisplacementPageCount() != null) {
 						// displacement pages specified
 						String attributeLabel;
@@ -302,14 +318,29 @@ public class LocationModeHandler implements IHyperlinkHandler<EAttribute, Comman
 						} catch (MissingResourceException e) {
 							throw new RuntimeException(e);
 						}
-						IModelChangeCommand command = 
+						SetObjectAttributeCommand setDisplacementCountCommand = 
 							new SetObjectAttributeCommand(record.getViaSpecification(), 
 														  SchemaPackage.eINSTANCE
 														  		       .getViaSpecification_DisplacementPageCount(), 
 														  dialog.getDisplacementPageCount(), 
 														  attributeLabel);
-						command.setContext(context);
-						return (Command) command;
+						if (record.getViaSpecification().getSymbolicDisplacementName() == null) {
+							setDisplacementCountCommand.setContext(context);
+							return (Command) setDisplacementCountCommand;
+						} else {
+							// the symbolic displacement is currently set, so we need to nullify it
+							SetObjectAttributeCommand nullifySymbolicDisplacementCommand = 
+								new SetObjectAttributeCommand(record.getViaSpecification(), 
+															  SchemaPackage.eINSTANCE
+															  		       .getViaSpecification_SymbolicDisplacementName(), 
+															  null, null);
+							ModelChangeCompoundCommand compoundCommand =
+								new ModelChangeCompoundCommand(setDisplacementCountCommand.getLabel());
+							compoundCommand.setContext(context);
+							compoundCommand.add(nullifySymbolicDisplacementCommand);
+							compoundCommand.add(setDisplacementCountCommand);
+							return (Command) compoundCommand;
+						}
 					} else {
 						String message = "logic error: displacement " +
 										 "specification not changed";

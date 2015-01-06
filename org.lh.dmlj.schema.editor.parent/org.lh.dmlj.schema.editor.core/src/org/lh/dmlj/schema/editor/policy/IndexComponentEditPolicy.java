@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -45,7 +45,7 @@ public class IndexComponentEditPolicy extends ComponentEditPolicy {
 		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
 		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_SYSTEM_OWNED_SET);
-		context.putContextData(systemOwner);
+		context.putContextData(systemOwner.getSet());
 		IModelChangeCommand command = 
 			DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		command.setContext(context);

@@ -24,16 +24,18 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.junit.Test;
 import org.lh.dmlj.schema.AreaSpecification;
-import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
+import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Ruler;
@@ -42,7 +44,6 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
 public class ModelChangeContextTest {
@@ -87,37 +88,13 @@ public class ModelChangeContextTest {
 	}
 	
 	@Test
-	public void testPutContextData_Feature() {
-		
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getConnector_Label());
-		assertEquals("Connector.label", context.getContextData().get(IContextDataKeys.PROPERTY_NAME));
-		
-		// invalid feature: null
-		context.getContextData().clear();
-		try {
-			context.putContextData((EStructuralFeature) null);
-		} catch (IllegalArgumentException e) {
-			assertEquals("Invalid feature: null", e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testPutContextData_Model() {
+	public void testPutContextData_DifferentModelTypes() {
 		
 		Schema schema = TestTools.getSchema("testdata/EMPSCHM version 100b.schema");
 		
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 		
-		// ConnectionLabel: set- and record name
-		ConnectionLabel connectionLabel = 
-			schema.getSet("DEPT-EMPLOYEE").getMembers().get(0).getConnectionLabel();
-		context.putContextData(connectionLabel);
-		assertEquals(2, context.getContextData().size());
-		assertEquals("DEPT-EMPLOYEE", context.getContextData().get(IContextDataKeys.SET_NAME));
-		assertEquals("EMPLOYEE", context.getContextData().get(IContextDataKeys.RECORD_NAME));
-		
-		// ConnectionPart : set name, record name and connection part index
+		// ConnectionPart: set name, record name and connection part index
 		SchemaRecord record = schema.getRecord("DENTAL-CLAIM");
 		ConnectionPart connectionPart = 
 			((MemberRole) record.getRole("COVERAGE-CLAIMS")).getConnectionParts().get(1);
@@ -138,16 +115,6 @@ public class ModelChangeContextTest {
 		assertEquals("DENTAL-CLAIM", context.getContextData().get(IContextDataKeys.RECORD_NAME));
 		assertEquals("1", context.getContextData().get(IContextDataKeys.CONNECTION_PART_INDEX));
 		
-		// DiagramData: nothing
-		context.getContextData().clear();
-		context.putContextData(mock(DiagramData.class));
-		assertEquals(0, context.getContextData().size());
-		
-		// DiagramLabel: nothing
-		context.getContextData().clear();
-		context.putContextData(mock(DiagramLabel.class));
-		assertEquals(0, context.getContextData().size());
-		
 		// Guide: ruler- and guide indexes
 		context.getContextData().clear();
 		Guide guide = schema.getDiagramData().getRulers().get(1).getGuides().get(0);
@@ -158,7 +125,7 @@ public class ModelChangeContextTest {
 		
 		// MemberRole: set- and record name
 		context.getContextData().clear();
-		context.putContextData(schema.getRecord("COVERAGE").getRole("EMP-COVERAGE"));
+		context.putContextData((MemberRole) schema.getRecord("COVERAGE").getRole("EMP-COVERAGE"));
 		assertEquals(2, context.getContextData().size());
 		assertEquals("EMP-COVERAGE", context.getContextData().get(IContextDataKeys.SET_NAME));
 		assertEquals("COVERAGE", context.getContextData().get(IContextDataKeys.RECORD_NAME));
@@ -169,11 +136,6 @@ public class ModelChangeContextTest {
 		context.putContextData(ruler);
 		assertEquals(1, context.getContextData().size());
 		assertEquals("0", context.getContextData().get(IContextDataKeys.RULER_INDEX));
-		
-		// Schema: nothing
-		context.getContextData().clear();
-		context.putContextData(mock(Schema.class));
-		assertEquals(0, context.getContextData().size());
 		
 		// SchemaArea: area name
 		context.getContextData().clear();
@@ -192,28 +154,168 @@ public class ModelChangeContextTest {
 		context.putContextData(schema.getSet("OFFICE-EMPLOYEE"));
 		assertEquals(1, context.getContextData().size());
 		assertEquals("OFFICE-EMPLOYEE", context.getContextData().get(IContextDataKeys.SET_NAME));
+	}
+	
+	@Test
+	public void testPutContextData_DiagramNodeTypes() {
 		
+		Schema schema = TestTools.getSchema("testdata/EMPSCHM version 100b.schema");
+		
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		
+		// ConnectionLabel: set- and record name
+		MemberRole memberRole = (MemberRole) schema.getRecord("COVERAGE").getRole("EMP-COVERAGE");
+		DiagramNode diagramNode = memberRole.getConnectionLabel();
+		context.putContextData(diagramNode);
+		assertEquals(2, context.getContextData().size());
+		assertEquals("EMP-COVERAGE", context.getContextData().get(IContextDataKeys.SET_NAME));
+		assertEquals("COVERAGE", context.getContextData().get(IContextDataKeys.RECORD_NAME));
+			
+		// Connector: set name, record name and connection part index
+		context.getContextData().clear();
+		SchemaRecord record = schema.getRecord("DENTAL-CLAIM");
+		Connector connector = 
+			((MemberRole) record.getRole("COVERAGE-CLAIMS")).getConnectionParts().get(1).getConnector();
+		diagramNode = connector;
+		context.putContextData(diagramNode);
+		assertEquals(3, context.getContextData().size());
+		assertEquals("COVERAGE-CLAIMS", context.getContextData().get(IContextDataKeys.SET_NAME));
+		assertEquals("DENTAL-CLAIM", context.getContextData().get(IContextDataKeys.RECORD_NAME));
+		assertEquals("1", context.getContextData().get(IContextDataKeys.CONNECTION_PART_INDEX));
+			
+		// DiagramLabel: nothing
+		context.getContextData().clear();
+		diagramNode = mock(DiagramLabel.class); // no diagram label in our schema
+		context.putContextData(diagramNode);
+		assertEquals(0, context.getContextData().size());
+			
+		// SchemaRecord: record name
+		context.getContextData().clear();
+		diagramNode = schema.getRecord("OFFICE");
+		context.putContextData(diagramNode);
+		assertEquals(1, context.getContextData().size());
+		assertEquals("OFFICE", context.getContextData().get(IContextDataKeys.RECORD_NAME));
+			
 		// SystemOwner: set name
 		context.getContextData().clear();
-		context.putContextData(schema.getSet("EMP-NAME-NDX").getSystemOwner());
+		diagramNode = schema.getSet("EMP-NAME-NDX").getSystemOwner();
+		context.putContextData(diagramNode);
 		assertEquals(1, context.getContextData().size());
 		assertEquals("EMP-NAME-NDX", context.getContextData().get(IContextDataKeys.SET_NAME));
 		
-		
-		// invalid model type: null
-		context.getContextData().clear();
+		// invalid diagram node type: not null
+		diagramNode = mock(DiagramNode.class);
 		try {
-			context.putContextData((EObject) null);
+			context.putContextData(diagramNode);
+			fail("should throw an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			assertEquals("Invalid model type: null", e.getMessage());
+			assertTrue(e.getMessage(), 
+					   e.getMessage().startsWith("DiagramNode type invalid: org.lh.dmlj.schema.DiagramNode"));
 		}
+		
+		// invalid diagram node type: null
+		diagramNode = null;
+		try {
+			context.putContextData(diagramNode);
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertTrue(e.getMessage(), 
+					   e.getMessage().startsWith("DiagramNode type invalid: null"));
+		}		
+	}
+
+	@Test
+	public void testPutContextData_FeatureRelated() {
+		
+		// test the exceptions...
+		try {
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_BENDPOINT);
+			context.putContextData(null, 
+								   SchemaPackage.eINSTANCE.getAreaProcedureCallSpecification_Area());
+			fail("should throw an IllegalStateException");
+		} catch (IllegalStateException e) {
+			assertEquals("Invalid model change type: ADD_BENDPOINT", e.getMessage());
+		}
+		try {
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+			context.putContextData(null, null);
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Invalid feature: null", e.getMessage());
+		}
+		try {
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+			context.putContextData(null, SchemaPackage.eINSTANCE.getAreaSpecification_Area());
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertTrue(e.getMessage().startsWith("Model type invalid: "));
+		}
+		try {
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+			context.putContextData(mock(AreaSpecification.class), 
+								   SchemaPackage.eINSTANCE.getAreaSpecification_Area());
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertTrue(e.getMessage().startsWith("Model type invalid: "));
+		}
+		
+		// SchemaArea: feature + area name
+		SchemaArea area = mock(SchemaArea.class);
+		when(area.getName()).thenReturn("AREA1");
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(area, SchemaPackage.eINSTANCE.getSchemaArea_Name());
+		assertEquals(2, context.getContextData().size());
+		assertEquals("SchemaArea.name", 
+					 context.getContextData().get(IContextDataKeys.PROPERTY_NAME));
+		assertEquals("AREA1", context.getContextData().get(IContextDataKeys.AREA_NAME));
+		
+		// DiagramLabel: feature
+		DiagramLabel diagramLabel = mock(DiagramLabel.class);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(diagramLabel, SchemaPackage.eINSTANCE.getDiagramLabel_Description());
+		assertEquals(1, context.getContextData().size());
+		assertEquals("DiagramLabel.description", 
+					 context.getContextData().get(IContextDataKeys.PROPERTY_NAME));
+		
+		// DiagramLabel: feature
+		DiagramData diagramData = mock(DiagramData.class);
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(diagramData, SchemaPackage.eINSTANCE.getDiagramData_ShowGrid());
+		assertEquals(1, context.getContextData().size());
+		assertEquals("DiagramData.showGrid", 
+					context.getContextData().get(IContextDataKeys.PROPERTY_NAME));
+		
+		// SchemaRecord: feature + record name
+		SchemaRecord record = mock(SchemaRecord.class);
+		when(record.getName()).thenReturn("RECORD1");
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(diagramData, SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+		assertEquals(1, context.getContextData().size());
+		assertEquals("SchemaRecord.name", 
+					 context.getContextData().get(IContextDataKeys.PROPERTY_NAME));
+		
+		// DiagramLabel: feature
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(diagramData, SchemaPackage.eINSTANCE.getSchema_Name());
+		assertEquals(1, context.getContextData().size());
+		assertEquals("Schema.name", context.getContextData().get(IContextDataKeys.PROPERTY_NAME));
+		
+		// Set: feature + set name
+		Set set = mock(Set.class);
+		when(set.getName()).thenReturn("SET1");
+		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(diagramData, SchemaPackage.eINSTANCE.getSet_Name());
+		assertEquals(1, context.getContextData().size());
+		assertEquals("Set.name", context.getContextData().get(IContextDataKeys.PROPERTY_NAME));
+		
 	}
 	
 	@Test
 	public void testIsPropertySet() {
 		
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+		context.putContextData(mock(SchemaRecord.class), 
+							   SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		
 		assertTrue(context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()));		
 		assertTrue(context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name(),
@@ -245,73 +347,12 @@ public class ModelChangeContextTest {
 	}
 	
 	@Test
-	public void testAppliesTo() {
-		
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		try {
-			context.appliesTo(null);
-			fail("should throw an IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
-			assertEquals("Invalid model: null", e.getMessage());
-		}
-		
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		try {
-			context.appliesTo(mock(SchemaRecord.class));
-			fail("should throw an IllegalStateException");
-		} catch (IllegalStateException e) {
-			assertEquals("Feature name NOT found in context data", e.getMessage());
-		}
-		
-		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		try {
-			context.appliesTo(mock(SchemaRecord.class));
-			fail("should throw an IllegalStateException");
-		} catch (IllegalStateException e) {
-			assertEquals("Feature name should NOT be present in context data: ADD_RECORD", 
-						 e.getMessage());
-		}
+	public void testAppliesTo_DifferentModelTypes_ValidSituationsOnly() {
 		
 		Schema schema = TestTools.getSchema("testdata/EMPSCHM version 100b.schema");
 		
-		// ConnectionLabel (not SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-		ConnectionLabel connectionLabel1 = 
-				((MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS")).getConnectionLabel();
-		ConnectionLabel connectionLabel2 = 
-			schema.getSet("OFFICE-EMPLOYEE").getMembers().get(0).getConnectionLabel();
-		assertFalse(context.appliesTo(connectionLabel1));
-		assertFalse(context.appliesTo(connectionLabel2));
-		context.putContextData(connectionLabel1);
-		assertTrue(context.appliesTo(connectionLabel1));
-		assertFalse(context.appliesTo(connectionLabel2));
-		// the context will also apply to the member role but not to the set, the member record and
-		// both connectors
-		assertTrue(context.appliesTo(connectionLabel1.getMemberRole()));
-		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(0).getConnector()));
-		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(1).getConnector()));
-		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getSet()));
-		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getRecord()));
-		
-		// ConnectionLabel (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(connectionLabel1));
-		assertFalse(context.appliesTo(connectionLabel2));
-		context.putContextData(connectionLabel1);
-		assertTrue(context.appliesTo(connectionLabel1));
-		assertFalse(context.appliesTo(connectionLabel2));
-		// the context will also apply to the member role, but not to the set, the member record and
-		// both connectors
-		assertTrue(context.appliesTo(connectionLabel1.getMemberRole()));
-		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(0).getConnector()));
-		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getConnectionParts().get(1).getConnector()));
-		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getSet()));
-		assertFalse(context.appliesTo(connectionLabel1.getMemberRole().getRecord()));
-		
 		// ConnectionPart (not SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
 		ConnectionPart part1 = 
 			((MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS")).getConnectionParts().get(0);
 		ConnectionPart part2 = 
@@ -329,27 +370,8 @@ public class ModelChangeContextTest {
 		assertTrue(context.appliesTo(part2));
 		assertFalse(context.appliesTo(part3));
 		assertFalse(context.appliesTo(part4));
-		// the context will NOT apply to the member role, connection label, set and member record
+		// the context will NOT apply to the member role, set and member record
 		assertFalse(context.appliesTo(part1.getMemberRole()));
-		assertFalse(context.appliesTo(part1.getMemberRole().getConnectionLabel()));
-		assertFalse(context.appliesTo(part1.getMemberRole().getSet()));
-		assertFalse(context.appliesTo(part1.getMemberRole().getRecord()));
-		
-		// ConnectionPart (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(part1));
-		assertFalse(context.appliesTo(part2));
-		assertFalse(context.appliesTo(part3));
-		assertFalse(context.appliesTo(part4));
-		context.putContextData(part1);
-		assertTrue(context.appliesTo(part1));
-		assertFalse(context.appliesTo(part2));
-		assertFalse(context.appliesTo(part3));
-		assertFalse(context.appliesTo(part4));
-		// the context will NOT apply to the member role, connection label, set and member record
-		assertFalse(context.appliesTo(part1.getMemberRole()));
-		assertFalse(context.appliesTo(part1.getMemberRole().getConnectionLabel()));
 		assertFalse(context.appliesTo(part1.getMemberRole().getSet()));
 		assertFalse(context.appliesTo(part1.getMemberRole().getRecord()));
 		
@@ -372,55 +394,10 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(connector2));
 		assertFalse(context.appliesTo(connector3));
 		assertFalse(context.appliesTo(connector4));
-		// the context will NOT apply to the member role, connection label, set and member record
+		// the context will NOT apply to the member role, set and member record
 		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole()));
-		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getConnectionLabel()));
 		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getSet()));
 		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getRecord()));
-		
-		// Connector (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(connector1));
-		assertFalse(context.appliesTo(connector2));
-		assertFalse(context.appliesTo(connector3));
-		assertFalse(context.appliesTo(connector4));
-		context.putContextData(connector1);
-		assertTrue(context.appliesTo(connector1));
-		assertFalse(context.appliesTo(connector2));
-		assertFalse(context.appliesTo(connector3));
-		assertFalse(context.appliesTo(connector4));
-		// the context will NOT apply to the member role, connection label, set and member record
-		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole()));
-		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getConnectionLabel()));
-		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getSet()));
-		assertFalse(context.appliesTo(connector1.getConnectionPart().getMemberRole().getRecord()));
-			
-		// DiagramData (not SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-		assertTrue(context.appliesTo(mock(DiagramData.class)));
-		context.putContextData(connectionLabel1);
-		assertFalse(context.appliesTo(mock(DiagramData.class)));
-		
-		// DiagramData (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertTrue(context.appliesTo(mock(DiagramData.class)));
-		context.putContextData(connectionLabel1);
-		assertFalse(context.appliesTo(mock(DiagramData.class)));
-		
-		// DiagramLabel (not SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-		assertTrue(context.appliesTo(mock(DiagramLabel.class)));
-		context.putContextData(connectionLabel1);
-		assertFalse(context.appliesTo(mock(DiagramLabel.class)));
-		
-		// DiagramLabel (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertTrue(context.appliesTo(mock(DiagramLabel.class)));
-		context.putContextData(connectionLabel1);
-		assertFalse(context.appliesTo(mock(DiagramLabel.class)));
 		
 		// Guide (not SET_FEATURE)
 		context = new ModelChangeContext(ModelChangeType.DELETE_GUIDE);
@@ -441,22 +418,6 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(guide1.getRuler()));
 		assertFalse(context.appliesTo(guide3.getRuler()));
 		
-		// Guide (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(guide1));
-		assertFalse(context.appliesTo(guide2));
-		assertFalse(context.appliesTo(guide3));
-		assertFalse(context.appliesTo(guide4));
-		context.putContextData(guide2);
-		assertFalse(context.appliesTo(guide1));
-		assertTrue(context.appliesTo(guide2));
-		assertFalse(context.appliesTo(guide3));
-		assertFalse(context.appliesTo(guide4));
-		// the context does NOT apply to either one of the rulers
-		assertFalse(context.appliesTo(guide1.getRuler()));
-		assertFalse(context.appliesTo(guide3.getRuler()));
-		
 		// MemberRole (not SET_FEATURE)
 		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
 		MemberRole memberRole1 = 
@@ -467,25 +428,7 @@ public class ModelChangeContextTest {
 		context.putContextData(memberRole1);
 		assertTrue(context.appliesTo(memberRole1));
 		assertFalse(context.appliesTo(memberRole2));
-		// the context will also apply to the connection label, but not to the set, member record
-		// and both connectors
-		assertTrue(context.appliesTo(memberRole1.getConnectionLabel()));
-		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(0).getConnector()));
-		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(1).getConnector()));
-		assertFalse(context.appliesTo(memberRole1.getSet()));
-		assertFalse(context.appliesTo(memberRole1.getRecord()));
-		
-		// MemberRole (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(memberRole1));
-		assertFalse(context.appliesTo(memberRole2));
-		context.putContextData(memberRole1);
-		assertTrue(context.appliesTo(memberRole1));
-		assertFalse(context.appliesTo(memberRole2));
-		// the context will also apply to the connection label, but not to the set, member record
-		// and both connectors
-		assertTrue(context.appliesTo(memberRole1.getConnectionLabel()));
+		// the context will not apply to the set, member record and both connectors
 		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(0).getConnector()));
 		assertFalse(context.appliesTo(memberRole1.getConnectionParts().get(1).getConnector()));
 		assertFalse(context.appliesTo(memberRole1.getSet()));
@@ -506,33 +449,6 @@ public class ModelChangeContextTest {
 		assertFalse(context.appliesTo(ruler2.getGuides().get(0)));
 		assertFalse(context.appliesTo(ruler2.getGuides().get(1)));
 		
-		// Ruler (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(ruler1));
-		assertFalse(context.appliesTo(ruler2));
-		context.putContextData(ruler2);
-		assertFalse(context.appliesTo(ruler1));
-		assertTrue(context.appliesTo(ruler2));
-		// the context does NOT apply to either one of the guides
-		assertFalse(context.appliesTo(ruler1.getGuides().get(0)));
-		assertFalse(context.appliesTo(ruler1.getGuides().get(1)));
-		assertFalse(context.appliesTo(ruler2.getGuides().get(0)));
-		assertFalse(context.appliesTo(ruler2.getGuides().get(1)));
-				
-		// Schema (not SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-		assertTrue(context.appliesTo(mock(Schema.class)));
-		context.putContextData(connectionLabel1);
-		assertFalse(context.appliesTo(mock(Schema.class)));
-		
-		// Schema (SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertTrue(context.appliesTo(mock(Schema.class)));
-		context.putContextData(connectionLabel1);
-		assertFalse(context.appliesTo(mock(Schema.class)));
-		
 		// SchemaArea (not SET_FEATURE)
 		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
 		SchemaArea area1 = schema.getArea("EMP-DEMO-REGION");
@@ -545,10 +461,7 @@ public class ModelChangeContextTest {
 		
 		// SchemaArea (SET_FEATURE)		
 		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(area1));
-		assertFalse(context.appliesTo(area2));
-		context.putContextData(area1);
+		context.putContextData(area1, SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertTrue(context.appliesTo(area1));
 		assertFalse(context.appliesTo(area2));
 		
@@ -564,10 +477,7 @@ public class ModelChangeContextTest {
 		
 		// SchemaRecord (SET_FEATURE)		
 		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(record1));
-		assertFalse(context.appliesTo(record2));
-		context.putContextData(record1);
+		context.putContextData(record1, SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertTrue(context.appliesTo(record1));
 		assertFalse(context.appliesTo(record2));
 		
@@ -580,61 +490,103 @@ public class ModelChangeContextTest {
 		context.putContextData(set1);
 		assertTrue(context.appliesTo(set1));
 		assertFalse(context.appliesTo(set2));
-		// the context will also apply to the system owner, but not the member role and member 
-		// record
-		assertTrue(context.appliesTo(set1.getSystemOwner()));
+		// the context will not apply to the member role and member record
 		assertFalse(context.appliesTo(set1.getMembers().get(0)));
 		assertFalse(context.appliesTo(set1.getMembers().get(0).getRecord()));
 		
 		// Set (SET_FEATURE)		
 		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(set1));
-		assertFalse(context.appliesTo(set2));
-		context.putContextData(set1);
+		context.putContextData(set1, SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		assertTrue(context.appliesTo(set1));
 		assertFalse(context.appliesTo(set2));
-		// the context will also apply to the system owner, but not the member role and member 
-		// record
-		assertTrue(context.appliesTo(set1.getSystemOwner()));
+		// the context will not apply to the member role and member record
 		assertFalse(context.appliesTo(set1.getMembers().get(0)));
 		assertFalse(context.appliesTo(set1.getMembers().get(0).getRecord()));
+	}
+	
+	@Test
+	public void testAppliesTo_DifferentModelTypes_InvalidSituationsOnly() 
+		throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		
+		// the purpose of this test case is to assure that for each model type the 'checkAppliesTo'
+		// method is invoked
+		 		
+		Class<?>[] modelTypes = {ConnectionPart.class, 
+								 Connector.class,
+								 Guide.class,
+								 MemberRole.class,
+								 Ruler.class,
+								 SchemaArea.class,
+								 SchemaRecord.class,
+								 Set.class};
+		for (Class<?> modelType : modelTypes) {
+			Method method = findAppliesToMethod(modelType);
+			method.setAccessible(true);
+			
+			// SET_PROPERTY model change type
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+			try {
+				Object _null = null;
+				method.invoke(context, new Object[] {_null});
+				fail("should throw an InvocationTargetException");
+			} catch (InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				assertTrue(modelType.getSimpleName() + " - unexpected cause: " + e.getCause(), 
+						   cause instanceof IllegalArgumentException);
+				assertEquals(modelType.getSimpleName() + " - Invalid model: null", 
+							 "Invalid model: null", cause.getMessage());
+			}			
+			try {
+				method.invoke(context, mock(modelType));
+				fail("should throw an IllegalStateException");
+			} catch (InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				assertTrue(modelType.getSimpleName() + " - unexpected cause: " + e.getCause(), 
+						   cause instanceof IllegalStateException);
+				assertEquals(modelType.getSimpleName() + " - Feature name NOT found in context data", 
+							 "Feature name NOT found in context data", cause.getMessage());
+			}
+			
+			// not SET_PROPERTY model change type			
+			context = new ModelChangeContext(ModelChangeType.ADD_BENDPOINT);
+			context.getContextData().put(IContextDataKeys.PROPERTY_NAME, "xyz");
+			try {
+				Object _null = null;
+				method.invoke(context, new Object[] {_null});
+				fail("should throw an InvocationTargetException");
+			} catch (InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				assertTrue(modelType.getSimpleName() + " - unexpected cause: " + e.getCause(), 
+						   cause instanceof IllegalArgumentException);
+				assertEquals(modelType.getSimpleName() + " - Invalid model: null", 
+							 "Invalid model: null", cause.getMessage());
+			}
+			try {
+				method.invoke(context, mock(modelType));
+				fail("should throw an IllegalStateException");
+			} catch (InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				assertTrue(modelType.getSimpleName() + " - unexpected cause: " + e.getCause(), 
+						   cause instanceof IllegalStateException);
+				assertEquals(modelType.getSimpleName() + " - Feature name should NOT be present in " +
+							 "context data: ADD_BENDPOINT", 
+							 "Feature name should NOT be present in context data: ADD_BENDPOINT", 
+							 cause.getMessage());
+			}
+		}				
+	}
+
+	private Method findAppliesToMethod(Class<?> modelType) {
+		for (Method method : ModelChangeContext.class.getMethods()) {
+			if (method.getName().equals("appliesTo") && method.getReturnType() == boolean.class &&
+				method.getParameterTypes().length == 1 && 
+				method.getParameterTypes()[0] == modelType) {
 				
-		// SystemOwner (not SET_FEATURE)
-		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-		SystemOwner systemOwner1 = schema.getSet("EMP-NAME-NDX").getSystemOwner();
-		SystemOwner systemOwner2 = schema.getSet("JOB-TITLE-NDX").getSystemOwner();
-		assertFalse(context.appliesTo(systemOwner1));
-		assertFalse(context.appliesTo(systemOwner2));
-		context.putContextData(systemOwner1);
-		assertTrue(context.appliesTo(systemOwner1));
-		assertFalse(context.appliesTo(systemOwner2));
-		// the context will also apply to the set, but not the member role and member record
-		assertTrue(context.appliesTo(systemOwner1.getSet()));
-		assertFalse(context.appliesTo(systemOwner1.getSet().getMembers().get(0)));
-		assertFalse(context.appliesTo(systemOwner1.getSet().getMembers().get(0).getRecord()));
-		
-		// SystemOwner (SET_FEATURE)		
-		context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
-		assertFalse(context.appliesTo(systemOwner1));
-		assertFalse(context.appliesTo(systemOwner2));
-		context.putContextData(systemOwner1);
-		assertTrue(context.appliesTo(systemOwner1));
-		assertFalse(context.appliesTo(systemOwner2));	
-		// the context will also apply to the set, but not the member role and member record
-		assertTrue(context.appliesTo(systemOwner1.getSet()));
-		assertFalse(context.appliesTo(systemOwner1.getSet().getMembers().get(0)));
-		assertFalse(context.appliesTo(systemOwner1.getSet().getMembers().get(0).getRecord()));
-		
-		// try an invalid model type
-		context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-		try {
-			context.appliesTo(mock(AreaSpecification.class));
-			fail("should throw an IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
-			assertTrue(e.getMessage().startsWith("Invalid model type: "));
+				return method;
+			}
 		}
+		fail("cannot find findAppliesTo method: " + modelType.getSimpleName());
+		return null; // never reached
 	}
 
 }

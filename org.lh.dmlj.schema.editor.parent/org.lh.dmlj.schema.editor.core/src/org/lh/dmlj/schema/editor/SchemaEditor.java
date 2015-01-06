@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -451,24 +451,21 @@ public class SchemaEditor
 			@Override
 			public void afterModelChange(ModelChangeContext context) {		
 				if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-					context.isPropertySet(ATTRIBUTE_SHOW_RULERS) &&
-					context.appliesTo(schema.getDiagramData())) {
+					context.isPropertySet(ATTRIBUTE_SHOW_RULERS)) {
 					
 					// the rulers are to be shown or hidden
 					boolean showRulers = schema.getDiagramData().isShowRulers();
 					getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
 													 Boolean.valueOf(showRulers));
 				} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-						   context.isPropertySet(ATTRIBUTE_SHOW_GRID) &&
-						   context.appliesTo(schema.getDiagramData())) { 
+						   context.isPropertySet(ATTRIBUTE_SHOW_GRID)) { 
 					
 					// the grid has to be shown or hidden
 					boolean showGrid = schema.getDiagramData().isShowGrid();					
 					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
 													 Boolean.valueOf(showGrid));
-				} else if ((context.getModelChangeType() == ModelChangeType.ZOOM_IN ||
-						    context.getModelChangeType() == ModelChangeType.ZOOM_OUT) &&
-						   context.appliesTo(schema.getDiagramData())) {
+				} else if (context.getModelChangeType() == ModelChangeType.ZOOM_IN ||
+						   context.getModelChangeType() == ModelChangeType.ZOOM_OUT) {
 					
 					// the zoom level has changed; it is important to set the manager's zoom level
 					// only when it's different from the current model value (to avoid assertion

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -59,11 +59,7 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 			}
 			ModelChangeContext context = new ModelChangeContext(modelChangeType);
-			if (modelChangeType == ModelChangeType.DELETE_SYSTEM_OWNED_SET) {
-				context.putContextData(connectionLabel.getMemberRole().getSet().getSystemOwner());
-			} else {
-				context.putContextData(connectionLabel.getMemberRole().getSet());
-			}
+			context.putContextData(connectionLabel.getMemberRole().getSet());
 			command.setContext(context);
 		}
 		return (Command) command;

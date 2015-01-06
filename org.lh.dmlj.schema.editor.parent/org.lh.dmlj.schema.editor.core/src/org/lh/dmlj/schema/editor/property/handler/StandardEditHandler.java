@@ -94,8 +94,7 @@ public class StandardEditHandler implements IEditHandler {
 			}
 			if (command != null) {
 				ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-				context.putContextData(attribute);
-				context.putContextData(target);
+				context.putContextData(target, attribute);
 				command.setContext(context);
 			}
 		}

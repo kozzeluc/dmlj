@@ -71,15 +71,6 @@ public class SetSortedPropertiesSection extends AbstractSetPropertiesSection {
 	}	
 	
 	@Override
-	public EObject getEditableObject(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
-			return target.getSortKey();
-		} else {
-			return super.getEditableObject(attribute);
-		}
-	}	
-	
-	@Override
 	public IEnumFilter<? extends Enum<?>> getEnumFilter(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getKey_DuplicatesOption()) {
 			// by DBkey: For MODE IS INDEX sets only

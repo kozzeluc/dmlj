@@ -65,12 +65,12 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			// we're dealing with a DiagramNode, it can only be a
 			// move request, so create the move command...
 			Rectangle box = (Rectangle)constraint;
-			DiagramNode locationProvider = (DiagramNode) child.getModel();
-			MoveDiagramNodeData moveDiagramNodeData = new MoveDiagramNodeData(locationProvider);
+			DiagramNode diagramNode = (DiagramNode) child.getModel();
+			MoveDiagramNodeData moveDiagramNodeData = new MoveDiagramNodeData(diagramNode);
 			ModelChangeContext context = 
 				new ModelChangeContext(moveDiagramNodeData.getModelChangeType());
-			context.putContextData(locationProvider);
-			IModelChangeCommand command = new MoveDiagramNodeCommand(locationProvider, box.x, box.y);
+			context.putContextData(diagramNode);
+			IModelChangeCommand command = new MoveDiagramNodeCommand(diagramNode, box.x, box.y);
 			command.setContext(context);
 			return (Command) command;
 		} else {
