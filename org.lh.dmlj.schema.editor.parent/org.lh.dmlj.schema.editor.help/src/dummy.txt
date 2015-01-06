@@ -1,0 +1,2 @@
+This file makes sure the 'src' source folder is created when checking out the project from the 
+repository, making sure no problems exist for the project.
