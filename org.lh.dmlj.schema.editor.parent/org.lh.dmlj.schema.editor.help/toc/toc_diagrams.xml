@@ -28,4 +28,14 @@
    </topic> 
  <topic href="html/diagrams/new_diagram.html" label="Creating a new Diagram">
  </topic>
+ <topic href="html/diagrams/import_diagram.html" label="Importing a Diagram">
+    <topic href="html/diagrams/import_diagram.html#wizard" label="Starting the Import Wizard">
+    </topic>
+    <topic href="html/diagrams/import_diagram.html#syntax" label="Importing from Schema Syntax">
+    </topic>
+    <topic href="html/diagrams/import_diagram.html#dictionary" label="Importing from a Dictionary">
+    </topic>
+    <topic href="html/diagrams/import_diagram.html#custom" label="Custom Import Tools">
+    </topic>
+ </topic>
 </toc>
