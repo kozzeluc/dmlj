@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -192,10 +192,10 @@ public abstract class Tools {
 		}
 		
 		StringBuilder p = new StringBuilder();
+		boolean ascending = 
+			memberRole.getSortKey().getElements().get(0).getSortSequence() == SortSequence.ASCENDING;
 		for (KeyElement keyElement : memberRole.getSortKey().getElements()) {
 			SortSequence sortSequence = keyElement.getSortSequence();
-			boolean ascending = 
-				keyElement.getSortSequence() == SortSequence.ASCENDING;
 			if (p.length() == 0) {
 				// very first line
 				if (ascending) {
@@ -205,6 +205,7 @@ public abstract class Tools {
 				}				
 			} else if ((sortSequence == SortSequence.ASCENDING) != ascending) {				
 				// switch of sort sequence
+				ascending = keyElement.getSortSequence() == SortSequence.ASCENDING;
 				p.append("),\n");
 				if (ascending) {
 					p.append("ASC (");
