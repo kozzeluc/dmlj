@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lh.dmlj.schema.editor</groupId>
     <artifactId>org.lh.dmlj.schema.editor.parent</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.6.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <tycho-version>0.21.0</tycho-version>
@@ -18,6 +18,7 @@
         <module>org.lh.dmlj.schema.editor.service</module>
         <module>org.lh.dmlj.schema.editor.service.api</module>
         <module>org.lh.dmlj.schema.editor.tika_1.4</module>
+        <module>org.lh.dmlj.schema.editor.help</module>
         <module>org.lh.dmlj.schema.editor.feature</module>
         <module>org.lh.dmlj.schema.editor.updatesite</module>
     </modules>

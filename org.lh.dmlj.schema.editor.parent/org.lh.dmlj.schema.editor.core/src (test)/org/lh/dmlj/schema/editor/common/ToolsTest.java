@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -27,16 +30,56 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Before;
 import org.junit.Test;
+import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.Key;
+import org.lh.dmlj.schema.KeyElement;
+import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OccursSpecification;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SetOrder;
+import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
 public class ToolsTest {
 	
 	private Schema schema;
 	
+	private static EList<KeyElement> generateKeyElementList(SortSequence... sortSequences) {
+		EList<KeyElement> keyElements = new BasicEList<>();
+		for (SortSequence sortSequence : sortSequences) {
+			Element element = mock(Element.class);
+			when(element.getName()).thenReturn("ELEMENT-" + (keyElements.size() + 1));
+			
+			KeyElement keyElement = mock(KeyElement.class);
+			when(keyElement.getElement()).thenReturn(element);
+			when(keyElement.getSortSequence()).thenReturn(sortSequence);
+			
+			keyElements.add(keyElement);
+		}
+		return keyElements;
+	}
+	
+	private static MemberRole generateMemberRole(DuplicatesOption duplicatesOption, 
+												 SortSequence... sortSequences) {
+		Set set = mock(Set.class);
+		when(set.getOrder()).thenReturn(SetOrder.SORTED);
+		
+		EList<KeyElement> keyElements = generateKeyElementList(sortSequences);
+		
+		Key sortKey = mock(Key.class);
+		when(sortKey.getElements()).thenReturn(keyElements);
+		when(sortKey.getDuplicatesOption()).thenReturn(duplicatesOption);
+		
+		MemberRole memberRole = mock(MemberRole.class);
+		when(memberRole.getSet()).thenReturn(set);
+		when(memberRole.getSortKey()).thenReturn(sortKey);
+		
+		return memberRole;
+	}
+
 	@Before
 	public void setup() {
 		// we'll use IDMSNTWK throughout these tests
@@ -196,6 +239,135 @@ public class ToolsTest {
 		assertEquals("element's indirect parent has a REDEFINES clause", true, 
 					 Tools.isInvolvedInRedefines(element));
 		
+	}
+	
+	@Test
+	public void testGetSortkeys_One_Element_Ascending() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.NOT_ALLOWED, SortSequence.ASCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("ASC (ELEMENT-1) DN", sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Two_Elements_Ascending() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.FIRST, 
+							   SortSequence.ASCENDING, SortSequence.ASCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("ASC (ELEMENT-1,\n\tELEMENT-2) DF", sortKeysAsString);		
+	}	
+	
+	@Test
+	public void testGetSortkeys_Three_Elements_Ascending() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.FIRST, 
+							   SortSequence.ASCENDING, SortSequence.ASCENDING, SortSequence.ASCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("ASC (ELEMENT-1,\n\tELEMENT-2,\n\tELEMENT-3) DF", sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_One_Element_Descending() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.NOT_ALLOWED, SortSequence.DESCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("DESC (ELEMENT-1) DN", sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Two_Elements_Descending() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.FIRST, 
+							   SortSequence.DESCENDING, SortSequence.DESCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("DESC (ELEMENT-1,\n\tELEMENT-2) DF", sortKeysAsString);		
+	}	
+	
+	@Test
+	public void testGetSortkeys_Three_Elements_Descending() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.FIRST, 
+							   SortSequence.DESCENDING, SortSequence.DESCENDING, 
+							   SortSequence.DESCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("DESC (ELEMENT-1,\n\tELEMENT-2,\n\tELEMENT-3) DF", sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Three_Elements_Mixed_1() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.FIRST, 
+							   SortSequence.ASCENDING, SortSequence.DESCENDING, 
+							   SortSequence.ASCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("ASC (ELEMENT-1),\nDESC (ELEMENT-2),\nASC (ELEMENT-3) DF", sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Three_Elements_Mixed_2() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.BY_DBKEY, 
+							   SortSequence.DESCENDING, SortSequence.ASCENDING, 
+							   SortSequence.DESCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("DESC (ELEMENT-1),\nASC (ELEMENT-2),\nDESC (ELEMENT-3) DD", sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Four_Elements_Mixed_1() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.FIRST, 
+							   SortSequence.ASCENDING, SortSequence.DESCENDING, 
+							   SortSequence.DESCENDING, SortSequence.ASCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("ASC (ELEMENT-1),\nDESC (ELEMENT-2,\n\tELEMENT-3),\nASC (ELEMENT-4) DF", 
+					 sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Four_Elements_Mixed_2() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.LAST, 
+							   SortSequence.DESCENDING, SortSequence.ASCENDING, 
+							   SortSequence.ASCENDING, SortSequence.DESCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("DESC (ELEMENT-1),\nASC (ELEMENT-2,\n\tELEMENT-3),\nDESC (ELEMENT-4) DL", 
+					 sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Four_Elements_Mixed_3() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.LAST, 
+							   SortSequence.DESCENDING, SortSequence.ASCENDING, 
+							   SortSequence.DESCENDING, SortSequence.ASCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("DESC (ELEMENT-1),\nASC (ELEMENT-2),\nDESC (ELEMENT-3),\nASC (ELEMENT-4) DL", 
+					 sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Four_Elements_Mixed_4() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.LAST, 
+							   SortSequence.ASCENDING, SortSequence.DESCENDING, 
+							   SortSequence.ASCENDING, SortSequence.DESCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("ASC (ELEMENT-1),\nDESC (ELEMENT-2),\nASC (ELEMENT-3),\nDESC (ELEMENT-4) DL", 
+					 sortKeysAsString);		
+	}
+	
+	@Test
+	public void testGetSortkeys_Four_Elements_Mixed_5() {
+		MemberRole memberRole = 
+			generateMemberRole(DuplicatesOption.LAST, 
+							   SortSequence.ASCENDING, SortSequence.DESCENDING,
+							   SortSequence.DESCENDING, SortSequence.DESCENDING,
+							   SortSequence.ASCENDING, SortSequence.DESCENDING);
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("ASC (ELEMENT-1),\nDESC (ELEMENT-2,\n\tELEMENT-3,\n\tELEMENT-4),\n" +
+					 "ASC (ELEMENT-5),\nDESC (ELEMENT-6) DL", sortKeysAsString);		
 	}
 
 }
