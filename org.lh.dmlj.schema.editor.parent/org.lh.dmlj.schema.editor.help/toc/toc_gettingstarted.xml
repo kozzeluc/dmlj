@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Getting Started" link_to="toc/toc_main.xml#gettingstarted"> 
+	<topic label="Introduction"  href="html/gettingstarted/introduction.html"> 
+	</topic>
+ <topic href="html/gettingstarted/properties_view.html" label="Properties view">
+ </topic>
+ <topic href="html/gettingstarted/workbench.html" label="Workbench">
+ </topic>
+ <topic href="html/gettingstarted/projects.html" label="Projects">
+ </topic>
+</toc>

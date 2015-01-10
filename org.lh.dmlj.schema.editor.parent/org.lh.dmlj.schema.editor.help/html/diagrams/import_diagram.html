@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Schema Editor</title>
+</head>
+
+<body>
+<h1>Importing a Diagram</h1>
+<h2>Contents</h2>
+<ul>
+<li><a href="#wizard">Starting the Import Wizard</a></li>
+<li><a href="#syntax">Importing from Schema Syntax</a></li>
+<li><a href="#dictionary">Importing from a Dictionary</a></li>
+<li><a href="#custom">Custom Import Tools</a></li>
+</ul>
+<a id="wizard"><h2>Starting the Import Wizard</h2></a>
+You can create a diagram for an existing CA IDMS/DB schema via a dedicated import wizard.  This 
+wizard can be selected on the import wizard selection dialog, which is accessed via the 
+"File"/"Import" menu item :
+<br><br>
+<img src="../../images/file_import_menuitem.png" alt="[file import menu-item]">
+<br><br>
+Select the import wizard in the import wizard selection dialog :
+<br><br>
+<img src="../../images/import_wizard_selection_dialog.png" alt="[import wizard selection dialog]">
+<br><br>
+The first thing you need to do in the import wizard is to select the data source.  There will be at
+least 2 available data sources :
+<br><br>
+<img src="../../images/import_wizard_data_source_selection.png" alt="[import wizard data source selection]">
+<br><br>
+If you have installed 1 or more custom import tools, they will show up in the above list as well.
+Press the "Select" button before going to the next wizard page.  Select the parent folder and name
+of the file that will hold the diagram; the file extension MUST be ".schema" :
+<br><br>
+<img src="../../images/import_file_selection.png" alt="[import file selection]">
+<br><br>
+Once you have selected the target file for the diagram, the next wizard pages vary depending on the 
+data source selected.  Each <i>standard</i> import tool is described hereunder.  The final page is
+ALWAYS the 'record layout manager selection page'; on that page you specify how the records in the 
+diagram should be placed initially :
+<br><br>
+<img src="../../images/import_layout_manager_selection.png" 
+     alt="[import layout manager selection]">
+<br><br>
+Note that 2 dedicated record layout managers are available, 1 for the EMPSCHM version 100 schema and
+1 for IDMSNTWK version 1 (none of these will be listed for any other schema).
+<br><br>
+The standard record layout manager places all records adjacent to each other and will produce an 
+equal number of rows and columns.
+<br><br>
+The grid record layout manager allows you to provide a properties file that contains the location of 
+each record :
+<pre>
+COVERAGE=D3
+DENTAL-CLAIM=E5
+DEPARTMENT=A2
+EMPLOYEE=C3
+EMPOSITION=C1
+EXPERTISE=C5
+HOSPITAL-CLAIM=E3
+INSURANCE-PLAN=D5
+JOB=B1
+NON-HOSP-CLAIM=E1
+OFFICE=A4
+SKILL=B5
+STRUCTURE=D1
+</pre>
+<a id="syntax"><h2>Importing from Schema Syntax</h2></a>
+When importing a diagram from schema syntax, you need to select the file containing the schema 
+syntax :
+<br><br>
+<img src="../../images/import_from_syntax_file_selection.png" alt="[syntax file selection]">
+<a id="dictionary"><h2>Importing from a Dictionary</h2></a>
+<a id="custom"><h2>Custom Import Tools</h2></a>
+You can create your own diagram import tools via the "org.lh.dmlj.schema.editor.core.import" 
+extension point.  The custom import tools you create will show up on the very first import wizard 
+page (see above).
+<br><br>
+Describing in detail how to build your own custom import tool (data source) is beyond the scope of 
+this help document.  You can take the "an IDMS dictionary on your mainframe" data source, which is 
+defined in the "org.lh.dmlj.schema.editor.dictionary.tools" plug-in project, as an example.
+</body>
+</html>

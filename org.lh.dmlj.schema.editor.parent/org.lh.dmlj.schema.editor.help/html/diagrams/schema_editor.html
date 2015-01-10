@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Schema Editor</title>
+</head>
+
+<body>
+<h1>Schema Editor</h1>
+<h2>Contents</h2>
+<ul>
+<li><a href="#opening">Opening the Schema Editor</a></li>
+<li><a href="#schema_properties">Schema properties</a></li>
+<ul>
+<li><a href="#rulers_and_guides">Rulers and Guides</a></li>
+<li><a href="#grid">Grid</a></li>
+<li><a href="#snap_to_geo">Snap to Geometry</a></li>
+</ul>
+<li><a href="#zooming">Zooming</a></li>
+<li><a href="#undo_redo">Undo/Redo</a></li>
+<li><a href="#saving">Saving the diagram</a></li>
+<li><a href="#palette">The Palette</a></li>
+<li><a href="#figures">Working with Figures</a></li>
+<li><a href="#connections">Working with Connections</a></li>
+</ul>
+<a id="opening"><h2>Opening the Schema Editor</h2></a>
+The Schema Editor is the component with which you can work on CA IDMS/DB schema diagrams.  You can
+open open as much diagrams in parallel as you want and the editors are always placed in the 
+workbench's editor area. 
+<br><br>
+Opening a diagram (.schema file) is as easy as double-clicking it in the Package Explorer view, or  
+selecting it in that view and pressing the F3 key.  If, for whatever reason the diagram is opened  
+with another editor (e.g. the Text Editor), right-click on the .schema file in the Package Explorer 
+view and select the Schema Editor :
+<br><br>
+<img src="../../images/open_diagram.png" alt="[open diagram]">
+<br><br><br>
+When you open the Employee Demo Database diagram (which you can download 
+<a href="https://sites.google.com/site/idmsschemasineclipse/examples/EMPSCHM version 100.schema">here</a>), 
+the Schema Editor will open and look like this : 
+<br><br>
+<img src="../../images/diagram_opened.png" alt="[diagram_opened]">
+<br><br><br>
+Note how the Properties- and Outline view work together with the Schema Editor (the Employee node in 
+the Outline view has been selected and expanded to illustrate this).
+<br><br>
+The Properties view is a standard Eclipse view and it will always show properties for the current 
+selection, in whatever editor or view is active.  The Outline view is also a standard Eclipse view
+and allows to describe the structure of the content in the active editor.
+<br><br>
+<a id="schema_properties"><h2>Schema properties</h2></a>
+To have the Properties view display the schema properties (with a “General”, “Diagram” and "Syntax" 
+tab, like the image below), you have to left-click your mouse somewhere in the Schema Editor's 
+"white space" (so not on a record, index or any other diagram item).  By clicking somewhere in the 
+Schema Editor's white space, you’ll make the schema contained in the active Schema Editor the 
+current selection.
+<br><br>
+<img src="../../images/general_schema_properties.png" alt="[general schema properties]">
+<br><br><br>
+If you select the Properties view’s “Diagram” tab, you’ll see a couple of interesting diagram
+properties (for which you can set the defaults on the main preference page) :
+<br><br>
+<img src="../../images/diagram_properties.png" alt="[diagram properties]">
+<br><br>
+<a id="rulers_and_guides"><h4>Rulers and Guides</h4></a>
+When the "Show rulers and guides" option is set to 'true', both a horizontal and vertical ruler are 
+shown; these allow you to add 1 or more guides by clicking on a ruler :
+<br><br>
+<img src="../../images/create_guides.png" alt="[create guides]">
+<br><br><br>
+You can change the ruler’s units on the diagram editor’s main preference page (“Window”/”Preferences” 
+menu item; choose either “Centimeters” (the default), “Inches” or “Pixels”).
+<br><br>
+Guides make it easier to align diagram figures. Once a guide is created, you can move or delete it 
+using its handle. To delete a guide, select its handle and press the Delete button.
+<br><br>
+Note that enabling the “Show rulers and guides” option produces another one :  “Snap to guides” 
+(whereas disabling it will hide the “Snap to guides” property); by enabling both the “Show rulers 
+and guides” option and the "Snap to guides" option, diagram figures will “snap” to the guides when 
+you move them, thus making diagram figure alignment even easier.
+<a id="grid"><h4>Grid</h4></a>
+Depending on your preferences, the grid will be enabled or not for new and imported schemas; when 
+the grid is disabled, your diagram items are clearly visible without the background grid :
+<br><br>
+<img src="../../images/grid_disabled.png" alt="[grid disabled]">
+<br><br><br>
+Enabling the "Show grid" option will show a grid in the diagram editor :
+<br><br>
+<img src="../../images/grid_enabled.png" alt="[grid enabled]">
+<br><br><br>
+The grid spacing in the current versions of the diagram editor is fixed at around half a centimeter; 
+a future version might make this configurable while respecting the preferred units.
+<br><br>
+Note that enabling the “Show grid” option produces another one : “Snap to grid”; enabling both the
+"Show grid" option and the “Snap to grid” option will make diagram figures “snap” to the grid when 
+you move them, thus making diagram figure alignment even easier.
+<a id="snap_to_geo"><h4>Snap to Geometry</h4></a>
+Enabling the "Snap to geometry" option will allow diagram figures to be aligned to other figures in 
+the diagram when you move them.
+<br><br>
+<a id="zooming"><h2>Zooming</h2></a>
+Zooming can be done by either using the “Diagram” menu’s “Zoom In” and “Zoom Out” menu items (or 
+their keyboard shortcuts) or using the zoom level combo :
+<br><br>
+<img src="../../images/diagram_zoom_menuitems.png" alt="[diagram zoom menu-items]" align="top">
+<img src="../../images/zoom_combo.png" alt="[zoom combo]" align="top">
+<br><br><br>
+Changing any of the above options or the zoom level will make the diagram editor dirty because all 
+of this information is kept in the .schema file.
+<br><br>
+<a id="undo_redo"><h2>Undo/Redo</h2></a>
+Undo/Redo functionality is available via the standard keyboard shortcuts CTRL+Z (undo) and CTRL+Y 
+(redo) or via the “Edit” menu’s “Undo…” and “Redo…” menu items.
+<br><br>
+<a id="saving"><h2>Saving the diagram</h2></a>
+You can drop items from the palette, move items around, change line characteristics, change the 
+diagram through the Properties view and you can delete items using the Outline view.  Note that 
+validations are being performed when you enter data in the Properties view and that an asterisk 
+appears to the left of the diagram’s file on the editor’s tab when you make 1 or more changes :
+<br><br>
+<img src="../../images/dirty_editor_mark.png" alt="[dirty editor mark]">
+<br><br><br>
+The asterisk indicates that your changes have not been saved to disk (the editor is dirty).  Saving 
+your diagram can be done in several ways, e.g. by using the “File”/”Save” menu item or clicking on 
+the floppy disk icon in the toolbar :
+<br><br>
+<img src="../../images/save_diagram.png" alt="[save diagram]">
+<br><br>
+<a id="palette"><h2>The Palette</h2></a>
+If you press the triangle on the top left of the diagram editor, the palette will show; pressing the 
+triangle (which has been flipped) again will make the palette disappear :
+<br><br>
+<img src="../../images/palette_collapsed.png" alt="[palette colapsed]" align="top">
+<img src="../../images/palette_visible.png" alt="[palette visible]" algin="top">
+<br><br><br>
+As you can see, the palette is still incomplete in the current version of the Eclipse CA IDMS/DB 
+Schema Diagram Editor (you cannot create records).
+<br><br>
+The first 2 palette tools can be used to select 1 or more items in the diagram :
+<ul>
+<li><img src="../../images/palette_select.png" alt="[select tool]" align="middle"> (Select) :  
+after selecting this tool, clicking on an item in the diagram will make that item the current 
+selection; the item's properties will be available in the Properties view.</li><br>
+<li><img src="../../images/palette_marquee.png" alt="[marquee tool]" align="middle"> (Marquee) :  
+after selecting this tool, you can drag an area in the diagram to select 1 or more items; this tool
+is currently of little use.</li>
+</ul>
+Dropping an item to the diagram is as easy as selecting the tool from the palette and subsequently - 
+and depending on the tool selected - clicking on 1 or more items, or whitespace, in the diagram :
+<ul>
+<li>General</li><br>
+<ul>
+<li><img src="../../images/palette_label.png" alt="[label tool]" align="middle"> (Label) :  
+after selecting this tool and clicking somewhere in the diagram's whitespace, a diagram label will
+appear at that location :
+<br>
+<img src="../../images/diagram_label_example.png" alt="[diagram label example]">
+<br><br>
+There can only be 1 diagram label per diagram.  The diagram label's first and last line can be  
+controlled through the Schema editor's preferences :
+<br><br>
+</li>
+<img src="../../images/diagram_label_preferences.png" alt="[diagram label preferences]">
+<br><br>
+Look <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">here</a> for
+a description of the date (Last Modified) format.
+<br><br>
+The diagram label's second line contains the schema name and version whereas the third line can be
+controlled in the Properties view (Description).
+</ul><br>
+<li>Sets</li><br>
+<ul>
+<li><img src="../../images/palette_chained_set.png" alt="[chained set tool]" align="middle"> (Chained 
+Set) :  first click on the owner record and then on the member record of the set that you want to 
+create; you'll notice that a line, starting at the owner record, will be visible and following the 
+mouse pointer after clicking the owner record (press the "Esc" key if you change your mind half way 
+through).  A chained set called "NEW-SET-n" will be created after clicking on the member record, 
+where "n" denotes a sequence number starting with 1.</li><br>
+<li><img src="../../images/palette_multiple_member_set.png" alt="[multiple-member set tool]" align="middle"> (Multiple-member Set) :  
+first click on the line that connects the owner record with an existing member record of the set you
+want to add a member record to (remember :  indexed sets can only have 1 member record).  You'll 
+notice that a line, starting at the owner record, will be visible and following the mouse pointer 
+after clicking that line (press the "Esc" key if you change your mind half way through).  Then click 
+on the record that you want to add as a member record of that set.</li><br>
+<li><img src="../../images/palette_indexed_set.png" alt="[indexed set tool]" align="middle"> (Indexed 
+Set) :  first click on the owner record and then on the member record of the set that you want to 
+create; you'll notice that a line, starting at the owner record, will be visible and following the 
+mouse pointer after clicking the owner record (press the "Esc" key if you change your mind half way 
+through).  An indexed set called "NEW-SET-n" will be created after clicking on the member record, 
+where "n" denotes a sequence number starting with 1.</li><br>
+<li><img src="../../images/palette_index.png" alt="[index tool]" align="middle"> (Index) :  
+click on the record that you want an index added.  An index (system-owned indexed set) called 
+"NEW-INDEX-n" will be created after clicking on the member record, where "n" denotes a sequence 
+number starting with 1.</li><br>
+<li><img src="../../images/palette_connector.png" alt="[connector tool]" align="middle"> (Connector) :  
+click on the line that connects the owner record of a set with one of its members.  A set of 2
+connectors will be added, effectively splitting the line in 2.  You can (only) add 1 label in the 
+Properties view for both connectors.</li>
+</ul>
+</ul>
+<a id="figures"><h2>Working with Figures</h2></a>
+You can easily drag a figure (a record, index, connector, set connection label or diagram label) to 
+another location.
+<br><br>
+<img src="../../images/working_with_figures.png" alt="[working with figures]">
+<br><br>
+<a id="connections"><h2>Working with Connections</h2></a>
+At first, every set connection is a straight line between the owner and member figure (multiple-member 
+sets will have 1 set connection per set member).  You can move both set connection endpoints (marked 
+in red on the image below) as well as add set connection bendpoints (blue) by moving the handles :
+<br><br>
+<img src="../../images/working_with_connections.png" alt="[working with connections]">
+</body>
+</html>
