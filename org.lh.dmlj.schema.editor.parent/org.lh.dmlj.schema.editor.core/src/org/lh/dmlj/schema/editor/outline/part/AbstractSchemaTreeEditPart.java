@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.outline.part;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -231,9 +232,34 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 		throw new IllegalArgumentException("no child edit part for model: " + model);
 	}
 	
+	protected void createAndAddChild(INodeTextProvider<?> model) {
+		EditPart child = SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);					
+		int index = getInsertionIndex(getChildren(), model, getChildNodeTextProviderOrder());					
+		addChild(child, index);
+	}
+	
+	protected void createAndAddChild(EObject model, INodeTextProvider<?> nodeTextProvider) {
+		EditPart child = SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);					
+		int index = 
+			getInsertionIndex(getChildren(), nodeTextProvider, getChildNodeTextProviderOrder());					
+		addChild(child, index);
+	}
+
 	public final void deactivate() {		
 		modelChangeProvider.removeModelChangeListener(this);		
 		super.deactivate();
+	}
+	
+	protected void findAndRemoveChild(EObject model, boolean useEditPartRegistry) {
+		Assert.isNotNull(model, "model is null");
+		EditPart child;
+		if (useEditPartRegistry) {
+			child = (EditPart) getViewer().getEditPartRegistry().get(model);
+			Assert.isNotNull(model, "no child edit part for model: " + model);
+		} else {
+			child = childFor(model);
+		}
+		removeChild(child);
 	}
 	
 	/**
@@ -285,6 +311,15 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	@Override
 	protected final String getText() {
 		return Tools.removeTrailingUnderscore(getNodeTextProvider().getNodeText());
+	}
+	
+	protected boolean hasChildFor(Object model) {
+		try {
+			childFor(model);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		}		
 	}
 	
 	/**
