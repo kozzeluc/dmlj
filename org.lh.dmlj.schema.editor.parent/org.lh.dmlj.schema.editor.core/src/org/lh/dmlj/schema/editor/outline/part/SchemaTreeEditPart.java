@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,17 +20,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.EditPart;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 	
@@ -39,173 +41,282 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 		
 		super(schema, modelChangeProvider);
 	}
-
+	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-		
-		if (owner == getModel().getDiagramData() && 
-			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
+	public void afterModelChange(ModelChangeContext context) {		
+		if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
 			
-			// a DIAGRAM LABEL was added; avoid just refreshing the children since this may be 
-			// costly; create the edit part and add it as a child
-			EditPart child = SchemaTreeEditPartFactory.createEditPart(item, modelChangeProvider);
-			addChild(child, 0);		// the diagram label is always the first child			
-		
-		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Areas()) {			
+			// a diagram label was added (execute/redo); avoid just refreshing the children since  
+			// this may be costly; create the edit part and add it as a child
+			DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
+			createAndAddChild(diagramLabel);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 			
-			// an AREA was added; avoid just refreshing the children since this may be costly; 			
-			// first, create an edit part for the area and add it as a child
-			SchemaArea area = (SchemaArea) item;
-			int i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());
-			EditPart child = SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
-			addChild(child, i);
+			// an add diagram label operation was undone; avoid just refreshing the children since 
+			// this may be costly; find the edit part and remove it as a child (we've put the 
+			// diagram label in the context's listener data on the before model change callback)
+			DiagramLabel diagramLabel = (DiagramLabel) context.getListenerData();
+			findAndRemoveChild(diagramLabel, true);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
 			
-		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
-			
-			// a RECORD was added; avoid just refreshing the children since this may be costly;  			
-			// first, create an edit part for the record and add it as a child
-			SchemaRecord record = (SchemaRecord) item;
-			int i = getInsertionIndex(getChildren(), record, getChildNodeTextProviderOrder());
-			EditPart child = SchemaTreeEditPartFactory.createEditPart(record, modelChangeProvider);
-			addChild(child, i);
+			// a RECORD was added (execute/redo); avoid just refreshing the children since this may 
+			// be costly; first, create an edit part for the record and add it as a child
+			SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);			
+			createAndAddChild(record);
 			
 			// second, when a record is added, an AREA might also have been created and added (this
 			// is the case when the schema has exactly 1 area and exactly 1 record at this point); 
 			// create an edit part for the record's area and add it as a child as well
 			if (getModel().getAreas().size() == 1 && getModel().getRecords().size() == 1) {
 				SchemaArea area = record.getAreaSpecification().getArea();
-				i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());
-				EditPart child2 = SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
-				addChild(child2, i);
+				createAndAddChild(area);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 		
-		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
+			// an add record operation was undone; the record will be in the context's listener data
+			SchemaRecord record = (SchemaRecord) context.getListenerData();
+			findAndRemoveChild(record, true);
 			
-			// a SET was added; avoid just refreshing the children since this may be costly; first,
-			// create the appropriate edit part for the set and add it as a child
-			Set set = (Set) item;
-			EObject model;
-			if (set.getSystemOwner() == null) {
-				// USER OWNER
-				model = set;
-			} else {
-				// SYSTEM OWNER
-				model = set.getSystemOwner();
-			}
-			int i = getInsertionIndex(getChildren(), set, getChildNodeTextProviderOrder());
-			EditPart child = SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);			
-			addChild(child, i); 	
+			// make sure to remove the area child as well if the area was removed
+			removeObsoleteChildren();
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+			
+			// a system owned indexed set was added (execute/redo); avoid just refreshing the 
+			// children since this may be costly; first, create the appropriate edit part for the 
+			// set and add it as a child
+			Set set = getModel().getSets().get(getModel().getSets().size() - 1); 
+			createAndAddChild(set.getSystemOwner(), set);						
 			
 			// second, when a system owned indexed set is added, an area is also created and added;  
 			// create an edit part for the index AREA and add it as a child as well BUT ONLY WHEN
 			// NEEDED
-			if (set.getSystemOwner() != null) {				
-				SchemaArea area = set.getSystemOwner().getAreaSpecification().getArea();
-				try {
-					childFor(area);
-					// if we get here, there is already a child edit part for the area
-				} catch (IllegalArgumentException e) {
-					// no child edit partexists for the area; create and add one
-					i = getInsertionIndex(getChildren(), area, getChildNodeTextProviderOrder());				
-					EditPart child2 = 
-						SchemaTreeEditPartFactory.createEditPart(area, modelChangeProvider);
-					addChild(child2, i);
-				}				
-			}
-		
-		}
-		
-	}
-	
-	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {
-		
-		if (reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications()) {
-			// a record or system owner is moved to another area; remove the area edit part 
-			// belonging to the old area if the old area was removed from the schema because it 
-			// became empty...
-			SchemaArea oldArea = (SchemaArea) oldOwner;
-			if (getModel().getArea(oldArea.getName()) == null) {
-				// the old area was removed from the schema
-				EditPart child = childFor(oldArea);
-				removeChild(child);
-			}
-			// ...and/or create a new edit part for the new area if it was created because of the 
-			// move
-			SchemaArea newArea = (SchemaArea) newOwner;
-			boolean createNewEditPart = true;
-			for (Object child : getChildren()) {
-				if (((EditPart)child).getModel() == newArea) {
-					// no need to create an edit part for the new area since it is already there; it
-					// will refresh itself and its children itself
-					createNewEditPart = false;
-					break;
-				}
-			}
-			if (createNewEditPart) {
-				// we need to create a new child edit part because the new area is indeed new
-				EditPart child = 
-					SchemaTreeEditPartFactory.createEditPart(newArea, modelChangeProvider);
-				int index = 
-					getInsertionIndex(getChildren(), newArea, getChildNodeTextProviderOrder());
-				addChild(child, index);
-			}
-		}
-		
-	}
-	
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
-		if (owner == getModel().getDiagramData() && 
-			reference == SchemaPackage.eINSTANCE.getDiagramData_Label()) {
+			SchemaArea area = set.getSystemOwner().getAreaSpecification().getArea();
+			if (!hasChildFor(area)) {				
+				// no child edit part exists for the area; create and add one				
+				createAndAddChild(area);
+			}			
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {			
 			
-			// the diagram label was removed; avoid just refreshing the children since this may be 
-			// costly; find the edit part and remove it as a child
-			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
-			removeChild(child);
-		
-		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Areas()) {
+			// an add system owned indexed set operation was undone; remove the appropriate child 
+			// using the model system owner which we put in the context's listener data while 
+			// processing the before model change event
+			SystemOwner systemOwner = (SystemOwner) context.getListenerData();
+			findAndRemoveChild(systemOwner, true);
 			
-			// an area was removed; avoid just refreshing the children since this may be costly; 
-			// find the edit part and remove it as a child
-			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
-			removeChild(child);
-			
-		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Records()) {
-			
-			// a record was removed; avoid just refreshing the children since this may be costly; 
-			// find the edit part and remove it as a child
-			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(item);
-			removeChild(child);
-			
-			// remove the record's area when it no longer exists
+			// make sure we remove the child edit part for the removed area as well
 			removeObsoleteChildren();
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 			
-		} else if (owner == getModel() && reference == SchemaPackage.eINSTANCE.getSchema_Sets()) {			
+			// a user owned set was added (execute/redo); avoid just refreshing the children since 
+			// this may be costly; create the appropriate edit part for the set and add it as a 
+			// child
+			Set set = getModel().getSets().get(getModel().getSets().size() - 1);
+			createAndAddChild(set);					
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {			
 			
-			// a set or index was removed; avoid just refreshing the children since this may be  
-			// costly; find the edit part and remove it as a child
-			Set set = (Set) item;
-			EObject model = null;
-			if (set.getSystemOwner() == null) {
-				// USER OWNER
-				model = set;				
+			// an add user owned set operation was undone; remove the appropriate child using the 
+			// model set which we put in the context's listener data while processing the before
+			// model change event
+			Set set = (Set) context.getListenerData();
+			findAndRemoveChild(set, true);
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {		
+			// whenever an area specification is changed, an area might be added or removed; get the
+			// 'old' area from the context's listener data; if it has bcome obsolete, remove the 
+			// corresponding child edit part
+			SchemaArea oldArea = (SchemaArea) context.getListenerData();
+			if (getModel().getArea(oldArea.getName()) == null) {
+				findAndRemoveChild(oldArea, true);
+			}
+			// get the 'new' area via the item contained in the context data; if it was effectively 
+			// newly created, create an edit part and add it as a child
+			SchemaArea newArea;
+			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
+				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				SchemaRecord record = getModel().getRecord(recordName);
+				newArea = record.getAreaSpecification().getArea();
 			} else {
-				// SYSTEM OWNER
-				model = set.getSystemOwner();
+				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				newArea = 
+					getModel().getSet(setName).getSystemOwner().getAreaSpecification().getArea();
 			}
-			EditPart child = (EditPart) getViewer().getEditPartRegistry().get(model);
-			removeChild(child);
-			
-			// in the case of a system owned indexed set: remove the system owner's area when it no 
-			// longer exists
-			if (set.getSystemOwner() != null) {
-				removeObsoleteChildren();
+			if (!hasChildFor(newArea)) {				
+				createAndAddChild(newArea);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+		
+			// the diagram label was deleted (execute/redo); get the diagram label from the 
+			// context's listener data and remove the child edit part
+			DiagramLabel diagramLabel = (DiagramLabel) context.getListenerData();
+			findAndRemoveChild(diagramLabel, true);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
 			
+			// a delete diagram label operation was undone; avoid just refreshing the children since
+			// this may be costly; create the edit part and add it as a child
+			DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
+			createAndAddChild(diagramLabel);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+		
+			// a record was deleted (execute/redo); we've put it in the context's listener data when
+			// processing the before model change event
+			SchemaRecord record = (SchemaRecord) context.getListenerData();
+			findAndRemoveChild(record, true);
+			
+			// make sure to remove the area child as well if the area was removed
+			removeObsoleteChildren();
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			
+			// a delete record operation is being undone; get the record using the context data and 
+			// create and add a child edit part for it
+			String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			SchemaRecord record = getModel().getRecord(recordName);			
+			createAndAddChild(record);
+			
+			// second, when a delete record operation is undone, an AREA might also have been added
+			// again (this is the case when the schema has exactly 1 area and exactly 1 record at 
+			// this point); create an edit part for the record's area and add it as a child as well
+			if (getModel().getAreas().size() == 1 && getModel().getRecords().size() == 1) {
+				SchemaArea area = record.getAreaSpecification().getArea();
+				createAndAddChild(area);
+			}		
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+			
+			// a system owned indexed was removed (execute/redo); avoid just refreshing the children 
+			// since this may be costly; find the edit part and remove it as a child (we've put the
+			// system owner in the context's listener data while processing the before model change
+			// event)
+			SystemOwner systemOwner = (SystemOwner) context.getListenerData();
+			findAndRemoveChild(systemOwner, true);
+			
+			// remove the system owner's area child edit part as well when it no longer exists
+			removeObsoleteChildren();
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			
+			// a delete system owned indexed set operation was undone; avoid just refreshing the 
+			// children since this may be costly; first, create the appropriate edit part for the 
+			// set and add it as a child
+			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			Set set = getModel().getSet(setName);
+			createAndAddChild(set.getSystemOwner(), set);
+			
+			// take care of the system owner's area too
+			SchemaArea area = set.getSystemOwner().getAreaSpecification().getArea();
+			if (!hasChildFor(area)) {				
+				// no child edit part exists for the area; create and add one				
+				createAndAddChild(area);
+			}			
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+			
+			// a user owned set was removed (execute/redo); avoid just refreshing the children since 
+			// this may be costly; find the edit part and remove it as a child (we've put the
+			// set in the context's listener data while processing the before model change event)
+			Set set = (Set) context.getListenerData();
+			findAndRemoveChild(set, true);			
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {	
+			
+			// a delete user owned set operation was undone; avoid just refreshing the 
+			// children since this may be costly; create the appropriate edit part for the set and 
+			// add it as a child
+			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			Set set = getModel().getSet(setName);
+			createAndAddChild(set);
 		}
-	}	
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL &&
+			context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			
+			// an add diagram label operation is being undone; put the diagram label in the 
+			// context's listener data because it will be gone when processing the after model 
+			// change event
+			DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
+			context.setListenerData(diagramLabel);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			
+			// an add record operation is being undone; put the record in the context's listener
+			// data so that we can refer to it in the after model change callback
+			SchemaRecord record = getModel().getRecords().get(getModel().getRecords().size() - 1);
+			context.setListenerData(record);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			
+			// an add system owned indexed set operation is being undone; put the system owner in 
+			// the context's listener data so that we can refer to it when processing the after 
+			// model change event
+			Set set = getModel().getSets().get(getModel().getSets().size() - 1);
+			context.setListenerData(set.getSystemOwner());
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			
+			// an add user owned set operation is being undone; put the set in the context's
+			// listener data so that we can refer to it when processing the after model change event
+			Set set = getModel().getSets().get(getModel().getSets().size() - 1);
+			context.setListenerData(set);		
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
+			// whenever an area specification is changed, an area might be added or removed; put the
+			// 'old' area in the context's listener data
+			SchemaArea area;
+			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
+				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				SchemaRecord record = getModel().getRecord(recordName);
+				area = record.getAreaSpecification().getArea();
+			} else {
+				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				area = getModel().getSet(setName).getSystemOwner().getAreaSpecification().getArea();
+			}
+			context.setListenerData(area);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+		
+			// the diagram label is being deleted (execute/redo); put the diagram label in the 
+			// context's listener data because it will be gone when processing the after model 
+			// change event
+			DiagramLabel diagramLabel = getModel().getDiagramData().getLabel();
+			context.setListenerData(diagramLabel);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+			
+			// a record is being deleted; put it in the context's listener data so that we can refer
+			// to it when processing the after model change event
+			String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			SchemaRecord record = getModel().getRecord(recordName);
+			context.setListenerData(record);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+		
+			// a system owned indexed set is being deleted; put the system owner in the context's 
+			// listener data so that we can refer to it when processing the after model change event
+			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			Set set = getModel().getSet(setName);
+			context.setListenerData(set.getSystemOwner());			
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+			
+			// a user owned set is being deleted; put it in the context's listener data so that we 
+			// can refer to it when processing the after model change event
+			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			Set set = getModel().getSet(setName);
+			context.setListenerData(set);
+		}
+	}
 	
 	@Override
 	protected Class<?>[] getChildNodeTextProviderOrder() {
