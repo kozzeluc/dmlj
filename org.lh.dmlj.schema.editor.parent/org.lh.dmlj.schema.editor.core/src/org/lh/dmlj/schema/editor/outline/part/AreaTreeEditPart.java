@@ -119,28 +119,26 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 			if (area == getModel()) {					
 				createAndAddChild(set.getSystemOwner(), set);
 			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
 				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
-				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				   context.appliesTo(getModel())) {
-				
-			// the area name change was undone... the order of the parent edit part might become 
-			// disrupted, so we have to inform that edit part of this fact
-			nodeTextChanged();						
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
-				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+				   appliesToModelArea(context)) {
 			
-			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
-			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
-				// the area name has changed (execute/redo)... the order of the parent edit part 
-				// might become disrupted, so we have to inform that edit part of this fact
-				nodeTextChanged();
-			}
+			// the area name has changed (execute/undo/redo)... the order of the parent edit part 
+			// might become disrupted, so we have to inform that edit part of this fact
+			nodeTextChanged();						
 		}
 		// Note that we don't do anything for new system owned indexed sets; that is because a new
 		// index will ALWAYS be stored in a new area (for which an edit part will be created; the
 		// new index will appear as a child of that new edit part).
+	}
+	
+	private boolean appliesToModelArea(ModelChangeContext context) {
+		if (Boolean.TRUE.equals(context.getListenerData())) {
+			return true;
+		} else {
+			String areaName = context.getContextData().get(IContextDataKeys.AREA_NAME);
+			return getModel().getName().equals(areaName);
+		}
 	}
 
 	@Override
@@ -177,14 +175,15 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 			if (set.getSystemOwner().getAreaSpecification().getArea() == getModel()) {
 				context.setListenerData(set.getSystemOwner());
 			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
 				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
 				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 				   context.appliesTo(getModel())) {
-				
-			// the area name is changing (execute/redo); put a boolean in the listener data, 
-			// which we will pick up again when processing the after model change event
-			context.setListenerData(Boolean.TRUE);					
+						
+			// the model area's name is changing (execute/redo); put Boolean.TRUE in the context's 
+			// listener's data so that we can respond to this when processing the after model change 
+			// event
+			context.setListenerData(Boolean.TRUE);
 		}
 	}
 

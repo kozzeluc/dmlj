@@ -199,7 +199,7 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	}
 
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {		
+	public final void afterAddItem(EObject owner, EReference reference, Object item) {		
 	}
 	
 	@Override
@@ -207,15 +207,15 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	}
 
 	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
+	public final void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
 	}
 
 	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {		
+	public final void afterRemoveItem(EObject owner, EReference reference, Object item) {		
 	}	
 	
 	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {				
+	public final void afterSetFeatures(EObject owner, EStructuralFeature[] features) {				
 	}
 	
 	@Override

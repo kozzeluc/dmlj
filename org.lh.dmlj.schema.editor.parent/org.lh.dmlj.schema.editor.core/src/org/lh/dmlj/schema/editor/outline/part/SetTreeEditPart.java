@@ -101,8 +101,9 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 			context.appliesTo(getModel())) {
 					
-			// the model set's name is changing; put Boolean.TRUE in the context's listener's data
-			// so that we can respond to this when processing the after model change event
+			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's 
+			// listener's data so that we can respond to this when processing the after model change 
+			// event
 			context.setListenerData(Boolean.TRUE);
 		}
 	}
