@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,9 +31,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.eclipse.core.runtime.AssertionFailedException;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.junit.Test;
@@ -270,7 +267,7 @@ public class ModelChangeDispatcherTest {
 		
 		final ModelChangeContext[] savedListenerContext1 = new ModelChangeContext[1];
 		final boolean[] listener1MethodCallsOK = {false, false};
-		IModelChangeListener listener1 = new ModelChangeAdapter() {		
+		IModelChangeListener listener1 = new IModelChangeListener() {		
 			public void beforeModelChange(ModelChangeContext listenerContext1) {
 								
 				assertNotSame(context, listenerContext1);
@@ -306,7 +303,7 @@ public class ModelChangeDispatcherTest {
 		
 		final ModelChangeContext[] savedListenerContext2 = new ModelChangeContext[1];
 		final boolean[] listener2MethodCallsOK = {false, false};
-		IModelChangeListener listener2 = new ModelChangeAdapter() {		
+		IModelChangeListener listener2 = new IModelChangeListener() {		
 			public void beforeModelChange(ModelChangeContext listenerContext1) {
 				
 				assertNotSame(context, listenerContext1);
@@ -443,7 +440,7 @@ public class ModelChangeDispatcherTest {
 		dispatcher.setSchema(mock(Schema.class));
 		
 		final boolean[] methodsInvoked = {false}; // beforeModelChange
-		IModelChangeListener listener = new ModelChangeAdapter() {			
+		IModelChangeListener listener = new IModelChangeListener() {			
 			@Override
 			public void beforeModelChange(ModelChangeContext context) {	
 				methodsInvoked[0] = true;
@@ -487,7 +484,7 @@ public class ModelChangeDispatcherTest {
 		dispatcher.setSchema(mock(Schema.class));
 		
 		final boolean[] methodsInvoked = {false}; // beforeModelChange listener2
-		final IModelChangeListener listener1 = new ModelChangeAdapter() {			
+		final IModelChangeListener listener1 = new IModelChangeListener() {			
 			@Override
 			public void beforeModelChange(ModelChangeContext context) {	
 				fail("method shouldn't be called");
@@ -497,7 +494,7 @@ public class ModelChangeDispatcherTest {
 				fail("method shouldn't be called");
 			}			
 		};
-		IModelChangeListener listener2 = new ModelChangeAdapter() {			
+		IModelChangeListener listener2 = new IModelChangeListener() {			
 			@Override
 			public void beforeModelChange(ModelChangeContext context) {	
 				dispatcher.removeModelChangeListener(listener1);
@@ -523,31 +520,6 @@ public class ModelChangeDispatcherTest {
 		dispatcher.dispatch(event);
 		
 		assertTrue(methodsInvoked[0]);
-		
-	}	
-	
-	public static abstract class ModelChangeAdapter implements IModelChangeListener {		
-
-		@Override
-		public void afterAddItem(EObject owner, EReference reference, Object item) {
-			fail("method shouldn't be called");
-		}
-
-		@Override
-		public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-								  EObject newOwner) {
-			fail("method shouldn't be called");
-		}
-
-		@Override
-		public void afterRemoveItem(EObject owner, EReference reference, Object item) {			
-			fail("method shouldn't be called");
-		}
-
-		@Override
-		public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-			fail("method shouldn't be called");
-		}		
 		
 	}
 	

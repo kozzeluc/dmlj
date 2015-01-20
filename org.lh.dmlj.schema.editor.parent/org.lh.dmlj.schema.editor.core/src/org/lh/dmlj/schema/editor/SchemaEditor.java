@@ -41,9 +41,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -445,10 +442,6 @@ public class SchemaEditor
 		modelChangeListener = new IModelChangeListener() {
 						
 			@Override
-			public void afterAddItem(EObject owner, EReference reference, Object item) {								
-			}
-
-			@Override
 			public void afterModelChange(ModelChangeContext context) {		
 				if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
 					context.isPropertySet(ATTRIBUTE_SHOW_RULERS)) {
@@ -480,19 +473,6 @@ public class SchemaEditor
 						manager.setZoom(schema.getDiagramData().getZoomLevel());
 					}
 				}
-			}
-			
-			@Override
-			public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-									  EObject newOwner) {								
-			}
-
-			@Override
-			public void afterRemoveItem(EObject owner, EReference reference, Object item) {								
-			}
-
-			@Override
-			public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {				
 			}
 			
 			@Override

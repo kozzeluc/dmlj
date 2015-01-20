@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,8 +20,6 @@ import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
@@ -120,26 +118,9 @@ public abstract class AbstractPropertiesSection
 	}
 	
 	@Override
-	public final void afterAddItem(EObject owner, EReference reference, Object item) {
-	}
-	
-	@Override
 	public void afterModelChange(ModelChangeContext context) {
 		// whatever model change, just refresh the properties section
 		doRefresh();
-	}
-	
-	@Override
-	public final void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  		EObject newOwner) {	
-	}
-	
-	@Override
-	public final void afterRemoveItem(EObject owner, EReference reference, Object item) {
-	}
-	
-	@Override
-	public final void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
 	}
 	
 	@Override

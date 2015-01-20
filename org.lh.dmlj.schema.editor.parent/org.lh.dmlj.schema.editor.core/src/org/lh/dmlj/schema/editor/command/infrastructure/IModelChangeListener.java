@@ -16,25 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.command.infrastructure;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 public interface IModelChangeListener {
 	
 	void beforeModelChange(ModelChangeContext context);
-	
-	@Deprecated
-	void afterAddItem(EObject owner, EReference reference, Object item);
-	
-	@Deprecated
-	void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner);
-	
-	@Deprecated
-	void afterRemoveItem(EObject owner, EReference reference, Object item);	
-	
-	@Deprecated
-	void afterSetFeatures(EObject owner, EStructuralFeature[] features);
 	
 	void afterModelChange(ModelChangeContext context);
 	

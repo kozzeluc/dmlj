@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
@@ -197,25 +196,9 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 		modelChangeProvider.addModelChangeListener(this);
 		super.activate();
 	}
-
-	@Override
-	public final void afterAddItem(EObject owner, EReference reference, Object item) {		
-	}
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {		
-	}
-
-	@Override
-	public final void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner) {		
-	}
-
-	@Override
-	public final void afterRemoveItem(EObject owner, EReference reference, Object item) {		
-	}	
-	
-	@Override
-	public final void afterSetFeatures(EObject owner, EStructuralFeature[] features) {				
 	}
 	
 	@Override

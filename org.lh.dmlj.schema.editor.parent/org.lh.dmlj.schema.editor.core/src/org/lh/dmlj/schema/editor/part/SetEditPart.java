@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,8 +30,6 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -104,10 +102,6 @@ public class SetEditPart
 	}
 
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-	}
-	
-	@Override
 	public void afterModelChange(ModelChangeContext context) {
 		if (context.getModelChangeType() == ModelChangeType.ADD_BENDPOINT &&
 			context.appliesTo(getModel())) {
@@ -130,19 +124,6 @@ public class SetEditPart
 			// an endpoint was moved on the connection part
 			refreshVisuals();
 		}
-	}
-
-	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {		
-	}
-
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {	
-	}
-
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
 	}
 
 	@Override

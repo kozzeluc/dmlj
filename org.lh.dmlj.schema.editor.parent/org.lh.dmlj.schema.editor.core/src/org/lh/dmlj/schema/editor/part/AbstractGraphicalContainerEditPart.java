@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,8 +28,6 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.lh.dmlj.schema.MemberRole;
@@ -72,23 +70,6 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 	public final void addNotify() {
 		super.addNotify();
 		modelChangeProvider.addModelChangeListener(this);
-	}	
-	
-	@Override
-	public final void afterAddItem(EObject owner, EReference reference, Object item) {		
-	}	
-	
-	@Override
-	public final void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {		
-	}
-
-	@Override
-	public final void afterRemoveItem(EObject owner, EReference reference, Object item) {				
-	}
-
-	@Override
-	public final void afterSetFeatures(EObject owner, EStructuralFeature[] features) {		
 	}
 	
 	protected final void collectObjectsForMemberRole(ModelChangeContext context, Scope scope) {

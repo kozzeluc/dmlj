@@ -19,9 +19,6 @@ package org.lh.dmlj.schema.editor.ruler;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.rulers.RulerChangeListener;
@@ -69,15 +66,6 @@ public class SchemaEditorRulerProvider
 	}
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-	}
-
-	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {				
-	}
-	
-	@Override
 	public void afterModelChange(ModelChangeContext context) {
 		if (context.getModelChangeType() == ModelChangeType.ADD_GUIDE &&
 			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
@@ -116,14 +104,6 @@ public class SchemaEditorRulerProvider
 			Guide guide = findGuide(context); // null if guide belongs to other ruler
 			notifyGuideMoved(guide);
 		}
-	}
-
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
-	}
-
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
 	}
 	
 	@Override
