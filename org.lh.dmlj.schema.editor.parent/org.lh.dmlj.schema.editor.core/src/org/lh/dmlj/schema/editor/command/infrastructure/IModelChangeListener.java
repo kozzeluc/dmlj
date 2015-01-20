@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,12 +24,16 @@ public interface IModelChangeListener {
 	
 	void beforeModelChange(ModelChangeContext context);
 	
+	@Deprecated
 	void afterAddItem(EObject owner, EReference reference, Object item);
 	
+	@Deprecated
 	void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner);
 	
+	@Deprecated
 	void afterRemoveItem(EObject owner, EReference reference, Object item);	
 	
+	@Deprecated
 	void afterSetFeatures(EObject owner, EStructuralFeature[] features);
 	
 	void afterModelChange(ModelChangeContext context);
