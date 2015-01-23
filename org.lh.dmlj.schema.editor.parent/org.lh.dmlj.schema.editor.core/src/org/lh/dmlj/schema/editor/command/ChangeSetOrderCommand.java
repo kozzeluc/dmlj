@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,27 +19,16 @@ package org.lh.dmlj.schema.editor.command;
 import java.util.Arrays;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 /**
  * A command that will change a set's order.  In the case the set order is changed to SORTED, the
  * sort key details for each member record have to be provided.
  */
-@ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class ChangeSetOrderCommand extends AbstractSortKeyManipulationCommand {
 
-	@Owner	  protected Set 		   	   set;
-	@Features private EStructuralFeature[] features = {
-		SchemaPackage.eINSTANCE.getSet_Order()
-	};
-	
+	protected Set set;
 	protected ISupplier<Set> setSupplier;
 	
 	private SetOrder oldOrder;

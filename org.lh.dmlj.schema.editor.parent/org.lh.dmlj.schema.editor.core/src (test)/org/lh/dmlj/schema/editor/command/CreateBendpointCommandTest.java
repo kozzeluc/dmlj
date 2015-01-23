@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,23 +20,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
 import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
@@ -94,36 +85,7 @@ public class CreateBendpointCommandTest {
 					 originalBendpoint3.getEyecatcher());
 		assertSame(originalBendpoint4, originalConnectionPart2.getBendpointLocations().get(1));
 		assertEquals("bendpoint [4] set OFFICE-EMPLOYEE (EMPLOYEE)", 
-				 	 originalBendpoint4.getEyecatcher());
-		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.ADD_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.ADD_ITEM, modelChangeAnnotation.category());		
-		
-		// make sure the owner is set
-		ConnectionPart owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == originalConnectionPart1);
-		
-		// make sure the reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations());			
-		
-		// make sure the item is set
-		DiagramLocation item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == newBendpoint);		
+				 	 originalBendpoint4.getEyecatcher());		
 	
 		
 		// undo the command and verify
@@ -145,28 +107,6 @@ public class CreateBendpointCommandTest {
 		assertSame(originalBendpoint4, originalConnectionPart2.getBendpointLocations().get(1));
 		assertEquals("bendpoint [3] set OFFICE-EMPLOYEE (EMPLOYEE)", 
 				 	 originalBendpoint4.getEyecatcher());
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == originalConnectionPart1);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations());			
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == newBendpoint);		
 		
 		
 		// redo the command and verify
@@ -198,30 +138,7 @@ public class CreateBendpointCommandTest {
 					 originalBendpoint3.getEyecatcher());
 		assertSame(originalBendpoint4, originalConnectionPart2.getBendpointLocations().get(1));
 		assertEquals("bendpoint [4] set OFFICE-EMPLOYEE (EMPLOYEE)", 
-				 	 originalBendpoint4.getEyecatcher());
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == originalConnectionPart1);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations());			
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == newBendpoint);		
-		
+				 	 originalBendpoint4.getEyecatcher());		
 	}
 	
 	@Test
@@ -427,13 +344,9 @@ public class CreateBendpointCommandTest {
 				return connectionPart;
 			}		
 		};
-		Command command = new CreateBendpointCommand(connectionPartSupplier, 1, 50, 100);
+		CreateBendpointCommand command = new CreateBendpointCommand(connectionPartSupplier, 1, 50, 100);
 		command.execute();
-		ConnectionPart owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == connectionPart);
+		assertSame(connectionPart, command.connectionPart);
 		command.undo();
 		command.redo();
 	}

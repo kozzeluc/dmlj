@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,16 +18,12 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertCommandCategorySet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertFeaturesSet;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertOwnerSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,9 +31,7 @@ import org.junit.Test;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
@@ -67,56 +61,6 @@ public class ChangePointerOrderCommandTest {
 		schema = TestTools.getEmpschmSchema();
 		objectGraph = TestTools.asObjectGraph(schema);
 		xmi = TestTools.asXmi(schema);
-	}	
-	
-	@Test
-	public void testAnnotations() {
-		
-		SchemaRecord record = TestTools.getRecord(schema, "EMPLOYEE");
-		Prefix originalPrefix = PrefixFactory.newPrefixForInquiry(record);
-		List<Pointer<?>> originalPointers = originalPrefix.getPointers();
-		List<Pointer<?>> newPointerOrder = new ArrayList<>(originalPointers); 
-		
-		
-		Command command = new ChangePointerOrderCommand(record, newPointerOrder);
-		
-		
-		command.execute();				
-		assertCommandCategorySet(command, ModelChangeCategory.SET_FEATURES);
-		assertOwnerSet(command, record);
-		assertFeaturesSet(command, new EStructuralFeature[] {
-		    SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition(),
-			SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition(),
-			SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition(),					
-		});	
-		
-		
-		command.undo();		
-		assertOwnerSet(command, record);
-		assertFeaturesSet(command, new EStructuralFeature[] {
-		    SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition(),
-			SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition(),
-			SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition(),					
-		});		
-
-		
-		command.redo();		
-		assertOwnerSet(command, record);
-		assertFeaturesSet(command, new EStructuralFeature[] {
-		    SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition(),
-			SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition(),	
-			SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition(),
-			SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition(),					
-		});			
-				
 	}
 	
 	@Test

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,27 +16,15 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.Element;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
-@ModelChange(category=SET_FEATURES)
 public class SwapRecordElementsCommand extends ModelChangeBasicCommand {
 	
-	@Owner protected SchemaRecord record;
-	@Features private EStructuralFeature[] features = {
-		SchemaPackage.eINSTANCE.getSchemaRecord_Elements(),
-		SchemaPackage.eINSTANCE.getSchemaRecord_RootElements()
-	};
+	protected SchemaRecord record;
 	
 	protected List<Element> newRootElements;
 	private List<Element> newAllElements = new ArrayList<>();

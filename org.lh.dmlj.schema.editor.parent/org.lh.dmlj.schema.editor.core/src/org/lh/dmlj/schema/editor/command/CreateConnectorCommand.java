@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,14 +16,11 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.ecore.EReference;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramData;
@@ -31,21 +28,13 @@ import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
 
-@ModelChange(category=ADD_ITEM)
 public class CreateConnectorCommand extends ModelChangeBasicCommand {
 	
 	static enum ConnectorLayout {HORIZONTAL, VERTICAL}
 	
-	@Owner 	   private MemberRole 	  memberRole;
-	@Item	   private ConnectionPart connectionPart2;
-	@Reference private EReference 	  reference = 
-		SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts();	
+	protected MemberRole memberRole;
+	private ConnectionPart connectionPart2;
 		
 	private Connector[]    	  connector = new Connector[2];
 	private DiagramLocation[] diagramLocation = new DiagramLocation[2];	

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,24 +17,15 @@
 package org.lh.dmlj.schema.editor.command;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.emf.ecore.EReference;
 import org.junit.Test;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 
 public class DeleteDiagramLabelCommandTest {
 
@@ -68,35 +59,6 @@ public class DeleteDiagramLabelCommandTest {
 		assertEquals(-1, diagramData.getLocations().indexOf(diagramLocation));
 		
 		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.ADD_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.REMOVE_ITEM, modelChangeAnnotation.category());		
-		
-		// make sure the owner is set
-		DiagramData owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == diagramData);
-		
-		// make sure the reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getDiagramData_Label());			
-		
-		// make sure the item is set
-		DiagramLabel item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == diagramLabel);
-		
-		
 		// undo the command and check if the diagram label and its diagram location are restored
 		// make sure the diagram label's diagram location is inserted again at the original index in
 		// the diagram location container
@@ -106,29 +68,7 @@ public class DeleteDiagramLabelCommandTest {
 		assertEquals(3, diagramData.getLocations().size());
 		DiagramLocation diagramLocation2 = diagramLabel.getDiagramLocation();
 		assertTrue(diagramLocation2 == diagramLocation);
-		assertEquals(1, diagramData.getLocations().indexOf(diagramLocation2));
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == diagramData);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getDiagramData_Label());			
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == diagramLabel);		
+		assertEquals(1, diagramData.getLocations().indexOf(diagramLocation2));		
 		
 		
 		// redo the command and check if the diagram label and its location are removed again
@@ -136,29 +76,6 @@ public class DeleteDiagramLabelCommandTest {
 		assertNull(diagramData.getLabel());
 		assertEquals(2, diagramData.getLocations().size());
 		assertEquals(-1, diagramData.getLocations().indexOf(diagramLocation2));
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == diagramData);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getDiagramData_Label());			
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == diagramLabel);		
-		
 	}	
 
 }

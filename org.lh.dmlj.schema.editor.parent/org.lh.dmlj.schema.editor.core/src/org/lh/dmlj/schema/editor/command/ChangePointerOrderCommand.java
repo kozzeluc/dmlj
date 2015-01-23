@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,32 +18,14 @@ package org.lh.dmlj.schema.editor.command;
 
 import java.util.List;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerReordering;
 
-@ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class ChangePointerOrderCommand extends ModelChangeBasicCommand {
 
-	@Owner 
 	protected SchemaRecord record;
-	
-	@Features 
-	private EStructuralFeature[] features = {
-		SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition(),
-		SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition(),
-		SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition(),
-		SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition(),
-		SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition(),
-		SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition(),
-	};
 	
 	private List<Pointer<?>> newPointerOrder;
 	private PrefixForPointerReordering prefix;

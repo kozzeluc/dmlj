@@ -16,10 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.command.infrastructure;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,146 +44,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	// things to carry from a pre-change to a post-change event:
 	private Command previousCommand;
 	private List<IModelChangeListener> allListeners;
-	private Map<Integer, Object> listenerDataMap;
-	
-	private static <T extends Annotation> Field getAnnotatedField(
-		Object object, 
-		Class<T> annotationType) {	
-		
-		Assert.isNotNull(object, "object is null");
-		Assert.isNotNull(annotationType, "annotationType is null");
-		
-		List<Field> annotatedFields = getAnnotatedFields(object, annotationType);
-		Assert.isTrue(annotatedFields.size() < 2, "more than 1 @" + annotationType.getSimpleName() + 
-					  " found: " + object.getClass().getName());
-		
-		if (!annotatedFields.isEmpty()) {
-			return annotatedFields.get(0);
-		} else {
-			return null;
-		}
-		
-	}
-	
-	private static <T extends Annotation, U> Field getAnnotatedField(
-		Object object, 
-		Class<T> annotationType,
-		String element, 
-		U elementValue) {	
-		
-		Assert.isNotNull(object, "object is null");
-		Assert.isNotNull(annotationType, "annotationType is null");
-		Assert.isNotNull(element, "element is null");
-		// elementValue is allowed to be null
-		
-		List<Field> annotatedFields = 
-			getAnnotatedFields(object, annotationType, element, elementValue);
-		Assert.isTrue(annotatedFields.size() < 2, "more than 1 @" + annotationType.getSimpleName() + 
-					  "(" + element + "=" + elementValue + ") found: " + 
-					  object.getClass().getName());
-		
-		if (!annotatedFields.isEmpty()) {
-			return annotatedFields.get(0);
-		} else {
-			return null;
-		}
-		
-	}	
-	
-	private static <T extends Annotation> List<Field> getAnnotatedFields(
-		Object object, 
-		Class<T> annotationType) {
-		
-		Assert.isNotNull(object, "object is null");
-		Assert.isNotNull(annotationType, "annotationType is null");
-		
-		List<Field> annotatedFields = new ArrayList<>();
-		for (Field aField : object.getClass().getDeclaredFields()) {
-			T annotation = aField.getAnnotation(annotationType);
-			if (annotation != null) {
-				annotatedFields.add(aField);				
-			}
-		}
-		return annotatedFields;
-		
-	}	
-	
-	@SuppressWarnings("unchecked")
-	private static <T extends Annotation, U> List<Field> getAnnotatedFields(
-		Object object, 
-		Class<T> annotationType,
-		String element, 
-		U elementValue) {
-			
-		Assert.isNotNull(object, "object is null");
-		Assert.isNotNull(annotationType, "annotationType is null");
-		Assert.isNotNull(element, "element is null");
-		// elementValue is allowed to be null
-		
-		Method method;
-		try {
-			method = annotationType.getMethod(element, new Class<?>[] {});			
-		} catch (NoSuchMethodException | SecurityException e) {
-			throw new RuntimeException("cannot locate element '" + element + "' in @" + 
-									   annotationType.getSimpleName(), e);
-		}
-		
-		List<Field> annotatedFields = getAnnotatedFields(object, annotationType);
-		List<Field> filteredAnnotatedFields = new ArrayList<>();
-		for (Field annotatedField : annotatedFields) {			
-			try {	
-				T annotation = annotatedField.getAnnotation(annotationType); 
-				U annotatedFieldsElementValue = 
-					(U) method.invoke(annotation, new Object[] {}); // no ClassCastException !? 
-				if (elementValue == null && annotatedFieldsElementValue == null ||
-					elementValue != null && elementValue.equals(annotatedFieldsElementValue)) {
-					
-					filteredAnnotatedFields.add(annotatedField);
-				}
-			} catch (IllegalAccessException | IllegalArgumentException | 
-					 InvocationTargetException e) {
-				
-				throw new RuntimeException("cannot access element '" + element + "' of @" + 
-						   				   annotationType.getSimpleName() + " on field " +
-						   				   annotatedField.getName() + ": " + 
-						   				   object.getClass().getName(), e);
-			}
-		}
-		return filteredAnnotatedFields;
-		
-	}	
-	
-	@SuppressWarnings("unchecked")
-	public static <T, U extends Annotation> T getAnnotatedFieldValue(
-		Object object, 
-		Class<U> annotationType, 
-		Availability availability) {		
-		
-		Assert.isNotNull(object, "object is null");
-		Assert.isNotNull(annotationType, "annotationType is null");
-		
-		Field annotatedField = getAnnotatedField(object, annotationType);
-		if (availability == Availability.MANDATORY) {
-			Assert.isNotNull(annotatedField, "an @" + annotationType.getSimpleName() + 
-							 " is mandatory: " + object.getClass().getName());
-		}
-		
-		if (annotatedField != null) {
-			annotatedField.setAccessible(true);
-			T value;
-			try {
-				value = (T) annotatedField.get(object);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new RuntimeException("cannot get value for field annotated with @" + 
-										   annotationType.getSimpleName() + ": " + 
-										   object.getClass().getName(), e);
-			}
-			return value;
-		} else {
-			return null;
-		}
-		
-	}
+	private Map<Integer, Object> listenerDataMap;	
 	
 	private static CommandExecutionMode getCommandExecutionMode(CommandStackEvent event) {
 		if (event.getDetail() == CommandStack.PRE_EXECUTE || 
@@ -224,38 +81,6 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		return "<unexpected value>";
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static <T, U extends Annotation, V> T getAnnotatedFieldValue(
-		Object object, 
-		Class<U> annotationType,
-		String element, 
-		V elementValue, 
-		Availability availability) {		
-		
-		Field annotatedField = getAnnotatedField(object, annotationType, element, elementValue);		
-		if (availability == Availability.MANDATORY) {
-			Assert.isNotNull(annotatedField, "an @" + annotationType.getSimpleName() + "(" + 
-							 element + "=" + elementValue + ") is mandatory: " + 
-							 object.getClass().getName());
-		}
-				
-		if (annotatedField != null) {
-			annotatedField.setAccessible(true);
-			T value;
-			try {
-				value = (T)annotatedField.get(object);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new RuntimeException("cannot get value for field annotated with @" + 
-										   annotationType.getSimpleName() + "(" + element + "=" +
-										   elementValue + "): " + object.getClass().getName(), e);
-			}
-			return value;
-		} else {
-			return null;
-		}
-		
-	}
-
 	public ModelChangeDispatcher() {
 		super();
 	}

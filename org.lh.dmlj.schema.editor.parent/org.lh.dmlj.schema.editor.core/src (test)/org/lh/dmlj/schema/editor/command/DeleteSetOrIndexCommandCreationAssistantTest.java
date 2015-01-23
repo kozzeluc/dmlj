@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,14 +23,12 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 import org.junit.Before;
 import org.junit.Test;
-import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
@@ -38,9 +36,6 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
 public class DeleteSetOrIndexCommandCreationAssistantTest {
@@ -67,18 +62,18 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 					    memberRole.getConnectionParts().size() > 1 &&
 					    !memberRole.getConnectionParts().get(1).getBendpointLocations().isEmpty());
 			
-			ConnectionPart commandConnectionPart = getAnnotatedFieldValue(command, Owner.class);
-			assertSame(memberRole, commandConnectionPart.getMemberRole());
+			DeleteBendpointCommand cCommand = (DeleteBendpointCommand) command;
+			assertSame(memberRole, cCommand.connectionPart.getMemberRole());
 			int commandConnectionPartIndex = getFieldValue(command, "connectionPartIndex");
 			assertEquals(0, commandConnectionPartIndex);
 		} else if (command instanceof DeleteConnectorsCommand) {			
 			assertEquals(2, memberRole.getConnectionParts().size());
-			MemberRole commandMemberRole = getAnnotatedFieldValue(command, Owner.class);
-			assertSame(memberRole, commandMemberRole);
+			DeleteConnectorsCommand cCommand = (DeleteConnectorsCommand) command;
+			assertSame(memberRole, cCommand.memberRole);
 		} else if (command instanceof DeleteSetCommand) {
 			assertNull(memberRole.getSet().getSystemOwner());
-			Set set = getAnnotatedFieldValue(command, Item.class);
-			assertSame(memberRole.getSet(), set);
+			DeleteSetCommand cCommand = (DeleteSetCommand) command;
+			assertSame(memberRole.getSet(), cCommand.set);
 		} else if (command instanceof DeleteIndexCommand) {
 			assertSame(SetMode.INDEXED, memberRole.getSet().getMode());
 			assertNotNull(memberRole.getSet().getSystemOwner());
@@ -86,24 +81,16 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 			assertSame(memberRole.getSet().getSystemOwner(), systemOwner);
 		} else if (command instanceof MakeRecordDirectCommand) {
 			assertSame(LocationMode.VIA, memberRole.getRecord().getLocationMode());
-			SchemaRecord record = getAnnotatedFieldValue(command, Owner.class);
-			assertSame(memberRole.getRecord(), record);
+			MakeRecordDirectCommand cCommand = (MakeRecordDirectCommand) command;
+			assertSame(memberRole.getRecord(), cCommand.record);
 		} else if (command instanceof RemoveMemberFromSetCommand) {
-			MemberRole commandMemberRole = getAnnotatedFieldValue(command, Item.class);
-			assertSame(memberRole, commandMemberRole);
+			RemoveMemberFromSetCommand cCommand = (RemoveMemberFromSetCommand) command;
+			assertSame(memberRole, cCommand.memberRole);
 		} else {
 			fail("unexpected command: " + command.getClass().getSimpleName());
 		}
 	}
 
-	private <T, U extends Annotation> T getAnnotatedFieldValue(Command command, 
-															   Class<U> annotationClass) {
-		T value = 
-			ModelChangeDispatcher.getAnnotatedFieldValue(command, annotationClass, 
-														 ModelChangeDispatcher.Availability.MANDATORY);
-		return value;
-	}
-	
 	@SuppressWarnings("unchecked")
 	private <T> T getFieldValue(Command command, String fieldName) {
 		try {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,15 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.eclipse.emf.ecore.EReference;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
 import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRole;
 
@@ -38,12 +31,10 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRole;
  * <li>bendpoints</li>
  *</ul>
  */
-@ModelChange(category=ModelChangeCategory.REMOVE_ITEM)
 public class DeleteSetCommand extends ModelChangeBasicCommand {
 
-	@Owner private Schema schema;
-	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
-	@Item private Set set;	
+	private Schema schema;
+	protected Set set;	
 	
 	private int indexOfSetInSchemasSets;	
 	private RemovableOwnerRole ownerRoleToBecomeObsolete;

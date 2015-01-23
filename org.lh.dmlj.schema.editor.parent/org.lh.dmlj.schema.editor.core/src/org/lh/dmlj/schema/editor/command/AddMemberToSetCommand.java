@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,13 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EReference;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramData;
@@ -30,29 +27,22 @@ import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendage;
 
-@ModelChange(category=ADD_ITEM)
 public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 
-	@Owner 	   protected Set 	  set;
-	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSet_Members();
-	@Item	   private MemberRole memberRole;
+	protected Set set;
+	private MemberRole memberRole;
 			
 	protected SchemaRecord 			  memberRecord;
 	private PrefixForPointerAppendage memberPrefix;

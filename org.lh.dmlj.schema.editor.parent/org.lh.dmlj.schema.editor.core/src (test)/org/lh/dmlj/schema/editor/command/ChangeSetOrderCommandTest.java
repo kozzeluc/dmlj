@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,12 +16,16 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,16 +34,10 @@ import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
@@ -59,76 +57,6 @@ public class ChangeSetOrderCommandTest {
 		schema = TestTools.getEmpschmSchema();
 		objectGraph = TestTools.asObjectGraph(schema);
 	}
-	
-	@Test
-	public void testAnnotations() {
-		
-		Set set = schema.getSet("EMP-EMPOSITION");		
-		
-		Command command = new ChangeSetOrderCommand(set, SetOrder.LAST);
-		
-		
-		command.execute();		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.SET_FEATURES
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.SET_FEATURES, modelChangeAnnotation.category());
-		
-		// make sure the owner is set
-		Set owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(set, owner);	
-		
-		// make sure the set order attribute is set
-		EStructuralFeature[] features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, features.length);
-		assertTrue(features[0] == SchemaPackage.eINSTANCE.getSet_Order());		
-		
-		
-		command.undo();
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(set, owner);		
-		
-		// make sure the set order attribute is still set
-		features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, features.length);
-		assertTrue(features[0] == SchemaPackage.eINSTANCE.getSet_Order());		
-		
-		
-		command.redo();
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(set, owner);		
-		
-		// make sure the set order attribute is still set
-		features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, features.length);
-		assertTrue(features[0] == SchemaPackage.eINSTANCE.getSet_Order());		
-				
-	}	
 	
 	@Test
 	public void testUnsortedToFirst() {
@@ -497,14 +425,10 @@ public class ChangeSetOrderCommandTest {
 				return set;
 			}
 		};
-		Command command = 
+		ChangeSetOrderCommand command = 
 			new ChangeSetOrderCommand(setSupplier, new ISortKeyDescription[] {sortKeyDescription});
 		command.execute();
-		Set owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(set, owner);
+		assertSame(set, command.set);
 	}
 
 }

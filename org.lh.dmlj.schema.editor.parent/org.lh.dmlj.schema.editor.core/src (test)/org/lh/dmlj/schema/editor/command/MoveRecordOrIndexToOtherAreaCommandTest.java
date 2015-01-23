@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,23 +22,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.emf.ecore.EReference;
 import org.junit.Test;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.OwnerType;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
 public class MoveRecordOrIndexToOtherAreaCommandTest {
@@ -86,45 +77,6 @@ public class MoveRecordOrIndexToOtherAreaCommandTest {
 		assertNull(areaSpecification2.getSymbolicSubareaName());
 		
 
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.MOVE_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.MOVE_ITEM, modelChangeAnnotation.category());		
-		
-		// make sure the old owner is set
-		SchemaArea oldOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.OLD,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(oldOwner == area);
-		
-		// make sure the reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications());
-		
-		// make sure the item is set
-		AreaSpecification item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == areaSpecification);		
-		
-		// make sure the new owner is set
-		SchemaArea newOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.NEW,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(newOwner == area2);
-		
 		// undo the command and check if the record is moved to its original area again
 		command.undo();
 		assertEquals(3, schema.getAreas().size());
@@ -144,39 +96,6 @@ public class MoveRecordOrIndexToOtherAreaCommandTest {
 		assertNull(areaSpecification3.getSymbolicSubareaName());
 		
 		
-		// make sure the old owner is still set
-		oldOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.OLD,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(oldOwner == area);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications());
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == areaSpecification);		
-		
-		// make sure the new owner is still set
-		newOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.NEW,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(newOwner == area2);
-		
-		
 		// redo the command and check if the record is moved to the other area again
 		command.execute();
 		assertEquals(3, schema.getAreas().size());
@@ -194,41 +113,7 @@ public class MoveRecordOrIndexToOtherAreaCommandTest {
 		assertEquals(offsetPercent, offsetExpression4.getOffsetPercent());
 		assertEquals(pageCount, offsetExpression4.getPageCount());
 		assertEquals(percent, offsetExpression4.getPercent());
-		assertNull(areaSpecification4.getSymbolicSubareaName());
-		
-		
-		// make sure the old owner is still set
-		oldOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.OLD,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(oldOwner == area);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications());
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == areaSpecification);		
-		
-		// make sure the new owner is still set
-		newOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.NEW,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(newOwner == area2);
-		
+		assertNull(areaSpecification4.getSymbolicSubareaName());		
 	}
 	
 	@Test
@@ -266,47 +151,8 @@ public class MoveRecordOrIndexToOtherAreaCommandTest {
 					 area2.getAreaSpecifications().indexOf(areaSpecification2));
 		OffsetExpression offsetExpression2 = areaSpecification2.getOffsetExpression();
 		assertTrue(offsetExpression2 == offsetExpression);
-		assertNull(areaSpecification2.getSymbolicSubareaName());
-		
+		assertNull(areaSpecification2.getSymbolicSubareaName());		
 
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.MOVE_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.MOVE_ITEM, modelChangeAnnotation.category());		
-		
-		// make sure the old owner is set
-		SchemaArea oldOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.OLD,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(oldOwner == area);
-		
-		// make sure the reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications());
-		
-		// make sure the item is set
-		AreaSpecification item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == areaSpecification);		
-		
-		// make sure the new owner is set
-		SchemaArea newOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.NEW,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(newOwner == area2);
 		
 		// undo the command and check if the index is moved to its original area again
 		command.undo();
@@ -328,39 +174,6 @@ public class MoveRecordOrIndexToOtherAreaCommandTest {
 		assertNull(areaSpecification3.getSymbolicSubareaName());
 		
 		
-		// make sure the old owner is still set
-		oldOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.OLD,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(oldOwner == area);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications());
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == areaSpecification);		
-		
-		// make sure the new owner is still set
-		newOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.NEW,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(newOwner == area2);
-		
-		
 		// redo the command and check if the index is moved to the other area again
 		command.execute();
 		assertEquals(3, schema.getAreas().size());
@@ -375,40 +188,6 @@ public class MoveRecordOrIndexToOtherAreaCommandTest {
 		OffsetExpression offsetExpression4 = areaSpecification4.getOffsetExpression();
 		assertTrue(offsetExpression4 == offsetExpression);
 		assertNull(areaSpecification4.getSymbolicSubareaName());
-		
-		
-		// make sure the old owner is still set
-		oldOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.OLD,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(oldOwner == area);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications());
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(item == areaSpecification);		
-		
-		// make sure the new owner is still set
-		newOwner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class,
-			"type",
-			OwnerType.NEW,			
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(newOwner == area2);
-		
 	}	
 	
 	@Test

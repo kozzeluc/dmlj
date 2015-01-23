@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,24 +20,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 import org.lh.dmlj.schema.editor.testtool.Xmi;
@@ -57,79 +49,14 @@ public class LockEndpointsCommandTest {
 		
 		// execute the command
 		command.execute();
-		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.SET_FEATURES
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.SET_FEATURES, modelChangeAnnotation.category());
-		
-		// make sure the owner is set
-		MemberRole owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRole, owner);		
-		
-		// make sure the 2 references are set
-		EStructuralFeature[] features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(2, features.length);
-		assertTrue(features[0] == 
-			SchemaPackage.eINSTANCE.getConnectionPart_SourceEndpointLocation());
-		assertTrue(features[1] == 
-				   SchemaPackage.eINSTANCE.getConnectionPart_TargetEndpointLocation());		
-		
+
 		
 		// undo the command
 		command.undo();
 		
-
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRole, owner);		
-		
-		// make sure the 2 references are still set
-		features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(2, features.length);
-		assertTrue(features[0] == 
-			SchemaPackage.eINSTANCE.getConnectionPart_SourceEndpointLocation());
-		assertTrue(features[1] == 
-				   SchemaPackage.eINSTANCE.getConnectionPart_TargetEndpointLocation());
-		
 		
 		// redo the command
-		command.redo();
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRole, owner);		
-		
-		// make sure the 2 references are still set
-		features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(2, features.length);
-		assertTrue(features[0] == 
-			SchemaPackage.eINSTANCE.getConnectionPart_SourceEndpointLocation());
-		assertTrue(features[1] == 
-				   SchemaPackage.eINSTANCE.getConnectionPart_TargetEndpointLocation());		
-		
+		command.redo();		
 	}
 	
 	@Test

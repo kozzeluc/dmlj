@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,21 +16,14 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.LocationMode;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 /**
  * A command that will change the record's location mode to CALC and set the 
@@ -38,15 +31,11 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
  * execution) and will definitely run into trouble when executed for a record 
  * that is defined as either CALC or VIA.
  */
-@ModelChange(category=SET_FEATURES)
 public class MakeRecordCalcCommand extends AbstractChangeLocationModeCommand {
 
-	@Owner 	  protected SchemaRecord 	   record;
-	@Features private EStructuralFeature[] features = new EStructuralFeature[] {
-		SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()
-	};
+	protected SchemaRecord record;
 	
-	private List<Element> 	 calcKeyElements;
+	private List<Element> calcKeyElements;
 	protected DuplicatesOption duplicatesOption;
 	
 	protected ISupplier<List<Element>> calcKeyElementSupplier;

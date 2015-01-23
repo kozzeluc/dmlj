@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,24 +16,12 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
-
-import org.eclipse.emf.ecore.EReference;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
 
-@ModelChange(category=ADD_ITEM)
 public class CreateBendpointCommand extends AbstractBendpointCommand {
 	
-	@Owner 	   private ConnectionPart 	connectionPart;
-	@Item  	   private DiagramLocation 	bendpoint;
-	@Reference private EReference 		reference = 
-		SchemaPackage.eINSTANCE.getConnectionPart_BendpointLocations();
+	private DiagramLocation bendpoint;
 	protected ISupplier<ConnectionPart> connectionPartSupplier;	
 	
 	public CreateBendpointCommand(ConnectionPart connectionPart, int index, int x, int y) {

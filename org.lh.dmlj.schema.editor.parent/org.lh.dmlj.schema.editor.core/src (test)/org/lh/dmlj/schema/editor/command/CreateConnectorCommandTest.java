@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,13 +16,17 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
 import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionPart;
@@ -30,15 +34,8 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
@@ -894,35 +891,6 @@ public class CreateConnectorCommandTest {
 		assertNull(connector2.getLabel());
 		
 		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.ADD_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.ADD_ITEM, modelChangeAnnotation.category());		
-		
-		// make sure the owner is set
-		MemberRole owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRole, owner);
-		
-		// make sure the reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts());			
-		
-		// make sure the item is set
-		ConnectionPart item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(newConnectionPart, item);
-		
-		
 		// undo the command and verify
 		command.undo();
 		ObjectGraph objectGraph3 = TestTools.asObjectGraph(schema);
@@ -934,29 +902,7 @@ public class CreateConnectorCommandTest {
 		assertSame(originalTargetEndpoint, originalConnectionPart.getTargetEndpointLocation());
 		assertEquals(2, originalConnectionPart.getBendpointLocations().size());
 		assertSame(originalBendpoint1, originalConnectionPart.getBendpointLocations().get(0));
-		assertSame(originalBendpoint2, originalConnectionPart.getBendpointLocations().get(1));
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRole, owner);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts());			
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(newConnectionPart, item);		
+		assertSame(originalBendpoint2, originalConnectionPart.getBendpointLocations().get(1));		
 		
 		
 		// redo the command and verify
@@ -991,30 +937,7 @@ public class CreateConnectorCommandTest {
 		assertEquals(146, connector2.getDiagramLocation().getY());
 		assertEquals("set connector[1] OFFICE-EMPLOYEE (EMPLOYEE)", 
 					 connector2.getDiagramLocation().getEyecatcher());
-		assertNull(connector2.getLabel());
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(memberRole, owner);
-		
-		// make sure the reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getMemberRole_ConnectionParts());			
-		
-		// make sure the item is still set
-		item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(newConnectionPart, item);		
-				
+		assertNull(connector2.getLabel());		
 	}
 
 	@Test
@@ -1259,13 +1182,9 @@ public class CreateConnectorCommandTest {
 				return memberRole;
 			}
 		};
-		Command command = new CreateConnectorCommand(memberRoleSupplier, new Point(1, 2));
+		CreateConnectorCommand command = new CreateConnectorCommand(memberRoleSupplier, new Point(1, 2));
 		command.execute();
-		MemberRole owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == memberRole);
+		assertSame(memberRole, command.memberRole);
 		command.undo();
 		command.redo();
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,23 +16,14 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
-
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
-@ModelChange(category=SET_FEATURES)
 public class MoveEndpointCommand extends ModelChangeBasicCommand {
 		
-	@Owner 	  private ConnectionPart 		connectionPart;
-	@Features private EStructuralFeature[] 	features;
+	protected ConnectionPart connectionPart;
 	
 	protected int newX;
 	protected int newY;
@@ -70,18 +61,11 @@ public class MoveEndpointCommand extends ModelChangeBasicCommand {
 		DiagramData diagramData = 
 			connectionPart.getMemberRole().getSet().getSchema().getDiagramData();
 		
-		// depending on whether we're moving the source or target endpoint, set the feature and save
-		// the old location, if present, and its location in the locations container (the schema's 
-		// diagram data)
+		// depending on whether we're moving the source or target endpoint, save the old location, 
+		// if present, and its location in the locations container (the schema's diagram data)
 		if (source) {
-			features = 
-				new EStructuralFeature[] {SchemaPackage.eINSTANCE
-													   .getConnectionPart_SourceEndpointLocation()};
 			oldLocation = connectionPart.getSourceEndpointLocation();
 		} else {
-			features = 
-				new EStructuralFeature[] {SchemaPackage.eINSTANCE
-													   .getConnectionPart_TargetEndpointLocation()};
 			oldLocation = connectionPart.getTargetEndpointLocation();
 		}		
 		if (oldLocation != null) {

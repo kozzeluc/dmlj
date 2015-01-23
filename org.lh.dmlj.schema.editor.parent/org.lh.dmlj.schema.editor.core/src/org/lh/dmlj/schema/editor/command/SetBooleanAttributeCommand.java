@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,21 +16,15 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 
-@ModelChange(category=SET_FEATURES)
 public class SetBooleanAttributeCommand extends ModelChangeBasicCommand {
 	
-	@Owner 	  private EObject 	 		   owner;
-	@Features private EStructuralFeature[] features;
+	private EObject 	 		   owner;
+	private EStructuralFeature[] features;
 	
 	private boolean	oldValue;
 	private boolean	newValue;			

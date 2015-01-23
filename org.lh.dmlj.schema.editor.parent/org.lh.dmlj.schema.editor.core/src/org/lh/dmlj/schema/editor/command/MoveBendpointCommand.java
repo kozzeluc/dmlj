@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,24 +16,12 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
-
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
-@ModelChange(category=SET_FEATURES)
 public class MoveBendpointCommand extends ModelChangeBasicCommand {	
 	
-	@Owner    private DiagramLocation 	   bendpoint;	
-	@Features private EStructuralFeature[] features = {
-		SchemaPackage.eINSTANCE.getDiagramLocation_X(),
-		SchemaPackage.eINSTANCE.getDiagramLocation_Y()
-	};	
+	private DiagramLocation 	   bendpoint;	
 	
 	private int oldX;
 	private int oldY;

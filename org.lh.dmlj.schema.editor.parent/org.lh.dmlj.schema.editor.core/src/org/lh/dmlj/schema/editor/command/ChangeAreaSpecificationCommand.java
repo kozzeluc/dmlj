@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,31 +17,17 @@
 package org.lh.dmlj.schema.editor.command;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 /**
  * A Command class to change 1 or more attributes in an AreaSpecification and its (optional) 
  * OffsetExpression.
  */
-@ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class ChangeAreaSpecificationCommand extends ModelChangeBasicCommand {
 	
-	@Owner 	  private AreaSpecification 	areaSpecification;
-	@Features private EStructuralFeature[] 	features = {
-		SchemaPackage.eINSTANCE.getAreaSpecification_SymbolicSubareaName(),
-		SchemaPackage.eINSTANCE.getOffsetExpression_OffsetPageCount(),
-		SchemaPackage.eINSTANCE.getOffsetExpression_OffsetPercent(),
-		SchemaPackage.eINSTANCE.getOffsetExpression_PageCount(),
-		SchemaPackage.eINSTANCE.getOffsetExpression_Percent()
-	};
+	private AreaSpecification 	areaSpecification;
 	
 	private String  		 oldSymbolicSubareaName;
 	private OffsetExpression oldOffsetExpression;
