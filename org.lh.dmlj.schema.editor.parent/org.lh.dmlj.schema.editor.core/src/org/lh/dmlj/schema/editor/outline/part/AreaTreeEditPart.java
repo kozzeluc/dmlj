@@ -42,15 +42,26 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
-			// a record is added; create a child edit part for it if the record is stored in the 
-			// model area
+		if (context.getModelChangeType() == ModelChangeType.ADD_RECORD &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+			
+			// a record is added (execute/redo); create a child edit part for it if the record is 
+			// stored in the model area
 			Schema schema = getModel().getSchema();
 			SchemaRecord record = schema.getRecords().get(schema.getRecords().size() - 1);			
 			SchemaArea area = record.getAreaSpecification().getArea();
 			if (area == getModel()) {					
 				createAndAddChild(record);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				   context.getListenerData() instanceof SchemaRecord) {
+					
+			// an add record operation was undone; remove the record's child edit part if it is 
+			// stored in the model area (in which case we've put the record in the context's 
+			// listener data when processing the before model change event)
+			SchemaRecord record = (SchemaRecord) context.getListenerData();	
+			findAndRemoveChild(record, false);
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
 			// area specification change
 			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
@@ -143,7 +154,18 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_RECORD &&
+			context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				
+			// an add record operation is being undone; store the record in the context's listener 
+			// data if it is stored in the model area
+			Schema schema = getModel().getSchema();
+			SchemaRecord record = schema.getRecords().get(schema.getRecords().size() - 1);			
+			SchemaArea area = record.getAreaSpecification().getArea();
+			if (area == getModel()) {					
+				context.setListenerData(record);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
 			// area specification change; if a record or system owner moves to another area, we need
 			// to know, so if the item involved is stored in the model area, put it in the context's
 			// listener data
