@@ -318,7 +318,7 @@ public class ModelChangeContext {
 		String featureName = ModelChangeContext.getQualifiedFeatureName(feature);
 		contextData.put(IContextDataKeys.PROPERTY_NAME, featureName);
 		
-		// the following is based on the types of defined attributes based properties sections
+		// the following is based on the types of defined attributes based properties sections...
 		if (model instanceof SchemaArea) {
 			putContextData((SchemaArea) model); 
 		} else if (model instanceof DiagramLabel) {
@@ -331,6 +331,17 @@ public class ModelChangeContext {
 			// nothing to set
 		} else if (model instanceof Set) {
 			putContextData((Set) model);
+		// ...but for completeness (and because it is necessary) we add the remaining types as well
+		} else if (model instanceof ConnectionPart) {
+			putContextData((ConnectionPart) model);
+		} else if (model instanceof Connector) {
+			putContextData((Connector) model);
+		} else if (model instanceof Guide) {
+			putContextData((Guide) model);
+		} else if (model instanceof MemberRole) {
+			putContextData((MemberRole) model);
+		} else if (model instanceof Ruler) {
+			putContextData((Ruler) model);
 		} else if (model == null){
 			throw new IllegalArgumentException("Model type invalid: null");
 		} else {
