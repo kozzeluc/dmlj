@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,6 +24,9 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.editor.command.DeleteDiagramLabelCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.outline.part.DiagramLabelTreeEditPart;
 import org.lh.dmlj.schema.editor.part.DiagramLabelEditPart;
 
@@ -59,7 +62,11 @@ public class DiagramLabelComponentEditPolicy extends ComponentEditPolicy {
 			diagramLabel = editPart.getModel();
 		}
 		
-		return new DeleteDiagramLabelCommand(diagramLabel.getDiagramData().getSchema());
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_DIAGRAM_LABEL);
+		ModelChangeBasicCommand command = 
+			new DeleteDiagramLabelCommand(diagramLabel.getDiagramData().getSchema());
+		command.setContext(context);
+		return command;
 		
 	}	
 	

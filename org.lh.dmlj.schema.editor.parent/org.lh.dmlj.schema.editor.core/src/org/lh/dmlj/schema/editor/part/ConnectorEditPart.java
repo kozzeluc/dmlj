@@ -25,8 +25,6 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -40,6 +38,8 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
@@ -58,26 +58,30 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 		// reference to that MemberRole will be nullified in the ConnectionPart
 		this.memberRole = connector.getConnectionPart().getMemberRole();
 	}	
-
+	
 	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		
-		super.afterSetFeatures(owner, features);
-		
-		if (owner == getModel() && 
-			isFeatureSet(features, SchemaPackage.eINSTANCE.getConnector_Label())) {
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.MOVE_CONNECTOR &&
+			context.appliesTo(getModel())) {
 			
-			// the connector label is set; refresh the edit part's visuals
-			refreshVisuals();					
-		}
-		
+			// the connector was moved
+			refreshVisuals();			
+			refreshConnections();			
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getConnector_Label()) &&
+				   context.appliesTo((memberRole.getConnectionParts().get(0).getConnector()))) {
+			
+			// the connector label is set; refresh the edit part's visuals (note that the context
+			// data ALWAYS refers to the FIRST connector in this situation, although both connectors
+			// are impacted) 
+			refreshVisuals();			
+		}		
 	}
 	
 	@Override
 	protected void createEditPolicies() {
 		// make sure we can delete connectors:
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, 
-						  new ConnectorComponentEditPolicy());
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ConnectorComponentEditPolicy());
 	}
 	
 	@Override

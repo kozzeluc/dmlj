@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,10 +20,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
-import org.eclipse.emf.ecore.EReference;
 import org.junit.Before;
 import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionLabel;
@@ -33,17 +31,10 @@ import org.lh.dmlj.schema.LabelAlignment;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
@@ -73,95 +64,6 @@ public class CreateSetCommandTest {
 		xmi = TestTools.asXmi(schema);
 	}
 	
-	@Test
-	public void testAnnotations() {
-		
-		SchemaRecord recordEmployee = schema.getRecord("EMPLOYEE");
-		SchemaRecord recordInsurancePlan = schema.getRecord("INSURANCE-PLAN");
-		
-		CreateSetCommand command = new CreateSetCommand(recordEmployee, SetMode.CHAINED);
-		command.setMemberRecord(recordInsurancePlan);		
-		
-		command.execute();		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.ADD_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.ADD_ITEM, modelChangeAnnotation.category());
-		
-		// make sure the owner is set
-		Schema owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(schema, owner);	
-		
-		// make sure the sets reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchema_Sets());
-		
-		// make sure the item is set
-		Set item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertNotNull(item);
-		
-		
-		command.undo();
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(schema, owner);		
-		
-		// make sure the sets reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);		
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchema_Sets());
-		
-		// make sure the item is still set
-		Set item2 = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(item, item2);		
-		
-		
-		command.redo();
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(schema, owner);		
-		
-		// make sure the sets reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);		
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSchema_Sets());
-		
-		// make sure the item is still set
-		item2 = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(item, item2);		
-				
-	}	
-		
 	@Test
 	public void testChainedSet() {
 		

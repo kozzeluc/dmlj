@@ -29,6 +29,7 @@ import org.lh.dmlj.schema.editor.command.CreateConnectorCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateIndexCommandTest;
+import org.lh.dmlj.schema.editor.command.CreateRecordCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateSetCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorCommandTest;
@@ -51,8 +52,11 @@ import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetShortAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommandTest;
+import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssistantTest;
+import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRoleTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRoleTest;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContextTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
 import org.lh.dmlj.schema.editor.common.ToolsTest;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
@@ -72,6 +76,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	
 	// command infrastructure tests
 	ModelChangeDispatcherTest.class,
+	ModelChangeContextTest.class,
 	
 	// command tests
 	AddMemberToSetCommandTest.class,
@@ -86,6 +91,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	CreateDiagramLabelCommandTest.class,
 	CreateGuideCommandTest.class,
 	CreateIndexCommandTest.class,
+	CreateRecordCommandTest.class,
 	CreateSetCommandTest.class,
 	DeleteBendpointCommandTest.class,
 	DeleteConnectorCommandTest.class,
@@ -119,6 +125,8 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	SetObjectAttributeCommandTest.class,
 	SetShortAttributeCommandTest.class,
 	SetZoomLevelCommandTest.class,
+	SwapRecordElementsCommandTest.class,
+	SwapRecordElementsCommandCreationAssistantTest.class,
 	
 	// edit part tests
 	AbstractSchemaTreeEditPartTest.class,

@@ -21,8 +21,6 @@ import java.text.SimpleDateFormat;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -36,6 +34,8 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
 import org.lh.dmlj.schema.editor.policy.DiagramLabelComponentEditPolicy;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
@@ -72,16 +72,16 @@ public class DiagramLabelEditPart
 	}
 	
 	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		
-		super.afterSetFeatures(owner, features);
-		
-		if (owner == getModel() &&
-			isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLabel_Description())) {
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+		    context.isPropertySet(SchemaPackage.eINSTANCE.getDiagramLabel_Description())) {
 			
-			// the diagram label's description has been set; refresh the edit part's visuals
-			refreshVisuals();		
-		}				
+			// the diagram label's description has been set
+			refreshVisuals();
+		}
+		// note that we do NOT have to do anything here to refresh the visuals in case the diagram 
+		// label is moved or resized; that event is perfectly handled in method  
+		// propertyChanged(Object source, int propId), which is called in that situation as well
 	}
 	
 	@Override
@@ -157,6 +157,8 @@ public class DiagramLabelEditPart
 		if (source == schemaEditor && propId == IEditorPart.PROP_DIRTY && 
 			isDiagramLabelStillPresent()) {
 			
+			// note that when the diagram label is moved or resized, this method is called as well, 
+			/// so the refresh of the visuals in that situation happens here:
 			refreshVisuals();
 		}
 	}

@@ -170,7 +170,8 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		if (handler.isValid() && command != null) {			
 			commandStack.execute(command);
 			// if there is a message, show it now (we have to do this after 
-			// executing the command or it will not shop up):
+			// executing the command or it will not show up):
+			// FIXME this does not seem to work (example: a change of the set membership option)
 			if (message != null) {
 				statusLineManager.setMessage("Warning: " + message);
 			}

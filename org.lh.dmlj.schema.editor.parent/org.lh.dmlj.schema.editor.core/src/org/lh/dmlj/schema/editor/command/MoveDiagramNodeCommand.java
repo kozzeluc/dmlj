@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,35 +16,25 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
-@ModelChange(category=ModelChangeCategory.SET_FEATURES)
-public class MoveDiagramNodeCommand extends Command {
+public class MoveDiagramNodeCommand extends ModelChangeBasicCommand {
 	
-	@Owner 	  private DiagramLocation 		diagramLocation;	
-	@Features private EStructuralFeature[] 	features = {
-		SchemaPackage.eINSTANCE.getDiagramLocation_X(),
-		SchemaPackage.eINSTANCE.getDiagramLocation_Y()
-	};
+	private DiagramLocation diagramLocation;	
 	
 	private DiagramNode diagramNode;
 	private int 		oldX;
 	private int 		oldY;
-	private int 		x;
-	private int 		y;
+	protected int 		x;
+	protected int 		y;
+	
+	protected ISupplier<? extends DiagramNode> diagramNodeSupplier;
 	
 	@SuppressWarnings("unused")
 	private MoveDiagramNodeCommand() {
@@ -79,8 +69,19 @@ public class MoveDiagramNodeCommand extends Command {
 		}
 	}
 	
+	public MoveDiagramNodeCommand(ISupplier<? extends DiagramNode> diagramNodeSupplier, int x, int y) {
+		super();		
+		this.diagramNodeSupplier = diagramNodeSupplier;
+		this.x = x;
+		this.y = y;		
+		setLabel("Move connection label");
+	}
+	
 	@Override
 	public void execute() {
+		if (diagramNodeSupplier != null) {
+			diagramNode = diagramNodeSupplier.supply();
+		}
 		diagramLocation = diagramNode.getDiagramLocation();
 		oldX = diagramLocation.getX();
 		oldY = diagramLocation.getY();

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,20 +17,12 @@
 package org.lh.dmlj.schema.editor.command;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.junit.Test;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 
 public class SetShortAttributeCommandTest {
 
@@ -50,30 +42,7 @@ public class SetShortAttributeCommandTest {
 		
 		// execute the command and check if the attribute value is set
 		command.execute();
-		assertEquals(2, owner.getVersion());
-		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.SET_FEATURES
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.SET_FEATURES, modelChangeAnnotation.category());
-		
-		// make sure the owner is set
-		Schema owner2 = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner2 == owner);		
-		
-		// make sure the attribute is set
-		EStructuralFeature[] attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, attributes.length);
-		assertTrue(attributes[0] == attribute);				
+		assertEquals(2, owner.getVersion());			
 		
 		
 		// undo the command and check if the attribute value is set to its old value again
@@ -81,42 +50,9 @@ public class SetShortAttributeCommandTest {
 		assertEquals(1, owner.getVersion());
 		
 		
-		// make sure the owner is still set
-		owner2 = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner2 == owner);		
-		
-		// make sure the attribute is still set
-		attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, attributes.length);
-		assertTrue(attributes[0] == attribute);		
-		
-		
 		// redo the command and check if the attribute value is set to its new value again
 		command.redo();
 		assertEquals(2, owner.getVersion());
-		
-		
-		// make sure the owner is still set
-		owner2 = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner2 == owner);		
-		
-		// make sure the attribute is still set
-		attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, attributes.length);
-		assertTrue(attributes[0] == attribute);				
-		
 	}
 
 }

@@ -22,7 +22,6 @@ import java.util.MissingResourceException;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Role;
@@ -30,6 +29,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
 import org.lh.dmlj.schema.editor.command.SetShortAttributeCommand;
 import org.lh.dmlj.schema.editor.common.Tools;
@@ -88,34 +88,34 @@ public abstract class AbstractSetPointersHandler {
 		}
 	}
 	
-	protected Command createAppendPointerCommand(SchemaRecord record, 
-												 Role setPointerTarget,
-												 EAttribute pointerToAdd) {
+	protected IModelChangeCommand createAppendPointerCommand(SchemaRecord record, 
+												 			 Role setPointerTarget,
+												 			 EAttribute pointerToAdd) {
 				
 		Assert.isTrue(setPointerTarget.eGet(pointerToAdd) == null, 
 											"logic error: pointer already set");
 		short pointerPosition = Tools.getFirstAvailablePointerPosition(record);
-		Command command = 
+		IModelChangeCommand command = 
 			new SetObjectAttributeCommand(setPointerTarget, pointerToAdd, 
 										  Short.valueOf(pointerPosition), 
 										  getAttributeLabel(pointerToAdd)); 
 		return command;		
 	}
 
-	protected List<Command> createShiftPointersCommands(SchemaRecord record, 
-														Role resetPointerTarget,
-														EAttribute pointerToRemove) {
+	protected List<IModelChangeCommand> createShiftPointersCommands(SchemaRecord record, 
+																	Role resetPointerTarget,
+																	EAttribute pointerToRemove) {
 				
 		Assert.isTrue(resetPointerTarget.eGet(pointerToRemove) != null, 
 					  "logic error: pointer not set");
 		
-		List<Command> commands = new ArrayList<>();
+		List<IModelChangeCommand> commands = new ArrayList<>();
 		
 		short marker = 
 			((Short) resetPointerTarget.eGet(pointerToRemove)).shortValue();
 		for (OwnerRole ownerRole : record.getOwnerRoles()) {
 			if (ownerRole == resetPointerTarget) {
-				Command command =
+				IModelChangeCommand command =
 					new SetObjectAttributeCommand(ownerRole, pointerToRemove, 
 												  null, 
 												  getAttributeLabel(pointerToRemove)); 
@@ -123,7 +123,7 @@ public abstract class AbstractSetPointersHandler {
 			}
 			if (ownerRole.getNextDbkeyPosition() > marker) {
 				short newValue = (short) (ownerRole.getNextDbkeyPosition() - 1); 
-				Command command =
+				IModelChangeCommand command =
 					new SetShortAttributeCommand(ownerRole, 
 												 SchemaPackage.eINSTANCE.getOwnerRole_NextDbkeyPosition(), 
 												 newValue, 
@@ -135,7 +135,7 @@ public abstract class AbstractSetPointersHandler {
 				
 				short newValue = 
 					(short) (ownerRole.getPriorDbkeyPosition().shortValue() - 1); 
-				Command command =
+				IModelChangeCommand command =
 					new SetObjectAttributeCommand(ownerRole, 
 												  SchemaPackage.eINSTANCE.getOwnerRole_PriorDbkeyPosition(), 
 												  Short.valueOf(newValue), 
@@ -146,7 +146,7 @@ public abstract class AbstractSetPointersHandler {
 		
 		for (MemberRole memberRole : record.getMemberRoles()) {
 			if (memberRole == resetPointerTarget) {				
-				Command command =
+				IModelChangeCommand command =
 					new SetObjectAttributeCommand(memberRole, pointerToRemove, 
 												  null, 
 												  getAttributeLabel(pointerToRemove)); 
@@ -157,7 +157,7 @@ public abstract class AbstractSetPointersHandler {
 				
 				short newValue = 
 					(short) (memberRole.getNextDbkeyPosition() - 1); 
-				Command command =
+				IModelChangeCommand command =
 					new SetObjectAttributeCommand(memberRole, 
 												 SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition(), 
 												 Short.valueOf(newValue), 
@@ -169,7 +169,7 @@ public abstract class AbstractSetPointersHandler {
 				
 				short newValue = 
 					(short) (memberRole.getPriorDbkeyPosition().shortValue() - 1); 
-				Command command =
+				IModelChangeCommand command =
 					new SetObjectAttributeCommand(memberRole, 
 												  SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition(), 
 												  Short.valueOf(newValue), 
@@ -181,7 +181,7 @@ public abstract class AbstractSetPointersHandler {
 				
 				short newValue = (short) (memberRole.getOwnerDbkeyPosition()
 													.shortValue() - 1); 
-				Command command =
+				IModelChangeCommand command =
 					new SetObjectAttributeCommand(memberRole, 
 												  SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition(), 
 												  Short.valueOf(newValue), 
@@ -193,7 +193,7 @@ public abstract class AbstractSetPointersHandler {
 				
 				short newValue = (short) (memberRole.getIndexDbkeyPosition()
 													.shortValue() - 1); 
-				Command command =
+				IModelChangeCommand command =
 					new SetObjectAttributeCommand(memberRole, 
 												  SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition(), 
 												  Short.valueOf(newValue), 

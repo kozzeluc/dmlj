@@ -42,7 +42,11 @@ import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
 import org.lh.dmlj.schema.editor.command.AddMemberToSetCommand;
 import org.lh.dmlj.schema.editor.command.CreateSetCommand;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
@@ -105,6 +109,11 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				// supply the member record type to the command since we couldn't do this at command
 				// construction time
 				command.setMemberRecord(record);
+				// create the model change context and pass it to the command
+				ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_MEMBER_TO_SET);
+				context.getContextData().put(IContextDataKeys.SET_NAME, set.getName());
+				context.getContextData().put(IContextDataKeys.RECORD_NAME, record.getName());
+				command.setContext(context);
 				return command;
 			}
 		}
@@ -133,7 +142,10 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				mode = SetMode.INDEXED;
 			} 
 			Assert.isNotNull(mode, "cannot determine set mode");	
-			request.setStartCommand(new CreateSetCommand(record, mode));
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_USER_OWNED_SET);
+			CreateSetCommand command = new CreateSetCommand(record, mode);
+			command.setContext(context);
+			request.setStartCommand(command);
 		}
 		return request.getStartCommand();
 	}
@@ -195,8 +207,12 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
 														    request.getLocation(), 
 														    zoomLevel);
-			return new MoveEndpointCommand(connectionPart, location.x, 
-										   location.y, true);					
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_ENDPOINT);
+			context.putContextData(connectionPart);
+			IModelChangeCommand command = 
+				new MoveEndpointCommand(connectionPart, location.x, location.y, true);
+			command.setContext(context);
+			return (Command) command;
 		} else {
 			return null;
 		}
@@ -229,8 +245,12 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				ReconnectEndpointAnchor.getRelativeLocation((RecordFigure)figure, 
 															request.getLocation(), 
 															zoomLevel);
-			return new MoveEndpointCommand(connectionPart, location.x, 
-										   location.y, false);					
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_ENDPOINT);
+			context.putContextData(connectionPart);
+			IModelChangeCommand command = 
+				new MoveEndpointCommand(connectionPart, location.x, location.y, false);
+			command.setContext(context);
+			return (Command) command;
 		} else {
 			return null;
 		}

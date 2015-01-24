@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,7 +30,10 @@ import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.editor.command.CreateBendpointCommand;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.MoveBendpointCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.part.SetEditPart;
 
@@ -152,17 +155,25 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
         
         // create the create bendpoint command...
         CreateBendpointCommand createBendpointCommand = 
-			new CreateBendpointCommand(connectionPart, request.getIndex(), p.x, 
-									   p.y);
+			new CreateBendpointCommand(connectionPart, request.getIndex(), p.x, p.y);
         
-        // chain both commands together, forming the final command...
-        return lockEndpointsCommand.chain(createBendpointCommand);
+        // create a compound command...
+        ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_BENDPOINT);
+        context.putContextData(connectionPart);
+        ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand("Create bendpoint");
+        cc.setContext(context);
+        cc.add(lockEndpointsCommand);
+        cc.add(createBendpointCommand);
+        return cc;
 	}
 
 	@Override
 	protected Command getDeleteBendpointCommand(BendpointRequest request) {
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_BENDPOINT);
+		context.putContextData(connectionPart);
 		DeleteBendpointCommand command = 
 			new DeleteBendpointCommand(connectionPart, request.getIndex());
+		command.setContext(context);
 		return command;
 	}
 
@@ -179,10 +190,11 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
         p.setPreciseY(p.preciseY() - ownerLocation.preciseY());
 		
         // create the move bendpoint command...
+        ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_BENDPOINT);
+        context.putContextData(connectionPart);
         MoveBendpointCommand command = 
-			new MoveBendpointCommand(connectionPart, request.getIndex(), p.x, 
-									 p.y);
-		
+			new MoveBendpointCommand(connectionPart, request.getIndex(), p.x, p.y);
+		command.setContext(context);
         return command;
 	}	
 	

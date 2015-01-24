@@ -22,6 +22,8 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.CreateIndexCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 /**
  * An edit policy that enables creating indexes.
@@ -43,7 +45,10 @@ public class RecordXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			return null;
 		}		
 		
-		return new CreateIndexCommand(record);				
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_SYSTEM_OWNED_SET);
+		CreateIndexCommand command = new CreateIndexCommand(record);	
+		command.setContext(context);
+		return command;
 	}
 	
 }

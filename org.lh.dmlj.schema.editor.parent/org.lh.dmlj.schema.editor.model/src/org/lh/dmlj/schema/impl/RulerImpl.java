@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -111,7 +111,7 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	 */
 	public EList<Guide> getGuides() {
 		if (guides == null) {
-			guides = new EObjectContainmentEList<Guide>(Guide.class, this, SchemaPackage.RULER__GUIDES);
+			guides = new EObjectContainmentWithInverseEList<Guide>(Guide.class, this, SchemaPackage.RULER__GUIDES, SchemaPackage.GUIDE__RULER);
 		}
 		return guides;
 	}
@@ -183,9 +183,12 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case SchemaPackage.RULER__GUIDES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getGuides()).basicAdd(otherEnd, msgs);
 			case SchemaPackage.RULER__DIAGRAM_DATA:
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,17 +14,25 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.command.annotation;
+package org.lh.dmlj.schema.editor.importtool.elements;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Collection;
+import java.util.Properties;
 
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ModelChange {
+import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollectorRegistry;
+import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
+
+public interface IRecordElementsImportTool {
 	
-	ModelChangeCategory category();
+	void dispose();
+	
+	Object getRecordPlaceholderContext();
+
+	Collection<?> getRootElementContexts(Object rootContext);
+	
+	<T> Collection<T> getSubordinateElementContexts(T elementContext);
+	
+	void init(IDataEntryContext dataEntryContext, Properties parameters,
+			  IRecordElementsDataCollectorRegistry recordElementDataCollectorRegistry);
 	
 }

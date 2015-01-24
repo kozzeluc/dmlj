@@ -23,18 +23,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.eclipse.core.runtime.AssertionFailedException;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.junit.Test;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 
 public class ChangeAreaSpecificationCommandTest {
 
@@ -250,88 +243,17 @@ public class ChangeAreaSpecificationCommandTest {
 		assertNull(areaSpecification.getOffsetExpression());
 		assertNull(areaSpecification.getSymbolicSubareaName());
 		
-
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.SET_FEATURES
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.SET_FEATURES, modelChangeAnnotation.category());		
-		
-		// make sure the owner is set
-		AreaSpecification owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == areaSpecification);
-		
-		// make sure the attributes are set - note that only the first attribute belongs to the
-		// owner (AreaSpecification); the remainder of the attributes belong to the owner's
-		// offsetExpression child, this is acceptable though since there is at most 1 offset
-		// expression per area specification
-		EStructuralFeature[] attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(5, attributes.length);
-		assertTrue(attributes[0] == SchemaPackage.eINSTANCE.getAreaSpecification_SymbolicSubareaName());
-		assertTrue(attributes[1] == SchemaPackage.eINSTANCE.getOffsetExpression_OffsetPageCount());
-		assertTrue(attributes[2] == SchemaPackage.eINSTANCE.getOffsetExpression_OffsetPercent());
-		assertTrue(attributes[3] == SchemaPackage.eINSTANCE.getOffsetExpression_PageCount());
-		assertTrue(attributes[4] == SchemaPackage.eINSTANCE.getOffsetExpression_Percent());
-		
 		
 		// undo the command and check that the offset expression and symbolic subarea are still null
 		command.undo();
 		assertNull(areaSpecification.getOffsetExpression());
-		assertNull(areaSpecification.getSymbolicSubareaName());
-		
-		
-		// make sure the owner is sill set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == areaSpecification);
-		
-		// make sure the attributes are still set
-		attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(5, attributes.length);
-		assertTrue(attributes[0] == SchemaPackage.eINSTANCE.getAreaSpecification_SymbolicSubareaName());
-		assertTrue(attributes[1] == SchemaPackage.eINSTANCE.getOffsetExpression_OffsetPageCount());
-		assertTrue(attributes[2] == SchemaPackage.eINSTANCE.getOffsetExpression_OffsetPercent());
-		assertTrue(attributes[3] == SchemaPackage.eINSTANCE.getOffsetExpression_PageCount());
-		assertTrue(attributes[4] == SchemaPackage.eINSTANCE.getOffsetExpression_Percent());		
+		assertNull(areaSpecification.getSymbolicSubareaName());		
 		
 		
 		// redo the command and check that no offset expression is added
 		command.redo();
 		assertNull(areaSpecification.getOffsetExpression());
-		assertNull(areaSpecification.getSymbolicSubareaName());
-		
-		
-		// make sure the owner is sill set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == areaSpecification);
-		
-		// make sure the attributes are still set
-		attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(5, attributes.length);
-		assertTrue(attributes[0] == SchemaPackage.eINSTANCE.getAreaSpecification_SymbolicSubareaName());
-		assertTrue(attributes[1] == SchemaPackage.eINSTANCE.getOffsetExpression_OffsetPageCount());
-		assertTrue(attributes[2] == SchemaPackage.eINSTANCE.getOffsetExpression_OffsetPercent());
-		assertTrue(attributes[3] == SchemaPackage.eINSTANCE.getOffsetExpression_PageCount());
-		assertTrue(attributes[4] == SchemaPackage.eINSTANCE.getOffsetExpression_Percent());		
-		
+		assertNull(areaSpecification.getSymbolicSubareaName());		
 	}
 	
 	/**

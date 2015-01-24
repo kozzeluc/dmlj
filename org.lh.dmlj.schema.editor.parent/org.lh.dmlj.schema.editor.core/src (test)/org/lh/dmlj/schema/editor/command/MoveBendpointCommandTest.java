@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,23 +17,14 @@
 package org.lh.dmlj.schema.editor.command;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
 import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
 public class MoveBendpointCommandTest {
@@ -73,30 +64,6 @@ public class MoveBendpointCommandTest {
 		assertEquals("bendpoint [0] set DEPT-EMPLOYEE (EMPLOYEE)", newBendpoint1a.getEyecatcher());
 		assertEquals("bendpoint [1] set DEPT-EMPLOYEE (EMPLOYEE)", 
 			 	 	 originalBendpoint2.getEyecatcher());
-		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.SET_FEATURES
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.SET_FEATURES, modelChangeAnnotation.category());		
-		
-		// make sure the owner is set
-		DiagramLocation owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == originalBendpoint1);
-		
-		// make sure the features are set
-		EStructuralFeature[] attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(2, attributes.length);
-		assertTrue(attributes[0] == SchemaPackage.eINSTANCE.getDiagramLocation_X());
-		assertTrue(attributes[1] == SchemaPackage.eINSTANCE.getDiagramLocation_Y());
 	
 		
 		// undo the command and verify
@@ -110,24 +77,7 @@ public class MoveBendpointCommandTest {
 		assertEquals("bendpoint [0] set DEPT-EMPLOYEE (EMPLOYEE)", newBendpoint1b.getEyecatcher());		
 		assertSame(originalBendpoint2, originalConnectionPart.getBendpointLocations().get(1));
 		assertEquals("bendpoint [1] set DEPT-EMPLOYEE (EMPLOYEE)", 
-				 	 originalBendpoint2.getEyecatcher());
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == originalBendpoint1);
-		
-		// make sure the features are still set
-		attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(2, attributes.length);
-		assertTrue(attributes[0] == SchemaPackage.eINSTANCE.getDiagramLocation_X());
-		assertTrue(attributes[1] == SchemaPackage.eINSTANCE.getDiagramLocation_Y());		
+				 	 originalBendpoint2.getEyecatcher());	
 		
 		
 		// redo the command and verify
@@ -141,24 +91,6 @@ public class MoveBendpointCommandTest {
 		assertSame(originalBendpoint2, originalConnectionPart.getBendpointLocations().get(1));
 		assertEquals("bendpoint [1] set DEPT-EMPLOYEE (EMPLOYEE)", 
 				 	 originalBendpoint2.getEyecatcher());
-		
-
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(owner == originalBendpoint1);
-		
-		// make sure the features are still set
-		attributes = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(2, attributes.length);
-		assertTrue(attributes[0] == SchemaPackage.eINSTANCE.getDiagramLocation_X());
-		assertTrue(attributes[1] == SchemaPackage.eINSTANCE.getDiagramLocation_Y());		
-		
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.Schema;
@@ -28,7 +27,10 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.policy.IndexComponentEditPolicy;
 
 public class IndexTreeEditPart extends AbstractSchemaTreeEditPart<SystemOwner> {
@@ -38,13 +40,38 @@ public class IndexTreeEditPart extends AbstractSchemaTreeEditPart<SystemOwner> {
 	}
 	
 	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		if (owner == getNodeTextProvider() && 
-			isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Name())) {
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
 			
-			// the set name has changed... the order of the parent edit part might become disrupted, 
-			// so we have to inform that edit part of this fact
-			nodeTextChanged();						
+			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
+			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
+				// the set name has changed (execute/redo)... the order of the parent edit part's 
+				// children might become disrupted, so we have to inform that edit part of this fact
+				nodeTextChanged();
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				   context.appliesTo(getModel().getSet())) {
+				
+			// the set name change was undone... the order of the parent edit part's children might  
+			// become disrupted, so we have to inform that edit part of this fact
+			nodeTextChanged();
+		}
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel().getSet())) {
+				
+			// the set name is changing (execute/redo); put a boolean in the listener data, which we 
+			// will pick up again when processing the after model change event
+			context.setListenerData(Boolean.TRUE);					
 		}
 	}	
 	

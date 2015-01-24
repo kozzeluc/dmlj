@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,27 +16,15 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.SET_FEATURES;
-
 import java.text.NumberFormat;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 
-@ModelChange(category=SET_FEATURES)
-public class SetZoomLevelCommand extends Command {
+public class SetZoomLevelCommand extends ModelChangeBasicCommand {
 		
-	@Owner 	  private DiagramData  		   diagramData; 
-	@Features private EStructuralFeature[] features = {
-		SchemaPackage.eINSTANCE.getDiagramData_ZoomLevel()
-	};
+	private DiagramData diagramData; 
 	
 	private double oldZoomLevel;
 	private double newZoomLevel;	

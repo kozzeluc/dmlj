@@ -29,10 +29,12 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.Set#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getMode <em>Mode</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Set#isMultipleMember <em>Multiple Member</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getOrder <em>Order</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getOwner <em>Owner</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getSchema <em>Schema</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Set#isSorted <em>Sorted</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getSystemOwner <em>System Owner</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getViaMembers <em>Via Members</em>}</li>
  * </ul>
@@ -99,6 +101,21 @@ public interface Set extends INodeTextProvider<Set> {
 	void setMode(SetMode value);
 
 	/**
+	 * Returns the value of the '<em><b>Multiple Member</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Multiple Member</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Multiple Member</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSet_MultipleMember()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isMultipleMember();
+
+	/**
 	 * Returns the value of the '<em><b>Order</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.lh.dmlj.schema.SetOrder}.
 	 * <!-- begin-user-doc -->
@@ -154,6 +171,21 @@ public interface Set extends INodeTextProvider<Set> {
 	 * @generated
 	 */
 	void setSchema(Schema value);
+
+	/**
+	 * Returns the value of the '<em><b>Sorted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Sorted</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Sorted</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSet_Sorted()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isSorted();
 
 	/**
 	 * Returns the value of the '<em><b>Owner</b></em>' containment reference.

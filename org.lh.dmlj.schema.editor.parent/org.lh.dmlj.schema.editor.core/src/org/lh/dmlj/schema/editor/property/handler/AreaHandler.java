@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,7 +22,6 @@ import java.util.MissingResourceException;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.AreaSpecification;
@@ -32,8 +31,12 @@ import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
 import org.lh.dmlj.schema.editor.command.ChangeAreaSpecificationCommand;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.MoveRecordOrIndexToOtherAreaCommand;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.IAreaSpecificationProvider;
 import org.lh.dmlj.schema.editor.property.ui.AreaDialog;
@@ -66,7 +69,15 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 		// the IAreaSpecificationProvider
 		AreaSpecification areaSpecification = 
 			areaSpecificationProvider.getAreaSpecification();
-				
+			
+		// now is a good time to create the model change context
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.CHANGE_AREA_SPECIFICATION);
+		if (areaSpecification.getRecord() != null) {
+			context.putContextData(areaSpecification.getRecord());
+		} else {
+			context.putContextData(areaSpecification.getSystemOwner().getSet());
+		}
+		
 		// see what area the record or system owner has to be located in; if it
 		// is the same (possibly renamed) area, we will not replace the whole
 		// AreaSpecification, if the record is moved to a different (possibly
@@ -80,7 +91,7 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 			
 			// the record remains located in the same area, but the area may 
 			// have to be renamed
-			List<Command> commands = new ArrayList<>();
+			List<IModelChangeCommand> commands = new ArrayList<>();
 			if (action == AreaDialog.Action.RENAME_AREA) {
 				// rename area; create a command to set the new area name
 				String attributeLabel;
@@ -142,7 +153,7 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 			    oldPercent != null && !oldPercent.equals(newOffsetPercent) ||			    
 			    newPercent != null && !newPercent.equals(oldOffsetPercent)) {
 				
-				Command command = 
+				IModelChangeCommand command = 
 					new ChangeAreaSpecificationCommand(areaSpecification, 
 													   newSymbolicSubareaName, 
 													   newOffsetPageCount, 
@@ -155,14 +166,17 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 			if (commands.isEmpty()) {
 				throw new RuntimeException("logic error: no commands created");				
 			} else if (commands.size() > 1) {
-				CompoundCommand cc = 
-					new CompoundCommand("Change area specification");				
-				for (Command command : commands) {
-					cc.add(command);
+				ModelChangeCompoundCommand cc = 
+					new ModelChangeCompoundCommand("Change area specification");				
+				cc.setContext(context);
+				for (IModelChangeCommand command : commands) {
+					cc.add((Command) command);
 				}
 				return cc;
 			} else {
-				return commands.get(0);
+				IModelChangeCommand command = commands.get(0);
+				command.setContext(context);
+				return (Command) commands.get(0);
 			}
 			
 		} else {
@@ -208,7 +222,8 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 													   dialog.getPercent());				
 				
 				// create the compound command and return it			
-				CompoundCommand cc = new CompoundCommand(ccLabel);				
+				ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(ccLabel);				
+				cc.setContext(context);
 				cc.add(moveRecordOrIndexToOtherAreaCommand);
 				cc.add(changeAreaSpecificationCommand);
 				return cc;
@@ -217,11 +232,17 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 				// the record or index moves to another area; neither the symbolic subarea nor any 
 				// offset expression attribute have changed
 				if (areaSpecification.getRecord() != null) {
-					return new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), 
-	 	     												   	   dialog.getAreaName());
+					IModelChangeCommand command = 
+						new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), 
+	 	     											   	    dialog.getAreaName());
+					command.setContext(context);
+					return (Command) command;
 				} else {
-					return new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), 
-																   dialog.getAreaName());
+					IModelChangeCommand command = 
+						new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), 
+																dialog.getAreaName());
+					command.setContext(context);
+					return (Command) command;
 				}
 			}
 		}		

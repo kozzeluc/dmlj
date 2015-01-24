@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Guide#getPosition <em>Position</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Guide#getRuler <em>Ruler</em>}</li>
  * </ul>
  * </p>
  *
@@ -60,5 +61,33 @@ public interface Guide extends EObject {
 	 * @generated
 	 */
 	void setPosition(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Ruler</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.Ruler#getGuides <em>Guides</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Ruler</em>' container reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Ruler</em>' container reference.
+	 * @see #setRuler(Ruler)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getGuide_Ruler()
+	 * @see org.lh.dmlj.schema.Ruler#getGuides
+	 * @model opposite="guides" transient="false"
+	 * @generated
+	 */
+	Ruler getRuler();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.Guide#getRuler <em>Ruler</em>}' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Ruler</em>' container reference.
+	 * @see #getRuler()
+	 * @generated
+	 */
+	void setRuler(Ruler value);
 
 } // Guide

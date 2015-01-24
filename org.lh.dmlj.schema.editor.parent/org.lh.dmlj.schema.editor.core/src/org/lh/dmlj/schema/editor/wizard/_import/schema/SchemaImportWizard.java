@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -86,6 +86,7 @@ import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryPageController;
 import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
+import org.lh.dmlj.schema.editor.wizard._import.ImportWizardPage;
 
 /**
  * This wizard is used for both importing (import mode; this is the default 
@@ -213,9 +214,9 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 			configElement.createDataEntryPage();		
 		
 		// wrap the data entry page in a wizard page
-		ImportWizardPage importWizardPage = 
-			new ImportWizardPage(dataEntryPage, configElement.getName(),
-								 configElement.getMessage());
+		SchemaImportWizardPage importWizardPage = 
+			new SchemaImportWizardPage(dataEntryPage, configElement.getName(), 
+								 	   configElement.getMessage());
 		importWizardPage.setFirstDataEntryPageInUpdateMode(firstDataEntryPageInUpdateMode);
 		
 		// inject the context in the data entry page's @Context annotated field 
@@ -394,9 +395,9 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 				// deal with the options wizard page
 				OptionsExtensionElement optionsExtensionElement = 
 					activeImportToolExtensionElement.getOptionsExtensionElement();
-				ImportWizardPage optionsWizardPage = 
-					new ImportWizardPage(new OptionsPage(optionsExtensionElement), 
-										 "_optionsPage", "Set options");
+				SchemaImportWizardPage optionsWizardPage = 
+					new SchemaImportWizardPage(new OptionsPage(optionsExtensionElement), 
+											   "_optionsPage", "Set options");
 				injectContext(optionsWizardPage.getDataEntryPage());
 				createAndInjectController(optionsWizardPage);
 				dataEntryWizardPages.add(optionsWizardPage);

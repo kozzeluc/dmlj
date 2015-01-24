@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,8 +20,6 @@ import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.GraphicalEditor;
@@ -40,6 +38,7 @@ import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.property.IGraphicalEditorProvider;
 
 /**
@@ -119,29 +118,13 @@ public abstract class AbstractPropertiesSection
 	}
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
+	public void afterModelChange(ModelChangeContext context) {
 		// whatever model change, just refresh the properties section
 		doRefresh();
 	}
 	
 	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {
-		
-		// whatever model change, just refresh the properties section
-		doRefresh();
-	}
-	
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
-		// whatever model change, just refresh the properties section
-		doRefresh();
-	}
-	
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		// whatever model change, just refresh the properties section
-		doRefresh();
+	public void beforeModelChange(ModelChangeContext context) {		
 	}
 	
 	private void clearGlobalActionHandlers() {

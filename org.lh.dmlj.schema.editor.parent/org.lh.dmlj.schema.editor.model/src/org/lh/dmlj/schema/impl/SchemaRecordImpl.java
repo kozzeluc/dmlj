@@ -58,8 +58,10 @@ import org.lh.dmlj.schema.ViaSpecification;
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getBaseVersion <em>Base Version</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isCalc <em>Calc</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getControlLength <em>Control Length</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getDataLength <em>Data Length</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isDirect <em>Direct</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isFragmented <em>Fragmented</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getLocationMode <em>Location Mode</em>}</li>
@@ -80,6 +82,7 @@ import org.lh.dmlj.schema.ViaSpecification;
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getSchema <em>Schema</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getSynonymName <em>Synonym Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getSynonymVersion <em>Synonym Version</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isVia <em>Via</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getViaSpecification <em>Via Specification</em>}</li>
  * </ul>
  * </p>
@@ -133,6 +136,15 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 */
 	protected short baseVersion = BASE_VERSION_EDEFAULT;
 	/**
+	 * The default value of the '{@link #isCalc() <em>Calc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isCalc()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean CALC_EDEFAULT = false;
+	/**
 	 * The default value of the '{@link #getControlLength() <em>Control Length</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -150,6 +162,15 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * @ordered
 	 */
 	protected static final short DATA_LENGTH_EDEFAULT = -1;
+	/**
+	 * The default value of the '{@link #isDirect() <em>Direct</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirect()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DIRECT_EDEFAULT = false;
 	/**
 	 * The default value of the '{@link #isFragmented() <em>Fragmented</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -385,6 +406,15 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 */
 	protected short synonymVersion = SYNONYM_VERSION_EDEFAULT;
 	/**
+	 * The default value of the '{@link #isVia() <em>Via</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVia()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean VIA_EDEFAULT = false;
+	/**
 	 * The cached value of the '{@link #getViaSpecification() <em>Via Specification</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -461,6 +491,15 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 		baseVersion = newBaseVersion;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SCHEMA_RECORD__BASE_VERSION, oldBaseVersion, baseVersion));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isCalc() {
+		return getLocationMode() == LocationMode.CALC;
 	}
 
 	/**
@@ -559,6 +598,15 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 			dataLength++;
 		}
 		return dataLength;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isDirect() {
+		return getLocationMode() == LocationMode.DIRECT;
 	}
 
 	/**
@@ -820,6 +868,15 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 		synonymVersion = newSynonymVersion;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SCHEMA_RECORD__SYNONYM_VERSION, oldSynonymVersion, synonymVersion));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isVia() {
+		return getLocationMode() == LocationMode.VIA;
 	}
 
 	/**
@@ -1141,10 +1198,14 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return getBaseName();
 			case SchemaPackage.SCHEMA_RECORD__BASE_VERSION:
 				return getBaseVersion();
+			case SchemaPackage.SCHEMA_RECORD__CALC:
+				return isCalc();
 			case SchemaPackage.SCHEMA_RECORD__CONTROL_LENGTH:
 				return getControlLength();
 			case SchemaPackage.SCHEMA_RECORD__DATA_LENGTH:
 				return getDataLength();
+			case SchemaPackage.SCHEMA_RECORD__DIRECT:
+				return isDirect();
 			case SchemaPackage.SCHEMA_RECORD__FRAGMENTED:
 				return isFragmented();
 			case SchemaPackage.SCHEMA_RECORD__ID:
@@ -1187,6 +1248,8 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return getSynonymName();
 			case SchemaPackage.SCHEMA_RECORD__SYNONYM_VERSION:
 				return getSynonymVersion();
+			case SchemaPackage.SCHEMA_RECORD__VIA:
+				return isVia();
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				return getViaSpecification();
 		}
@@ -1358,10 +1421,14 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return BASE_NAME_EDEFAULT == null ? baseName != null : !BASE_NAME_EDEFAULT.equals(baseName);
 			case SchemaPackage.SCHEMA_RECORD__BASE_VERSION:
 				return baseVersion != BASE_VERSION_EDEFAULT;
+			case SchemaPackage.SCHEMA_RECORD__CALC:
+				return isCalc() != CALC_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__CONTROL_LENGTH:
 				return getControlLength() != CONTROL_LENGTH_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__DATA_LENGTH:
 				return getDataLength() != DATA_LENGTH_EDEFAULT;
+			case SchemaPackage.SCHEMA_RECORD__DIRECT:
+				return isDirect() != DIRECT_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__FRAGMENTED:
 				return isFragmented() != FRAGMENTED_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__ID:
@@ -1402,6 +1469,8 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return SYNONYM_NAME_EDEFAULT == null ? synonymName != null : !SYNONYM_NAME_EDEFAULT.equals(synonymName);
 			case SchemaPackage.SCHEMA_RECORD__SYNONYM_VERSION:
 				return synonymVersion != SYNONYM_VERSION_EDEFAULT;
+			case SchemaPackage.SCHEMA_RECORD__VIA:
+				return isVia() != VIA_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				return viaSpecification != null;
 		}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,25 +21,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.junit.Test;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.Syntax;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
@@ -88,30 +80,7 @@ public class ChangeCalcKeyCommandTest {
 		assertSame(empId, calcKey2.getElements().get(1).getElement());
 		assertSame(DuplicatesOption.FIRST, calcKey2.getDuplicatesOption());		
 		assertNull(calcKey2.getMemberRole());	
-		assertEquals("EMP-NAME-0415, EMP-ID-0415", calcKey2.getElementSummary());
-		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.SET_FEATURES
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.SET_FEATURES, modelChangeAnnotation.category());
-		
-		// make sure the owner is set
-		SchemaRecord owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(record, owner);		
-		
-		// make sure the CALC key reference is set
-		EStructuralFeature[] features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, features.length);
-		assertTrue(features[0] == SchemaPackage.eINSTANCE.getSchemaRecord_CalcKey());		
+		assertEquals("EMP-NAME-0415, EMP-ID-0415", calcKey2.getElementSummary());		
 		
 		
 		// undo the command and check the CALC key
@@ -130,22 +99,6 @@ public class ChangeCalcKeyCommandTest {
 		assertEquals("EMP-ID-0415", calcKey.getElementSummary());
 		
 		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(record, owner);		
-		
-		// make sure the CALC key reference is still set
-		features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, features.length);
-		assertTrue(features[0] == SchemaPackage.eINSTANCE.getSchemaRecord_CalcKey());		
-		
-		
 		// redo the command and check the CALC key
 		command.redo();
 		ObjectGraph objectGraph4 = TestTools.asObjectGraph(schema);
@@ -160,24 +113,7 @@ public class ChangeCalcKeyCommandTest {
 		assertSame(empId, calcKey2.getElements().get(1).getElement());
 		assertSame(DuplicatesOption.FIRST, calcKey2.getDuplicatesOption());
 		assertNull(calcKey2.getMemberRole());
-		assertEquals("EMP-NAME-0415, EMP-ID-0415", calcKey2.getElementSummary());
-		
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(record, owner);		
-		
-		// make sure the CALC key reference is still set
-		features = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertEquals(1, features.length);
-		assertTrue(features[0] == SchemaPackage.eINSTANCE.getSchemaRecord_CalcKey());		
-		
+		assertEquals("EMP-NAME-0415, EMP-ID-0415", calcKey2.getElementSummary());		
 	}
 
 }
