@@ -36,6 +36,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
+import org.lh.dmlj.schema.editor.policy.RecordComponentEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
 
 public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord> {
@@ -257,6 +258,10 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 				installEditPolicy(EditPolicy.COMPONENT_ROLE, 
 								  new RemoveMemberFromSetEditPolicy(memberRole, false));
 			}
+			// a record cannot be deleted when pressing the delete key under a set's owner record
+		} else {
+			// the next edit policy allows for the deletion of a record 
+			installEditPolicy(EditPolicy.COMPONENT_ROLE, new RecordComponentEditPolicy());
 		}
 	}
 	

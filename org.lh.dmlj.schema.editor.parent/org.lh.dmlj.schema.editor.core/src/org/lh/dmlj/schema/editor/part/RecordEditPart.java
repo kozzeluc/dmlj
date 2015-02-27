@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -44,6 +44,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
+import org.lh.dmlj.schema.editor.policy.RecordComponentEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RecordGraphicalNodeEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RecordXYLayoutEditPolicy;
 
@@ -151,6 +152,9 @@ public class RecordEditPart
 								  						    getViewer()));
 		
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new RecordXYLayoutEditPolicy(getModel()));
+		
+		// the next edit policy allows for the deletion of a record
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new RecordComponentEditPolicy());
 		
 	}
 	

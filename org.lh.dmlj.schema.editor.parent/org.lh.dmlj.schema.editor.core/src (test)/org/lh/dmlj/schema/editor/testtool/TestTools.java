@@ -21,12 +21,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -35,6 +39,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.commands.Command;
 import org.junit.Assert;
+import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
@@ -44,6 +49,9 @@ import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.Procedure;
+import org.lh.dmlj.schema.ProcedureCallSpecification;
+import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
@@ -76,6 +84,30 @@ public abstract class TestTools {
 				
 	}	
 	
+	public static void addProcedureCallSpecification(Procedure procedure, SchemaArea area) {		
+		AreaProcedureCallSpecification callSpec = mock(AreaProcedureCallSpecification.class);
+		when(callSpec.getArea()).thenReturn(area);
+		when(callSpec.getProcedure()).thenReturn(procedure);
+		if (area.getProcedures() == null) {
+			// the area should be a mock object
+			when(area.getProcedures()).thenReturn(new BasicEList<AreaProcedureCallSpecification>());	
+		}
+		area.getProcedures().add(callSpec);
+		procedure.getCallSpecifications().add(callSpec);
+	}
+
+	public static void addProcedureCallSpecification(Procedure procedure, SchemaRecord record) {
+		RecordProcedureCallSpecification callSpec = mock(RecordProcedureCallSpecification.class);
+		when(callSpec.getRecord()).thenReturn(record);
+		when(callSpec.getProcedure()).thenReturn(procedure);
+		if (record.getProcedures() == null) {
+			// the record should be a mock object
+			when(record.getProcedures()).thenReturn(new BasicEList<RecordProcedureCallSpecification>());	
+		}
+		record.getProcedures().add(callSpec);
+		procedure.getCallSpecifications().add(callSpec);
+	}
+
 	public static void addSourceAndTargetEndPoints(Set set) {
 		Assert.assertEquals(1, set.getMembers().size());
 		Assert.assertEquals(1, set.getMembers().get(0).getConnectionParts().size());
@@ -498,6 +530,19 @@ public abstract class TestTools {
 		
 	}
 	
+	public static Procedure createProcedure() {
+		Procedure procedure = mock(Procedure.class);
+		EList<ProcedureCallSpecification> callSpecs = new BasicEList<>();
+		when(procedure.getCallSpecifications()).thenReturn(callSpecs);
+		return procedure;
+	}
+
+	public static Procedure createProcedure(String name) {
+		Procedure procedure = createProcedure();
+		when(procedure.getName()).thenReturn(name);
+		return procedure;
+	}
+
 	public static SchemaArea getArea(Schema schema, String areaName) {
 		SchemaArea area = schema.getArea(areaName);
 		assertNotNull("area " + areaName + " is not defined in schema " + schema.getName() + 

@@ -106,7 +106,7 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 	}
 	
 	protected final void collectObjectsForRecord(ModelChangeContext context) {
-		String recordName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
 		SchemaRecord record = context.getSchema().getRecord(recordName);
 		
 		Map<String, List<EObject>> map = createModelChildrenActionMap(context);
