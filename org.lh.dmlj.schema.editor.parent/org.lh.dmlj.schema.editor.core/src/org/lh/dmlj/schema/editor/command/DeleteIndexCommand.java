@@ -137,6 +137,9 @@ public class DeleteIndexCommand extends ModelChangeBasicCommand {
 					  systemOwner.getSet().getName());				
 		removeAreaSpecification();
 		if (area.getAreaSpecifications().isEmpty()) {
+			// TODO don't remove the area here; we've got a dedicated command to remove an area and
+			// whenever an area becomes obsolete after removing an index, a compound command should
+			// be the answer
 			removeArea();
 		}		
 		removeMembershipData();
@@ -150,6 +153,9 @@ public class DeleteIndexCommand extends ModelChangeBasicCommand {
 	private void removeArea() {
 		schema.getAreas().remove(area);
 		removeProcedureCallSpecifications();
+		// TODO don't remove any obsolete procedures here; we've got a dedicated command to remove a 
+		// procedure and whenever a procedure becomes obsolete after removing an index, a compound 
+		// command should be the answer
 		removeObsoleteProcedures();		
 	}
 	

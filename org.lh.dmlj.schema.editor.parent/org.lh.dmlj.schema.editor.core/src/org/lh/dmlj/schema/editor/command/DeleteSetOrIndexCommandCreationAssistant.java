@@ -85,6 +85,10 @@ public abstract class DeleteSetOrIndexCommandCreationAssistant {
 			
 			if (memberRole.getSet().getSystemOwner() != null) {
 				// indexed sets are never multiple-member sets and so this will be the last command
+				// TODO don't remove any obsolete area or procedures with the delete index command; 
+				// we've got dedicated commands to remove an area or a procedure and whenever an 
+				// area and/or procedure becomes obsolete after removing an index, a compound 
+				// command should be the answer
 				commands.add(new DeleteIndexCommand(memberRole.getSet().getSystemOwner()));				
 			} else if (memberRole.getSet().getMembers().size() == 1 || 
 					   memberRoles.size() == memberRole.getSet().getMembers().size() && 
