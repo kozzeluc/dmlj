@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -61,7 +61,8 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.MOVE_CONNECTOR &&
+		if ((context.getModelChangeType() == ModelChangeType.MOVE_CONNECTOR ||
+			 context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
 			context.appliesTo(getModel())) {
 			
 			// the connector was moved

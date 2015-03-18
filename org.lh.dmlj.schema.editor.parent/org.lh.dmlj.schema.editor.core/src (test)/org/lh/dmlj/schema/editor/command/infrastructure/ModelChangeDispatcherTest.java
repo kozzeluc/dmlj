@@ -16,13 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.command.infrastructure;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -30,13 +24,20 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.AssertionFailedException;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.junit.Test;
+import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
+import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
 
 public class ModelChangeDispatcherTest {	
 	
@@ -521,6 +522,85 @@ public class ModelChangeDispatcherTest {
 		
 		assertTrue(methodsInvoked[0]);
 		
+	}
+	
+	@Test
+	public void testIsMoveGroupOfDiagramNodesCompoundCommand() {
+		
+		List<Command> commands = new ArrayList<>();
+		commands.add(mock(Command.class));
+		commands.add(mock(Command.class));
+		
+		assertFalse(ModelChangeDispatcher.isMoveGroupOfDiagramNodesCompoundCommand(commands));
+		
+		commands.add(mock(MoveDiagramNodeCommand.class));
+		assertFalse(ModelChangeDispatcher.isMoveGroupOfDiagramNodesCompoundCommand(commands));
+		
+		commands.clear();
+		commands.add(mock(MoveDiagramNodeCommand.class));
+		assertTrue(ModelChangeDispatcher.isMoveGroupOfDiagramNodesCompoundCommand(commands));
+		commands.add(mock(MoveDiagramNodeCommand.class));
+		assertTrue(ModelChangeDispatcher.isMoveGroupOfDiagramNodesCompoundCommand(commands));
+		
+		commands.add(mock(Command.class));
+		assertFalse(ModelChangeDispatcher.isMoveGroupOfDiagramNodesCompoundCommand(commands));
+	}
+	
+	@Test 
+	public void testCreateModelChangeContextHierarchy() {
+		
+		ModelChangeContext parent = 
+			new ModelChangeContext(ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES);
+		
+		ModelChangeContext[] childContexts = {new ModelChangeContext(ModelChangeType.MOVE_RECORD), 
+									  		  new ModelChangeContext(ModelChangeType.MOVE_SET_OR_INDEX_LABEL)};
+		List<MoveDiagramNodeCommand> childCommands = new ArrayList<>();
+		for (int i = 0; i < childContexts.length; i++) {
+			MoveDiagramNodeCommand command = 
+				new MoveDiagramNodeCommand(mock(DiagramNode.class), 0, 0);
+			command.setContext(childContexts[i]);
+			childCommands.add(command);
+		}
+		
+		ModelChangeDispatcher.createModelChangeContextHierarchy(parent, childCommands);
+		
+		assertEquals(2, parent.getChildren().size());
+		assertSame(childContexts[0], parent.getChildren().get(0));
+		assertSame(childContexts[1], parent.getChildren().get(1));
+		
+		assertSame(parent, childContexts[0].getParent());
+		assertSame(parent, childContexts[1].getParent());
+		
+	}
+	
+	@Test
+	public void testLocateModelChangeContextForMoveGroupOfDiagramNodes() {
+		
+		ModelChangeContext context1 = new ModelChangeContext(ModelChangeType.MOVE_RECORD);
+		ModelChangeContext context2 = new ModelChangeContext(ModelChangeType.MOVE_INDEX);
+		
+		MoveDiagramNodeCommand command1 = new MoveDiagramNodeCommand(mock(DiagramNode.class), 0, 0);
+		MoveDiagramNodeCommand command2 = new MoveDiagramNodeCommand(mock(DiagramNode.class), 0, 0);
+		
+		command1.setContext(context1);
+		command2.setContext(context2);
+		
+		CompoundCommand compoundCommand = new CompoundCommand();
+		compoundCommand.add(command1);
+		compoundCommand.add(command2);		
+		
+		CommandStackEvent event = mock(CommandStackEvent.class);
+		when(event.getCommand()).thenReturn(compoundCommand);
+				
+		ModelChangeDispatcher dispatcher = new ModelChangeDispatcher();		
+		ModelChangeContext context = dispatcher.locateModelChangeContext(event);
+		assertNotNull(context);
+		assertSame(ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES, context.getModelChangeType());
+		assertEquals(2, context.getChildren().size());
+		assertSame(context1, context.getChildren().get(0));
+		assertSame(context2, context.getChildren().get(1));
+		assertSame(context, context1.getParent());
+		assertSame(context, context2.getParent());
 	}
 	
 }

@@ -30,6 +30,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
+import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
 
 public class ModelChangeDispatcher implements IModelChangeProvider {
 	
@@ -44,6 +45,24 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	private List<IModelChangeListener> allListeners;
 	private Map<Integer, Object> listenerDataMap;	
 	
+	private static List<MoveDiagramNodeCommand> convertToMoveDiagramNodeCommands(List<Command> commands) {
+		List<MoveDiagramNodeCommand> moveDiagramNodeCommands = new ArrayList<>();
+		for (Command command : commands) {
+			moveDiagramNodeCommands.add((MoveDiagramNodeCommand) command);
+		}
+		return moveDiagramNodeCommands;
+	}
+
+	protected static void createModelChangeContextHierarchy(ModelChangeContext parentContext, 
+								    				 	    List<MoveDiagramNodeCommand> childCommands) {
+		
+		for (MoveDiagramNodeCommand command : childCommands) {
+			ModelChangeContext childContext = command.getContext();
+			parentContext.getChildren().add(childContext);
+			childContext.setParent(parentContext);
+		}
+	}
+
 	private static CommandExecutionMode getCommandExecutionMode(CommandStackEvent event) {
 		if (event.getDetail() == CommandStack.PRE_EXECUTE || 
 			event.getDetail() == CommandStack.POST_EXECUTE) {
@@ -60,6 +79,15 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		}
 		throw new IllegalArgumentException("cannot derive command execution mode: " + 
 										   event.getDetail()); 
+	}
+
+	protected static boolean isMoveGroupOfDiagramNodesCompoundCommand(List<Command> commands) {
+		for (Object command : commands) {
+			if (!(command instanceof MoveDiagramNodeCommand)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public ModelChangeDispatcher() {
@@ -160,7 +188,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 	}
 
 	@SuppressWarnings("unchecked")
-	private ModelChangeContext locateModelChangeContext(CommandStackEvent event) {
+	protected ModelChangeContext locateModelChangeContext(CommandStackEvent event) {
 		// we need to extract the model change context from the command that was put on the command
 		// stack
 		ModelChangeContext context;		
@@ -192,6 +220,15 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 				compoundCommandCommands = new ArrayList<>();
 				compoundCommandCommands.add(wrappedBasicCommand);
 				context = wrappedBasicCommand.getContext();
+			} else if (compoundCommandCommands.size() > 1 &&
+					   isMoveGroupOfDiagramNodesCompoundCommand(compoundCommand.getCommands())) {
+				
+				// 2 or more diagram nodes are being moved; we need to create the (global) model 
+				// change context ourselves
+				context = new ModelChangeContext(ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES);
+				List<MoveDiagramNodeCommand> moveDiagramNodeCommands = 
+					convertToMoveDiagramNodeCommands(compoundCommand.getCommands());
+				createModelChangeContextHierarchy(context, moveDiagramNodeCommands);
 			} else {
 				Assert.isTrue(eventCommand instanceof IModelChangeCommand, 
 						  	  "not an IModelChangeCommand: " + eventCommand);

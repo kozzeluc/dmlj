@@ -79,7 +79,8 @@ public class RecordEditPart
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_VIA_SPECIFICATION &&
 				   context.appliesTo(getModel())) {
 			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.MOVE_RECORD &&
+		} else if ((context.getModelChangeType() == ModelChangeType.MOVE_RECORD ||
+					context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
 				   context.appliesTo(getModel())) {
 			
 			// the record was moved

@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.junit.Test;
 import org.lh.dmlj.schema.AreaSpecification;
@@ -47,6 +48,19 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
 public class ModelChangeContextTest {
+
+	private Method findAppliesToMethod(Class<?> modelType) {
+		for (Method method : ModelChangeContext.class.getMethods()) {
+			if (method.getName().equals("appliesTo") && method.getReturnType() == boolean.class &&
+				method.getParameterTypes().length == 1 && 
+				method.getParameterTypes()[0] == modelType) {
+				
+				return method;
+			}
+		}
+		fail("cannot find findAppliesTo method: " + modelType.getSimpleName());
+		return null; // never reached
+	}
 
 	@Test
 	public void test() {
@@ -69,6 +83,7 @@ public class ModelChangeContextTest {
 		assertSame(CommandExecutionMode.UNDO, context.getCommandExecutionMode());
 		
 		ModelChangeContext copy = context.copy();
+		assertNotSame(context, copy);
 		assertSame(ModelChangeType.SWAP_RECORD_ELEMENTS, copy.getModelChangeType());
 		assertSame(schema, copy.getSchema());
 		assertNotSame(context.getContextData(), copy.getContextData());
@@ -76,8 +91,65 @@ public class ModelChangeContextTest {
 		assertEquals("value1", copy.getContextData().get("key1"));
 		assertEquals("value2", copy.getContextData().get("key2"));
 		assertNull("listener data should be erased for copies", copy.getListenerData());
-		assertNull("command execution mode should be erased for copies", copy.getCommandExecutionMode());
+		assertNull("command execution mode should be erased for copies", copy.getCommandExecutionMode());		
+	}
+	
+	@Test
+	public void testCopy_ParentWithChildren() {
 		
+		Schema schema = mock(Schema.class);
+		
+		ModelChangeContext child1 = new ModelChangeContext(ModelChangeType.MOVE_CONNECTOR);
+		child1.setSchema(schema);
+		child1.getContextData().put("child1.key1", "child1.value1");
+		child1.getContextData().put("child1.key2", "child1.value2");
+		child1.setListenerData("listener data for child1");
+		
+		ModelChangeContext child2 = new ModelChangeContext(ModelChangeType.MOVE_RECORD);
+		child2.setSchema(schema);
+		child2.getContextData().put("child2.key1", "child2.value1");
+		child2.getContextData().put("child2.key2", "child2.value2");
+		child2.setListenerData("listener data for child2");
+		
+		ModelChangeContext parent = new ModelChangeContext(ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES);
+		parent.setSchema(schema);
+		parent.getChildren().add(child1);
+		parent.getChildren().add(child2);
+		child1.setParent(parent);
+		child2.setParent(parent);	
+		parent.setListenerData("listener data for parent");
+		parent.setCommandExecutionMode(CommandExecutionMode.REDO);
+		
+		ModelChangeContext copyOfParent = parent.copy();
+		assertNotSame(parent, copyOfParent);
+		assertSame(ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES, copyOfParent.getModelChangeType());
+		assertSame(schema, copyOfParent.getSchema());
+		assertNull("listener data should be erased for copies", copyOfParent.getListenerData());
+		assertNull("command execution mode should be erased for copies", 
+				   copyOfParent.getCommandExecutionMode());
+		assertEquals(2, copyOfParent.getChildren().size());
+		assertNotSame(child1, copyOfParent.getChildren().get(0));
+		assertNotSame(child2, copyOfParent.getChildren().get(1));
+		
+		ModelChangeContext copyOfChild1 = copyOfParent.getChildren().get(0);
+		assertNotSame(child1, copyOfChild1);
+		assertSame(ModelChangeType.MOVE_CONNECTOR, copyOfChild1.getModelChangeType());
+		assertSame(schema, copyOfChild1.getSchema());
+		assertNotSame(child1.getContextData(), copyOfChild1.getContextData());
+		assertEquals(2, copyOfChild1.getContextData().size());
+		assertEquals("child1.value1", copyOfChild1.getContextData().get("child1.key1"));
+		assertEquals("child1.value2", copyOfChild1.getContextData().get("child1.key2"));
+		assertNull("listener data should be erased for copies", copyOfChild1.getListenerData());
+		
+		ModelChangeContext copyOfChild2 = copyOfParent.getChildren().get(1);
+		assertNotSame(child2, copyOfChild2);
+		assertSame(ModelChangeType.MOVE_RECORD, copyOfChild2.getModelChangeType());
+		assertSame(schema, copyOfChild2.getSchema());
+		assertNotSame(child2.getContextData(), copyOfChild2.getContextData());
+		assertEquals(2, copyOfChild2.getContextData().size());
+		assertEquals("child2.value1", copyOfChild2.getContextData().get("child2.key1"));
+		assertEquals("child2.value2", copyOfChild2.getContextData().get("child2.key2"));
+		assertNull("listener data should be erased for copies", copyOfChild2.getListenerData());
 	}
 	
 	@Test
@@ -576,17 +648,225 @@ public class ModelChangeContextTest {
 		}				
 	}
 
-	private Method findAppliesToMethod(Class<?> modelType) {
-		for (Method method : ModelChangeContext.class.getMethods()) {
-			if (method.getName().equals("appliesTo") && method.getReturnType() == boolean.class &&
-				method.getParameterTypes().length == 1 && 
-				method.getParameterTypes()[0] == modelType) {
-				
-				return method;
-			}
-		}
-		fail("cannot find findAppliesTo method: " + modelType.getSimpleName());
-		return null; // never reached
+	@Test
+	public void testParentWithChildren() {
+		
+		ModelChangeContext firstChild = new ModelChangeContext(ModelChangeType.MOVE_RECORD);
+		ModelChangeContext secondChild = 
+			new ModelChangeContext(ModelChangeType.MOVE_SET_OR_INDEX_LABEL);		
+		ModelChangeContext parent = 
+			new ModelChangeContext(ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES);
+		List<ModelChangeContext> children = parent.getChildren();
+		assertTrue(children.isEmpty());
+		
+		assertSame(children, parent.getChildren());
+		parent.getChildren().add(firstChild);
+		assertEquals(1, children.size());
+		assertSame(firstChild, children.get(0));
+		parent.getChildren().add(secondChild);
+		assertEquals(2, children.size());
+		assertSame(firstChild, children.get(0));
+		assertSame(secondChild, children.get(1));
+		
+		assertNull(firstChild.getParent());
+		assertNull(secondChild.getParent());		
+		firstChild.setParent(parent);
+		secondChild.setParent(parent);
+		assertSame(parent, firstChild.getParent());
+		assertSame(parent, secondChild.getParent());
+	}
+	
+	@Test
+	public void testAppliesTo_ParentContext_DifferentModelTypes() {
+	
+		Schema schema = TestTools.getSchema("testdata/EMPSCHM version 100b.schema");
+		
+		ModelChangeContext parentContext = 
+			new ModelChangeContext(ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES);
+		
+		// ConnectionPart (not SET_FEATURE)
+		ModelChangeContext childContext = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		ConnectionPart part1 = 
+			((MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS")).getConnectionParts().get(0);
+		ConnectionPart part2 = 
+			((MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS")).getConnectionParts().get(1);
+		ConnectionPart part3 = 
+			((MemberRole) schema.getRecord("EMPOSITION").getRole("JOB-EMPOSITION")).getConnectionParts().get(0);
+		ConnectionPart part4 = 
+			((MemberRole) schema.getRecord("EMPOSITION").getRole("JOB-EMPOSITION")).getConnectionParts().get(1);
+		assertFalse(parentContext.appliesTo(part1));
+		assertFalse(parentContext.appliesTo(part2));
+		assertFalse(parentContext.appliesTo(part3));
+		assertFalse(parentContext.appliesTo(part4));
+		childContext.putContextData(part2);
+		assertFalse(parentContext.appliesTo(part1));
+		assertTrue(parentContext.appliesTo(part2));
+		assertFalse(parentContext.appliesTo(part3));
+		assertFalse(parentContext.appliesTo(part4));
+		// the context will NOT apply to the member role, set and member record
+		assertFalse(parentContext.appliesTo(part1.getMemberRole()));
+		assertFalse(parentContext.appliesTo(part1.getMemberRole().getSet()));
+		assertFalse(parentContext.appliesTo(part1.getMemberRole().getRecord()));
+		
+		// Connector (not SET_FEATURE)
+		childContext = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		Connector connector1 = 
+			((MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS")).getConnectionParts().get(0).getConnector();
+		Connector connector2 = 
+			((MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS")).getConnectionParts().get(1).getConnector();
+		Connector connector3 = 
+			((MemberRole) schema.getRecord("EMPOSITION").getRole("JOB-EMPOSITION")).getConnectionParts().get(0).getConnector();
+		Connector connector4 = 
+			((MemberRole) schema.getRecord("EMPOSITION").getRole("JOB-EMPOSITION")).getConnectionParts().get(1).getConnector();
+		assertFalse(parentContext.appliesTo(connector1));
+		assertFalse(parentContext.appliesTo(connector2));
+		assertFalse(parentContext.appliesTo(connector3));
+		assertFalse(parentContext.appliesTo(connector4));
+		childContext.putContextData(connector1);
+		assertTrue(parentContext.appliesTo(connector1));
+		assertFalse(parentContext.appliesTo(connector2));
+		assertFalse(parentContext.appliesTo(connector3));
+		assertFalse(parentContext.appliesTo(connector4));
+		// the context will NOT apply to the member role, set and member record
+		assertFalse(parentContext.appliesTo(connector1.getConnectionPart().getMemberRole()));
+		assertFalse(parentContext.appliesTo(connector1.getConnectionPart().getMemberRole().getSet()));
+		assertFalse(parentContext.appliesTo(connector1.getConnectionPart().getMemberRole().getRecord()));
+		
+		// Guide (not SET_FEATURE)
+		childContext = new ModelChangeContext(ModelChangeType.DELETE_GUIDE);
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		Guide guide1 = schema.getDiagramData().getRulers().get(0).getGuides().get(0);
+		Guide guide2 = schema.getDiagramData().getRulers().get(0).getGuides().get(1);
+		Guide guide3 = schema.getDiagramData().getRulers().get(1).getGuides().get(0);
+		Guide guide4 = schema.getDiagramData().getRulers().get(1).getGuides().get(1);
+		assertFalse(parentContext.appliesTo(guide1));
+		assertFalse(parentContext.appliesTo(guide2));
+		assertFalse(parentContext.appliesTo(guide3));
+		assertFalse(parentContext.appliesTo(guide4));
+		childContext.putContextData(guide3);
+		assertFalse(parentContext.appliesTo(guide1));
+		assertFalse(parentContext.appliesTo(guide2));
+		assertTrue(parentContext.appliesTo(guide3));
+		assertFalse(parentContext.appliesTo(guide4));
+		// the context does NOT apply to either one of the rulers
+		assertFalse(parentContext.appliesTo(guide1.getRuler()));
+		assertFalse(parentContext.appliesTo(guide3.getRuler()));
+		
+		// MemberRole (not SET_FEATURE)
+		childContext = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		MemberRole memberRole1 = 
+			(MemberRole) schema.getRecord("DENTAL-CLAIM").getRole("COVERAGE-CLAIMS");
+		MemberRole memberRole2 = schema.getSet("OFFICE-EMPLOYEE").getMembers().get(0);
+		assertFalse(parentContext.appliesTo(memberRole1));
+		assertFalse(parentContext.appliesTo(memberRole2));
+		childContext.putContextData(memberRole1);
+		assertTrue(parentContext.appliesTo(memberRole1));
+		assertFalse(parentContext.appliesTo(memberRole2));
+		// the context will not apply to the set, member record and both connectors
+		assertFalse(parentContext.appliesTo(memberRole1.getConnectionParts().get(0).getConnector()));
+		assertFalse(parentContext.appliesTo(memberRole1.getConnectionParts().get(1).getConnector()));
+		assertFalse(parentContext.appliesTo(memberRole1.getSet()));
+		assertFalse(parentContext.appliesTo(memberRole1.getRecord()));
+		
+		// Ruler (not SET_FEATURE)
+		childContext = new ModelChangeContext(ModelChangeType.ADD_GUIDE);
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		Ruler ruler1 = schema.getDiagramData().getRulers().get(0);
+		Ruler ruler2 = schema.getDiagramData().getRulers().get(1);
+		assertFalse(parentContext.appliesTo(ruler1));
+		assertFalse(parentContext.appliesTo(ruler2));
+		childContext.putContextData(ruler2);
+		assertFalse(parentContext.appliesTo(ruler1));
+		assertTrue(parentContext.appliesTo(ruler2));
+		// the context does NOT apply to either one of the guides
+		assertFalse(parentContext.appliesTo(ruler1.getGuides().get(0)));
+		assertFalse(parentContext.appliesTo(ruler1.getGuides().get(1)));
+		assertFalse(parentContext.appliesTo(ruler2.getGuides().get(0)));
+		assertFalse(parentContext.appliesTo(ruler2.getGuides().get(1)));
+		
+		// SchemaArea (not SET_FEATURE)
+		childContext = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		SchemaArea area1 = schema.getArea("EMP-DEMO-REGION");
+		SchemaArea area2 = schema.getArea("ORG-DEMO-REGION");
+		assertFalse(parentContext.appliesTo(area1));
+		assertFalse(parentContext.appliesTo(area2));
+		childContext.putContextData(area1);
+		assertTrue(parentContext.appliesTo(area1));
+		assertFalse(parentContext.appliesTo(area2));
+		
+		// SchemaArea (SET_FEATURE)		
+		childContext = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		childContext.putContextData(area1, SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		assertTrue(parentContext.appliesTo(area1));
+		assertFalse(parentContext.appliesTo(area2));
+		
+		// SchemaRecord (not SET_FEATURE)
+		childContext = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		SchemaRecord record1 = schema.getRecord("EMPLOYEE");
+		SchemaRecord record2 = schema.getRecord("DEPARTMENT");
+		assertFalse(parentContext.appliesTo(record1));
+		assertFalse(parentContext.appliesTo(record2));
+		childContext.putContextData(record1);
+		assertTrue(parentContext.appliesTo(record1));
+		assertFalse(parentContext.appliesTo(record2));
+		
+		// SchemaRecord (SET_FEATURE)		
+		childContext = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		childContext.putContextData(record1, SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		assertTrue(parentContext.appliesTo(record1));
+		assertFalse(parentContext.appliesTo(record2));
+		
+		// Set (not SET_FEATURE)
+		childContext = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		Set set1 = schema.getSet("EMP-NAME-NDX");
+		Set set2 = schema.getSet("COVERAGE-CLAIMS");
+		assertFalse(parentContext.appliesTo(set1));
+		assertFalse(parentContext.appliesTo(set2));
+		childContext.putContextData(set1);
+		assertTrue(parentContext.appliesTo(set1));
+		assertFalse(parentContext.appliesTo(set2));
+		// the context will not apply to the member role and member record
+		assertFalse(parentContext.appliesTo(set1.getMembers().get(0)));
+		assertFalse(parentContext.appliesTo(set1.getMembers().get(0).getRecord()));
+		
+		// Set (SET_FEATURE)		
+		childContext = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		childContext.putContextData(set1, SchemaPackage.eINSTANCE.getSchemaRecord_Name());
+		parentContext.getChildren().clear();
+		parentContext.getChildren().add(childContext);
+		childContext.setParent(parentContext);
+		assertTrue(parentContext.appliesTo(set1));
+		assertFalse(parentContext.appliesTo(set2));
+		// the context will not apply to the member role and member record
+		assertFalse(parentContext.appliesTo(set1.getMembers().get(0)));
+		assertFalse(parentContext.appliesTo(set1.getMembers().get(0).getRecord()));		
 	}
 
 }

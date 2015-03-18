@@ -93,7 +93,8 @@ public class SetDescriptionEditPart
 			// pointers were added or removed (note that the context can apply to either the member
 			// role OR set)
 			refreshVisuals();			
-		} else if (context.getModelChangeType() == ModelChangeType.MOVE_SET_OR_INDEX_LABEL &&
+		} else if ((context.getModelChangeType() == ModelChangeType.MOVE_SET_OR_INDEX_LABEL ||
+				    context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
 				   context.appliesTo(getModel().getMemberRole())) {
 	
 			// the connection label was moved

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -50,7 +50,8 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.MOVE_INDEX &&
+		if ((context.getModelChangeType() == ModelChangeType.MOVE_INDEX ||
+			 context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
 			context.appliesTo(getModel().getSet())) {
 			
 			// the index was moved

@@ -16,7 +16,9 @@
  */
 package org.lh.dmlj.schema.editor.command.infrastructure;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
@@ -38,12 +40,140 @@ import org.lh.dmlj.schema.SystemOwner;
 
 public class ModelChangeContext {
 
+	private List<ModelChangeContext> children = new ArrayList<>();
 	private CommandExecutionMode commandExecutionMode;
 	private Map<String, String> contextData = new HashMap<>();
 	private Object listenerData;
+	private ModelChangeContext parent;
 	private ModelChangeType modelChangeType;
 	private Schema schema;
 	
+	private static boolean appliesTo(ModelChangeContext context, ConnectionPart connectionPart) {
+		checkAppliesTo(context, connectionPart);
+		MemberRole memberRole = connectionPart.getMemberRole();
+		Set set = memberRole.getSet();
+		SchemaRecord record = memberRole.getRecord();
+		int connectionPartIndex = memberRole.getConnectionParts().indexOf(connectionPart);
+		return context.contextData.size() == 3 && 
+			   set.getName().equals(context.contextData.get(IContextDataKeys.SET_NAME)) && 
+			   record.getName().equals(context.contextData.get(IContextDataKeys.RECORD_NAME)) &&
+			   context.contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
+			   connectionPartIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.CONNECTION_PART_INDEX)) ||				   
+			   context.contextData.size() == 4 &&
+			   context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			   set.getName().equals(context.contextData.get(IContextDataKeys.SET_NAME)) &&
+			   record.getName().equals(context.contextData.get(IContextDataKeys.RECORD_NAME)) &&
+			   context.contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
+			   connectionPartIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.CONNECTION_PART_INDEX));
+	}
+	
+	private static boolean appliesTo(ModelChangeContext context, Connector connector) {
+		checkAppliesTo(context, connector);
+		MemberRole memberRole = connector.getConnectionPart().getMemberRole();
+		Set set = memberRole.getSet();
+		SchemaRecord record = memberRole.getRecord();
+		int connectionPartIndex = 
+			memberRole.getConnectionParts().indexOf(connector.getConnectionPart());
+		return context.contextData.size() == 3 && 
+			   set.getName().equals(context.contextData.get(IContextDataKeys.SET_NAME)) && 
+			   record.getName().equals(context.contextData.get(IContextDataKeys.RECORD_NAME)) &&
+			   context.contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
+			   connectionPartIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.CONNECTION_PART_INDEX)) ||				   
+			   context.contextData.size() == 4 &&
+			   context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			   set.getName().equals(context.contextData.get(IContextDataKeys.SET_NAME)) &&
+			   record.getName().equals(context.contextData.get(IContextDataKeys.RECORD_NAME)) &&
+			   context.contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
+			   connectionPartIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.CONNECTION_PART_INDEX));				
+	}
+	
+	private static boolean appliesTo(ModelChangeContext context, Guide guide) {
+		checkAppliesTo(context, guide);
+		Ruler ruler = guide.getRuler();
+		int rulerIndex = ruler.getDiagramData().getRulers().indexOf(ruler);
+		int guideIndex = ruler.getGuides().indexOf(guide);
+		return context.contextData.size() == 2 &&
+			   context.contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
+			   rulerIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.RULER_INDEX)) &&
+			   context.contextData.containsKey(IContextDataKeys.GUIDE_INDEX) &&
+			   guideIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.GUIDE_INDEX)) ||
+			   context.contextData.size() == 3 &&
+			   context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			   context.contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
+			   rulerIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.RULER_INDEX)) &&
+			   context.contextData.containsKey(IContextDataKeys.GUIDE_INDEX) &&
+			   guideIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.GUIDE_INDEX));		
+	}
+	
+	private static boolean appliesTo(ModelChangeContext context, MemberRole memberRole) {
+		checkAppliesTo(context, memberRole);
+		Set set = memberRole.getSet();
+		SchemaRecord record = memberRole.getRecord();
+		return context.contextData.size() == 2 && 
+			   set.getName().equals(context.contextData.get(IContextDataKeys.SET_NAME)) && 
+			   record.getName().equals(context.contextData.get(IContextDataKeys.RECORD_NAME)) ||
+			   context.contextData.size() == 3 &&
+					   context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			   set.getName().equals(context.contextData.get(IContextDataKeys.SET_NAME)) &&
+			   record.getName().equals(context.contextData.get(IContextDataKeys.RECORD_NAME));		
+	}
+	
+	private static boolean appliesTo(ModelChangeContext context, Ruler ruler) {
+		checkAppliesTo(context, ruler);
+		int rulerIndex = ruler.getDiagramData().getRulers().indexOf(ruler);
+		return context.contextData.size() == 1 &&
+			   context.contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
+			   rulerIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.RULER_INDEX)) ||
+			   context.contextData.size() == 2 &&
+			   context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			   context.contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
+			   rulerIndex == Integer.valueOf(context.contextData.get(IContextDataKeys.RULER_INDEX));		
+	}
+	
+	private static boolean appliesTo(ModelChangeContext context, SchemaArea area) {
+		checkAppliesTo(context, area);
+		return context.contextData.size() == 1 && 
+			   area.getName().equals(context.contextData.get(IContextDataKeys.AREA_NAME)) ||
+			   context.contextData.size() == 2 &&
+			   context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			   area.getName().equals(context.contextData.get(IContextDataKeys.AREA_NAME));		
+	}
+	
+	private static boolean appliesTo(ModelChangeContext context, SchemaRecord record) {
+		checkAppliesTo(context, record);
+		return context.contextData.size() == 1 && 
+			   record.getName().equals(context.contextData.get(IContextDataKeys.RECORD_NAME)) ||
+			   context.contextData.size() == 2 &&
+			   context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			   record.getName().equals(context.contextData.get(IContextDataKeys.RECORD_NAME));		
+	}
+	
+	private static boolean appliesTo(ModelChangeContext context, Set set) {
+		checkAppliesTo(context, set);
+		return context.contextData.size() == 1 && 
+			   set.getName().equals(context.contextData.get(IContextDataKeys.SET_NAME)) ||
+			   context.contextData.size() == 2 &&
+			   context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			   set.getName().equals(context.contextData.get(IContextDataKeys.SET_NAME));		
+	}
+
+	private static void checkAppliesTo(ModelChangeContext context, EObject model) {
+		if (model == null) {
+			throw new IllegalArgumentException("Invalid model: null");
+		}
+		if (context.modelChangeType == ModelChangeType.SET_PROPERTY &&
+			!context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME)) {
+			
+			throw new IllegalStateException("Feature name NOT found in context data");
+		}
+		if (context.contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
+			context.modelChangeType != ModelChangeType.SET_PROPERTY) {
+			
+			throw new IllegalStateException("Feature name should NOT be present in context data: " +
+											context.modelChangeType);
+		}		
+	}
+
 	public static String getQualifiedFeatureName(EStructuralFeature feature) {
 		return feature.getContainerClass().getSimpleName() + "." + feature.getName();
 	}
@@ -54,129 +184,135 @@ public class ModelChangeContext {
 	}
 
 	public boolean appliesTo(ConnectionPart connectionPart) {
-		checkAppliesTo(connectionPart);
-		MemberRole memberRole = connectionPart.getMemberRole();
-		Set set = memberRole.getSet();
-		SchemaRecord record = memberRole.getRecord();
-		int connectionPartIndex = memberRole.getConnectionParts().indexOf(connectionPart);
-		return contextData.size() == 3 && 
-			   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
-			   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) &&
-			   contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
-			   connectionPartIndex == Integer.valueOf(contextData.get(IContextDataKeys.CONNECTION_PART_INDEX)) ||				   
-			   contextData.size() == 4 &&
-			   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-			   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
-			   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) &&
-			   contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
-			   connectionPartIndex == Integer.valueOf(contextData.get(IContextDataKeys.CONNECTION_PART_INDEX));		
+		if (children.isEmpty()) {
+			return appliesTo(this, connectionPart);
+		} else {
+			for (ModelChangeContext child : children) {
+				try {
+					if (child.appliesTo(connectionPart)) {
+						return true;
+					}
+				} catch (IllegalStateException e) {					
+				}
+			}
+			return false;
+		}
 	}
 	
 	public boolean appliesTo(Connector connector) {
-		checkAppliesTo(connector);
-		MemberRole memberRole = connector.getConnectionPart().getMemberRole();
-		Set set = memberRole.getSet();
-		SchemaRecord record = memberRole.getRecord();
-		int connectionPartIndex = 
-			memberRole.getConnectionParts().indexOf(connector.getConnectionPart());
-		return contextData.size() == 3 && 
-			   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
-			   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) &&
-			   contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
-			   connectionPartIndex == Integer.valueOf(contextData.get(IContextDataKeys.CONNECTION_PART_INDEX)) ||				   
-			   contextData.size() == 4 &&
-			   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-			   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
-			   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) &&
-			   contextData.containsKey(IContextDataKeys.CONNECTION_PART_INDEX) &&
-			   connectionPartIndex == Integer.valueOf(contextData.get(IContextDataKeys.CONNECTION_PART_INDEX));				
+		if (children.isEmpty()) {
+			return appliesTo(this, connector);
+		} else {
+			for (ModelChangeContext child : children) {
+				try {
+					if (child.appliesTo(connector)) {
+						return true;
+					}
+				} catch (IllegalStateException e) {					
+				}
+			}
+			return false;
+		}			
 	}
 	
 	public boolean appliesTo(Guide guide) {
-		checkAppliesTo(guide);
-		Ruler ruler = guide.getRuler();
-		int rulerIndex = ruler.getDiagramData().getRulers().indexOf(ruler);
-		int guideIndex = ruler.getGuides().indexOf(guide);
-		return contextData.size() == 2 &&
-			   contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
-			   rulerIndex == Integer.valueOf(contextData.get(IContextDataKeys.RULER_INDEX)) &&
-			   contextData.containsKey(IContextDataKeys.GUIDE_INDEX) &&
-			   guideIndex == Integer.valueOf(contextData.get(IContextDataKeys.GUIDE_INDEX)) ||
-			   contextData.size() == 3 &&
-			   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-			   contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
-			   rulerIndex == Integer.valueOf(contextData.get(IContextDataKeys.RULER_INDEX)) &&
-			   contextData.containsKey(IContextDataKeys.GUIDE_INDEX) &&
-			   guideIndex == Integer.valueOf(contextData.get(IContextDataKeys.GUIDE_INDEX));		
+		if (children.isEmpty()) {
+			return appliesTo(this, guide);
+		} else {
+			for (ModelChangeContext child : children) {
+				try {
+					if (child.appliesTo(guide)) {
+						return true;
+					}
+				} catch (IllegalStateException e) {					
+				}
+			}
+			return false;
+		}		
 	}
 	
 	public boolean appliesTo(MemberRole memberRole) {
-		checkAppliesTo(memberRole);
-		Set set = memberRole.getSet();
-		SchemaRecord record = memberRole.getRecord();
-		return contextData.size() == 2 && 
-			   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) && 
-			   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
-			   contextData.size() == 3 &&
-			   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-			   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) &&
-			   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));		
+		if (children.isEmpty()) {
+			return appliesTo(this, memberRole);
+		} else {
+			for (ModelChangeContext child : children) {
+				try {
+					if (child.appliesTo(memberRole)) {
+						return true;
+					}
+				} catch (IllegalStateException e) {					
+				}
+			}
+			return false;
+		}		
 	}
 	
 	public boolean appliesTo(Ruler ruler) {
-		checkAppliesTo(ruler);
-		int rulerIndex = ruler.getDiagramData().getRulers().indexOf(ruler);
-		return contextData.size() == 1 &&
-			   contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
-			   rulerIndex == Integer.valueOf(contextData.get(IContextDataKeys.RULER_INDEX)) ||
-			   contextData.size() == 2 &&
-			   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-			   contextData.containsKey(IContextDataKeys.RULER_INDEX) &&
-			   rulerIndex == Integer.valueOf(contextData.get(IContextDataKeys.RULER_INDEX));		
+		if (children.isEmpty()) {
+			return appliesTo(this, ruler);
+		} else {
+			for (ModelChangeContext child : children) {
+				try {
+					if (child.appliesTo(ruler)) {
+						return true;
+					}
+				} catch (IllegalStateException e) {					
+				}
+			}
+			return false;
+		}		
 	}
 	
 	public boolean appliesTo(SchemaArea area) {
-		checkAppliesTo(area);
-		return contextData.size() == 1 && 
-			   area.getName().equals(contextData.get(IContextDataKeys.AREA_NAME)) ||
-			   contextData.size() == 2 &&
-			   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-			   area.getName().equals(contextData.get(IContextDataKeys.AREA_NAME));		
+		if (children.isEmpty()) {
+			return appliesTo(this, area);
+		} else {
+			for (ModelChangeContext child : children) {
+				try {
+					if (child.appliesTo(area)) {
+						return true;
+					}
+				} catch (IllegalStateException e) {					
+				}
+			}
+			return false;
+		}		
 	}
 	
 	public boolean appliesTo(SchemaRecord record) {
-		checkAppliesTo(record);
-		return contextData.size() == 1 && 
-			   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME)) ||
-			   contextData.size() == 2 &&
-			   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-			   record.getName().equals(contextData.get(IContextDataKeys.RECORD_NAME));		
+		if (children.isEmpty()) {
+			return appliesTo(this, record);
+		} else {
+			for (ModelChangeContext child : children) {
+				try {
+					if (child.appliesTo(record)) {
+						return true;
+					}
+				} catch (IllegalStateException e) {					
+				}
+			}
+			return false;
+		}		
 	}
 	
 	public boolean appliesTo(Set set) {
-		checkAppliesTo(set);
-		return contextData.size() == 1 && 
-			   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME)) ||
-			   contextData.size() == 2 &&
-			   contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-			   set.getName().equals(contextData.get(IContextDataKeys.SET_NAME));		
+		if (children.isEmpty()) {
+			return appliesTo(this, set);
+		} else {
+			for (ModelChangeContext child : children) {
+				try {
+					if (child.appliesTo(set)) {
+						return true;
+					}
+				} catch (IllegalStateException e) {					
+				}
+			}
+			return false;
+		}		
 	}
 	
-	private void checkAppliesTo(EObject model) {
-		if (model == null) {
-			throw new IllegalArgumentException("Invalid model: null");
-		}
-		if (modelChangeType == ModelChangeType.SET_PROPERTY &&
-			!contextData.containsKey(IContextDataKeys.PROPERTY_NAME)) {
-			
-			throw new IllegalStateException("Feature name NOT found in context data");
-		}
-		if (contextData.containsKey(IContextDataKeys.PROPERTY_NAME) &&
-		    modelChangeType != ModelChangeType.SET_PROPERTY) {
-			
-			throw new IllegalStateException("Feature name should NOT be present in context data: " +
-											modelChangeType);
-		}		
+	public List<ModelChangeContext> getChildren() {
+		return children;		
 	}
 	
 	public ModelChangeContext copy() {
@@ -184,6 +320,11 @@ public class ModelChangeContext {
 		copy.setSchema(schema);
 		for (String key : contextData.keySet()) {
 			copy.getContextData().put(key, contextData.get(key));
+		}
+		for (ModelChangeContext child : children) {
+			ModelChangeContext copyOfChild = child.copy();
+			copy.getChildren().add(copyOfChild);
+			copyOfChild.setParent(copy);
 		}
 		// don't copy the listener data and command execution mode
 		return copy;
@@ -203,6 +344,10 @@ public class ModelChangeContext {
 
 	public ModelChangeType getModelChangeType() {
 		return modelChangeType;
+	}
+	
+	public ModelChangeContext getParent() {
+		return parent;
 	}
 
 	public Schema getSchema() {
@@ -370,6 +515,10 @@ public class ModelChangeContext {
 		this.listenerData = listenerData;
 	}
 	
+	public void setParent(ModelChangeContext parent) {
+		this.parent = parent;
+	}
+
 	public void setSchema(Schema schema) {
 		this.schema = schema;
 	}
