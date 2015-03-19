@@ -111,7 +111,7 @@
             <or>
                <test
                      forcePluginActivation="true"
-                     property="org.lh.dmlj.schema.editor.ui.properties.recordSelected">
+                     property="org.lh.dmlj.schema.editor.ui.properties.SchemaFileSelected">
                </test>
             </or>
          </activeWhen>
@@ -150,6 +150,29 @@
                commandId="org.lh.dmlj.schema.editor.ui.command.update"
                label="Update..."
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     forcePluginActivation="true"
+                     property="org.lh.dmlj.schema.editor.ui.properties.SchemaFileSelected">
+               </test>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=import">
+         <command
+               commandId="org.lh.dmlj.schema.editor.ui.command.update"
+               label="Update..."
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     forcePluginActivation="true"
+                     property="org.lh.dmlj.schema.editor.ui.properties.SchemaFileSelected">
+               </test>
+            </visibleWhen>
          </command>
       </menuContribution>
    </extension>   
