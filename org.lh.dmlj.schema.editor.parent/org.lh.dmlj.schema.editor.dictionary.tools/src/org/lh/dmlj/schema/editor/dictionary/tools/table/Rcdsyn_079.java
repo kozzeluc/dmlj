@@ -55,8 +55,8 @@ public class Rcdsyn_079 implements IDbkeyProvider {
 			}
 		}
 		throw new RuntimeException("internal error: no NAMESYN-083 for an SDR-042 with dbkey X'" + 
-								   JdbcTools.toHexString(dbkey) + "' under RCDSYN-079=X'" + 
-								   JdbcTools.toHexString(this.dbkey) + "'");
+								   JdbcTools.toHexString(dbkeyOfSdr_042) + "' under the " +
+								   "RCDSYN-079 with dbkey X'" + JdbcTools.toHexString(dbkey) + "'");
 	}
 
 	public Sr_036 getSr_036() {

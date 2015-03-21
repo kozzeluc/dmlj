@@ -39,8 +39,8 @@ import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.SchemaDat
 import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Column_1028;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Constraint_1029;
@@ -211,14 +211,23 @@ public class SchemaImportTool implements ISchemaImportTool {
 				if (sr_036s.containsKey(Long.valueOf(dbkeySr_036))) {
 					Sr_036 sr_036 = sr_036s.get(Long.valueOf(dbkeySr_036));
 					long dbkeyRcdsyn_079b = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);
-					if (dbkeyRcdsyn_079b != sr_036.getRcdsyn_079().getDbkey()) {
-						Rcdsyn_079 rcdsyn_079 = new Rcdsyn_079();
-						rcdsyn_079.setDbkey(dbkeyRcdsyn_079b);
-						rcdsyn_079.setRsynName_079(row.getString(Rcdsyn_079.RSYN_NAME_079));
-						rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
-						rcdsyn_079.setSr_036(sr_036);
-						sr_036.setRcdsyn_079b(rcdsyn_079);
-						rcdsyn_079bs.put(Long.valueOf(dbkeyRcdsyn_079b), rcdsyn_079);
+					Rcdsyn_079 currentRcdsyn_079b = sr_036.getRcdsyn_079();
+					if (dbkeyRcdsyn_079b != currentRcdsyn_079b.getDbkey()) {
+						String rsynName_079 = row.getString(Rcdsyn_079.RSYN_NAME_079).trim();
+						short rsynVer_079 = row.getShort(Rcdsyn_079.RSYN_VER_079);
+						if (!rsynName_079.equals(currentRcdsyn_079b.getRsynName_079()) || 
+							rsynVer_079 != currentRcdsyn_079b.getRsynVer_079()) {
+							
+							// only set the base RCDSYN-079 occurrence when the name or version are
+							// different from the RCDSYN-079 that is connected to the schema
+							Rcdsyn_079 newRcdsyn_079 = new Rcdsyn_079();
+							newRcdsyn_079.setDbkey(dbkeyRcdsyn_079b);
+							newRcdsyn_079.setRsynName_079(rsynName_079);
+							newRcdsyn_079.setRsynVer_079(rsynVer_079);
+							newRcdsyn_079.setSr_036(sr_036);
+							sr_036.setRcdsyn_079b(newRcdsyn_079);
+							rcdsyn_079bs.put(Long.valueOf(dbkeyRcdsyn_079b), newRcdsyn_079);
+						}
 					}
 				}
 			}					
