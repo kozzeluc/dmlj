@@ -14,11 +14,12 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
+package org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema;
 
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn_079;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr_036;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaListQueryTemplate;
@@ -293,7 +294,7 @@ public class Query {
 			return this;
 		}
 
-		public Builder forValidSchemaList(ImportSession session) {
+		public Builder forValidSchemaList(DictionarySession session) {
 			IQueryTemplate template;
 			if (session.getDictionary().isSysdirl()) {
 				description = "valid schema list (SYSDIRL)";

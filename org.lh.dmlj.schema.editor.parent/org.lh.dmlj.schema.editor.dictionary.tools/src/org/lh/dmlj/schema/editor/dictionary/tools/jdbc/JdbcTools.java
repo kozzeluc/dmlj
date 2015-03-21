@@ -29,6 +29,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
 
@@ -70,10 +71,10 @@ public abstract class JdbcTools {
 	}
 
 	private static TestConnectionResult testConnection(Dictionary dictionary) {			
-		ImportSession session = null;
+		DictionarySession session = null;
 		try {
 			session = 
-				new ImportSession(dictionary, "Test connection to dictionary " + dictionary.getId());
+				new DictionarySession(dictionary, "Test connection to dictionary " + dictionary.getId());
 			session.open();
 			Query query = new Query.Builder().forValidSchemaList(session).build();
 			session.runQuery(query, new IRowProcessor() {

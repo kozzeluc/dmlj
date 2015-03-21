@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.S_010;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Schemacmt_181;
 import org.lh.dmlj.schema.editor.importtool.ISchemaDataCollector;

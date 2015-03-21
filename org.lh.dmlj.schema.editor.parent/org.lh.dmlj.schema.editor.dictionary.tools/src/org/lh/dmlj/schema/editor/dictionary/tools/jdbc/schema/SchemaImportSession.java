@@ -14,11 +14,12 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
+package org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema;
 
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
-public class SchemaImportSession extends ImportSession {
+public class SchemaImportSession extends DictionarySession {
 	
 	private String schemaName;
 	private int schemaVersion;

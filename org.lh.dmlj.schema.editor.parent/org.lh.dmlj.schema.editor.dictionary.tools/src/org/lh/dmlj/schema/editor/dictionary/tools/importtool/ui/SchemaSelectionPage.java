@@ -39,9 +39,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.S_010;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
@@ -119,8 +119,8 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
 		Throwable throwableToPass = null;
 		try {
-			ImportSession session = 
-				new ImportSession(dictionary, "Retrieve valid schema list from dictionary " + 
+			DictionarySession session = 
+				new DictionarySession(dictionary, "Retrieve valid schema list from dictionary " + 
 								  dictionary.getId());
 			session.open();	
 			Query query = new Query.Builder().forValidSchemaList(session).build();

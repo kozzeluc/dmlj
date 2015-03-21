@@ -28,10 +28,11 @@ import java.util.List;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ui.PromptForPasswordDialog;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
-public class ImportSession {
+public class DictionarySession {
 	
 	protected Connection connection;
 	private long connectionClosed = -1;
@@ -85,10 +86,10 @@ public class ImportSession {
 	}
 
 	@SuppressWarnings("unused")
-	private ImportSession() {
+	private DictionarySession() {
 	}
 	
-	public ImportSession(Dictionary dictionary, String description) {
+	public DictionarySession(Dictionary dictionary, String description) {
 		super();
 		this.dictionary = dictionary;
 		this.description = description;

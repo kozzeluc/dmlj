@@ -12,3 +12,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: ca.idms.jdbc;resolution:=optional
 Bundle-Vendor: Luc Hermans
+Export-Package: org.lh.dmlj.schema.editor.dictionary.tools,
+ org.lh.dmlj.schema.editor.dictionary.tools.jdbc,
+ org.lh.dmlj.schema.editor.dictionary.tools.model
