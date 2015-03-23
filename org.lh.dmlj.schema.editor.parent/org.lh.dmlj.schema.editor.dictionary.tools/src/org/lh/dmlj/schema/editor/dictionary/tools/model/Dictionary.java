@@ -110,6 +110,16 @@ public class Dictionary implements Comparable<Dictionary> {
 		
 	}
 	
+	private static int getHighestInternalId(List<Dictionary> dictionaries) {
+		int highestInternalId = -1;
+		for (Dictionary dictionary : dictionaries) {
+			if (dictionary.getInternalId() > highestInternalId) {
+				highestInternalId = dictionary.getInternalId();
+			}
+		}
+		return highestInternalId;
+	}
+
 	public static List<Dictionary> list(File folder) throws Throwable {
 		List<Dictionary> dictionaries = new ArrayList<>();
 		File[] files = folder.listFiles(FILENAME_FILTER);
@@ -121,13 +131,9 @@ public class Dictionary implements Comparable<Dictionary> {
 	}
 	
 	public static Dictionary newInstance(File folder) throws Throwable {
-		List<Dictionary> dictionaries = list(folder);
-		int highestInternalId = 
-			dictionaries.isEmpty() ? -1 : dictionaries.get(dictionaries.size() - 1).getInternalId();
-		Dictionary dictionary = new Dictionary(highestInternalId + 1);
-		return dictionary;
+		return new Dictionary(getHighestInternalId(list(folder)) + 1);		
 	}
-
+	
 	public static Dictionary newTemporaryInstance() {
 		return new Dictionary(-1);
 	}
