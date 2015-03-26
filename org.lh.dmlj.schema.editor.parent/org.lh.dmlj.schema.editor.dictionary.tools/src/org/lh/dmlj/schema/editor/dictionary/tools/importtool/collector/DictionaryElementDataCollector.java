@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.lh.dmlj.schema.Usage;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
@@ -53,7 +54,7 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 			return;
 		}
 		namedes_186Map = new HashMap<>();
-		Query elementSynonymCommentListQuery = 
+		IQuery elementSynonymCommentListQuery = 
 			new Query.Builder().forElementSynonymCommentList(session, rcdsyn_079s).build();
 		session.runQuery(elementSynonymCommentListQuery, new IRowProcessor() {			
 			@Override

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,8 +38,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttributeKeys;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
@@ -123,7 +124,7 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 				new DictionarySession(dictionary, "Retrieve valid schema list from dictionary " + 
 								  dictionary.getId());
 			session.open();	
-			Query query = new Query.Builder().forValidSchemaList(session).build();
+			IQuery query = new Query.Builder().forValidSchemaList(session).build();
 			session.runQuery(query, new IRowProcessor() {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {

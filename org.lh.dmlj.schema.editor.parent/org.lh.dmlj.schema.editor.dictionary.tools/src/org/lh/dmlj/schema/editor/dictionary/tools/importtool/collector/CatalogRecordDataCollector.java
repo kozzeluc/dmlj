@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,6 +29,7 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
@@ -55,7 +56,7 @@ public class CatalogRecordDataCollector implements IRecordDataCollector<Table_10
 			return;
 		}
 		calcKeyElementsMap = new HashMap<>();
-		Query catalogCalcKeyElementListQuery = 
+		IQuery catalogCalcKeyElementListQuery = 
 			new Query.Builder().forCatalogCalcKeyElementList(session).build();
 		session.runQuery(catalogCalcKeyElementListQuery, new IRowProcessor() {			
 			@Override
@@ -86,7 +87,7 @@ public class CatalogRecordDataCollector implements IRecordDataCollector<Table_10
 			return;
 		}
 		viaSetNames = new HashMap<>();
-		Query catalogViaSetListQuery = new Query.Builder().forCatalogViaSetList(session).build();
+		IQuery catalogViaSetListQuery = new Query.Builder().forCatalogViaSetList(session).build();
 		session.runQuery(catalogViaSetListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {

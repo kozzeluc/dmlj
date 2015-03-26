@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn_079;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr_036;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaListQueryTemplate;
@@ -50,7 +51,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.template.ValidSchemaListForSys
 import org.lh.dmlj.schema.editor.dictionary.tools.template.ViaSetListQueryTemplate;
 
 
-public class Query {
+public class Query implements IQuery {
 	
 	private static final IQueryTemplate areaListQueryTemplate = new AreaListQueryTemplate();
 	private static final IQueryTemplate areaProcedureListQueryTemplate = new AreaProcedureListQueryTemplate();
@@ -88,14 +89,17 @@ public class Query {
 		this.setSql(builder.sql);
 	}
 	
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	@Override
 	public int getNumber() {
 		return number;
 	}
 
+	@Override
 	public String getSql() {
 		return sql;
 	}
@@ -104,6 +108,7 @@ public class Query {
 		this.description = description;
 	}
 
+	@Override
 	public void setNumber(int number) {
 		this.number = number;
 	}
@@ -125,7 +130,7 @@ public class Query {
 			super();
 		}
 		
-		public Query build() {
+		public IQuery build() {
 			return new Query(this);
 		}
 

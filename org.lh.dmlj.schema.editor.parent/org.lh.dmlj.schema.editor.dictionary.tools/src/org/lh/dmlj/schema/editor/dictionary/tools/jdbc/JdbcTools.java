@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -76,7 +76,7 @@ public abstract class JdbcTools {
 			session = 
 				new DictionarySession(dictionary, "Test connection to dictionary " + dictionary.getId());
 			session.open();
-			Query query = new Query.Builder().forValidSchemaList(session).build();
+			IQuery query = new Query.Builder().forValidSchemaList(session).build();
 			session.runQuery(query, new IRowProcessor() {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {					
@@ -124,7 +124,7 @@ public abstract class JdbcTools {
 		} else {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, result[0].message);
 		}
-	}
+	}	
 
 	public static String toHexString(long dbkey) {
 		StringBuilder p = new StringBuilder(Long.toHexString(dbkey));

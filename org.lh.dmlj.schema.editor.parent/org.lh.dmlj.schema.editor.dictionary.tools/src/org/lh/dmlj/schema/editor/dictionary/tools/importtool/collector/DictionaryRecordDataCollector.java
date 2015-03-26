@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,6 +28,7 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
@@ -57,7 +58,7 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 			return;
 		}
 		calcKeyElementsMap = new HashMap<>();
-		Query calcKeyElementListQuery = new Query.Builder().forCalcKeyElementList(session).build();
+		IQuery calcKeyElementListQuery = new Query.Builder().forCalcKeyElementList(session).build();
 		session.runQuery(calcKeyElementListQuery, new IRowProcessor() {			
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
@@ -85,7 +86,7 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 			return;
 		}
 		viaSetNames = new HashMap<>();
-		Query viaSetListQuery = new Query.Builder().forViaSetList(session).build();
+		IQuery viaSetListQuery = new Query.Builder().forViaSetList(session).build();
 		session.runQuery(viaSetListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
