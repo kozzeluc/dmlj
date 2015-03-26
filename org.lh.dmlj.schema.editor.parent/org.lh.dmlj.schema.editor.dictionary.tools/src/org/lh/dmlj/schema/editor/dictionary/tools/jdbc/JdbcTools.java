@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
@@ -124,7 +126,31 @@ public abstract class JdbcTools {
 		} else {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, result[0].message);
 		}
-	}	
+	}
+	
+	public static boolean[] toBooleanArray(ResultSet row, String columnLabel) {
+		byte[] b1 = toByteArray(row, columnLabel);
+		boolean[] b2 = new boolean[8 * b1.length];
+		for (int i = 0; i < b2.length; i++) {
+			if ((b1[i / 8] & (1 << (7 - (i % 8)))) > 0) {
+				b2[i] = true;
+			}
+	    }
+		return b2;
+	}
+	
+	public static byte[] toByteArray(ResultSet row, String columnLabel) {
+		InputStream in;
+		try {
+			in = row.getBinaryStream(columnLabel);
+			byte[] b = new byte[1];
+			in.read(b);
+			in.close();
+			return b;
+		} catch (SQLException | IOException e) {
+			throw new RuntimeException(e);
+		}		
+	}
 
 	public static String toHexString(long dbkey) {
 		StringBuilder p = new StringBuilder(Long.toHexString(dbkey));
