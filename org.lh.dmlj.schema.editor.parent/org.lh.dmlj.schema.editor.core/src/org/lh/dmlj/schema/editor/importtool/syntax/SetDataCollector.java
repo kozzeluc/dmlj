@@ -296,16 +296,28 @@ public class SetDataCollector
 										String memberRecordName, 
 										String keyElementName) {
 		
-		String scanItem = "                 " + keyElementName + " ";
-		int i = indexOf(scanItem, context, memberRecordName);
-		int j = context.getLines().get(i).indexOf(" ", 17);
-		String p = context.getLines().get(i).substring(j + 1).trim();
-		if (p.startsWith("ASCENDING")) {
-			return SortSequence.ASCENDING;
-		} else if (p.startsWith("DESCENDING")) {
-			return SortSequence.DESCENDING;
+		if (keyElementName != null) {
+			// the set member is NOT sorted by dbkey
+			String scanItem = "                 " + keyElementName + " ";
+			int i = indexOf(scanItem, context, memberRecordName);
+			int j = context.getLines().get(i).indexOf(" ", 17);
+			String p = context.getLines().get(i).substring(j + 1).trim();
+			if (p.startsWith("ASCENDING")) {
+				return SortSequence.ASCENDING;
+			} else if (p.startsWith("DESCENDING")) {
+				return SortSequence.DESCENDING;
+			} else {
+				return null;
+			}
 		} else {
-			return null;
+			// the set member IS sorted by dbkey
+			String scanItem = "                 DBKEY DESCENDING";
+			int i = indexOf(scanItem, context, memberRecordName);
+			if (i > -1) {				
+				return SortSequence.DESCENDING;
+			} else {
+				return SortSequence.ASCENDING;
+			}
 		}
 	}
 

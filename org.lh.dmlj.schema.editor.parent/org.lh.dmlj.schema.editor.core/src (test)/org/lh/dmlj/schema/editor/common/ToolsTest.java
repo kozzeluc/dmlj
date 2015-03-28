@@ -369,5 +369,25 @@ public class ToolsTest {
 		assertEquals("ASC (ELEMENT-1),\nDESC (ELEMENT-2,\n\tELEMENT-3,\n\tELEMENT-4),\n" +
 					 "ASC (ELEMENT-5),\nDESC (ELEMENT-6) DL", sortKeysAsString);		
 	}
+	
+	@Test
+	public void testGetSortkeys_Dbkey() {
+		Set set = mock(Set.class);
+		when(set.getOrder()).thenReturn(SetOrder.SORTED);
+		KeyElement keyElement = mock(KeyElement.class);
+		when(keyElement.isDbkey()).thenReturn(true);
+		when (keyElement.getSortSequence()).thenReturn(SortSequence.ASCENDING);
+		EList<KeyElement> keyElements = new BasicEList<>();
+		keyElements.add(keyElement);
+		Key sortKey = mock(Key.class);
+		when(sortKey.getElements()).thenReturn(keyElements);
+		when(sortKey.getDuplicatesOption()).thenReturn(DuplicatesOption.NOT_ALLOWED);
+		MemberRole memberRole = mock(MemberRole.class);
+		when(memberRole.getSet()).thenReturn(set);
+		when(memberRole.getSortKey()).thenReturn(sortKey);
+		
+		String sortKeysAsString = Tools.getSortKeys(memberRole);
+		assertEquals("ASC (DBKEY) DN", sortKeysAsString);
+	}
 
 }
