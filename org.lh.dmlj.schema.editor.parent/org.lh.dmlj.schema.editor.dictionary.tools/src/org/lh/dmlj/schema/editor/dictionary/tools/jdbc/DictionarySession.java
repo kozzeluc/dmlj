@@ -144,6 +144,10 @@ public class DictionarySession {
 		}
 	}
 
+	public Connection getConnection() {
+		return connection;
+	}
+
 	public final void runQuery(IQuery query, IRowProcessor rowProcessor) {
 		
 		if (connectionOpened == -1) {
