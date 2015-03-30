@@ -39,6 +39,7 @@ import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -112,13 +113,19 @@ public class RecordEditPart
 			
 			// the storage mode was changed
 			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {			
 			// the record name or containing area name has changed (execute/redo)
 			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
 				refreshVisuals();
 			}		
-		}		
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
+			// the containing area name was possibly renamed
+			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
+			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
+				refreshVisuals();
+			}
+		}
 	}
 	
 	@Override
@@ -140,6 +147,19 @@ public class RecordEditPart
 			// listener data, which we will pick up again when processing the after model change 
 			// event
 			context.setListenerData(Boolean.TRUE);
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
+				   !context.appliesTo(getModel())) {
+			
+			// it is possible that, together with changing an area specification, the area is 
+			// being renamed as well; the record whose area specification is changed will be
+			// refreshed already, but we need to make sure that the new area name replaces the old
+			// one (we might unnecessarily do a refresh, but that's better than missing an area
+			// rename)
+			String anotherRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			SchemaRecord anotherRecord = getModel().getSchema().getRecord(anotherRecordName);
+			if (anotherRecord.getAreaSpecification().getArea() == getModel().getAreaSpecification().getArea()) {
+				context.setListenerData(Boolean.TRUE);
+			}
 		}
 	}
 	
