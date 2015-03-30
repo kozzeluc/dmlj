@@ -110,6 +110,25 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 					nodeTextChanged();
 				}
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				   context.getListenerData() instanceof SchemaRecord) {
+			
+			// a record contained in the model area was deleted (execute/redo); remove the record's 
+			// child edit part
+			SchemaRecord record = (SchemaRecord) context.getListenerData();	
+			findAndRemoveChild(record, false);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+					
+			// a delete record operation was undone; create a child edit part for the record if it  
+			// is stored in the model area
+			String recordName = context.getContextData().get((IContextDataKeys.RECORD_NAME));
+			SchemaRecord record = getModel().getSchema().getRecord(recordName);			
+			SchemaArea area = record.getAreaSpecification().getArea();
+			if (area == getModel()) {					
+				createAndAddChild(record);
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET &&
 				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 				   context.getListenerData() instanceof SystemOwner) {
@@ -184,6 +203,17 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 					context.setListenerData(set.getSystemOwner());
 				}
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+						
+				// a record is being deleted (execute/redo); store the record in the context's  
+				// listener data if it is stored in the model area
+				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				SchemaRecord record = getModel().getSchema().getRecord(recordName);			
+				SchemaArea area = record.getAreaSpecification().getArea();
+				if (area == getModel()) {					
+					context.setListenerData(record);
+				}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET &&
 			context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 			
