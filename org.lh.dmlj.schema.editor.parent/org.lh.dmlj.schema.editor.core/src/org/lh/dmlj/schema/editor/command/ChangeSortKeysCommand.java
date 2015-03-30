@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,26 +16,20 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import java.util.Arrays;
+
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 /**
  * A command that will change a sort key.
  */
-@ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class ChangeSortKeysCommand extends AbstractSortKeyManipulationCommand {
 
-	@Owner	  private Set 		   		   set;
-	@Features private EStructuralFeature[] features = {
-		SchemaPackage.eINSTANCE.getMemberRole_SortKey()
-	};	
+	protected Set set;	
+	
+	protected ISupplier<Set> setSupplier;
 	
 	public ChangeSortKeysCommand(Set set, ISortKeyDescription[] sortKeyDescriptions) {
 		super(set, sortKeyDescriptions);
@@ -44,8 +38,25 @@ public class ChangeSortKeysCommand extends AbstractSortKeyManipulationCommand {
 		this.set = set;
 	}
 	
+	public ChangeSortKeysCommand(ISupplier<Set> setSupplier, 
+								 ISortKeyDescription[] sortKeyDescriptions) {
+		
+		super(null, sortKeyDescriptions);
+		Assert.isNotNull(sortKeyDescriptions, "sortKeyDescriptions is null");
+		this.setSupplier = setSupplier;
+	}
+	
 	@Override
 	public void execute() {
+		
+		if (setSupplier != null) {
+			super.set = setSupplier.supply();
+			set = super.set;
+			Assert.isTrue(set.getOrder() == SetOrder.SORTED, "not a sorted set");
+			Assert.isTrue(set.getMembers().size() == sortKeyDescriptions.length, 
+				  	  	  "the number of sort key descriptions does NOT match the number of set " +
+				  	  	  "members: " + set.getName() + " " + Arrays.asList(sortKeyDescriptions));
+		}
 		
 		// remember the current sort keys		
 		stashSortKeys(0);		

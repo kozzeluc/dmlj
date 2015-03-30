@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,15 +23,12 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.junit.Before;
 import org.junit.Test;
-import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
@@ -39,46 +36,44 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
 public class DeleteSetOrIndexCommandCreationAssistantTest {
 
 	private Schema schema;	
 	
-	private void checkCommand(CompoundCommand compoundCommand, MemberRole memberRole) {		
+	private void checkCommand(ModelChangeCompoundCommand compoundCommand, MemberRole memberRole) {		
 		checkCommand(compoundCommand, memberRole, 0, compoundCommand.size() - 1);		
 	}
 	
-	private void checkCommand(CompoundCommand compoundCommand, MemberRole memberRole, 
+	private void checkCommand(ModelChangeCompoundCommand compoundCommand, MemberRole memberRole, 
 							  int beginIndex, int endIndex) {
 		
 		for (int i = beginIndex; i <= endIndex; i++) {
-			Command command = (Command) compoundCommand.getCommands().get(i);			
+			ModelChangeBasicCommand command = 
+				(ModelChangeBasicCommand) compoundCommand.getCommands().get(i);			
 			checkCommand(command, memberRole);
 		}		
 	}
 	
-	private void checkCommand(Command command, MemberRole memberRole) {
+	private void checkCommand(ModelChangeBasicCommand command, MemberRole memberRole) {
 		if (command instanceof DeleteBendpointCommand) {
 			assertTrue(!memberRole.getConnectionParts().get(0).getBendpointLocations().isEmpty() ||
 					    memberRole.getConnectionParts().size() > 1 &&
 					    !memberRole.getConnectionParts().get(1).getBendpointLocations().isEmpty());
 			
-			ConnectionPart commandConnectionPart = getAnnotatedFieldValue(command, Owner.class);
-			assertSame(memberRole, commandConnectionPart.getMemberRole());
+			DeleteBendpointCommand cCommand = (DeleteBendpointCommand) command;
+			assertSame(memberRole, cCommand.connectionPart.getMemberRole());
 			int commandConnectionPartIndex = getFieldValue(command, "connectionPartIndex");
 			assertEquals(0, commandConnectionPartIndex);
 		} else if (command instanceof DeleteConnectorsCommand) {			
 			assertEquals(2, memberRole.getConnectionParts().size());
-			MemberRole commandMemberRole = getAnnotatedFieldValue(command, Owner.class);
-			assertSame(memberRole, commandMemberRole);
+			DeleteConnectorsCommand cCommand = (DeleteConnectorsCommand) command;
+			assertSame(memberRole, cCommand.memberRole);
 		} else if (command instanceof DeleteSetCommand) {
 			assertNull(memberRole.getSet().getSystemOwner());
-			Set set = getAnnotatedFieldValue(command, Item.class);
-			assertSame(memberRole.getSet(), set);
+			DeleteSetCommand cCommand = (DeleteSetCommand) command;
+			assertSame(memberRole.getSet(), cCommand.set);
 		} else if (command instanceof DeleteIndexCommand) {
 			assertSame(SetMode.INDEXED, memberRole.getSet().getMode());
 			assertNotNull(memberRole.getSet().getSystemOwner());
@@ -86,24 +81,16 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 			assertSame(memberRole.getSet().getSystemOwner(), systemOwner);
 		} else if (command instanceof MakeRecordDirectCommand) {
 			assertSame(LocationMode.VIA, memberRole.getRecord().getLocationMode());
-			SchemaRecord record = getAnnotatedFieldValue(command, Owner.class);
-			assertSame(memberRole.getRecord(), record);
+			MakeRecordDirectCommand cCommand = (MakeRecordDirectCommand) command;
+			assertSame(memberRole.getRecord(), cCommand.record);
 		} else if (command instanceof RemoveMemberFromSetCommand) {
-			MemberRole commandMemberRole = getAnnotatedFieldValue(command, Item.class);
-			assertSame(memberRole, commandMemberRole);
+			RemoveMemberFromSetCommand cCommand = (RemoveMemberFromSetCommand) command;
+			assertSame(memberRole, cCommand.memberRole);
 		} else {
 			fail("unexpected command: " + command.getClass().getSimpleName());
 		}
 	}
 
-	private <T, U extends Annotation> T getAnnotatedFieldValue(Command command, 
-															   Class<U> annotationClass) {
-		T value = 
-			ModelChangeDispatcher.getAnnotatedFieldValue(command, annotationClass, 
-														 ModelChangeDispatcher.Availability.MANDATORY);
-		return value;
-	}
-	
 	@SuppressWarnings("unchecked")
 	private <T> T getFieldValue(Command command, String fieldName) {
 		try {
@@ -139,13 +126,15 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		// the index to be deleted AND when no connectors are present on the line between the index
 		// figure and the member record		
 		MemberRole memberRole = schema.getSet("JOB-TITLE-NDX").getMembers().get(0);		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		ModelChangeBasicCommand command = 
+			(ModelChangeBasicCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertTrue(command instanceof DeleteIndexCommand);
 		checkCommand(command, memberRole);
 	
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+		command = 
+			(ModelChangeBasicCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertTrue(command instanceof DeleteIndexCommand);
 		checkCommand(command, memberRole);
 		
@@ -164,9 +153,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		createConnectorCommand.execute();
 		
 		// have the compound created and verify		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);	
-		CompoundCommand compoundCommand = (CompoundCommand) command;
+		ModelChangeCompoundCommand compoundCommand = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals("Delete index", compoundCommand.getLabel());
 		assertEquals(2, compoundCommand.getCommands().size());
 		assertTrue(compoundCommand.getCommands().get(0) instanceof DeleteConnectorsCommand);
@@ -176,9 +164,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);	
-		compoundCommand = (CompoundCommand) command;
+		compoundCommand = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertEquals("Delete index", compoundCommand.getLabel());
 		assertEquals(2, compoundCommand.getCommands().size());
 		assertTrue(compoundCommand.getCommands().get(0) instanceof DeleteConnectorsCommand);
@@ -200,10 +187,9 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		tmpCommand.execute();		
 		assertEquals(1, memberRole.getConnectionParts().get(0).getBendpointLocations().size());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		
-		CompoundCommand cc = (CompoundCommand) command;
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteIndexCommand);
@@ -212,10 +198,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);
+		cc = (ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		
-		cc = (CompoundCommand) command;
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteIndexCommand);
@@ -243,10 +227,9 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		tmpCommand3.execute();		
 		assertEquals(1, memberRole.getConnectionParts().get(1).getBendpointLocations().size());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		
-		CompoundCommand cc = (CompoundCommand) command;
 		assertEquals(4, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -257,10 +240,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);
+		cc = (ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		
-		cc = (CompoundCommand) command;
 		assertEquals(4, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -290,9 +271,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		// have the compound created and verify		
 		MemberRole memberRole = schema.getSet("JOB-TITLE-NDX").getMembers().get(0);
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);	
-		CompoundCommand compoundCommand = (CompoundCommand) command;
+		ModelChangeCompoundCommand compoundCommand = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals("Delete index", compoundCommand.getLabel());
 		assertEquals(2, compoundCommand.getCommands().size());
 		assertTrue(compoundCommand.getCommands().get(0) instanceof MakeRecordDirectCommand);
@@ -302,9 +282,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);	
-		compoundCommand = (CompoundCommand) command;
+		compoundCommand = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertEquals("Delete index", compoundCommand.getLabel());
 		assertEquals(2, compoundCommand.getCommands().size());
 		assertTrue(compoundCommand.getCommands().get(0) instanceof MakeRecordDirectCommand);
@@ -345,9 +324,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertEquals(1, memberRole.getConnectionParts().get(1).getBendpointLocations().size());
 		
 		// have the compound created and verify		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);	
-		CompoundCommand compoundCommand = (CompoundCommand) command;
+		ModelChangeCompoundCommand compoundCommand = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals("Delete index", compoundCommand.getLabel());
 		assertEquals(5, compoundCommand.getCommands().size());
 		assertTrue(compoundCommand.getCommands().get(0) instanceof DeleteBendpointCommand);
@@ -360,9 +338,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);	
-		compoundCommand = (CompoundCommand) command;
+		compoundCommand = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertEquals("Delete index", compoundCommand.getLabel());
 		assertEquals(5, compoundCommand.getCommands().size());
 		assertTrue(compoundCommand.getCommands().get(0) instanceof DeleteBendpointCommand);
@@ -379,13 +356,15 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 	public void test_SingleMemberSet_SimpleCommand() {		
 		
 		MemberRole memberRole = schema.getSet("JOB-EMPOSITION").getMembers().get(0);		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		ModelChangeBasicCommand command = 
+			(ModelChangeBasicCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertTrue(command instanceof DeleteSetCommand);
 		checkCommand(command, memberRole);
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+		command = 
+			(ModelChangeBasicCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertTrue(command instanceof DeleteSetCommand);
 		checkCommand(command, memberRole);
 		
@@ -399,9 +378,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		tmpCommand.execute();
 		assertEquals(2, memberRole.getConnectionParts().size());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteConnectorsCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteSetCommand);
@@ -410,9 +388,7 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);
-		cc = (CompoundCommand) command;
+		cc = (ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteConnectorsCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteSetCommand);
@@ -431,9 +407,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		tmpCommand.execute();
 		assertEquals(1, memberRole.getConnectionParts().get(0).getBendpointLocations().size());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteSetCommand);
@@ -442,9 +417,7 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);
-		cc = (CompoundCommand) command;
+		cc = (ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteSetCommand);
@@ -471,9 +444,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		tmpCommand3.execute();
 		assertEquals(1, memberRole.getConnectionParts().get(1).getBendpointLocations().size());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(4, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -484,9 +456,7 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);
-		cc = (CompoundCommand) command;
+		cc = (ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertEquals(4, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -506,9 +476,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertEquals(1, memberRole.getConnectionParts().size());
 		assertTrue(memberRole.getConnectionParts().get(0).getBendpointLocations().isEmpty());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof MakeRecordDirectCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteSetCommand);
@@ -517,9 +486,7 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);
-		cc = (CompoundCommand) command;
+		cc = (ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof MakeRecordDirectCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteSetCommand);
@@ -542,9 +509,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertEquals(2, memberRole.getConnectionParts().get(0).getBendpointLocations().size());
 		assertEquals(0, memberRole.getConnectionParts().get(1).getBendpointLocations().size());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(5, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -556,9 +522,7 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		
 		
 		// the same should happen when passing the set and not the member role
-		command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
-		assertTrue(command instanceof CompoundCommand);
-		cc = (CompoundCommand) command;
+		cc = (ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 		assertEquals(5, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -593,7 +557,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertTrue(memberRole.getConnectionParts().get(0).getBendpointLocations().isEmpty());
 		assertEquals("DENTAL-CLAIM", set.getMembers().get(2).getRecord().getName());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		ModelChangeBasicCommand command = 
+			(ModelChangeBasicCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertTrue(command instanceof RemoveMemberFromSetCommand);
 		
 		checkCommand(command, memberRole);
@@ -627,9 +592,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertEquals(2, memberRole.getConnectionParts().size());
 		assertEquals("DENTAL-CLAIM", set.getMembers().get(2).getRecord().getName());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteConnectorsCommand);
 		assertTrue(cc.getCommands().get(1) instanceof RemoveMemberFromSetCommand);
@@ -660,9 +624,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertEquals(2, memberRole.getConnectionParts().size());
 		assertEquals("DENTAL-CLAIM", set.getMembers().get(2).getRecord().getName());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(4, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -692,9 +655,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertSame(LocationMode.DIRECT, memberRole.getRecord().getLocationMode());				
 		assertEquals("DENTAL-CLAIM", set.getMembers().get(2).getRecord().getName());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(3, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -725,9 +687,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertSame(LocationMode.VIA, memberRole.getRecord().getLocationMode());
 		assertEquals("DENTAL-CLAIM", set.getMembers().get(2).getRecord().getName());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(2, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof MakeRecordDirectCommand);
 		assertTrue(cc.getCommands().get(1) instanceof RemoveMemberFromSetCommand);
@@ -755,9 +716,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertEquals(2, memberRole.getConnectionParts().size());
 		assertEquals("DENTAL-CLAIM", set.getMembers().get(2).getRecord().getName());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		assertEquals(5, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -840,9 +800,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertSame(LocationMode.DIRECT, memberRole2.getRecord().getLocationMode());		
 		assertSame(LocationMode.DIRECT, memberRole3.getRecord().getLocationMode());		
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 		assertEquals(6, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteConnectorsCommand);				
 		assertTrue(cc.getCommands().get(1) instanceof RemoveMemberFromSetCommand);
@@ -901,9 +860,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertSame(LocationMode.DIRECT, memberRole2.getRecord().getLocationMode());		
 		assertSame(LocationMode.DIRECT, memberRole3.getRecord().getLocationMode());		
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 		assertEquals(8, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);				
 		assertTrue(cc.getCommands().get(1) instanceof RemoveMemberFromSetCommand);
@@ -994,9 +952,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertSame(LocationMode.DIRECT, memberRole2.getRecord().getLocationMode());		
 		assertSame(LocationMode.DIRECT, memberRole3.getRecord().getLocationMode());		
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 		assertEquals(14, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);
@@ -1061,9 +1018,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertSame(LocationMode.VIA, memberRole3.getRecord().getLocationMode());
 		assertSame(set, memberRole3.getRecord().getViaSpecification().getSet());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 		assertEquals(6, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof MakeRecordDirectCommand);				
 		assertTrue(cc.getCommands().get(1) instanceof RemoveMemberFromSetCommand);
@@ -1141,9 +1097,8 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		assertSame(LocationMode.VIA, memberRole3.getRecord().getLocationMode());
 		assertSame(set, memberRole3.getRecord().getViaSpecification().getSet());
 		
-		Command command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
-		assertTrue(command instanceof CompoundCommand);
-		CompoundCommand cc = (CompoundCommand) command;
+		ModelChangeCompoundCommand cc = 
+			(ModelChangeCompoundCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 		assertEquals(17, cc.getCommands().size());
 		assertTrue(cc.getCommands().get(0) instanceof DeleteBendpointCommand);
 		assertTrue(cc.getCommands().get(1) instanceof DeleteBendpointCommand);

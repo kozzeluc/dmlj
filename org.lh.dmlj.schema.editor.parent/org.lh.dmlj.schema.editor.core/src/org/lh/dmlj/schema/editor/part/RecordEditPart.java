@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,9 +23,6 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -41,9 +38,14 @@ import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
+import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
+import org.lh.dmlj.schema.editor.policy.RecordComponentEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RecordGraphicalNodeEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RecordXYLayoutEditPolicy;
 
@@ -56,50 +58,109 @@ public class RecordEditPart
 	
 	public RecordEditPart(SchemaRecord record, IModelChangeProvider modelChangeProvider) {
 		super(record, modelChangeProvider);		
-	}	
-	
-	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {
-
-		if (item == getModel().getAreaSpecification()) {
-			// the record was moved to another area
-			refreshVisuals();
-		}		
 	}
 	
 	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		
-		super.afterSetFeatures(owner, features);
-		
-		if (owner == getModel()) {			
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
+			context.appliesTo(getModel())) {
 			
-			// refresh the edit part's visuals because one of the contained items has changed
+			// the area specification has changed
 			refreshVisuals();
-		
-		} else if (getModel().getLocationMode() == LocationMode.VIA &&
-				   owner == getModel().getViaSpecification().getSet() &&
-				   isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Name())) {
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_CALCKEY &&
+				   context.appliesTo(getModel())) {
 			
-			// the name of the the record's VIA set has changed
-			refreshVisuals();			
-			
-		} else if (getModel().getLocationMode() == LocationMode.CALC &&
-				   owner == getModel().getCalcKey() && 
-				   isFeatureSet(features, SchemaPackage.eINSTANCE.getKey_DuplicatesOption())) {
-			
-			// the CALC key's duplicates option has changed
-			refreshVisuals();			
-		
-		} else if (owner == getModel().getAreaSpecification().getArea() &&
-				   isFeatureSet(features, SchemaPackage.eINSTANCE.getSchemaArea_Name())) {
-			
-			// the name of the area in which the record is stored has changed
+			// the CALC key has changed
 			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_LOCATION_MODE &&
+				   context.appliesTo(getModel())) {
 			
+			// the location mode has changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_VIA_SPECIFICATION &&
+				   context.appliesTo(getModel())) {
+			refreshVisuals();
+		} else if ((context.getModelChangeType() == ModelChangeType.MOVE_RECORD ||
+					context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
+				   context.appliesTo(getModel())) {
+			
+			// the record was moved
+			refreshVisuals();			
+			refreshConnections();
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				   context.appliesTo(getModel().getAreaSpecification().getArea())) {
+								
+			// the record's containing area name change was undone
+			refreshVisuals();			
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				   context.appliesTo(getModel())) {
+			
+			// the record name change was undone
+			refreshVisuals();							
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Id()) &&
+				   context.appliesTo(getModel())) {
+			
+			// the record id was changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_StorageMode()) &&
+				   context.appliesTo(getModel())) {
+			
+			// the storage mode was changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {			
+			// the record name or containing area name has changed (execute/redo)
+			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
+			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
+				refreshVisuals();
+			}		
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
+			// the containing area name was possibly renamed
+			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
+			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
+				refreshVisuals();
+			}
 		}
-		
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel())) {
+							
+			// the record name is changing (execute/redo); put a boolean in the listener data, 
+			// which we will pick up again when processing the after model change event
+			context.setListenerData(Boolean.TRUE);
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				   context.appliesTo(getModel().getAreaSpecification().getArea())) {
+						
+			// the record's containing area name is changing (execute/redo); put a boolean in the 
+			// listener data, which we will pick up again when processing the after model change 
+			// event
+			context.setListenerData(Boolean.TRUE);
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
+				   !context.appliesTo(getModel())) {
+			
+			// it is possible that, together with changing an area specification, the area is 
+			// being renamed as well; the record whose area specification is changed will be
+			// refreshed already, but we need to make sure that the new area name replaces the old
+			// one (we might unnecessarily do a refresh, but that's better than missing an area
+			// rename)
+			String anotherRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			SchemaRecord anotherRecord = getModel().getSchema().getRecord(anotherRecordName);
+			if (anotherRecord.getAreaSpecification().getArea() == getModel().getAreaSpecification().getArea()) {
+				context.setListenerData(Boolean.TRUE);
+			}
+		}
 	}
 	
 	@Override
@@ -112,6 +173,9 @@ public class RecordEditPart
 								  						    getViewer()));
 		
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new RecordXYLayoutEditPolicy(getModel()));
+		
+		// the next edit policy allows for the deletion of a record
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new RecordComponentEditPolicy());
 		
 	}
 	

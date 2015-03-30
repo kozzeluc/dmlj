@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,10 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.common;
 
-
-
-
-
 public abstract class NamingConventions {
 		
 	private static final String AT_SIGN = "@";
@@ -30,9 +26,10 @@ public abstract class NamingConventions {
 	private static final String POUND_SIGN = "#";
 	private static final String UNDERSCORE = "_";
 
-	public static enum Type {ELEMENT_NAME, LOGICAL_AREA_NAME, PHYSICAL_AREA_NAME, 
-						     PROCEDURE_NAME, RECORD_ID, RECORD_NAME, SCHEMA_NAME, 
-						     SET_NAME, SYMBOLIC_DISPLACEMENT, SYMBOLIC_INDEX_NAME};	
+	public static enum Type {ELEMENT_NAME, LOGICAL_AREA_NAME, PHYSICAL_AREA_NAME,
+							 PRIMARY_RECORD_NAME, PROCEDURE_NAME, RECORD_ID, RECORD_NAME, 
+							 SCHEMA_NAME, SET_NAME, SYMBOLIC_DISPLACEMENT, SYMBOLIC_INDEX_NAME, 
+						     VERSION_SPECIFICATION};	
 		
 	static boolean checkValidCharacters(String name, 
 												String validCharacters) {
@@ -53,6 +50,8 @@ public abstract class NamingConventions {
 			return validatePhysicalDdlEntityName(value, type);
 		} else if (type == Type.RECORD_NAME) {
 			return validateRecordName(value);
+		} else if (type == Type.PRIMARY_RECORD_NAME) {
+			return validatePrimaryRecordName(value);
 		} else if (type == Type.PROCEDURE_NAME) {
 			return validateProcedureName(value);
 		} else if (type == Type.SCHEMA_NAME) {
@@ -71,6 +70,8 @@ public abstract class NamingConventions {
 	public static ValidationResult validate(short value, Type type) {
 		if (type == Type.RECORD_ID) {
 			return validateRecordId(value);
+		} else if (type == Type.VERSION_SPECIFICATION) {
+			return validateVersionSpecification(value);
 		} else {
 			throw new IllegalArgumentException("type not supported: " + type);
 		}
@@ -233,6 +234,65 @@ public abstract class NamingConventions {
 		return new ValidationResult(ValidationResult.Status.OK);
 		
 	}
+	
+	private static ValidationResult validateVersionSpecification(short versionSpecification) {		
+		
+		// versionSpecification must be an unsigned integer in the range 1 through 9999. 
+		if (versionSpecification < 1 || versionSpecification > 9999) {
+			String message = "must be an unsigned integer in the range 1 through 9999";	
+			return new ValidationResult(ValidationResult.Status.ERROR, message);
+		}		
+		
+		// versionSpecification is valid
+		return new ValidationResult(ValidationResult.Status.OK);
+		
+	}
+	
+	private static ValidationResult validatePrimaryRecordName(String name) {
+		
+		// name must be a 1- through 32-character alphanumeric value.
+		if (name == null || name.length() < 1 || name.length() > 32) {				
+			String message = "must be a 1- through 32-character alphanumeric value";
+			return new ValidationResult(ValidationResult.Status.ERROR, message);
+		}
+		
+		// the following restrictions are assumed but might be not be completely correct:
+		
+		// The first character must be A through Z (alphabetic), #, $, or @ 
+		// (international symbols).
+		String firstChar = name.substring(0, 1).toUpperCase();
+		String validFirstChars = LETTERS + POUND_SIGN + DOLLAR_SIGN + AT_SIGN;
+		if (validFirstChars.indexOf(firstChar) == -1) {
+			String message = "first character must be A through Z " +
+							 "(alphabetic), #, $, or @";
+			return new ValidationResult(ValidationResult.Status.ERROR, message);
+		}
+		
+		// The remaining characters can be alphabetic or international symbols,  
+		// 0 through 9, or the hyphen (except as the last character or following 
+		// another hyphen).
+		String validNextChars = 
+			LETTERS + DIGITS + POUND_SIGN + DOLLAR_SIGN + AT_SIGN + HYPHEN;
+		for (int i = 1; i < name.length(); i++) {
+			String remainingChar = name.substring(i, i + 1).toUpperCase();
+			if (validNextChars.indexOf(remainingChar) == -1) {
+				String message = 
+					"remaining characters can only be alphabetic or " +
+					"international symbols (#, $, or @), 0 through 9, or " +
+					"the hyphen";
+				return new ValidationResult(ValidationResult.Status.ERROR, 
+											message);
+			}
+		}
+		if (name.endsWith("-") || name.indexOf("--") > -1) {			
+			String message = "the hyphen can not be the last character " +
+							 "or follow another hyphen";
+			return new ValidationResult(ValidationResult.Status.ERROR, message);
+		}
+		
+		// name is valid
+		return new ValidationResult(ValidationResult.Status.OK);
+	}	
 
 	private static ValidationResult validateRecordName(String name) {
 		

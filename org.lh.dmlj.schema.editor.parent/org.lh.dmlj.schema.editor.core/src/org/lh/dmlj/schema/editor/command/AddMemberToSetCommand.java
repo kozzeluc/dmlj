@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,10 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EReference;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramData;
@@ -27,33 +27,28 @@ import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendage;
 
-@ModelChange(category=ADD_ITEM)
 public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 
-	@Owner 	   private Set 		  set;
-	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSet_Members();
-	@Item	   private MemberRole memberRole;
+	protected Set set;
+	private MemberRole memberRole;
 			
-	private SchemaRecord 			  memberRecord;
+	protected SchemaRecord 			  memberRecord;
 	private PrefixForPointerAppendage memberPrefix;
-	private DiagramData	    		  diagramData;	
+	private DiagramData	    		  diagramData;
+	protected PointerType[] pointerTypes = 
+		{PointerType.MEMBER_NEXT, PointerType.MEMBER_PRIOR, PointerType.MEMBER_OWNER};	
 	
 	public AddMemberToSetCommand(Set set) {
 		super(set, null);
@@ -62,6 +57,26 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 		this.set = set;
 		this.diagramData = set.getSchema().getDiagramData();				
 		setLabel("Add member record type to set " + set.getName());
+	}
+	
+	public AddMemberToSetCommand(Set set, PointerType[] pointerTypes) {
+		this(set);
+		List<PointerType> filteredPointerTypes = new ArrayList<>();
+		boolean nextPointerOk = false;
+		for (PointerType pointerType : pointerTypes) {
+			if (pointerType == PointerType.MEMBER_NEXT) {
+				nextPointerOk = true;
+			} else if (pointerType != PointerType.MEMBER_PRIOR &&
+					   pointerType != PointerType.MEMBER_OWNER) {
+				
+				throw new IllegalArgumentException("invalid pointer type: " + pointerType);
+			}
+			filteredPointerTypes.add(pointerType);
+		}
+		if (!nextPointerOk) {
+			throw new IllegalArgumentException("NEXT pointer is mandatory");
+		}
+		this.pointerTypes = filteredPointerTypes.toArray(new PointerType[] {});
 	}
 	
 	@Override
@@ -110,16 +125,8 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 		memberRole.setSet(set);
 		
 		if (memberPrefix == null) {
-			if (set.getMode() == SetMode.CHAINED) {
-				memberPrefix = 
-					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_NEXT, 
-															   PointerType.MEMBER_PRIOR, 
-															   PointerType.MEMBER_OWNER);
-			} else {
-				memberPrefix = 
-					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_INDEX, 
-															   PointerType.MEMBER_OWNER);			
-			}
+			memberPrefix = 
+				PrefixFactory.newPrefixForPointerAppendage(memberRole, pointerTypes);			
 		}
 		memberPrefix.appendPointers();
 		

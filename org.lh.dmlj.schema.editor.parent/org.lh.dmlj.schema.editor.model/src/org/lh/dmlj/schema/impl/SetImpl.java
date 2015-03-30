@@ -53,10 +53,12 @@ import org.lh.dmlj.schema.ViaSpecification;
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMode <em>Mode</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#isMultipleMember <em>Multiple Member</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getOrder <em>Order</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getOwner <em>Owner</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getSchema <em>Schema</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#isSorted <em>Sorted</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getSystemOwner <em>System Owner</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getViaMembers <em>Via Members</em>}</li>
  * </ul>
@@ -111,6 +113,15 @@ public class SetImpl extends EObjectImpl implements Set {
 	 */
 	protected SetMode mode = MODE_EDEFAULT;
 	/**
+	 * The default value of the '{@link #isMultipleMember() <em>Multiple Member</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isMultipleMember()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean MULTIPLE_MEMBER_EDEFAULT = false;
+	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -155,6 +166,15 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * @ordered
 	 */
 	protected OwnerRole owner;
+	/**
+	 * The default value of the '{@link #isSorted() <em>Sorted</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSorted()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SORTED_EDEFAULT = false;
 	/**
 	 * The cached value of the '{@link #getSystemOwner() <em>System Owner</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -247,6 +267,15 @@ public class SetImpl extends EObjectImpl implements Set {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isMultipleMember() {
+		return getMembers().size() > 1;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public SetOrder getOrder() {
@@ -304,6 +333,15 @@ public class SetImpl extends EObjectImpl implements Set {
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SET__SCHEMA, newSchema, newSchema));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isSorted() {
+		return getOrder() == SetOrder.SORTED;
 	}
 
 	/**
@@ -503,6 +541,8 @@ public class SetImpl extends EObjectImpl implements Set {
 				return getMembers();
 			case SchemaPackage.SET__MODE:
 				return getMode();
+			case SchemaPackage.SET__MULTIPLE_MEMBER:
+				return isMultipleMember();
 			case SchemaPackage.SET__NAME:
 				return getName();
 			case SchemaPackage.SET__ORDER:
@@ -511,6 +551,8 @@ public class SetImpl extends EObjectImpl implements Set {
 				return getOwner();
 			case SchemaPackage.SET__SCHEMA:
 				return getSchema();
+			case SchemaPackage.SET__SORTED:
+				return isSorted();
 			case SchemaPackage.SET__SYSTEM_OWNER:
 				return getSystemOwner();
 			case SchemaPackage.SET__VIA_MEMBERS:
@@ -616,6 +658,8 @@ public class SetImpl extends EObjectImpl implements Set {
 				return members != null && !members.isEmpty();
 			case SchemaPackage.SET__MODE:
 				return mode != MODE_EDEFAULT;
+			case SchemaPackage.SET__MULTIPLE_MEMBER:
+				return isMultipleMember() != MULTIPLE_MEMBER_EDEFAULT;
 			case SchemaPackage.SET__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case SchemaPackage.SET__ORDER:
@@ -624,6 +668,8 @@ public class SetImpl extends EObjectImpl implements Set {
 				return owner != null;
 			case SchemaPackage.SET__SCHEMA:
 				return getSchema() != null;
+			case SchemaPackage.SET__SORTED:
+				return isSorted() != SORTED_EDEFAULT;
 			case SchemaPackage.SET__SYSTEM_OWNER:
 				return systemOwner != null;
 			case SchemaPackage.SET__VIA_MEMBERS:

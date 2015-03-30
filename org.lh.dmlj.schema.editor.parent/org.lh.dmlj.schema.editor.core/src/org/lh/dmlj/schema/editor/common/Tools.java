@@ -180,14 +180,7 @@ public abstract class Tools {
 
 	public static String getSortKeys(MemberRole memberRole) {
 		
-		if (memberRole.getSet().getOrder() != SetOrder.SORTED ||
-			// added the next condition to avoid a NPE when deleting an index (before changing the 
-			// diagram edit parts to the new model change notification mechanism);
-			// TODO remove this condition when the diagram edit parts are modified to use the
-			//      new model change notification system (categorized command stack events) instead 
-			//      of model change events
-			memberRole.getSortKey() == null) { 
-			
+		if (memberRole.getSet().getOrder() != SetOrder.SORTED || memberRole.getSortKey() == null) { 				
 			return null;
 		}
 		
@@ -218,8 +211,12 @@ public abstract class Tools {
 				// by using a tab character, things will currently not line up 
 				// as we would like them to...
 				p.append("\t");
-			}			
-			p.append(keyElement.getElement().getName());
+			}	
+			if (!keyElement.isDbkey()) {
+				p.append(keyElement.getElement().getName());
+			} else {
+				p.append("DBKEY");
+			}
 		}
 		p.append(") ");		
 		p.append(getDuplicatesOption(memberRole.getSortKey()));

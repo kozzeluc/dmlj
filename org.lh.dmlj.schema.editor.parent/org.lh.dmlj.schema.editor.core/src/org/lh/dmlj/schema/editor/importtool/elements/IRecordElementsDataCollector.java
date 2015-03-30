@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,15 +14,36 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.command.annotation;
+package org.lh.dmlj.schema.editor.importtool.elements;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Collection;
 
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Features {
+import org.lh.dmlj.schema.Usage;
+
+public interface IRecordElementsDataCollector<T> {
+	
+	String getBaseName(T context);
+
+	String getDependsOnElementName(T context);
+
+	Collection<String> getIndexElementBaseNames(T context);
+	
+	Collection<String> getIndexElementNames(T context);
+	
+	boolean getIsNullable(T context);
+
+	short getLevel(T context);
+
+	String getName(T context);
+
+	short getOccurrenceCount(T context);	
+
+	String getPicture(T context);
+
+	String getRedefinedElementName(T context);	
+	
+	Usage getUsage(T context);
+	
+	String getValue(T context);
 	
 }

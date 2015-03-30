@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,13 +20,16 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommand;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommand;
 import org.lh.dmlj.schema.editor.command.SetShortAttributeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class StandardEditHandler implements IEditHandler {
 
-	private Command command;
+	private IModelChangeCommand command;
 	private String  message;	
 	
 	@SuppressWarnings("unused")
@@ -34,14 +37,9 @@ public class StandardEditHandler implements IEditHandler {
 		super();
 	}
 	
-	StandardEditHandler(EObject target, EAttribute attribute, String label, 
-						Object newValue) {
+	public StandardEditHandler(EObject target, EAttribute attribute, String label, Object newValue, 
+							   String message) {
 		
-		this(target, attribute, label, newValue, null);
-	}
-	
-	public StandardEditHandler(EObject target, EAttribute attribute, String label, 
-						Object newValue, String message) {
 		super();
 		
 		this.message = message;
@@ -75,34 +73,36 @@ public class StandardEditHandler implements IEditHandler {
 			valueChanged = !oldValue.equals(newValue);
 		}
 		
-		// only if the value has changed (or we are dealing with an unsupported
-		// type), create the edit command or set a message if we cannot set one
+		// only if the value has changed (or we are dealing with an unsupported type), create the 
+		// edit command or set a message if we cannot set one
 		if (valueChanged) {
 			if (attribute.getEType().getName().equals("EString") ||
 				attribute.getEType().getName().equals("EShortObject")) {
 				
-				command = new SetObjectAttributeCommand(target, attribute, 
-												  		newValue, label);
+				command = new SetObjectAttributeCommand(target, attribute, newValue, label);
 			} else if (attribute.getEType().getName().equals("EBoolean")) {
 				boolean b = ((Boolean)newValue).booleanValue();
-				command = 
-					new SetBooleanAttributeCommand(target, attribute, b, label);
+				command = new SetBooleanAttributeCommand(target, attribute, b, label);
 			} else if (attribute.getEType().getName().equals("EShort")) {
 				short i = ((Short)newValue).shortValue();
-				command = 
-					new SetShortAttributeCommand(target, attribute, i, label);
+				command = new SetShortAttributeCommand(target, attribute, i, label);
 			} else if (classifier.getInstanceClass().isEnum()) {
-				command = new SetObjectAttributeCommand(target, attribute, 
-				  									    newValue, label);
+				command = new SetObjectAttributeCommand(target, attribute, newValue, label);
 			} else {
+				command = null;
 				message = "unsupported type: " + attribute.getEType().getName();
+			}
+			if (command != null) {
+				ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+				context.putContextData(target, attribute);
+				command.setContext(context);
 			}
 		}
 	}
 
 	@Override
 	public Command getEditCommand() {
-		return command;
+		return (Command) command;
 	}
 
 	@Override

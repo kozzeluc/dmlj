@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -37,10 +37,11 @@ import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.Dictionar
 import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.DictionarySetDataCollector;
 import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.SchemaDataCollector;
 import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttributeKeys;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Column_1028;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Constraint_1029;
@@ -100,7 +101,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		final List<Sa_018> list = new ArrayList<>();
 		
 		final Map<Long, Sa_018> sa_018s = new HashMap<>();
-		Query areaListQuery = new Query.Builder().forAreaList(session).build();
+		IQuery areaListQuery = new Query.Builder().forAreaList(session).build();
 		session.runQuery(areaListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {	
@@ -112,7 +113,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 			}			
 		});	
 		
-		Query areaProcedureListQuery = new Query.Builder().forAreaProcedureList(session).build();
+		IQuery areaProcedureListQuery = new Query.Builder().forAreaProcedureList(session).build();
 		session.runQuery(areaProcedureListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {								
@@ -142,7 +143,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		// regular records
 		final List<String> regularRecords = new ArrayList<>();
-		Query recordListQuery = new Query.Builder().forRecordList(session).build();
+		IQuery recordListQuery = new Query.Builder().forRecordList(session).build();
 		session.runQuery(recordListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
@@ -200,7 +201,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		// locate the base record synonym and hook it to the SR-036 when different from the record 
 		// synonym referenced by the schema		
-		Query baseRecordSynonymListQuery = 
+		IQuery baseRecordSynonymListQuery = 
 			new Query.Builder()
 					 .forBaseRecordSynonymList(session, new ArrayList<>(sr_036s.values()))
 					 .build();
@@ -211,14 +212,23 @@ public class SchemaImportTool implements ISchemaImportTool {
 				if (sr_036s.containsKey(Long.valueOf(dbkeySr_036))) {
 					Sr_036 sr_036 = sr_036s.get(Long.valueOf(dbkeySr_036));
 					long dbkeyRcdsyn_079b = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);
-					if (dbkeyRcdsyn_079b != sr_036.getRcdsyn_079().getDbkey()) {
-						Rcdsyn_079 rcdsyn_079 = new Rcdsyn_079();
-						rcdsyn_079.setDbkey(dbkeyRcdsyn_079b);
-						rcdsyn_079.setRsynName_079(row.getString(Rcdsyn_079.RSYN_NAME_079));
-						rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
-						rcdsyn_079.setSr_036(sr_036);
-						sr_036.setRcdsyn_079b(rcdsyn_079);
-						rcdsyn_079bs.put(Long.valueOf(dbkeyRcdsyn_079b), rcdsyn_079);
+					Rcdsyn_079 currentRcdsyn_079b = sr_036.getRcdsyn_079();
+					if (dbkeyRcdsyn_079b != currentRcdsyn_079b.getDbkey()) {
+						String rsynName_079 = row.getString(Rcdsyn_079.RSYN_NAME_079).trim();
+						short rsynVer_079 = row.getShort(Rcdsyn_079.RSYN_VER_079);
+						if (!rsynName_079.equals(currentRcdsyn_079b.getRsynName_079()) || 
+							rsynVer_079 != currentRcdsyn_079b.getRsynVer_079()) {
+							
+							// only set the base RCDSYN-079 occurrence when the name or version are
+							// different from the RCDSYN-079 that is connected to the schema
+							Rcdsyn_079 newRcdsyn_079 = new Rcdsyn_079();
+							newRcdsyn_079.setDbkey(dbkeyRcdsyn_079b);
+							newRcdsyn_079.setRsynName_079(rsynName_079);
+							newRcdsyn_079.setRsynVer_079(rsynVer_079);
+							newRcdsyn_079.setSr_036(sr_036);
+							sr_036.setRcdsyn_079b(newRcdsyn_079);
+							rcdsyn_079bs.put(Long.valueOf(dbkeyRcdsyn_079b), newRcdsyn_079);
+						}
 					}
 				}
 			}					
@@ -243,7 +253,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		// get ALL elements for ALL regular records
 		final Map<Long, Long> sdr_042_dbkeys = new HashMap<>(); // for postprocessing RCDSYN-079bs
-		Query elementListQuery = 
+		IQuery elementListQuery = 
 			new Query.Builder().forElementList(session, listOfRcdsyn_079sInvolved).build();
 		session.runQuery(elementListQuery, new IRowProcessor() {
 			@Override
@@ -297,7 +307,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 				namesyn_083.setSdr_042(sdr_042);
 			}
 		}
-		Query elementCommentListQuery = 
+		IQuery elementCommentListQuery = 
 			new Query.Builder()
 					 .forElementCommentList(session, new ArrayList<>(rcdsyn_079s.values()))
 					 .build();
@@ -322,7 +332,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		});	
 		
 		// record procedures
-		Query recordProcedureListQuery =
+		IQuery recordProcedureListQuery =
 			new Query.Builder().forRecordProcedureList(session).build();
 		session.runQuery(recordProcedureListQuery, new IRowProcessor() {
 			@Override
@@ -348,7 +358,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 			final IRecordDataCollector<Table_1050> rdc = 
 				dataCollectorRegistry.getRecordDataCollector(Table_1050.class);			
 			
-			Query catalogRecordListQuery = new Query.Builder().forCatalogRecordList().build();
+			IQuery catalogRecordListQuery = new Query.Builder().forCatalogRecordList().build();
 			session.runQuery(catalogRecordListQuery, new IRowProcessor() {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {
@@ -367,7 +377,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 			});	
 			
 			// get ALL elements for ALL catalog records; these are all root elements
-			Query catalogElementListQuery = new Query.Builder().forCatalogElementList().build();
+			IQuery catalogElementListQuery = new Query.Builder().forCatalogElementList().build();
 			session.runQuery(catalogElementListQuery, new IRowProcessor() {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {
@@ -430,7 +440,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		// regular sets
 		final Map<Long, Long> sor_046ToSrcdMappings = new HashMap<>();
-		Query setOwnerListQuery = new Query.Builder().forSetOwnerList(session).build();
+		IQuery setOwnerListQuery = new Query.Builder().forSetOwnerList(session).build();
 		session.runQuery(setOwnerListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
@@ -442,7 +452,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		});				
 		final List<String> regularSets = new ArrayList<>();
 		final Map<Long, Sor_046> sor_046s = new HashMap<>();
-		Query setListQuery = new Query.Builder().forSetList(session).build();
+		IQuery setListQuery = new Query.Builder().forSetList(session).build();
 		session.runQuery(setListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
@@ -509,7 +519,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		// catalog derived sets (only if the user wants us to add them)
 		if (session.isIdmsntwkVersion1() && addMissingCatalogComponents) {
-			Query catalogSetListQuery = new Query.Builder().forCatalogSetList().build();
+			IQuery catalogSetListQuery = new Query.Builder().forCatalogSetList().build();
 			session.runQuery(catalogSetListQuery, new IRowProcessor() {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {
@@ -541,7 +551,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 			});
 			
 			// system owned indexed sets...
-			Query catalogIndexListQuery = new Query.Builder().forCatalogIndexList().build();
+			IQuery catalogIndexListQuery = new Query.Builder().forCatalogIndexList().build();
 			session.runQuery(catalogIndexListQuery, new IRowProcessor() {				
 				@Override
 				public void processRow(ResultSet row) throws SQLException {

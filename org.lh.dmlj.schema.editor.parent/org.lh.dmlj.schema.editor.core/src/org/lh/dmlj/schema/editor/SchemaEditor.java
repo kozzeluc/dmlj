@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -41,9 +41,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -124,11 +121,14 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -147,8 +147,6 @@ public class SchemaEditor
 		SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
 	private static final EAttribute ATTRIBUTE_SHOW_RULERS = 
 		SchemaPackage.eINSTANCE.getDiagramData_ShowRulers();
-	private static final EAttribute ATTRIBUTE_ZOOM_LEVEL =
-		SchemaPackage.eINSTANCE.getDiagramData_ZoomLevel();
 	
 	// This class listens to changes to the file system in the workspace, and
 	// makes changes accordingly.
@@ -306,7 +304,8 @@ public class SchemaEditor
 	}
 	
 	@Override
-	public void stackChanged(CommandStackEvent event) {												
+	public void stackChanged(CommandStackEvent event) {
+		modelChangeDispatcher.setSchema(schema);
 		modelChangeDispatcher.dispatch(event);				
 	}
 	
@@ -407,13 +406,21 @@ public class SchemaEditor
 				getCommandStack().execute(command);				
 			}
 			
-			// make sure we are informed of zoom changes
+			// make sure we are informed of zoom changes (the graphical editor automatically adjusts
+			// the graphics)
 			manager.addZoomListener(new ZoomListener() {
 				@Override
 				public void zoomChanged(double zoom) {
 					if (zoom != schema.getDiagramData().getZoomLevel()) {
-						SetZoomLevelCommand command = 
-							new SetZoomLevelCommand(schema, zoom);
+						ModelChangeType modelChangeType;
+						if (zoom < schema.getDiagramData().getZoomLevel()) {
+							modelChangeType = ModelChangeType.ZOOM_OUT;
+						} else {
+							modelChangeType = ModelChangeType.ZOOM_IN;
+						}
+						ModelChangeContext context = new ModelChangeContext(modelChangeType);
+						SetZoomLevelCommand command = new SetZoomLevelCommand(schema, zoom);
+						command.setContext(context);
 						getCommandStack().execute(command);
 					}
 				}
@@ -435,48 +442,41 @@ public class SchemaEditor
 		modelChangeListener = new IModelChangeListener() {
 						
 			@Override
-			public void afterAddItem(EObject owner, EReference reference, Object item) {								
-			}
-
-			@Override
-			public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-									  EObject newOwner) {								
-			}
-
-			@Override
-			public void afterRemoveItem(EObject owner, EReference reference, Object item) {								
-			}
-
-			@Override
-			public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-				if (owner == schema.getDiagramData() && 
-					features.length == 1 && features[0] == ATTRIBUTE_SHOW_RULERS) {
+			public void afterModelChange(ModelChangeContext context) {		
+				if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+					context.isPropertySet(ATTRIBUTE_SHOW_RULERS)) {
 					
 					// the rulers are to be shown or hidden
 					boolean showRulers = schema.getDiagramData().isShowRulers();
 					getGraphicalViewer().setProperty(RulerProvider.PROPERTY_RULER_VISIBILITY,
 													 Boolean.valueOf(showRulers));
-				} else if (owner == schema.getDiagramData() && 
-						   features.length == 1 && features[0] == ATTRIBUTE_SHOW_GRID) {
+				} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+						   context.isPropertySet(ATTRIBUTE_SHOW_GRID)) { 
 					
 					// the grid has to be shown or hidden
 					boolean showGrid = schema.getDiagramData().isShowGrid();					
 					getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE,
 													 Boolean.valueOf(showGrid));
-				} else if (owner == schema.getDiagramData() && 
-						   features.length == 1 && features[0] == ATTRIBUTE_ZOOM_LEVEL) {
+				} else if (context.getModelChangeType() == ModelChangeType.ZOOM_IN ||
+						   context.getModelChangeType() == ModelChangeType.ZOOM_OUT) {
 					
 					// the zoom level has changed; it is important to set the manager's zoom level
 					// only when it's different from the current model value (to avoid assertion
 					// errors regarding the 'dispatching' indicator in the model change dispatcher,
 					// meaning we've put a command on the command stack while dispatching a command
-					// stack event)
+					// stack event); it turns out that this is only the case when the zoom command
+					// is undone or redone (which makes sense since we are not using the normal zoom
+					// controls in that situation)
 					if (manager != null && 
 						schema.getDiagramData().getZoomLevel() != manager.getZoom()) {
 						
 						manager.setZoom(schema.getDiagramData().getZoomLevel());
 					}
-				}				
+				}
+			}
+			
+			@Override
+			public void beforeModelChange(ModelChangeContext context) {				
 			}
 			
 		};
@@ -751,7 +751,18 @@ public class SchemaEditor
         									  new SimpleFactory(DiagramLabel.class), 
         									  label16, 
         									  label24);
-	        
+	    
+        // record creation tool
+        ImageDescriptor record16 = 
+        	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/record16.gif"));
+        ImageDescriptor record24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/record24.gif"));
+        CombinedTemplateCreationEntry recordCreationTool = 
+        	new CombinedTemplateCreationEntry("Record", "Add record", 
+        									  new SimpleFactory(SchemaRecord.class), record16, 
+        									  record24);
+        recordCreationTool.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);
+        
         // chained set creation tool
         ImageDescriptor chainedSet16 = 
         	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/chainedSet16.gif"));
@@ -821,6 +832,11 @@ public class SchemaEditor
         PaletteDrawer createGeneralItemsDrawer = new PaletteDrawer("General");
         createGeneralItemsDrawer.add(labelCreationTool);
         palette.add(createGeneralItemsDrawer);
+        
+        // Records drawer
+        PaletteDrawer createRecordItemsDrawer = new PaletteDrawer("Records");
+        createRecordItemsDrawer.add(recordCreationTool);
+        palette.add(createRecordItemsDrawer);
         
         // Sets drawer
         PaletteDrawer createSetItemsDrawer = new PaletteDrawer("Sets");

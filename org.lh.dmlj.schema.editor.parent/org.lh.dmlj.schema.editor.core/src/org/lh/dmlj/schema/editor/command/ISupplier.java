@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,8 +14,19 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.command.annotation;
+package org.lh.dmlj.schema.editor.command;
 
-public enum OwnerType {
-	NEW, OLD, DEFAULT
+/**
+ * Implementations supply commands with an object that cannot be provided at command construction 
+ * time (e.g. because it is not yet created); the first thing during command executing is invoking 
+ * the supplier to obtain that object. 
+ * 
+ * @param <T> the type of the object that will be supplied
+ */
+public interface ISupplier<T> {
+	/**
+	 * Invoked as the first step during command execution.
+	 * @return the object that cannot be supplied at command construction time
+	 */
+	T supply();
 }

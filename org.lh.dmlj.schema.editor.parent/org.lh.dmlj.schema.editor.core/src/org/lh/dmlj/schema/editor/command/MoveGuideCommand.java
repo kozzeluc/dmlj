@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,22 +16,11 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Guide;
-import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
-@ModelChange(category=ModelChangeCategory.SET_FEATURES)
-public class MoveGuideCommand extends Command {
+public class MoveGuideCommand extends ModelChangeBasicCommand {
 
-	@Owner 	  private Guide 		 		guide; 
-	@Features private EStructuralFeature[] 	features = {
-		SchemaPackage.eINSTANCE.getGuide_Position()
-	};
+	private Guide guide; 
 	
 	private int positionDelta;
 	

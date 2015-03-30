@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,10 +29,11 @@ import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Column_1028;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Constkey_1030;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Constraint_1029;
@@ -68,7 +69,7 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 			return;
 		}
 		sortKeyElementsMap = new HashMap<>();
-		Query catalogSortKeyElementListForUserOwnedSetsQuery = 
+		IQuery catalogSortKeyElementListForUserOwnedSetsQuery = 
 			new Query.Builder().forCatalogSortKeyElementListForUserOwnedSetsQuery(session).build();
 		session.runQuery(catalogSortKeyElementListForUserOwnedSetsQuery, new IRowProcessor() {			
 			@Override
@@ -92,7 +93,7 @@ public class CatalogUserOwnedSetDataCollector implements ISetDataCollector<Const
 				constraint_1029.getOrderkey_1044s().add(orderkey_1044);
 			}
 		});
-		Query catalogForeignKeyListQuery = new Query.Builder().forCatalogForeignKeyList().build();
+		IQuery catalogForeignKeyListQuery = new Query.Builder().forCatalogForeignKeyList().build();
 		session.runQuery(catalogForeignKeyListQuery, new IRowProcessor() {			
 			@Override
 			public void processRow(ResultSet row) throws SQLException {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,10 +30,11 @@ import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Index_1041;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Indexkey_1042;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Table_1050;
@@ -54,7 +55,7 @@ public class CatalogSystemOwnedIndexDataCollector implements ISetDataCollector<I
 			return;
 		}
 		sortKeyElementsMap = new HashMap<>();
-		Query catalogSortKeyElementListForSystemOwnedSetsQuery = 
+		IQuery catalogSortKeyElementListForSystemOwnedSetsQuery = 
 			new Query.Builder().forCatalogSortKeyElementListForSystemOwnedSets(session).build();
 		session.runQuery(catalogSortKeyElementListForSystemOwnedSetsQuery, new IRowProcessor() {			
 			@Override

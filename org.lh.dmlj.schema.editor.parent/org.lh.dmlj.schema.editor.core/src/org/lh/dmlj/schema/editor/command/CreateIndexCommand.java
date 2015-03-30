@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,10 +17,7 @@
 package org.lh.dmlj.schema.editor.command;
 
 import static org.lh.dmlj.schema.SetMembershipOption.MANDATORY_AUTOMATIC;
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.ADD_ITEM;
 
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
@@ -29,30 +26,21 @@ import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.IndexedSetModeSpecification;
 import org.lh.dmlj.schema.LabelAlignment;
 import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
 import org.lh.dmlj.schema.editor.figure.IndexFigure;
 
-@ModelChange(category=ADD_ITEM)
-public class CreateIndexCommand extends Command {
+public class CreateIndexCommand extends ModelChangeBasicCommand {
 	
 	private static final String AREA_NAME_SUFFIX = "-AREA";
 	private static final String SET_NAME_PREFIX = "NEW-INDEX-";
 	
-	@Owner 	   private Schema 	  schema;
-	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
-	@Item  	   private Set	  	  set;
+	private Set	set;
 	
 	private SchemaArea 		  area;
 	private AreaSpecification areaSpecification;
@@ -79,8 +67,6 @@ public class CreateIndexCommand extends Command {
 
 	@Override
 	public void execute() {
-		
-		schema = record.getSchema();
 		
 		String setName = calculateSetName(); 		
 		String areaName = setName + AREA_NAME_SUFFIX;		

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,21 +18,15 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertCommandCategorySet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertItemSet;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertOwnerSet;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertReferenceSet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertSetRemoved;
 
 import org.eclipse.gef.commands.Command;
 import org.junit.Before;
 import org.junit.Test;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 import org.lh.dmlj.schema.editor.testtool.Xmi;
@@ -92,30 +86,6 @@ public class DeleteSetCommandTest {
 		xmi = TestTools.asXmi(schema);
 	}	
 	
-	@Test
-	public void testAnnotations() {
-				
-		Set set = TestTools.getSet(schema, "DEPT-EMPLOYEE"); 
-		
-		Command command = new DeleteSetCommand(set);		
-		command.execute();		
-		assertCommandCategorySet(command, ModelChangeCategory.REMOVE_ITEM);				
-		assertOwnerSet(command, schema);		
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());				
-		assertItemSet(command, set);		
-		
-		command.undo();		
-		assertOwnerSet(command, schema);		
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());			
-		assertItemSet(command, set);
-		
-		command.redo();
-		assertOwnerSet(command, schema);
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());			
-		assertItemSet(command, set);		
-		
-	}
-
 	@Test
 	public void testSortedChainedSet() {		
 		

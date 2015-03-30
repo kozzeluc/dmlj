@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,14 +20,21 @@ import java.util.List;
 
 public interface IDataEntryContext {
 	
-	public static final String SCHEMA_NAME = "schemaName";
-	public static final String SCHEMA_VERSION = "schemaVersion";
+	// TODO move the standard context attribute names to an abstract class or interface (same package)
 	
+	// standard schema import tool context attribute names
+	public static final String SCHEMA_NAME = "schemaName";
+	public static final String SCHEMA_VERSION = "schemaVersion";	
 	public static final String DIAGRAMDATA_SHOW_RULERS = "showRulers";
 	public static final String DIAGRAMDATA_SHOW_GRID = "showGrid";
 	public static final String DIAGRAMDATA_SNAP_TO_GUIDES = "snapToGuides";
 	public static final String DIAGRAMDATA_SNAP_TO_GRID = "snapToGrid";
-	public static final String DIAGRAMDATA_SNAP_TO_GEOMETRY = "snapToGeometry";	
+	public static final String DIAGRAMDATA_SNAP_TO_GEOMETRY = "snapToGeometry";
+	
+	// standard record elements import tool context attribute names
+	public static final String CURRENT_SCHEMA_RECORD = "currentSchemaRecord";
+	public static final String SCHEMA = "schema";
+	public static final String RECORD = "record";
 	
 	void clear();
 	

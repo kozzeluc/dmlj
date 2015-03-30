@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ui.PromptForPasswordDialog;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
-public class ImportSession {
+public class DictionarySession {
 	
 	protected Connection connection;
 	private long connectionClosed = -1;
@@ -85,10 +85,10 @@ public class ImportSession {
 	}
 
 	@SuppressWarnings("unused")
-	private ImportSession() {
+	private DictionarySession() {
 	}
 	
-	public ImportSession(Dictionary dictionary, String description) {
+	public DictionarySession(Dictionary dictionary, String description) {
 		super();
 		this.dictionary = dictionary;
 		this.description = description;
@@ -144,7 +144,11 @@ public class ImportSession {
 		}
 	}
 
-	public final void runQuery(Query query, IRowProcessor rowProcessor) {
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public final void runQuery(IQuery query, IRowProcessor rowProcessor) {
 		
 		if (connectionOpened == -1) {
 			throw new RuntimeException("session not open");
@@ -199,12 +203,12 @@ public class ImportSession {
 		
 		private long end1;
 		private long end2;
-		private Query query;
+		private IQuery query;
 		private int rowsProcessed;
 		private long start;
 		private Throwable t;
 		
-		public QueryStatistics(Query query, long start, long end1, long end2, int rowsProcessed, 
+		public QueryStatistics(IQuery query, long start, long end1, long end2, int rowsProcessed, 
 							   Throwable t) {
 			
 			this.query = query;

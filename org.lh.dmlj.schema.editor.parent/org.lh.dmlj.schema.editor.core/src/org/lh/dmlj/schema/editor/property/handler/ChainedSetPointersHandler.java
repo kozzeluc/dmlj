@@ -21,10 +21,13 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.IMemberRoleProvider;
 import org.lh.dmlj.schema.editor.property.ui.ChainedSetPointersDialog;
@@ -59,7 +62,7 @@ public class ChainedSetPointersHandler
 		
 		// the user pressed the OK button, which means something has to be
 		// changed; build a list of commands to execute on the command stack...
-		List<Command> commands = new ArrayList<>();
+		List<IModelChangeCommand> commands = new ArrayList<>();
 		
 		// first stop: see if the user wants something to happen to the set's
 		// prior pointers (next pointers are mandatory for chained sets); either
@@ -122,7 +125,7 @@ public class ChainedSetPointersHandler
 					// pointer in the prefix of the member record at the first
 					// available position (i.e. create the command to get the 
 					// job done)
-					Command command = 
+					IModelChangeCommand command = 
 						createAppendPointerCommand(aMemberRole.getRecord(), 
 												   aMemberRole, 
 												   MEMBER_OWNER_POINTER_POSITION);
@@ -133,7 +136,7 @@ public class ChainedSetPointersHandler
 					// shifting all pointers following the removed owner pointer 
 					// one place to the left (i.e. create the commands to get 
 					// the job done)
-					List<Command> commands2 = 
+					List<IModelChangeCommand> commands2 = 
 						createShiftPointersCommands(aMemberRole.getRecord(), 
 													aMemberRole, 
 													MEMBER_OWNER_POINTER_POSITION);
@@ -142,8 +145,16 @@ public class ChainedSetPointersHandler
 			}
 		}
 		
-		// create a compound command if needed; there should always be at least 
-		// 1 command to add to it
+		// now is a good time to create the model change context
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_OR_REMOVE_SET_POINTERS);
+		if (dialog.isOwnerPointerManipulationForAllMembers()) {
+			context.putContextData(memberRole.getSet());
+		} else {
+			context.putContextData(memberRole);
+		}
+		
+		// create a compound command if needed; there should always be at least 1 command to add to 
+		// it
 		if (commands.isEmpty()) {
 			throw new RuntimeException("logic error: no commands created");				
 		} else if (commands.size() > 1) {			
@@ -151,13 +162,16 @@ public class ChainedSetPointersHandler
 				"Change pointers for set '" + 
 				Tools.removeTrailingUnderscore(memberRole.getSet().getName()) + 
 				"'";			
-			CompoundCommand cc = new CompoundCommand(label);
-			for (Command command : commands) {
-				cc.add(command);
+			ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(label);
+			cc.setContext(context);
+			for (IModelChangeCommand command : commands) {
+				cc.add((Command) command);
 			}
 			return cc;
 		} else {
-			return commands.get(0);
+			IModelChangeCommand command = commands.get(0); 
+			command.setContext(context);
+			return (Command) command;
 		}		
 		
 	}

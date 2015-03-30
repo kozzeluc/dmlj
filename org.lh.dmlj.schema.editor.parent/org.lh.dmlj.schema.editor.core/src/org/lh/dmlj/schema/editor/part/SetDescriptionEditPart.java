@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,9 +23,6 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
@@ -37,7 +34,11 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.figure.SetDescriptionFigure;
@@ -55,72 +56,98 @@ public class SetDescriptionEditPart
 	public SetDescriptionEditPart(ConnectionLabel connectionLabel, 
 								  IModelChangeProvider modelChangeProvider) {
 		super(connectionLabel, modelChangeProvider);		
-	}	
-	
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		
-		super.afterSetFeatures(owner, features);
-		
-		if (owner == getModel().getMemberRole().getSet() &&
-			isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Name())) {
-			
-			// the set name has changed
-			refreshVisuals();
-		} else if (owner == getModel().getMemberRole() &&
-				   (isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition()) ||
-					isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition()) ||
-					isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition()) ||
-					isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition()))) {
-			
-			// the maintained pointers (might) have (been) changed (no need to check the owner
-			// pointer positions; we're only interested in pointer availability, not pointer
-			// position)
-			refreshVisuals();
-			
-		} else if (owner == getModel().getMemberRole() &&
-				   isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_MembershipOption())) {
-			
-			// the membership option has changed
-			refreshVisuals();
-			
-		} else if (owner == getModel().getMemberRole().getSortKey() &&
-				   isFeatureSet(features, SchemaPackage.eINSTANCE.getKey_DuplicatesOption())) {
-			
-			// the sort key's duplicates option has changed
-			refreshVisuals();
-			
-		} else if (owner == getModel().getMemberRole().getSet() &&
-				   (isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Order()) ||
-					isFeatureSet(features, SchemaPackage.eINSTANCE.getMemberRole_SortKey()))) {
-			
-			// the set order or a sort key has changed
-			refreshVisuals();
-			
-		} else if (getModel().getMemberRole().getSet() != null &&
-				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
-				   owner == getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea() &&
-				   isFeatureSet(features, SchemaPackage.eINSTANCE.getSchemaArea_Name())) {
-			
-			// the system owner's containing area name has changed
-			refreshVisuals();
-			
-		}
-		
 	}
 	
 	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {
-		
-		if (getModel().getMemberRole().getSet().getSystemOwner() != null &&
-			item == getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification()) {
+	public void afterModelChange(ModelChangeContext context) {		
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel().getMemberRole().getSet())) {
 			
-			// the system owner has moved to another area
+			// the set name change was undone; note that the context data will ALWAYS contain the
+			// ORIGINAL set name (i.e. the one that was changed during the execute/redo); that's why 
+			// we compare the set name in the context data to the actual value to determine if we 
+			// need to refresh the visuals
+			refreshVisuals();			
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
+				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
+				   context.appliesTo(getModel().getMemberRole().getSet())) {
+			
+			// the system owner's area specification has changed
 			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SET_ORDER &&
+				   context.appliesTo(getModel().getMemberRole().getSet())) {
 			
+			// the set order has changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SORTKEYS &&
+				   context.appliesTo(getModel().getMemberRole().getSet())) {
+			
+			// the sort key has changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_OR_REMOVE_SET_POINTERS &&
+				   (context.appliesTo(getModel().getMemberRole()) ||
+				    context.appliesTo(getModel().getMemberRole().getSet()))) {			
+			
+			// pointers were added or removed (note that the context can apply to either the member
+			// role OR set)
+			refreshVisuals();			
+		} else if ((context.getModelChangeType() == ModelChangeType.MOVE_SET_OR_INDEX_LABEL ||
+				    context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
+				   context.appliesTo(getModel().getMemberRole())) {
+	
+			// the connection label was moved
+			refreshVisuals();			
+			refreshConnections();			
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getMemberRole_MembershipOption()) &&
+				   context.appliesTo(getModel().getMemberRole())) {
+			
+			// the membership option has changed
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
+				   context.appliesTo(getModel().getMemberRole()
+						   					   .getSet()
+						   					   .getSystemOwner()
+						   					   .getAreaSpecification()
+						   					   .getArea())) {
+					
+			// the system owner's containing area name change was undone
+			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
+			// the set name or the system owner's containing area name has changed (execute/redo)
+			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
+			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
+				refreshVisuals();
+			}		
 		}
-		
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {
+		SystemOwner systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel().getMemberRole().getSet())) {
+			
+			// the set name is changing (execute/redo); put a boolean in the listener data, which we 
+			// will pick up again when processing the after model change event
+			context.setListenerData(Boolean.TRUE);
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+				   systemOwner != null &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				   context.appliesTo(systemOwner.getAreaSpecification().getArea())) {
+				
+			// the system owner's containing area name is changing (execute/redo); put a boolean in 
+			// the listener data, which we will pick up again when processing the after model change 
+			// event
+			context.setListenerData(Boolean.TRUE);			
+		}
 	}
 	
 	@Override

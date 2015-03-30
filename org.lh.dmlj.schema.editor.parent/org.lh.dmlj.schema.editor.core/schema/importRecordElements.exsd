@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.lh.dmlj.schema.editor.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.lh.dmlj.schema.editor.core" id="importRecordElements" name="importRecordElements"/>
+      </appinfo>
+      <documentation>
+         Describes a list of record element import tools to be offered in the Import Record Elements wizard.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+         <documentation>
+            An extension point that allows contributers to provide 1 or more record element import tools.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="importTools" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dataEntryPage">
+      <annotation>
+         <documentation>
+            A wizard page that allows the collection of data needed by the import tool.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The unique id for the data entry page.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name for the wizard page; should not start with an underscore.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="message" type="string">
+            <annotation>
+               <documentation>
+                  The message to be shown in the wizard page; the message should describe the purpose of the wizard page.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of the class that implements org.lh.dmlj.schema.editor.importtool.IDataEntryPage; the class must extend org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage and should have a default constructor.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="importTool">
+      <annotation>
+         <documentation>
+            An import tool that delivers the data needed to create interrelated instances of org.lh.dmlj.schema.Element that are to be referenced by an existing org.lh.dmlj.schema.SchemaRecord instance.
+
+A number of data entry pages can be configured for each import tool.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="dataEntryPage" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The unique id for the import tool.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name for the import tool.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="source" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Describes the (data) source to be used for the import; the value for the source attribute will be shown in the &apos;Source&apos; combo of the source selection page of the import wizard; it is good practice to start the value of &apos;source&apos; with a lowercase article (e.g. &apos;a&apos; or &apos;the&apos;).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of the class that implements org.lh.dmlj.schema.editor.importtool.elements.IRecordElementImportTool.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.lh.dmlj.schema.editor.importtool.elements.IRecordElementImportTool"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  A description for the import tool that will be displayed in the import tool selection page of the import wizard when the user selects the import tool in the combo.  It is good practice to provide an import tool description like&quot;Import record elements  from [...]&quot;.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="parameters" type="string">
+            <annotation>
+               <documentation>
+                  A .properties file that configures the import tool.
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="importTools">
+      <annotation>
+         <documentation>
+            The set of import tools offered by the extension.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="importTool" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         1.7.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

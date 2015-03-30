@@ -2,8 +2,23 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="import" name="Schema Import Tools" schema="schema/import.exsd"/>
+   <extension-point id="importRecordElements" name="Record Element Import Tools" schema="schema/importRecordElements.exsd"/>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.lh.dmlj.schema.editor.ui.DiagramMenuVisiblePropertyTester"
+            id="org.lh.dmlj.schema.editor.core.propertyTester3"
+            namespace="org.lh.dmlj.schema.editor.ui.properties"
+            properties="diagramMenuVisible"
+            type="java.lang.Object">
+      </propertyTester>
+      <propertyTester
+            class="org.lh.dmlj.schema.editor.ui.RecordSelectedPropertyTester"
+            id="org.lh.dmlj.schema.editor.ui.propertyTester2"
+            namespace="org.lh.dmlj.schema.editor.ui.properties"
+            properties="recordSelected"
+            type="java.lang.Object">
+      </propertyTester>
       <propertyTester
             class="org.lh.dmlj.schema.editor.ui.SchemaFileSelectedPropertyTester"
             id="org.lh.dmlj.schema.editor.ui.propertyTester1"
@@ -20,6 +35,10 @@
    </extension>
    <extension
          point="org.eclipse.ui.commands">
+      <command
+            id="org.lh.dmlj.schema.editor.core.import.elements"
+            name="Import Record Elements...">
+      </command>
       <command
             id="org.lh.dmlj.schema.editor.ui.command.update"
             name="Update">
@@ -75,6 +94,17 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
+            class="org.lh.dmlj.schema.editor.ui.handler.ImportRecordElementsHandler"
+            commandId="org.lh.dmlj.schema.editor.core.import.elements">
+         <activeWhen>
+            <or>
+               <test
+                     property="org.lh.dmlj.schema.editor.ui.properties.recordSelected">
+               </test>
+            </or>
+         </activeWhen>
+      </handler>
+      <handler
             class="org.lh.dmlj.schema.editor.ui.handler.UpdateSchemaHandler"
             commandId="org.lh.dmlj.schema.editor.ui.command.update">
          <activeWhen>
@@ -90,12 +120,59 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu?after=edit">
+         <menu
+               id="org.lh.dmlj.schema.editor.menu.diagram"
+               label="Diagram"
+               mnemonic="D">
+            <command
+                  commandId="org.lh.dmlj.schema.editor.core.import.elements"
+                  label="Import Record Elements..."
+                  mnemonic="R"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <or>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.lh.dmlj.schema.editor.ui.properties.diagramMenuVisible">
+                     </test>
+                  </or>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
             allPopups="true"
             locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=import">
          <command
                commandId="org.lh.dmlj.schema.editor.ui.command.update"
                label="Update..."
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     forcePluginActivation="true"
+                     property="org.lh.dmlj.schema.editor.ui.properties.SchemaFileSelected">
+               </test>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=import">
+         <command
+               commandId="org.lh.dmlj.schema.editor.ui.command.update"
+               label="Update..."
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <test
+                     forcePluginActivation="true"
+                     property="org.lh.dmlj.schema.editor.ui.properties.SchemaFileSelected">
+               </test>
+            </visibleWhen>
          </command>
       </menuContribution>
    </extension>   
@@ -158,7 +235,13 @@
                label="General">
          </propertyTab>
          <propertyTab
-               afterTab="org.lh.dmlj.schema.editor.propertyTabSortedSet"
+               afterTab="org.lh.dmlj.schema.editor.propertyTabGeneral"
+               category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabDictionary"
+               label="Dictionary">
+         </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabDictionary"
                category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabRecordLength"
                label="Length">
@@ -176,7 +259,7 @@
                label="CALC">
          </propertyTab>
          <propertyTab
-               afterTab="org.lh.dmlj.schema.editor.propertyTabLengt"
+               afterTab="org.lh.dmlj.schema.editor.propertyTabLength"
                category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabVia"
                label="VIA">
@@ -395,6 +478,14 @@
                   type="org.lh.dmlj.schema.MemberRole">
             </input>
          </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.section.RecordDictionaryPropertiesSection"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordDictionary"
+               tab="org.lh.dmlj.schema.editor.propertyTabDictionary">
+            <input
+                  type="org.lh.dmlj.schema.SchemaRecord">
+            </input>
+         </propertySection>
       </propertySections>
    </extension>
    <extension
@@ -487,6 +578,30 @@
             <postOptionsPages></postOptionsPages>
          </importTool>
       </importTools>
+   </extension>
+   <extension
+         point="org.lh.dmlj.schema.editor.core.importRecordElements">
+        <importTools>
+	      <importTool
+	            class="org.lh.dmlj.schema.editor.importtool.elements.diagram.ImportRecordElementsFromDiagramImportTool"
+	            description="Import record elements from a schema diagram in your workspace."
+	            id="org.lh.dmlj.schema.editor.importtool.elements.ImportRecordElementsFromAnotherSchemaImportTool"
+	            name="Import from another schema"
+	            source="a record type in 1 of your schema diagrams">
+	         <dataEntryPage
+	               class="org.lh.dmlj.schema.editor.importtool.elements.diagram.SchemaSelectionPage"
+	               id="org.lh.dmlj.schema.editor.importtool.elements.schemaSelectionPage"
+	               message="Select a schema diagram"
+	               name="schemaSelectionPage">
+	         </dataEntryPage>
+	         <dataEntryPage
+	               class="org.lh.dmlj.schema.editor.importtool.elements.diagram.RecordSelectionPage"
+	               id="org.lh.dmlj.schema.editor.importtool.elements.recordSelectionPage"
+	               message="Select a record type"
+	               name="recordSelectionPage">
+	         </dataEntryPage>
+	      </importTool>
+	     </importTools>
    </extension>
 
 </plugin>

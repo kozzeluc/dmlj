@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,24 +16,13 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.MOVE_ITEM;
-import static org.lh.dmlj.schema.editor.command.annotation.OwnerType.NEW;
-import static org.lh.dmlj.schema.editor.command.annotation.OwnerType.OLD;
-
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.common.Tools;
 
 /**
@@ -45,13 +34,11 @@ import org.lh.dmlj.schema.editor.common.Tools;
  * Besides moving a record or index to another area, a whole bunch of other attributes in the area
  * specification can be changed as well.
  */
-@ModelChange(category=MOVE_ITEM)
-public class MoveRecordOrIndexToOtherAreaCommand extends Command {
+public class MoveRecordOrIndexToOtherAreaCommand extends ModelChangeBasicCommand {
 	
-	@Owner(type=OLD) private SchemaArea		   oldArea;
-	@Owner(type=NEW) private SchemaArea 	   newArea;
-	@Reference 		 private EReference 	   reference = SchemaPackage.eINSTANCE.getSchemaArea_AreaSpecifications();	
-	@Item			 private AreaSpecification areaSpecification;
+	private SchemaArea oldArea;
+	private SchemaArea newArea;
+	private AreaSpecification areaSpecification;
 	
 	private Schema			  schema;
 	private SchemaRecord 	  record;	

@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.lh.dmlj.schema.AreaProcedureCallFunction;
 import org.lh.dmlj.schema.ProcedureCallTime;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Sa_018;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Sacall_020;
 import org.lh.dmlj.schema.editor.importtool.IAreaDataCollector;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,8 +20,6 @@ import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
@@ -30,10 +28,9 @@ import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.lh.dmlj.schema.DiagramNode;
-import org.lh.dmlj.schema.ResizableDiagramNode;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 
 
 /**
@@ -79,53 +76,12 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	}
 
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
+	public void afterModelChange(ModelChangeContext context) {		
 	}
-
+	
 	@Override
-	public void afterMoveItem(EObject oldOwner, EReference reference, Object item, 
-							  EObject newOwner) {		
+	public void beforeModelChange(ModelChangeContext context) {		
 	}
-
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {		
-	}
-
-	/**
-	 * Subclasses that override this method should make sure they call this implementation as well
-	 * since it takes care of the diagram location and dimension changes.
-	 * @see org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener#afterSetFeatures(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EStructuralFeature[])
-	 */
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		if (owner == getModel().getDiagramLocation() &&
-			(isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLocation_X()) ||
-			 isFeatureSet(features, SchemaPackage.eINSTANCE.getDiagramLocation_Y()))) {				
-				
-			// the diagram location of the model has changed; refresh the visuals so that the 
-			// diagram node appears at its new location in the diagram
-			refreshVisuals();
-			
-			// allow connections to be refreshed as well since the bendpoint coordinates are stored  
-			// as as relative to the owner figure and moving the owner figure does not automatically 
-			// trigger a refresh of any involved connection's visuals...
-			refreshConnections();
-		
-		} else if (owner == getModel() && owner instanceof ResizableDiagramNode &&
-				   (isFeatureSet(features, SchemaPackage.eINSTANCE.getResizableDiagramNode_Width()) ||
-					isFeatureSet(features, SchemaPackage.eINSTANCE.getResizableDiagramNode_Height()))) {
-		
-			// the dimensions (size) of the model has changed; refresh the visuals so that the 
-			// diagram node appears with its new dimensions in the diagram
-			refreshVisuals();
-			
-			// allow connections to be refreshed as well since the bendpoint coordinates are stored  
-			// as as relative to the owner figure and resizing the owner figure does not  
-			// automatically trigger a refresh of any involved connection's visuals...
-			refreshConnections();			
-			
-		}		
-	}	
 
 	@Override
 	protected void createEditPolicies() {		

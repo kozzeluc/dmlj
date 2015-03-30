@@ -21,6 +21,9 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class DeleteSetEditPolicy extends ComponentEditPolicy {
 	
@@ -36,7 +39,17 @@ public class DeleteSetEditPolicy extends ComponentEditPolicy {
 		if (deleteRequest.getEditParts().size() > 1) {						
 			return null;
 		}
-		return DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
+		ModelChangeType modelChangeType;
+		if (set.getSystemOwner() != null) {
+			modelChangeType = ModelChangeType.DELETE_SYSTEM_OWNED_SET;
+		} else {
+			modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
+		}
+		ModelChangeContext context = new ModelChangeContext(modelChangeType);
+		context.putContextData(set);
+		IModelChangeCommand command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
+		command.setContext(context); 
+		return (Command) command;
 	}
 	
 }

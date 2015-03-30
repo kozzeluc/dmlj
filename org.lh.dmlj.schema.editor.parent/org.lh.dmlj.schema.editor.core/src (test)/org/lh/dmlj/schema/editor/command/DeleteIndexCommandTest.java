@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,11 +22,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.asObjectGraph;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.asXmi;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertCommandCategorySet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertItemSet;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertOwnerSet;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertReferenceSet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.getEmpschmSchema;
 
 import org.junit.Test;
@@ -45,11 +41,9 @@ import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
@@ -88,36 +82,18 @@ public class DeleteIndexCommandTest {
 		Xmi touchedXmi = asXmi(schema);
 		TestTools.assertSetRemoved(schema, "JOB-TITLE-NDX");
 		
-		// once execute() has been called, all annotated field values should be in place
-		assertCommandCategorySet(command, ModelChangeCategory.REMOVE_ITEM);
-		assertOwnerSet(command, schema);
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());
-		assertItemSet(command, set);		
-		
-		
 		// undo the command and check if the system-owned indexed set is restored (as a matter of 
 		// fact, check if the schema exactly matches the state before removing the index)
 		command.undo();		
 		assertEquals(objectGraph, asObjectGraph(schema));
 		assertEquals(xmi, TestTools.asXmi(schema));
 		
-		// make sure the annotated field values are still there
-		assertOwnerSet(command, schema);
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());
-		assertItemSet(command, set);
-		
 
 		// redo the command and check that the index is removed again, in all of its facets (as a 
 		// matter of fact, check if the schema exactly matches the state before removing the index)
 		command.redo();			
 		assertEquals(touchedObjectGraph, asObjectGraph(schema));
-		assertEquals(touchedXmi, TestTools.asXmi(schema));				
-		
-		// make sure the annotated field values are still there
-		assertOwnerSet(command, schema);
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSchema_Sets());
-		assertItemSet(command, set);		
-		
+		assertEquals(touchedXmi, TestTools.asXmi(schema));
 	}
 	
 	@Test

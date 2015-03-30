@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,8 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory.REMOVE_ITEM;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,30 +25,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
 import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
 
-@ModelChange(category=REMOVE_ITEM)
-public class DeleteIndexCommand extends Command {	
+public class DeleteIndexCommand extends ModelChangeBasicCommand {	
 	
-	@Owner private Schema schema;
-	@Reference private EReference reference = SchemaPackage.eINSTANCE.getSchema_Sets();
-	@Item private Set set;
+	private Schema schema;
+	private Set set;
 	
 	private SystemOwner systemOwner;
 	
@@ -148,6 +137,9 @@ public class DeleteIndexCommand extends Command {
 					  systemOwner.getSet().getName());				
 		removeAreaSpecification();
 		if (area.getAreaSpecifications().isEmpty()) {
+			// TODO don't remove the area here; we've got a dedicated command to remove an area and
+			// whenever an area becomes obsolete after removing an index, a compound command should
+			// be the answer
 			removeArea();
 		}		
 		removeMembershipData();
@@ -161,6 +153,9 @@ public class DeleteIndexCommand extends Command {
 	private void removeArea() {
 		schema.getAreas().remove(area);
 		removeProcedureCallSpecifications();
+		// TODO don't remove any obsolete procedures here; we've got a dedicated command to remove a 
+		// procedure and whenever a procedure becomes obsolete after removing an index, a compound 
+		// command should be the answer
 		removeObsoleteProcedures();		
 	}
 	

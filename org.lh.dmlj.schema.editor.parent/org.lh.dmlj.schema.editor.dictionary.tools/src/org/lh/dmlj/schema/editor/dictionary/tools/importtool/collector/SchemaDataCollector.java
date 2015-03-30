@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,10 +21,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Query;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.S_010;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Schemacmt_181;
 import org.lh.dmlj.schema.editor.importtool.ISchemaDataCollector;
@@ -45,7 +46,7 @@ public class SchemaDataCollector implements ISchemaDataCollector {
 		// contains 1 line of comment, split in 2 part holding 50 bytes each; we'll make sure that 
 		// any comment line we return does not exceed 80 characters; 80 is the maximum for any line 
 		// of comment
-		Query schemaDescriptionAndCommentListQuery = 
+		IQuery schemaDescriptionAndCommentListQuery = 
 			new Query.Builder().forSchemaDescriptionAndCommentList(session).build();
 		final boolean[] first = {true};
 		session.runQuery(schemaDescriptionAndCommentListQuery, new IRowProcessor() {		

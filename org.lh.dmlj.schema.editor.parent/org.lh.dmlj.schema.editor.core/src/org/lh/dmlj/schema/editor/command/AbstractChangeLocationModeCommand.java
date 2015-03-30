@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
@@ -32,7 +31,7 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.ViaSpecification;
 
-public abstract class AbstractChangeLocationModeCommand extends Command {
+public abstract class AbstractChangeLocationModeCommand extends ModelChangeBasicCommand {
 
 	protected SchemaRecord 	record;	
 	private StashedData[] 	stash = new StashedData[5];

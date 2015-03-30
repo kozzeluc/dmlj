@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,6 +25,9 @@ import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class IndexComponentEditPolicy extends ComponentEditPolicy {
 
@@ -40,8 +43,13 @@ public class IndexComponentEditPolicy extends ComponentEditPolicy {
 			return null;
 		}
 		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
-		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);		
-		return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);
+		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_SYSTEM_OWNED_SET);
+		context.putContextData(systemOwner.getSet());
+		IModelChangeCommand command = 
+			DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		command.setContext(context);
+		return (Command) command;
 	}
 	
 }

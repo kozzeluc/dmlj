@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -27,7 +27,6 @@ import org.eclipse.gef.ui.actions.ZoomInRetargetAction;
 import org.eclipse.gef.ui.actions.ZoomOutRetargetAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.actions.ActionFactory;
@@ -35,6 +34,8 @@ import org.eclipse.ui.actions.LabelRetargetAction;
 import org.eclipse.ui.actions.RetargetAction;
 
 public class SchemaEditorActionBarContributor extends ActionBarContributor {
+
+	private static final String DIAGRAM_MENU_ID = "org.lh.dmlj.schema.editor.menu.diagram";
 
 	public SchemaEditorActionBarContributor() {
 		super();
@@ -65,8 +66,9 @@ public class SchemaEditorActionBarContributor extends ActionBarContributor {
 		
 		super.contributeToMenu(menuManager);
 		
-		MenuManager diagramMenu = new MenuManager("Diagram");
+		IMenuManager diagramMenu = menuManager.findMenuUsingPath(DIAGRAM_MENU_ID);		
 		
+		diagramMenu.add(new Separator());
 		diagramMenu.add(getAction(GEFActionConstants.ZOOM_IN));
 		diagramMenu.add(getAction(GEFActionConstants.ZOOM_OUT));
 		

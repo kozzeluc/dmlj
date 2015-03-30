@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,6 +24,9 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 
 public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
@@ -41,7 +44,25 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 		}
 		// get the connection label and have the right command created
 		ConnectionLabel connectionLabel = (ConnectionLabel) editParts.get(0).getModel();
-		return DeleteSetOrIndexCommandCreationAssistant.getCommand(connectionLabel.getMemberRole());
+		IModelChangeCommand command = 
+			DeleteSetOrIndexCommandCreationAssistant.getCommand(connectionLabel.getMemberRole());
+		if (connectionLabel.getMemberRole().getSet().isMultipleMember()) {
+			ModelChangeContext context = 
+				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
+			context.putContextData(connectionLabel.getMemberRole());
+			command.setContext(context);
+		} else {
+			ModelChangeType modelChangeType;
+			if (connectionLabel.getMemberRole().getSet().getSystemOwner() != null) {
+				modelChangeType = ModelChangeType.DELETE_SYSTEM_OWNED_SET;
+			} else {
+				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
+			}
+			ModelChangeContext context = new ModelChangeContext(modelChangeType);
+			context.putContextData(connectionLabel.getMemberRole().getSet());
+			command.setContext(context);
+		}
+		return (Command) command;
 	}
 	
 }

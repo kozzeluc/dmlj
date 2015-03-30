@@ -1,3 +1,19 @@
+/**
+ * Copyright (C) 2015  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program.  If
+ * not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contact information: kozzeluc@gmail.com.
+ */
 package org.lh.dmlj.schema.editor.testtool;
 
 import static org.junit.Assert.assertNotEquals;
@@ -5,24 +21,25 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.commands.Command;
 import org.junit.Assert;
+import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
@@ -32,6 +49,9 @@ import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.Procedure;
+import org.lh.dmlj.schema.ProcedureCallSpecification;
+import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
@@ -44,13 +64,6 @@ import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommand;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
 import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommand;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
@@ -71,6 +84,30 @@ public abstract class TestTools {
 				
 	}	
 	
+	public static void addProcedureCallSpecification(Procedure procedure, SchemaArea area) {		
+		AreaProcedureCallSpecification callSpec = mock(AreaProcedureCallSpecification.class);
+		when(callSpec.getArea()).thenReturn(area);
+		when(callSpec.getProcedure()).thenReturn(procedure);
+		if (area.getProcedures() == null) {
+			// the area should be a mock object
+			when(area.getProcedures()).thenReturn(new BasicEList<AreaProcedureCallSpecification>());	
+		}
+		area.getProcedures().add(callSpec);
+		procedure.getCallSpecifications().add(callSpec);
+	}
+
+	public static void addProcedureCallSpecification(Procedure procedure, SchemaRecord record) {
+		RecordProcedureCallSpecification callSpec = mock(RecordProcedureCallSpecification.class);
+		when(callSpec.getRecord()).thenReturn(record);
+		when(callSpec.getProcedure()).thenReturn(procedure);
+		if (record.getProcedures() == null) {
+			// the record should be a mock object
+			when(record.getProcedures()).thenReturn(new BasicEList<RecordProcedureCallSpecification>());	
+		}
+		record.getProcedures().add(callSpec);
+		procedure.getCallSpecifications().add(callSpec);
+	}
+
 	public static void addSourceAndTargetEndPoints(Set set) {
 		Assert.assertEquals(1, set.getMembers().size());
 		Assert.assertEquals(1, set.getMembers().get(0).getConnectionParts().size());
@@ -113,12 +150,6 @@ public abstract class TestTools {
 		return new Xmi(schema);			
 	}
 	
-	public static void assertCommandCategorySet(Command command, ModelChangeCategory category) {
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertSame(category, modelChangeAnnotation.category());				
-	}
-
 	public static void assertConnectionLabelRemoved(Schema touchedSchema, String setName,
 			 										String recordName) {
 	
@@ -274,32 +305,6 @@ public abstract class TestTools {
 		assertEquals(expectedLines, actualLines);
 	}
 	
-	public static void assertFeaturesSet(Command command, EStructuralFeature[] expected) {
-		
-		java.util.Set<EStructuralFeature> setOfExpected = new HashSet<>(Arrays.asList(expected));
-		Assert.assertEquals("expected contains duplicates", expected.length, setOfExpected.size());
-		
-		EStructuralFeature[] actual = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Features.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		
-		for (EStructuralFeature actualFeature : actual) {
-			Assert.assertTrue("not expected: " + actualFeature, setOfExpected.remove(actualFeature));
-		}
-		
-		Assert.assertTrue("not set: " + setOfExpected, setOfExpected.isEmpty());
-		
-	}
-
-	public static void assertItemSet(Command command, EObject expected) {
-		EObject actual = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(expected, actual);
-	}
-
 	private static void assertMemberRoleRemoved(Schema touchedSchema, String recordName, 
 			  								    String setName) {
 	
@@ -352,22 +357,6 @@ public abstract class TestTools {
 		
 	}
 	
-	public static void assertOwnerSet(Command command, EObject expected) {
-		EObject actual = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(expected, actual);
-	}
-	
-	public static void assertReferenceSet(Command command, EReference expected) {
-		EReference actual = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(expected, actual);
-	}
-
 	public static void assertPointersRemoved(Schema touchedSchema, String recordName, String setName) {		
 
 		Prefix untouchedPrefix = getPrefix(UNTOUCHED_EMPSCHM, recordName);
@@ -541,6 +530,19 @@ public abstract class TestTools {
 		
 	}
 	
+	public static Procedure createProcedure() {
+		Procedure procedure = mock(Procedure.class);
+		EList<ProcedureCallSpecification> callSpecs = new BasicEList<>();
+		when(procedure.getCallSpecifications()).thenReturn(callSpecs);
+		return procedure;
+	}
+
+	public static Procedure createProcedure(String name) {
+		Procedure procedure = createProcedure();
+		when(procedure.getName()).thenReturn(name);
+		return procedure;
+	}
+
 	public static SchemaArea getArea(Schema schema, String areaName) {
 		SchemaArea area = schema.getArea(areaName);
 		assertNotNull("area " + areaName + " is not defined in schema " + schema.getName() + 

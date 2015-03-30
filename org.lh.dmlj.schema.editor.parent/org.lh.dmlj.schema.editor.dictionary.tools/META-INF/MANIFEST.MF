@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor Dictionary Tools
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.dictionary.tools;singleton:=true
-Bundle-Version: 1.6.1.qualifier
+Bundle-Version: 1.7.0.qualifier
 Bundle-Activator: org.lh.dmlj.schema.editor.dictionary.tools.Plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -12,3 +12,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: ca.idms.jdbc;resolution:=optional
 Bundle-Vendor: Luc Hermans
+Export-Package: org.lh.dmlj.schema.editor.dictionary.tools,
+ org.lh.dmlj.schema.editor.dictionary.tools.jdbc,
+ org.lh.dmlj.schema.editor.dictionary.tools.model

@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.lh.dmlj.schema.Usage;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.SchemaImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Column_1028;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Table_1050;
 import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;

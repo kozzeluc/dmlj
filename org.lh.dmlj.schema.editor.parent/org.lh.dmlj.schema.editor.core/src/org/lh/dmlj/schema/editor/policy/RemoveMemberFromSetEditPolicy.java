@@ -21,6 +21,9 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 	
@@ -40,10 +43,27 @@ public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 		}
 		if (removingLastMember() && allowRemovalOfSet) {			
 			// create a command to remove the set
-			return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+			ModelChangeType modelChangeType;
+			if (memberRole.getSet().getSystemOwner() != null) {
+				modelChangeType = ModelChangeType.DELETE_SYSTEM_OWNED_SET;
+			} else {
+				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
+			}
+			ModelChangeContext context = new ModelChangeContext(modelChangeType);
+			context.putContextData(memberRole.getSet());
+			IModelChangeCommand command = 
+				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+			command.setContext(context);
+			return (Command) command;
 		} else if (!removingLastMember()) {	
 			// create a command to remove the member record type from the set
-			return DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);			
+			ModelChangeContext context = 
+				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
+			context.putContextData(memberRole);
+			IModelChangeCommand command = 
+				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+			command.setContext(context);
+			return (Command) command;
 		}
 		return null;
 	}

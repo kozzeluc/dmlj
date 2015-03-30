@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,15 +14,31 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.command.annotation;
+package org.lh.dmlj.schema.editor.command;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Item {
+public class ModelChangeBasicCommand extends Command implements IModelChangeCommand {
+
+	private ModelChangeContext context;
+	
+	public ModelChangeBasicCommand() {
+		super();
+	}
+	
+	public ModelChangeBasicCommand(String label) {
+		super(label);
+	}
+
+	@Override
+	public ModelChangeContext getContext() {
+		return context;
+	}
+
+	@Override
+	public void setContext(ModelChangeContext context) {
+		this.context = context;
+	}
 	
 }

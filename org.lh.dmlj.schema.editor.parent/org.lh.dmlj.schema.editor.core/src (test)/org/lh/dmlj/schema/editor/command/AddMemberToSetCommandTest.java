@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,12 +20,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import org.eclipse.core.runtime.AssertionFailedException;
-import org.eclipse.emf.ecore.EReference;
 import org.junit.Before;
 import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionLabel;
@@ -36,20 +34,14 @@ import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.LabelAlignment;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
-import org.lh.dmlj.schema.editor.command.annotation.Item;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
-import org.lh.dmlj.schema.editor.command.annotation.Reference;
-import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
+import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.testtool.ObjectGraph;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 import org.lh.dmlj.schema.editor.testtool.Xmi;
@@ -76,95 +68,6 @@ public class AddMemberToSetCommandTest {
 		schema = TestTools.getEmpschmSchema();
 		objectGraph = TestTools.asObjectGraph(schema);
 		xmi = TestTools.asXmi(schema);
-	}
-	
-	@Test
-	public void testAnnotations() {
-	
-		Set setJobEmposition = schema.getSet("JOB-EMPOSITION");
-		SchemaRecord recordEmployee = schema.getRecord("EMPLOYEE");		
-		
-		AddMemberToSetCommand command = new AddMemberToSetCommand(setJobEmposition);
-		command.setMemberRecord(recordEmployee);		
-		
-		command.execute();		
-		
-		// once execute() has been called, all annotated field values should be in place; make sure
-		// the command class itself is annotated with @ModelChange with its type set to 
-		// ModelChangeCategory.ADD_ITEM
-		ModelChange modelChangeAnnotation = command.getClass().getAnnotation(ModelChange.class);	
-		assertNotNull(modelChangeAnnotation);
-		assertEquals(ModelChangeCategory.ADD_ITEM, modelChangeAnnotation.category());
-		
-		// make sure the owner is set
-		Set owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(setJobEmposition, owner);	
-		
-		// make sure the member role reference is set
-		EReference reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSet_Members());
-		
-		// make sure the item is set
-		MemberRole item = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertNotNull(item);		
-		
-		
-		command.undo();
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(setJobEmposition, owner);		
-		
-		// make sure the sets reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);		
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSet_Members());
-		
-		// make sure the item is still set
-		MemberRole item2 = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(item, item2);		
-		
-		
-		command.redo();
-		
-		// make sure the owner is still set
-		owner = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Owner.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(setJobEmposition, owner);		
-		
-		// make sure the sets reference is still set
-		reference = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Reference.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);		
-		assertTrue(reference == SchemaPackage.eINSTANCE.getSet_Members());
-		
-		// make sure the item is still set
-		item2 = ModelChangeDispatcher.getAnnotatedFieldValue(
-			command, 
-			Item.class, 
-			ModelChangeDispatcher.Availability.MANDATORY);
-		assertSame(item, item2);		
-		
 	}
 	
 	@Test
@@ -243,6 +146,71 @@ public class AddMemberToSetCommandTest {
 	}
 	
 	@Test
+	public void testUnsortedChainedSet_ExplicitPointerTypes() {
+		
+		Set set = schema.getSet("JOB-EMPOSITION");
+		assertEquals(1, set.getMembers().size());
+		SchemaRecord jobRecord = schema.getRecord("JOB");
+		SchemaRecord employeeRecord = schema.getRecord("EMPLOYEE");
+		
+		AddMemberToSetCommand command = 
+			new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT, 
+															  PointerType.MEMBER_PRIOR});
+		command.setMemberRecord(employeeRecord);
+		
+		
+		command.execute();
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
+		
+		assertEquals(2, set.getMembers().size());
+		MemberRole newMemberRole = set.getMembers().get(1);
+		assertSame(set, newMemberRole.getSet());
+		assertSame(employeeRecord, newMemberRole.getRecord());
+		assertEquals(1, newMemberRole.getConnectionParts().size());		
+		assertEquals(Short.valueOf((short) 17), (Short) newMemberRole.getNextDbkeyPosition());
+		assertEquals(Short.valueOf((short) 18), (Short) newMemberRole.getPriorDbkeyPosition());
+		assertNull(newMemberRole.getOwnerDbkeyPosition());
+		assertNull(newMemberRole.getIndexDbkeyPosition());
+		assertSame(SetMembershipOption.MANDATORY_AUTOMATIC, newMemberRole.getMembershipOption());
+		
+		ConnectionPart connectionPart = newMemberRole.getConnectionParts().get(0);
+		assertNotNull(connectionPart);
+		assertEquals(0, connectionPart.getBendpointLocations().size());
+		assertNull(connectionPart.getConnector());
+		assertNull(connectionPart.getSourceEndpointLocation());
+		assertNull(connectionPart.getTargetEndpointLocation());
+		assertEquals(schema.getDiagramData().getConnectionParts().size() - 1, 
+					 schema.getDiagramData().getConnectionParts().indexOf(connectionPart));
+		
+		ConnectionLabel connectionLabel = newMemberRole.getConnectionLabel();
+		assertNotNull(connectionLabel);
+		assertSame(LabelAlignment.LEFT, connectionLabel.getAlignment());
+		assertEquals(schema.getDiagramData().getConnectionLabels().size() - 1, 
+				 	 schema.getDiagramData().getConnectionLabels().indexOf(connectionLabel));
+		
+		DiagramLocation diagramLocation = connectionLabel.getDiagramLocation();
+		assertNotNull(diagramLocation);
+		assertEquals(schema.getDiagramData().getLocations().size() - 1,
+				 	 schema.getDiagramData().getLocations().indexOf(diagramLocation));
+		assertEquals("set label JOB-EMPOSITION (EMPLOYEE)", diagramLocation.getEyecatcher());
+		assertEquals(jobRecord.getDiagramLocation().getX() + RecordFigure.UNSCALED_WIDTH + 5, 
+					 diagramLocation.getX());
+		assertEquals(jobRecord.getDiagramLocation().getY(), diagramLocation.getY());
+		
+		
+		command.undo();
+		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
+		
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
+		
+	}
+
+	@Test
 	public void testSortedChainedSet() {
 		
 		Set set = schema.getSet("DEPT-EMPLOYEE");
@@ -314,8 +282,52 @@ public class AddMemberToSetCommandTest {
 		
 		command.redo();
 		checkObjectGraph(touchedObjectGraph);
-		checkXmi(touchedXmi);
+		checkXmi(touchedXmi);	
+	}
+	
+	@Test
+	public void testPointerTypes() {
 		
-	}	
+		Set set = schema.getSet("COVERAGE-CLAIMS");
+		
+		// invalid pointer type specifications
+		try {
+			new AddMemberToSetCommand(set, new PointerType[] {});
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("NEXT pointer is mandatory", e.getMessage());
+		}
+		try {
+			new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+															  PointerType.OWNER_NEXT});
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("invalid pointer type: OWNER_NEXT", e.getMessage());
+		}
+		try {
+			new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+															  PointerType.OWNER_PRIOR});
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("invalid pointer type: OWNER_PRIOR", e.getMessage());
+		}
+		try {
+			new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+															  PointerType.MEMBER_INDEX});
+			fail("should throw an IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("invalid pointer type: MEMBER_INDEX", e.getMessage());
+		}
+		
+		// ALL valid pointer specifiations (the order in which they are specified does NOT matter)
+		new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT});
+		new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+				  										  PointerType.MEMBER_PRIOR});
+		new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+				  										  PointerType.MEMBER_OWNER});
+		new AddMemberToSetCommand(set, new PointerType[] {PointerType.MEMBER_NEXT,
+				  										  PointerType.MEMBER_PRIOR,
+				  										  PointerType.MEMBER_OWNER});
+	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,12 +29,17 @@ import org.lh.dmlj.schema.editor.command.CreateConnectorCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateIndexCommandTest;
+import org.lh.dmlj.schema.editor.command.CreateRecordCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateSetCommandTest;
+import org.lh.dmlj.schema.editor.command.DeleteAreaCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteConnectorCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteDiagramLabelCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteIndexCommandTest;
+import org.lh.dmlj.schema.editor.command.DeleteProcedureCommandTest;
+import org.lh.dmlj.schema.editor.command.DeleteRecordCommandCreationAssistantTest;
+import org.lh.dmlj.schema.editor.command.DeleteRecordCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteSetCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistantTest;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommandTest;
@@ -45,14 +50,19 @@ import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveRecordOrIndexToOtherAreaCommandTest;
+import org.lh.dmlj.schema.editor.command.RemoveAreaProcedureCallSpecificationCommandTest;
 import org.lh.dmlj.schema.editor.command.RemoveMemberFromSetCommandTest;
+import org.lh.dmlj.schema.editor.command.RemoveRecordProcedureCallSpecificationCommandTest;
 import org.lh.dmlj.schema.editor.command.ResizeDiagramNodeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetBooleanAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetObjectAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetShortAttributeCommandTest;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommandTest;
+import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssistantTest;
+import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRoleTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRoleTest;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContextTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
 import org.lh.dmlj.schema.editor.common.ToolsTest;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
@@ -72,6 +82,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	
 	// command infrastructure tests
 	ModelChangeDispatcherTest.class,
+	ModelChangeContextTest.class,
 	
 	// command tests
 	AddMemberToSetCommandTest.class,
@@ -86,11 +97,16 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	CreateDiagramLabelCommandTest.class,
 	CreateGuideCommandTest.class,
 	CreateIndexCommandTest.class,
+	CreateRecordCommandTest.class,
 	CreateSetCommandTest.class,
+	DeleteAreaCommandTest.class,
 	DeleteBendpointCommandTest.class,
 	DeleteConnectorCommandTest.class,
 	DeleteDiagramLabelCommandTest.class,
 	DeleteGuideCommandTest.class,
+	DeleteProcedureCommandTest.class,
+	DeleteRecordCommandCreationAssistantTest.class,
+	DeleteRecordCommandTest.class,
 	DeleteSetOrIndexCommandCreationAssistantTest.class,
 	DeleteIndexCommandTest.class,
 	DeleteSetCommandTest.class,
@@ -113,12 +129,16 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	PrefixUtilTest.class,
 	RemovableMemberRoleTest.class,
 	RemovableOwnerRoleTest.class,
+	RemoveAreaProcedureCallSpecificationCommandTest.class,
 	RemoveMemberFromSetCommandTest.class,
+	RemoveRecordProcedureCallSpecificationCommandTest.class,
 	ResizeDiagramNodeCommandTest.class,
 	SetBooleanAttributeCommandTest.class,
 	SetObjectAttributeCommandTest.class,
 	SetShortAttributeCommandTest.class,
 	SetZoomLevelCommandTest.class,
+	SwapRecordElementsCommandTest.class,
+	SwapRecordElementsCommandCreationAssistantTest.class,
 	
 	// edit part tests
 	AbstractSchemaTreeEditPartTest.class,

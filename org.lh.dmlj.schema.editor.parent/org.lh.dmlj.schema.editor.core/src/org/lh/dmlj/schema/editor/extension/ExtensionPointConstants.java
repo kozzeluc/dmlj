@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2014  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,7 +18,8 @@ package org.lh.dmlj.schema.editor.extension;
 
 public class ExtensionPointConstants {
 
-	public static final String EXTENSION_POINT_IMPORT_ID = "import";	
+	public static final String EXTENSION_POINT_IMPORT_ID = "import";
+	public static final String EXTENSION_POINT_IMPORT_RECORD_ELEMENTS_ID = "importRecordElements";
 	
 	public static final String ELEMENT_IMPORT_TOOLS = "importTools";
 	public static final String ELEMENT_IMPORT_TOOL = "importTool";

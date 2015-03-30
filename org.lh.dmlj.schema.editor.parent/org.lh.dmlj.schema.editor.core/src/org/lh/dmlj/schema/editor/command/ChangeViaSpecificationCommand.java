@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,13 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.command.annotation.Features;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChange;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
-import org.lh.dmlj.schema.editor.command.annotation.Owner;
 
 
 /**
@@ -30,14 +24,10 @@ import org.lh.dmlj.schema.editor.command.annotation.Owner;
  * only be used for VIA records and will definitely run into trouble when 
  * executed for a record that is defined as either CALC or DIRECT.
  */
-@ModelChange(category=ModelChangeCategory.SET_FEATURES)
 public class ChangeViaSpecificationCommand 
 	extends AbstractChangeLocationModeCommand {
 
-	@Owner	  private SchemaRecord 		   record;
-	@Features private EStructuralFeature[] features = {
-		SchemaPackage.eINSTANCE.getSchemaRecord_ViaSpecification()
-	};
+	private SchemaRecord record;	
 	
 	private String newViaSetName; 
 	private String newSymbolicDisplacementName; 

@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -27,12 +28,21 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
+import org.lh.dmlj.schema.ConnectionLabel;
+import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommand;
+import org.lh.dmlj.schema.editor.command.CreateRecordCommand;
+import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
+import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
 import org.lh.dmlj.schema.editor.part.AbstractDiagramNodeEditPart;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
@@ -55,8 +65,14 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			// we're dealing with a DiagramNode, it can only be a
 			// move request, so create the move command...
 			Rectangle box = (Rectangle)constraint;
-			DiagramNode locationProvider = (DiagramNode) child.getModel();
-			return new MoveDiagramNodeCommand(locationProvider, box.x, box.y);
+			DiagramNode diagramNode = (DiagramNode) child.getModel();
+			MoveDiagramNodeData moveDiagramNodeData = new MoveDiagramNodeData(diagramNode);
+			ModelChangeContext context = 
+				new ModelChangeContext(moveDiagramNodeData.getModelChangeType());
+			context.putContextData(diagramNode);
+			IModelChangeCommand command = new MoveDiagramNodeCommand(diagramNode, box.x, box.y);
+			command.setContext(context);
+			return (Command) command;
 		} else {
 			// not a DiagramNode or user is trying to resize, make
 			// sure he/she gets the right feedback
@@ -78,33 +94,76 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		
-		if (request.getNewObjectType() != DiagramLabel.class ||
+		if (request.getNewObjectType() != DiagramLabel.class && 
+			request.getNewObjectType() != SchemaRecord.class ||
+			request.getNewObjectType() == DiagramLabel.class && 
 			schema.getDiagramData().getLabel() != null) {
 			
 			return null;
 		}	
 		
-		String organisation = Plugin.getDefault()
-									.getPreferenceStore()
-									.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
-		String lastModified = null;
-		if (Plugin.getDefault()
-				  .getPreferenceStore()
-				  .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
-			
-			String pattern = 
-				Plugin.getDefault()
+		if (request.getNewObjectType() == DiagramLabel.class) {
+			String organisation = Plugin.getDefault()
+										.getPreferenceStore()
+										.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
+			String lastModified = null;
+			if (Plugin.getDefault()
 					  .getPreferenceStore()
-					  .getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
-			DateFormat format = new SimpleDateFormat(pattern);
-			lastModified = 
-				"Last modified: " + format.format(System.currentTimeMillis()) + " (not saved)";
+					  .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
+				
+				String pattern = 
+					Plugin.getDefault()
+						  .getPreferenceStore()
+						  .getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+				DateFormat format = new SimpleDateFormat(pattern);
+				lastModified = 
+					"Last modified: " + format.format(System.currentTimeMillis()) + " (not saved)";
+			}
+			Dimension size = 
+				DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(), 
+												  schema.getDescription(), lastModified); 
+			PrecisionPoint p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
+			getHostFigure().translateToRelative(p);
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_DIAGRAM_LABEL);
+			ModelChangeBasicCommand command = new CreateDiagramLabelCommand(schema, p, size);
+			command.setContext(context);
+			return command;
+		} else if (request.getNewObjectType() == SchemaRecord.class) {
+			PrecisionPoint p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
+			getHostFigure().translateToRelative(p);
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+			ModelChangeBasicCommand command = new CreateRecordCommand(schema, p);
+			command.setContext(context);
+			return command;
 		}
-		Dimension size = 
-			DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(), 
-											  schema.getDescription(), lastModified); 
-		
-		return new CreateDiagramLabelCommand(schema, request.getLocation(), size);
+		return null;
 	}	
+	
+	public static class MoveDiagramNodeData {
+		
+		private DiagramNode diagramNode;
+		
+		public MoveDiagramNodeData(DiagramNode diagramNode) {
+			super();
+			this.diagramNode = diagramNode;
+		}
+		
+		public ModelChangeType getModelChangeType() {
+			if (diagramNode instanceof ConnectionLabel) {
+				return ModelChangeType.MOVE_SET_OR_INDEX_LABEL;
+			} else if (diagramNode instanceof Connector) {
+				return ModelChangeType.MOVE_CONNECTOR;
+			} else if (diagramNode instanceof DiagramLabel) {
+				return ModelChangeType.MOVE_DIAGRAM_LABEL;
+			} else if (diagramNode instanceof SchemaRecord) {
+				return ModelChangeType.MOVE_RECORD;
+			} else if (diagramNode instanceof SystemOwner) {
+				return ModelChangeType.MOVE_INDEX;
+			} else {
+				throw new IllegalStateException("Unexpected diagram node: " + diagramNode);
+			}
+		}
+		
+	}
 	
 }

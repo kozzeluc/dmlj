@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,9 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
@@ -33,7 +30,11 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
+import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.policy.DeleteSetEditPolicy;
 import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
 
@@ -44,48 +45,75 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 	}
 	
 	@Override
-	public void afterAddItem(EObject owner, EReference reference, Object item) {
-		if (owner == getNodeTextProvider() && 
-			reference == SchemaPackage.eINSTANCE.getSet_Members()) {
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+			appliesToMemberOfModelSet(context)) {
 			
-			// a member record type was added to the set (or a delete of a multiple-member set has
-			// been undone); only add a child when it's not already there:
-			SchemaRecord memberRecord = ((MemberRole) item).getRecord();
-			try {
-				childFor(memberRecord);
-			} catch (IllegalArgumentException e) {
-				EditPart child = 
-					SchemaTreeEditPartFactory.createEditPart(memberRecord, modelChangeProvider);					
-				int index = 
-					getInsertionIndex(getChildren(), memberRecord, getChildNodeTextProviderOrder());					
-				addChild(child, index);
-			}
-		}
-	}
-	
-	@Override
-	public void afterRemoveItem(EObject owner, EReference reference, Object item) {
-		if (owner == getNodeTextProvider() && 
-			reference == SchemaPackage.eINSTANCE.getSet_Members()) {
+			// a member record type was added to the model set (execute/redo)			
+			createAndAddRecordAsChild(context);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				   appliesToMemberOfModelSet(context)) {
 			
-			// a member record type was removed from the set; although the item is set to the member
-			// role involved, the reference to the record itself is lost, so we need to figure out
-			// ourselves which member record was removed... or just refresh the children:
-			refreshChildren();
-		}
-	}
-	
-	@Override
-	public void afterSetFeatures(EObject owner, EStructuralFeature[] features) {
-		if (owner == getNodeTextProvider() && 
-			isFeatureSet(features, SchemaPackage.eINSTANCE.getSet_Name())) {
+			// an add member record to set operation was undone for the model set
+			findAndRemoveRecordAsChild(context);
+		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				   appliesToMemberOfModelSet(context)) {
 			
-			// the set name has changed... the order of the parent edit part might become disrupted, 
-			// so we have to inform that edit part of this fact
+			// a member record type was removed from the model set (execute/redo)
+			findAndRemoveRecordAsChild(context);
+		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				   appliesToMemberOfModelSet(context)) {
+			
+			// a remove member from set operation was undone for the model set
+			createAndAddRecordAsChild(context);
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+				   appliesToModelSet(context)) {
+			
+			// the set name has changed (execute/undo/redo)... the order of the parent edit part 
+			// might become disrupted, so we have to inform that edit part of this fact
 			nodeTextChanged();						
+		}
+	}
+	
+	private boolean appliesToMemberOfModelSet(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		return getModel().getName().equals(setName);
+	}
+	
+	private boolean appliesToModelSet(ModelChangeContext context) {
+		if (Boolean.TRUE.equals(context.getListenerData())) {
+			return true;
+		} else {
+			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			return getModel().getName().equals(setName);
 		}
 	}	
 	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel())) {
+					
+			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's 
+			// listener's data so that we can respond to this when processing the after model change 
+			// event
+			context.setListenerData(Boolean.TRUE);
+		}
+	}
+	
+	private void createAndAddRecordAsChild(ModelChangeContext context) {
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord record = getModel().getSchema().getRecord(recordName);
+		createAndAddChild(record);
+	}
+
 	@Override
 	protected void createEditPolicies() {
 		if (getParentModelObject() instanceof Schema) {
@@ -104,6 +132,12 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 								  new RemoveMemberFromSetEditPolicy(memberRole, false));
 			}
 		}
+	}
+	
+	private void findAndRemoveRecordAsChild(ModelChangeContext context) {
+		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		SchemaRecord record = getModel().getSchema().getRecord(recordName);
+		findAndRemoveChild(record, false);
 	}
 	
 	@Override

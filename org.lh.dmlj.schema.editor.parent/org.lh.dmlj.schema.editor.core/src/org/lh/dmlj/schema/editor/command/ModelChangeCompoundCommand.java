@@ -14,32 +14,31 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
+package org.lh.dmlj.schema.editor.command;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
+import org.eclipse.gef.commands.CompoundCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 
-public class SchemaImportSession extends ImportSession {
+public class ModelChangeCompoundCommand extends CompoundCommand implements IModelChangeCommand {
+
+	private ModelChangeContext context;
 	
-	private String schemaName;
-	private int schemaVersion;
-
-	public SchemaImportSession(Dictionary dictionary, String schemaName, int schemaVersion) {
-		super(dictionary, "Import schema " + schemaName + " version " + schemaVersion + 
-			  " from dictionary " + dictionary.getId());
-		this.schemaName = schemaName;
-		this.schemaVersion = schemaVersion;
-	}
-
-	public String getSchemaName() {
-		return schemaName;
-	}
-
-	public int getSchemaVersion() {
-		return schemaVersion;
+	public ModelChangeCompoundCommand() {
+		super();
 	}
 	
-	public boolean isIdmsntwkVersion1() {
-		return schemaName.equals("IDMSNTWK") && schemaVersion == 1;
+	public ModelChangeCompoundCommand(String label) {
+		super(label);
 	}
 
+	@Override
+	public ModelChangeContext getContext() {
+		return context;
+	}
+
+	@Override
+	public void setContext(ModelChangeContext context) {
+		this.context = context;
+	}
+	
 }

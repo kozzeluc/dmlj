@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,11 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertCommandCategorySet;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertItemSet;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertOwnerSet;
-import static org.lh.dmlj.schema.editor.testtool.TestTools.assertReferenceSet;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,13 +36,11 @@ import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
-import org.lh.dmlj.schema.editor.command.annotation.ModelChangeCategory;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
@@ -93,29 +87,6 @@ public class RemoveMemberFromSetCommandTest {
 		xmi = TestTools.asXmi(schema);
 		
 	}	
-	
-	@Test
-	public void testAnnotations() {
-						
-		Command command = new RemoveMemberFromSetCommand(memberRoleNonHospClaim);
-		
-		command.execute();		
-		assertCommandCategorySet(command, ModelChangeCategory.REMOVE_ITEM);		
-		assertOwnerSet(command, set);
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSet_Members());
-		assertItemSet(command, memberRoleNonHospClaim);		
-				
-		command.undo();		
-		assertOwnerSet(command, set);
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSet_Members());
-		assertItemSet(command, memberRoleNonHospClaim);
-				
-		command.redo();		
-		assertOwnerSet(command, set);
-		assertReferenceSet(command, SchemaPackage.eINSTANCE.getSet_Members());
-		assertItemSet(command, memberRoleNonHospClaim);		
-		
-	}
 	
 	@Test
 	public void testUnsorted() {	

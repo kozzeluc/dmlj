@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,18 +16,11 @@
  */
 package org.lh.dmlj.schema.editor.command.infrastructure;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 public interface IModelChangeListener {
 	
-	void afterAddItem(EObject owner, EReference reference, Object item);
+	void beforeModelChange(ModelChangeContext context);
 	
-	void afterMoveItem(EObject oldOwner, EReference reference, Object item, EObject newOwner);
-	
-	void afterRemoveItem(EObject owner, EReference reference, Object item);	
-	
-	void afterSetFeatures(EObject owner, EStructuralFeature[] features);
+	void afterModelChange(ModelChangeContext context);
 	
 }
