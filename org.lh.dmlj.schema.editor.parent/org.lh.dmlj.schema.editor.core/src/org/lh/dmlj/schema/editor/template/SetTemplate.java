@@ -286,9 +286,15 @@ for (MemberRole memberRole : memberRoles) {
             } else {
                 bracket = "";
             }
+            String elementOrDbkey;
+            if (!keyElement.isDbkey()) {
+            	elementOrDbkey = keyElement.getElement().getName();
+            } else {
+            	elementOrDbkey = "DBKEY";
+            }
 
     stringBuffer.append(TEXT_25);
-    stringBuffer.append( keyElement.getElement().getName() );
+    stringBuffer.append( elementOrDbkey );
     stringBuffer.append(TEXT_26);
     stringBuffer.append( keyElement.getSortSequence() );
     stringBuffer.append(TEXT_27);
