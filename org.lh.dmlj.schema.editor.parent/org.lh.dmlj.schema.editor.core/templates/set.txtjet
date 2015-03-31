@@ -209,8 +209,14 @@ for (MemberRole memberRole : memberRoles) {
             } else {
                 bracket = "";
             }
+            String elementOrDbkey;
+            if (!keyElement.isDbkey()) {
+            	elementOrDbkey = keyElement.getElement().getName();
+            } else {
+            	elementOrDbkey = "DBKEY";
+            }
 %>
-                 <%= keyElement.getElement().getName() %> <%= keyElement.getSortSequence() %> <%= bracket %>
+                 <%= elementOrDbkey %> <%= keyElement.getSortSequence() %> <%= bracket %>
 <%
         }
 %>
