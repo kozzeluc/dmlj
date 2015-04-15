@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -382,7 +382,7 @@ public class RecordDataCollector
 				return line.substring(34, i);
 			}
 		}
-		return null;
+		return getName(context);
 	}
 
 	@Override
@@ -399,7 +399,7 @@ public class RecordDataCollector
 				return Short.valueOf(line.substring(i + 9).trim()).shortValue();
 			}
 		}
-		return 0;
+		return 1;
 	}
 
 	@Override

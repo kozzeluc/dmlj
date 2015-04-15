@@ -15,12 +15,7 @@
  * Contact information: kozzeluc@gmail.com.
  */package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -57,7 +52,7 @@ public class ChangeSortKeysCommandTest {
 	
 	@Before
 	public void setup() {
-		// we'll use EMPSCHM throughout these tests
+		// we'll use EMPSCHM throughout (almost all of) these tests
 		schema = TestTools.getEmpschmSchema();
 		objectGraph = TestTools.asObjectGraph(schema);
 		xmi = TestTools.asXmi(schema);
@@ -450,6 +445,178 @@ public class ChangeSortKeysCommandTest {
 		checkObjectGraph(touchedObjectGraph);
 		checkXmi(touchedXmi);
 		
+	}
+	
+	@Test
+	public void testSortedByDbkey_FlipSortSequenceToDescending() {
+		
+		schema = TestTools.getSchema("testdata/EMPSCHM version 100d.schema");
+		objectGraph = TestTools.asObjectGraph(schema);
+		xmi = TestTools.asXmi(schema);
+		
+		Set set = schema.getSet("JOB-TITLE-NDX");
+		MemberRole memberRole = set.getMembers().get(0);
+		Key key = memberRole.getSortKey();
+		
+		ISortKeyDescription sortKeyDescription = mock(ISortKeyDescription.class);
+		when(sortKeyDescription.getElementNames()).thenReturn(new String[] {ISortKeyDescription.DBKEY_ELEMENT});
+		when(sortKeyDescription.getSortSequences()).thenReturn(new SortSequence[] {SortSequence.DESCENDING});
+		when(sortKeyDescription.getDuplicatesOption()).thenReturn(DuplicatesOption.NOT_ALLOWED);
+		when(sortKeyDescription.isNaturalSequence()).thenReturn(true);
+		when(sortKeyDescription.isCompressed()).thenReturn(false);	
+		
+		Command command = 
+			new ChangeSortKeysCommand(set, new ISortKeyDescription[] {sortKeyDescription});
+		
+		command.execute();
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
+		assertSame(set, schema.getSet("JOB-TITLE-NDX"));
+		assertSame(memberRole, set.getMembers().get(0));
+		Key newSortKey = set.getMembers().get(0).getSortKey();
+		assertNotSame(key, newSortKey);
+		assertEquals(1, newSortKey.getElements().size());
+		assertNull(newSortKey.getElements().get(0).getElement());
+		assertSame(SortSequence.DESCENDING, newSortKey.getElements().get(0).getSortSequence());
+		assertTrue(newSortKey.isNaturalSequence());
+		assertFalse(newSortKey.isCompressed());
+		
+		command.undo();
+		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
+		
+	}
+	
+	@Test
+	public void testSortedByDbkey_FlipSortSequenceToAscending() {
+		
+		schema = TestTools.getSchema("testdata/EMPSCHM version 100d.schema");
+		objectGraph = TestTools.asObjectGraph(schema);
+		xmi = TestTools.asXmi(schema);
+		
+		Set set = schema.getSet("SKILL-NAME-NDX");
+		MemberRole memberRole = set.getMembers().get(0);
+		Key key = memberRole.getSortKey();
+		
+		ISortKeyDescription sortKeyDescription = mock(ISortKeyDescription.class);
+		when(sortKeyDescription.getElementNames()).thenReturn(new String[] {ISortKeyDescription.DBKEY_ELEMENT});
+		when(sortKeyDescription.getSortSequences()).thenReturn(new SortSequence[] {SortSequence.ASCENDING});
+		when(sortKeyDescription.getDuplicatesOption()).thenReturn(DuplicatesOption.NOT_ALLOWED);
+		when(sortKeyDescription.isNaturalSequence()).thenReturn(true);
+		when(sortKeyDescription.isCompressed()).thenReturn(false);	
+		
+		Command command = 
+			new ChangeSortKeysCommand(set, new ISortKeyDescription[] {sortKeyDescription});
+		
+		command.execute();
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
+		assertSame(set, schema.getSet("SKILL-NAME-NDX"));
+		assertSame(memberRole, set.getMembers().get(0));
+		Key newSortKey = set.getMembers().get(0).getSortKey();
+		assertNotSame(key, newSortKey);
+		assertEquals(1, newSortKey.getElements().size());
+		assertNull(newSortKey.getElements().get(0).getElement());
+		assertSame(SortSequence.ASCENDING, newSortKey.getElements().get(0).getSortSequence());
+		assertTrue(newSortKey.isNaturalSequence());
+		assertFalse(newSortKey.isCompressed());
+		
+		command.undo();
+		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
+		
+	}	
+	
+	@Test
+	public void testSortedByDbkeyToNotSortedByDbkey() {
+		
+		schema = TestTools.getSchema("testdata/EMPSCHM version 100d.schema");
+		objectGraph = TestTools.asObjectGraph(schema);
+		xmi = TestTools.asXmi(schema);
+		
+		Set set = schema.getSet("JOB-TITLE-NDX");
+		MemberRole memberRole = set.getMembers().get(0);
+		Key key = memberRole.getSortKey();
+		
+		ISortKeyDescription sortKeyDescription = mock(ISortKeyDescription.class);
+		when(sortKeyDescription.getElementNames()).thenReturn(new String[] {"JOB-ID-0440", "TITLE-0440"});
+		when(sortKeyDescription.getSortSequences()).thenReturn(new SortSequence[] {SortSequence.ASCENDING, SortSequence.DESCENDING});
+		when(sortKeyDescription.getDuplicatesOption()).thenReturn(DuplicatesOption.FIRST);
+		when(sortKeyDescription.isNaturalSequence()).thenReturn(false);
+		when(sortKeyDescription.isCompressed()).thenReturn(true);	
+		
+		Command command = 
+			new ChangeSortKeysCommand(set, new ISortKeyDescription[] {sortKeyDescription});
+		
+		command.execute();
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
+		assertSame(set, schema.getSet("JOB-TITLE-NDX"));
+		assertSame(memberRole, set.getMembers().get(0));
+		Key newSortKey = set.getMembers().get(0).getSortKey();
+		assertNotSame(key, newSortKey);
+		assertEquals(2, newSortKey.getElements().size());
+		assertEquals("JOB-ID-0440", newSortKey.getElements().get(0).getElement().getName());
+		assertEquals("TITLE-0440", newSortKey.getElements().get(1).getElement().getName());
+		assertSame(SortSequence.ASCENDING, newSortKey.getElements().get(0).getSortSequence());
+		assertSame(SortSequence.DESCENDING, newSortKey.getElements().get(1).getSortSequence());
+		assertFalse(newSortKey.isNaturalSequence());
+		assertTrue(newSortKey.isCompressed());
+				
+		command.undo();
+		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
+	}
+	
+	@Test
+	public void testNotSortedByDbkeyToSortedByDbkey() {
+		
+		Set set = schema.getSet("OFFICE-EMPLOYEE");
+		MemberRole memberRole = set.getMembers().get(0);
+		Key key = memberRole.getSortKey();
+		
+		ISortKeyDescription sortKeyDescription = mock(ISortKeyDescription.class);
+		when(sortKeyDescription.getElementNames()).thenReturn(new String[] {ISortKeyDescription.DBKEY_ELEMENT});
+		when(sortKeyDescription.getSortSequences()).thenReturn(new SortSequence[] {SortSequence.ASCENDING});
+		when(sortKeyDescription.getDuplicatesOption()).thenReturn(DuplicatesOption.NOT_ALLOWED);
+		when(sortKeyDescription.isNaturalSequence()).thenReturn(false);
+		when(sortKeyDescription.isCompressed()).thenReturn(false);
+		
+		Command command = 
+			new ChangeSortKeysCommand(set, new ISortKeyDescription[] {sortKeyDescription});
+		
+		command.execute();
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		Xmi touchedXmi = TestTools.asXmi(schema);
+		assertSame(set, schema.getSet("OFFICE-EMPLOYEE"));
+		assertSame(memberRole, set.getMembers().get(0));
+		Key newSortKey = set.getMembers().get(0).getSortKey();
+		assertNotSame(key, newSortKey);
+		assertEquals(1, newSortKey.getElements().size());
+		assertNull(newSortKey.getElements().get(0).getElement());
+		assertSame(SortSequence.ASCENDING, newSortKey.getElements().get(0).getSortSequence());
+		assertFalse(newSortKey.isNaturalSequence());
+		assertFalse(newSortKey.isCompressed());
+		
+		command.undo();
+		checkObjectGraph(objectGraph);
+		checkXmi(xmi);
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);
+		checkXmi(touchedXmi);
 	}
 	
 	@Test
