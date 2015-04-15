@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.core;singleton:=true
-Bundle-Version: 1.7.1.qualifier
+Bundle-Version: 1.7.2.qualifier
 Bundle-Activator: org.lh.dmlj.schema.editor.Plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
