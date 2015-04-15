@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -86,13 +86,18 @@ public abstract class AbstractSortKeyManipulationCommand extends ModelChangeBasi
 			Assert.isTrue(processed.indexOf(elementName) < 0, 
 						  "already a sort element in record " + record.getName() +
 						  ": " + elementName);
-			// get the element from the record, make sure it exists
-			Element element = record.getElement(elementName);
-			Assert.isNotNull(element, "element not found in record " + record.getName() + ": " + 
-							 elementName);
-			// create the sort key without creating the reference to each element
-			preparedSortKey.sortKeyElements.add(element);
-			preparedSortKey.sortKeyElementIndexes[i] = element.getKeyElements().size();
+			if (!elementName.equals(ISortKeyDescription.DBKEY_ELEMENT)) {
+				// get the element from the record, make sure it exists
+				Element element = record.getElement(elementName);
+				Assert.isNotNull(element, "element not found in record " + record.getName() + ": " + 
+								 elementName);
+				// create the sort key without creating the reference to each element
+				preparedSortKey.sortKeyElements.add(element);
+				preparedSortKey.sortKeyElementIndexes[i] = element.getKeyElements().size();				
+			} else {
+				// the sortkey denotes the dbkey
+				preparedSortKey.sortedByDbkey = true;
+			}
 			KeyElement keyElement = SchemaFactory.eINSTANCE.createKeyElement();
 			keyElement.setSortSequence(sortKeyDescriptions[memberRoleIndex].getSortSequences()[i]);
 			preparedSortKey.sortKey.getElements().add(keyElement);
@@ -100,9 +105,14 @@ public abstract class AbstractSortKeyManipulationCommand extends ModelChangeBasi
 			// remember the element name
 			processed.add(elementName);
 		}
+		Assert.isTrue(set.getMode() == SetMode.INDEXED || !preparedSortKey.sortedByDbkey, 
+					  "only indexed sets can be sorted on dbkey: " + set.getName());
 		Assert.isTrue(set.getMode() == SetMode.INDEXED ||
 					  sortKeyDescriptions[memberRoleIndex].getDuplicatesOption() != DuplicatesOption.BY_DBKEY, 
 					  "duplicates by dbkey is only allowed for INDEXED sets: " + set.getName());
+		Assert.isTrue(!preparedSortKey.sortedByDbkey ||
+					  sortKeyDescriptions[memberRoleIndex].getDuplicatesOption() != DuplicatesOption.BY_DBKEY,
+					  "duplicates by dbkey is not allowed for sets sorted on dbkey: " + set.getName());
 		preparedSortKey.sortKey
 					   .setDuplicatesOption(sortKeyDescriptions[memberRoleIndex].getDuplicatesOption());
 		preparedSortKey.sortKey.setNaturalSequence(sortKeyDescriptions[memberRoleIndex].isNaturalSequence());
@@ -152,10 +162,12 @@ public abstract class AbstractSortKeyManipulationCommand extends ModelChangeBasi
 		MemberRole memberRole = set.getMembers().get(memberRoleIndex);
 		StashedSortKey stashedSortKey = slot.stashedSortKeys.get(memberRoleIndex);
 		
-		for (int i = 0; i < stashedSortKey.sortKeyElements.size(); i++) {
-			Element element = stashedSortKey.sortKeyElements.get(i);
-			KeyElement keyElement = stashedSortKey.sortKeyKeyElements.get(i);
-			element.getKeyElements().add(stashedSortKey.sortKeyElementIndexes[i], keyElement);
+		if (!stashedSortKey.sortedByDbkey) {
+			for (int i = 0; i < stashedSortKey.sortKeyElements.size(); i++) {
+				Element element = stashedSortKey.sortKeyElements.get(i);
+				KeyElement keyElement = stashedSortKey.sortKeyKeyElements.get(i);
+				element.getKeyElements().add(stashedSortKey.sortKeyElementIndexes[i], keyElement);
+			}
 		}
 		
 		memberRole.setSortKey(stashedSortKey.sortKey);
@@ -183,11 +195,15 @@ public abstract class AbstractSortKeyManipulationCommand extends ModelChangeBasi
 		stashedSortKey.sortKeyElementIndexes = new int[stashedSortKey.sortKey.getElements().size()];
 		int i = 0;
 		for (KeyElement keyElement : stashedSortKey.sortKey.getElements()) {
-			Element element = keyElement.getElement();
-			stashedSortKey.sortKeyElements.add(element);
-			stashedSortKey.sortKeyElementIndexes[i++] = 
-				element.getKeyElements().indexOf(keyElement);
-			stashedSortKey.sortKeyKeyElements.add(keyElement);
+			if (!keyElement.isDbkey()) {
+				Element element = keyElement.getElement();
+				stashedSortKey.sortKeyElements.add(element);
+				stashedSortKey.sortKeyElementIndexes[i++] = 
+					element.getKeyElements().indexOf(keyElement);
+				stashedSortKey.sortKeyKeyElements.add(keyElement);
+			} else {
+				stashedSortKey.sortedByDbkey = true;
+			}
 		}
 		
 		slot.stashedSortKeys.add(stashedSortKey);
@@ -212,7 +228,9 @@ public abstract class AbstractSortKeyManipulationCommand extends ModelChangeBasi
 		private int			  	 sortKeyIndex;
 		private List<Element> 	 sortKeyElements = new ArrayList<>();
 		private int[] 		  	 sortKeyElementIndexes;
-		private List<KeyElement> sortKeyKeyElements = new ArrayList<>();						
+		private List<KeyElement> sortKeyKeyElements = new ArrayList<>();
+		
+		private boolean			 sortedByDbkey = false;
 	}	
 	
 }

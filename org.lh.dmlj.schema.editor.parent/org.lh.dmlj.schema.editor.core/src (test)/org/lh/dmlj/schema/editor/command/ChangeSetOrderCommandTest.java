@@ -16,12 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -53,7 +48,7 @@ public class ChangeSetOrderCommandTest {
 	
 	@Before
 	public void setup() {
-		// we'll use EMPSCHM throughout these tests
+		// we'll use EMPSCHM throughout (almost all of) these tests
 		schema = TestTools.getEmpschmSchema();
 		objectGraph = TestTools.asObjectGraph(schema);
 	}
@@ -151,7 +146,7 @@ public class ChangeSetOrderCommandTest {
 	}	
 	
 	@Test
-	public void testSortedToFirst() {
+	public void testSortedNotByDbkeyToFirst() {
 		
 		Set set = schema.getSet("DEPT-EMPLOYEE");
 		assertSame(SetOrder.SORTED, set.getOrder());
@@ -204,7 +199,37 @@ public class ChangeSetOrderCommandTest {
 	}
 	
 	@Test
-	public void testUnsortedToSorted_SingleMemberSet() {
+	public void testSortedByDbkeyToFirst() {
+		
+		schema = TestTools.getSchema("testdata/EMPSCHM version 100d.schema");
+		objectGraph = TestTools.asObjectGraph(schema);
+		
+		Set set = schema.getSet("JOB-TITLE-NDX");
+		MemberRole memberRole = set.getMembers().get(0);
+		Key key = memberRole.getSortKey();
+		SchemaRecord job = memberRole.getRecord();
+		assertEquals(2, job.getKeys().size());
+		assertEquals(1, job.getKeys().indexOf(key));
+		assertEquals(1, key.getElements().size());
+		assertNull(key.getElements().get(0).getElement());
+		
+		Command command = new ChangeSetOrderCommand(set, SetOrder.FIRST);
+		
+		command.execute();		
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);
+		assertEquals(1, job.getKeys().size());
+		assertEquals(-1, job.getKeys().indexOf(key));
+		
+		command.undo();
+		checkObjectGraph(objectGraph);
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);
+		
+	}
+	
+	@Test
+	public void testUnsortedToSortedNotByDbkey_SingleMemberSet() {
 	
 		Set set = schema.getSet("EMP-EMPOSITION");
 		assertSame(SetOrder.FIRST, set.getOrder());
@@ -353,7 +378,7 @@ public class ChangeSetOrderCommandTest {
 	}	
 	
 	@Test
-	public void testUnsortedToSorted_IndexedSet() {
+	public void testUnsortedToSortedNotByDbkey_IndexedSet() {
 		
 		// first of all: we need to create a new indexed set because none of the indexed employee 
 		// demo sets is unsorted; creating a new system owned indexed set always results in an
@@ -403,6 +428,47 @@ public class ChangeSetOrderCommandTest {
 		checkObjectGraph(touchedObjectGraph);
 		
 	}
+	
+	@Test
+	public void testUnsortedToSortedByDbkey_SingleMemberSet() {
+	
+		schema = TestTools.getSchema("testdata/EMPSCHM version 100d.schema");
+		objectGraph = TestTools.asObjectGraph(schema);
+		
+		Set set = schema.getSet("EMP-NAME-NDX");	
+		SchemaRecord employee = set.getMembers().get(0).getRecord();
+		assertEquals(3, employee.getKeys().size());
+		
+		ISortKeyDescription sortKeyDescription = mock(ISortKeyDescription.class);
+		when(sortKeyDescription.getElementNames()).thenReturn(new String[] {ISortKeyDescription.DBKEY_ELEMENT});
+		when(sortKeyDescription.getSortSequences()).thenReturn(new SortSequence[] {SortSequence.DESCENDING});
+		when(sortKeyDescription.getDuplicatesOption()).thenReturn(DuplicatesOption.NOT_ALLOWED);
+		when(sortKeyDescription.isNaturalSequence()).thenReturn(true);
+		when(sortKeyDescription.isCompressed()).thenReturn(false);
+		
+		Command command = 
+			new ChangeSetOrderCommand(set, new ISortKeyDescription[] {sortKeyDescription});
+		
+		command.execute();		
+		ObjectGraph touchedObjectGraph = TestTools.asObjectGraph(schema);		
+		assertSame(set, schema.getSet("EMP-NAME-NDX"));
+		Key key = set.getMembers().get(0).getSortKey();
+		assertNotNull(key);
+		assertEquals(3, employee.getKeys().indexOf(key));
+		assertEquals(1, key.getElements().size());
+		assertNull(key.getElements().get(0).getElement());
+		assertSame(SortSequence.DESCENDING, key.getElements().get(0).getSortSequence());
+		assertSame(DuplicatesOption.NOT_ALLOWED, key.getDuplicatesOption());
+		assertTrue(key.isNaturalSequence());
+		assertFalse(key.isCompressed());
+		
+		command.undo();		
+		checkObjectGraph(objectGraph);
+		
+		
+		command.redo();
+		checkObjectGraph(touchedObjectGraph);				
+	}	
 	
 	@Test
 	public void testSetSupplierConstructor() {
