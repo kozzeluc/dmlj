@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -65,7 +65,7 @@ public class SetOrderDialog extends Dialog {
 	private Button 	  btnSorted;
 	private Label 	  lblMemberRecord;
 	private Table	  tableMemberRecords;
-	private Label 	  lblSortElements;
+	private Label 	  lblAvailableSortElements;
 	private Table 	  tableAvailableSortElements;
 	private Table 	  tableSelectedSortElements;
 	private Button 	  btnAddSortElementOrDbkey;
@@ -80,6 +80,8 @@ public class SetOrderDialog extends Dialog {
 	private Button 	  btnCompressed;
 	private Label 	  lblDuplicates;
 	private Combo 	  comboDuplicatesOption;
+	private Label lblSelectedSortElements;
+	private Label lblIfNoSort;
 	
 	private Font 	  boldTableFont;
 	private Font 	  italicTableFont;
@@ -108,11 +110,13 @@ public class SetOrderDialog extends Dialog {
 	// selected member record
 	private Map<String, MemberRole> members = new HashMap<>();
 	private int 					selectedMemberRecordIndex = -1;
+	private SortSequence dbkeySortSequence = null; // indexed sets only
 	
 	// a copy of the initial situation (member record specific data only)
 	private Map<String, java.util.List<String>> copyOfSelectedSortElements = new HashMap<>();
 	private Map<String, Boolean> 				copyOfNaturalSequences = new HashMap<>();
-	private Map<String, DuplicatesOption> 		copyOfDuplicatesOptions = new HashMap<>();	
+	private Map<String, DuplicatesOption> 		copyOfDuplicatesOptions = new HashMap<>();
+	private SortSequence copyOfDbkeySortSequence = null; // indexed sets only
 	
 	/**
 	 * Create the dialog.
@@ -144,7 +148,8 @@ public class SetOrderDialog extends Dialog {
 		p.append(elementName);
 		java.util.List<String> memberSelectedSortElements = selectedSortElements.get(recordName);		
 		if (memberSelectedSortElements.isEmpty()) {
-			tableSelectedSortElements.removeAll(); // make sure "DBKEY" is removed first			
+			tableSelectedSortElements.removeAll(); // make sure "DBKEY" is removed first
+			dbkeySortSequence = null;
 		}
 		memberSelectedSortElements.add(p.toString());
 		TableItem item = new TableItem(tableSelectedSortElements, SWT.NONE);
@@ -253,14 +258,18 @@ public class SetOrderDialog extends Dialog {
 			}						
 			if (set.getOrder() == SetOrder.SORTED) {
 				for (KeyElement keyElement : memberRole.getSortKey().getElements()) {					
-					StringBuilder p = new StringBuilder();
-					if (keyElement.getSortSequence() == SortSequence.ASCENDING) {
-						p.append("ASC ");
+					if (!keyElement.isDbkey()) {
+						StringBuilder p = new StringBuilder();
+						if (keyElement.getSortSequence() == SortSequence.ASCENDING) {
+							p.append("ASC ");
+						} else {
+							p.append("DESC ");
+						}					
+						p.append(keyElement.getElement().getName());
+						memberSelectedSortElements.add(p.toString());
 					} else {
-						p.append("DESC ");
+						dbkeySortSequence = keyElement.getSortSequence();
 					}
-					p.append(keyElement.getElement().getName());
-					memberSelectedSortElements.add(p.toString());
 				}
 				naturalSequences.put(recordName, memberRole.getSortKey().isNaturalSequence());
 				compressed = memberRole.getSortKey().isCompressed();
@@ -285,6 +294,7 @@ public class SetOrderDialog extends Dialog {
 		for (String key : duplicatesOptions.keySet()) {
 			copyOfDuplicatesOptions.put(key, duplicatesOptions.get(key));
 		}
+		copyOfDbkeySortSequence = dbkeySortSequence;
 		
 	}
 
@@ -378,11 +388,16 @@ public class SetOrderDialog extends Dialog {
 		lblMemberRecord = new Label(compositeSorted, SWT.NONE);
 		lblMemberRecord.setText("Member record:");
 		
-		lblSortElements = new Label(compositeSorted, SWT.NONE);
-		GridData gd_lblSortElementsOr = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
+		lblAvailableSortElements = new Label(compositeSorted, SWT.NONE);
+		GridData gd_lblSortElementsOr = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblSortElementsOr.horizontalIndent = 10;
-		lblSortElements.setLayoutData(gd_lblSortElementsOr);
-		lblSortElements.setText("Sort elements:");
+		lblAvailableSortElements.setLayoutData(gd_lblSortElementsOr);
+		lblAvailableSortElements.setText("Available sort elements:");
+		new Label(compositeSorted, SWT.NONE);
+		
+		lblSelectedSortElements = new Label(compositeSorted, SWT.NONE);
+		lblSelectedSortElements.setEnabled(false);
+		lblSelectedSortElements.setText("Selected sort elements\u00B9:");
 		new Label(compositeSorted, SWT.NONE);
 		
 		tableMemberRecords = new Table(compositeSorted, SWT.BORDER);
@@ -569,6 +584,13 @@ public class SetOrderDialog extends Dialog {
 		lblDuplicates.setText("Duplicates:");
 		new Label(composite_2, SWT.NONE);
 		
+		lblIfNoSort = new Label(compositeSorted, SWT.NONE);
+		lblIfNoSort.setEnabled(false);
+		GridData gd_lblIfNoSort = new GridData(SWT.LEFT, SWT.CENTER, false, false, 5, 1);
+		gd_lblIfNoSort.verticalIndent = 10;
+		lblIfNoSort.setLayoutData(gd_lblIfNoSort);
+		lblIfNoSort.setText("\u00B9If no sort elements are selected, the set is sorted by dbkey (indexed sets only).");
+		
 		collectData();
 		initializeControls();
 
@@ -596,7 +618,7 @@ public class SetOrderDialog extends Dialog {
 		// compute and set the key length
 		java.util.List<String> memberSelectedSortElements = selectedSortElements.get(recordName);
 		int keyLength = 0;
-		if (memberSelectedSortElements.isEmpty() & set.getMode() == SetMode.INDEXED) {
+		if (isSortedByDbkey()) {
 			keyLength = 4; // indexed set sorted on dbkey
 		} else {			
 			for (String aSelectedSortElement : memberSelectedSortElements) {
@@ -612,7 +634,8 @@ public class SetOrderDialog extends Dialog {
 		boolean sorted = setOrder == SetOrder.SORTED;
 		boolean sortElementSelected = !selectedSortElements.get(recordName).isEmpty();
 		lblMemberRecord.setEnabled(sorted);
-		lblSortElements.setEnabled(sorted);
+		lblAvailableSortElements.setEnabled(sorted);
+		lblSelectedSortElements.setEnabled(sorted);
 		tableMemberRecords.setEnabled(sorted);
 		tableAvailableSortElements.setEnabled(sorted);
 		boolean keyLengthWouldExceed256BytesForSelectedElement = false;
@@ -627,35 +650,16 @@ public class SetOrderDialog extends Dialog {
 			}
 		}
 		tableSelectedSortElements.setEnabled(sorted);
+		lblIfNoSort.setEnabled(sorted);
 		btnAddSortElementOrDbkey.setEnabled(sorted && 
 											tableAvailableSortElements.getSelectionCount() == 1 &&
 											!keyLengthWouldExceed256BytesForSelectedElement);		
 		btnRemoveSortElementOrDbkey.setEnabled(sorted &&
 											   tableSelectedSortElements.getSelectionCount() == 1 &&
 											   sortElementSelected);
-		String selectedSortElement =
-			tableSelectedSortElements.getSelectionCount() == 1 ?
-			tableSelectedSortElements.getItem(tableSelectedSortElements.getSelectionIndex())
-									 .getText(0) : 
-			null;
-		btnAsc.setEnabled(sorted && tableSelectedSortElements.getSelectionCount() == 1 &&
-						  selectedSortElement.startsWith("DESC "));
-		btnDesc.setEnabled(sorted && tableSelectedSortElements.getSelectionCount() == 1 &&
-						   selectedSortElement.startsWith("ASC "));
-		btnUp.setEnabled(sorted && tableSelectedSortElements.getSelectionCount() == 1 &&
-						 tableSelectedSortElements.getSelectionIndex() > 0);
-		btnDown.setEnabled(sorted && tableSelectedSortElements.getSelectionCount() == 1 &&
-				 		   tableSelectedSortElements.getSelectionIndex() < (tableSelectedSortElements.getItemCount() - 1));
-		lblKeyLength.setEnabled(sorted);
-		lblKeylengthValue.setEnabled(sorted);
-		btnNaturalSequence.setEnabled(sorted);
-		btnCompressed.setEnabled(sorted && set.getMode() == SetMode.INDEXED);
-		lblDuplicates.setEnabled(sorted);
-		comboDuplicatesOption.setEnabled(sorted);
 		
-		// for indexed sets, show "DBKEY" if no sort element is selected
-		if (set.getMode() == SetMode.INDEXED && !sortElementSelected &&
-			tableSelectedSortElements.getItemCount() == 0) {
+		// for indexed sets, show "ASC/DESC DBKEY" if sorted by dbkey
+		if (isSortedByDbkey()) {
 			
 			// we use an italic font for the DBKEY replacement sort element; create this font if not
 			// already done
@@ -666,11 +670,41 @@ public class SetOrderDialog extends Dialog {
 				italicTableFont = new Font(font.getDevice(), fontData);
 			}
 			
+			tableSelectedSortElements.removeAll();
 			TableItem item = new TableItem(tableSelectedSortElements, SWT.NONE);
-			item.setText("DBKEY");
-			item.setFont(italicTableFont);			
-			
-		}		
+			if (dbkeySortSequence == SortSequence.ASCENDING) {
+				item.setText("ASC DBKEY");
+			} else {
+				item.setText("DESC DBKEY");
+			}
+			item.setFont(italicTableFont);	
+		}
+		
+		String selectedSortElement =
+			tableSelectedSortElements.getSelectionCount() == 1 ?
+			tableSelectedSortElements.getItem(tableSelectedSortElements.getSelectionIndex())
+									 .getText(0) : 
+			null;
+		btnAsc.setEnabled(sorted && 
+						  tableSelectedSortElements.getSelectionCount() == 1 &&
+				  		  selectedSortElement.startsWith("DESC ") ||
+				  		  tableSelectedSortElements.getItemCount() == 1 &&
+				  		  tableSelectedSortElements.getItem(0).getText(0).equals("DESC DBKEY"));
+		btnDesc.setEnabled(sorted && 
+						   tableSelectedSortElements.getSelectionCount() == 1 &&
+				   		   selectedSortElement.startsWith("ASC ") ||
+					  	   tableSelectedSortElements.getItemCount() == 1 &&
+					  	   tableSelectedSortElements.getItem(0).getText(0).equals("ASC DBKEY"));
+		btnUp.setEnabled(sorted && tableSelectedSortElements.getSelectionCount() == 1 &&
+				 		 tableSelectedSortElements.getSelectionIndex() > 0);
+		btnDown.setEnabled(sorted && tableSelectedSortElements.getSelectionCount() == 1 &&
+		 		   		   tableSelectedSortElements.getSelectionIndex() < (tableSelectedSortElements.getItemCount() - 1));
+		lblKeyLength.setEnabled(sorted);
+		lblKeylengthValue.setEnabled(sorted);
+		btnNaturalSequence.setEnabled(sorted);
+		btnCompressed.setEnabled(sorted && set.getMode() == SetMode.INDEXED);
+		lblDuplicates.setEnabled(sorted);
+		comboDuplicatesOption.setEnabled(sorted && dbkeySortSequence == null);
 		
 		// OK button
 		Button okButton = getButton(IDialogConstants.OK_ID);		
@@ -690,17 +724,26 @@ public class SetOrderDialog extends Dialog {
 				
 		// given the index, flip the sort sequence in both the member's list of selected elements 
 		// and the dialog's list of selected elements
-		java.util.List<String> memberSelectedSortElements = selectedSortElements.get(recordName);		
-		String sortElementDescription = memberSelectedSortElements.get(index);				
-		String newSortSequence = sortElementDescription.startsWith("ASC ") ? "DESC " : "ASC ";
-		String elementName = 
-			sortElementDescription.substring(sortElementDescription.indexOf(" ") + 1);		
-		StringBuilder p = new StringBuilder();
-		p.append(newSortSequence);
-		p.append(elementName);		
-		memberSelectedSortElements.set(index, p.toString());
-		TableItem item = tableSelectedSortElements.getItem(index);
-		item.setText(0, p.toString());	
+		java.util.List<String> memberSelectedSortElements = selectedSortElements.get(recordName);
+		if (!isSortedByDbkey()) {
+			TableItem item = tableSelectedSortElements.getItem(index);
+			String sortElementDescription = memberSelectedSortElements.get(index);				
+			String newSortSequence = sortElementDescription.startsWith("ASC ") ? "DESC " : "ASC ";
+			String elementName = 
+				sortElementDescription.substring(sortElementDescription.indexOf(" ") + 1);		
+			StringBuilder p = new StringBuilder();
+			p.append(newSortSequence);
+			p.append(elementName);		
+			memberSelectedSortElements.set(index, p.toString());		
+			item.setText(0, p.toString());
+		} else {
+			// sorted by dbkey (index might be equal to -1 since no item has to be selected)
+			if (dbkeySortSequence == SortSequence.ASCENDING) {
+				dbkeySortSequence = SortSequence.DESCENDING;
+			} else {
+				dbkeySortSequence = SortSequence.ASCENDING;
+			}
+		}
 		
 		enableAndDisable();
 		
@@ -734,32 +777,44 @@ public class SetOrderDialog extends Dialog {
 
 				@Override
 				public String[] getElementNames() {
-					List<String> memberSelectedSortElements = selectedSortElements.get(recordName);
-					String[] sortElementNames = new String[memberSelectedSortElements.size()];
-					for (int i = 0; i < sortElementNames.length; i++) {
-						String sortElementDescription = memberSelectedSortElements.get(i);
-						int j = sortElementDescription.indexOf(" ");
-						sortElementNames[i] = sortElementDescription.substring(j + 1);
+					if (!isSortedByDbkey()) {
+						List<String> memberSelectedSortElements = selectedSortElements.get(recordName);
+						String[] sortElementNames = new String[memberSelectedSortElements.size()];
+						for (int i = 0; i < sortElementNames.length; i++) {
+							String sortElementDescription = memberSelectedSortElements.get(i);
+							int j = sortElementDescription.indexOf(" ");
+							sortElementNames[i] = sortElementDescription.substring(j + 1);
+						}
+						return sortElementNames;
+					} else {
+						return new String[] {ISortKeyDescription.DBKEY_ELEMENT};
 					}
-					return sortElementNames;
 				}
 
 				@Override
 				public SortSequence[] getSortSequences() {
-					List<String> memberSelectedSortElements = selectedSortElements.get(recordName);
-					SortSequence[] sortSequences = 
-						new SortSequence[memberSelectedSortElements.size()];
-					for (int i = 0; i < sortSequences.length; i++) {
-						String sortElementDescription = memberSelectedSortElements.get(i);
-						sortSequences[i] = sortElementDescription.startsWith("ASC ") ? 
-										   SortSequence.ASCENDING : SortSequence.DESCENDING;
+					if (!isSortedByDbkey()) {
+						List<String> memberSelectedSortElements = selectedSortElements.get(recordName);
+						SortSequence[] sortSequences = 
+							new SortSequence[memberSelectedSortElements.size()];
+						for (int i = 0; i < sortSequences.length; i++) {
+							String sortElementDescription = memberSelectedSortElements.get(i);
+							sortSequences[i] = sortElementDescription.startsWith("ASC ") ? 
+											   SortSequence.ASCENDING : SortSequence.DESCENDING;
+						}
+						return sortSequences;
+					} else {
+						return new SortSequence[] {dbkeySortSequence};
 					}
-					return sortSequences;
 				}
 
 				@Override
 				public DuplicatesOption getDuplicatesOption() {
-					return fSetOrderDialog.getDuplicatesOption(recordName);
+					if (!isSortedByDbkey()) {
+						return fSetOrderDialog.getDuplicatesOption(recordName);
+					} else {
+						return DuplicatesOption.NOT_ALLOWED;
+					}
 				}
 
 				@Override
@@ -811,7 +866,7 @@ public class SetOrderDialog extends Dialog {
 			TableItem item = new TableItem(tableMemberRecords, SWT.NONE);
 			item.setText(0, recordName);
 			java.util.List<String> memberSelectedSortElements = selectedSortElements.get(recordName);
-			if (memberSelectedSortElements.isEmpty()) {
+			if (memberSelectedSortElements.isEmpty() && set.getMode() != SetMode.INDEXED) {
 				item.setFont(boldTableFont);
 			}
 		} 
@@ -880,6 +935,9 @@ public class SetOrderDialog extends Dialog {
 			}
 			
 		}
+		if (dbkeySortSequence != copyOfDbkeySortSequence) {
+			return true;
+		}
 		
 		// nothing has changed
 		return false;
@@ -907,6 +965,11 @@ public class SetOrderDialog extends Dialog {
 	private boolean isNaturalSequence(String recordName) {
 		Assert.isTrue(naturalSequences.containsKey(recordName));
 		return naturalSequences.get(recordName).booleanValue();		
+	}
+	
+	private boolean isSortedByDbkey() {
+		// will return true only when the set is indexed and no sort elements are selected
+		return dbkeySortSequence != null;
 	}
 
 	private void memberRecordSelectionChanged(boolean callEnableOrDisable) {
@@ -1038,6 +1101,14 @@ public class SetOrderDialog extends Dialog {
 			}
 			TableItem item = tableMemberRecords.getItems()[i];
 			item.setFont(boldTableFont);			
+		}
+		// reset the sort sequence when sorted on dbkey (indexed sets only); make sure the duplicates
+		// option is set to 'not allowed' as well
+		if (memberSelectedSortElements.isEmpty() && set.getMode() == SetMode.INDEXED) {
+			dbkeySortSequence = copyOfDbkeySortSequence == SortSequence.DESCENDING ? 
+								SortSequence.DESCENDING : SortSequence.ASCENDING;
+			duplicatesOptions.put(recordName, DuplicatesOption.NOT_ALLOWED);
+			comboDuplicatesOption.select(2);
 		}
 		
 		// get the element name
