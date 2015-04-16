@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -210,6 +210,14 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 				return createViaSpecificationAdapter();
 			}
 			@Override
+			public Adapter caseVsamIndex(VsamIndex object) {
+				return createVsamIndexAdapter();
+			}
+			@Override
+			public Adapter caseVsamType(VsamType object) {
+				return createVsamTypeAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -394,6 +402,34 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createViaSpecificationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.VsamIndex <em>Vsam Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.VsamIndex
+	 * @generated
+	 */
+	public Adapter createVsamIndexAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.lh.dmlj.schema.VsamType <em>Vsam Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.lh.dmlj.schema.VsamType
+	 * @generated
+	 */
+	public Adapter createVsamTypeAdapter() {
 		return null;
 	}
 

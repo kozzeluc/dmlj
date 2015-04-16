@@ -73,6 +73,9 @@ import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.Usage;
 import org.lh.dmlj.schema.ViaSpecification;
+import org.lh.dmlj.schema.VsamIndex;
+import org.lh.dmlj.schema.VsamLengthType;
+import org.lh.dmlj.schema.VsamType;
 
 /**
  * <!-- begin-user-doc -->
@@ -164,6 +167,20 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	private EClass viaSpecificationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass vsamIndexEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass vsamTypeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -395,6 +412,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	private EEnum usageEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum vsamLengthTypeEEnum = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -813,6 +837,24 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getSchemaRecord_Vsam() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(28);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSchemaRecord_VsamType() {
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(29);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getSchemaRecord_OwnerRoles() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(19);
 	}
@@ -894,8 +936,26 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getSet_Chained() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSet_Indexed() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getSet_Name() {
-		return (EAttribute)setEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)setEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -904,7 +964,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getSet_Mode() {
-		return (EAttribute)setEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)setEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -913,15 +973,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EAttribute getSet_MultipleMember() {
-		return (EAttribute)setEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSet_Order() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -930,34 +981,16 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getSet_Order() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getSet_Schema() {
-		return (EReference)setEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getSet_Sorted() {
-		return (EAttribute)setEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSet_Owner() {
-		return (EReference)setEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSet_SystemOwner() {
 		return (EReference)setEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -966,8 +999,35 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getSet_Sorted() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_Owner() {
+		return (EReference)setEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_SystemOwner() {
+		return (EReference)setEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getSet_Members() {
-		return (EReference)setEClass.getEStructuralFeatures().get(1);
+		return (EReference)setEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -976,7 +1036,25 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getSet_ViaMembers() {
-		return (EReference)setEClass.getEStructuralFeatures().get(10);
+		return (EReference)setEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getSet_Vsam() {
+		return (EAttribute)setEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSet_VsamIndex() {
+		return (EReference)setEClass.getEStructuralFeatures().get(14);
 	}
 
 	/**
@@ -1030,7 +1108,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * @generated
 	 */
 	public EReference getSet_IndexedSetModeSpecification() {
-		return (EReference)setEClass.getEStructuralFeatures().get(0);
+		return (EReference)setEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1409,6 +1487,60 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 */
 	public EAttribute getViaSpecification_SymbolicDisplacementName() {
 		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVsamIndex() {
+		return vsamIndexEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getVsamIndex_Set() {
+		return (EReference)vsamIndexEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVsamType() {
+		return vsamTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getVsamType_LengthType() {
+		return (EAttribute)vsamTypeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getVsamType_Record() {
+		return (EReference)vsamTypeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getVsamType_Spanned() {
+		return (EAttribute)vsamTypeEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2415,6 +2547,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getVsamLengthType() {
+		return vsamLengthTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public SchemaFactory getSchemaFactory() {
 		return (SchemaFactory)getEFactoryInstance();
 	}
@@ -2650,8 +2791,12 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__SYNONYM_VERSION);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__VIA);
 		createEReference(schemaRecordEClass, SCHEMA_RECORD__VIA_SPECIFICATION);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__VSAM);
+		createEReference(schemaRecordEClass, SCHEMA_RECORD__VSAM_TYPE);
 
 		setEClass = createEClass(SET);
+		createEAttribute(setEClass, SET__CHAINED);
+		createEAttribute(setEClass, SET__INDEXED);
 		createEReference(setEClass, SET__INDEXED_SET_MODE_SPECIFICATION);
 		createEReference(setEClass, SET__MEMBERS);
 		createEAttribute(setEClass, SET__MODE);
@@ -2663,6 +2808,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(setEClass, SET__SORTED);
 		createEReference(setEClass, SET__SYSTEM_OWNER);
 		createEReference(setEClass, SET__VIA_MEMBERS);
+		createEAttribute(setEClass, SET__VSAM);
+		createEReference(setEClass, SET__VSAM_INDEX);
 
 		systemOwnerEClass = createEClass(SYSTEM_OWNER);
 		createEReference(systemOwnerEClass, SYSTEM_OWNER__AREA_SPECIFICATION);
@@ -2673,6 +2820,14 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEReference(viaSpecificationEClass, VIA_SPECIFICATION__RECORD);
 		createEReference(viaSpecificationEClass, VIA_SPECIFICATION__SET);
 		createEAttribute(viaSpecificationEClass, VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME);
+
+		vsamIndexEClass = createEClass(VSAM_INDEX);
+		createEReference(vsamIndexEClass, VSAM_INDEX__SET);
+
+		vsamTypeEClass = createEClass(VSAM_TYPE);
+		createEAttribute(vsamTypeEClass, VSAM_TYPE__LENGTH_TYPE);
+		createEReference(vsamTypeEClass, VSAM_TYPE__RECORD);
+		createEAttribute(vsamTypeEClass, VSAM_TYPE__SPANNED);
 
 		// Create enums
 		areaProcedureCallFunctionEEnum = createEEnum(AREA_PROCEDURE_CALL_FUNCTION);
@@ -2688,6 +2843,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		sortSequenceEEnum = createEEnum(SORT_SEQUENCE);
 		storageModeEEnum = createEEnum(STORAGE_MODE);
 		usageEEnum = createEEnum(USAGE);
+		vsamLengthTypeEEnum = createEEnum(VSAM_LENGTH_TYPE);
 	}
 
 	/**
@@ -2751,6 +2907,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		g1.getETypeArguments().add(g2);
 		setEClass.getEGenericSuperTypes().add(g1);
 		systemOwnerEClass.getESuperTypes().add(this.getDiagramNode());
+		vsamIndexEClass.getESuperTypes().add(this.getDiagramNode());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(areaProcedureCallSpecificationEClass, AreaProcedureCallSpecification.class, "AreaProcedureCallSpecification", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2993,6 +3150,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getSchemaRecord_SynonymVersion(), ecorePackage.getEShort(), "synonymVersion", "0", 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_Via(), ecorePackage.getEBoolean(), "via", null, 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_ViaSpecification(), this.getViaSpecification(), this.getViaSpecification_Record(), "viaSpecification", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_Vsam(), ecorePackage.getEBoolean(), "vsam", "false", 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getSchemaRecord_VsamType(), this.getVsamType(), this.getVsamType_Record(), "vsamType", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(schemaRecordEClass, this.getElement(), "getElement", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEString(), "name", 1, 1, IS_UNIQUE, IS_ORDERED);
@@ -3001,6 +3160,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEParameter(op, ecorePackage.getEString(), "setName", 1, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(setEClass, Set.class, "Set", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSet_Chained(), ecorePackage.getEBoolean(), "chained", "false", 0, 1, Set.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSet_Indexed(), ecorePackage.getEBoolean(), "indexed", "false", 0, 1, Set.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_IndexedSetModeSpecification(), this.getIndexedSetModeSpecification(), this.getIndexedSetModeSpecification_Set(), "indexedSetModeSpecification", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_Members(), this.getMemberRole(), this.getMemberRole_Set(), "members", null, 1, -1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSet_Mode(), this.getSetMode(), "mode", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3012,6 +3173,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getSet_Sorted(), ecorePackage.getEBoolean(), "sorted", null, 0, 1, Set.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_SystemOwner(), this.getSystemOwner(), this.getSystemOwner_Set(), "systemOwner", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSet_ViaMembers(), this.getViaSpecification(), this.getViaSpecification_Set(), "viaMembers", null, 0, -1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSet_Vsam(), ecorePackage.getEBoolean(), "vsam", "false", 0, 1, Set.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getSet_VsamIndex(), this.getVsamIndex(), this.getVsamIndex_Set(), "vsamIndex", null, 0, 1, Set.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(systemOwnerEClass, SystemOwner.class, "SystemOwner", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSystemOwner_AreaSpecification(), this.getAreaSpecification(), this.getAreaSpecification_SystemOwner(), "areaSpecification", null, 0, 1, SystemOwner.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3022,6 +3185,18 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEReference(getViaSpecification_Record(), this.getSchemaRecord(), this.getSchemaRecord_ViaSpecification(), "record", null, 1, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getViaSpecification_Set(), this.getSet(), this.getSet_ViaMembers(), "set", null, 1, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getViaSpecification_SymbolicDisplacementName(), ecorePackage.getEString(), "symbolicDisplacementName", null, 0, 1, ViaSpecification.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(vsamIndexEClass, VsamIndex.class, "VsamIndex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getVsamIndex_Set(), this.getSet(), this.getSet_VsamIndex(), "set", null, 1, 1, VsamIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(vsamIndexEClass, this.getMemberRole(), "getMemberRole", 1, 1, IS_UNIQUE, !IS_ORDERED);
+
+		addEOperation(vsamIndexEClass, this.getSchemaRecord(), "getRecord", 1, 1, IS_UNIQUE, !IS_ORDERED);
+
+		initEClass(vsamTypeEClass, VsamType.class, "VsamType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getVsamType_LengthType(), this.getVsamLengthType(), "lengthType", null, 0, 1, VsamType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getVsamType_Record(), this.getSchemaRecord(), this.getSchemaRecord_VsamType(), "record", null, 1, 1, VsamType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getVsamType_Spanned(), ecorePackage.getEBoolean(), "spanned", "false", 0, 1, VsamType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.class, "AreaProcedureCallFunction");
@@ -3046,6 +3221,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.LAST);
 		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.BY_DBKEY);
 		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.NOT_ALLOWED);
+		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.UNORDERED);
 
 		initEEnum(labelAlignmentEEnum, LabelAlignment.class, "LabelAlignment");
 		addEEnumLiteral(labelAlignmentEEnum, LabelAlignment.LEFT);
@@ -3056,6 +3232,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEEnumLiteral(locationModeEEnum, LocationMode.CALC);
 		addEEnumLiteral(locationModeEEnum, LocationMode.DIRECT);
 		addEEnumLiteral(locationModeEEnum, LocationMode.VIA);
+		addEEnumLiteral(locationModeEEnum, LocationMode.VSAM);
+		addEEnumLiteral(locationModeEEnum, LocationMode.VSAM_CALC);
 
 		initEEnum(procedureCallTimeEEnum, ProcedureCallTime.class, "ProcedureCallTime");
 		addEEnumLiteral(procedureCallTimeEEnum, ProcedureCallTime.BEFORE);
@@ -3085,6 +3263,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEEnum(setModeEEnum, SetMode.class, "SetMode");
 		addEEnumLiteral(setModeEEnum, SetMode.CHAINED);
 		addEEnumLiteral(setModeEEnum, SetMode.INDEXED);
+		addEEnumLiteral(setModeEEnum, SetMode.VSAM_INDEX);
 
 		initEEnum(setOrderEEnum, SetOrder.class, "SetOrder");
 		addEEnumLiteral(setOrderEEnum, SetOrder.FIRST);
@@ -3113,6 +3292,10 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEEnumLiteral(usageEEnum, Usage.POINTER);
 		addEEnumLiteral(usageEEnum, Usage.DISPLAY_1);
 		addEEnumLiteral(usageEEnum, Usage.CONDITION_NAME);
+
+		initEEnum(vsamLengthTypeEEnum, VsamLengthType.class, "VsamLengthType");
+		addEEnumLiteral(vsamLengthTypeEEnum, VsamLengthType.FIXED);
+		addEEnumLiteral(vsamLengthTypeEEnum, VsamLengthType.VARIABLE);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -41,6 +41,7 @@ import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.ViaSpecification;
+import org.lh.dmlj.schema.VsamIndex;
 
 /**
  * <!-- begin-user-doc -->
@@ -50,6 +51,8 @@ import org.lh.dmlj.schema.ViaSpecification;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getNodeText <em>Node Text</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#isChained <em>Chained</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#isIndexed <em>Indexed</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getMode <em>Mode</em>}</li>
@@ -61,6 +64,8 @@ import org.lh.dmlj.schema.ViaSpecification;
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#isSorted <em>Sorted</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getSystemOwner <em>System Owner</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getViaMembers <em>Via Members</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#isVsam <em>Vsam</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getVsamIndex <em>Vsam Index</em>}</li>
  * </ul>
  * </p>
  *
@@ -76,6 +81,24 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * @ordered
 	 */
 	protected static final String NODE_TEXT_EDEFAULT = null;
+	/**
+	 * The default value of the '{@link #isChained() <em>Chained</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isChained()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean CHAINED_EDEFAULT = false;
+	/**
+	 * The default value of the '{@link #isIndexed() <em>Indexed</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIndexed()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean INDEXED_EDEFAULT = false;
 	/**
 	 * The cached value of the '{@link #getIndexedSetModeSpecification() <em>Indexed Set Mode Specification</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -195,6 +218,26 @@ public class SetImpl extends EObjectImpl implements Set {
 	protected EList<ViaSpecification> viaMembers;
 
 	/**
+	 * The default value of the '{@link #isVsam() <em>Vsam</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVsam()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean VSAM_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #getVsamIndex() <em>Vsam Index</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVsamIndex()
+	 * @generated
+	 * @ordered
+	 */
+	protected VsamIndex vsamIndex;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -220,6 +263,24 @@ public class SetImpl extends EObjectImpl implements Set {
 	 */
 	public String getNodeText() {
 		return getName();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isChained() {
+		return getMode() == SetMode.CHAINED;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isIndexed() {
+		return getMode() == SetMode.INDEXED;
 	}
 
 	/**
@@ -457,6 +518,58 @@ public class SetImpl extends EObjectImpl implements Set {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isVsam() {
+		return getMode() == SetMode.VSAM_INDEX;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VsamIndex getVsamIndex() {
+		return vsamIndex;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetVsamIndex(VsamIndex newVsamIndex, NotificationChain msgs) {
+		VsamIndex oldVsamIndex = vsamIndex;
+		vsamIndex = newVsamIndex;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.SET__VSAM_INDEX, oldVsamIndex, newVsamIndex);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setVsamIndex(VsamIndex newVsamIndex) {
+		if (newVsamIndex != vsamIndex) {
+			NotificationChain msgs = null;
+			if (vsamIndex != null)
+				msgs = ((InternalEObject)vsamIndex).eInverseRemove(this, SchemaPackage.VSAM_INDEX__SET, VsamIndex.class, msgs);
+			if (newVsamIndex != null)
+				msgs = ((InternalEObject)newVsamIndex).eInverseAdd(this, SchemaPackage.VSAM_INDEX__SET, VsamIndex.class, msgs);
+			msgs = basicSetVsamIndex(newVsamIndex, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SET__VSAM_INDEX, newVsamIndex, newVsamIndex));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -483,6 +596,10 @@ public class SetImpl extends EObjectImpl implements Set {
 				return basicSetSystemOwner((SystemOwner)otherEnd, msgs);
 			case SchemaPackage.SET__VIA_MEMBERS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getViaMembers()).basicAdd(otherEnd, msgs);
+			case SchemaPackage.SET__VSAM_INDEX:
+				if (vsamIndex != null)
+					msgs = ((InternalEObject)vsamIndex).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SET__VSAM_INDEX, null, msgs);
+				return basicSetVsamIndex((VsamIndex)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -507,6 +624,8 @@ public class SetImpl extends EObjectImpl implements Set {
 				return basicSetSystemOwner(null, msgs);
 			case SchemaPackage.SET__VIA_MEMBERS:
 				return ((InternalEList<?>)getViaMembers()).basicRemove(otherEnd, msgs);
+			case SchemaPackage.SET__VSAM_INDEX:
+				return basicSetVsamIndex(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -535,6 +654,10 @@ public class SetImpl extends EObjectImpl implements Set {
 		switch (featureID) {
 			case SchemaPackage.SET__NODE_TEXT:
 				return getNodeText();
+			case SchemaPackage.SET__CHAINED:
+				return isChained();
+			case SchemaPackage.SET__INDEXED:
+				return isIndexed();
 			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
 				return getIndexedSetModeSpecification();
 			case SchemaPackage.SET__MEMBERS:
@@ -557,6 +680,10 @@ public class SetImpl extends EObjectImpl implements Set {
 				return getSystemOwner();
 			case SchemaPackage.SET__VIA_MEMBERS:
 				return getViaMembers();
+			case SchemaPackage.SET__VSAM:
+				return isVsam();
+			case SchemaPackage.SET__VSAM_INDEX:
+				return getVsamIndex();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -599,6 +726,9 @@ public class SetImpl extends EObjectImpl implements Set {
 				getViaMembers().clear();
 				getViaMembers().addAll((Collection<? extends ViaSpecification>)newValue);
 				return;
+			case SchemaPackage.SET__VSAM_INDEX:
+				setVsamIndex((VsamIndex)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -638,6 +768,9 @@ public class SetImpl extends EObjectImpl implements Set {
 			case SchemaPackage.SET__VIA_MEMBERS:
 				getViaMembers().clear();
 				return;
+			case SchemaPackage.SET__VSAM_INDEX:
+				setVsamIndex((VsamIndex)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -652,6 +785,10 @@ public class SetImpl extends EObjectImpl implements Set {
 		switch (featureID) {
 			case SchemaPackage.SET__NODE_TEXT:
 				return NODE_TEXT_EDEFAULT == null ? getNodeText() != null : !NODE_TEXT_EDEFAULT.equals(getNodeText());
+			case SchemaPackage.SET__CHAINED:
+				return isChained() != CHAINED_EDEFAULT;
+			case SchemaPackage.SET__INDEXED:
+				return isIndexed() != INDEXED_EDEFAULT;
 			case SchemaPackage.SET__INDEXED_SET_MODE_SPECIFICATION:
 				return indexedSetModeSpecification != null;
 			case SchemaPackage.SET__MEMBERS:
@@ -674,6 +811,10 @@ public class SetImpl extends EObjectImpl implements Set {
 				return systemOwner != null;
 			case SchemaPackage.SET__VIA_MEMBERS:
 				return viaMembers != null && !viaMembers.isEmpty();
+			case SchemaPackage.SET__VSAM:
+				return isVsam() != VSAM_EDEFAULT;
+			case SchemaPackage.SET__VSAM_INDEX:
+				return vsamIndex != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -124,6 +124,24 @@ public interface SchemaFactory extends EFactory {
 	 * @generated
 	 */
 	ViaSpecification createViaSpecification();
+
+	/**
+	 * Returns a new object of class '<em>Vsam Index</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Vsam Index</em>'.
+	 * @generated
+	 */
+	VsamIndex createVsamIndex();
+
+	/**
+	 * Returns a new object of class '<em>Vsam Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Vsam Type</em>'.
+	 * @generated
+	 */
+	VsamType createVsamType();
 
 	/**
 	 * Returns a new object of class '<em>Diagram Location</em>'.

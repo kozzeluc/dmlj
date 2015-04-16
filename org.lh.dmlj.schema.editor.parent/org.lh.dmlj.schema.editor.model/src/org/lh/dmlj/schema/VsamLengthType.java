@@ -24,117 +24,93 @@ import org.eclipse.emf.common.util.Enumerator;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Set Mode</b></em>',
+ * A representation of the literals of the enumeration '<em><b>Vsam Length Type</b></em>',
  * and utility methods for working with them.
  * <!-- end-user-doc -->
- * @see org.lh.dmlj.schema.SchemaPackage#getSetMode()
+ * @see org.lh.dmlj.schema.SchemaPackage#getVsamLengthType()
  * @model
  * @generated
  */
-public enum SetMode implements Enumerator {
+public enum VsamLengthType implements Enumerator {
 	/**
-	 * The '<em><b>CHAINED</b></em>' literal object.
+	 * The '<em><b>FIXED</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #CHAINED_VALUE
+	 * @see #FIXED_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	CHAINED(0, "CHAINED", "CHAINED"),
+	FIXED(0, "FIXED", "FIXED"),
 
 	/**
-	 * The '<em><b>INDEXED</b></em>' literal object.
+	 * The '<em><b>VARIABLE</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #INDEXED_VALUE
+	 * @see #VARIABLE_VALUE
 	 * @generated
 	 * @ordered
 	 */
-	INDEXED(1, "INDEXED", "INDEXED"), /**
-	 * The '<em><b>VSAM INDEX</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #VSAM_INDEX_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	VSAM_INDEX(2, "VSAM_INDEX", "VSAM_INDEX");
+	VARIABLE(1, "VARIABLE", "VARIABLE");
 
 	/**
-	 * The '<em><b>CHAINED</b></em>' literal value.
+	 * The '<em><b>FIXED</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>CHAINED</b></em>' literal object isn't clear,
+	 * If the meaning of '<em><b>FIXED</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #CHAINED
+	 * @see #FIXED
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int CHAINED_VALUE = 0;
+	public static final int FIXED_VALUE = 0;
 
 	/**
-	 * The '<em><b>INDEXED</b></em>' literal value.
+	 * The '<em><b>VARIABLE</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>INDEXED</b></em>' literal object isn't clear,
+	 * If the meaning of '<em><b>VARIABLE</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @see #INDEXED
+	 * @see #VARIABLE
 	 * @model
 	 * @generated
 	 * @ordered
 	 */
-	public static final int INDEXED_VALUE = 1;
+	public static final int VARIABLE_VALUE = 1;
 
 	/**
-	 * The '<em><b>VSAM INDEX</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>VSAM INDEX</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #VSAM_INDEX
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int VSAM_INDEX_VALUE = 2;
-
-	/**
-	 * An array of all the '<em><b>Set Mode</b></em>' enumerators.
+	 * An array of all the '<em><b>Vsam Length Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final SetMode[] VALUES_ARRAY =
-		new SetMode[] {
-			CHAINED,
-			INDEXED,
-			VSAM_INDEX,
+	private static final VsamLengthType[] VALUES_ARRAY =
+		new VsamLengthType[] {
+			FIXED,
+			VARIABLE,
 		};
 
 	/**
-	 * A public read-only list of all the '<em><b>Set Mode</b></em>' enumerators.
+	 * A public read-only list of all the '<em><b>Vsam Length Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final List<SetMode> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+	public static final List<VsamLengthType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Set Mode</b></em>' literal with the specified literal value.
+	 * Returns the '<em><b>Vsam Length Type</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static SetMode get(String literal) {
+	public static VsamLengthType get(String literal) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			SetMode result = VALUES_ARRAY[i];
+			VsamLengthType result = VALUES_ARRAY[i];
 			if (result.toString().equals(literal)) {
 				return result;
 			}
@@ -143,14 +119,14 @@ public enum SetMode implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Set Mode</b></em>' literal with the specified name.
+	 * Returns the '<em><b>Vsam Length Type</b></em>' literal with the specified name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static SetMode getByName(String name) {
+	public static VsamLengthType getByName(String name) {
 		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-			SetMode result = VALUES_ARRAY[i];
+			VsamLengthType result = VALUES_ARRAY[i];
 			if (result.getName().equals(name)) {
 				return result;
 			}
@@ -159,16 +135,15 @@ public enum SetMode implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Set Mode</b></em>' literal with the specified integer value.
+	 * Returns the '<em><b>Vsam Length Type</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static SetMode get(int value) {
+	public static VsamLengthType get(int value) {
 		switch (value) {
-			case CHAINED_VALUE: return CHAINED;
-			case INDEXED_VALUE: return INDEXED;
-			case VSAM_INDEX_VALUE: return VSAM_INDEX;
+			case FIXED_VALUE: return FIXED;
+			case VARIABLE_VALUE: return VARIABLE;
 		}
 		return null;
 	}
@@ -200,7 +175,7 @@ public enum SetMode implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private SetMode(int value, String name, String literal) {
+	private VsamLengthType(int value, String name, String literal) {
 		this.value = value;
 		this.name = name;
 		this.literal = literal;
@@ -244,4 +219,4 @@ public enum SetMode implements Enumerator {
 		return literal;
 	}
 	
-} //SetMode
+} //VsamLengthType

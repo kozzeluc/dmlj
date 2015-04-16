@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -60,7 +60,23 @@ public enum LocationMode implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	VIA(2, "VIA", "VIA");
+	VIA(2, "VIA", "VIA"), /**
+	 * The '<em><b>VSAM</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #VSAM_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	VSAM(3, "VSAM", "VSAM"), /**
+	 * The '<em><b>VSAM CALC</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #VSAM_CALC_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	VSAM_CALC(4, "VSAM_CALC", "VSAM_CALC");
 
 	/**
 	 * The '<em><b>CALC</b></em>' literal value.
@@ -108,6 +124,36 @@ public enum LocationMode implements Enumerator {
 	public static final int VIA_VALUE = 2;
 
 	/**
+	 * The '<em><b>VSAM</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>VSAM</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #VSAM
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int VSAM_VALUE = 3;
+
+	/**
+	 * The '<em><b>VSAM CALC</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>VSAM CALC</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #VSAM_CALC
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int VSAM_CALC_VALUE = 4;
+
+	/**
 	 * An array of all the '<em><b>Location Mode</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -118,6 +164,8 @@ public enum LocationMode implements Enumerator {
 			CALC,
 			DIRECT,
 			VIA,
+			VSAM,
+			VSAM_CALC,
 		};
 
 	/**
@@ -171,6 +219,8 @@ public enum LocationMode implements Enumerator {
 			case CALC_VALUE: return CALC;
 			case DIRECT_VALUE: return DIRECT;
 			case VIA_VALUE: return VIA;
+			case VSAM_VALUE: return VSAM;
+			case VSAM_CALC_VALUE: return VSAM_CALC;
 		}
 		return null;
 	}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2013  Luc Hermans&#xD;&#xA;&#xD;&#xA;This program is free software: you can redistribute it and/or modify it under the terms of the&#xD;&#xA;GNU General Public License as published by the Free Software Foundation, either version 3 of the&#xD;&#xA;License, or (at your option) any later version.&#xD;&#xA;&#xD;&#xA;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without&#xD;&#xA;even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU&#xD;&#xA;General Public License for more details.&#xD;&#xA;&#xD;&#xA;You should have received a copy of the GNU General Public License along with this program.  If&#xD;&#xA;not, see &lt;http://www.gnu.org/licenses/>.&#xD;&#xA;&#xD;&#xA;Contact information: kozzeluc@gmail.com."
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (C) 2015  Luc Hermans&#xD;&#xA;&#xD;&#xA;This program is free software: you can redistribute it and/or modify it under the terms of the&#xD;&#xA;GNU General Public License as published by the Free Software Foundation, either version 3 of the&#xD;&#xA;License, or (at your option) any later version.&#xD;&#xA;&#xD;&#xA;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without&#xD;&#xA;even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU&#xD;&#xA;General Public License for more details.&#xD;&#xA;&#xD;&#xA;You should have received a copy of the GNU General Public License along with this program.  If&#xD;&#xA;not, see &lt;http://www.gnu.org/licenses/>.&#xD;&#xA;&#xD;&#xA;Contact information: kozzeluc@gmail.com."
     modelDirectory="/org.lh.dmlj.schema.editor.model/src" modelPluginID="org.lh.dmlj.schema.editor.model"
     modelName="Schema" importerID="org.eclipse.emf.importer.cdo" complianceLevel="7.0"
     copyrightFields="false" editPluginID="org.lh.dmlj.schema.editor.model">
@@ -29,6 +29,7 @@
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//DuplicatesOption/LAST"/>
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//DuplicatesOption/BY_DBKEY"/>
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//DuplicatesOption/NOT_ALLOWED"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//DuplicatesOption/UNORDERED"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//LabelAlignment">
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LabelAlignment/LEFT"/>
@@ -39,6 +40,8 @@
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LocationMode/CALC"/>
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LocationMode/DIRECT"/>
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LocationMode/VIA"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LocationMode/VSAM"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//LocationMode/VSAM_CALC"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//ProcedureCallTime">
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//ProcedureCallTime/BEFORE"/>
@@ -68,6 +71,7 @@
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//SetMode">
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMode/CHAINED"/>
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMode/INDEXED"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetMode/VSAM_INDEX"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//SetOrder">
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//SetOrder/FIRST"/>
@@ -97,11 +101,13 @@
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/DISPLAY_1"/>
       <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//Usage/CONDITION_NAME"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Schema.ecore#//VsamLengthType">
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//VsamLengthType/FIXED"/>
+      <genEnumLiterals ecoreEnumLiteral="Schema.ecore#//VsamLengthType/VARIABLE"/>
+    </genEnums>
     <genClasses ecoreClass="Schema.ecore#//AreaProcedureCallSpecification">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//AreaProcedureCallSpecification/area"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//AreaProcedureCallSpecification/callTime"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//AreaProcedureCallSpecification/function"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//AreaProcedureCallSpecification/procedure"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//AreaSpecification">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//AreaSpecification/symbolicSubareaName"/>
@@ -175,6 +181,7 @@
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Guide">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Guide/position"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//Guide/ruler"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//IndexedSetModeSpecification">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexedSetModeSpecification/displacementPageCount"/>
@@ -186,6 +193,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexElement/baseName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//IndexElement/name"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//IndexElement/occursSpecification"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Schema.ecore#//INodeTextProvider">
+      <genTypeParameters ecoreTypeParameter="Schema.ecore#//INodeTextProvider/T"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//INodeTextProvider/nodeText"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Key">
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Key/calcKey"/>
@@ -237,10 +248,14 @@
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Procedure">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Procedure/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//Procedure/schema"/>
+      <genOperations ecoreOperation="Schema.ecore#//Procedure/getCallSpecifications"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Schema.ecore#//ProcedureCallSpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ProcedureCallSpecification/callTime"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//ProcedureCallSpecification/procedure"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//RecordProcedureCallSpecification">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//RecordProcedureCallSpecification/callTime"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//RecordProcedureCallSpecification/procedure"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//RecordProcedureCallSpecification/record"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//RecordProcedureCallSpecification/verb"/>
     </genClasses>
@@ -299,8 +314,10 @@
     <genClasses ecoreClass="Schema.ecore#//SchemaRecord">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/baseName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/baseVersion"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/calc"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/controlLength"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/dataLength"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/direct"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/fragmented"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/locationMode"/>
@@ -321,7 +338,10 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/schema"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/synonymName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/synonymVersion"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/via"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/viaSpecification"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//SchemaRecord/vsam"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//SchemaRecord/vsamType"/>
       <genOperations ecoreOperation="Schema.ecore#//SchemaRecord/getElement">
         <genParameters ecoreParameter="Schema.ecore#//SchemaRecord/getElement/name"/>
       </genOperations>
@@ -330,15 +350,21 @@
       </genOperations>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//Set">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/chained"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/indexed"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/indexedSetModeSpecification"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/members"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/mode"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/multipleMember"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/order"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/owner"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//Set/schema"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/sorted"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/systemOwner"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/viaMembers"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//Set/vsam"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Schema.ecore#//Set/vsamIndex"/>
     </genClasses>
     <genClasses ecoreClass="Schema.ecore#//SystemOwner">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//SystemOwner/areaSpecification"/>
@@ -349,6 +375,14 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//ViaSpecification/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Schema.ecore#//ViaSpecification/set"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//ViaSpecification/symbolicDisplacementName"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//VsamIndex">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//VsamIndex/set"/>
+    </genClasses>
+    <genClasses ecoreClass="Schema.ecore#//VsamType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//VsamType/lengthType"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Schema.ecore#//VsamType/record"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Schema.ecore#//VsamType/spanned"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
