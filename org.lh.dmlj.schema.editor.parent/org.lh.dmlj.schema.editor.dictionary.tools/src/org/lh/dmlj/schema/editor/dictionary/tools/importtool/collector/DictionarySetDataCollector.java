@@ -146,6 +146,8 @@ public class DictionarySetDataCollector implements ISetDataCollector<Sor_046> {
 			return DuplicatesOption.FIRST;
 		} else if (smr_052.getDup_052() == 2) {
 			return DuplicatesOption.LAST;
+		} else if (smr_052.getDup_052() == 3) {
+			return DuplicatesOption.UNORDERED;
 		} else if (smr_052.getDup_052() == 4) {
 			return DuplicatesOption.BY_DBKEY;
 		} else {

@@ -29,6 +29,7 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.VsamLengthType;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
@@ -250,6 +251,16 @@ public class CatalogRecordDataCollector implements IRecordDataCollector<Table_10
 	@Override
 	public String getViaSymbolicDisplacementName(Table_1050 table_1050) {
 		return null;
+	}
+
+	@Override
+	public VsamLengthType getVsamLengthType(Table_1050 table_1050) {
+		return null;
+	}
+
+	@Override
+	public boolean isVsamSpanned(Table_1050 table_1050) {
+		return false;
 	}
 
 }

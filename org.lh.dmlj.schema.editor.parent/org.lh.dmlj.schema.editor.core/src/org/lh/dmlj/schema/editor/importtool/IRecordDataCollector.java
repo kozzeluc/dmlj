@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,6 +22,7 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.VsamLengthType;
 
 public interface IRecordDataCollector<T> {	
 	
@@ -70,5 +71,9 @@ public interface IRecordDataCollector<T> {
 	String getViaSetName(T context);
 
 	String getViaSymbolicDisplacementName(T context);	
+	
+	VsamLengthType getVsamLengthType(T context);
+	
+	boolean isVsamSpanned(T context);
 	
 }

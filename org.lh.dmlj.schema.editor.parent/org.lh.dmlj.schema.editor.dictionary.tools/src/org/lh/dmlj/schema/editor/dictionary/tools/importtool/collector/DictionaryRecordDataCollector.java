@@ -28,6 +28,7 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.VsamLengthType;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
@@ -127,6 +128,8 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 			return DuplicatesOption.FIRST;
 		} else if (smr_052.getDup_052() == 2) {
 			return DuplicatesOption.LAST;
+		} else if (smr_052.getDup_052() == 3) {
+			return DuplicatesOption.UNORDERED;
 		} else if (smr_052.getDup_052() == 4) {
 			return DuplicatesOption.BY_DBKEY;
 		} else {
@@ -305,6 +308,18 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public VsamLengthType getVsamLengthType(Srcd_113 srcd_113) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isVsamSpanned(Srcd_113 srcd_113) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
