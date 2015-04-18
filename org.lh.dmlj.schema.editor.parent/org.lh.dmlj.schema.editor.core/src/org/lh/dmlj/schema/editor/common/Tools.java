@@ -79,6 +79,8 @@ public abstract class Tools {
 			return "DF";
 		} else if (duplicatesOption == DuplicatesOption.LAST) {
 			return "DL";
+		} else if (duplicatesOption == DuplicatesOption.UNORDERED) {
+			return "DU";
 		} else {
 			return "DD";
 		}
@@ -150,6 +152,11 @@ public abstract class Tools {
 	}
 	
 	public static String getPointers(MemberRole memberRole) {
+		
+		if (memberRole.getSet().isVsam()) {
+			return "";
+		}
+		
 		StringBuilder p = new StringBuilder();
 		
 		if (memberRole.getSet().getMode() == SetMode.CHAINED) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,6 +20,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 /**
@@ -37,7 +38,7 @@ import org.lh.dmlj.schema.editor.figure.RecordFigure;
  *     <li>In the case of a <i>user owned set</i>, the location returned by a 
  *         standard chopbox anchor for the record figure will be used.
  *         <br><br></li>
- *     <li>In the case of a <i>system owned set</i>, the location returned is 1 
+ *     <li>In the case of a <i>system owned set</i> or <i>VSAM index</i>, the location returned is 1 
  *         of the 4 corners on the record figure, depending on the reference 
  *         location.</li>
  *     </ul>
@@ -62,9 +63,9 @@ public class LockedRecordTargetAnchor extends AbstractLockedRecordAnchor {
 	@Override
 	protected Point getDefaultLocation(Point originalReference) {
 		
-		// in the case of a user owned set, just call the super implementation
-		// of this method...
-		if (connectionPart.getMemberRole().getSet().getSystemOwner() == null) {
+		// in the case of a user owned set, just call the super implementation of this method...
+		Set set = connectionPart.getMemberRole().getSet();
+		if (set.isChained() || set.isIndexed() && set.getSystemOwner() == null) {
 			return super.getDefaultLocation(originalReference);
 		}
 		

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -100,8 +100,10 @@ public class SetDescriptionFigure extends Figure {
 		p.append(FILLER);
 		p.append("\n");
 		
-		p.append(pointers);
-		p.append(" ");
+		if (pointers != null && !pointers.trim().isEmpty()) {
+			p.append(pointers);
+			p.append(" ");
+		}
 		p.append(membershipOption);
 		p.append(" ");
 		p.append(order);

@@ -37,6 +37,7 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 
 public class ModelChangeContext {
 
@@ -408,6 +409,9 @@ public class ModelChangeContext {
 		} else if (diagramNode instanceof SystemOwner) {
 			SystemOwner systemOwner = (SystemOwner) diagramNode;
 			putContextData(systemOwner.getSet());
+		} else if (diagramNode instanceof VsamIndex) {
+			VsamIndex vsamIndex = (VsamIndex) diagramNode;
+			putContextData(vsamIndex.getSet());
 		} else if (diagramNode != null) {
 			throw new IllegalArgumentException("DiagramNode type invalid: " + 
 											   diagramNode.getClass().getName());
