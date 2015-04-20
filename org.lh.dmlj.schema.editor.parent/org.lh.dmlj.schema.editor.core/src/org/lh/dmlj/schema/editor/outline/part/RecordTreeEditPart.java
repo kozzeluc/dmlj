@@ -31,6 +31,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -242,7 +243,7 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 		EObject parentModelObject = getParentModelObject();
 		if (parentModelObject instanceof Set) {
 			Set set = (Set) parentModelObject;
-			if (set.getOwner().getRecord() != getModel()) {
+			if (set.isVsam() || set.getOwner().getRecord() != getModel()) {
 				// the model record is a member of the parent edit part's model set; the next 
 				// edit policy allows for the removal of the record as a set member, without the
 				// ability to remove the set when the record is the last remaining member in the set 
@@ -290,7 +291,9 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			} else {
 				return "icons/member_record.gif";
 			}
-		} else if (parentModelObject instanceof SystemOwner) {
+		} else if (parentModelObject instanceof SystemOwner ||
+				   parentModelObject instanceof VsamIndex) {
+			
 			return "icons/member_record.gif";
 		} else {
 			return "icons/record.gif";
@@ -326,14 +329,20 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 				if (set.getSystemOwner() != null) {
 					// the record is the member of a system owned indexed set; add the system owner
 					children.add(set.getSystemOwner());
-				} else if (set.getOwner().getRecord() == getModel()) {
+				} else if (set.getOwner() != null && set.getOwner().getRecord() == getModel()) {
 					// the record is the owner of the set; add the set
 					children.add(set);
 				} else {
-					// the record is a member of the set; add the set
-					for (MemberRole memberRole : set.getMembers()) {
-						if (memberRole.getRecord() == getModel()) {
-							children.add(memberRole.getSet());
+					// the record is a member of the set
+					if (set.isVsam()) {
+						// add the VSAM index
+						children.add(set.getVsamIndex());
+					} else {
+						// add the set (why are we traversing the list of members her ?)
+						for (MemberRole memberRole : set.getMembers()) {
+							if (memberRole.getRecord() == getModel()) {
+								children.add(memberRole.getSet());
+							}
 						}
 					}
 				}

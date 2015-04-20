@@ -350,11 +350,14 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 		Collections.sort(records);
 		children.addAll(records);
 		
-		// add the sets or the system owners in alphabetical order
+		// add the sets, system owners and VSAM indexes in alphabetical order
 		List<Set> sets = new ArrayList<>(getModel().getSets());
 		Collections.sort(sets);
 		for (Set set : sets) {
-			if (set.getSystemOwner() == null) {
+			if (set.isVsam()) {
+				// VSAM index
+				children.add(set.getVsamIndex());
+			} else if (set.getSystemOwner() == null) {
 				// user owned set (chained or indexed): set
 				children.add(set);
 			} else {
