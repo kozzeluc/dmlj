@@ -55,6 +55,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isVia <em>Via</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getViaSpecification <em>Via Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isVsam <em>Vsam</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isVsamCalc <em>Vsam Calc</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getVsamType <em>Vsam Type</em>}</li>
  * </ul>
  * </p>
@@ -536,6 +537,22 @@ public interface SchemaRecord extends DiagramNode, INodeTextProvider<SchemaRecor
 	 * @generated
 	 */
 	boolean isVsam();
+
+	/**
+	 * Returns the value of the '<em><b>Vsam Calc</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vsam Calc</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Vsam Calc</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_VsamCalc()
+	 * @model default="false" transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isVsamCalc();
 
 	/**
 	 * Returns the value of the '<em><b>Vsam Type</b></em>' containment reference.

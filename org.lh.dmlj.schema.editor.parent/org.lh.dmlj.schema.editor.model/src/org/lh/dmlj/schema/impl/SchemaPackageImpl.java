@@ -846,8 +846,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getSchemaRecord_VsamCalc() {
+		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(29);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getSchemaRecord_VsamType() {
-		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(29);
+		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(30);
 	}
 
 	/**
@@ -2792,6 +2801,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__VIA);
 		createEReference(schemaRecordEClass, SCHEMA_RECORD__VIA_SPECIFICATION);
 		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__VSAM);
+		createEAttribute(schemaRecordEClass, SCHEMA_RECORD__VSAM_CALC);
 		createEReference(schemaRecordEClass, SCHEMA_RECORD__VSAM_TYPE);
 
 		setEClass = createEClass(SET);
@@ -3151,6 +3161,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		initEAttribute(getSchemaRecord_Via(), ecorePackage.getEBoolean(), "via", null, 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_ViaSpecification(), this.getViaSpecification(), this.getViaSpecification_Record(), "viaSpecification", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSchemaRecord_Vsam(), ecorePackage.getEBoolean(), "vsam", "false", 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSchemaRecord_VsamCalc(), ecorePackage.getEBoolean(), "vsamCalc", "false", 0, 1, SchemaRecord.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getSchemaRecord_VsamType(), this.getVsamType(), this.getVsamType_Record(), "vsamType", null, 0, 1, SchemaRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = addEOperation(schemaRecordEClass, this.getElement(), "getElement", 0, 1, IS_UNIQUE, IS_ORDERED);

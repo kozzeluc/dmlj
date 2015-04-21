@@ -414,6 +414,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="vsam" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         changeable="false" volatile="true" transient="true" defaultValueLiteral="false"
         derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vsamCalc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" defaultValueLiteral="false"
+        derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="vsamType" eType="#//VsamType"
         containment="true" eOpposite="#//VsamType/record"/>
     <eGenericSuperTypes eClassifier="#//DiagramNode"/>

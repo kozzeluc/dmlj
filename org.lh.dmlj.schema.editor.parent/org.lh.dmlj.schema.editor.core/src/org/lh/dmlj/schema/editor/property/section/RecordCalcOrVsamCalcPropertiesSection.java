@@ -26,7 +26,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 import org.lh.dmlj.schema.editor.property.handler.LocationModeHandler;
 
-public class RecordCalcPropertiesSection 
+public class RecordCalcOrVsamCalcPropertiesSection 
 	extends AbstractRecordPropertiesSection {
 
 	private static final EAttribute[] ATTRIBUTES = 
@@ -36,7 +36,7 @@ public class RecordCalcPropertiesSection
 	private IHyperlinkHandler<EAttribute, Command> locationModeHandler = 
 		new LocationModeHandler(this);	
 
-	public RecordCalcPropertiesSection() {
+	public RecordCalcOrVsamCalcPropertiesSection() {
 		super();
 	}	
 	

@@ -86,6 +86,7 @@ import org.lh.dmlj.schema.VsamType;
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isVia <em>Via</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getViaSpecification <em>Via Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isVsam <em>Vsam</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isVsamCalc <em>Vsam Calc</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getVsamType <em>Vsam Type</em>}</li>
  * </ul>
  * </p>
@@ -435,6 +436,15 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * @ordered
 	 */
 	protected static final boolean VSAM_EDEFAULT = false;
+	/**
+	 * The default value of the '{@link #isVsamCalc() <em>Vsam Calc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVsamCalc()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean VSAM_CALC_EDEFAULT = false;
 	/**
 	 * The cached value of the '{@link #getVsamType() <em>Vsam Type</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -949,7 +959,16 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * @generated NOT
 	 */
 	public boolean isVsam() {
-		return getLocationMode() == LocationMode.VSAM || getLocationMode() == LocationMode.VSAM_CALC;
+		return getLocationMode() == LocationMode.VSAM;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isVsamCalc() {
+		return getLocationMode() == LocationMode.VSAM_CALC;
 	}
 
 	/**
@@ -1333,6 +1352,8 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return getViaSpecification();
 			case SchemaPackage.SCHEMA_RECORD__VSAM:
 				return isVsam();
+			case SchemaPackage.SCHEMA_RECORD__VSAM_CALC:
+				return isVsamCalc();
 			case SchemaPackage.SCHEMA_RECORD__VSAM_TYPE:
 				return getVsamType();
 		}
@@ -1564,6 +1585,8 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return viaSpecification != null;
 			case SchemaPackage.SCHEMA_RECORD__VSAM:
 				return isVsam() != VSAM_EDEFAULT;
+			case SchemaPackage.SCHEMA_RECORD__VSAM_CALC:
+				return isVsamCalc() != VSAM_CALC_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__VSAM_TYPE:
 				return vsamType != null;
 		}

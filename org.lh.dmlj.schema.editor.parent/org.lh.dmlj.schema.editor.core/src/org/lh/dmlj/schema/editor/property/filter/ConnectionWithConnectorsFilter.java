@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,6 +22,7 @@ import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 
 public class ConnectionWithConnectorsFilter implements IFilter {
 
@@ -55,6 +56,10 @@ public class ConnectionWithConnectorsFilter implements IFilter {
             			   						 .getConnectionParts()
             			   						 .size(); 
             return connectionPartCount > 1;
+        } else if (modelObject instanceof VsamIndex) {
+        	VsamIndex vsamIndex = (VsamIndex) modelObject;
+        	int connectionPartCount = vsamIndex.getMemberRole().getConnectionParts().size();
+        	return connectionPartCount > 1;
         } else {
         	return false;
         }        

@@ -2182,13 +2182,22 @@ public interface SchemaPackage extends EPackage {
 	int SCHEMA_RECORD__VSAM = DIAGRAM_NODE_FEATURE_COUNT + 29;
 
 	/**
+	 * The feature id for the '<em><b>Vsam Calc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__VSAM_CALC = DIAGRAM_NODE_FEATURE_COUNT + 30;
+
+	/**
 	 * The feature id for the '<em><b>Vsam Type</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD__VSAM_TYPE = DIAGRAM_NODE_FEATURE_COUNT + 30;
+	int SCHEMA_RECORD__VSAM_TYPE = DIAGRAM_NODE_FEATURE_COUNT + 31;
 
 	/**
 	 * The number of structural features of the '<em>Record</em>' class.
@@ -2197,7 +2206,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 31;
+	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 32;
 
 	/**
 	 * The feature id for the '<em><b>Node Text</b></em>' attribute.
@@ -3096,6 +3105,17 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSchemaRecord_Vsam();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#isVsamCalc <em>Vsam Calc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Vsam Calc</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#isVsamCalc()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_VsamCalc();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.SchemaRecord#getVsamType <em>Vsam Type</em>}'.
@@ -5489,6 +5509,14 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SCHEMA_RECORD__VSAM = eINSTANCE.getSchemaRecord_Vsam();
+
+		/**
+		 * The meta object literal for the '<em><b>Vsam Calc</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__VSAM_CALC = eINSTANCE.getSchemaRecord_VsamCalc();
 
 		/**
 		 * The meta object literal for the '<em><b>Vsam Type</b></em>' containment reference feature.

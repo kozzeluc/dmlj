@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -72,20 +72,14 @@ public class SetMemberPropertiesSection
 		List<EAttribute> attributes = new ArrayList<>();
 		attributes.add(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		attributes.add(SchemaPackage.eINSTANCE.getSchemaArea_Name());
-		if (set.getMode() == SetMode.CHAINED) {
-			// chained set
-			attributes.add(SchemaPackage.eINSTANCE
-									    .getMemberRole_NextDbkeyPosition());			
-			attributes.add(SchemaPackage.eINSTANCE
-										.getMemberRole_PriorDbkeyPosition());
-		} else {
-			// indexed set			
-			attributes.add(SchemaPackage.eINSTANCE
-									    .getMemberRole_IndexDbkeyPosition());
+		if (set.isChained()) {
+			attributes.add(SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition());			
+			attributes.add(SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition());
+		} else if (set.isIndexed()) {
+			attributes.add(SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition());
 		}
-		if (set.getSystemOwner() == null) {
-			attributes.add(SchemaPackage.eINSTANCE
-									    .getMemberRole_OwnerDbkeyPosition());
+		if (!set.isVsam() && set.getSystemOwner() == null) {
+			attributes.add(SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition());
 		}
 		attributes.add(SchemaPackage.eINSTANCE.getMemberRole_MembershipOption());		
 		return attributes;
