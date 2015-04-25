@@ -31,11 +31,13 @@ import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
+import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -123,6 +125,12 @@ public class SetDescriptionEditPart
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
 				refreshVisuals();
 			}		
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
+			// the containing area name was possibly renamed
+			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
+			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
+				refreshVisuals();
+			}
 		}
 	}
 	
@@ -147,6 +155,32 @@ public class SetDescriptionEditPart
 			// the listener data, which we will pick up again when processing the after model change 
 			// event
 			context.setListenerData(Boolean.TRUE);			
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
+				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
+				   !context.appliesTo(getModel().getMemberRole().getSet())) {
+			
+			// it is possible that, together with changing an area specification, the area is 
+			// being renamed as well; the record or system owned indexed set whose area 
+			// specification is changed will be refreshed already, but we need to make sure that the 
+			// new area name replaces the old one EVERYWHERE (we might unnecessarily do a refresh,  
+			// but that's better than missing an area rename)
+			SchemaArea modelArea = 
+				getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea();
+			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
+				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				SchemaRecord record = 
+					getModel().getMemberRole().getSet().getSchema().getRecord(recordName);
+				if (record.getAreaSpecification().getArea() == modelArea) {
+					context.setListenerData(Boolean.TRUE);
+				}
+			} else if (context.getContextData().containsKey(IContextDataKeys.SET_NAME)) {
+				String anotherSetName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				Set anotherSet = 
+					getModel().getMemberRole().getSet().getSchema().getSet(anotherSetName);
+				if (anotherSet.getSystemOwner().getAreaSpecification().getArea() == modelArea) {
+					context.setListenerData(Boolean.TRUE);
+				}
+			}
 		}
 	}
 	

@@ -32,8 +32,10 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
@@ -151,14 +153,23 @@ public class RecordEditPart
 				   !context.appliesTo(getModel())) {
 			
 			// it is possible that, together with changing an area specification, the area is 
-			// being renamed as well; the record whose area specification is changed will be
-			// refreshed already, but we need to make sure that the new area name replaces the old
-			// one (we might unnecessarily do a refresh, but that's better than missing an area
-			// rename)
-			String anotherRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
-			SchemaRecord anotherRecord = getModel().getSchema().getRecord(anotherRecordName);
-			if (anotherRecord.getAreaSpecification().getArea() == getModel().getAreaSpecification().getArea()) {
-				context.setListenerData(Boolean.TRUE);
+			// being renamed as well; the record or system owned indexed set whose area 
+			// specification is changed will be refreshed already, but we need to make sure that the 
+			// new area name replaces the old one EVERYWHERE (we might unnecessarily do a refresh,  
+			// but that's better than missing an area rename)
+			SchemaArea modelArea = getModel().getAreaSpecification().getArea();
+			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
+				String anotherRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				SchemaRecord anotherRecord = getModel().getSchema().getRecord(anotherRecordName);
+				if (anotherRecord.getAreaSpecification().getArea() == modelArea) {
+					context.setListenerData(Boolean.TRUE);
+				}
+			} else if (context.getContextData().containsKey(IContextDataKeys.SET_NAME)) {
+				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				Set set = getModel().getSchema().getSet(setName);
+				if (set.getSystemOwner().getAreaSpecification().getArea() == modelArea) {
+					context.setListenerData(Boolean.TRUE);
+				}
 			}
 		}
 	}
