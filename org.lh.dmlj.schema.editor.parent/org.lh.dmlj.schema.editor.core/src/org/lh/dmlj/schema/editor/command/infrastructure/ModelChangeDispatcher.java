@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
@@ -149,7 +151,18 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 				// only call the before model change method if the listener is still registered
 				ModelChangeContext contextCopy = context.copy();
 				contextCopy.setCommandExecutionMode(getCommandExecutionMode(event));
-				listener.beforeModelChange(contextCopy);
+				try {
+					listener.beforeModelChange(contextCopy);
+				} catch (Throwable t) {
+					StringBuilder message = new StringBuilder(); 
+					message.append("Exception thrown while dispatching pre-change event");
+					message.append("\n         Listener: " + listener.getClass().getName());
+					if (listener instanceof EditPart) {
+						EditPart editPart = (EditPart) listener;
+						message.append("\n         Model:    " + editPart.getModel().toString());
+					}
+					Plugin.logError(message.toString(), t);
+				}
 				Object listenerData = contextCopy.getListenerData();
 				if (listenerData != null) {
 					listenerDataMap.put(Integer.valueOf(i), listenerData);
@@ -177,8 +190,19 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 				Object listenerData = listenerDataMap.get(Integer.valueOf(i));
 				if (listenerData != null) {
 					contextCopy.setListenerData(listenerData);
-				}				
-				listener.afterModelChange(contextCopy);
+				}
+				try {
+					listener.afterModelChange(contextCopy);
+				} catch (Throwable t) {
+					StringBuilder message = new StringBuilder(); 
+					message.append("Exception thrown while dispatching post-change event");
+					message.append("\n         Listener: " + listener.getClass().getName());
+					if (listener instanceof EditPart) {
+						EditPart editPart = (EditPart) listener;
+						message.append("\n         Model:    " + editPart.getModel().toString());
+					}
+					Plugin.logError(message.toString(), t);
+				}
 			}
 		}
 		// nullify the things we needed to carry from the pre-change to the post-change event:
