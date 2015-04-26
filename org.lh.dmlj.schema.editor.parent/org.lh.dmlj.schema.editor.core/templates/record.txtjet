@@ -1,6 +1,6 @@
 <%
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -59,9 +59,11 @@ if (record.getBaseName() != null &&
 %>         
          RECORD ID IS <%= record.getId() %>
 <%
-if (record.getLocationMode() == LocationMode.CALC) {
+if (record.isCalc() || record.isVsamCalc()) {    
     StringBuilder keyElements = new StringBuilder();
-    keyElements.append("         LOCATION MODE IS CALC USING ( ");
+    keyElements.append("         LOCATION MODE IS ");
+    keyElements.append(record.getLocationMode().toString().replaceAll("_", " "));
+    keyElements.append(" USING ( ");
     for (KeyElement keyElement : record.getCalcKey().getElements()) {
         String q = keyElement.getElement().getName();
         if (keyElements.length() + q.length() > 72) {
@@ -111,9 +113,20 @@ if (record.getLocationMode() == LocationMode.CALC) {
              DISPLACEMENT <%= pages %> PAGES
 <%             
     }
-} else {
+} else if (record.getLocationMode() == LocationMode.DIRECT) {
 %>
          LOCATION MODE IS DIRECT
+<%
+} else {
+%>
+         LOCATION MODE IS VSAM
+<%
+}
+if (record.isVsam() || record.isVsamCalc()) {
+    String vsamLengthType = record.getVsamType().getLengthType().toString();
+    String spannedOrNot = record.getVsamType().isSpanned() ? "SPANNED" : "NONSPANNED";
+%>
+         VSAM TYPE IS <%= vsamLengthType %> LENGTH <%= spannedOrNot %>
 <%
 }
 if (record.getMinimumRootLength() != null) {

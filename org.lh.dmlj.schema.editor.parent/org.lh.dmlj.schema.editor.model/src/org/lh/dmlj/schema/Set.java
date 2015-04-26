@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,6 +26,8 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.lh.dmlj.schema.Set#isChained <em>Chained</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Set#isIndexed <em>Indexed</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getIndexedSetModeSpecification <em>Indexed Set Mode Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getMembers <em>Members</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getMode <em>Mode</em>}</li>
@@ -37,6 +39,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.Set#isSorted <em>Sorted</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getSystemOwner <em>System Owner</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getViaMembers <em>Via Members</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Set#isVsam <em>Vsam</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.Set#getVsamIndex <em>Vsam Index</em>}</li>
  * </ul>
  * </p>
  *
@@ -45,6 +49,38 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface Set extends INodeTextProvider<Set> {
+	/**
+	 * Returns the value of the '<em><b>Chained</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Chained</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Chained</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSet_Chained()
+	 * @model default="false" transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isChained();
+
+	/**
+	 * Returns the value of the '<em><b>Indexed</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Indexed</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Indexed</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSet_Indexed()
+	 * @model default="false" transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isIndexed();
+
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -278,6 +314,50 @@ public interface Set extends INodeTextProvider<Set> {
 	 * @generated
 	 */
 	EList<ViaSpecification> getViaMembers();
+
+	/**
+	 * Returns the value of the '<em><b>Vsam</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vsam</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Vsam</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSet_Vsam()
+	 * @model default="false" transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isVsam();
+
+	/**
+	 * Returns the value of the '<em><b>Vsam Index</b></em>' containment reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.VsamIndex#getSet <em>Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vsam Index</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Vsam Index</em>' containment reference.
+	 * @see #setVsamIndex(VsamIndex)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSet_VsamIndex()
+	 * @see org.lh.dmlj.schema.VsamIndex#getSet
+	 * @model opposite="set" containment="true"
+	 * @generated
+	 */
+	VsamIndex getVsamIndex();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.Set#getVsamIndex <em>Vsam Index</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Vsam Index</em>' containment reference.
+	 * @see #getVsamIndex()
+	 * @generated
+	 */
+	void setVsamIndex(VsamIndex value);
 
 	/**
 	 * Returns the value of the '<em><b>Indexed Set Mode Specification</b></em>' containment reference.

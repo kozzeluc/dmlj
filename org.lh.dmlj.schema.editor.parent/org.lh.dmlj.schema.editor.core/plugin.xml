@@ -261,6 +261,12 @@
          <propertyTab
                afterTab="org.lh.dmlj.schema.editor.propertyTabLength"
                category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabVsamCalc"
+               label="VSAM CALC">
+         </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabLength"
+               category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabVia"
                label="VIA">
          </propertyTab>
@@ -401,10 +407,16 @@
                tab="org.lh.dmlj.schema.editor.propertyTabProcedures">
          </propertySection>
          <propertySection
-               class="org.lh.dmlj.schema.editor.property.section.RecordCalcPropertiesSection"
+               class="org.lh.dmlj.schema.editor.property.section.RecordCalcOrVsamCalcPropertiesSection"
                filter="org.lh.dmlj.schema.editor.property.filter.CalcRecordFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordCalc"
                tab="org.lh.dmlj.schema.editor.propertyTabCalc">
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.section.RecordCalcOrVsamCalcPropertiesSection"
+               filter="org.lh.dmlj.schema.editor.property.filter.VsamCalcRecordFilter"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordVsamCalc"
+               tab="org.lh.dmlj.schema.editor.propertyTabVsamCalc">
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.RecordViaPropertiesSection"
@@ -422,11 +434,9 @@
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.RecordPrefixPropertiesSection"
+               filter="org.lh.dmlj.schema.editor.property.filter.NonVsamRecordFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordPrefix"
                tab="org.lh.dmlj.schema.editor.propertyTabPrefix">
-            <input
-                  type="org.lh.dmlj.schema.SchemaRecord">
-            </input>
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.RecordInfoSection"
@@ -444,11 +454,9 @@
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.SetOwnerPropertiesSection"
+               filter="org.lh.dmlj.schema.editor.property.filter.NonVsamSetFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetOwner"
                tab="org.lh.dmlj.schema.editor.propertyTabOwnerSet">
-            <input
-                  type="org.lh.dmlj.schema.MemberRole">
-            </input>
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.SetMemberPropertiesSection"

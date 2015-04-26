@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,6 +25,7 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
@@ -45,6 +46,8 @@ public class SchemaTreeEditPartFactory implements EditPartFactory {
 			return new SetTreeEditPart((Set) model, modelChangeProvider);
 		} else if (model instanceof SystemOwner) {
 			return new IndexTreeEditPart((SystemOwner) model, modelChangeProvider);
+		} else if (model instanceof VsamIndex) {
+			return new VsamIndexTreeEditPart((VsamIndex) model, modelChangeProvider);
 		}
 		throw new IllegalArgumentException("Unexpected model type: " + model.getClass().getName());
 	}

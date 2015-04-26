@@ -23,11 +23,10 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.VsamIndex;
 
-public class SortedSetFilter implements IFilter {
+public class NonVsamSetFilter implements IFilter {
 
 	@Override
 	public boolean select(Object object) {
@@ -49,14 +48,13 @@ public class SortedSetFilter implements IFilter {
         		((Connector)modelObject).getConnectionPart().getMemberRole();
         	set = memberRole.getSet();
         } else if (modelObject instanceof SystemOwner) {
-        	SystemOwner systemOwner = (SystemOwner) modelObject;
-        	set = systemOwner.getSet();
-        } else if (modelObject instanceof VsamIndex) {
         	return true;
+        } else if (modelObject instanceof VsamIndex) {
+        	return false;
         } else {
         	return false;
         }
-        return set.getOrder() == SetOrder.SORTED;
+        return !set.isVsam();
 	}
 
 }

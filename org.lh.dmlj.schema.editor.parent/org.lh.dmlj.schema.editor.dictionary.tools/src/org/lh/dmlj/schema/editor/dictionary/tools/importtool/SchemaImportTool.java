@@ -180,6 +180,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 				srcd_113.setSrId_113(row.getShort(Srcd_113.SR_ID_113));
 				srcd_113.setSubarea_113(row.getString(Srcd_113.SUBAREA_113));
 				srcd_113.setSymbolDisplace_113(row.getString(Srcd_113.SYMBOL_DISPLACE_113));
+				srcd_113.setVsamType_113(row.getString(Srcd_113.VSAM_TYPE_113));
 				srcd_113.setRcdsyn_079(rcdsyn_079);
 				srcd_113.setSam_056(sam_056);
 				srcd_113s.put(Long.valueOf(srcd_113.getDbkey()), srcd_113);

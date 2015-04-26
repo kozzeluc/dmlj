@@ -28,6 +28,7 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.VsamLengthType;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
@@ -127,6 +128,8 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 			return DuplicatesOption.FIRST;
 		} else if (smr_052.getDup_052() == 2) {
 			return DuplicatesOption.LAST;
+		} else if (smr_052.getDup_052() == 3) {
+			return DuplicatesOption.UNORDERED;
 		} else if (smr_052.getDup_052() == 4) {
 			return DuplicatesOption.BY_DBKEY;
 		} else {
@@ -151,6 +154,10 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 			return LocationMode.VIA;
 		} else if (srcd_113.getMode_113() == 1) {
 			return LocationMode.CALC;
+		} else if (srcd_113.getMode_113() == 3) {
+			return LocationMode.VSAM;
+		} else if (srcd_113.getMode_113() == 4) {
+			return LocationMode.VSAM_CALC;
 		} else {
 			return LocationMode.DIRECT;
 		}
@@ -305,6 +312,23 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public VsamLengthType getVsamLengthType(Srcd_113 srcd_113) {
+		if (srcd_113.getRecType_113().equals("F")) {
+			return VsamLengthType.FIXED;
+		} else if (srcd_113.getRecType_113().equals("V")) {
+			return VsamLengthType.VARIABLE;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public boolean isVsamSpanned(Srcd_113 srcd_113) {
+		String vsamType = srcd_113.getVsamType_113();
+		return vsamType.equals("D"); // "A" denotes NONSPANNED
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -47,6 +47,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.ViaSpecification;
+import org.lh.dmlj.schema.VsamType;
 
 /**
  * <!-- begin-user-doc -->
@@ -84,6 +85,9 @@ import org.lh.dmlj.schema.ViaSpecification;
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getSynonymVersion <em>Synonym Version</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isVia <em>Via</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getViaSpecification <em>Via Specification</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isVsam <em>Vsam</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isVsamCalc <em>Vsam Calc</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getVsamType <em>Vsam Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -423,6 +427,33 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * @ordered
 	 */
 	protected ViaSpecification viaSpecification;
+	/**
+	 * The default value of the '{@link #isVsam() <em>Vsam</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVsam()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean VSAM_EDEFAULT = false;
+	/**
+	 * The default value of the '{@link #isVsamCalc() <em>Vsam Calc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isVsamCalc()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean VSAM_CALC_EDEFAULT = false;
+	/**
+	 * The cached value of the '{@link #getVsamType() <em>Vsam Type</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVsamType()
+	 * @generated
+	 * @ordered
+	 */
+	protected VsamType vsamType;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -925,6 +956,67 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isVsam() {
+		return getLocationMode() == LocationMode.VSAM;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isVsamCalc() {
+		return getLocationMode() == LocationMode.VSAM_CALC;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VsamType getVsamType() {
+		return vsamType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetVsamType(VsamType newVsamType, NotificationChain msgs) {
+		VsamType oldVsamType = vsamType;
+		vsamType = newVsamType;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, SchemaPackage.SCHEMA_RECORD__VSAM_TYPE, oldVsamType, newVsamType);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setVsamType(VsamType newVsamType) {
+		if (newVsamType != vsamType) {
+			NotificationChain msgs = null;
+			if (vsamType != null)
+				msgs = ((InternalEObject)vsamType).eInverseRemove(this, SchemaPackage.VSAM_TYPE__RECORD, VsamType.class, msgs);
+			if (newVsamType != null)
+				msgs = ((InternalEObject)newVsamType).eInverseAdd(this, SchemaPackage.VSAM_TYPE__RECORD, VsamType.class, msgs);
+			msgs = basicSetVsamType(newVsamType, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.SCHEMA_RECORD__VSAM_TYPE, newVsamType, newVsamType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EList<OwnerRole> getOwnerRoles() {
@@ -1138,6 +1230,10 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				if (viaSpecification != null)
 					msgs = ((InternalEObject)viaSpecification).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION, null, msgs);
 				return basicSetViaSpecification((ViaSpecification)otherEnd, msgs);
+			case SchemaPackage.SCHEMA_RECORD__VSAM_TYPE:
+				if (vsamType != null)
+					msgs = ((InternalEObject)vsamType).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - SchemaPackage.SCHEMA_RECORD__VSAM_TYPE, null, msgs);
+				return basicSetVsamType((VsamType)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -1166,6 +1262,8 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return basicSetSchema(null, msgs);
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				return basicSetViaSpecification(null, msgs);
+			case SchemaPackage.SCHEMA_RECORD__VSAM_TYPE:
+				return basicSetVsamType(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -1252,6 +1350,12 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return isVia();
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				return getViaSpecification();
+			case SchemaPackage.SCHEMA_RECORD__VSAM:
+				return isVsam();
+			case SchemaPackage.SCHEMA_RECORD__VSAM_CALC:
+				return isVsamCalc();
+			case SchemaPackage.SCHEMA_RECORD__VSAM_TYPE:
+				return getVsamType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -1331,6 +1435,9 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				setViaSpecification((ViaSpecification)newValue);
 				return;
+			case SchemaPackage.SCHEMA_RECORD__VSAM_TYPE:
+				setVsamType((VsamType)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -1403,6 +1510,9 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				setViaSpecification((ViaSpecification)null);
 				return;
+			case SchemaPackage.SCHEMA_RECORD__VSAM_TYPE:
+				setVsamType((VsamType)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1473,6 +1583,12 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 				return isVia() != VIA_EDEFAULT;
 			case SchemaPackage.SCHEMA_RECORD__VIA_SPECIFICATION:
 				return viaSpecification != null;
+			case SchemaPackage.SCHEMA_RECORD__VSAM:
+				return isVsam() != VSAM_EDEFAULT;
+			case SchemaPackage.SCHEMA_RECORD__VSAM_CALC:
+				return isVsamCalc() != VSAM_CALC_EDEFAULT;
+			case SchemaPackage.SCHEMA_RECORD__VSAM_TYPE:
+				return vsamType != null;
 		}
 		return super.eIsSet(featureID);
 	}

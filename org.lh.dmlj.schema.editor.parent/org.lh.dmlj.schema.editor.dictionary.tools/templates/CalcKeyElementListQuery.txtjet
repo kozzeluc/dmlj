@@ -1,6 +1,6 @@
 <%
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -37,7 +37,7 @@ FROM "<%= sysdirlSchema %>"."S-010" AS S_010,
 	 "<%= sysdirlSchema %>"."SMR-052" AS SMR_052,
 	 "<%= sysdirlSchema %>"."SCR-054" AS SCR_054
 WHERE S_010.S_NAM_010 = '<%= schemaName %>' AND S_010.S_SER_010 = <%= schemaVersion %> AND
-      "S-SRCD" AND SRCD_113.SR_ID_113 > 9 AND SRCD_113.MODE_113 = 1 AND
+      "S-SRCD" AND SRCD_113.SR_ID_113 > 9 AND (SRCD_113.MODE_113 = 1 OR SRCD_113.MODE_113 = 4) AND
       FIRST "SRCD-SAM" AND
       "SRCD-SMR" AND SMR_052.SET_NAM_052 = 'CALC' AND
       "SMR-SCR"

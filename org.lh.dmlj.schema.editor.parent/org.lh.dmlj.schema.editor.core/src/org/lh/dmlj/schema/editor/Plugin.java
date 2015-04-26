@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -67,6 +67,8 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		new Font(Display.getCurrent(), "Arial", 6, SWT.BOLD);
 	private Font 					figureFontItalic = 
 		new Font(Display.getCurrent(), "Arial", 6, SWT.ITALIC);
+	private Font 					figureFontSmall = 
+		new Font(Display.getCurrent(), "Arial", 5, SWT.NORMAL);
 	private Map<String, Image> 	 	images = new HashMap<String, Image>();
 	private boolean 				logDebugMessages;
 	private File 					tmpFolder;
@@ -205,6 +207,10 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		return figureFontItalic;
 	}
 	
+	public Font getFigureFontSmall() {
+		return figureFontSmall;
+	}
+	
 	public Image getImage(String path) {
 		if (images.containsKey(path)) {
 			return images.get(path);
@@ -300,6 +306,7 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		figureFont.dispose();
 		figureFontBold.dispose();
 		figureFontItalic.dispose();
+		figureFontSmall.dispose();
 		
 		plugin = null;
 		super.stop(context);

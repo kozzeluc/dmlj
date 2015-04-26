@@ -34,39 +34,42 @@ public class RecordTemplate
   protected final String TEXT_17 = NL + "             DISPLACEMENT ";
   protected final String TEXT_18 = " PAGES";
   protected final String TEXT_19 = NL + "         LOCATION MODE IS DIRECT";
-  protected final String TEXT_20 = NL + "         MINIMUM ROOT LENGTH IS ";
-  protected final String TEXT_21 = " CHARACTERS         ";
-  protected final String TEXT_22 = NL + "         MINIMUM FRAGMENT LENGTH IS ";
-  protected final String TEXT_23 = " CHARACTERS         ";
-  protected final String TEXT_24 = NL + "         CALL ";
-  protected final String TEXT_25 = " ";
-  protected final String TEXT_26 = " ";
-  protected final String TEXT_27 = NL + "         WITHIN AREA ";
-  protected final String TEXT_28 = " SUBAREA ";
-  protected final String TEXT_29 = NL + "         WITHIN AREA ";
-  protected final String TEXT_30 = " OFFSET ";
-  protected final String TEXT_31 = " FOR ";
-  protected final String TEXT_32 = " ";
-  protected final String TEXT_33 = NL + "         WITHIN AREA ";
-  protected final String TEXT_34 = "         " + NL + "*+       OWNER OF SET ";
-  protected final String TEXT_35 = NL + "*+           NEXT DBKEY POSITION IS ";
-  protected final String TEXT_36 = NL + "*+           PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_37 = NL + "*+       MEMBER OF SET ";
+  protected final String TEXT_20 = NL + "         LOCATION MODE IS VSAM";
+  protected final String TEXT_21 = NL + "         VSAM TYPE IS ";
+  protected final String TEXT_22 = " LENGTH ";
+  protected final String TEXT_23 = NL + "         MINIMUM ROOT LENGTH IS ";
+  protected final String TEXT_24 = " CHARACTERS         ";
+  protected final String TEXT_25 = NL + "         MINIMUM FRAGMENT LENGTH IS ";
+  protected final String TEXT_26 = " CHARACTERS         ";
+  protected final String TEXT_27 = NL + "         CALL ";
+  protected final String TEXT_28 = " ";
+  protected final String TEXT_29 = " ";
+  protected final String TEXT_30 = NL + "         WITHIN AREA ";
+  protected final String TEXT_31 = " SUBAREA ";
+  protected final String TEXT_32 = NL + "         WITHIN AREA ";
+  protected final String TEXT_33 = " OFFSET ";
+  protected final String TEXT_34 = " FOR ";
+  protected final String TEXT_35 = " ";
+  protected final String TEXT_36 = NL + "         WITHIN AREA ";
+  protected final String TEXT_37 = "         " + NL + "*+       OWNER OF SET ";
   protected final String TEXT_38 = NL + "*+           NEXT DBKEY POSITION IS ";
   protected final String TEXT_39 = NL + "*+           PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_40 = NL + "*+           INDEX DBKEY POSITION IS ";
-  protected final String TEXT_41 = NL + "*+           INDEX DBKEY POSITION IS OMITTED";
-  protected final String TEXT_42 = NL + "*+           OWNER DBKEY POSITION IS ";
-  protected final String TEXT_43 = NL + "         .";
-  protected final String TEXT_44 = NL;
-  protected final String TEXT_45 = "         ";
+  protected final String TEXT_40 = NL + "*+       MEMBER OF SET ";
+  protected final String TEXT_41 = NL + "*+           NEXT DBKEY POSITION IS ";
+  protected final String TEXT_42 = NL + "*+           PRIOR DBKEY POSITION IS ";
+  protected final String TEXT_43 = NL + "*+           INDEX DBKEY POSITION IS ";
+  protected final String TEXT_44 = NL + "*+           INDEX DBKEY POSITION IS OMITTED";
+  protected final String TEXT_45 = NL + "*+           OWNER DBKEY POSITION IS ";
+  protected final String TEXT_46 = NL + "         .";
+  protected final String TEXT_47 = NL;
+  protected final String TEXT_48 = "         ";
 
   public String generate(Object argument)
   {
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -131,9 +134,11 @@ if (record.getBaseName() != null &&
     stringBuffer.append(TEXT_6);
     stringBuffer.append( record.getId() );
     
-if (record.getLocationMode() == LocationMode.CALC) {
+if (record.isCalc() || record.isVsamCalc()) {    
     StringBuilder keyElements = new StringBuilder();
-    keyElements.append("         LOCATION MODE IS CALC USING ( ");
+    keyElements.append("         LOCATION MODE IS ");
+    keyElements.append(record.getLocationMode().toString().replaceAll("_", " "));
+    keyElements.append(" USING ( ");
     for (KeyElement keyElement : record.getCalcKey().getElements()) {
         String q = keyElement.getElement().getName();
         if (keyElements.length() + q.length() > 72) {
@@ -194,32 +199,46 @@ if (record.getLocationMode() == LocationMode.CALC) {
     stringBuffer.append(TEXT_18);
                  
     }
-} else {
+} else if (record.getLocationMode() == LocationMode.DIRECT) {
 
     stringBuffer.append(TEXT_19);
+    
+} else {
+
+    stringBuffer.append(TEXT_20);
+    
+}
+if (record.isVsam() || record.isVsamCalc()) {
+    String vsamLengthType = record.getVsamType().getLengthType().toString();
+    String spannedOrNot = record.getVsamType().isSpanned() ? "SPANNED" : "NONSPANNED";
+
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append( vsamLengthType );
+    stringBuffer.append(TEXT_22);
+    stringBuffer.append( spannedOrNot );
     
 }
 if (record.getMinimumRootLength() != null) {
 
-    stringBuffer.append(TEXT_20);
+    stringBuffer.append(TEXT_23);
     stringBuffer.append( record.getMinimumRootLength() );
-    stringBuffer.append(TEXT_21);
+    stringBuffer.append(TEXT_24);
     
 }
 if (record.getMinimumFragmentLength() != null) {
 
-    stringBuffer.append(TEXT_22);
+    stringBuffer.append(TEXT_25);
     stringBuffer.append( record.getMinimumFragmentLength() );
-    stringBuffer.append(TEXT_23);
+    stringBuffer.append(TEXT_26);
     
 }
 for (RecordProcedureCallSpecification procedureCall : record.getProcedures()) {
 
-    stringBuffer.append(TEXT_24);
+    stringBuffer.append(TEXT_27);
     stringBuffer.append( procedureCall.getProcedure().getName() );
-    stringBuffer.append(TEXT_25);
+    stringBuffer.append(TEXT_28);
     stringBuffer.append( procedureCall.getCallTime().toString() );
-    stringBuffer.append(TEXT_26);
+    stringBuffer.append(TEXT_29);
     stringBuffer.append( procedureCall.getVerb().toString() );
     	
 }
@@ -230,9 +249,9 @@ OffsetExpression offsetExpression =
     record.getAreaSpecification().getOffsetExpression();
 if (symbolicSubareaName != null) {
 
-    stringBuffer.append(TEXT_27);
+    stringBuffer.append(TEXT_30);
     stringBuffer.append( areaName );
-    stringBuffer.append(TEXT_28);
+    stringBuffer.append(TEXT_31);
     stringBuffer.append( symbolicSubareaName );
     
 } else if (offsetExpression != null) { 
@@ -253,17 +272,17 @@ if (symbolicSubareaName != null) {
         q = "100 PERCENT";
     }
 
-    stringBuffer.append(TEXT_29);
-    stringBuffer.append( areaName );
-    stringBuffer.append(TEXT_30);
-    stringBuffer.append( p );
-    stringBuffer.append(TEXT_31);
-    stringBuffer.append( q );
     stringBuffer.append(TEXT_32);
+    stringBuffer.append( areaName );
+    stringBuffer.append(TEXT_33);
+    stringBuffer.append( p );
+    stringBuffer.append(TEXT_34);
+    stringBuffer.append( q );
+    stringBuffer.append(TEXT_35);
     
 } else {
 
-    stringBuffer.append(TEXT_33);
+    stringBuffer.append(TEXT_36);
     stringBuffer.append( areaName );
     
 }
@@ -284,14 +303,14 @@ for (OwnerRole role : ownerRoles) {
         setName = role.getSet().getName();
     }
 
-    stringBuffer.append(TEXT_34);
+    stringBuffer.append(TEXT_37);
     stringBuffer.append( setName );
-    stringBuffer.append(TEXT_35);
+    stringBuffer.append(TEXT_38);
     stringBuffer.append( role.getNextDbkeyPosition() );
     
     if (role.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_36);
+    stringBuffer.append(TEXT_39);
     stringBuffer.append( role.getPriorDbkeyPosition() );
     
     }
@@ -324,48 +343,48 @@ for (MemberRole role : memberRoles) {
         setName = role.getSet().getName();
     }
 
-    stringBuffer.append(TEXT_37);
+    stringBuffer.append(TEXT_40);
     stringBuffer.append( setName );
     
     if (role.getNextDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_38);
+    stringBuffer.append(TEXT_41);
     stringBuffer.append( role.getNextDbkeyPosition() );
     
     }
     if (role.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_39);
+    stringBuffer.append(TEXT_42);
     stringBuffer.append( role.getPriorDbkeyPosition() );
     
     }
     if (role.getIndexDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_40);
+    stringBuffer.append(TEXT_43);
     stringBuffer.append( role.getIndexDbkeyPosition() );
     
     } else if (role.getSet().getSystemOwner() != null) {
 
-    stringBuffer.append(TEXT_41);
+    stringBuffer.append(TEXT_44);
     
     }
     if (role.getOwnerDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_42);
+    stringBuffer.append(TEXT_45);
     stringBuffer.append( role.getOwnerDbkeyPosition() );
     
     }
 }
 
-    stringBuffer.append(TEXT_43);
+    stringBuffer.append(TEXT_46);
     
 ElementTemplate elementTemplate = new ElementTemplate();
 for (Element element : record.getElements()) {
     String syntax = elementTemplate.generate(element);
 
-    stringBuffer.append(TEXT_44);
+    stringBuffer.append(TEXT_47);
     stringBuffer.append( syntax );
-    stringBuffer.append(TEXT_45);
+    stringBuffer.append(TEXT_48);
         
 }
 

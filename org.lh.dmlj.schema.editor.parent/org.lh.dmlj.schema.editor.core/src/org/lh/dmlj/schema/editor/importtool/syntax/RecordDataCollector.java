@@ -26,6 +26,7 @@ import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
+import org.lh.dmlj.schema.VsamLengthType;
 import org.lh.dmlj.schema.editor.importtool.IRecordDataCollector;
 
 public class RecordDataCollector 
@@ -97,6 +98,8 @@ public class RecordDataCollector
 					return DuplicatesOption.LAST;
 				} else if (line.substring(28).startsWith("NOT ALLOWED")) {
 					return DuplicatesOption.NOT_ALLOWED;
+				} else if (line.substring(28).startsWith("UNORDERED")) {
+					return DuplicatesOption.UNORDERED;
 				}
 			}
 		}
@@ -107,24 +110,26 @@ public class RecordDataCollector
 	public Collection<String> getCalcKeyElementNames(SchemaSyntaxWrapper context) {
 		List<String> list = new ArrayList<>();		
 		int i = 0;
-		while (!context.getLines()
-					   .get(i)
-					   .startsWith("         LOCATION MODE IS CALC USING ( ")) {
+		while (!context.getLines().get(i).startsWith("         LOCATION MODE IS CALC USING ( ") &&
+			   !context.getLines().get(i).startsWith("         LOCATION MODE IS VSAM CALC USING ( ")) {			
 			
 			i += 1;
 		}
+		boolean vsam = context.getLines().get(i).indexOf("VSAM CALC") > -1;
 		while (i < context.getLines().size()) {
 			if (context.getLines().get(i).trim().equals(")")) {
 				// we've processed all elements; no relevant data on this line
 				break;
 			}
 			int j;
-			if (context.getLines()
-					   .get(i)
-					   .startsWith("         LOCATION MODE IS CALC USING ( ")) {
+			if (context.getLines().get(i).startsWith("         LOCATION MODE IS CALC USING ( ") ||
+				context.getLines().get(i).startsWith("         LOCATION MODE IS VSAM CALC USING ( ")) {
 				
 				// first line
 				j = 39;
+				if (vsam) {
+					j += 5;
+				}
 			} else {
 				j = 15;
 			}
@@ -156,6 +161,10 @@ public class RecordDataCollector
 					return LocationMode.VIA;
 				} else if (line.substring(26).startsWith("DIRECT")) {
 					return LocationMode.DIRECT;
+				} else if (line.substring(26).startsWith("VSAM CALC")) {
+					return LocationMode.VSAM_CALC;
+				} else if (line.substring(26).startsWith("VSAM")) {
+					return LocationMode.VSAM;
 				}
 			}
 		}
@@ -437,6 +446,30 @@ public class RecordDataCollector
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public VsamLengthType getVsamLengthType(SchemaSyntaxWrapper context) {
+		for (String line : context.getLines()) {
+			if (line.startsWith("         VSAM TYPE IS ")) {				
+				if (line.substring(22).toUpperCase().startsWith("FIXED LENGTH")) {
+					return VsamLengthType.FIXED;
+				} else if (line.substring(22).toUpperCase().startsWith("VARIABLE LENGTH")) {
+					return VsamLengthType.VARIABLE;
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean isVsamSpanned(SchemaSyntaxWrapper context) {
+		for (String line : context.getLines()) {
+			if (line.startsWith("         VSAM TYPE IS ")) {				
+				return line.trim().toUpperCase().endsWith(" SPANNED");
+			}
+		}
+		return false;
 	}	
 	
 }

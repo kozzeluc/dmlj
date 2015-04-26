@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,6 +36,7 @@ public class Srcd_113 {
 	public static final String SR_ID_113 = "SR_ID_113";
 	public static final String SUBAREA_113 = "SUBAREA_113";
 	public static final String SYMBOL_DISPLACE_113 = "SYMBOL_DISPLACE_113";
+	public static final String VSAM_TYPE_113 = "VSAM_TYPE_113";
 	
 	private long dbkey;
 	private Rcdsyn_079 rcdsyn_079;
@@ -54,6 +55,7 @@ public class Srcd_113 {
 	private short srId_113;
 	private String subarea_113;
 	private String symbolDisplace_113;
+	private String vsamType_113;
 	
 	public Srcd_113() {
 		super();
@@ -122,6 +124,10 @@ public class Srcd_113 {
 	public String getSymbolDisplace_113() {
 		return symbolDisplace_113;
 	}
+	
+	public String getVsamType_113() {
+		return vsamType_113;
+	}
 
 	public void setDbkey(long dbkey) {
 		this.dbkey = dbkey;
@@ -181,6 +187,10 @@ public class Srcd_113 {
 
 	public void setSymbolDisplace_113(String symbolDisplace_113) {
 		this.symbolDisplace_113 = JdbcTools.removeTrailingSpaces(symbolDisplace_113);
+	}
+	
+	public void setVsamType_113(String vsamType_113) {
+		this.vsamType_113 = JdbcTools.removeTrailingSpaces(vsamType_113);
 	}
 
 }

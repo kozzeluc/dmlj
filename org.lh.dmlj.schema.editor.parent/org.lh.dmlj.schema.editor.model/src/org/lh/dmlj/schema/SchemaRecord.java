@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -54,6 +54,9 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getSynonymVersion <em>Synonym Version</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isVia <em>Via</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getViaSpecification <em>Via Specification</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isVsam <em>Vsam</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isVsamCalc <em>Vsam Calc</em>}</li>
+ *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getVsamType <em>Vsam Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -518,6 +521,66 @@ public interface SchemaRecord extends DiagramNode, INodeTextProvider<SchemaRecor
 	 * @generated
 	 */
 	void setViaSpecification(ViaSpecification value);
+
+	/**
+	 * Returns the value of the '<em><b>Vsam</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vsam</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Vsam</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_Vsam()
+	 * @model default="false" transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isVsam();
+
+	/**
+	 * Returns the value of the '<em><b>Vsam Calc</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vsam Calc</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Vsam Calc</em>' attribute.
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_VsamCalc()
+	 * @model default="false" transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	boolean isVsamCalc();
+
+	/**
+	 * Returns the value of the '<em><b>Vsam Type</b></em>' containment reference.
+	 * It is bidirectional and its opposite is '{@link org.lh.dmlj.schema.VsamType#getRecord <em>Record</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Vsam Type</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Vsam Type</em>' containment reference.
+	 * @see #setVsamType(VsamType)
+	 * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord_VsamType()
+	 * @see org.lh.dmlj.schema.VsamType#getRecord
+	 * @model opposite="record" containment="true"
+	 * @generated
+	 */
+	VsamType getVsamType();
+
+	/**
+	 * Sets the value of the '{@link org.lh.dmlj.schema.SchemaRecord#getVsamType <em>Vsam Type</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Vsam Type</em>' containment reference.
+	 * @see #getVsamType()
+	 * @generated
+	 */
+	void setVsamType(VsamType value);
 
 	/**
 	 * Returns the value of the '<em><b>Owner Roles</b></em>' reference list.
