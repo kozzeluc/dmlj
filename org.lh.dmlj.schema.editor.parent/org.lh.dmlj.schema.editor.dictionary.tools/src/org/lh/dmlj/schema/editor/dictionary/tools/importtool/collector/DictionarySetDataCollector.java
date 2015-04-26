@@ -258,6 +258,8 @@ public class DictionarySetDataCollector implements ISetDataCollector<Sor_046> {
 			return SetMode.CHAINED;
 		} else if (mode == 21) {
 			return SetMode.INDEXED;
+		} else if (mode == 32) {
+			return SetMode.VSAM_INDEX;
 		} else {
 			return null;
 		}

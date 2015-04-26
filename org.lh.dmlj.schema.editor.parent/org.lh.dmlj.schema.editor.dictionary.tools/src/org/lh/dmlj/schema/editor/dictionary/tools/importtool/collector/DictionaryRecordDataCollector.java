@@ -154,6 +154,10 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 			return LocationMode.VIA;
 		} else if (srcd_113.getMode_113() == 1) {
 			return LocationMode.CALC;
+		} else if (srcd_113.getMode_113() == 3) {
+			return LocationMode.VSAM;
+		} else if (srcd_113.getMode_113() == 4) {
+			return LocationMode.VSAM_CALC;
 		} else {
 			return LocationMode.DIRECT;
 		}
@@ -312,14 +316,19 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 
 	@Override
 	public VsamLengthType getVsamLengthType(Srcd_113 srcd_113) {
-		// TODO Auto-generated method stub
-		return null;
+		if (srcd_113.getRecType_113().equals("F")) {
+			return VsamLengthType.FIXED;
+		} else if (srcd_113.getRecType_113().equals("V")) {
+			return VsamLengthType.VARIABLE;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public boolean isVsamSpanned(Srcd_113 srcd_113) {
-		// TODO Auto-generated method stub
-		return false;
+		String vsamType = srcd_113.getVsamType_113();
+		return vsamType.equals("D"); // "A" denotes NONSPANNED
 	}
 
 }

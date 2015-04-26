@@ -21,14 +21,14 @@ public class CalcKeyElementListQueryTemplate implements IQueryTemplate {
   protected final String TEXT_5 = "\".\"SMR-052\" AS SMR_052," + NL + "\t \"";
   protected final String TEXT_6 = "\".\"SCR-054\" AS SCR_054" + NL + "WHERE S_010.S_NAM_010 = '";
   protected final String TEXT_7 = "' AND S_010.S_SER_010 = ";
-  protected final String TEXT_8 = " AND" + NL + "      \"S-SRCD\" AND SRCD_113.SR_ID_113 > 9 AND SRCD_113.MODE_113 = 1 AND" + NL + "      FIRST \"SRCD-SAM\" AND" + NL + "      \"SRCD-SMR\" AND SMR_052.SET_NAM_052 = 'CALC' AND" + NL + "      \"SMR-SCR\"";
+  protected final String TEXT_8 = " AND" + NL + "      \"S-SRCD\" AND SRCD_113.SR_ID_113 > 9 AND (SRCD_113.MODE_113 = 1 OR SRCD_113.MODE_113 = 4) AND" + NL + "      FIRST \"SRCD-SAM\" AND" + NL + "      \"SRCD-SMR\" AND SMR_052.SET_NAM_052 = 'CALC' AND" + NL + "      \"SMR-SCR\"";
 
 	public String generate(Object argument)
   {
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the

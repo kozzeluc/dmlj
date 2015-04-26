@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -728,7 +728,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 								outputFileSelectionPage.getOutputFile()
 													   .getAbsolutePath() +
 								" after a failed CA IDMS/DB schema import";
-							System.out.println(message);
+							Plugin.logWarning(message);
 						}
 					}
 					
@@ -750,16 +750,23 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		try {
 			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			Throwable cause = e.getCause();
+			StringBuilder message = new StringBuilder();
 			if (cause != null) {
 				// file niet in een project (folder) of project niet open
-				MessageDialog.openError(workbenchWindow.getShell(), 
-										"File Creation", cause.getMessage());
+				if (cause.getMessage() != null) {
+					message.append(cause.getMessage());
+				}
+			} else if (e.getMessage() != null) {
+				message.append(e.getMessage());
+			}			
+			if (message.length() == 0) {
+				message.append("Unknown error while importing schema");
 			} else {
-				MessageDialog.openError(workbenchWindow.getShell(), 
-										"File Creation", e.getMessage());
+				message.insert(0, "Error while importing schema: ");
 			}
+			Plugin.logError(message.toString(), e);
+			MessageDialog.openError(workbenchWindow.getShell(), "File Creation", message.toString());
 			return false;
 		}		
 		
@@ -772,7 +779,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 							   .findMember(modelFile.getFullPath());
 			resource.refreshLocal(IResource.DEPTH_ZERO, null);
 		} catch (Throwable e) {
-			e.printStackTrace(); // just log whatever problem we encounter
+			Plugin.logError("Error while refreshing workspace", e);
 		}
 		
 		// Select the new file resource in the current view.
@@ -792,6 +799,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 											 				    .toString())
 											 				    .getId());	
 		} catch (PartInitException exception) {
+			Plugin.logError("Error while opening imported schema", exception);			
 			MessageDialog.openError(workbenchWindow.getShell(), "Open Editor", 
 									exception.getMessage());
 			return false;
