@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -40,8 +40,8 @@ public class RecordXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {		
 		
-		// make sure the index tool is used
-		if (request.getNewObjectType() != SystemOwner.class) {			
+		// make sure the index tool is used and that the record is NOT of type VSAM
+		if (request.getNewObjectType() != SystemOwner.class || record.isVsam() || record.isVsamCalc()) {			
 			return null;
 		}		
 		
