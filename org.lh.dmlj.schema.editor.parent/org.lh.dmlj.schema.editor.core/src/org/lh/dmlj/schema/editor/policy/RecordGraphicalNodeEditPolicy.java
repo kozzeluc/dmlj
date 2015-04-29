@@ -94,8 +94,9 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 			// adding a member record type to an existing set 
 			AddMemberToSetCommand command = (AddMemberToSetCommand)request.getStartCommand();
 			Set set = command.getSet();
-			if (set.getOwner().getRecord() == record) {
-				// the record already participates in the given set as the owner record type
+			if (set.getOwner().getRecord() == record || record.isVsam() || record.isVsamCalc()) {
+				// the record already participates in the given set as the owner record type or is
+				// of type VSAM
 				return null;
 			}
 			for (MemberRole memberRole : set.getMembers()) {
