@@ -1188,5 +1188,35 @@ public class CreateConnectorCommandTest {
 		command.undo();
 		command.redo();
 	}
+	
+	@Test
+	public void testVsamIndexLine() {
+		Schema schema = TestTools.getSchema("testdata/VSAMTEST version 1.schema");
+		ObjectGraph objectGraph1 = TestTools.asObjectGraph(schema);
+		Set set = schema.getSet("KSDSPAD");
+		Point location = new Point(114, 201);
+		Command command = new CreateConnectorCommand(set.getVsamIndex().getMemberRole(), location);
+		
+		command.execute();
+		ObjectGraph objectGraph2 = TestTools.asObjectGraph(schema);
+		assertEquals(2, set.getMembers().get(0).getConnectionParts().size());
+		DiagramLocation firstConnectorLocation = 
+			set.getMembers().get(0).getConnectionParts().get(0).getConnector().getDiagramLocation();
+		assertEquals(104, firstConnectorLocation.getX());
+		assertEquals(181, firstConnectorLocation.getY());
+		DiagramLocation secondConnectorLocation = 
+			set.getMembers().get(0).getConnectionParts().get(1).getConnector().getDiagramLocation();
+		assertEquals(104, secondConnectorLocation.getX());
+		assertEquals(201, secondConnectorLocation.getY());
+		
+		command.undo();
+		ObjectGraph objectGraph3 = TestTools.asObjectGraph(schema);
+		assertEquals(objectGraph1, objectGraph3);
+		
+		command.redo();
+		ObjectGraph objectGraph4 = TestTools.asObjectGraph(schema);
+		assertEquals(objectGraph2, objectGraph4);
+	}
+	
 
 }

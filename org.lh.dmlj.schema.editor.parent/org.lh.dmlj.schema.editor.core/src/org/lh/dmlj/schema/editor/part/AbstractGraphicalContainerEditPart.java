@@ -91,6 +91,12 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 			} else if (scope == Scope.CONNECTORS_ONLY) {
 				toRefresh.add(set.getSystemOwner());
 			}
+		} else if (set.getVsamIndex() != null) {
+			if (scope == Scope.ALL) {
+				toCreateOrRemove.add(set.getVsamIndex());
+			} else if (scope == Scope.CONNECTORS_ONLY) {
+				toRefresh.add(set.getVsamIndex());
+			}		
 		} else {
 			toRefresh.add(set.getOwner().getRecord());
 		}
