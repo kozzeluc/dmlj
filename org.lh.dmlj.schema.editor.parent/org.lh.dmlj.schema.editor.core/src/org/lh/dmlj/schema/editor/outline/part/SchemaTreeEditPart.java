@@ -28,6 +28,7 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -127,6 +128,21 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			// model change event
 			Set set = (Set) context.getListenerData();
 			findAndRemoveChild(set, true);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+			
+			// a VSAM index was added (execute/redo); avoid just refreshing the children since this 
+			// may be costly; create the appropriate edit part for the set and add it as a child
+			Set set = getModel().getSets().get(getModel().getSets().size() - 1); 
+			createAndAddChild(set.getVsamIndex(), set);									
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {			
+			
+			// an add VSAM index set operation was undone; remove the appropriate child using the 
+			// model VSAM index which we put in the context's listener data while processing the 
+			// before model change event
+			VsamIndex vsamIndex = (VsamIndex) context.getListenerData();
+			findAndRemoveChild(vsamIndex, true);
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {		
 			// whenever an area specification is changed, an area might be added or removed; get the
 			// 'old' area from the context's listener data; if it has bcome obsolete, remove the 
@@ -270,6 +286,13 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			// listener data so that we can refer to it when processing the after model change event
 			Set set = getModel().getSets().get(getModel().getSets().size() - 1);
 			context.setListenerData(set);		
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			
+			// an add VSAM index operation is being undone; put the VSAM index in the context's 
+			// listener data so that we can refer to it when processing the after model change event
+			Set set = getModel().getSets().get(getModel().getSets().size() - 1);
+			context.setListenerData(set.getVsamIndex());
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
 			// whenever an area specification is changed, an area might be added or removed; put the
 			// 'old' area in the context's listener data

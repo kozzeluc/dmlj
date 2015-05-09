@@ -96,6 +96,21 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			// an add user owned set operation was undone
 			Set set = (Set) context.getListenerData();
 			findAndRemoveChild(set, false);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && 
+				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+					
+			// a VSAM index was added (execute/redo)
+			Set set = getLastSet();
+			if (isMemberOf(set)) {
+				createAndAddChild(set.getVsamIndex(), set);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && 
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				   context.getListenerData() instanceof VsamIndex) {
+					
+			// an add VSAM index to the model record operation was undone
+			VsamIndex vsamIndex = (VsamIndex) context.getListenerData();
+			findAndRemoveChild(vsamIndex, false);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET && 
 				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 				   context.getListenerData() instanceof SystemOwner) {
@@ -189,6 +204,14 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			if (isOwnerOf(set) || isMemberOf(set)) {				
 				context.setListenerData(set);
 			}		
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && atTopLevel &&
+				context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				
+				// an add VSAM index operation is being undone
+				Set set = getLastSet();
+				if (isMemberOf(set)) {
+					context.setListenerData(set.getVsamIndex());
+				}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET && 
 				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 		

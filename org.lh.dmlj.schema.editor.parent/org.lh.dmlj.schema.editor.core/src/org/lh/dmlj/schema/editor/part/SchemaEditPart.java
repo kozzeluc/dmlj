@@ -80,6 +80,10 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
+			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
+			createAndAddChildren(context);
+			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
@@ -117,6 +121,9 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
+			findAndRemoveChildren(context);
+			findAndRefreshChildren(context);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
@@ -168,6 +175,8 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			collectObjectsForSet(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
 			collectObjectsForSet(context);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+			collectObjectsForSet(context);
 		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
 			collectObjectsForMemberRole(context, Scope.ALL);
 		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
@@ -187,6 +196,8 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET) {
 			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
+			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
 			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			collectObjectsForMemberRole(context, Scope.CONNECTORS_ONLY);
