@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -187,7 +187,8 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 */
 	public boolean isCalcKey() {
 		SchemaRecord record = getRecord();
-		return record.getLocationMode() == LocationMode.CALC &&
+		return (record.getLocationMode() == LocationMode.CALC ||
+				record.getLocationMode() == LocationMode.VSAM_CALC) &&
 			   record.getCalcKey() == this;
 	}
 
