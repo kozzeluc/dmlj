@@ -25,6 +25,8 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRole;
  * A command that removes a set from a schema, disconnects the owner- and member roles from the
  * owner-and member record types and cleans up the sort key and its elements in the case of a sorted
  * set.  This command can <b>NOT</b> deal with :<ul>
+ * <li>system owned indexed sets</li>
+ * <li>VSAM indexes</li>
  * <li>multiple-member sets</li>
  * <li>a set whose member record type is stored VIA the set that is to be deleted</li>
  * <li>multiple connection parts, i.e. no connectors should be present</li>

@@ -55,6 +55,8 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 			ModelChangeType modelChangeType;
 			if (connectionLabel.getMemberRole().getSet().getSystemOwner() != null) {
 				modelChangeType = ModelChangeType.DELETE_SYSTEM_OWNED_SET;
+			} else if (connectionLabel.getMemberRole().getSet().getVsamIndex() != null) {
+				modelChangeType = ModelChangeType.DELETE_VSAM_INDEX;
 			} else {
 				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 			}

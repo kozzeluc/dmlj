@@ -1123,5 +1123,18 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		checkCommand(cc, memberRole3, 11, 16);
 		
 	}	
-
+	
+	@Test
+	public void testVsamIndex() {
+		// just do a simple test without the complexity of connectors and bendpoints; under normal
+		// circumstances there is a single straight line connecting the VSAM index figure with the
+		// record
+		Schema schema = TestTools.getSchema("testdata/VSAMTEST version 1.schema");
+		Set set = schema.getSet("KSDSPAD");
+		DeleteVsamIndexCommand command = 
+			(DeleteVsamIndexCommand) DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
+		assertEquals("Delete VSAM index", command.getLabel());
+		assertNull(command.getContext());
+	}
+	
 }

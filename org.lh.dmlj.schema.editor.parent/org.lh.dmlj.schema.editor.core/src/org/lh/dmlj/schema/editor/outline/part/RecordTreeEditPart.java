@@ -141,6 +141,21 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			if (isOwnerOf(set) || isMemberOf(set)) {
 				createAndAddSetAsChild(context);
 			}			 
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
+				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				   context.getListenerData() instanceof VsamIndex) {
+			
+			// a VSAM index was deleted (execute/redo)
+			VsamIndex vsamIndex = (VsamIndex) context.getListenerData();
+			findAndRemoveChild(vsamIndex, false);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
+				   atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+		
+			// a delete VSAM index operation was undone
+			Set set = findSet(context);
+			if (isMemberOf(set)) {
+				createAndAddVsamIndexAsChild(context);
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET && 
 				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 				   context.getListenerData() instanceof Set) {
@@ -228,6 +243,14 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			if (isOwnerOf(set) || isMemberOf(set)) {
 				context.setListenerData(set);
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
+				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+		
+			// a VSAM index is being deleted
+			Set set = findSet(context);
+			if (isMemberOf(set)) {
+				context.setListenerData(set.getVsamIndex());
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET && 
 				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
 			
@@ -259,6 +282,12 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
 		Set set = getModel().getSchema().getSet(setName);
 		createAndAddChild(set.getSystemOwner(), set);
+	}
+	
+	private void createAndAddVsamIndexAsChild(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		Set set = getModel().getSchema().getSet(setName);
+		createAndAddChild(set.getVsamIndex(), set);
 	}
 	
 	@Override

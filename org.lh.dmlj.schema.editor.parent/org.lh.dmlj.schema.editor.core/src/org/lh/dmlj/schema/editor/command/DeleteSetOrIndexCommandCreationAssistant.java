@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -90,6 +90,9 @@ public abstract class DeleteSetOrIndexCommandCreationAssistant {
 				// area and/or procedure becomes obsolete after removing an index, a compound 
 				// command should be the answer
 				commands.add(new DeleteIndexCommand(memberRole.getSet().getSystemOwner()));				
+			} else if (memberRole.getSet().getVsamIndex() != null) {
+				// VSAM indexes are never multiple-member sets and so this will be the last command
+				commands.add(new DeleteVsamIndexCommand(memberRole.getSet().getVsamIndex()));				
 			} else if (memberRole.getSet().getMembers().size() == 1 || 
 					   memberRoles.size() == memberRole.getSet().getMembers().size() && 
 					   i == (memberRoles.size() - 1)) {
@@ -110,6 +113,8 @@ public abstract class DeleteSetOrIndexCommandCreationAssistant {
 			Set set = memberRoles.get(0).getSet();
 			if (set.getSystemOwner() != null) {
 				ccLabel = "Delete index";
+			} else if (set.getVsamIndex() != null) {
+					ccLabel = "Delete VSAM index";
 			} else if (memberRoles.size() == 1 && set.getMembers().size() > 1) {
 				ccLabel = "Remove member record type from set " + 
 						  Tools.removeTrailingUnderscore(set.getName());			
@@ -125,7 +130,7 @@ public abstract class DeleteSetOrIndexCommandCreationAssistant {
 			
 		} else {
 			return commands.get(0);
-		}		
+		}
 		
 	}
 	

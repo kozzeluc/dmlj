@@ -43,6 +43,7 @@ import org.lh.dmlj.schema.editor.command.DeleteRecordCommandCreationAssistantTes
 import org.lh.dmlj.schema.editor.command.DeleteRecordCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteSetCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistantTest;
+import org.lh.dmlj.schema.editor.command.DeleteVsamIndexCommandTest;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordCalcCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommandTest;
@@ -112,6 +113,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	DeleteSetOrIndexCommandCreationAssistantTest.class,
 	DeleteIndexCommandTest.class,
 	DeleteSetCommandTest.class,
+	DeleteVsamIndexCommandTest.class,
 	LockEndpointsCommandTest.class,
 	MakeRecordCalcCommandTest.class,
 	MakeRecordDirectCommandTest.class,

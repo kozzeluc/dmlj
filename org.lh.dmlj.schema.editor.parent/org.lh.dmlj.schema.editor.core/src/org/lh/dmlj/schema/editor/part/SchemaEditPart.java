@@ -98,6 +98,9 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context); 
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+			findAndRemoveChildren(context);
+			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
@@ -141,6 +144,10 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
+			collectObjectsForSet(context);
+			createAndAddChildren(context);
+			findAndRefreshChildren(context);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
 			collectObjectsForSet(context);
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);

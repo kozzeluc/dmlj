@@ -251,6 +251,22 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
 			Set set = getModel().getSet(setName);
 			createAndAddChild(set);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+			
+			// a VSAM index was removed (execute/redo); avoid just refreshing the children since 
+			// this may be costly; find the edit part and remove it as a child (we've put the VSAM
+			// index in the context's listener data while processing the before model change event)
+			VsamIndex vsamIndex = (VsamIndex) context.getListenerData();
+			findAndRemoveChild(vsamIndex, true);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			
+			// a delete VSAM index operation was undone; avoid just refreshing the children since 
+			// this may be costly; create the appropriate edit part for the set and add it as a child
+			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			Set set = getModel().getSet(setName);
+			createAndAddChild(set.getVsamIndex(), set);			
 		}
 	}
 	
@@ -338,6 +354,14 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
 			Set set = getModel().getSet(setName);
 			context.setListenerData(set);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+		
+			// a VSAM index is being deleted; put the VSAM index in the context's listener data so 
+			// that we can refer to it when processing the after model change event
+			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			Set set = getModel().getSet(setName);
+			context.setListenerData(set.getVsamIndex());			
 		}
 	}
 	

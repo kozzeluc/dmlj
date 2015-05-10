@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -42,6 +42,8 @@ public class DeleteSetEditPolicy extends ComponentEditPolicy {
 		ModelChangeType modelChangeType;
 		if (set.getSystemOwner() != null) {
 			modelChangeType = ModelChangeType.DELETE_SYSTEM_OWNED_SET;
+		} else if (set.getVsamIndex() != null) {
+			modelChangeType = ModelChangeType.DELETE_VSAM_INDEX;
 		} else {
 			modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 		}
