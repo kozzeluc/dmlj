@@ -20,6 +20,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.lh.dmlj.schema.editor.command.AddMemberToSetCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeAreaSpecificationCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeCalcKeyCommandTest;
+import org.lh.dmlj.schema.editor.command.ChangeLocationModeCommandFactoryTest;
 import org.lh.dmlj.schema.editor.command.ChangePointerOrderCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeSortKeysCommandTest;
@@ -90,6 +91,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	AddMemberToSetCommandTest.class,
 	ChangeAreaSpecificationCommandTest.class,
 	ChangeCalcKeyCommandTest.class,
+	ChangeLocationModeCommandFactoryTest.class,
 	ChangePointerOrderCommandTest.class,
 	ChangeSetOrderCommandTest.class,
 	ChangeSortKeysCommandTest.class,
