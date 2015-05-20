@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -334,7 +334,10 @@ public class SetDataCollector
 	@Override
 	public String getSystemOwnerAreaName(SchemaSyntaxWrapper context) {
 		for (String line : context.getLines()) {
-			if (line.startsWith("             WITHIN AREA ")) {				
+			// check for a WITHIN AREA clause, taking in mind that it can be commented out (meaning
+			// the system owner is in the same area as the member record (but we return the area
+			// name found in the WITHIN AREA clause)
+			if (line.length() > 2 && line.substring(2).startsWith("           WITHIN AREA ")) {				
 				String p = line.substring(25).trim();
 				int i = p.indexOf(" ");
 				if (i > -1) {
