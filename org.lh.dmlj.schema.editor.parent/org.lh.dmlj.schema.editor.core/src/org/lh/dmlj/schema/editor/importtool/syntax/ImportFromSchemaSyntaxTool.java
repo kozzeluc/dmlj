@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -445,13 +445,22 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 			if (line.trim().equals(".")) {
 				inElementSyntax = true;
 			} else if (inElementSyntax) {
-				String p = line.substring(2).trim();
-				if (p.startsWith("0") && p.charAt(2) == ' ') {
-					// skip level 88 elements
-					String elementName = p.substring(3);
-					if (!elementName.equals("FILLER")) {
-						// skip FILLER elements
-						allElementNames.add(elementName);
+				String p = line.substring(2).trim(); // get rid of the comment indicator
+				// let's see if the first 2 characters are an element level number...
+				if (p.length() > 3 && 
+					p.charAt(0) != ' ' && p.charAt(1) != ' ' && p.charAt(2) == ' ') {
+					
+					try {
+						int level = Integer.valueOf(p.substring(0, 2));
+						if (level >= 2 && level <= 49) {							
+							// this line contains an element name; we need that, but we skip level 
+							// 88 (condition names) and FILLER elements
+							String elementName = p.substring(3);
+							if (!elementName.equals("FILLER")) {
+								allElementNames.add(elementName);
+							}
+						}					
+					} catch (NumberFormatException e) {
 					}
 				}
 			}
@@ -500,26 +509,30 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		// (other than sorted on dbkey) in which the record participates as a 
 		// member and , see if there is a prefix/suffix mismatch using the first 
 		// sort element name of that set 
-		String firstSortElement = 
-			getFirstSortElement(recordDataCollector.getName(context));
-		if (firstSortElement != null) {	
-			controlElementName = firstSortElement;
-			// if the first sort key element name is contained in the list of 
-			// all elements, there is no prefix/suffix mismatch, but we might be 
-			// able to distill a suffix later if the user requested to do so
-			if (!allElementNames.contains(firstSortElement)) {
-				if (setRecordPrefixAndOrSuffix(context, allElementNames, 
-									       	   firstSortElement)) {
-				
-					return;
-				} else {
-					throw new RuntimeException("logic error: cannot derive prefix/" +
-						   				   	   "suffix for " + 
-						   				   	   recordDataCollector.getName(context) +
-						   				   	   " (VIA/DIRECT)");
-				}
-			}			
-		}		
+		if (recordDataCollector.getLocationMode(context) == LocationMode.DIRECT ||
+			recordDataCollector.getLocationMode(context) == LocationMode.VIA) {
+			
+			String firstSortElement = 
+				getFirstSortElement(recordDataCollector.getName(context));
+			if (firstSortElement != null) {	
+				controlElementName = firstSortElement;
+				// if the first sort key element name is contained in the list of 
+				// all elements, there is no prefix/suffix mismatch, but we might be 
+				// able to distill a suffix later if the user requested to do so
+				if (!allElementNames.contains(firstSortElement)) {
+					if (setRecordPrefixAndOrSuffix(context, allElementNames, 
+										       	   firstSortElement)) {
+					
+						return;
+					} else {
+						throw new RuntimeException("logic error: cannot derive prefix/" +
+							   				   	   "suffix for " + 
+							   				   	   recordDataCollector.getName(context) +
+							   				   	   " (VIA/DIRECT)");
+					}
+				}			
+			}
+		}
 		
 		// no prefix/suffix mismatch or no control fields available - use the 
 		// record-id as a suffix if (and only if) the user selected one of the 

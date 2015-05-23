@@ -1413,17 +1413,6 @@ public final class SchemaImportToolProxy {
 				}
 				minimumFragmentLength = Short.valueOf(i);
 				
-				// perform the maximum value check (not sure if the CA IDMS
-				// schema performs this check)				
-				if (minimumFragmentLength > record.getDataLength()) {
-					String message = 
-						"minimum fragment length (" + minimumFragmentLength +
-						") invalid: exceeds data length (record=" + 
-						record.getName() + "; data length=" + 
-						record.getDataLength() + ")";
-					throw new RuntimeException(message);
-				}
-				
 				// the minimum fragment length is valid; set the possibly 
 				// adjusted value in the record
 				record.setMinimumFragmentLength(Short.valueOf(minimumFragmentLength));

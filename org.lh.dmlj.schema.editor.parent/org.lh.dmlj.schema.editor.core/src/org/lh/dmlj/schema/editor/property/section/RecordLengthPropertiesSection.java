@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -126,12 +126,6 @@ public class RecordLengthPropertiesSection
 					i++;
 				}
 				newMinimumFragmentLength = Short.valueOf(i);
-				// perform the maximum value check (not sure if the CA IDMS
-				// schema performs this check)				
-				if (newMinimumFragmentLength > target.getDataLength()) {
-					String message = "exceeds 'Data length'";
-					return new ErrorEditHandler(message);
-				} 
 				// the value entered is valid
 				return super.getEditHandler(attribute, newMinimumFragmentLength);
 			} else if (newMinimumFragmentLength != null && 

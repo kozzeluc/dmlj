@@ -338,7 +338,10 @@ public class SetDataCollector
 	@Override
 	public String getSystemOwnerAreaName(SchemaSyntaxWrapper context) {
 		for (String line : context.getLines()) {
-			if (line.startsWith("             WITHIN AREA ")) {				
+			// check for a WITHIN AREA clause, taking in mind that it can be commented out (meaning
+			// the system owner is in the same area as the member record (but we return the area
+			// name found in the WITHIN AREA clause)
+			if (line.length() > 2 && line.substring(2).startsWith("           WITHIN AREA ")) {				
 				String p = line.substring(25).trim();
 				int i = p.indexOf(" ");
 				if (i > -1) {
