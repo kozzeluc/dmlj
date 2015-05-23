@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -1345,17 +1345,6 @@ public final class SchemaImportToolProxy {
 					i++;
 				}
 				minimumFragmentLength = Short.valueOf(i);
-				
-				// perform the maximum value check (not sure if the CA IDMS
-				// schema performs this check)				
-				if (minimumFragmentLength > record.getDataLength()) {
-					String message = 
-						"minimum fragment length (" + minimumFragmentLength +
-						") invalid: exceeds data length (record=" + 
-						record.getName() + "; data length=" + 
-						record.getDataLength() + ")";
-					throw new RuntimeException(message);
-				}
 				
 				// the minimum fragment length is valid; set the possibly 
 				// adjusted value in the record
