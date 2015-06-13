@@ -19,6 +19,8 @@ package org.lh.dmlj.schema.editor.command;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.SchemaRecord;
 
+// FIXME make this command suitable for VSAM and VSAM CALC records as well
+
 /**
  * A command that will change the record's location mode to DIRECT.  This command can only be used 
  * for CALC and VIA records and will definitely run into trouble when executed for a record that is 

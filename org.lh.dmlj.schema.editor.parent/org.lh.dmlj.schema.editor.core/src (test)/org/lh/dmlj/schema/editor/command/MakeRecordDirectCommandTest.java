@@ -16,10 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import org.eclipse.gef.commands.Command;
@@ -143,5 +140,15 @@ public class MakeRecordDirectCommandTest {
 		assertEquals(syntax2, syntax4);
 		
 	}	
+	
+	@Test
+	public void test_VsamRecord() {
+		fail("not yet implemented");
+	}
+	
+	@Test
+	public void test_VsamCalcRecord() {
+		fail("not yet implemented");
+	}
 
 }
