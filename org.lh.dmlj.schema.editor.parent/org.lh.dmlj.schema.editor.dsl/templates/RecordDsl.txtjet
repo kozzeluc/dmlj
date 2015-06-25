@@ -1,0 +1,120 @@
+<%
+/**
+ * Copyright (C) 2015  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program.  If
+ * not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contact information: kozzeluc@gmail.com.
+ */
+%>
+<%@ jet package="org.lh.dmlj.schema.editor.dsl.template" 
+        class="RecordDslTemplate"
+        imports="org.lh.dmlj.schema.*"
+%>
+<%
+SchemaRecord record = (SchemaRecord) argument;
+%>
+    record { 
+        name '<%= record.getName() %>'
+        shareStructure '<%= record.getSynonymName() %> version <%=record.getSynonymVersion()%>'
+        primaryRecord '<%= record.getBaseName() %> version <%=record.getBaseVersion()%>'
+        recordId <%=record.getId() %>
+<%
+if (record.getLocationMode() == LocationMode.DIRECT) {
+%>
+        direct
+<%
+} else if (record.getLocationMode() == LocationMode.CALC ||
+           record.getLocationMode() == LocationMode.VSAM_CALC) {
+    
+    StringBuilder calcKeyElementNames = new StringBuilder();
+    for (KeyElement keyElement : record.getCalcKey().getElements()) {
+        if (calcKeyElementNames.length() > 0) {
+            calcKeyElementNames.append(' ');
+        }
+        calcKeyElementNames.append(keyElement.getElement().getName());
+    }
+    if (record.getLocationMode() == LocationMode.CALC) {
+%>
+        calc {
+<%
+    } else {
+%>
+        vsamCalc {
+<%
+    }
+%>
+            elements '<%= calcKeyElementNames.toString() %>'
+            duplicates '<%= record.getCalcKey().getDuplicatesOption().toString().replaceAll("_", " ") %>'
+        }
+<%
+} else if (record.getLocationMode() == LocationMode.VIA) {
+%>
+        via {
+            set '<%= record.getViaSpecification().getSet().getName() %>'
+<%
+    if (record.getViaSpecification().getSymbolicDisplacementName() != null) {
+%>
+            displacement '<%= record.getViaSpecification().getSymbolicDisplacementName() %>' (symbolic displacement)
+<%
+    } else if (record.getViaSpecification().getDisplacementPageCount() != null) {
+%>
+            displacement <%= record.getViaSpecification().getDisplacementPageCount().shortValue() %> displacement pages
+<%
+    }
+%>
+        }
+<%
+} else {
+%>
+        vsam
+<%
+}
+%>
+        area { 
+            name '<%= record.getAreaSpecification().getArea().getName() %>'
+<%
+    if (record.getAreaSpecification().getSymbolicSubareaName() != null) {
+%>
+            subarea '<%= record.getAreaSpecification().getSymbolicSubareaName() %>'
+<%
+    } else if (record.getAreaSpecification().getOffsetExpression() != null) {
+        OffsetExpression offsetExpression = record.getAreaSpecification().getOffsetExpression();
+        if (offsetExpression.getOffsetPageCount() != null) {
+%>
+            offsetPages <%= offsetExpression.getOffsetPageCount().intValue() %>
+<%
+        } else if (offsetExpression.getOffsetPercent() != null) {
+%>
+            offsetPercent <%= offsetExpression.getOffsetPercent().shortValue() %>
+<%        
+        }
+        if (offsetExpression.getPageCount() != null) {
+%>
+            pages <%= offsetExpression.getPageCount().intValue() %>
+<%
+        } else if (offsetExpression.getPercent() != null) {
+%>
+            percent <%= offsetExpression.getPercent().shortValue() %>
+<%
+        }
+    }
+%>
+        }
+<%
+for (RecordProcedureCallSpecification call : record.getProcedures()) {
+%>
+        call '<%= call.getProcedure().getName() %> <%= call.getCallTime() %> <%= call.getVerb().toString().replaceAll("_", " ") %>'
+<%
+}
+%>
+    }         

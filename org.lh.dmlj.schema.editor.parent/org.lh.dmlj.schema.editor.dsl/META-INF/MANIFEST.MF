@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dsl
+Bundle-SymbolicName: org.lh.dmlj.schema.editor.dsl
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.lh.dmlj.schema.editor.dsl.Plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.ui,
+ org.lh.dmlj.schema.editor.model
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy

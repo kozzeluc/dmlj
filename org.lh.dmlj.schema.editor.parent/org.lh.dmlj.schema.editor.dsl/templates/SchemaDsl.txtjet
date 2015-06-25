@@ -1,0 +1,109 @@
+<%
+/**
+ * Copyright (C) 2015  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program.  If
+ * not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contact information: kozzeluc@gmail.com.
+ */
+%>
+<%@ jet package="org.lh.dmlj.schema.editor.dsl.template" 
+        class="SchemaDslTemplate"
+        imports="org.lh.dmlj.schema.*"
+%>
+<%
+Schema schema = (Schema) argument;
+DiagramData diagramData = schema.getDiagramData();
+AreaDslTemplate areaTemplate = new AreaDslTemplate();
+RecordDslTemplate recordTemplate = new RecordDslTemplate();
+%>
+schema {
+    name '<%= schema.getName() %>'
+    version <%= schema.getVersion() %>
+<%
+if (schema.getDescription() != null) {
+%>
+    description '<%= schema.getDescription() %>'
+<%
+}
+if (schema.getMemoDate() != null) {
+%>
+    memoDate '<%= schema.getMemoDate() %>'
+<%
+}
+if (schema.getComments() != null && !schema.getComments().isEmpty()) {
+    for (String comment : schema.getComments()) {
+%>
+    comments '<%= comment %>'
+<%
+    }
+}
+if (diagramData != null) {
+%>
+    diagram {
+<%
+    if (diagramData.getLabel() != null) {
+%>
+        label {
+            description '<%= diagramData.getLabel().getDescription() %>'
+            x <%= diagramData.getLabel().getDiagramLocation().getX() %>
+            y <%= diagramData.getLabel().getDiagramLocation().getY() %>
+            width <%= diagramData.getLabel().getWidth() %>
+            height <%= diagramData.getLabel().getHeight() %>
+        }
+<%
+    }
+%>
+        zoom <%= (int) (diagramData.getZoomLevel() * 100.0) %>
+<%
+    if (diagramData.isShowRulers()) {
+%>
+        showRulersAndGuides
+<%
+}
+    if (diagramData.isShowGrid()) {
+%> 
+        showGrid
+<%
+}
+    if (diagramData.isSnapToGuides()) {
+%>
+        snapToGuides
+<%
+    }
+    if (diagramData.isSnapToGrid()) {
+%>
+        snapToGrid
+<%
+    }
+    if (diagramData.isSnapToGeometry()) {
+%>
+        snapToGeometry
+<%
+    }
+%>
+    }
+<%
+}
+%>
+
+<%
+for (SchemaArea area : schema.getAreas()) {
+    stringBuffer.append(areaTemplate.generate(area));
+    stringBuffer.append('\n');
+}
+for (SchemaRecord record : schema.getRecords()) {
+    stringBuffer.append(recordTemplate.generate(record));
+    stringBuffer.append('\n');
+}
+%>
+}         
