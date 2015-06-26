@@ -19,9 +19,7 @@ package org.lh.dmlj.schema.editor.part;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -203,22 +201,7 @@ public class SetDescriptionEditPart
 
 	@Override
 	protected IFigure createFigure() {
-		Figure figure = new SetDescriptionFigure();	
-		
-		// add a tooltip containing the set's name...
-        String adjustedSetName;
-        Set set = getModel().getMemberRole().getSet();
-        if (set.getName().endsWith("_")) {
-            StringBuilder p = new StringBuilder(set.getName());
-            p.setLength(p.length() - 1);
-            adjustedSetName = p.toString();
-        } else {
-            adjustedSetName = set.getName();
-        }
-        Label tooltip = new Label(adjustedSetName);
-        figure.setToolTip(tooltip);
-        
-        return figure;
+		return new SetDescriptionFigure();
 	}
 	
 	@Override
@@ -280,14 +263,10 @@ public class SetDescriptionEditPart
 		
 		SetDescriptionFigure figure = (SetDescriptionFigure) getFigure();
 		
-		// we need to manipulate the set name in the case of some dictionary
-		// sets (DDLCATLOD area, which has the same structure as DDLDCLOD)...
-		StringBuilder setName = 
-			new StringBuilder(memberRole.getSet().getName());
-		if (setName.toString().endsWith("_")) {
-			setName.setLength(setName.length() - 1);
-		}
-		figure.setName(setName.toString());
+		// we need to manipulate the set name in the case of some dictionary sets (DDLCATLOD area, 
+		// which has the same structure as DDLDCLOD)...
+		String adjustedSetName = Tools.removeTrailingUnderscore(memberRole.getSet().getName());
+		figure.setName(adjustedSetName);
 		
 		figure.setPointers(Tools.getPointers(memberRole));
 		figure.setMembershipOption(Tools.getMembershipOption(memberRole));

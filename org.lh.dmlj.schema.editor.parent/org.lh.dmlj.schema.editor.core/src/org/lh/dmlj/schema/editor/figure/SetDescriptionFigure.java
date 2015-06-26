@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.figure;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.ParagraphTextLayout;
@@ -70,6 +71,8 @@ public class SetDescriptionFigure extends Figure {
 	public void setName(String name) {
 		this.name = name;
 		setTextFlowText();
+		Label tooltip = new Label(name);
+		setToolTip(tooltip);
 	}
 
 	public void setOrder(String order) {
