@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -32,6 +32,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.command.ChangePointerOrderCommand;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
@@ -178,8 +180,11 @@ public class RecordPrefixPropertiesSection
 			// cancel button pressed
 			return;
 		}
+		ModelChangeContext context = 
+			new ModelChangeContext(ModelChangeType.REORDER_POINTERS_IN_PREFIX);
 		ChangePointerOrderCommand command = 
 			new ChangePointerOrderCommand(target, dialog.getDesiredPointerList());
+		command.setContext(context);
 		commandStack.execute(command);
 	}
 
