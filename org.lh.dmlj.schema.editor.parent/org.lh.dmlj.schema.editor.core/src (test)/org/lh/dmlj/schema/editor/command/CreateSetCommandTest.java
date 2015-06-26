@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.IndexedSetModeSpecification;
 import org.lh.dmlj.schema.LabelAlignment;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
@@ -164,10 +165,16 @@ public class CreateSetCommandTest {
 		assertEquals(originalSetCount, schema.getSets().indexOf(set));
 		assertEquals("NEW-SET-1", set.getName());
 		assertSame(SetMode.INDEXED, set.getMode());
-		assertNull(set.getIndexedSetModeSpecification());
 		assertNull(set.getSystemOwner());
 		assertEquals(1, set.getMembers().size());
 		assertEquals(0, set.getViaMembers().size());
+		
+		IndexedSetModeSpecification indexedSetModeSpecification = 
+			set.getIndexedSetModeSpecification();
+		assertNotNull(indexedSetModeSpecification);
+		assertNull(indexedSetModeSpecification.getKeyCount());
+		assertEquals("NEW-SET-1", indexedSetModeSpecification.getSymbolicIndexName());
+		assertNull(indexedSetModeSpecification.getDisplacementPageCount());
 		
 		OwnerRole ownerRole = set.getOwner();
 		assertSame(recordEmployee, ownerRole.getRecord());
