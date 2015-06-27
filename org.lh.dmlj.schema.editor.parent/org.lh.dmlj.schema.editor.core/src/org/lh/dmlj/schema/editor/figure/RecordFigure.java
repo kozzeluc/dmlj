@@ -182,6 +182,7 @@ public class RecordFigure extends Figure {
 	
 	public void setRecordName(String recordName) {
 		recordNameFigure.setText(recordName);
+		setToolTip(new Label(recordName));
 	}
 	
 	public void setStorageMode(String storageMode) {

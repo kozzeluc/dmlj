@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.IndexedSetModeSpecification;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Schema;
@@ -76,6 +77,13 @@ public class CreateSetCommand extends ModelChangeBasicCommand {
 		set.setName(calculateSetName());
 		set.setMode(mode);
 		set.setOrder(SetOrder.LAST);
+		
+		if (mode == SetMode.INDEXED) {
+			IndexedSetModeSpecification indexedSetModeSpecification =
+				SchemaFactory.eINSTANCE.createIndexedSetModeSpecification();		
+			indexedSetModeSpecification.setSymbolicIndexName(set.getName());
+			set.setIndexedSetModeSpecification(indexedSetModeSpecification);
+		}
 		
 		ownerRole = SchemaFactory.eINSTANCE.createOwnerRole();
 		ownerRole.setSet(set);

@@ -30,6 +30,7 @@ import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
+import org.lh.dmlj.schema.IndexedSetModeSpecification;
 import org.lh.dmlj.schema.LabelAlignment;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Schema;
@@ -75,6 +76,14 @@ public class CreateIndexCommandTest {
 		assertNull(set.getOwner());
 		assertEquals(1, set.getMembers().size());	
 		assertEquals(0, set.getViaMembers().size());
+		
+		// check the indexed set mode specification
+		IndexedSetModeSpecification indexedSetModeSpecification = 
+			set.getIndexedSetModeSpecification();
+		assertNotNull(indexedSetModeSpecification);
+		assertNull(indexedSetModeSpecification.getKeyCount());
+		assertEquals("NEW-INDEX-1", indexedSetModeSpecification.getSymbolicIndexName());
+		assertNull(indexedSetModeSpecification.getDisplacementPageCount());
 		
 		// check the set's system owner
 		SystemOwner systemOwner = set.getSystemOwner();

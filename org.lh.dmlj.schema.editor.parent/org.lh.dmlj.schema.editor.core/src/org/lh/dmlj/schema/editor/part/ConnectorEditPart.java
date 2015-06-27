@@ -37,9 +37,11 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
+import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.ConnectorFigure;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
@@ -76,7 +78,30 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 			// data ALWAYS refers to the FIRST connector in this situation, although both connectors
 			// are impacted) 
 			refreshVisuals();			
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+				   (context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				    Boolean.TRUE.equals(context.getListenerData())) ||
+				    context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				    context.appliesTo(getModel().getConnectionPart().getMemberRole().getSet())) {
+			
+			// the set name has changed (execute/undo/redo)
+			refreshVisuals();						
 		}		
+	}
+	
+	@Override
+	public void beforeModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel().getConnectionPart().getMemberRole().getSet())) {
+					
+			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's 
+			// listener's data so that we can respond to this when processing the after model change 
+			// event (so we can update the figure's tooltip)
+			context.setListenerData(Boolean.TRUE);
+		}
 	}
 	
 	@Override
@@ -189,6 +214,12 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 		Connector connector = getModel();
 		ConnectorFigure figure = (ConnectorFigure) getFigure();
 		figure.setLabel(connector.getLabel());
+		
+		// we need to manipulate the set name in the case of some dictionary sets (DDLCATLOD area, 
+		// which has the same structure as DDLDCLOD)...
+		Set set = getModel().getConnectionPart().getMemberRole().getSet();
+		String adjustedSetName = Tools.removeTrailingUnderscore(set.getName());
+		figure.setName(adjustedSetName);
 	}
 	
 }

@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.figure;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.ParagraphTextLayout;
@@ -70,6 +71,8 @@ public class SetDescriptionFigure extends Figure {
 	public void setName(String name) {
 		this.name = name;
 		setTextFlowText();
+		Label tooltip = new Label(name);
+		setToolTip(tooltip);
 	}
 
 	public void setOrder(String order) {

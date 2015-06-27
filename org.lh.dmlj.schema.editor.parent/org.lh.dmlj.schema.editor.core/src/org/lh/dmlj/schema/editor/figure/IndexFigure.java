@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.figure;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolygonShape;
 import org.eclipse.draw2d.geometry.Rectangle;
 
@@ -41,5 +42,11 @@ public class IndexFigure extends PolygonShape {
 		addPoint(r.getTopLeft());
 		setEnd(r.getTopLeft());
 		setPreferredSize(r.getSize().expand(1, 1));
+	}
+
+
+	public void setName(String name) {
+		Label tooltip = new Label(name);
+		setToolTip(tooltip);
 	}
 }
