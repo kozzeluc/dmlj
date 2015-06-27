@@ -42,11 +42,14 @@ import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.MemberRole;
+import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
 import org.lh.dmlj.schema.editor.policy.SetBendpointEditPolicy;
@@ -66,6 +69,7 @@ public class SetEditPart
 
 	private MemberRole 			 memberRole;	
 	private IModelChangeProvider modelChangeProvider;
+	private boolean tooltipSet;
 	
 	/**
 	 * Checks whether the feature of interest is set in a grouped model change.
@@ -123,11 +127,30 @@ public class SetEditPart
 			
 			// an endpoint was moved on the connection part
 			refreshVisuals();
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
+				   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+				   (context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				    Boolean.TRUE.equals(context.getListenerData())) ||
+				    context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				    context.appliesTo(getModel().getMemberRole().getSet())) {
+			
+			// the set name has changed (execute/undo/redo)
+			refreshTooltip();						
 		}
 	}
 
 	@Override
-	public void beforeModelChange(ModelChangeContext context) {		
+	public void beforeModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
+			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+			context.appliesTo(getModel().getMemberRole().getSet())) {
+					
+			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's 
+			// listener's data so that we can respond to this when processing the after model change 
+			// event
+			context.setListenerData(Boolean.TRUE);
+		}
 	}
 	
 	@Override
@@ -172,19 +195,6 @@ public class SetEditPart
 		} else {
 			connection.setLineStyle(Graphics.LINE_DASH);
 		}
-		
-		// add a tooltip containing the set's name; this is helpful if the
-        // connection endpoints are not easy to locate...
-        String adjustedSetName;
-        if (set.getName().endsWith("_")) {
-            StringBuilder p = new StringBuilder(set.getName());
-            p.setLength(p.length() - 1);
-            adjustedSetName = p.toString();
-        } else {
-            adjustedSetName = set.getName();
-        }
-        Label tooltip = new Label(adjustedSetName);
-        connection.setToolTip(tooltip);
 		
 		return connection;		
 	}
@@ -249,8 +259,17 @@ public class SetEditPart
 						  new SetBendpointEditPolicy(this));
 	}
 	
+	private void refreshTooltip() {
+		// set/refresh the tooltip, containing the set's name; this is helpful if the connection  
+		// endpoints are not easy to locate...
+        String adjustedSetName = 
+        	Tools.removeTrailingUnderscore(getModel().getMemberRole().getSet().getName());
+        Label tooltip = new Label(adjustedSetName);
+        getConnectionFigure().setToolTip(tooltip);
+	}
+	
 	@Override
-	protected void refreshVisuals() {		
+	protected void refreshVisuals() {
 		
 		List<Bendpoint> bendpoints = new ArrayList<>();
 		// no connectors are currently involved
@@ -270,6 +289,12 @@ public class SetEditPart
 		getConnectionFigure().setRoutingConstraint(bendpoints);
 		
 		refreshBendpointEditPolicy();
+		
+		if (!tooltipSet) {
+			// set the tooltip for the first time (it will be set again when the set name changes)
+			refreshTooltip();
+			tooltipSet = true;
+		}
 	}
 
 	@Override

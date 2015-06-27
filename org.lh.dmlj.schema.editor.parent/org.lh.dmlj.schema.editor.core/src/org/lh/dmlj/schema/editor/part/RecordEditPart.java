@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -192,22 +190,7 @@ public class RecordEditPart
 	
 	@Override
 	protected IFigure createFigure() {
-		Figure figure = new RecordFigure();
-		
-		// add a tooltip containing the record's name...
-        String adjustedRecordName;
-        SchemaRecord record = getModel();
-        if (record.getName().endsWith("_")) {
-            StringBuilder p = new StringBuilder(record.getName());
-            p.setLength(p.length() - 1);
-            adjustedRecordName = p.toString();
-        } else {
-            adjustedRecordName = record.getName();
-        }
-        Label tooltip = new Label(adjustedRecordName);
-        figure.setToolTip(tooltip);
-		
-		return figure;
+		return new RecordFigure();
 	}
 	
 	@Override
@@ -295,11 +278,8 @@ public class RecordEditPart
 		RecordFigure figure = (RecordFigure) getFigure();
 		// we need to manipulate the record name in the case of some dictionary
 		// records (DDLCATLOD area, which has the same structure as DDLDCLOD)...
-		StringBuilder recordName = new StringBuilder(record.getName());
-		if (record.getName().endsWith("_")) {
-			recordName.setLength(recordName.length() - 1);
-		}
-		figure.setRecordName(recordName.toString());
+		String adjustedRecordName = Tools.removeTrailingUnderscore(record.getName());
+		figure.setRecordName(adjustedRecordName);
 		figure.setRecordId(record.getId());
 		figure.setStorageMode(Tools.getStorageMode(record.getStorageMode()));
 		int dataLength = record.getDataLength();
