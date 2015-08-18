@@ -82,10 +82,13 @@
     <connectionParts memberRole="//@sets.6/@members.0" sourceEndpointLocation="//@diagramData/@locations.57"/>
     <connectionParts memberRole="//@sets.7/@members.0" targetEndpointLocation="//@diagramData/@locations.59"/>
     <connectionParts bendpointLocations="//@diagramData/@locations.46 //@diagramData/@locations.45" memberRole="//@sets.8/@members.0" sourceEndpointLocation="//@diagramData/@locations.35" targetEndpointLocation="//@diagramData/@locations.31"/>
-    <connectionParts bendpointLocations="//@diagramData/@locations.42 //@diagramData/@locations.40" memberRole="//@sets.9/@members.0" sourceEndpointLocation="//@diagramData/@locations.41" targetEndpointLocation="//@diagramData/@locations.39"/>
+    <connectionParts connector="//@diagramData/@connectors.0" bendpointLocations="//@diagramData/@locations.64 //@diagramData/@locations.63" memberRole="//@sets.9/@members.0" sourceEndpointLocation="//@diagramData/@locations.41"/>
     <connectionParts bendpointLocations="//@diagramData/@locations.33 //@diagramData/@locations.44" memberRole="//@sets.10/@members.0" sourceEndpointLocation="//@diagramData/@locations.34" targetEndpointLocation="//@diagramData/@locations.32"/>
     <connectionParts memberRole="//@sets.11/@members.0"/>
     <connectionParts memberRole="//@sets.12/@members.0"/>
+    <connectionParts connector="//@diagramData/@connectors.1" bendpointLocations="//@diagramData/@locations.42 //@diagramData/@locations.40" memberRole="//@sets.9/@members.0" targetEndpointLocation="//@diagramData/@locations.39"/>
+    <connectors diagramLocation="//@diagramData/@locations.61" connectionPart="//@diagramData/@connectionParts.11" label="A"/>
+    <connectors diagramLocation="//@diagramData/@locations.62" connectionPart="//@diagramData/@connectionParts.15" label="A"/>
     <label diagramLocation="//@diagramData/@locations.60" height="45" width="169" description="Employee Demo Database"/>
     <locations eyecatcher="record COVERAGE" x="285" y="361"/>
     <locations eyecatcher="record DENTAL-CLAIM" x="475" y="475"/>
@@ -127,9 +130,9 @@
     <locations eyecatcher="bendpoint [0] set DEPT-EMPLOYEE (EMPLOYEE)" x="66" y="114"/>
     <locations eyecatcher="set DEPT-EMPLOYEE member endpoint (EMPLOYEE)" x="38"/>
     <locations eyecatcher="set OFFICE-EMPLOYEE member endpoint (EMPLOYEE)" x="95"/>
-    <locations eyecatcher="bendpoint [1] set OFFICE-EMPLOYEE (EMPLOYEE)" x="-19" y="171"/>
+    <locations eyecatcher="bendpoint [3] set OFFICE-EMPLOYEE (EMPLOYEE)" x="-19" y="171"/>
     <locations eyecatcher="set OFFICE-EMPLOYEE owner endpoint (EMPLOYEE)" x="65" y="53"/>
-    <locations eyecatcher="bendpoint [0] set OFFICE-EMPLOYEE (EMPLOYEE)" x="65" y="171"/>
+    <locations eyecatcher="bendpoint [2] set OFFICE-EMPLOYEE (EMPLOYEE)" x="65" y="171"/>
     <locations eyecatcher="bendpoint [1] set DEPT-EMPLOYEE (EMPLOYEE)" x="152" y="114"/>
     <locations eyecatcher="bendpoint [1] set REPORTS-TO (STRUCTURE)" x="-183" y="77"/>
     <locations eyecatcher="bendpoint [1] set MANAGES (STRUCTURE)" x="-151" y="87"/>
@@ -148,6 +151,10 @@
     <locations eyecatcher="set COVERAGE-CLAIMS member endpoint (HOSPITAL-CLAIM)" x="65"/>
     <locations eyecatcher="set JOB-TITLE-NDX member endpoint (JOB)" x="20"/>
     <locations eyecatcher="diagram label" x="33" y="551"/>
+    <locations eyecatcher="set connector[0] OFFICE-EMPLOYEE (EMPLOYEE)" x="425" y="116"/>
+    <locations eyecatcher="set connector[1] OFFICE-EMPLOYEE (EMPLOYEE)" x="454" y="132"/>
+    <locations eyecatcher="bendpoint [1] set OFFICE-EMPLOYEE (EMPLOYEE)" x="35" y="77"/>
+    <locations eyecatcher="bendpoint [0] set OFFICE-EMPLOYEE (EMPLOYEE)" x="65" y="77"/>
     <rulers type="VERTICAL"/>
     <rulers/>
   </diagramData>
@@ -536,7 +543,7 @@
   </sets>
   <sets mode="INDEXED" name="OFFICE-EMPLOYEE" order="SORTED">
     <indexedSetModeSpecification keyCount="30"/>
-    <members indexDbkeyPosition="5" membershipOption="OPTIONAL_AUTOMATIC" ownerDbkeyPosition="6" record="//@records.3" sortKey="//@records.3/@keys.3" connectionParts="//@diagramData/@connectionParts.11" connectionLabel="//@diagramData/@connectionLabels.4"/>
+    <members indexDbkeyPosition="5" membershipOption="OPTIONAL_AUTOMATIC" ownerDbkeyPosition="6" record="//@records.3" sortKey="//@records.3/@keys.3" connectionParts="//@diagramData/@connectionParts.11 //@diagramData/@connectionParts.15" connectionLabel="//@diagramData/@connectionLabels.4"/>
     <owner nextDbkeyPosition="1" priorDbkeyPosition="2" record="//@records.10"/>
   </sets>
   <sets name="REPORTS-TO" order="NEXT">

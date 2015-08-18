@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2015  Luc Hermans
  * 
@@ -14,16 +15,31 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.lh.dmlj.schema.editor.dsl.builder.SchemaDslBuilderTest;
-
+import org.lh.dmlj.schema.editor.dsl.builder.model.AreaModelBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.model.RecordModelBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.model.SchemaModelBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.AreaSyntaxBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.ElementSyntaxBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.SetSyntaxBuilderSpec;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+		
+	AreaSyntaxBuilderSpec.class,
+	RecordSyntaxBuilderSpec.class,
+	ElementSyntaxBuilderSpec.class,
+	SetSyntaxBuilderSpec.class,
+	SchemaSyntaxBuilderSpec.class,
 	
-	SchemaDslBuilderTest.class
+	AreaModelBuilderSpec.class,
+	RecordModelBuilderSpec.class,
+	SchemaModelBuilderSpec.class	
 	
 })
 public class AllTests {	
