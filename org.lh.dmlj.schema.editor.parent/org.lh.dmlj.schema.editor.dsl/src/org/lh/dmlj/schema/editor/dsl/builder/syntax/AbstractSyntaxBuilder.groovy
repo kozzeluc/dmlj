@@ -44,6 +44,10 @@ abstract class AbstractSyntaxBuilder<T> {
 		}
 	}
 	
+	protected void blank_line() {
+		newLine()
+	}
+	
 	String build(T model) {
 		this.model = model
 		build()		
@@ -53,32 +57,29 @@ abstract class AbstractSyntaxBuilder<T> {
 	protected abstract String build();
 	
 	def methodMissing(String name, arguments) {
-		if (name == 'blank_line' && !arguments) {
-			return newLine()
-		} else if (name == 'without_tab' && arguments.size() == 1 && 
+		if (name.startsWith('with_') && name.endsWith('_tabs') && arguments.size() == 1 && 
 			(arguments[0] instanceof String || arguments[0] instanceof GString)) {
 			
-			return write(arguments[0], 0)
-		} else if (name == 'with_1_tab' && arguments.size() == 1 && 
-				   (arguments[0] instanceof String || arguments[0] instanceof GString)) {
-			
-			return write(arguments[0], 1)
-		} else if (name.startsWith('with_') && name.endsWith('_tabs') && arguments.size() == 1 && 
-				   (arguments[0] instanceof String || arguments[0] instanceof GString)) {
-			
-			try {
-				int i = name.indexOf('_tabs')
-				int level = Integer.valueOf(name.substring(5, i))
-				return write(arguments[0], level)	
-			} catch (NumberFormatException e) {
+			int i = name.indexOf('_tabs')
+			int level = Integer.valueOf(name.substring(5, i))
+			AbstractSyntaxBuilder.metaClass."$name" = { String text ->				
+				delegate.write(text, level)					
 			}
+			return "$name"(arguments[0])
 		}
-		//throw new MissingMethodException(name, getClass(), arguments)
-		super.methodMissing(name, arguments)
+		throw new MissingMethodException(name, getClass(), arguments)		
 	}
 	
 	private void newLine() {
 		output <<= '\n'
+	}
+	
+	protected void with_1_tab(String text) {
+		write(text, 1)
+	}
+	
+	protected void without_tab(String text) {
+		write(text, 0)
 	}
 	
 	private void write(String text, int level) {
