@@ -27,10 +27,16 @@ import org.lh.dmlj.schema.SetMembershipOption
 import org.lh.dmlj.schema.SetMode
 import org.lh.dmlj.schema.SetOrder
 
+import groovy.transform.CompileStatic;
+
+@CompileStatic
 class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
+	
+	private Set set
 
 	@Override
-	protected String build() {		
+	protected String doBuild(Set model) {
+		set = model		
 		name()
 		order()
 		index()
@@ -40,31 +46,31 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 	
 	private void name() {
 		if (generateName) {
-			without_tab "name '${model.name}'"
+			without_tab "name '${set.name}'"
 		}
 	}
 	
 	private void order() {
-		if (model.order != SetOrder.NEXT) {
+		if (set.order != SetOrder.NEXT) {
 			if (generateName) {
 				blank_line()
 			}
-			without_tab "order '${model.order}'"
+			without_tab "order '${set.order}'"
 		}
 	}
 	
 	private void index() {
-		if (model.mode == SetMode.INDEXED) {
-			if (generateName || model.order != SetOrder.NEXT) {
+		if (set.mode == SetMode.INDEXED) {
+			if (generateName || set.order != SetOrder.NEXT) {
 				blank_line()
 			}
-			if (model.indexedSetModeSpecification.symbolicIndexName) {
-				without_tab "index '${model.indexedSetModeSpecification.symbolicIndexName}'"
+			if (set.indexedSetModeSpecification.symbolicIndexName) {
+				without_tab "index '${set.indexedSetModeSpecification.symbolicIndexName}'"
 			} else {
 				without_tab "index {"
-				with_1_tab "keys ${model.indexedSetModeSpecification.keyCount}"
-				if (model.indexedSetModeSpecification.displacementPageCount) {
-					with_1_tab "displacement ${model.indexedSetModeSpecification.displacementPageCount}"
+				with_1_tab "keys ${set.indexedSetModeSpecification.keyCount}"
+				if (set.indexedSetModeSpecification.displacementPageCount) {
+					with_1_tab "displacement ${set.indexedSetModeSpecification.displacementPageCount}"
 				}
 				without_tab "}"
 			}
@@ -78,23 +84,23 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 	}
 	
 	private void ownerRecord() {
-		if (model.owner) {
-			if (generateName || model.order != SetOrder.NEXT || model.mode == SetMode.INDEXED) {
+		if (set.owner) {
+			if (generateName || set.order != SetOrder.NEXT || set.mode == SetMode.INDEXED) {
 				blank_line()
 			}			
-			without_tab "owner '${model.owner.record.name}' {"
-			with_1_tab "next ${model.owner.nextDbkeyPosition}"
-			if (model.owner.priorDbkeyPosition) {
-				with_1_tab "prior ${model.owner.priorDbkeyPosition}"
+			without_tab "owner '${set.owner.record.name}' {"
+			with_1_tab "next ${set.owner.nextDbkeyPosition}"
+			if (set.owner.priorDbkeyPosition) {
+				with_1_tab "prior ${set.owner.priorDbkeyPosition}"
 			}
 			without_tab "}"
 		}		
 	}
 	
 	private void systemOwner() {
-		if (model.mode == SetMode.INDEXED && model.systemOwner) {
+		if (set.mode == SetMode.INDEXED && set.systemOwner) {
 			blank_line()
-			AreaSpecification areaSpecification = model.systemOwner.areaSpecification
+			AreaSpecification areaSpecification = set.systemOwner.areaSpecification
 			without_tab "systemOwner {"
 			if (!areaSpecification.symbolicSubareaName &&
 				!areaSpecification.offsetExpression ||
@@ -126,25 +132,25 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 			}
 			blank_line()		
 			with_1_tab "diagram {"
-			with_2_tabs "x ${model.systemOwner.diagramLocation.x}"
-			with_2_tabs "y ${model.systemOwner.diagramLocation.y}"
+			with_2_tabs "x ${set.systemOwner.diagramLocation.x}"
+			with_2_tabs "y ${set.systemOwner.diagramLocation.y}"
 			with_1_tab "}"
 			without_tab "}"
 		}
 	}
 	
 	private void vsamIndex() {
-		if (model.mode == SetMode.VSAM_INDEX && model.vsamIndex) {
+		if (set.mode == SetMode.VSAM_INDEX && set.vsamIndex) {
 			blank_line()
 			without_tab "vsamIndex {"
-			with_1_tab "x ${model.vsamIndex.diagramLocation.x}"
-			with_1_tab "y ${model.vsamIndex.diagramLocation.y}"
+			with_1_tab "x ${set.vsamIndex.diagramLocation.x}"
+			with_1_tab "y ${set.vsamIndex.diagramLocation.y}"
 			without_tab "}"
 		}
 	}
 	
 	private void members() {
-		for (memberRole in model.members) {
+		for (memberRole in set.members) {
 			blank_line()
 			without_tab "member '${memberRole.record.name}' {"
 			memberPointers(memberRole)
@@ -178,7 +184,7 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 	}
 	
 	private void sortKey(MemberRole memberRole) {
-		if (model.order == SetOrder.SORTED && memberRole.sortKey) {
+		if (set.order == SetOrder.SORTED && memberRole.sortKey) {
 			blank_line()
 			with_1_tab "key {"
 			for (KeyElement keyElement in memberRole.sortKey.elements) {

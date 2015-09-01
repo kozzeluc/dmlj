@@ -16,14 +16,16 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.syntax
 
-import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.Schema
 
+import groovy.transform.CompileStatic;;
+
+@CompileStatic
 abstract class AbstractSyntaxBuilder<T> {
 	
 	private static final String TAB = '    '
 
-	protected T model
-	protected def output = ''
+	protected StringBuilder output = new StringBuilder()
 	protected int initialTabs = 0;
 	protected boolean generateName = true; // not applicable for schemas
 	
@@ -49,26 +51,11 @@ abstract class AbstractSyntaxBuilder<T> {
 	}
 	
 	String build(T model) {
-		this.model = model
-		build()		
+		doBuild(model)		
 		output.toString()
 	}
 	
-	protected abstract String build();
-	
-	def methodMissing(String name, arguments) {
-		if (name.startsWith('with_') && name.endsWith('_tabs') && arguments.size() == 1 && 
-			(arguments[0] instanceof String || arguments[0] instanceof GString)) {
-			
-			int i = name.indexOf('_tabs')
-			int level = Integer.valueOf(name.substring(5, i))
-			AbstractSyntaxBuilder.metaClass."$name" = { String text ->				
-				delegate.write(text, level)					
-			}
-			return "$name"(arguments[0])
-		}
-		throw new MissingMethodException(name, getClass(), arguments)		
-	}
+	protected abstract String doBuild(T model);
 	
 	private void newLine() {
 		output <<= '\n'
@@ -76,6 +63,22 @@ abstract class AbstractSyntaxBuilder<T> {
 	
 	protected void with_1_tab(String text) {
 		write(text, 1)
+	}
+	
+	protected void with_2_tabs(String text) {
+		write(text, 2)
+	}
+	
+	protected void with_3_tabs(String text) {
+		write(text, 3)
+	}
+	
+	protected void with_4_tabs(String text) {
+		write(text, 4)
+	}
+	
+	protected void with_5_tabs(String text) {
+		write(text, 5)
 	}
 	
 	protected void without_tab(String text) {

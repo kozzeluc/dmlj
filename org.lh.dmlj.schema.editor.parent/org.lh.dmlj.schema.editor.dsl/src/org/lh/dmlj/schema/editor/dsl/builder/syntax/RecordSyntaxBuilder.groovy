@@ -16,19 +16,22 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.syntax
 
-import org.lh.dmlj.schema.Element
-import org.lh.dmlj.schema.KeyElement
+import groovy.transform.CompileStatic
+
 import org.lh.dmlj.schema.LocationMode
 import org.lh.dmlj.schema.OffsetExpression
-import org.lh.dmlj.schema.RecordProcedureCallSpecification
 import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.StorageMode
-import org.lh.dmlj.schema.VsamType;
+import org.lh.dmlj.schema.VsamType
 
+@CompileStatic
 class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	
+	private SchemaRecord record
+	
 	@Override
-	protected String build() {		
+	protected String doBuild(SchemaRecord model) {
+		record = model		
 		name()
 		shareStructure()
 		primaryRecord()
@@ -44,39 +47,39 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	
 	private void name() {
 		if (generateName) {
-			without_tab "name '${model.name}'"
+			without_tab "name '${record.name}'"
 		}
 	}
 	
 	private void shareStructure() {
-		if (model.synonymName) {
-			without_tab "shareStructure '${model.synonymName} version ${model.synonymVersion}'"			
+		if (record.synonymName) {
+			without_tab "shareStructure '${record.synonymName} version ${record.synonymVersion}'"			
 		}
 	}
 	
 	private void primaryRecord() {
-		if (model.baseName &&
-			(!model.synonymName ||
-			 model.baseName != model.synonymName || model.baseVersion != model.synonymVersion)) {
+		if (record.baseName &&
+			(!record.synonymName ||
+			 record.baseName != record.synonymName || record.baseVersion != record.synonymVersion)) {
 		
-			without_tab "primaryRecord '${model.baseName} version ${model.baseVersion}'"
+			without_tab "primaryRecord '${record.baseName} version ${record.baseVersion}'"
 		}
 	}
 	
 	private void recordId() {
-		without_tab "recordId ${model.id}"
+		without_tab "recordId ${record.id}"
 	}
 	
 	private void locationMode() {
-		if (model.locationMode != LocationMode.DIRECT) {
+		if (record.locationMode != LocationMode.DIRECT) {
 			blank_line()
-			if (model.locationMode == LocationMode.CALC) {
+			if (record.locationMode == LocationMode.CALC) {
 				calc()
-			} else if (model.locationMode == LocationMode.VIA) {
+			} else if (record.locationMode == LocationMode.VIA) {
 				via()
-			} else if (model.locationMode == LocationMode.VSAM) {
+			} else if (record.locationMode == LocationMode.VSAM) {
 				vsam()
-			} else if (model.locationMode == LocationMode.VSAM_CALC) {
+			} else if (record.locationMode == LocationMode.VSAM_CALC) {
 				vsamCalc()
 			}
 		}
@@ -84,20 +87,20 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	
 	private void calc() {
 		without_tab 'calc {'
-		for (keyElement in model.calcKey.elements) {			
+		for (keyElement in record.calcKey.elements) {			
 			with_1_tab "element '${keyElement.element.name}'"
 		}			
-		with_1_tab "duplicates '${replaceUnderscoresBySpaces(model.calcKey.duplicatesOption)}'"
+		with_1_tab "duplicates '${replaceUnderscoresBySpaces(record.calcKey.duplicatesOption)}'"
 		without_tab '}'
 	}
 	
 	private void via() {
 		without_tab 'via {'
-		with_1_tab "set '${model.viaSpecification.set.name}'"
-		if (model.viaSpecification.symbolicDisplacementName) {			
-			with_1_tab "displacement '${model.viaSpecification.symbolicDisplacementName}'"			
-		} else if (model.viaSpecification.displacementPageCount) {			
-			with_1_tab "displacement ${model.viaSpecification.displacementPageCount}"
+		with_1_tab "set '${record.viaSpecification.set.name}'"
+		if (record.viaSpecification.symbolicDisplacementName) {			
+			with_1_tab "displacement '${record.viaSpecification.symbolicDisplacementName}'"			
+		} else if (record.viaSpecification.displacementPageCount) {			
+			with_1_tab "displacement ${record.viaSpecification.displacementPageCount}"
 		}		
 		without_tab '}'
 	}
@@ -110,16 +113,16 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	
 	private void vsamCalc() {
 		without_tab 'vsamCalc {'
-		for (keyElement in model.calcKey.elements) {
+		for (keyElement in record.calcKey.elements) {
 			with_1_tab "element '${keyElement.element.name}'"
 		}
-		with_1_tab "duplicates '${replaceUnderscoresBySpaces(model.calcKey.duplicatesOption)}'"
+		with_1_tab "duplicates '${replaceUnderscoresBySpaces(record.calcKey.duplicatesOption)}'"
 		vsamType()
 		without_tab '}'
 	}
 	
 	private void vsamType() {
-		VsamType vsamType = model.vsamType
+		VsamType vsamType = record.vsamType
 		with_1_tab "type ${vsamType.lengthType}"
 		if (vsamType.spanned) {
 			with_1_tab 'spanned'
@@ -128,21 +131,21 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 
 	private void area() {
 		blank_line()
-		if (!model.areaSpecification.symbolicSubareaName &&
-			!model.areaSpecification.offsetExpression ||
-			model.areaSpecification.offsetExpression &&
-			!model.areaSpecification.offsetExpression.offsetPageCount &&
-			!model.areaSpecification.offsetExpression.offsetPercent &&
-			!model.areaSpecification.offsetExpression.pageCount &&
-			!model.areaSpecification.offsetExpression.percent) {
+		if (!record.areaSpecification.symbolicSubareaName &&
+			!record.areaSpecification.offsetExpression ||
+			record.areaSpecification.offsetExpression &&
+			!record.areaSpecification.offsetExpression.offsetPageCount &&
+			!record.areaSpecification.offsetExpression.offsetPercent &&
+			!record.areaSpecification.offsetExpression.pageCount &&
+			!record.areaSpecification.offsetExpression.percent) {
 		
-			without_tab "area '${model.areaSpecification.area.name}'"
+			without_tab "area '${record.areaSpecification.area.name}'"
 		} else {
-			without_tab "area '${model.areaSpecification.area.name}' {"
-			if (model.areaSpecification.symbolicSubareaName) {
-				with_1_tab "subarea '${model.areaSpecification.symbolicSubareaName}'"
-			} else if (model.areaSpecification.offsetExpression) {
-				OffsetExpression offsetExpression = model.areaSpecification.offsetExpression
+			without_tab "area '${record.areaSpecification.area.name}' {"
+			if (record.areaSpecification.symbolicSubareaName) {
+				with_1_tab "subarea '${record.areaSpecification.symbolicSubareaName}'"
+			} else if (record.areaSpecification.offsetExpression) {
+				OffsetExpression offsetExpression = record.areaSpecification.offsetExpression
 				if (offsetExpression.offsetPageCount) {
 					with_1_tab "offsetPages ${offsetExpression.offsetPageCount}"		
 				} else if (offsetExpression.offsetPercent) {		
@@ -159,41 +162,40 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	}
 	
 	private void minimumRootLength() {
-		if (model.minimumRootLength) { 	// we need everything non-null, so also a zero
+		if (record.minimumRootLength) { 	// we need everything non-null, so also a zero
 			blank_line()
-			without_tab "minimumRootLength ${model.minimumRootLength}"
+			without_tab "minimumRootLength ${record.minimumRootLength}"
 		}
 	}
 	
 	private void minimumFragmentLength() {
-		if (model.minimumFragmentLength) {	// we need everything non-null, so also a zero
-			if (!model.minimumRootLength) {
+		if (record.minimumFragmentLength) {	// we need everything non-null, so also a zero
+			if (!record.minimumRootLength) {
 				blank_line()
 			}
-			without_tab "minimumFragmentLength ${model.minimumFragmentLength}"
+			without_tab "minimumFragmentLength ${record.minimumFragmentLength}"
 		}
 	}
 	
 	private void procedures() {
-		if (model.procedures) {
+		if (record.procedures) {
 			blank_line()	
 		}
-		for (call in model.procedures) {
+		for (call in record.procedures) {
 			without_tab "call '${call.procedure.name} ${call.callTime} ${replaceUnderscoresBySpaces(call.verb)}'"
 		}
 	}
 	
 	private void elements() {
-		def elementDslBuilderProperties = 
-			[ output : output , initialTabs : initialTabs + 2 , generateName : false ];
 		blank_line()
 		without_tab 'elements {'
-		for (element in model.rootElements) {
-			if (element != model.rootElements[0]) {
+		for (element in record.rootElements) {
+			if (element != record.rootElements[0]) {
 				blank_line()
 			}
 			with_1_tab "element '${element.name}' {"
-			new ElementSyntaxBuilder(elementDslBuilderProperties).build(element)
+			new ElementSyntaxBuilder([ output : output , initialTabs : initialTabs + 2 , 
+									   generateName : false ]).build(element)
 			with_1_tab '}'
 		}
 		without_tab '}'
@@ -202,11 +204,11 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	private void diagram() {
 		blank_line()
 		without_tab 'diagram {'
-		if (model.getStorageMode() != StorageMode.FIXED) {			
-			with_1_tab "storageMode '${replaceUnderscoresBySpaces(model.storageMode)}'"			
+		if (record.getStorageMode() != StorageMode.FIXED) {			
+			with_1_tab "storageMode '${replaceUnderscoresBySpaces(record.storageMode)}'"			
 		}							
-		with_1_tab "x ${model.diagramLocation.x}"
-		with_1_tab "y ${model.diagramLocation.y}"
+		with_1_tab "x ${record.diagramLocation.x}"
+		with_1_tab "y ${record.diagramLocation.y}"
 		without_tab '}'
 	}
 	

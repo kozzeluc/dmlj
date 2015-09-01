@@ -19,12 +19,18 @@ package org.lh.dmlj.schema.editor.dsl.builder.syntax
 import org.lh.dmlj.schema.Element
 import org.lh.dmlj.schema.IndexElement
 import org.lh.dmlj.schema.OccursSpecification
-import org.lh.dmlj.schema.Usage;
+import org.lh.dmlj.schema.Usage
 
+import groovy.transform.CompileStatic;;
+
+@CompileStatic
 class ElementSyntaxBuilder extends AbstractSyntaxBuilder<Element> {
 	
+	private Element element
+	
 	@Override
-	protected String build() {
+	protected String doBuild(Element model) {
+		element = model
 		level()
 		name()		
 		baseName()		
@@ -39,37 +45,36 @@ class ElementSyntaxBuilder extends AbstractSyntaxBuilder<Element> {
 	
 	private void name() {
 		if (generateName) {
-			without_tab "name '${model.name}'"
+			without_tab "name '${element.name}'"
 		}
 	}
 	
 	private void level() {
-		without_tab "level ${model.level}"
+		without_tab "level ${element.level}"
 	}
 	
 	private void baseName() {
-		if (model.baseName && model.baseName != model.name) {
-			without_tab "baseName '${model.baseName}'"
+		if (element.baseName && element.baseName != element.name) {
+			without_tab "baseName '${element.baseName}'"
 		}
 	}
 	
 	private void redefines() {
-		if (model.redefines) {
-			without_tab "redefines '${model.redefines.name}'"
+		if (element.redefines) {
+			without_tab "redefines '${element.redefines.name}'"
 		}
 	}
 	
 	private void children() {
-		def elementDslBuilderProperties =
-			[ output : output , initialTabs : initialTabs + 2 , generateName : false ];
-		if (model.children) {
+		if (element.children) {
 			without_tab 'children {'
-			for (child in model.children) {
-				if (child != model.children[0]) {
+			for (child in element.children) {
+				if (child != element.children[0]) {
 					blank_line()
 				}
 				with_1_tab "element '${child.name}' {"
-				new ElementSyntaxBuilder(elementDslBuilderProperties).build(child)
+				new ElementSyntaxBuilder([ output : output , initialTabs : initialTabs + 2 , 
+										   generateName : false ]).build(child)
 				with_1_tab '}'
 			}
 			without_tab '}'
@@ -77,26 +82,26 @@ class ElementSyntaxBuilder extends AbstractSyntaxBuilder<Element> {
 	}
 	
 	private void picture() {
-		if (model.picture) {	
-			without_tab "picture '${model.picture}'"
+		if (element.picture) {	
+			without_tab "picture '${element.picture}'"
 		}
 	}
 	
 	private void usage() {
-		if (model.usage != Usage.DISPLAY && model.usage != Usage.CONDITION_NAME) {
-			without_tab "usage '${replaceUnderscoresBySpaces(model.usage)}'"
+		if (element.usage != Usage.DISPLAY && element.usage != Usage.CONDITION_NAME) {
+			without_tab "usage '${replaceUnderscoresBySpaces(element.usage)}'"
 		}
 	}
 	
 	private void value() {
-		if (model.value) {
-			without_tab "value ${withQuotes(model.value)}"			
+		if (element.value) {
+			without_tab "value ${withQuotes(element.value)}"			
 		}
 	}
 	
 	private void occurs() {
-		if (model.occursSpecification) {
-			OccursSpecification occursSpecification = model.occursSpecification
+		if (element.occursSpecification) {
+			OccursSpecification occursSpecification = element.occursSpecification
 			if (!occursSpecification.dependingOn && !occursSpecification.indexElements) {
 				without_tab "occurs ${occursSpecification.count}"
 			} else {
@@ -120,7 +125,7 @@ class ElementSyntaxBuilder extends AbstractSyntaxBuilder<Element> {
 	}
 	
 	private void nullable() {
-		if (model.nullable) {
+		if (element.nullable) {
 			without_tab 'nullable'
 		}
 	}

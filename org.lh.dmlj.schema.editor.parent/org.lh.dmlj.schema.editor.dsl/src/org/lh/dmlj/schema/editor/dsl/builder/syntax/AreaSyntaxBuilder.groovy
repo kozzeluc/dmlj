@@ -18,27 +18,33 @@ package org.lh.dmlj.schema.editor.dsl.builder.syntax
 
 import org.lh.dmlj.schema.AreaProcedureCallSpecification
 import org.lh.dmlj.schema.SchemaArea
-import org.lh.dmlj.schema.Set;;
+import org.lh.dmlj.schema.Set
 
+import groovy.transform.CompileStatic;;;
+
+@CompileStatic
 class AreaSyntaxBuilder extends AbstractSyntaxBuilder<SchemaArea> {
 	
+	private SchemaArea area
+	
 	@Override
-	protected String build() {				
+	protected String doBuild(SchemaArea model) {
+		area = model			
 		name()
 		procedures()
 	}
 	
 	private void name() {
 		if (generateName) {		
-			without_tab "name '${model.name}'"
+			without_tab "name '${area.name}'"
 		}		
 	}
 	
 	private void procedures() {
-		if (model.procedures && generateName) {
+		if (area.procedures && generateName) {
 			blank_line()
 		}
-		for (call in model.procedures) {
+		for (call in area.procedures) {
 			def procedureCallSpecification = call.getProcedure().name
 			procedureCallSpecification <<= ' '
 			procedureCallSpecification <<= call.callTime
