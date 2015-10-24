@@ -132,8 +132,8 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 			}
 			blank_line()		
 			with_1_tab "diagram {"
-			with_2_tabs "x ${set.systemOwner.diagramLocation.x}"
-			with_2_tabs "y ${set.systemOwner.diagramLocation.y}"
+			with_2_tabs "x ${xOrY(set.systemOwner.diagramLocation.x)}"
+			with_2_tabs "y ${xOrY(set.systemOwner.diagramLocation.y)}"
 			with_1_tab "}"
 			without_tab "}"
 		}
@@ -143,8 +143,8 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 		if (set.mode == SetMode.VSAM_INDEX && set.vsamIndex) {
 			blank_line()
 			without_tab "vsamIndex {"
-			with_1_tab "x ${set.vsamIndex.diagramLocation.x}"
-			with_1_tab "y ${set.vsamIndex.diagramLocation.y}"
+			with_1_tab "x ${xOrY(set.vsamIndex.diagramLocation.x)}"
+			with_1_tab "y ${xOrY(set.vsamIndex.diagramLocation.y)}"
 			without_tab "}"
 		}
 	}
@@ -217,8 +217,8 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 		with_1_tab "diagram {"
 		
 		with_2_tabs "label {"
-		with_3_tabs "x ${memberRole.connectionLabel.diagramLocation.x}"
-		with_3_tabs "y ${memberRole.connectionLabel.diagramLocation.y}"
+		with_3_tabs "x ${xOrY(memberRole.connectionLabel.diagramLocation.x)}"
+		with_3_tabs "y ${xOrY(memberRole.connectionLabel.diagramLocation.y)}"
 		with_2_tabs "}"
 		
 		if (firstConnectionPart.sourceEndpointLocation || firstConnectionPart.bendpointLocations ||
@@ -230,16 +230,16 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 		
 		if (firstConnectionPart.sourceEndpointLocation) {
 			with_3_tabs "start {"
-			with_4_tabs "x ${firstConnectionPart.sourceEndpointLocation.x}"
-			with_4_tabs "y ${firstConnectionPart.sourceEndpointLocation.y}"
+			with_4_tabs "x ${xOrY(firstConnectionPart.sourceEndpointLocation.x)}"
+			with_4_tabs "y ${xOrY(firstConnectionPart.sourceEndpointLocation.y)}"
 			with_3_tabs "}"
 		}
 		
 		for (DiagramLocation bendpoint in firstConnectionPart.bendpointLocations) {			
 			blank_line()
 			with_3_tabs "bendpoint {"
-			with_4_tabs "x ${bendpoint.x}"
-			with_4_tabs "y ${bendpoint.y}"
+			with_4_tabs "x ${xOrY(bendpoint.x)}"
+			with_4_tabs "y ${xOrY(bendpoint.y)}"
 			with_3_tabs "}"
 		}
 		
@@ -250,8 +250,8 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 			for (ConnectionPart connectionPart in memberRole.connectionParts) {
 				blank_line()
 				with_4_tabs "connector {"
-				with_5_tabs "x ${connectionPart.getConnector().diagramLocation.x}"
-				with_5_tabs "y ${connectionPart.getConnector().diagramLocation.y}"
+				with_5_tabs "x ${xOrY(connectionPart.getConnector().diagramLocation.x)}"
+				with_5_tabs "y ${xOrY(connectionPart.getConnector().diagramLocation.y)}"
 				with_4_tabs "}"
 			}
 			with_3_tabs "}"	
@@ -259,8 +259,8 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 			for (DiagramLocation bendpoint in secondConnectionPart.bendpointLocations) {
 				blank_line()
 				with_3_tabs "bendpoint {"
-				with_4_tabs "x ${bendpoint.x}"
-				with_4_tabs "y ${bendpoint.y}"
+				with_4_tabs "x ${xOrY(bendpoint.x)}"
+				with_4_tabs "y ${xOrY(bendpoint.y)}"
 				with_3_tabs "}"
 			}
 		}
@@ -270,8 +270,8 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 				blank_line()
 			}
 			with_3_tabs "end {"
-			with_4_tabs "x ${lastConnectionPart.targetEndpointLocation.x}"
-			with_4_tabs "y ${lastConnectionPart.targetEndpointLocation.y}"
+			with_4_tabs "x ${xOrY(lastConnectionPart.targetEndpointLocation.x)}"
+			with_4_tabs "y ${xOrY(lastConnectionPart.targetEndpointLocation.y)}"
 			with_3_tabs "}"
 		}
 		

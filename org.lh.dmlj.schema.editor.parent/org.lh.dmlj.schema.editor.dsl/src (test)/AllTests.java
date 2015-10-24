@@ -20,8 +20,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.lh.dmlj.schema.editor.dsl.builder.model.AreaModelBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.model.ElementModelBuilderSpec;
 import org.lh.dmlj.schema.editor.dsl.builder.model.RecordModelBuilderSpec;
 import org.lh.dmlj.schema.editor.dsl.builder.model.SchemaModelBuilderSpec;
+import org.lh.dmlj.schema.editor.dsl.builder.model.SetModelBuilderSpec;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.AreaSyntaxBuilderSpec;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.ElementSyntaxBuilderSpec;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilderSpec;
@@ -39,7 +41,9 @@ import org.lh.dmlj.schema.editor.dsl.builder.syntax.SetSyntaxBuilderSpec;
 	
 	AreaModelBuilderSpec.class,
 	RecordModelBuilderSpec.class,
-	SchemaModelBuilderSpec.class	
+	ElementModelBuilderSpec.class,
+	SchemaModelBuilderSpec.class,
+	SetModelBuilderSpec.class
 	
 })
 public class AllTests {	

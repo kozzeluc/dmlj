@@ -341,7 +341,8 @@ shareStructure 'LOGREC-143 version 1'
 recordId 143
  
 area 'DDLDCLOG'
- 
+
+minimumRootLength 0
 minimumFragmentLength 4
  
 elements {
@@ -440,8 +441,44 @@ elements {
 		
 	}
 	
+	def "Record with location mode VSAM (fixed nonspanned)"() {
+		
+		given: "a record syntax builder and a slightly tweaked version of the EMPSCHM version 100"
+				"schema"
+		RecordSyntaxBuilder builder = new RecordSyntaxBuilder()
+		Schema schema = loadSchema('testdata/EMPSCHM version 100.schema')
+		SchemaRecord record = schema.getRecord('INSURANCE-PLAN')
+		record.locationMode = LocationMode.VSAM
+		record.calcKey = null
+		VsamType vsamType = SchemaFactory.eINSTANCE.createVsamType()
+		vsamType.lengthType = VsamLengthType.FIXED
+		vsamType.spanned = false
+		record.vsamType = vsamType
+		
+		when: "passing the record to the builder's build method"
+		String syntax = builder.build(record)
+		
+		then: "the builder creates the syntax that describes the record: a 'vsam' specification is"
+			  "generated"
+		syntax.startsWith(expected(
+"""
+name 'INSURANCE-PLAN'
+shareStructure 'INSURANCE-PLAN version 100'
+recordId 435
+ 
+vsam
+ 
+area 'INS-DEMO-REGION' {
+    offsetPages 1
+    pages 4
+}
+ 
+elements {
+"""))
+	}
+	
 	@Unroll
-	def "Record with location mode VSAM"() {
+	def "Record with location mode VSAM (other than fixed nonspanned)"() {
 		
 		given: "a record syntax builder and a slightly tweaked version of the EMPSCHM version 100"
 				"schema"
@@ -480,14 +517,58 @@ elements {
 		
 		where: "the VSAM type is specified as follows"
 		lengthType				| spanned | expectedVsamBody 
-		VsamLengthType.FIXED	| false    | 'type FIXED'
-		VsamLengthType.FIXED	| true     | 'type FIXED\n    spanned'
-		VsamLengthType.VARIABLE	| false    | 'type VARIABLE'
-		VsamLengthType.VARIABLE	| true     | 'type VARIABLE\n    spanned'
+		VsamLengthType.FIXED	| true     | "spanned"
+		VsamLengthType.VARIABLE	| false    | "type 'VARIABLE'"
+		VsamLengthType.VARIABLE	| true     | "type 'VARIABLE'\n    spanned"
 	}
 	
 	@Unroll
-	def "Record with location mode VSAM CALC"() {
+	def "Record with location mode VSAM CALC (fixed nonspanned)"() {
+		
+	given: "a record syntax builder and a slightly tweaked version of the EMPSCHM version 100"
+		   "schema"
+	RecordSyntaxBuilder builder = new RecordSyntaxBuilder()
+	Schema schema = loadSchema('testdata/EMPSCHM version 100.schema')
+	SchemaRecord record = schema.getRecord('INSURANCE-PLAN')
+	record.locationMode = LocationMode.VSAM_CALC
+	record.calcKey.duplicatesOption = duplicatesOption
+	VsamType vsamType = SchemaFactory.eINSTANCE.createVsamType()
+	vsamType.lengthType = VsamLengthType.FIXED
+	vsamType.spanned = false
+	record.vsamType = vsamType
+	
+	when: "passing the record to the builder's build method"
+	String syntax = builder.build(record)
+	
+	then: "the builder creates the syntax that describes the record: a 'vsamCalc' specification"
+		  "is generated"
+	syntax.startsWith(expected(
+"""
+name 'INSURANCE-PLAN'
+shareStructure 'INSURANCE-PLAN version 100'
+recordId 435
+ 
+vsamCalc {
+    element 'INS-PLAN-CODE-0435'
+    duplicates '$duplicatesOptionInSyntax'
+}
+ 
+area 'INS-DEMO-REGION' {
+    offsetPages 1
+    pages 4
+}
+ 
+elements {
+"""))
+	
+	where: "the duplicates option is specified as follows:"
+	duplicatesOption 			 | duplicatesOptionInSyntax
+	DuplicatesOption.UNORDERED 	 | 'UNORDERED'				 
+	DuplicatesOption.NOT_ALLOWED | 'NOT ALLOWED'			 			 
+}
+	
+	@Unroll
+	def "Record with location mode VSAM CALC (other than fixed nonspanned)"() {
 			
 		given: "a record syntax builder and a slightly tweaked version of the EMPSCHM version 100"
 			   "schema"
@@ -528,14 +609,12 @@ elements {
 		
 		where: "the duplicates option and VSAM type are specified as follows:"
 		duplicatesOption 			 | lengthType 			   | spanned | duplicatesOptionInSyntax | expectedVsamBodyRemainder
-		DuplicatesOption.UNORDERED 	 | VsamLengthType.FIXED    | false   | 'UNORDERED'				 | 'type FIXED'
-		DuplicatesOption.UNORDERED 	 | VsamLengthType.FIXED    | true    | 'UNORDERED'				 | 'type FIXED\n    spanned'
-		DuplicatesOption.UNORDERED 	 | VsamLengthType.VARIABLE | false   | 'UNORDERED'				 | 'type VARIABLE'
-		DuplicatesOption.UNORDERED 	 | VsamLengthType.VARIABLE | true    | 'UNORDERED'				 | 'type VARIABLE\n    spanned'
-		DuplicatesOption.NOT_ALLOWED | VsamLengthType.FIXED    | false   | 'NOT ALLOWED'			 | 'type FIXED'
-		DuplicatesOption.NOT_ALLOWED | VsamLengthType.FIXED    | true    | 'NOT ALLOWED'			 | 'type FIXED\n    spanned'
-		DuplicatesOption.NOT_ALLOWED | VsamLengthType.VARIABLE | false   | 'NOT ALLOWED'			 | 'type VARIABLE'
-		DuplicatesOption.NOT_ALLOWED | VsamLengthType.VARIABLE | true    | 'NOT ALLOWED'			 | 'type VARIABLE\n    spanned'
+		DuplicatesOption.UNORDERED 	 | VsamLengthType.FIXED    | true    | 'UNORDERED'				 | "spanned"
+		DuplicatesOption.UNORDERED 	 | VsamLengthType.VARIABLE | false   | 'UNORDERED'				 | "type 'VARIABLE'"
+		DuplicatesOption.UNORDERED 	 | VsamLengthType.VARIABLE | true    | 'UNORDERED'				 | "type 'VARIABLE'\n    spanned"
+		DuplicatesOption.NOT_ALLOWED | VsamLengthType.FIXED    | true    | 'NOT ALLOWED'			 | "spanned"
+		DuplicatesOption.NOT_ALLOWED | VsamLengthType.VARIABLE | false   | 'NOT ALLOWED'			 | "type 'VARIABLE'"
+		DuplicatesOption.NOT_ALLOWED | VsamLengthType.VARIABLE | true    | 'NOT ALLOWED'			 | "type 'VARIABLE'\n    spanned"
 	}
 	
 	@Unroll
@@ -674,9 +753,9 @@ area 'ORG-DEMO-REGION' {
 minimumRootLength 24
 minimumFragmentLength 296
  
-call 'IDMSCOMP $syntaxPart'
-call 'IDMSCOMP $syntaxPart'
-call 'IDMSDCOM $syntaxPart'
+procedure 'IDMSCOMP $syntaxPart'
+procedure 'IDMSCOMP $syntaxPart'
+procedure 'IDMSDCOM $syntaxPart'
  
 elements {
 """))

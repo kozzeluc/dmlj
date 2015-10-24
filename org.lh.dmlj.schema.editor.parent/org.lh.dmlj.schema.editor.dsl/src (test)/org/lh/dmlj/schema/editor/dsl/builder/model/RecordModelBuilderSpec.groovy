@@ -16,9 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.model
 
+import org.lh.dmlj.schema.DuplicatesOption
+import org.lh.dmlj.schema.Key
 import org.lh.dmlj.schema.LocationMode
 import org.lh.dmlj.schema.Procedure
-import org.lh.dmlj.schema.ProcedureCallSpecification
 import org.lh.dmlj.schema.ProcedureCallTime
 import org.lh.dmlj.schema.RecordProcedureCallSpecification
 import org.lh.dmlj.schema.RecordProcedureCallVerb
@@ -27,8 +28,7 @@ import org.lh.dmlj.schema.SchemaArea
 import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.StorageMode
 import org.lh.dmlj.schema.Usage
-import org.lh.dmlj.schema.editor.dsl.builder.model.RecordBuilder;
-import org.lh.dmlj.schema.editor.dsl.builder.model.SchemaBuilder;
+import org.lh.dmlj.schema.VsamLengthType
 
 import spock.lang.Unroll
 
@@ -200,7 +200,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build the simpliest record, NOT referencing a given schema, from only a name"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the record name"
 		SchemaRecord record = builder.build('RECORD1')
@@ -225,10 +225,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		def schemaDefinition = {
 			name 'EMPSCHM'
 		}
-		def schemaBuilder = new SchemaBuilder()
+		def schemaBuilder = new SchemaModelBuilder()
 		Schema schema = schemaBuilder.build(schemaDefinition)
 		assert schema
-		def RecordBuilder builder = new RecordBuilder( [ schema : schema] )
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema] )
 		
 		when: "building the record passing the record name"
 		SchemaRecord record = builder.build('RECORD1')
@@ -252,7 +252,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build the simpliest record, NOT referencing a given schema, from an empty closure"() {
 		
 		given: "a SchemaRecord builder without a Schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing an empty closure"
 		def definition = {}
@@ -278,10 +278,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		def schemaDefinition = {
 			name 'EMPSCHM'
 		}
-		def schemaBuilder = new SchemaBuilder()
+		def schemaBuilder = new SchemaModelBuilder()
 		Schema schema = schemaBuilder.build(schemaDefinition)
 		assert schema		
-		def RecordBuilder builder = new RecordBuilder( [ schema : schema ] )
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )
 		
 		when: "building the record passing an empty closure"
 		def definition = {}
@@ -306,7 +306,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build the simpliest record, NOT referencing a given schema, passing nothing at all"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing no arguments at all"
 		SchemaRecord record = builder.build()
@@ -331,10 +331,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		def schemaDefinition = {
 			name 'EMPSCHM'
 		}
-		def schemaBuilder = new SchemaBuilder()
+		def schemaBuilder = new SchemaModelBuilder()
 		Schema schema = schemaBuilder.build(schemaDefinition)
 		assert schema
-		def RecordBuilder builder = new RecordBuilder( [ schema : schema ] )
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )
 		
 		when: "building the record passing no arguments at all"
 		SchemaRecord record = builder.build()
@@ -358,7 +358,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build the simpliest record, NOT referencing a given schema, from a closure specifying only a name"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing a closure with the record name"
 		def definition = {
@@ -386,10 +386,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		def schemaDefinition = {
 			name 'EMPSCHM'
 		}
-		def schemaBuilder = new SchemaBuilder()
+		def schemaBuilder = new SchemaModelBuilder()
 		Schema schema = schemaBuilder.build(schemaDefinition)
 		assert schema
-		def RecordBuilder builder = new RecordBuilder( [ schema : schema ] )
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )
 		
 		when: "building the record passing a closure with the record name"
 		def definition = {
@@ -416,7 +416,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build the simpliest record, NOT referencing a given schema, from a name AND a closure"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing a name and a closure containing the record id"
 		def definition = {
@@ -444,10 +444,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		def schemaDefinition = {
 			name 'EMPSCHM'
 		}
-		def schemaBuilder = new SchemaBuilder()
+		def schemaBuilder = new SchemaModelBuilder()
 		Schema schema = schemaBuilder.build(schemaDefinition)
 		assert schema
-		def RecordBuilder builder = new RecordBuilder( [ schema : schema ] )
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )
 		
 		when: "building the record passing a name and a closure containing the record id"
 		def definition = {
@@ -475,7 +475,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build a record, NOT referencing a given schema, from a closure only, controlling ALL names and versions"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing a name and a closure containing the record id, record"
 		      "synonym and base record"
@@ -511,10 +511,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		def schemaDefinition = {
 			name 'EMPSCHM'
 		}
-		def schemaBuilder = new SchemaBuilder()
+		def schemaBuilder = new SchemaModelBuilder()
 		Schema schema = schemaBuilder.build(schemaDefinition)
 		assert schema
-		def RecordBuilder builder = new RecordBuilder( [ schema : schema ] )
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )
 		
 		when: "building the record passing a name and a closure containing the record id, record"
 		      "synonym and base record"
@@ -549,7 +549,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "specify a storage mode"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing a closure containing the storage mode"
 		def definition = {
@@ -574,7 +574,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build a record with procedures called, NOT referencing a given schema"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record with a closure containing 4 procedure calls,"
 			  "referring to 2 distinct procedures"
@@ -613,13 +613,13 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				procedure 'PROC1 BEFORE FINISH'
 			}
 		}
-		def schemaBuilder = new SchemaBuilder()
+		def schemaBuilder = new SchemaModelBuilder()
 		Schema schema = schemaBuilder.build(schemaDefinition)
 		assert schema
 		assert schema.procedures
 		assert schema.procedures.size == 1
 		assert schema.procedures[0].name == 'PROC1'
-		def RecordBuilder builder = new RecordBuilder( [ schema : schema ] )							
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )							
 																										
 		when: "building the record with a closure containing 4 procedure calls, referring to 2"			
 			  "distinct procedures, of which 1 is already defined in the schema"						
@@ -654,7 +654,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "the callTime should be derived from what's in the closure's procedure value"() {
 		
 		given: "a record builder"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record with a closure containing a procedure call"
 		def definition = {
@@ -676,7 +676,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "the function should be derived from what's in the closure's procedure value"() {
 		
 		given: "a record builder"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record with a closure containing a procedure call"
 		def definition = {
@@ -703,7 +703,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "the minimum root en fragment lengths should be taken from what's in the closure"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing a closure containing a minimum root and fragment length"
 		def definition = {
@@ -722,7 +722,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "the record figure's x and y diagram coordinates should be taken from what's in the closure"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing a closure containing the figure's x and y coordinates"
 		def definition = {
@@ -743,7 +743,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area without symbolic subarea or offset expression (no schema specified, area name, no area body)"() {
 	
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name without a closure"
 		def definition = {
@@ -758,7 +758,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area without symbolic subarea or offset expression (no schema specified, name and empty closure)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and an empty closure"
 		def definition = {
@@ -773,7 +773,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area without symbolic subarea or offset expression (no schema specified, area body contains name)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing a closure containing an area name"
 		def definition = {
@@ -790,7 +790,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area with a symbolic subarea name (no schema specified, area name and area body)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the symbolic"
 			  "subarea name"
@@ -809,7 +809,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area with offset pages (no schema specified, area name and area body)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the offset page"
 			  "count"
@@ -828,7 +828,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area with offset percent (no schema specified, area name and area body)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the offset percent"
 		def definition = {
@@ -846,7 +846,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area with pages in its offset expression (no schema specified, area name and area body)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the page count"
 		def definition = {
@@ -864,7 +864,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area with a percentage in its offset expression (no schema specified, area name and area body)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the percentage"
 		def definition = {
@@ -882,7 +882,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area with offset pages and pages (no schema specified, area name and area body)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the offset page"
 			  "count"
@@ -914,7 +914,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "assign an area with offset percent and percent (no schema specified, area name and area body)"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the offset page"
 			  "count"
@@ -943,10 +943,111 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert record.areaSpecification.area.name == "INS-DEMO-REGION"
 	}
 	
+	def "assign an existing area"() {
+		 
+		given: "a record builder with a given schema"
+		def schemaDefinition = {
+			name 'EMPSCHM'
+			version 100
+			area 'EMP-DEMO-REGION'
+		}
+		def schemaBuilder = new SchemaModelBuilder()
+		Schema schema = schemaBuilder.build(schemaDefinition)
+		assert schema
+		SchemaArea empDemoRegion = schema.getArea('EMP-DEMO-REGION')
+		assert empDemoRegion
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )
+		 
+		when: ""
+		def definition = {
+			area 'EMP-DEMO-REGION'
+		}
+		SchemaRecord record = builder.build(definition)
+		 
+		then: ""
+		record
+		record.areaSpecification
+		record.areaSpecification.area.is(empDemoRegion)
+		!record.areaSpecification.offsetExpression
+	    record.schema
+		record.schema.is(schema)
+		schema.areas.size() == 1
+		schema.areas[0].is(empDemoRegion)
+	}
+	
+	def "assign an existing area (with offset expression)"() {
+		
+		given: "a record builder with a given schema"
+		def schemaDefinition = {
+			name 'EMPSCHM'
+			version 100
+			area 'EMP-DEMO-REGION'
+		}
+		def schemaBuilder = new SchemaModelBuilder()
+		Schema schema = schemaBuilder.build(schemaDefinition)
+		assert schema
+		SchemaArea empDemoRegion = schema.getArea('EMP-DEMO-REGION')
+		assert empDemoRegion
+		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )
+		
+		when: ""
+		def definition = {
+			area 'EMP-DEMO-REGION' {
+				offsetPages 5
+				pages 10
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: ""
+		record
+		record.areaSpecification
+	   	record.areaSpecification.area.is(empDemoRegion)
+		record.areaSpecification.offsetExpression
+		record.areaSpecification.offsetExpression.offsetPageCount == 5
+		!record.areaSpecification.offsetExpression.offsetPercent
+		record.areaSpecification.offsetExpression.pageCount == 10
+		!record.areaSpecification.offsetExpression.percent
+		record.schema
+		record.schema.is(schema)
+		schema.areas.size() == 1
+		schema.areas[0].is(empDemoRegion)
+    }
+	
+	def "assign an non-existing area"() {
+		
+	   given: "a record builder with a given schema"
+	   def schemaDefinition = {
+		   name 'EMPSCHM'
+		   version 100
+	   }
+	   def schemaBuilder = new SchemaModelBuilder()
+	   Schema schema = schemaBuilder.build(schemaDefinition)
+	   assert schema
+	   assert !schema.getArea('EMP-DEMO-REGION')
+	   def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )
+		
+	   when: ""
+	   def definition = {
+		   area 'EMP-DEMO-REGION'
+	   }
+	   SchemaRecord record = builder.build(definition)
+		
+	   then: ""
+	   record
+	   record.areaSpecification
+	   record.areaSpecification.area.name == 'EMP-DEMO-REGION'
+	   !record.areaSpecification.offsetExpression
+	   record.schema
+	   record.schema.is(schema)
+	   schema.areas.size() == 1
+	   schema.areas[0] == record.areaSpecification.area
+   }
+	
 	def "offsetPages and offsetPercent are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the offset page"
 			  "count and offset percent (in that order)"
@@ -966,7 +1067,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "offsetPercent and offsetPages are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the offset percent"
 			  "and offset pages (in that order)"
@@ -986,7 +1087,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "pages and percent are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the page count"
 			  "and percent (in that order)"
@@ -1006,7 +1107,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "percent and pages are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the percent and"
 			  "pages (in that order)"
@@ -1026,7 +1127,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "subarea and offsetPages are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the subarea and"
 			  "offsetPages (in that order)"
@@ -1046,7 +1147,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "offsetPages and subarea are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the"
 			  "offsetPages and subarea (in that order)"
@@ -1066,7 +1167,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "subarea and offsetPercent are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the subarea and"
 			  "offsetPercent (in that order)"
@@ -1086,7 +1187,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "offsetPercent and subarea are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the"
 			  "offsetPercent and subarea (in that order)"
@@ -1106,7 +1207,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "subarea and pages are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the subarea and"
 			  "pages (in that order)"
@@ -1126,7 +1227,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "pages and subarea are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the pages and"
 			  "subarea (in that order)"
@@ -1146,7 +1247,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "subarea and percent are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the subarea and"
 			  "percent (in that order)"
@@ -1166,7 +1267,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "percent and subarea are mutually exclusive"() {
 		
 		given: "a record builder without a schema"
-		def RecordBuilder builder = new RecordBuilder()
+		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record passing the area name and a closure containing the percent and"
 			  "subarea (in that order)"
@@ -1181,6 +1282,965 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		then: "the record build is rejected because percent and subarea are mutually exclusive"
 		def error = thrown(AssertionError)
 		error.message.startsWith('subarea and anything of [offsetPages, offsetPercent, pages, percent] area mutually exclusive')
+	}
+	
+	def "single simple root element"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record from te definition"
+		def definition = { 
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's element list will contain only the given element"
+		record
+		record.elements.size() == 1
+		record.rootElements.size() == 1
+		
+		record.elements[0] == record.rootElements[0]
+		record.elements[0].name == 'DEPT-ID-0410'
+		record.elements[0].level == 2
+		record.elements[0].picture == '9(4)'
+		assert !record.elements[0].children
+		!record.elements[0].parent
+	}
+
+	def "single simple root element (element name in closure)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record from te definition"
+		def definition = {
+			elements {
+				element  {
+					level 2
+					name 'DEPT-ID-0410'
+					picture '9(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's element list will contain only the given element"
+		record
+		record.elements.size() == 1
+		record.rootElements.size() == 1
+		
+		record.elements[0] == record.rootElements[0]
+		record.elements[0].name == 'DEPT-ID-0410'
+		record.elements[0].level == 2
+		record.elements[0].picture == '9(4)'
+		assert !record.elements[0].children
+		!record.elements[0].parent
+	}
+
+	def "2 simple root elements"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record from te definition"
+		def definition = {
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+				element 'DEPT-NAME-0410' {
+					level 2
+					picture 'X(45)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's element list will contain both elements"
+		record
+		record.elements.size() == 2
+		record.rootElements.size() == 2
+		
+		record.elements[0] == record.rootElements[0]
+		record.elements[0].name == 'DEPT-ID-0410'
+		record.elements[0].level == 2
+		record.elements[0].picture == '9(4)'
+		assert !record.elements[0].children
+		!record.elements[0].parent
+		
+		record.elements[1] == record.rootElements[1]
+		record.elements[1].name == 'DEPT-NAME-0410'
+		record.elements[1].level == 2
+		record.elements[1].picture == 'X(45)'
+		assert !record.elements[1].children
+		!record.elements[1].parent
+	}
+
+	def "2 simple root elements (name specified in 2 different ways)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record from te definition"
+		def definition = {
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+				element {
+					level 2
+					name 'DEPT-NAME-0410'
+					picture 'X(45)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's element list will contain both elements"
+		record
+		record.elements.size() == 2
+		record.rootElements.size() == 2
+		
+		record.elements[0] == record.rootElements[0]
+		record.elements[0].name == 'DEPT-ID-0410'
+		record.elements[0].level == 2
+		record.elements[0].picture == '9(4)'
+		assert !record.elements[0].children
+		!record.elements[0].parent
+		
+		record.elements[1] == record.rootElements[1]
+		record.elements[1].name == 'DEPT-NAME-0410'
+		record.elements[1].level == 2
+		record.elements[1].picture == 'X(45)'
+		assert !record.elements[1].children
+		!record.elements[1].parent
+	}
+
+	def "single group root element"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record from te definition"
+		def definition = {
+			elements {
+				element 'EMP-NAME-0415' {
+					level 2
+					children {
+						element 'EMP-FIRST-NAME-0415' {
+							level 3
+							picture 'X(10)'
+						}
+						element 'EMP-LAST-NAME-0415' {
+							level 3
+							picture 'X(15)'
+						}
+					}
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's element list will contain the given elements"
+		record
+		record.elements.size() == 3
+		record.rootElements.size() == 1
+		
+		record.elements[0] == record.rootElements[0]
+		record.elements[0].name == 'EMP-NAME-0415'
+		record.elements[0].level == 2
+		!record.elements[0].picture
+		record.elements[0].children.size() == 2
+		!record.elements[0].parent
+		
+		record.elements[1].name == 'EMP-FIRST-NAME-0415'
+		record.elements[1].level == 3
+		record.elements[1].picture == 'X(10)'
+		!record.elements[1].children
+		record.elements[1].parent == record.elements[0]
+		
+		record.elements[2].name == 'EMP-LAST-NAME-0415'
+		record.elements[2].level == 3
+		record.elements[2].picture == 'X(15)'
+		!record.elements[2].children
+		record.elements[2].parent == record.elements[0]
+	}
+
+	def "single group root element (names specified in 2 different ways)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record from te definition"
+		def definition = {
+			elements {
+				element {
+					level 2
+					name 'EMP-NAME-0415'
+					children {
+						element 'EMP-FIRST-NAME-0415' {
+							level 3
+							picture 'X(10)'
+						}
+						element {
+							level 3
+							name 'EMP-LAST-NAME-0415'
+							picture 'X(15)'
+						}
+					}
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's element list will contain the given elements"
+		record
+		record.elements.size() == 3
+		record.rootElements.size() == 1
+		
+		record.elements[0] == record.rootElements[0]
+		record.elements[0].name == 'EMP-NAME-0415'
+		record.elements[0].level == 2
+		!record.elements[0].picture
+		record.elements[0].children.size() == 2
+		
+		record.elements[1].name == 'EMP-FIRST-NAME-0415'
+		record.elements[1].level == 3
+		record.elements[1].picture == 'X(10)'
+		!record.elements[1].children
+		record.elements[1].parent == record.elements[0]
+		
+		record.elements[2].name == 'EMP-LAST-NAME-0415'
+		record.elements[2].level == 3
+		record.elements[2].picture == 'X(15)'
+		!record.elements[2].children
+		record.elements[2].parent == record.elements[0]
+	}
+
+	def "DIRECT record (default)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing no location mode"
+		def definition = { }
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to DIRECT"
+		record
+		record.locationMode == LocationMode.DIRECT
+	}
+	
+	def "DIRECT record (explicitly specified)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing no location mode"
+		def definition = { 
+			direct
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to DIRECT"
+		record
+		record.locationMode == LocationMode.DIRECT
+	}
+	
+	def "VSAM record (default length type, nonspanned; no closure)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VSAM without a closure"
+		def definition = {
+			vsam
+		}
+		SchemaRecord record = builder.build(definition)
+			
+		then: "the record's location mode will be set to VSAM and the VSAM type to FIXED length"
+			  "NONSPANNED"
+		record
+		record.locationMode == LocationMode.VSAM
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.FIXED
+		!record.vsamType.spanned
+	}
+	
+	def "VSAM record (default length type, nonspanned; empty closure)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VSAM without a closure"
+		def definition = {
+			vsam {				
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+			
+		then: "the record's location mode will be set to VSAM and the VSAM type to FIXED length"
+			  "NONSPANNED"
+		record
+		record.locationMode == LocationMode.VSAM
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.FIXED
+		!record.vsamType.spanned
+	}
+	
+	@Unroll
+	def "VSAM record (fixed/variable length nonspanned)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VSAM"
+		def definition = {
+			vsam {
+				type _type	
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VSAM and the VSAM type to FIXED length"
+			  "NONSPANNED"
+		record
+		record.locationMode == LocationMode.VSAM
+		record.vsamType
+		record.vsamType.lengthType == expectedLengthType
+		!record.vsamType.spanned
+		
+		where:
+		_type 	   | expectedLengthType
+		'FIXED'    | VsamLengthType.FIXED
+		'VARIABLE' | VsamLengthType.VARIABLE
+	}
+	
+	@Unroll
+	def "VSAM record (fixed/variable length spanned)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VSAM"
+		def definition = {
+			vsam {
+				type _type
+				spanned
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VSAM and the VSAM type to FIXED length"
+			  "NONSPANNED"
+		record
+		record.locationMode == LocationMode.VSAM
+		record.vsamType
+		record.vsamType.lengthType == expectedLengthType
+		record.vsamType.spanned
+		
+		where:
+		_type 	   | expectedLengthType
+		'FIXED'    | VsamLengthType.FIXED
+		'VARIABLE' | VsamLengthType.VARIABLE
+	}
+	
+	def "VIA record (no displacement specification; VIA set is a placeholder, existing schema)"() {
+		
+		given: "a record builder with a schema"
+		def schemaDefinition = {
+			name 'EMPSCHM'
+			version 100
+		}
+		def schemaBuilder = new SchemaModelBuilder()
+		Schema schema = schemaBuilder.build(schemaDefinition)
+		assert schema 
+		def RecordModelBuilder builder = new RecordModelBuilder( schema : schema )
+		
+		when: "building the record passing a location mode of VIA"
+		def definition = {
+			via {
+				set 'XYZ'
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VIA and it will refer to a VIA"
+			  "specification that refers to a placeholder set - the VIA set is to be resolved when"
+			  "the set is buing built (which is beyond the scope of this test case)"
+		record
+		record.locationMode == LocationMode.VIA
+		record.viaSpecification
+		record.viaSpecification.set
+		record.viaSpecification.set.name == 'XYZ'
+		!record.viaSpecification.set.schema		// placeholder set is NOT attached to the schema
+		!record.viaSpecification.set.members	// placeholder set has no members
+		!record.viaSpecification.symbolicDisplacementName
+		!record.viaSpecification.displacementPageCount
+	}
+	
+	def "VIA record (no displacement specification; VIA set is real and not a placeholder, no schema)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VIA"
+		def definition = {
+			via {
+				set 'XYZ'
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VIA and it will refer to a VIA"
+			  "specification that refers to an automatically created set that is added to the"
+			  "temporary schema to which the record belongs"
+		record
+		record.locationMode == LocationMode.VIA
+		record.viaSpecification
+		record.viaSpecification.set
+		record.viaSpecification.set.name == 'XYZ'
+		record.viaSpecification.set.schema
+		record.viaSpecification.set.schema.is(record.schema)
+		record.viaSpecification.set.members.size() == 1
+		record.viaSpecification.set.members[0].record.is(record)
+		!record.viaSpecification.symbolicDisplacementName
+		!record.viaSpecification.displacementPageCount
+	}
+	
+	def "VIA record (symbolic displacement name)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VIA"
+		def definition = {
+			via {
+				set 'XYZ'
+				displacement 'SYMBOL1'
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VIA and it will refer to a VIA"
+			  "specification that refers to a placeholder set"
+		record
+		record.locationMode == LocationMode.VIA
+		record.viaSpecification
+		record.viaSpecification.set
+		record.viaSpecification.set.name == 'XYZ'
+		record.viaSpecification.set.schema
+		record.viaSpecification.set.schema.is(record.schema)
+		record.viaSpecification.set.members.size() == 1
+		record.viaSpecification.set.members[0].record.is(record)
+		record.viaSpecification.symbolicDisplacementName == 'SYMBOL1'
+		!record.viaSpecification.displacementPageCount
+	}
+	
+	def "VIA record (displacement page count)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VIA"
+		def definition = {
+			via {
+				set 'XYZ'
+				displacement 13
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VIA and it will refer to a VIA"
+			  "specification that refers to a placeholder set"
+		record
+		record.locationMode == LocationMode.VIA
+		record.viaSpecification
+		record.viaSpecification.set
+		record.viaSpecification.set.name == 'XYZ'
+		record.viaSpecification.set.schema
+		record.viaSpecification.set.schema.is(record.schema)
+		record.viaSpecification.set.members.size() == 1
+		record.viaSpecification.set.members[0].record.is(record)
+		!record.viaSpecification.symbolicDisplacementName
+		record.viaSpecification.displacementPageCount == 13
+	}
+	
+	def "VIA record (displacement page count is mutually exclusive with symbolic displacement name)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VIA"
+		def definition = {
+			via {
+				set 'XYZ'
+				displacement 'SYMBOL1'
+				displacement 13
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "an error will occur"
+		def error = thrown(AssertionError)
+		error.message.startsWith('displacement page count and symbolic displacement name are mutually exclusive')
+	}
+	
+	def "VIA record (symbolic displacement name is mutually exclusive with displacement page count)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VIA"
+		def definition = {
+			via {
+				set 'XYZ'
+				displacement 13
+				displacement 'SYMBOL1'				
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "an error will occur"
+		def error = thrown(AssertionError)
+		error.message.startsWith('symbolic displacement name and displacement page count are mutually exclusive')
+	}
+	
+	def "CALC record (1 CALC key element)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of CALC"
+		def definition = {
+			calc {
+				element 'DEPT-ID-0410'
+				duplicates 'NOT ALLOWED'
+			}
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to CALC"
+		record
+		record.locationMode == LocationMode.CALC
+		record.calcKey
+		record.keys.find { Key key -> key.is(record.calcKey) }
+		record.calcKey.elements.size() == 1
+				
+		record.calcKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
+		!record.calcKey.compressed
+		!record.calcKey.naturalSequence
+		!record.calcKey.memberRole
+		
+		record.calcKey.elements[0].element == record.elements[0]
+	}
+	
+	def "CALC record (2 CALC key elements)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of CALC"
+		def definition = {
+			calc {
+				element 'DEPT-ID-0410'
+				element 'DEPT-ID2-0410'
+				duplicates 'NOT ALLOWED'
+			}
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+				element 'DEPT-ID2-0410' {
+					level 2
+					picture 'X(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to CALC"
+		record
+		record.locationMode == LocationMode.CALC
+		record.calcKey
+		record.keys.find { Key key -> key.is(record.calcKey) }
+		record.calcKey.elements.size() == 2
+		
+		record.calcKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
+		!record.calcKey.compressed
+		!record.calcKey.naturalSequence
+		!record.calcKey.memberRole
+		
+		record.calcKey.elements[0].element == record.elements[0]				
+		record.calcKey.elements[1].element == record.elements[1]
+	}
+	
+	@Unroll
+	def "CALC record (verify all possible duplicates option values)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of CALC"
+		def definition = {
+			calc {
+				element 'DEPT-ID-0410'
+				duplicates _duplicates
+			}
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to CALC"
+		record
+		record.locationMode == LocationMode.CALC
+		record.calcKey
+		record.keys.find { Key key -> key.is(record.calcKey) }
+		record.calcKey.elements.size() == 1
+				
+		record.calcKey.duplicatesOption == expectedDuplicatesOption
+		!record.calcKey.compressed
+		!record.calcKey.naturalSequence
+		!record.calcKey.memberRole
+		
+		record.calcKey.elements[0].element == record.elements[0]
+		
+		where:
+		_duplicates   | expectedDuplicatesOption
+		'FIRST' 	  | DuplicatesOption.FIRST
+		'LAST' 		  | DuplicatesOption.LAST
+		'BY DBKEY'    | DuplicatesOption.BY_DBKEY
+		'NOT ALLOWED' | DuplicatesOption.NOT_ALLOWED
+	}
+	
+	def "VSAM CALC record (1 CALC key element, default length type, nonspanned)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of CALC"
+		def definition = {
+			vsamCalc {
+				element 'DEPT-ID-0410'
+				duplicates 'NOT ALLOWED'
+			}
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VSAM CALC"
+		record
+		record.locationMode == LocationMode.VSAM_CALC
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.FIXED
+		!record.vsamType.spanned
+		record.calcKey
+		record.calcKey.elements.size() == 1
+				
+		record.calcKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
+		!record.calcKey.compressed
+		!record.calcKey.naturalSequence
+		!record.calcKey.memberRole
+		
+		record.calcKey.elements[0].element == record.elements[0]
+	}
+	
+	def "VSAM CALC record (1 CALC key element, variable length type, nonspanned)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of CALC"
+		def definition = {
+			vsamCalc {				 
+				element 'DEPT-ID-0410'
+				duplicates 'NOT ALLOWED'
+				type 'VARIABLE'
+			}
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VSAM CALC"
+		record
+		record.locationMode == LocationMode.VSAM_CALC
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.VARIABLE
+		!record.vsamType.spanned
+		record.calcKey
+		record.calcKey.elements.size() == 1
+				
+		record.calcKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
+		!record.calcKey.compressed
+		!record.calcKey.naturalSequence
+		!record.calcKey.memberRole
+		
+		record.calcKey.elements[0].element == record.elements[0]
+	}
+	
+	def "VSAM CALC record (2 CALC key elements, default length type, nonspanned)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VSAM CALC"
+		def definition = {
+			vsamCalc {
+				element 'DEPT-ID-0410'
+				element 'DEPT-ID2-0410'
+				duplicates 'NOT ALLOWED'
+			}
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+				element 'DEPT-ID2-0410' {
+					level 2
+					picture 'X(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VSAM CALC"
+		record
+		record.locationMode == LocationMode.VSAM_CALC
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.FIXED
+		!record.vsamType.spanned
+		record.calcKey
+		record.calcKey.elements.size() == 2
+		
+		record.calcKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
+		!record.calcKey.compressed
+		!record.calcKey.naturalSequence
+		!record.calcKey.memberRole
+		
+		record.calcKey.elements[0].element == record.elements[0]
+		record.calcKey.elements[1].element == record.elements[1]
+	}
+	
+	def "VSAM CALC record (2 CALC key elements, default length type, spanned)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of VSAM CALC"
+		def definition = {
+			vsamCalc {
+				element 'DEPT-ID-0410'
+				element 'DEPT-ID2-0410'
+				duplicates 'NOT ALLOWED'
+				spanned
+			}
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+				element 'DEPT-ID2-0410' {
+					level 2
+					picture 'X(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VSAM CALC"
+		record
+		record.locationMode == LocationMode.VSAM_CALC
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.FIXED
+		record.vsamType.spanned
+		record.calcKey
+		record.calcKey.elements.size() == 2
+		
+		record.calcKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
+		!record.calcKey.compressed
+		!record.calcKey.naturalSequence
+		!record.calcKey.memberRole
+		
+		record.calcKey.elements[0].element == record.elements[0]
+		record.calcKey.elements[1].element == record.elements[1]
+	}
+	
+	@Unroll
+	def "VSAM CALC record (verify all possible duplicates option values; variable length type, spanned)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a location mode of CALC"
+		def definition = {
+			vsamCalc {
+				element 'DEPT-ID-0410'
+				duplicates _duplicates
+				type 'VARIABLE'
+				spanned
+			}
+			elements {
+				element 'DEPT-ID-0410' {
+					level 2
+					picture '9(4)'
+				}
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's location mode will be set to VSAM CALC"
+		record
+		record.locationMode == LocationMode.VSAM_CALC
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.VARIABLE
+		record.vsamType.spanned
+		record.calcKey
+		record.calcKey.elements.size() == 1
+				
+		record.calcKey.duplicatesOption == expectedDuplicatesOption
+		!record.calcKey.compressed
+		!record.calcKey.naturalSequence
+		!record.calcKey.memberRole
+		
+		record.calcKey.elements[0].element == record.elements[0]
+		
+		where:
+		_duplicates   | expectedDuplicatesOption
+		'NOT ALLOWED' | DuplicatesOption.NOT_ALLOWED
+		'UNORDERED'   | DuplicatesOption.UNORDERED
+	}
+	
+	def "default synonym name and version"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing no synonym name and version"
+		def definition = {
+			name 'EMPLOYEE'
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record will have its synonym name and version set based on the record name"
+		record
+		record.name == 'EMPLOYEE'
+		record.synonymName == 'EMPLOYEE'
+		record.synonymVersion == 1
+		record.baseName == record.synonymName
+		record.baseVersion == record.synonymVersion
+	}
+	
+	def "synonym name and version"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a synonym name and version"
+		def definition = {
+			name 'EMPLOYEE'
+			shareStructure 'EMPSYN version 123'
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record will have its synonym name and version set based on the record name"
+		record
+		record.name == 'EMPLOYEE'
+		record.synonymName == 'EMPSYN'
+		record.synonymVersion == 123
+		record.baseName == record.synonymName
+		record.baseVersion == record.synonymVersion
+	}
+	
+	def "default base name and version (no record synonym defined)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing no base name and version"
+		def definition = {
+			name 'EMPLOYEE'
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record will have its base name and version equal to the synonym name and version"
+		record
+		record.name == 'EMPLOYEE'
+		record.synonymName == 'EMPLOYEE'
+		record.synonymVersion == 1
+		record.baseName == record.synonymName
+		record.baseVersion == record.synonymVersion		
+	}
+	
+	def "default base name and version (record synonym defined)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing no base name and version"
+		def definition = {
+			name 'EMPLOYEE'
+			shareStructure 'EMPSYN version 123'
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record will have its base name and version equal to the synonym name and version"
+		record
+		record.name == 'EMPLOYEE'
+		record.synonymName == 'EMPSYN'
+		record.synonymVersion == 123
+		record.baseName == record.synonymName
+		record.baseVersion == record.synonymVersion
+	}
+	
+	def "base name and version"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record passing a base name and version"
+		def definition = {
+			name 'EMPLOYEE'
+			primaryRecord 'EMPBASE version 456'
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record will have its base record name and version set to the values specified"
+		record
+		record.name == 'EMPLOYEE'
+		record.synonymName == 'EMPLOYEE'
+		record.synonymVersion == 1
+		record.baseName == 'EMPBASE'
+		record.baseVersion == 456
 	}
 	
 }

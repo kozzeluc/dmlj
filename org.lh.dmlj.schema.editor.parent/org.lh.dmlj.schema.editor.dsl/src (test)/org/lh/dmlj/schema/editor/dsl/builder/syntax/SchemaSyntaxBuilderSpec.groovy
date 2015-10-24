@@ -16,8 +16,9 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.syntax
 
-import static org.junit.Assert.fail
-
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
+import org.eclipse.emf.ecore.xmi.util.XMLProcessor
 import org.lh.dmlj.schema.Schema
 
 class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
@@ -30,7 +31,7 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		when: "passing the schema to the builder's build method"
 		String syntax = builder.build(schema)
-		//capture(syntax, 'testdata/EMPSCHM version 100.syntax')
+		//new File('testdata/EMPSCHM version 100.syntax').text = syntax
 		
 		then: "the builder creates the syntax that describes the schema"		
 		mustMatchSyntaxInFile(syntax, 'testdata/EMPSCHM version 100.syntax')		
@@ -44,7 +45,7 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		when: "passing the schema to the builder's build method"
 		String syntax = builder.build(schema)
-		//capture(syntax, 'testdata/IDMSNTWK version 1 (Release 18.5).syntax')
+		//new File('testdata/IDMSNTWK version 1 (Release 18.5).syntax').text = syntax
 		
 		then: "the builder creates the syntax that describes the schema"		
 		mustMatchSyntaxInFile(syntax, 'testdata/IDMSNTWK version 1 (Release 18.5).syntax')
@@ -66,7 +67,7 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 """
 name 'EMPSCHM'
 version 100
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
 
 diagram {
 """))
@@ -89,7 +90,7 @@ name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
 memoDate '13/08/64'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
 
 diagram {
 """))
@@ -112,7 +113,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     showRulersAndGuides
@@ -136,7 +137,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -166,7 +167,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -197,7 +198,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -228,7 +229,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -259,7 +260,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -292,7 +293,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -325,7 +326,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -360,7 +361,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -395,7 +396,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -432,7 +433,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -469,7 +470,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -508,7 +509,7 @@ diagram {
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
  
 diagram {
     label {
@@ -524,6 +525,22 @@ diagram {
     snapToGrid
 }
 """))
+	}
+	
+	def "schema with an area that does NOT contain any record (e.g. DDLDCSCR)"() {
+		
+		given: "a schema syntax builder and the IDMSNTWK version 1 (Release 18.5) schema"
+		SchemaSyntaxBuilder builder = new SchemaSyntaxBuilder()
+		Schema schema = loadSchema('testdata/IDMSNTWK version 1 (Release 18.5).schema')
+		assert schema
+		assert schema.getArea('DDLDCSCR') // this area does NOT contain any records
+		
+		when: "passing the schema to the builder's build method"
+		String syntax = builder.build(schema)
+		
+		then: "the builder creates the syntax that describes the schema, explicitly defining the"
+			  "DDLDCSCR area"
+		syntax.indexOf("area 'DDLDCSCR'") > -1
 	}
 	
 }

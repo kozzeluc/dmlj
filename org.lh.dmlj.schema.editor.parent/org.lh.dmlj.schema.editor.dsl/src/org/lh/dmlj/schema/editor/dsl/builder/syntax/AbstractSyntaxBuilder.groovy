@@ -91,4 +91,11 @@ abstract class AbstractSyntaxBuilder<T> {
 		output <<= '\n'	
 	}
 	
+	protected String xOrY(int value) {
+		if (value < 0) {
+			return "'$value'"
+		} else {
+			return "$value"
+		}
+	}
 }

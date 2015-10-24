@@ -399,7 +399,7 @@ member 'NON-HOSP-CLAIM' {
             }
 
             bendpoint {
-                x -127
+                x '-127'
                 y 76
             }
 
@@ -926,7 +926,7 @@ member 'EMPLOYEE' {
             }
  
             bendpoint {
-                x -19
+                x '-19'
                 y 171
             }
  
@@ -1051,7 +1051,7 @@ member 'EMPLOYEE' {
                 }
 
                 bendpoint {
-                    x -183
+                    x '-183'
                     y 77
                 }
 
@@ -1138,7 +1138,7 @@ member 'EMPLOYEE' {
                 }
  
                 bendpoint {
-                    x -19
+                    x '-19'
                     y 171
                 }
  

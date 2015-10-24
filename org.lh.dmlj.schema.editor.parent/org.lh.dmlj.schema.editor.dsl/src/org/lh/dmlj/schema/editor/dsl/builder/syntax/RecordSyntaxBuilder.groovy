@@ -22,6 +22,7 @@ import org.lh.dmlj.schema.LocationMode
 import org.lh.dmlj.schema.OffsetExpression
 import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.StorageMode
+import org.lh.dmlj.schema.VsamLengthType
 import org.lh.dmlj.schema.VsamType
 
 @CompileStatic
@@ -106,9 +107,13 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	}
 	
 	private void vsam() {
-		without_tab 'vsam {'
-		vsamType()
-		without_tab '}'
+		if (record.vsamType.lengthType == VsamLengthType.FIXED && !record.vsamType.spanned) {
+			without_tab 'vsam'
+		} else {
+			without_tab 'vsam {'
+			vsamType()
+			without_tab '}'
+		}
 	}
 	
 	private void vsamCalc() {
@@ -123,7 +128,9 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	
 	private void vsamType() {
 		VsamType vsamType = record.vsamType
-		with_1_tab "type ${vsamType.lengthType}"
+		if (vsamType.lengthType != VsamLengthType.FIXED) {
+			with_1_tab "type '${vsamType.lengthType}'"
+		}
 		if (vsamType.spanned) {
 			with_1_tab 'spanned'
 		}
@@ -162,15 +169,15 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	}
 	
 	private void minimumRootLength() {
-		if (record.minimumRootLength) { 	// we need everything non-null, so also a zero
+		if (record.minimumRootLength != null) { 	// we need everything non-null, so also a zero
 			blank_line()
 			without_tab "minimumRootLength ${record.minimumRootLength}"
 		}
 	}
 	
 	private void minimumFragmentLength() {
-		if (record.minimumFragmentLength) {	// we need everything non-null, so also a zero
-			if (!record.minimumRootLength) {
+		if (record.minimumFragmentLength != null) {	// we need everything non-null, so also a zero
+			if (record.minimumRootLength == null) {
 				blank_line()
 			}
 			without_tab "minimumFragmentLength ${record.minimumFragmentLength}"
@@ -182,7 +189,7 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 			blank_line()	
 		}
 		for (call in record.procedures) {
-			without_tab "call '${call.procedure.name} ${call.callTime} ${replaceUnderscoresBySpaces(call.verb)}'"
+			without_tab "procedure '${call.procedure.name} ${call.callTime} ${replaceUnderscoresBySpaces(call.verb)}'"
 		}
 	}
 	
@@ -207,8 +214,8 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 		if (record.getStorageMode() != StorageMode.FIXED) {			
 			with_1_tab "storageMode '${replaceUnderscoresBySpaces(record.storageMode)}'"			
 		}							
-		with_1_tab "x ${record.diagramLocation.x}"
-		with_1_tab "y ${record.diagramLocation.y}"
+		with_1_tab "x ${xOrY(record.diagramLocation.x)}"
+		with_1_tab "y ${xOrY(record.diagramLocation.y)}"
 		without_tab '}'
 	}
 	

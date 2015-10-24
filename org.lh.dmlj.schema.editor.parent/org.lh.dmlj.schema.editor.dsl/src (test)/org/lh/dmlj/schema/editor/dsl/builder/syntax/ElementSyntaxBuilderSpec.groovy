@@ -46,7 +46,7 @@ picture '9(4)'
 """)
 	}
 	
-	def "Element with a baseName property"() {
+	def "Element with a baseName different from the element name"() {
 		
 		given: "an element syntax builder and the EMPSCHM version 100 schema"
 		ElementSyntaxBuilder builder = new ElementSyntaxBuilder()
@@ -65,6 +65,41 @@ level 2
 name 'EMP-ID-0415'
 baseName 'EMP-ID'
 picture '9(4)'
+""")
+	}
+	
+	def "Element with a baseName equal the element name"() {
+		
+		given: "an element syntax builder and the EMPSCHM version 100 schema"
+		ElementSyntaxBuilder builder = new ElementSyntaxBuilder()
+		Schema schema = loadSchema('testdata/EMPSCHM version 100.schema')
+		Element element = schema.getRecord('COVERAGE').getElement('SELECTION-DATE-0400')
+		
+		when: "passing the element to the builder's build method"
+		String syntax = builder.build(element)
+		
+		then: "the builder creates the syntax that describes the element: a baseName property is "
+			  "generated"
+		syntax == expected(
+"""
+level 2
+name 'SELECTION-DATE-0400'
+children {
+    element 'SELECTION-YEAR-0400' {
+        level 3
+        picture '9(4)'
+    }
+ 
+    element 'SELECTION-MONTH-0400' {
+        level 3
+        picture '9(2)'
+    }
+ 
+    element 'SELECTION-DAY-0400' {
+        level 3
+        picture '9(2)'
+    }
+}
 """)
 	}
 	
@@ -329,13 +364,14 @@ occurs 2
 		String syntax = builder.build(element)
 		
 		then: "the builder creates the syntax that describes the element: an occurs property is "
-			  "generated, specifying (only) a count"
+			  "generated, specifying a count and the depending on element name"
 		syntax == expected(
 """
 level 2
 name 'CAT-EXTENSION-DATA-163'
 picture 'X(01)'
-occurs 510 {
+occurs {
+    count 510
     dependingOn 'CAT-EXTENSION-LENGTH-163'
 }
 """)
@@ -361,13 +397,14 @@ occurs 510 {
 		String syntax = builder.build(element)
 		
 		then: "the builder creates the syntax that describes the element: an occurs property is "
-			  "generated, specifying (only) a count"
+			  "generated, specifying a count and both index elements"
 		syntax == expected(
 """
 level 2
 name 'DIAGNOSIS-0430'
 picture 'X(60)'
-occurs 2 {
+occurs {
+    count 2
     indexedBy {
         name 'INDEX1'
         baseName 'INDEX1-BASE'
@@ -400,13 +437,14 @@ occurs 2 {
 		String syntax = builder.build(element)
 		
 		then: "the builder creates the syntax that describes the element: an occurs property is "
-			  "generated, specifying (only) a count"
+			  "generated, specifying a count, the depending on element name and index elements"
 		syntax == expected(
 """
 level 2
 name 'CAT-EXTENSION-DATA-163'
 picture 'X(01)'
-occurs 510 {
+occurs {
+    count 510
     dependingOn 'CAT-EXTENSION-LENGTH-163'
     indexedBy {
         name 'INDEX1'

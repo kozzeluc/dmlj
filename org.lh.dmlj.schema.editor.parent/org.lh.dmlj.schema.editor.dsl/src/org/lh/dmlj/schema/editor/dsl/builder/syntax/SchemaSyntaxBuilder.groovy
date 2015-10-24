@@ -62,7 +62,7 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	private void comments() {
 		if (schema.comments) {
 			for (comment in schema.comments) {
-				without_tab "comments ${withQuotes(comment)})"
+				without_tab "comments ${withQuotes(comment)}"
 			}
 		}
 	}
@@ -89,8 +89,8 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 		if (diagramData.label) {
 			with_1_tab 'label {'
 			with_2_tabs "description \"${diagramData.label.description}\""
-			with_2_tabs "x ${diagramData.label.diagramLocation.x}"
-			with_2_tabs "y ${diagramData.label.diagramLocation.y}"
+			with_2_tabs "x ${xOrY(diagramData.label.diagramLocation.x)}"
+			with_2_tabs "y ${xOrY(diagramData.label.diagramLocation.y)}"
 			with_2_tabs "width ${diagramData.label.width}"
 			with_2_tabs "height ${diagramData.label.height}"
 			with_1_tab '}'			
@@ -139,11 +139,9 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	
 	private void areas() {
 		for (area in schema.areas) {
-			if (area.procedures) {				
-				
+			if (area.procedures || !area.areaSpecifications) {				
 				AreaSyntaxBuilder areaSyntaxBuilder = 
-					new AreaSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])				
-				
+					new AreaSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])								
 				blank_line()
 				without_tab "area '${area.name}' {"
 				areaSyntaxBuilder.build(area)

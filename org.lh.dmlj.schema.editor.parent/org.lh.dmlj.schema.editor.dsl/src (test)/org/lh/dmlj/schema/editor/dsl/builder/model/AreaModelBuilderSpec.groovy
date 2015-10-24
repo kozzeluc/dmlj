@@ -22,8 +22,8 @@ import org.lh.dmlj.schema.Procedure
 import org.lh.dmlj.schema.ProcedureCallTime
 import org.lh.dmlj.schema.Schema
 import org.lh.dmlj.schema.SchemaArea
-import org.lh.dmlj.schema.editor.dsl.builder.model.AreaBuilder;
-import org.lh.dmlj.schema.editor.dsl.builder.model.SchemaBuilder;
+import org.lh.dmlj.schema.editor.dsl.builder.model.AreaModelBuilder;
+import org.lh.dmlj.schema.editor.dsl.builder.model.SchemaModelBuilder;
 
 import spock.lang.Unroll
 
@@ -45,10 +45,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	
 	def "build area without procedures, NOT referencing a given schema, from a closure only"() {
 		
-		given: "a SchemaArea builder without a Schema"
-		def AreaBuilder builder = new AreaBuilder()
+		given: "an area model builder without a Schema"
+		def AreaModelBuilder builder = new AreaModelBuilder()
 		
-		when: "building the area with DSL containing only the area name"
+		when: "building the area with a closure specifying only the area name"
 		def definition = {
 			name 'AREA1'
 		}
@@ -68,13 +68,13 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	
 	def "build area without procedures, referencing a given schema, from a closure only"() {
 		
-		given: "a SchemaArea builder with a Schema"
-		Schema schema = new SchemaBuilder().build()
+		given: "an area model builder with a Schema"
+		Schema schema = new SchemaModelBuilder().build()
 		assert schema.areas.empty
 		assert schema.procedures.empty
-		def AreaBuilder builder = new AreaBuilder( [ schema : schema ] )
+		def AreaModelBuilder builder = new AreaModelBuilder( [ schema : schema ] )
 		
-		when: "building the area with DSL containing only the area name"
+		when: "building the area with a closure specifying only the area name"
 		def definition = {
 			name 'AREA1'
 		}
@@ -95,8 +95,8 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	
 	def "build area with procedures called, NOT referencing a given schema, completely from a closure"() {
 		
-		given: "a SchemaArea builder without a Schema"
-		def AreaBuilder builder = new AreaBuilder()
+		given: "an area model builder without a Schema"
+		def AreaModelBuilder builder = new AreaModelBuilder()
 		
 		when: "building the area from a closure containing the area name and 4 procedure calls,"
 			  "referring to 2 distinct procedures"
@@ -136,10 +136,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build area with procedures called, referencing a given schema, completely from a closure"() {
 		
 		given: "a SchemaArea builder with a Schema"
-		Schema schema = new SchemaBuilder().build()
+		Schema schema = new SchemaModelBuilder().build()
 		assert schema.areas.empty
 		assert schema.procedures.empty
-		def AreaBuilder builder = new AreaBuilder( [ schema : schema ] )
+		def AreaModelBuilder builder = new AreaModelBuilder( [ schema : schema ] )
 		
 		when: "building the area from a closure containing the area name and 4 procedure calls,"
 			  "referring to 2 distinct procedures"
@@ -179,7 +179,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build area with NO procedures called, NOT referencing a given schema, from only a name"() {
 		
 		given: "a SchemaArea builder without a Schema"
-		def AreaBuilder builder = new AreaBuilder()
+		def AreaModelBuilder builder = new AreaModelBuilder()
 		
 		when: "building the area passing the area name"
 		SchemaArea area = builder.build('AREA1')
@@ -198,10 +198,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build area with NO procedures called, referencing a given schema, from only a name"() {
 		
 		given: "a SchemaArea builder with a Schema"
-		Schema schema = new SchemaBuilder().build()
+		Schema schema = new SchemaModelBuilder().build()
 		assert schema.areas.empty
 		assert schema.procedures.empty
-		def AreaBuilder builder = new AreaBuilder( [ schema : schema ] )
+		def AreaModelBuilder builder = new AreaModelBuilder( [ schema : schema ] )
 		
 		when: "building the area passing the area name"
 		SchemaArea area = builder.build('AREA1')
@@ -222,7 +222,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build area with procedures called, NOT referencing a schema, from a name AND a closure"() {
 		
 		given: "a SchemaArea builder without a Schema"
-		def AreaBuilder builder = new AreaBuilder()
+		def AreaModelBuilder builder = new AreaModelBuilder()
 		
 		when: "building the area with the area name and a closure containing 4 procedure calls,"
 			  " referring to 2 distinct procedures"
@@ -261,10 +261,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build area with procedures called, referencing a schema, from a name AND a closure"() {
 		
 		given: "a SchemaArea builder with a Schema"
-		Schema schema = new SchemaBuilder().build()
+		Schema schema = new SchemaModelBuilder().build()
 		assert schema.areas.empty
 		assert schema.procedures.empty
-		def AreaBuilder builder = new AreaBuilder( [ schema : schema ] )
+		def AreaModelBuilder builder = new AreaModelBuilder( [ schema : schema ] )
 		
 		when: "building the area with the area name and a closure containing 4 procedure calls,"
 			  "referring to 2 distinct procedures"
@@ -304,7 +304,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "the callTime should be derived from what's in the closure's procedure value"() {
 		
 		given: "a SchemaArea builder"
-		def AreaBuilder builder = new AreaBuilder()
+		def AreaModelBuilder builder = new AreaModelBuilder()
 		
 		when: "building the area with a closure containing a procedure call"
 		def definition = {
@@ -327,7 +327,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "the function should be derived from what's in the closure's procedure value"() {
 		
 		given: "a SchemaArea builder"
-		def AreaBuilder builder = new AreaBuilder()
+		def AreaModelBuilder builder = new AreaModelBuilder()
 		
 		when: "building the area with a closure containing a procedure call"
 		def definition = {

@@ -105,7 +105,8 @@ class ElementSyntaxBuilder extends AbstractSyntaxBuilder<Element> {
 			if (!occursSpecification.dependingOn && !occursSpecification.indexElements) {
 				without_tab "occurs ${occursSpecification.count}"
 			} else {
-				without_tab "occurs ${occursSpecification.count} {"
+				without_tab "occurs {"
+				with_1_tab "count ${occursSpecification.count}"
 				if (occursSpecification.dependingOn) {
 					with_1_tab "dependingOn '${occursSpecification.dependingOn.name}'"		
 				}

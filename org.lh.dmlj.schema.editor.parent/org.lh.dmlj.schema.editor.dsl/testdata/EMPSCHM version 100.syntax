@@ -1,7 +1,7 @@
 name 'EMPSCHM'
 version 100
 description 'EMPLOYEE DEMO DATABASE'
-comments 'INSTALLATION: COMMONWEATHER CORPORATION')
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
 
 diagram {
     label {
@@ -323,7 +323,8 @@ record 'DENTAL-CLAIM' {
                     picture 'X'
                 }
             }
-            occurs 10 {
+            occurs {
+                count 10
                 dependingOn 'NUMBER-OF-PROCEDURES-0405'
             }
         }
@@ -1123,9 +1124,9 @@ record 'JOB' {
     minimumRootLength 24
     minimumFragmentLength 296
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JOB-ID-0440' {
@@ -1397,7 +1398,8 @@ record 'NON-HOSP-CLAIM' {
                     picture 'XXX'
                 }
             }
-            occurs 10 {
+            occurs {
+                count 10
                 dependingOn 'NUMBER-OF-PROCEDURES-0445'
             }
         }
@@ -1641,7 +1643,7 @@ set 'COVERAGE-CLAIMS' {
                 }
 
                 bendpoint {
-                    x -127
+                    x '-127'
                     y 76
                 }
 
@@ -1965,7 +1967,7 @@ set 'MANAGES' {
                 }
 
                 bendpoint {
-                    x -151
+                    x '-151'
                     y 87
                 }
 
@@ -2046,7 +2048,7 @@ set 'OFFICE-EMPLOYEE' {
                 }
 
                 bendpoint {
-                    x -19
+                    x '-19'
                     y 171
                 }
 
@@ -2090,7 +2092,7 @@ set 'REPORTS-TO' {
                 }
 
                 bendpoint {
-                    x -183
+                    x '-183'
                     y 77
                 }
 

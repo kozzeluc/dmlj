@@ -16,19 +16,22 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.model
 
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
+import org.eclipse.emf.ecore.xmi.util.XMLProcessor
 import org.lh.dmlj.schema.AreaProcedureCallFunction
 import org.lh.dmlj.schema.DiagramData
 import org.lh.dmlj.schema.ProcedureCallTime
 import org.lh.dmlj.schema.RulerType
 import org.lh.dmlj.schema.Schema
-import org.lh.dmlj.schema.editor.dsl.builder.model.SchemaBuilder;
+import org.lh.dmlj.schema.SetOrder
 
 class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 
 	def "build the temporary schema"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema without any argument"
 		Schema schema = builder.build()
@@ -40,7 +43,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build an initial schema given (only) a name and version"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema with a name and version"
 		def definition = {
@@ -54,10 +57,50 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertEmptySchema(schema, 'EMPSCHM', 100)	
 	}
 	
+	def "build an initial schema given a name, version and description"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name and version"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			description 'EMPLOYEE DEMO DATABASE'
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version and some initial"
+			  "diagram data"
+		schema
+		schema.description == 'EMPLOYEE DEMO DATABASE'
+	}
+	
+	def "build an initial schema given a name, version and comments"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name and version"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			comments 'INSTALLATION: COMMONWEATHER CORPORATION'
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version and some initial"
+			  "diagram data"
+		schema
+		schema.comments
+		schema.comments.size() == 1
+		schema.comments[0] == 'INSTALLATION: COMMONWEATHER CORPORATION'
+	}
+	
 	def "build a schema with (only) a diagram label"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema with a name, version and diagram label"
 		def definition = {
@@ -118,7 +161,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "build a schema with (only) non-standard diagram settings"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema with a name, version and non-standard diagram settings"
 		def definition = {
@@ -153,7 +196,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "define an area without procedure calls: area name passed as string argument, no area closure"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema with a name, version and an area with a procedure called"
 		def definition = {
@@ -178,7 +221,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "define an area without procedure calls: area name is part of the area closure"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema with a name, version and an area with a procedure called"
 		def definition = {
@@ -205,7 +248,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "define an area with procedure calls: area name is preceding the area closure"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema with a name, version and an area with a procedure called"
 		def definition = {
@@ -236,7 +279,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "define an area with procedure calls: area name is part of the area closure"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema with a name, version and an area with a procedure called"
 		def definition = {
@@ -268,10 +311,10 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 	def "define a couple of records without specifying anything at all"() {
 		
 		given: "a Schema builder"
-		def SchemaBuilder builder = new SchemaBuilder()
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
 		when: "building the schema with a name, version and 3 records, for which we don't specify"
-		      "nything"
+		      "anything"
 		def definition = {
 			name 'EMPSCHM'
 			version 100
@@ -306,6 +349,403 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		schema.records[2].id == 12
 		schema.records[2].areaSpecification.area == schema.areas[2]
 		schema.sets.empty
+	}
+	
+	def "define a couple of records by specifying a name (no closure)"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name, version and 3 records, for which we specify a name"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			record 'RECORD1'
+			record 'RECORD2'
+			record 'RECORD3'
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version containing 3 records"
+			  "with the given names, referring to 3 automatically generated areas"
+		schema
+		assertBasicSchema(schema, 'EMPSCHM', 100)
+		assertStandardDiagramData(schema)
+		assert schema.diagramData.connectionLabels.empty
+		assert schema.diagramData.connectionParts.empty
+		assert schema.diagramData.connectors.empty
+		assert schema.diagramData.locations.size == 3
+		schema.procedures.empty
+		schema.areas.size == 3
+		schema.areas[0].name == 'RECORD1-AREA'
+		schema.areas[1].name == 'RECORD2-AREA'
+		schema.areas[2].name == 'RECORD3-AREA'
+		schema.records.size == 3
+		schema.records[0].name == 'RECORD1'
+		schema.records[0].id == 10
+		schema.records[0].areaSpecification.area == schema.areas[0]
+		schema.records[1].name == 'RECORD2'
+		schema.records[1].id == 11
+		schema.records[1].areaSpecification.area == schema.areas[1]
+		schema.records[2].name == 'RECORD3'
+		schema.records[2].id == 12
+		schema.records[2].areaSpecification.area == schema.areas[2]
+		schema.sets.empty
+	}
+	
+	def "define a couple of records by specifying a name (with closure)"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name, version and 3 records, for which we specify a name"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			record { 
+				name 'RECORD1' 
+			}
+			record { 
+				name 'RECORD2' 
+			}
+			record { 
+				name 'RECORD3' 
+			}
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version containing 3 records"
+			  "with the given names, referring to 3 automatically generated areas"
+		schema
+		assertBasicSchema(schema, 'EMPSCHM', 100)
+		assertStandardDiagramData(schema)
+		assert schema.diagramData.connectionLabels.empty
+		assert schema.diagramData.connectionParts.empty
+		assert schema.diagramData.connectors.empty
+		assert schema.diagramData.locations.size == 3
+		schema.procedures.empty
+		schema.areas.size == 3
+		schema.areas[0].name == 'RECORD1-AREA'
+		schema.areas[1].name == 'RECORD2-AREA'
+		schema.areas[2].name == 'RECORD3-AREA'
+		schema.records.size == 3
+		schema.records[0].name == 'RECORD1'
+		schema.records[0].id == 10
+		schema.records[0].areaSpecification.area == schema.areas[0]
+		schema.records[1].name == 'RECORD2'
+		schema.records[1].id == 11
+		schema.records[1].areaSpecification.area == schema.areas[1]
+		schema.records[2].name == 'RECORD3'
+		schema.records[2].id == 12
+		schema.records[2].areaSpecification.area == schema.areas[2]
+		schema.sets.empty
+	}
+	
+	def "define a couple of records by specifying a name and record id"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name, version and 3 records, for which we specify a name"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			record 'RECORD1' { 
+				recordId 100
+			}
+			record 'RECORD2' { 
+				recordId 200
+			}
+			record 'RECORD3' { 
+				recordId 300
+			}
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version containing 3 records"
+			  "with the given names, referring to 3 automatically generated areas"
+		schema
+		assertBasicSchema(schema, 'EMPSCHM', 100)
+		assertStandardDiagramData(schema)
+		assert schema.diagramData.connectionLabels.empty
+		assert schema.diagramData.connectionParts.empty
+		assert schema.diagramData.connectors.empty
+		assert schema.diagramData.locations.size == 3
+		schema.procedures.empty
+		schema.areas.size == 3
+		schema.areas[0].name == 'RECORD1-AREA'
+		schema.areas[1].name == 'RECORD2-AREA'
+		schema.areas[2].name == 'RECORD3-AREA'
+		schema.records.size == 3
+		schema.records[0].name == 'RECORD1'
+		schema.records[0].id == 100
+		schema.records[0].areaSpecification.area == schema.areas[0]
+		schema.records[1].name == 'RECORD2'
+		schema.records[1].id == 200
+		schema.records[1].areaSpecification.area == schema.areas[1]
+		schema.records[2].name == 'RECORD3'
+		schema.records[2].id == 300
+		schema.records[2].areaSpecification.area == schema.areas[2]
+		schema.sets.empty
+	}
+	
+	def "assign a record to an existing area"() {
+		
+	   given: "a schema builder"
+	   def schemaBuilder = new SchemaModelBuilder()
+		
+	   when: "building the schema"
+	   def definition = {
+		   name 'EMPSCHM'
+		   version 100
+		   
+		   area 'EMP-DEMO-REGION'
+		   
+		   record 'EMPLOYEE' {
+			   area 'EMP-DEMO-REGION'
+		   }
+	   }
+	   Schema schema = schemaBuilder.build(definition)
+		
+	   then: "the area will be created only once and is referenced by the record"
+	   schema
+	   schema.areas.size() == 1
+	   schema.records.size() == 1
+	   schema.records[0].name == 'EMPLOYEE'
+	   schema.records[0].areaSpecification.area
+	   schema.records[0].areaSpecification.area.name == 'EMP-DEMO-REGION'
+	   schema.records[0].areaSpecification.area.is(schema.areas[0])
+   }
+	
+	def "assign a record to a non-existing area"() {
+		
+	   given: "a schema builder"
+	   def schemaBuilder = new SchemaModelBuilder()
+		
+	   when: "building the schema"
+	   def definition = {
+		   name 'EMPSCHM'
+		   version 100
+		   
+		   record 'EMPLOYEE' {
+			   area 'EMP-DEMO-REGION'
+		   }
+	   }
+	   Schema schema = schemaBuilder.build(definition)
+		
+	   then: "the area will be created automatically and is referenced by the record"
+	   schema
+	   schema.areas.size() == 1
+	   schema.records.size() == 1
+	   schema.records[0].name == 'EMPLOYEE'
+	   schema.records[0].areaSpecification.area
+	   schema.records[0].areaSpecification.area.name == 'EMP-DEMO-REGION'
+	   schema.records[0].areaSpecification.area.is(schema.areas[0])
+   }
+	
+	def "define a couple of sets without specifying anything at all"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name, version and 3 sets, for which we don't specify"
+			  "anything"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			set
+			set
+			set
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version containing 3 sets"
+		schema
+		assertBasicSchema(schema, 'EMPSCHM', 100)
+		assertStandardDiagramData(schema)
+		schema.sets.size() == 3
+		schema.sets[0].name == 'SET1'
+		schema.sets[0].order == SetOrder.NEXT
+		schema.sets[0].owner
+		schema.sets[0].owner.record.schema.is(schema)
+		schema.sets[0].members.size() == 1
+		schema.sets[0].members[0].record.schema.is(schema)
+		schema.sets[1].name == 'SET2'
+		schema.sets[1].order == SetOrder.NEXT
+		schema.sets[1].owner
+		schema.sets[1].owner.record.schema.is(schema)
+		schema.sets[1].members.size() == 1
+		schema.sets[1].members[0].record.schema.is(schema)
+		schema.sets[2].name == 'SET3'
+		schema.sets[2].order == SetOrder.NEXT
+		schema.sets[2].owner
+		schema.sets[2].owner.record.schema.is(schema)
+		schema.sets[2].members.size() == 1
+		schema.sets[2].members[0].record.schema.is(schema)
+	}
+	
+	def "define a couple of sets by specifying a name (no closure)"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name, version and 3 sets, for which we don't specify"
+			  "anything"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			set 'SET01'
+			set 'SET02'
+			set 'SET03'
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version containing 3 sets"
+		schema
+		assertBasicSchema(schema, 'EMPSCHM', 100)
+		assertStandardDiagramData(schema)
+		schema.sets.size() == 3
+		schema.sets[0].name == 'SET01'
+		schema.sets[0].order == SetOrder.NEXT
+		schema.sets[0].owner
+		schema.sets[0].owner.record.schema.is(schema)
+		schema.sets[0].members.size() == 1
+		schema.sets[0].members[0].record.schema.is(schema)
+		schema.sets[1].name == 'SET02'
+		schema.sets[1].order == SetOrder.NEXT
+		schema.sets[1].owner
+		schema.sets[1].owner.record.schema.is(schema)
+		schema.sets[1].members.size() == 1
+		schema.sets[1].members[0].record.schema.is(schema)
+		schema.sets[2].name == 'SET03'
+		schema.sets[2].order == SetOrder.NEXT
+		schema.sets[2].owner
+		schema.sets[2].owner.record.schema.is(schema)
+		schema.sets[2].members.size() == 1
+		schema.sets[2].members[0].record.schema.is(schema)
+	}
+	
+	def "define a couple of sets by specifying a name (with closure)"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name, version and 3 sets, for which we don't specify"
+			  "anything"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			set { 
+				name 'SET01' 
+			}
+			set { 
+				name 'SET02' 
+			}
+			set { 
+				name 'SET03' 
+			}
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version containing 3 sets"
+		schema
+		assertBasicSchema(schema, 'EMPSCHM', 100)
+		assertStandardDiagramData(schema)
+		schema.sets.size() == 3
+		schema.sets[0].name == 'SET01'
+		schema.sets[0].order == SetOrder.NEXT
+		schema.sets[0].owner
+		schema.sets[0].owner.record.schema.is(schema)
+		schema.sets[0].members.size() == 1
+		schema.sets[0].members[0].record.schema.is(schema)
+		schema.sets[1].name == 'SET02'
+		schema.sets[1].order == SetOrder.NEXT
+		schema.sets[1].owner
+		schema.sets[1].owner.record.schema.is(schema)
+		schema.sets[1].members.size() == 1
+		schema.sets[1].members[0].record.schema.is(schema)
+		schema.sets[2].name == 'SET03'
+		schema.sets[2].order == SetOrder.NEXT
+		schema.sets[2].owner
+		schema.sets[2].owner.record.schema.is(schema)
+		schema.sets[2].members.size() == 1
+		schema.sets[2].members[0].record.schema.is(schema)
+	}
+	
+	def "define a couple of sets by specifying a name and set order"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name, version and 3 sets, for which we don't specify"
+			  "anything"
+		def definition = {
+			name 'EMPSCHM'
+			version 100
+			set 'SET01' { 
+				order 'FIRST'
+			}
+			set 'SET02' { 
+				order 'LAST' 
+			}
+			set 'SET03' { 
+				order 'PRIOR' 
+			}
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version containing 3 sets"
+		schema
+		assertBasicSchema(schema, 'EMPSCHM', 100)
+		assertStandardDiagramData(schema)
+		schema.sets.size() == 3
+		schema.sets[0].name == 'SET01'
+		schema.sets[0].order == SetOrder.FIRST
+		schema.sets[0].owner
+		schema.sets[0].owner.record.schema.is(schema)
+		schema.sets[0].members.size() == 1
+		schema.sets[0].members[0].record.schema.is(schema)
+		schema.sets[1].name == 'SET02'
+		schema.sets[1].order == SetOrder.LAST
+		schema.sets[1].owner
+		schema.sets[1].owner.record.schema.is(schema)
+		schema.sets[1].members.size() == 1
+		schema.sets[1].members[0].record.schema.is(schema)
+		schema.sets[2].name == 'SET03'
+		schema.sets[2].order == SetOrder.PRIOR
+		schema.sets[2].owner
+		schema.sets[2].owner.record.schema.is(schema)
+		schema.sets[2].members.size() == 1
+		schema.sets[2].members[0].record.schema.is(schema)
+	}
+	
+	def "EMPSCHM version 100"() {
+		
+		given: "the schema loaded from xmi, as well as a Schema builder"
+		Schema original = loadSchema('testdata/EMPSCHM version 100.schema')
+		SchemaModelBuilder builder = new SchemaModelBuilder()		
+		
+		when: "building the schema from a file containing the schema syntax"
+		Schema schema = builder.buildFromFile(new File('testdata/EMPSCHM version 100.syntax'))
+		
+		then: "the result will be a schema conforming to the syntax in the file"
+		schema
+		assertEquals(toCompareFriendlyXmi(original), toCompareFriendlyXmi(schema)) 
+	}
+	
+	def "IDMSNTWK version 1 (Release 18.5)"() {
+		
+		given: "the schema loaded from xmi, as well as a Schema builder"
+		Schema original = loadSchema('testdata/IDMSNTWK version 1 (Release 18.5).schema')
+		SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema from a file containing the schema syntax"
+		Schema schema = 
+			builder.buildFromFile(new File('testdata/IDMSNTWK version 1 (Release 18.5).syntax'))
+		
+		then: "the result will be a schema conforming to the syntax in the file"
+		schema
+		assertEquals(toCompareFriendlyXmi(original), toCompareFriendlyXmi(schema)) 
 	}
 	
 }

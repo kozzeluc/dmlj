@@ -17,36 +17,10 @@
 package org.lh.dmlj.schema.editor.dsl.builder.syntax
 
 import org.eclipse.core.runtime.AssertionFailedException
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
-import org.lh.dmlj.schema.Schema
 import org.lh.dmlj.schema.SchemaPackage
+import org.lh.dmlj.schema.editor.dsl.builder.AbstractBuilderSpec
 
-import spock.lang.Specification
-
-abstract class AbstractSyntaxBuilderSpec extends Specification{
-	
-	private SchemaPackage schemaPackage = SchemaPackage.eINSTANCE
-	
-	protected void capture(String syntax, String targetFilePath) {
-		FileWriter fw = new FileWriter(new File(targetFilePath))
-		PrintWriter pw = new PrintWriter(fw)
-		pw.print(syntax)
-		pw.flush()
-		pw.close()
-		fw.close()
-	}
-
-	protected Schema loadSchema(String path) {
-		URI uri = URI.createFileURI(new File(path).getAbsolutePath())
-		ResourceSet resourceSet = new ResourceSetImpl()
-		resourceSet.resourceFactoryRegistry.extensionToFactoryMap.put('schema', new XMIResourceFactoryImpl())
-		Resource resource = resourceSet.getResource(uri, true)
-		return resource.contents[0]
-	}
+abstract class AbstractSyntaxBuilderSpec extends AbstractBuilderSpec {
 	
 	protected String expected(String syntax) {
 		String p;

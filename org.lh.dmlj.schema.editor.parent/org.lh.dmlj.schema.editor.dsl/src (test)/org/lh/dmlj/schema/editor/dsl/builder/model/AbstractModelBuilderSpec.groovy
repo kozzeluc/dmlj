@@ -17,26 +17,14 @@
 package org.lh.dmlj.schema.editor.dsl.builder.model
 
 import org.lh.dmlj.schema.DiagramData
-import org.lh.dmlj.schema.LocationMode
 import org.lh.dmlj.schema.RulerType
 import org.lh.dmlj.schema.Schema
-import org.lh.dmlj.schema.SchemaArea
-import org.lh.dmlj.schema.SchemaRecord
-import org.lh.dmlj.schema.StorageMode
+import org.lh.dmlj.schema.editor.dsl.builder.AbstractBuilderSpec
 
-import spock.lang.Specification
-
-class AbstractModelBuilderSpec extends Specification {
+class AbstractModelBuilderSpec extends AbstractBuilderSpec {
 
 	protected String TEMP_SCHEMA_NAME = 'TMPSCHM'
 	protected int TEMP_SCHEMA_VERSION = 1
-	
-	protected static runClosure(Object delegate, Closure closure) {
-		Closure clonedClosure = closure.clone()
-		clonedClosure.delegate = delegate
-		clonedClosure.resolveStrategy = Closure.DELEGATE_ONLY
-		clonedClosure()
-	}
 	
 	protected void assertBasicSchema(Schema schema, String expectedName, int expectedVersion) {		
 		assert schema
@@ -66,6 +54,47 @@ class AbstractModelBuilderSpec extends Specification {
 		assert schema.areas.empty
 		assert schema.records.empty
 		assert schema.sets.empty
+	}
+	
+	protected void assertEquals(List<String> expectedLines, List<String> actualLines) {
+		
+		String firstLineMessage
+		int index
+		for (int i = 0; i < expectedLines.size() && i < actualLines.size(); i++) {
+			if (expectedLines[i] != actualLines[i]) {
+				firstLineMessage = 
+					"line $i - expected: <${expectedLines[i]}>, actual: <${actualLines[i]}>"
+				index = i
+				break
+			}
+		}
+		if (!firstLineMessage) {
+			if (expectedLines.size() > actualLines.size()) {
+				index = expectedLines.size() - 1
+				firstLineMessage = "line $index - expected: <${expectedLines[index]}>, actual: null"						
+			} else if (expectedLines.size() != actualLines.size()) {
+				index = actualLines.size() - 1
+				firstLineMessage = "line $index - expected: null, actual: <${actualLines[index]}>"		
+				
+			}
+		}
+		
+		if (firstLineMessage) {
+			StringBuilder message = new StringBuilder(firstLineMessage)
+			message << '\n\nexpected lines:'
+			for (int i in (index - 5)..(index + 5)) {
+				if (i >= 0 && i < expectedLines.size()) {
+					message << "\n[$i] ${expectedLines[i]}"
+				}	
+			}
+			message << '\n\nactual lines:'
+			for (int i in (index - 5)..(index + 5)) {
+				if (i >= 0 && i < expectedLines.size()) {
+					message << "\n[$i] ${actualLines[i]}"
+				}
+			}
+			throw new AssertionError(message)
+		}
 	}
 	
 	protected void assertSchemaWithStandardDiagramData(Schema schema, String expectedName, 

@@ -24,6 +24,9 @@ area 'DDLDCMSG' {
     procedure 'IDMSDCOM BEFORE EVERY DML FUNCTION'
 }
 
+area 'DDLDCSCR' {
+}
+
 record 'S-010' {
     shareStructure 'S-010 version 1'
     recordId 10
@@ -38,9 +41,9 @@ record 'S-010' {
     minimumRootLength 12
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'S-NAME-010' {
@@ -414,9 +417,9 @@ record 'SA-018' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SA-NAM-018' {
@@ -670,9 +673,9 @@ record 'SACALL-020' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'CALL-SEQ-CTL-020' {
@@ -971,9 +974,9 @@ record 'SSA-024' {
     minimumRootLength 40
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SSA-CNTRL-024' {
@@ -1068,9 +1071,9 @@ record 'TASK-025' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'TASK-NAME-025' {
@@ -1335,9 +1338,9 @@ record 'SS-026' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SS-NAM-026' {
@@ -1604,9 +1607,9 @@ record 'DEST-028' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'DEST-NAME-028' {
@@ -1773,9 +1776,9 @@ record 'QUEUE-030' {
     minimumRootLength 16
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'QUEUE-NAME-030' {
@@ -1899,11 +1902,12 @@ record 'MODNEST-031' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEST-CODE-031' {
@@ -1981,9 +1985,9 @@ record 'SSR-032' {
     minimumRootLength 44
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SSR-CNTRL-032' {
@@ -2109,11 +2113,12 @@ record 'QUEUECMT-033' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-033' {
@@ -2161,9 +2166,9 @@ record 'SSOR-034' {
     minimumRootLength 44
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SSOR-CNTRL-034' {
@@ -2232,11 +2237,12 @@ record 'USERNEST-035' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEST-CODE-035' {
@@ -2277,9 +2283,9 @@ record 'SR-036' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SR-NAM-036' {
@@ -2418,11 +2424,12 @@ record 'SFK-037' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'FK-POS-037' {
@@ -2494,11 +2501,12 @@ record 'SYSCMT-038' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-038' {
@@ -2696,9 +2704,9 @@ record 'SRCALL-040' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'CALL-SEQ-CTL-040' {
@@ -2748,9 +2756,9 @@ record 'SYS-041' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SYS-NAME-041' {
@@ -3628,11 +3636,12 @@ record 'SDR-042' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SEQ-042' {
@@ -3857,11 +3866,12 @@ record 'SYSNEST-043' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEST-CODE-043' {
@@ -3898,11 +3908,12 @@ record 'SDES-044' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-044' {
@@ -4209,11 +4220,12 @@ record 'ACCESS-045' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'PRIORITY-045' {
@@ -4265,9 +4277,9 @@ record 'SOR-046' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SET-NAM-046' {
@@ -4466,9 +4478,9 @@ record 'USER-047' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-NAME-047' {
@@ -4999,11 +5011,12 @@ record 'USERCMT-048' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-048' {
@@ -5047,11 +5060,12 @@ record 'PROGLST-049' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'PROG-NAME-049' {
@@ -5156,11 +5170,12 @@ record 'PROGCMT-050' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-050' {
@@ -5318,9 +5333,9 @@ record 'PROG-051' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'PROG-NAME-051' {
@@ -5495,11 +5510,12 @@ record 'SMR-052' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SET-NAM-052' {
@@ -5641,11 +5657,12 @@ record 'PROGNEST-053' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEST-CODE-053' {
@@ -5688,11 +5705,12 @@ record 'SCR-054' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SCR-POS-054' {
@@ -5786,11 +5804,12 @@ record 'MODLST-055' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-055' {
@@ -5890,11 +5909,12 @@ record 'SAM-056' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SR-NAM-056' {
@@ -5951,11 +5971,12 @@ record 'AFACT-057' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'AF-FUNCT-057' {
@@ -6088,9 +6109,9 @@ record 'INQ-058' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'INQ-NAM-058' {
@@ -6262,11 +6283,12 @@ record 'RCDACT-059' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'RA-FUNCT-059' {
@@ -6375,11 +6397,12 @@ record 'SYSATTR-060' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-060' {
@@ -6405,11 +6428,12 @@ record 'SETACT-061' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SA-FUNCT-061' {
@@ -6503,11 +6527,12 @@ record 'USERELEM-062' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-062' {
@@ -6670,11 +6695,12 @@ record 'USERATTR-064' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-064' {
@@ -6700,11 +6726,12 @@ record 'PROGATTR-065' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-065' {
@@ -6763,9 +6790,9 @@ record 'MODULE-067' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'MOD-NAME-067' {
@@ -6940,9 +6967,9 @@ record 'SSMR-068' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'MR-ID-068' {
@@ -7051,11 +7078,12 @@ record 'MODATTR-069' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-069' {
@@ -7081,11 +7109,12 @@ record 'SSCR-070' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'CR-ID-070' {
@@ -7164,11 +7193,12 @@ record 'FILENEST-071' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEST-CODE-071' {
@@ -7205,11 +7235,12 @@ record 'FILECMT-072' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-072' {
@@ -7253,11 +7284,12 @@ record 'FILEATTR-073' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-073' {
@@ -7287,9 +7319,9 @@ record 'PTRM-074' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'PTRM-NAME-074' {
@@ -7530,11 +7562,12 @@ record 'SSFK-076' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'FK-ID-076' {
@@ -7635,11 +7668,12 @@ record 'OOAKEXT-078' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'FILLER' {
@@ -7669,9 +7703,9 @@ record 'RCDSYN-079' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'RSYN-NAME-079' {
@@ -7762,11 +7796,12 @@ record 'RCDCMT-080' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-080' {
@@ -7810,11 +7845,12 @@ record 'RCDATTR-081' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-081' {
@@ -7840,11 +7876,12 @@ record 'ELEMCMT-082' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-082' {
@@ -7921,11 +7958,12 @@ record 'NAMESYN-083' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SYN-NAME-083' {
@@ -7988,11 +8026,12 @@ record 'MODCMT-084' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-084' {
@@ -8303,9 +8342,9 @@ record 'ELEMSYN-085' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'ES-NAME-085' {
@@ -8357,11 +8396,12 @@ record 'CLASSCMT-086' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-086' {
@@ -8405,11 +8445,12 @@ record 'ELEMNEST-087' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEST-CODE-087' {
@@ -8452,11 +8493,12 @@ record 'TEXT-088' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-088' {
@@ -8488,11 +8530,12 @@ record 'ELEMRNG-089' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'RNG-BGN-089' {
@@ -8528,11 +8571,12 @@ record 'ELEMATTR-090' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-090' {
@@ -8763,11 +8807,12 @@ record 'ATTRCMT-094' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-094' {
@@ -8872,11 +8917,12 @@ record 'TASKCMT-096' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-096' {
@@ -8920,11 +8966,12 @@ record 'MAPLST-097' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-097' {
@@ -8959,9 +9006,9 @@ record 'MAP-098' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'MAP-NAME-098' {
@@ -9338,11 +9385,12 @@ record 'DESTCMT-101' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-101' {
@@ -9386,11 +9434,12 @@ record 'DESTATTR-102' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-102' {
@@ -9813,9 +9862,9 @@ record 'LTRM-106' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'LTRM-NAME-106' {
@@ -9945,11 +9994,12 @@ record 'LTRMCMT-107' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-107' {
@@ -9993,11 +10043,12 @@ record 'LTRMATTR-108' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-108' {
@@ -10027,9 +10078,9 @@ record 'LINE-109' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'LINE-NAME-109' {
@@ -10171,11 +10222,12 @@ record 'LINECMT-110' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-110' {
@@ -10219,11 +10271,12 @@ record 'LINEATTR-111' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-111' {
@@ -10249,11 +10302,12 @@ record 'TASKATTR-112' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-112' {
@@ -10279,11 +10333,12 @@ record 'SRCD-113' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'S-NAME-113' {
@@ -10580,11 +10635,12 @@ record 'USERSYS-114' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-114' {
@@ -10627,11 +10683,12 @@ record 'USERLINE-115' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-115' {
@@ -10678,9 +10735,9 @@ record 'MESSAGE-116' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'MSG-KEY-116' {
@@ -10789,9 +10846,9 @@ record 'PANEL-118' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'PANEL-NAME-118' {
@@ -10892,11 +10949,12 @@ record 'PANELCMT-119' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-119' {
@@ -10940,11 +10998,12 @@ record 'PANELATTR-120' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-120' {
@@ -10970,11 +11029,12 @@ record 'PANELFLD-121' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'PFLNAME-121' {
@@ -11035,11 +11095,12 @@ record 'MAPCMT-122' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-122' {
@@ -11083,11 +11144,12 @@ record 'MAPATTR-123' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-123' {
@@ -11113,11 +11175,12 @@ record 'MAPFLD-124' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'DATAFLD-INDEX-124' {
@@ -11435,11 +11498,12 @@ record 'MAPRCD-125' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'MAP-INDEX-125' {
@@ -11493,11 +11557,12 @@ record 'PROGMAP-126' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-126' {
@@ -11579,11 +11644,12 @@ record 'PTRMCMT-128' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-128' {
@@ -11627,11 +11693,12 @@ record 'PTRMATTR-129' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-129' {
@@ -11657,11 +11724,12 @@ record 'QUEUEATTR-130' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-130' {
@@ -11715,11 +11783,12 @@ record 'ATTRNEST-132' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEST-CODE-132' {
@@ -11767,11 +11836,12 @@ record 'USERRCD-133' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-133' {
@@ -11814,11 +11884,12 @@ record 'USERFILE-134' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-134' {
@@ -11861,11 +11932,12 @@ record 'USERPROG-135' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-135' {
@@ -11908,11 +11980,12 @@ record 'USERMOD-136' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-136' {
@@ -11955,11 +12028,12 @@ record 'USERMAP-137' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-137' {
@@ -12077,6 +12151,7 @@ record 'SROOT-DCS-139' {
 
     area 'DDLDCRUN'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
     elements {
@@ -12122,7 +12197,8 @@ record 'SROOT-DCS-139' {
         element 'SRHUDATA-139' {
             level 2
             picture 'X(01)'
-            occurs 500 {
+            occurs {
+                count 500
                 dependingOn 'SRHVSIZE-139'
             }
         }
@@ -12169,11 +12245,12 @@ record 'RCDSYNATTR-141' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-141' {
@@ -12199,11 +12276,12 @@ record 'CVGDEFS-142' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'CVG-TYPE-142' {
@@ -14399,6 +14477,7 @@ record 'LOGREC-143' {
 
     area 'DDLDCLOG'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
     elements {
@@ -14436,7 +14515,8 @@ record 'LOGREC-143' {
                     picture 'X(01)'
                 }
             }
-            occurs 256 {
+            occurs {
+                count 256
                 dependingOn 'LENGTH-143'
             }
         }
@@ -14459,11 +14539,12 @@ record 'MSG-LINE-144' {
 
     area 'DDLDCMSG'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'CMT-ID-144' {
@@ -14550,11 +14631,12 @@ record 'RCDNEST-145' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEST-CODE-145' {
@@ -14591,11 +14673,12 @@ record 'MSGCMT-146' {
 
     area 'DDLDCMSG'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-146' {
@@ -14639,11 +14722,12 @@ record 'PFLD-DATA-147' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'NEXT-DEV-147' {
@@ -14723,11 +14807,12 @@ record 'USERPTRM-148' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-148' {
@@ -14770,11 +14855,12 @@ record 'USERLTRM-149' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-149' {
@@ -14817,11 +14903,12 @@ record 'USERDEST-150' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-150' {
@@ -14864,11 +14951,12 @@ record 'USERQUEUE-151' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-151' {
@@ -14911,11 +14999,12 @@ record 'USERTASK-152' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-152' {
@@ -14958,11 +15047,12 @@ record 'USERPANEL-153' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-153' {
@@ -15005,11 +15095,12 @@ record 'SYSMOD-154' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-154' {
@@ -15179,6 +15270,7 @@ record 'LOADCTL-158' {
 
     area 'DDLDCLOD'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
     elements {
@@ -15225,7 +15317,8 @@ record 'LOADCTL-158' {
                     usage 'COMPUTATIONAL'
                 }
             }
-            occurs 127 {
+            occurs {
+                count 127
                 dependingOn 'LOADCTL-RLDNUM-158'
             }
         }
@@ -15248,11 +15341,12 @@ record 'ELEMACT-159' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'EA-FUNCT-159' {
@@ -15336,9 +15430,9 @@ record 'CATENTRY-160' {
     minimumRootLength 64
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'CAT-IDENTIFICATION-160' {
@@ -15763,11 +15857,12 @@ record 'CATPASSKEY-162' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'CAT-PASSKEYS-162' {
@@ -15823,6 +15918,7 @@ record 'CATEXT-163' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
     elements {
@@ -15835,7 +15931,8 @@ record 'CATEXT-163' {
         element 'CAT-EXTENSION-DATA-163' {
             level 2
             picture 'X(01)'
-            occurs 510 {
+            occurs {
+                count 510
                 dependingOn 'CAT-EXTENSION-LENGTH-163'
             }
         }
@@ -15897,9 +15994,9 @@ record 'SYSMO-170' {
     minimumRootLength 32
     minimumFragmentLength 512
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SYS-NAME-170' {
@@ -16917,11 +17014,12 @@ record 'ATTRUSER-173' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-173' {
@@ -17050,6 +17148,7 @@ record 'SYMCTL-176' {
 
     area 'DDLDCLOD'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
     elements {
@@ -17096,7 +17195,8 @@ record 'SYMCTL-176' {
                     usage 'COMPUTATIONAL'
                 }
             }
-            occurs 127 {
+            occurs {
+                count 127
                 dependingOn 'SYMCTL-RLDNUM-176'
             }
         }
@@ -17119,11 +17219,12 @@ record 'SCHEMAATTR-180' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-180' {
@@ -17149,11 +17250,12 @@ record 'SCHEMACMT-181' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-181' {
@@ -17197,11 +17299,12 @@ record 'USERSCHEMA-182' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-182' {
@@ -17244,11 +17347,12 @@ record 'SSATTR-183' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TEXT-183' {
@@ -17274,11 +17378,12 @@ record 'SSCMT-184' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-184' {
@@ -17322,11 +17427,12 @@ record 'USERSS-185' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'USER-AUTH-FLAG-185' {
@@ -17369,11 +17475,12 @@ record 'NAMEDES-186' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-186' {
@@ -17656,11 +17763,12 @@ record 'PATHDEF-192' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'TYP-192' {
@@ -18073,11 +18181,12 @@ record 'LRCMT-194' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'IDD-SEQ-194' {
@@ -18121,11 +18230,12 @@ record 'MODMAP-195' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'JCT-TYPE-195' {
@@ -18160,9 +18270,9 @@ record 'SYMNAME-200' {
     minimumRootLength 20
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SYMBOL-TYPE-200' {
@@ -18199,11 +18309,12 @@ record 'SYMREC-201' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SYMBOL-TYPE-201' {
@@ -18235,11 +18346,12 @@ record 'SYMSET-202' {
 
     area 'DDLDML'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    procedure 'IDMSCOMP BEFORE STORE'
+    procedure 'IDMSCOMP BEFORE MODIFY'
+    procedure 'IDMSDCOM AFTER GET'
 
     elements {
         element 'SYMBOL-TYPE-202' {
@@ -20118,6 +20230,7 @@ record 'LOADCTL-158_' {
 
     area 'DDLCATLOD'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
     elements {
@@ -20164,7 +20277,8 @@ record 'LOADCTL-158_' {
                     usage 'COMPUTATIONAL'
                 }
             }
-            occurs 127 {
+            occurs {
+                count 127
                 dependingOn 'LOADCTL-RLDNUM-158'
             }
         }
@@ -20424,6 +20538,7 @@ record 'SYMCTL-176_' {
 
     area 'DDLCATLOD'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
     elements {
@@ -20470,7 +20585,8 @@ record 'SYMCTL-176_' {
                     usage 'COMPUTATIONAL'
                 }
             }
-            occurs 127 {
+            occurs {
+                count 127
                 dependingOn 'SYMCTL-RLDNUM-176'
             }
         }
@@ -22415,6 +22531,7 @@ record 'TRACEREC-177' {
 
     area 'DDLDCTRC'
 
+    minimumRootLength 0
     minimumFragmentLength 4
 
     elements {
@@ -22452,7 +22569,8 @@ record 'TRACEREC-177' {
                     picture 'X(01)'
                 }
             }
-            occurs 256 {
+            occurs {
+                count 256
                 dependingOn 'LENGTH-177'
             }
         }
@@ -22806,17 +22924,17 @@ set 'S-SCHEMACMT' {
             line {
                 start {
                     x 117
-                    y -1
+                    y '-1'
                 }
 
                 bendpoint {
                     x 117
-                    y -25
+                    y '-25'
                 }
 
                 bendpoint {
                     x 317
-                    y -25
+                    y '-25'
                 }
 
                 end {
@@ -23132,7 +23250,7 @@ set 'OOAK-DEST' {
                 }
 
                 end {
-                    x -1
+                    x '-1'
                     y 14
                 }
             }
@@ -23405,7 +23523,7 @@ set 'OOAK-OOAKEXT' {
                 }
 
                 bendpoint {
-                    x -66
+                    x '-66'
                     y 81
                 }
 
@@ -23605,7 +23723,7 @@ set 'OOAK-QUEUE' {
                 }
 
                 end {
-                    x -1
+                    x '-1'
                     y 11
                 }
             }
@@ -23792,7 +23910,7 @@ set 'OOAK-TASK' {
                 }
 
                 end {
-                    x -1
+                    x '-1'
                     y 8
                 }
             }
@@ -23949,12 +24067,12 @@ set 'SA-AFACT' {
 
                 bendpoint {
                     x 117
-                    y -21
+                    y '-21'
                 }
 
                 bendpoint {
                     x 596
-                    y -21
+                    y '-21'
                 }
 
                 bendpoint {
@@ -24007,18 +24125,18 @@ set 'SA-FILEATTR' {
                 }
 
                 bendpoint {
-                    x -29
+                    x '-29'
                     y 6
                 }
 
                 bendpoint {
-                    x -29
-                    y -43
+                    x '-29'
+                    y '-43'
                 }
 
                 bendpoint {
-                    x -193
-                    y -43
+                    x '-193'
+                    y '-43'
                 }
 
                 end {
@@ -24049,17 +24167,17 @@ set 'SA-FILECMT' {
             line {
                 start {
                     x 39
-                    y -1
+                    y '-1'
                 }
 
                 bendpoint {
                     x 39
-                    y -167
+                    y '-167'
                 }
 
                 bendpoint {
-                    x -194
-                    y -167
+                    x '-194'
+                    y '-167'
                 }
 
                 end {
@@ -24102,12 +24220,12 @@ set 'SA-FILESYN' {
                 }
 
                 bendpoint {
-                    x -68
+                    x '-68'
                     y 108
                 }
 
                 bendpoint {
-                    x -68
+                    x '-68'
                     y 296
                 }
 
@@ -24152,7 +24270,7 @@ set 'SA-SACALL' {
 
                 bendpoint {
                     x 89
-                    y -110
+                    y '-110'
                 }
 
                 end {
@@ -24213,12 +24331,12 @@ set 'SA-SSA' {
 
                 bendpoint {
                     x 102
-                    y -40
+                    y '-40'
                 }
 
                 bendpoint {
                     x 680
-                    y -40
+                    y '-40'
                 }
 
                 bendpoint {
@@ -24227,7 +24345,7 @@ set 'SA-SSA' {
                 }
 
                 end {
-                    x -1
+                    x '-1'
                     y 26
                 }
             }
@@ -24289,17 +24407,17 @@ set 'SA-USERFILE' {
                 }
 
                 bendpoint {
-                    x -26
+                    x '-26'
                     y 44
                 }
 
                 bendpoint {
-                    x -26
+                    x '-26'
                     y 86
                 }
 
                 bendpoint {
-                    x -197
+                    x '-197'
                     y 86
                 }
 
@@ -24457,12 +24575,12 @@ set 'TASK-TASKATTR' {
 
                 bendpoint {
                     x 96
-                    y -31
+                    y '-31'
                 }
 
                 bendpoint {
                     x 583
-                    y -31
+                    y '-31'
                 }
 
                 end {
@@ -24556,12 +24674,12 @@ set 'TASK-USERTASK' {
 
                 bendpoint {
                     x 67
-                    y -48
+                    y '-48'
                 }
 
                 bendpoint {
                     x 842
-                    y -48
+                    y '-48'
                 }
 
                 end {
@@ -24602,17 +24720,17 @@ set 'SS-ACCESS' {
 
                 bendpoint {
                     x 108
-                    y -39
+                    y '-39'
                 }
 
                 bendpoint {
                     x 1211
-                    y -39
+                    y '-39'
                 }
 
                 bendpoint {
                     x 1211
-                    y -513
+                    y '-513'
                 }
 
                 end {
@@ -24731,13 +24849,13 @@ set 'SS-SSATTR' {
                 }
 
                 bendpoint {
-                    x -36
+                    x '-36'
                     y 9
                 }
 
                 bendpoint {
-                    x -36
-                    y -250
+                    x '-36'
+                    y '-250'
                 }
 
                 end {
@@ -24937,12 +25055,12 @@ set 'SS-SSR' {
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 47
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 416
                 }
 
@@ -24981,13 +25099,13 @@ set 'SS-USERSS' {
                 }
 
                 bendpoint {
-                    x -98
+                    x '-98'
                     y 21
                 }
 
                 bendpoint {
-                    x -98
-                    y -378
+                    x '-98'
+                    y '-378'
                 }
 
                 end {
@@ -25053,12 +25171,12 @@ set 'DESTLST-USERDST' {
 
                 bendpoint {
                     x 187
-                    y -196
+                    y '-196'
                 }
 
                 bendpoint {
                     x 1104
-                    y -196
+                    y '-196'
                 }
 
                 end {
@@ -25097,12 +25215,12 @@ set 'DEST-DESTATTR' {
 
                 bendpoint {
                     x 115
-                    y -39
+                    y '-39'
                 }
 
                 bendpoint {
                     x 579
-                    y -39
+                    y '-39'
                 }
 
                 end {
@@ -25196,7 +25314,7 @@ set 'DEST-SENDLST' {
 
                 bendpoint {
                     x 63
-                    y -109
+                    y '-109'
                 }
 
                 end {
@@ -25235,12 +25353,12 @@ set 'DEST-USERDEST' {
 
                 bendpoint {
                     x 88
-                    y -57
+                    y '-57'
                 }
 
                 bendpoint {
                     x 844
-                    y -57
+                    y '-57'
                 }
 
                 end {
@@ -25279,12 +25397,12 @@ set 'QUEUE-QUEUEATTR' {
 
                 bendpoint {
                     x 101
-                    y -36
+                    y '-36'
                 }
 
                 bendpoint {
                     x 582
-                    y -36
+                    y '-36'
                 }
 
                 end {
@@ -25378,12 +25496,12 @@ set 'QUEUE-USERQUEUE' {
 
                 bendpoint {
                     x 69
-                    y -51
+                    y '-51'
                 }
 
                 bendpoint {
                     x 844
-                    y -51
+                    y '-51'
                 }
 
                 end {
@@ -25557,12 +25675,12 @@ set 'SSR-SSMR' {
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 37
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 295
                 }
 
@@ -25814,7 +25932,7 @@ set 'SR-RCDATTR' {
 
                 bendpoint {
                     x 155
-                    y -243
+                    y '-243'
                 }
 
                 end {
@@ -25935,7 +26053,7 @@ set 'SR-USERRCD' {
 
                 bendpoint {
                     x 182
-                    y -379
+                    y '-379'
                 }
 
                 end {
@@ -25975,12 +26093,12 @@ set 'SYS-ACCESS' {
                 }
 
                 bendpoint {
-                    x -66
+                    x '-66'
                     y 8
                 }
 
                 bendpoint {
-                    x -66
+                    x '-66'
                     y 160
                 }
 
@@ -26020,7 +26138,7 @@ set 'SYS-CVGDEFS' {
 
                 bendpoint {
                     x 36
-                    y -108
+                    y '-108'
                 }
 
                 end {
@@ -26337,12 +26455,12 @@ set 'SYS-SYSATTR' {
 
                 bendpoint {
                     x 58
-                    y -64
+                    y '-64'
                 }
 
                 bendpoint {
                     x 1106
-                    y -64
+                    y '-64'
                 }
 
                 end {
@@ -26378,12 +26496,12 @@ set 'SYS-SYSCMT' {
 
                 bendpoint {
                     x 81
-                    y -47
+                    y '-47'
                 }
 
                 bendpoint {
                     x 845
-                    y -47
+                    y '-47'
                 }
 
                 end {
@@ -26417,12 +26535,12 @@ set 'SYS-SYSMO' {
 
                 bendpoint {
                     x 104
-                    y -32
+                    y '-32'
                 }
 
                 bendpoint {
                     x 583
-                    y -32
+                    y '-32'
                 }
 
                 end {
@@ -26460,12 +26578,12 @@ set 'SYS-SYSMOD' {
                 }
 
                 bendpoint {
-                    x -28
+                    x '-28'
                     y 41
                 }
 
                 bendpoint {
-                    x -28
+                    x '-28'
                     y 420
                 }
 
@@ -26548,12 +26666,12 @@ set 'SYS-USERSYS' {
                 }
 
                 bendpoint {
-                    x -47
+                    x '-47'
                     y 26
                 }
 
                 bendpoint {
-                    x -47
+                    x '-47'
                     y 295
                 }
 
@@ -26691,23 +26809,23 @@ set 'SDR-SCR' {
                 }
 
                 bendpoint {
-                    x -1113
+                    x '-1113'
                     y 92
                 }
 
                 bendpoint {
-                    x -1113
-                    y -30
+                    x '-1113'
+                    y '-30'
                 }
 
                 bendpoint {
-                    x -1237
-                    y -30
+                    x '-1237'
+                    y '-30'
                 }
 
                 bendpoint {
-                    x -1237
-                    y -38
+                    x '-1237'
+                    y '-38'
                 }
 
                 end {
@@ -26743,18 +26861,18 @@ set 'SDR-SCR' {
                 }
 
                 bendpoint {
-                    x -1113
+                    x '-1113'
                     y 92
                 }
 
                 bendpoint {
-                    x -1113
-                    y -30
+                    x '-1113'
+                    y '-30'
                 }
 
                 bendpoint {
-                    x -977
-                    y -30
+                    x '-977'
+                    y '-30'
                 }
 
                 end {
@@ -26883,7 +27001,7 @@ set 'USER-ACCESS' {
 
                 bendpoint {
                     x 151
-                    y -120
+                    y '-120'
                 }
 
                 end {
@@ -26944,12 +27062,12 @@ set 'USER-CATENTRY' {
 
                 bendpoint {
                     x 8
-                    y -452
+                    y '-452'
                 }
 
                 bendpoint {
-                    x -934
-                    y -452
+                    x '-934'
+                    y '-452'
                 }
 
                 end {
@@ -26988,7 +27106,7 @@ set 'USER-USERATTR' {
 
                 bendpoint {
                     x 0
-                    y -108
+                    y '-108'
                 }
 
                 end {
@@ -27023,12 +27141,12 @@ set 'USER-USERCMT' {
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 49
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 294
                 }
 
@@ -27068,12 +27186,12 @@ set 'USER-USERDEST' {
 
                 bendpoint {
                     x 74
-                    y -279
+                    y '-279'
                 }
 
                 bendpoint {
                     x 282
-                    y -279
+                    y '-279'
                 }
 
                 connectors {
@@ -27128,12 +27246,12 @@ set 'USER-USERDST' {
 
                 bendpoint {
                     x 66
-                    y -288
+                    y '-288'
                 }
 
                 bendpoint {
                     x 263
-                    y -288
+                    y '-288'
                 }
 
                 connectors {
@@ -27186,12 +27304,12 @@ set 'USER-USERELEM' {
 
                 bendpoint {
                     x 36
-                    y -318
+                    y '-318'
                 }
 
                 bendpoint {
                     x 187
-                    y -318
+                    y '-318'
                 }
 
                 connectors {
@@ -27232,7 +27350,7 @@ set 'USER-USERFILE' {
 
         diagram {
             label {
-                x -19
+                x '-19'
                 y 1301
             }
 
@@ -27244,12 +27362,12 @@ set 'USER-USERFILE' {
 
                 bendpoint {
                     x 15
-                    y -336
+                    y '-336'
                 }
 
                 bendpoint {
                     x 130
-                    y -336
+                    y '-336'
                 }
 
                 connectors {
@@ -27261,7 +27379,7 @@ set 'USER-USERFILE' {
                     }
 
                     connector {
-                        x -19
+                        x '-19'
                         y 1330
                     }
                 }
@@ -27302,12 +27420,12 @@ set 'USER-USERLINE' {
 
                 bendpoint {
                     x 43
-                    y -311
+                    y '-311'
                 }
 
                 bendpoint {
                     x 206
-                    y -311
+                    y '-311'
                 }
 
                 connectors {
@@ -27360,12 +27478,12 @@ set 'USER-USERLTRM' {
 
                 bendpoint {
                     x 58
-                    y -296
+                    y '-296'
                 }
 
                 bendpoint {
                     x 244
-                    y -296
+                    y '-296'
                 }
 
                 connectors {
@@ -27418,12 +27536,12 @@ set 'USER-USERMAP' {
 
                 bendpoint {
                     x 101
-                    y -251
+                    y '-251'
                 }
 
                 bendpoint {
                     x 339
-                    y -251
+                    y '-251'
                 }
 
                 connectors {
@@ -27475,12 +27593,12 @@ set 'USER-USERMOD' {
                 }
 
                 bendpoint {
-                    x -60
+                    x '-60'
                     y 43
                 }
 
                 bendpoint {
-                    x -60
+                    x '-60'
                     y 433
                 }
 
@@ -27520,12 +27638,12 @@ set 'USER-USERPANEL' {
 
                 bendpoint {
                     x 109
-                    y -244
+                    y '-244'
                 }
 
                 bendpoint {
                     x 358
-                    y -244
+                    y '-244'
                 }
 
                 connectors {
@@ -27578,12 +27696,12 @@ set 'USER-USERPROG' {
 
                 bendpoint {
                     x 29
-                    y -324
+                    y '-324'
                 }
 
                 bendpoint {
                     x 168
-                    y -324
+                    y '-324'
                 }
 
                 connectors {
@@ -27636,12 +27754,12 @@ set 'USER-USERPTRM' {
 
                 bendpoint {
                     x 50
-                    y -304
+                    y '-304'
                 }
 
                 bendpoint {
                     x 225
-                    y -304
+                    y '-304'
                 }
 
                 connectors {
@@ -27694,12 +27812,12 @@ set 'USER-USERQUEUE' {
 
                 bendpoint {
                     x 83
-                    y -269
+                    y '-269'
                 }
 
                 bendpoint {
                     x 301
-                    y -269
+                    y '-269'
                 }
 
                 connectors {
@@ -27752,12 +27870,12 @@ set 'USER-USERRCD' {
 
                 bendpoint {
                     x 22
-                    y -330
+                    y '-330'
                 }
 
                 bendpoint {
                     x 149
-                    y -330
+                    y '-330'
                 }
 
                 connectors {
@@ -27809,18 +27927,18 @@ set 'USER-USERSCHEMA' {
                 }
 
                 bendpoint {
-                    x -27
+                    x '-27'
                     y 7
                 }
 
                 bendpoint {
-                    x -27
-                    y -53
+                    x '-27'
+                    y '-53'
                 }
 
                 bendpoint {
-                    x -1240
-                    y -53
+                    x '-1240'
+                    y '-53'
                 }
 
                 end {
@@ -27858,18 +27976,18 @@ set 'USER-USERSS' {
                 }
 
                 bendpoint {
-                    x -40
+                    x '-40'
                     y 17
                 }
 
                 bendpoint {
-                    x -40
-                    y -42
+                    x '-40'
+                    y '-42'
                 }
 
                 bendpoint {
-                    x -973
-                    y -42
+                    x '-973'
+                    y '-42'
                 }
 
                 end {
@@ -27930,12 +28048,12 @@ set 'USER-USERTASK' {
 
                 bendpoint {
                     x 92
-                    y -261
+                    y '-261'
                 }
 
                 bendpoint {
                     x 320
-                    y -261
+                    y '-261'
                 }
 
                 connectors {
@@ -28115,12 +28233,12 @@ set 'PROG-ELEMACT' {
                 }
 
                 bendpoint {
-                    x -50
+                    x '-50'
                     y 37
                 }
 
                 bendpoint {
-                    x -50
+                    x '-50'
                     y 149
                 }
 
@@ -28159,23 +28277,23 @@ set 'PROG-LRACT' {
                 }
 
                 bendpoint {
-                    x -91
+                    x '-91'
                     y 11
                 }
 
                 bendpoint {
-                    x -91
+                    x '-91'
                     y 71
                 }
 
                 bendpoint {
-                    x -361
+                    x '-361'
                     y 71
                 }
 
                 bendpoint {
-                    x -361
-                    y -107
+                    x '-361'
+                    y '-107'
                 }
 
                 end {
@@ -28333,12 +28451,12 @@ set 'PROG-PROGLST' {
 
                 bendpoint {
                     x 107
-                    y -33
+                    y '-33'
                 }
 
                 bendpoint {
                     x 324
-                    y -33
+                    y '-33'
                 }
 
                 end {
@@ -28410,17 +28528,17 @@ set 'PROG-RCDACT' {
                 }
 
                 bendpoint {
-                    x -79
+                    x '-79'
                     y 19
                 }
 
                 bendpoint {
-                    x -79
+                    x '-79'
                     y 85
                 }
 
                 bendpoint {
-                    x -460
+                    x '-460'
                     y 85
                 }
 
@@ -28459,17 +28577,17 @@ set 'PROG-RCDCOPY' {
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 48
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 767
                 }
 
                 bendpoint {
-                    x -978
+                    x '-978'
                     y 767
                 }
 
@@ -28508,17 +28626,17 @@ set 'PROG-SETACT' {
                 }
 
                 bendpoint {
-                    x -65
+                    x '-65'
                     y 29
                 }
 
                 bendpoint {
-                    x -65
+                    x '-65'
                     y 95
                 }
 
                 bendpoint {
-                    x -695
+                    x '-695'
                     y 95
                 }
 
@@ -28555,27 +28673,27 @@ set 'PROG-SSPROG' {
 
                 bendpoint {
                     x 23
-                    y -43
+                    y '-43'
                 }
 
                 bendpoint {
-                    x -314
-                    y -43
+                    x '-314'
+                    y '-43'
                 }
 
                 bendpoint {
-                    x -314
-                    y -466
+                    x '-314'
+                    y '-466'
                 }
 
                 bendpoint {
-                    x -483
-                    y -466
+                    x '-483'
+                    y '-466'
                 }
 
                 bendpoint {
-                    x -483
-                    y -516
+                    x '-483'
+                    y '-516'
                 }
 
                 end {
@@ -28614,12 +28732,12 @@ set 'PROG-USERPROG' {
 
                 bendpoint {
                     x 44
-                    y -56
+                    y '-56'
                 }
 
                 bendpoint {
-                    x -194
-                    y -56
+                    x '-194'
+                    y '-56'
                 }
 
                 end {
@@ -28749,7 +28867,7 @@ set 'SMR-SFK' {
                 }
 
                 bendpoint {
-                    x -197
+                    x '-197'
                     y 24
                 }
 
@@ -28858,13 +28976,13 @@ set 'INQ-ELEMATTR' {
                 }
 
                 bendpoint {
-                    x -46
+                    x '-46'
                     y 13
                 }
 
                 bendpoint {
-                    x -46
-                    y -243
+                    x '-46'
+                    y '-243'
                 }
 
                 end {
@@ -29060,12 +29178,12 @@ set 'INQ-USERELEM' {
 
                 bendpoint {
                     x 97
-                    y -37
+                    y '-37'
                 }
 
                 bendpoint {
                     x 319
-                    y -37
+                    y '-37'
                 }
 
                 end {
@@ -29175,13 +29293,13 @@ set 'MODULE-ACCESS' {
                 }
 
                 bendpoint {
-                    x -72
+                    x '-72'
                     y 25
                 }
 
                 bendpoint {
-                    x -72
-                    y -770
+                    x '-72'
+                    y '-770'
                 }
 
                 end {
@@ -29219,13 +29337,13 @@ set 'MODULE-MODATTR' {
                 }
 
                 bendpoint {
-                    x -48
+                    x '-48'
                     y 13
                 }
 
                 bendpoint {
-                    x -48
-                    y -380
+                    x '-48'
+                    y '-380'
                 }
 
                 end {
@@ -29260,13 +29378,13 @@ set 'MODULE-MODCMT' {
                 }
 
                 bendpoint {
-                    x -35
+                    x '-35'
                     y 4
                 }
 
                 bendpoint {
-                    x -35
-                    y -244
+                    x '-35'
+                    y '-244'
                 }
 
                 end {
@@ -29388,7 +29506,7 @@ set 'MODULE-SYSMOD' {
 
                 bendpoint {
                     x 178
-                    y -505
+                    y '-505'
                 }
 
                 end {
@@ -29457,13 +29575,13 @@ set 'MODULE-USERMOD' {
                 }
 
                 bendpoint {
-                    x -94
+                    x '-94'
                     y 36
                 }
 
                 bendpoint {
-                    x -94
-                    y -242
+                    x '-94'
+                    y '-242'
                 }
 
                 end {
@@ -29526,7 +29644,7 @@ set 'SSMR-SSFK' {
                 }
 
                 bendpoint {
-                    x -196
+                    x '-196'
                     y 89
                 }
 
@@ -29566,12 +29684,12 @@ set 'PTRM-PTRMATTR' {
 
                 bendpoint {
                     x 98
-                    y -33
+                    y '-33'
                 }
 
                 bendpoint {
                     x 588
-                    y -33
+                    y '-33'
                 }
 
                 end {
@@ -29665,12 +29783,12 @@ set 'PTRM-USERPTRM' {
 
                 bendpoint {
                     x 64
-                    y -49
+                    y '-49'
                 }
 
                 bendpoint {
                     x 844
-                    y -49
+                    y '-49'
                 }
 
                 end {
@@ -29731,12 +29849,12 @@ set 'RCDSYN-FRSYN' {
 
                 bendpoint {
                     x 13
-                    y -20
+                    y '-20'
                 }
 
                 bendpoint {
-                    x -1237
-                    y -20
+                    x '-1237'
+                    y '-20'
                 }
 
                 end {
@@ -29782,7 +29900,7 @@ set 'RCDSYN-LRSSR' {
 
                 bendpoint {
                     x 232
-                    y -637
+                    y '-637'
                 }
 
                 end {
@@ -29820,12 +29938,12 @@ set 'RCDSYN-MAPRCD' {
                 }
 
                 bendpoint {
-                    x -59
+                    x '-59'
                     y 43
                 }
 
                 bendpoint {
-                    x -59
+                    x '-59'
                     y 261
                 }
 
@@ -29836,7 +29954,7 @@ set 'RCDSYN-MAPRCD' {
 
                 bendpoint {
                     x 1257
-                    y -380
+                    y '-380'
                 }
 
                 end {
@@ -29950,22 +30068,22 @@ set 'RCDSYN-SRCD' {
             line {
                 start {
                     x 33
-                    y -1
+                    y '-1'
                 }
 
                 bendpoint {
                     x 33
-                    y -32
+                    y '-32'
                 }
 
                 bendpoint {
-                    x -574
-                    y -32
+                    x '-574'
+                    y '-32'
                 }
 
                 bendpoint {
-                    x -574
-                    y -639
+                    x '-574'
+                    y '-639'
                 }
 
                 end {
@@ -30011,12 +30129,12 @@ set 'RCDSYN-SSR' {
 
                 bendpoint {
                     x 209
-                    y -563
+                    y '-563'
                 }
 
                 bendpoint {
-                    x -166
-                    y -563
+                    x '-166'
+                    y '-563'
                 }
 
                 end {
@@ -30067,12 +30185,12 @@ set 'NAMESYN-MAPFLD' {
 
                 bendpoint {
                     x 1035
-                    y -311
+                    y '-311'
                 }
 
                 bendpoint {
                     x 1326
-                    y -311
+                    y '-311'
                 }
 
                 end {
@@ -30152,7 +30270,7 @@ set 'ELEMSYN-ELEMACT' {
 
                 bendpoint {
                     x 446
-                    y -367
+                    y '-367'
                 }
 
                 end {
@@ -30252,12 +30370,12 @@ set 'ATTR-ATTRCMT' {
                 }
 
                 bendpoint {
-                    x -63
+                    x '-63'
                     y 42
                 }
 
                 bendpoint {
-                    x -63
+                    x '-63'
                     y 295
                 }
 
@@ -30428,12 +30546,12 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 bendpoint {
                     x 325
-                    y -223
+                    y '-223'
                 }
 
                 end {
@@ -30463,7 +30581,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30507,7 +30625,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30539,7 +30657,7 @@ set 'ATTR-JCT' {
 
         diagram {
             label {
-                x -8
+                x '-8'
                 y 1015
             }
 
@@ -30551,7 +30669,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30563,7 +30681,7 @@ set 'ATTR-JCT' {
                     }
 
                     connector {
-                        x -19
+                        x '-19'
                         y 1061
                     }
                 }
@@ -30595,7 +30713,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30639,7 +30757,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30683,7 +30801,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30727,7 +30845,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -224
+                    y '-224'
                 }
 
                 connectors {
@@ -30771,7 +30889,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30815,7 +30933,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30859,7 +30977,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30903,7 +31021,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30947,7 +31065,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -30991,7 +31109,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -31035,7 +31153,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -31079,7 +31197,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -31123,7 +31241,7 @@ set 'ATTR-JCT' {
 
                 bendpoint {
                     x 61
-                    y -223
+                    y '-223'
                 }
 
                 connectors {
@@ -31220,12 +31338,12 @@ set 'MAP-MAPATTR' {
 
                 bendpoint {
                     x 112
-                    y -27
+                    y '-27'
                 }
 
                 bendpoint {
                     x 585
-                    y -27
+                    y '-27'
                 }
 
                 end {
@@ -31289,17 +31407,17 @@ set 'MAP-MAPFLD' {
                 }
 
                 bendpoint {
-                    x -73
+                    x '-73'
                     y 45
                 }
 
                 bendpoint {
-                    x -73
+                    x '-73'
                     y 104
                 }
 
                 bendpoint {
-                    x -194
+                    x '-194'
                     y 104
                 }
 
@@ -31362,17 +31480,17 @@ set 'MAP-MAPRCD' {
                 }
 
                 bendpoint {
-                    x -89
+                    x '-89'
                     y 34
                 }
 
                 bendpoint {
-                    x -89
+                    x '-89'
                     y 93
                 }
 
                 bendpoint {
-                    x -459
+                    x '-459'
                     y 93
                 }
 
@@ -31412,7 +31530,7 @@ set 'MAP-MODMAP' {
 
                 bendpoint {
                     x 46
-                    y -110
+                    y '-110'
                 }
 
                 end {
@@ -31453,12 +31571,12 @@ set 'MAP-PROGMAP' {
 
                 bendpoint {
                     x 24
-                    y -36
+                    y '-36'
                 }
 
                 bendpoint {
-                    x -434
-                    y -36
+                    x '-434'
+                    y '-36'
                 }
 
                 end {
@@ -31497,12 +31615,12 @@ set 'MAP-USERMAP' {
 
                 bendpoint {
                     x 88
-                    y -45
+                    y '-45'
                 }
 
                 bendpoint {
                     x 843
-                    y -45
+                    y '-45'
                 }
 
                 end {
@@ -31611,12 +31729,12 @@ set 'LTRM-LTRMATTR' {
 
                 bendpoint {
                     x 99
-                    y -33
+                    y '-33'
                 }
 
                 bendpoint {
                     x 585
-                    y -33
+                    y '-33'
                 }
 
                 end {
@@ -31710,12 +31828,12 @@ set 'LTRM-USERLTRM' {
 
                 bendpoint {
                     x 61
-                    y -50
+                    y '-50'
                 }
 
                 bendpoint {
                     x 841
-                    y -50
+                    y '-50'
                 }
 
                 end {
@@ -31754,12 +31872,12 @@ set 'LINE-LINEATTR' {
 
                 bendpoint {
                     x 100
-                    y -36
+                    y '-36'
                 }
 
                 bendpoint {
                     x 585
-                    y -36
+                    y '-36'
                 }
 
                 end {
@@ -31865,12 +31983,12 @@ set 'LINE-USERLINE' {
 
                 bendpoint {
                     x 65
-                    y -55
+                    y '-55'
                 }
 
                 bendpoint {
                     x 845
-                    y -55
+                    y '-55'
                 }
 
                 end {
@@ -31908,13 +32026,13 @@ set 'SRCD-SAM' {
                 }
 
                 bendpoint {
-                    x -43
+                    x '-43'
                     y 13
                 }
 
                 bendpoint {
-                    x -43
-                    y -232
+                    x '-43'
+                    y '-232'
                 }
 
                 end {
@@ -32180,12 +32298,12 @@ set 'PANEL-PANELATTR' {
 
                 bendpoint {
                     x 109
-                    y -27
+                    y '-27'
                 }
 
                 bendpoint {
                     x 580
-                    y -27
+                    y '-27'
                 }
 
                 end {
@@ -32249,12 +32367,12 @@ set 'PANEL-PANELFLD' {
                 }
 
                 bendpoint {
-                    x -81
+                    x '-81'
                     y 27
                 }
 
                 bendpoint {
-                    x -81
+                    x '-81'
                     y 142
                 }
 
@@ -32294,12 +32412,12 @@ set 'PANEL-USERPANEL' {
 
                 bendpoint {
                     x 88
-                    y -46
+                    y '-46'
                 }
 
                 bendpoint {
                     x 844
-                    y -46
+                    y '-46'
                 }
 
                 end {
@@ -32494,13 +32612,13 @@ set 'LOADHDR-LOADJCT' {
                 }
 
                 bendpoint {
-                    x -70
+                    x '-70'
                     y 12
                 }
 
                 bendpoint {
-                    x -70
-                    y -107
+                    x '-70'
+                    y '-107'
                 }
 
                 end {
@@ -32969,12 +33087,12 @@ set 'SYMNAME-SYMSET' {
                 }
 
                 bendpoint {
-                    x -43
+                    x '-43'
                     y 27
                 }
 
                 bendpoint {
-                    x -43
+                    x '-43'
                     y 297
                 }
 
@@ -33047,17 +33165,17 @@ set 'AREA-FILEMAP' {
                 }
 
                 bendpoint {
-                    x -94
+                    x '-94'
                     y 39
                 }
 
                 bendpoint {
-                    x -94
+                    x '-94'
                     y 87
                 }
 
                 bendpoint {
-                    x -158
+                    x '-158'
                     y 87
                 }
 
@@ -33548,13 +33666,13 @@ set 'LOADHDR-LOADJCT_' {
                 }
 
                 bendpoint {
-                    x -64
+                    x '-64'
                     y 13
                 }
 
                 bendpoint {
-                    x -64
-                    y -110
+                    x '-64'
+                    y '-110'
                 }
 
                 end {
@@ -33850,12 +33968,12 @@ set 'CONSTRAINT-ORDER' {
                 }
 
                 bendpoint {
-                    x -57
+                    x '-57'
                     y 25
                 }
 
                 bendpoint {
-                    x -57
+                    x '-57'
                     y 294
                 }
 
@@ -34151,12 +34269,12 @@ set 'TABLE-INDEX' {
             line {
                 start {
                     x 117
-                    y -1
+                    y '-1'
                 }
 
                 bendpoint {
                     x 117
-                    y -109
+                    y '-109'
                 }
 
                 end {
@@ -34205,12 +34323,12 @@ set 'TABLE-SECTION' {
                 }
 
                 bendpoint {
-                    x -62
+                    x '-62'
                     y 79
                 }
 
                 bendpoint {
-                    x -62
+                    x '-62'
                     y 296
                 }
 
