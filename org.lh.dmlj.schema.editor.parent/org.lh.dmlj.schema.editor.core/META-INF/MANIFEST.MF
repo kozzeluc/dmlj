@@ -21,5 +21,7 @@ Bundle-Vendor: Luc Hermans
 Export-Package: org.lh.dmlj.schema.editor,
  org.lh.dmlj.schema.editor.importtool,
  org.lh.dmlj.schema.editor.importtool.elements
-Import-Package: org.lh.dmlj.schema.editor.service,
+Import-Package: org.lh.dmlj.schema.editor.dsl.builder.model;resolution:=optional,
+ org.lh.dmlj.schema.editor.dsl.builder.syntax;resolution:=optional,
+ org.lh.dmlj.schema.editor.service,
  org.lh.dmlj.schema.editor.service.api

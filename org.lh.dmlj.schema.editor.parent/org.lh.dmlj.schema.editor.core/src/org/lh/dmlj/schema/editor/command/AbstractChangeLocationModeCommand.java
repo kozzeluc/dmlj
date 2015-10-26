@@ -30,6 +30,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.ViaSpecification;
+import org.lh.dmlj.schema.VsamType;
 
 public abstract class AbstractChangeLocationModeCommand extends ModelChangeBasicCommand {
 
@@ -184,6 +185,11 @@ public abstract class AbstractChangeLocationModeCommand extends ModelChangeBasic
 		record.setViaSpecification(null);			
 		viaSpecification.setSet(null);	
 	}
+	
+	protected void removeVsamType() {
+		Assert.isNotNull(record.getVsamType(), "record's vsamType is null");
+		record.setVsamType(null);
+	}
 
 	protected void restoreCalcKey(int index) {		
 		
@@ -223,14 +229,32 @@ public abstract class AbstractChangeLocationModeCommand extends ModelChangeBasic
 		
 	}
 	
+	protected void restoreVsamType(int index) {				
+		
+		Assert.isTrue(stash[index] != null || 
+					  stash[index].locationMode != LocationMode.VSAM &&
+					  stash[index].locationMode != LocationMode.VSAM_CALC,
+					  "VSAM type not stashed: " + index);
+		Assert.isTrue(record.getVsamType() == null, "record's vsamType is already set");
+		
+		record.setVsamType(stash[index].vsamType);
+	}
+	
 	protected void stash(int index) {
 		Assert.isTrue(stash[index] == null, "already stashed: " + index);
 		stash[index] = new StashedData();
 		stash[index].locationMode = record.getLocationMode();		
-		if (stash[index].locationMode == LocationMode.CALC) {
+		if (stash[index].locationMode == LocationMode.CALC || 
+			stash[index].locationMode == LocationMode.VSAM_CALC) {
+			
 			stashCalcKey(index);				
-		} else {
+		} else if (stash[index].locationMode == LocationMode.VIA) {
 			stashViaSpecification(index);
+		} 
+		if (stash[index].locationMode == LocationMode.VSAM || 
+			stash[index].locationMode == LocationMode.VSAM_CALC) {
+			
+			stashVsamType(index);
 		}
 	}
 	
@@ -259,6 +283,11 @@ public abstract class AbstractChangeLocationModeCommand extends ModelChangeBasic
 				  .indexOf(stash[index].viaSpecification);
 	}
 	
+	private void stashVsamType(int index) {
+		Assert.isTrue(record.getVsamType() != null, "cannot stash: no VSAM type");
+		stash[index].vsamType = record.getVsamType();
+	}
+	
 	private static class StashedData {
 	
 		protected LocationMode 	 locationMode;	
@@ -270,7 +299,9 @@ public abstract class AbstractChangeLocationModeCommand extends ModelChangeBasic
 		
 		private Set			 	 viaSet;
 		private ViaSpecification viaSpecification;
-		private int				 viaSpecificationIndex;		
+		private int				 viaSpecificationIndex;
+		
+		private VsamType		 vsamType;
 		
 	}
 

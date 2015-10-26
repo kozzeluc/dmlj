@@ -480,6 +480,7 @@ class RecordModelBuilder extends AbstractModelBuilder {
 		record.locationMode = LocationMode.VSAM_CALC
 		record.vsamType = SchemaFactory.eINSTANCE.createVsamType()
 		record.calcKey = SchemaFactory.eINSTANCE.createKey()
+		record.keys << record.calcKey
 		record.calcKey.duplicatesOption = DuplicatesOption.NOT_ALLOWED
 		bodies << BODY_VSAM_CALC
 		runClosure(definition)

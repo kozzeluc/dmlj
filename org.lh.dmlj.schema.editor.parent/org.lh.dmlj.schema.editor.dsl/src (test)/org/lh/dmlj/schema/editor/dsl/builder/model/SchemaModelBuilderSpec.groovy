@@ -40,6 +40,19 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertTemporarySchema(schema)
 	}
 	
+	def "schema without a name and version"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema from an empty closure"
+		def definition = { }
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema, containing only some initial diagram data"
+		assertTemporarySchema(schema)
+	}
+
 	def "build an initial schema given (only) a name and version"() {
 		
 		given: "a Schema builder"
@@ -308,7 +321,48 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		schema.sets.empty
 	}
 	
-	def "define a couple of records without specifying anything at all"() {
+	def "define a couple of records without specifying anything at all (schema name and version not specified)"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a name, version and 3 records, for which we don't specify"
+			  "anything"
+		def definition = {
+			record
+			record
+			record
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given name and version containing 3 records"
+			  "with an automatically generated name, referring to 3 automatically generated areas"
+		schema
+		assertBasicSchema(schema, 'TMPSCHM', 1)
+		assertStandardDiagramData(schema)
+		assert schema.diagramData.connectionLabels.empty
+		assert schema.diagramData.connectionParts.empty
+		assert schema.diagramData.connectors.empty
+		assert schema.diagramData.locations.size == 3
+		schema.procedures.empty
+		schema.areas.size == 3
+		schema.areas[0].name == 'SR0010-AREA'
+		schema.areas[1].name == 'SR0011-AREA'
+		schema.areas[2].name == 'SR0012-AREA'
+		schema.records.size == 3
+		schema.records[0].name == 'SR0010'
+		schema.records[0].id == 10
+		schema.records[0].areaSpecification.area == schema.areas[0]
+		schema.records[1].name == 'SR0011'
+		schema.records[1].id == 11
+		schema.records[1].areaSpecification.area == schema.areas[1]
+		schema.records[2].name == 'SR0012'
+		schema.records[2].id == 12
+		schema.records[2].areaSpecification.area == schema.areas[2]
+		schema.sets.empty
+	}
+	
+	def "define a couple of records without specifying anything at all (schema name and version specified)"() {
 		
 		given: "a Schema builder"
 		def SchemaModelBuilder builder = new SchemaModelBuilder()
@@ -543,6 +597,9 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 	   schema.records[0].areaSpecification.area.is(schema.areas[0])
    }
 	
+	def "define a VSAM record"() {
+	}
+	
 	def "define a couple of sets without specifying anything at all"() {
 		
 		given: "a Schema builder"
@@ -747,5 +804,4 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		schema
 		assertEquals(toCompareFriendlyXmi(original), toCompareFriendlyXmi(schema)) 
 	}
-	
 }

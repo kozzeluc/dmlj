@@ -1968,6 +1968,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		!record.calcKey.memberRole
 		
 		record.calcKey.elements[0].element == record.elements[0]
+		
+		record.keys.size() == 1
+		record.keys[0] == record.calcKey
 	}
 	
 	def "VSAM CALC record (1 CALC key element, variable length type, nonspanned)"() {
@@ -2006,6 +2009,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		!record.calcKey.memberRole
 		
 		record.calcKey.elements[0].element == record.elements[0]
+		
+		record.keys.size() == 1
+		record.keys[0] == record.calcKey
 	}
 	
 	def "VSAM CALC record (2 CALC key elements, default length type, nonspanned)"() {
@@ -2049,6 +2055,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		record.calcKey.elements[0].element == record.elements[0]
 		record.calcKey.elements[1].element == record.elements[1]
+		
+		record.keys.size() == 1
+		record.keys[0] == record.calcKey
 	}
 	
 	def "VSAM CALC record (2 CALC key elements, default length type, spanned)"() {
@@ -2093,6 +2102,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		record.calcKey.elements[0].element == record.elements[0]
 		record.calcKey.elements[1].element == record.elements[1]
+		
+		record.keys.size() == 1
+		record.keys[0] == record.calcKey
 	}
 	
 	@Unroll
@@ -2133,6 +2145,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		!record.calcKey.memberRole
 		
 		record.calcKey.elements[0].element == record.elements[0]
+		
+		record.keys.size() == 1
+		record.keys[0] == record.calcKey
 		
 		where:
 		_duplicates   | expectedDuplicatesOption

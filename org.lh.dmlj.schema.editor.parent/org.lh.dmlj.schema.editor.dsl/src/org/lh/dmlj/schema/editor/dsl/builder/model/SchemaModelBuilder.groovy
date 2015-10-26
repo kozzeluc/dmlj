@@ -109,6 +109,13 @@ class SchemaModelBuilder extends AbstractModelBuilder {
 		
 		assert !bodies
 		
+		if (!schema.name) {
+			schema.name = 'TMPSCHM'
+		}
+		if (!schema.version) {
+			schema.version = 1
+		}
+		
 		schema
 	}
 	

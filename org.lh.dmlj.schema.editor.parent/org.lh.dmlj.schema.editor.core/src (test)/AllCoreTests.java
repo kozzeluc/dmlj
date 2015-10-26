@@ -47,7 +47,7 @@ import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistan
 import org.lh.dmlj.schema.editor.command.DeleteVsamIndexCommandTest;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordCalcCommandTest;
-import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommandTest;
+import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommandSpec;
 import org.lh.dmlj.schema.editor.command.MakeRecordViaCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordVsamCalcCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordVsamCommandTest;
@@ -120,7 +120,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	DeleteVsamIndexCommandTest.class,
 	LockEndpointsCommandTest.class,
 	MakeRecordCalcCommandTest.class,
-	MakeRecordDirectCommandTest.class,
+	MakeRecordDirectCommandSpec.class,
 	MakeRecordViaCommandTest.class,
 	MakeRecordVsamCalcCommandTest.class,
 	MakeRecordVsamCommandTest.class,
@@ -157,5 +157,5 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	ToolsTest.class
 	
 })
-public class AllTests {	
+public class AllCoreTests {	
 }

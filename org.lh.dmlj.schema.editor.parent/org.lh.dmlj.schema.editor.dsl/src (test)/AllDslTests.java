@@ -46,5 +46,5 @@ import org.lh.dmlj.schema.editor.dsl.builder.syntax.SetSyntaxBuilderSpec;
 	SetModelBuilderSpec.class
 	
 })
-public class AllTests {	
+public class AllDslTests {	
 }

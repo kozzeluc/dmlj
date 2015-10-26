@@ -26,7 +26,9 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.util.BasicEList;
@@ -530,6 +532,14 @@ public abstract class TestTools {
 		
 	}
 	
+	public static boolean compare(Map<String, ?> expected, Map<String, ?> actual) {
+		assertEquals((ObjectGraph) expected.get("objectGraph"), 
+					 (ObjectGraph) actual.get("objectGraph"));
+		assertEquals((Xmi) expected.get("xmi"), (Xmi) actual.get("xmi"));
+		assertEquals((Syntax) expected.get("syntax"), (Syntax) actual.get("syntax"));
+		return true;
+	}
+
 	public static Procedure createProcedure() {
 		Procedure procedure = mock(Procedure.class);
 		EList<ProcedureCallSpecification> callSpecs = new BasicEList<>();
@@ -649,7 +659,15 @@ public abstract class TestTools {
 			}
 		}
 	}
-
+	
+	public static Map<String, ?> snapshot(Schema schema) {
+		Map<String, Object> snapshot = new HashMap<>();
+		snapshot.put("objectGraph", asObjectGraph(schema));
+		snapshot.put("xmi", asXmi(schema));
+		snapshot.put("syntax", asSyntax(schema));
+		return snapshot;
+	}
+	
 	public static abstract class Asserter<T> {
 		public abstract void doAssert(int itemIndex, T expected, T actual);
 	}	
