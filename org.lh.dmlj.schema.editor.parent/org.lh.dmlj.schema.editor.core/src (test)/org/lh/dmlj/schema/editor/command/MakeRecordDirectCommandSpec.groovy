@@ -24,6 +24,7 @@ import static org.lh.dmlj.schema.editor.testtool.TestTools.asXmi
 import static org.lh.dmlj.schema.editor.testtool.TestTools.compare
 import static org.lh.dmlj.schema.editor.testtool.TestTools.snapshot
 
+import org.eclipse.core.runtime.AssertionFailedException
 import org.eclipse.gef.commands.Command
 import org.lh.dmlj.schema.LocationMode
 import org.lh.dmlj.schema.Schema
@@ -31,11 +32,7 @@ import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.Set
 import org.lh.dmlj.schema.ViaSpecification
 import org.lh.dmlj.schema.VsamLengthType
-import org.lh.dmlj.schema.editor.testtool.ObjectGraph
 import org.lh.dmlj.schema.editor.testtool.SchemaEntityBuilder
-import org.lh.dmlj.schema.editor.testtool.Syntax
-import org.lh.dmlj.schema.editor.testtool.TestTools
-import org.lh.dmlj.schema.editor.testtool.Xmi
 
 import spock.lang.Specification
 
@@ -292,8 +289,8 @@ class MakeRecordDirectCommandSpec extends Specification implements SchemaEntityB
 		command.execute()
 		
 		then: "an assertion error is thrown"
-		def error = thrown(AssertionError)
-		error.message.equals('cannot make record DIRECT because it is a member of a VSAM index')
+		def error = thrown(AssertionFailedException)
+		error.message.startsWith('assertion failed: cannot make record DIRECT because it is a member of a VSAM index')
 	}
 	
 	def "VSAM record (execute)"() {
@@ -353,8 +350,8 @@ class MakeRecordDirectCommandSpec extends Specification implements SchemaEntityB
 		command.execute()
 		
 		then: "an assertion error is thrown"
-		def error = thrown(AssertionError)
-		error.message.equals('cannot make record DIRECT because it is a member of a VSAM index')
+		def error = thrown(AssertionFailedException)
+		error.message.startsWith('assertion failed: cannot make record DIRECT because it is a member of a VSAM index')
 	}
 	
 	def "VSAM CALC record (execute)"() {

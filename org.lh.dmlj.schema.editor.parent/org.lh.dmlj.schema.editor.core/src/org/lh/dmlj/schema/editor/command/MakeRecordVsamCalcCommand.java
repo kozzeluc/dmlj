@@ -19,21 +19,32 @@ package org.lh.dmlj.schema.editor.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.LocationMode;
+import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.VsamLengthType;
+import org.lh.dmlj.schema.VsamType;
 
+/**
+ * A command that will change the record's location mode to VSAM CALC and set the CALC key.  This 
+ * command can only be used for DIRECT and VSAM records (at the time of execution) and will 
+ * definitely run into trouble when executed for a record that is defined otherwise.
+ */
 public class MakeRecordVsamCalcCommand extends AbstractChangeLocationModeCommand {
-	
-	// TODO complete this class
-	
-	private SchemaRecord record;
+
+	protected SchemaRecord record;
+	private LocationMode originalLocationMode;
 	
 	private List<Element> calcKeyElements;
 	protected DuplicatesOption duplicatesOption;
 	
+	protected ISupplier<List<Element>> calcKeyElementSupplier;
+	
 	public MakeRecordVsamCalcCommand(SchemaRecord record, List<Element> calcKeyElements,
-			 						 DuplicatesOption duplicatesOption) {
+								 	 DuplicatesOption duplicatesOption) {
 		
 		super("Set 'Location mode' to 'VSAM CALC'", record);
 		this.record = record;
@@ -41,18 +52,50 @@ public class MakeRecordVsamCalcCommand extends AbstractChangeLocationModeCommand
 		this.duplicatesOption = duplicatesOption;
 	}
 	
-	@Override
-	public void execute() {
-		throw new UnsupportedOperationException("not yet implemented");
-	}
+	public MakeRecordVsamCalcCommand(SchemaRecord record, 
+									 ISupplier<List<Element>> calcKeyElementSupplier,
+									 DuplicatesOption duplicatesOption) {
+		
+		super("Set 'Location mode' to 'VSAM CALC'", record);
+		this.record = record;
+		this.calcKeyElementSupplier = calcKeyElementSupplier;
+		this.duplicatesOption = duplicatesOption;
+	}	
 	
 	@Override
-	public void undo() {
-		throw new UnsupportedOperationException("not yet implemented");
+	public void execute() {		
+		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT ||
+					  record.getLocationMode() == LocationMode.VSAM, "record not DIRECT or VSAM");
+		originalLocationMode = record.getLocationMode();
+		if (calcKeyElementSupplier != null) {
+			calcKeyElements = new ArrayList<>(calcKeyElementSupplier.supply());
+		}
+		createCalcKey(calcKeyElements, null, duplicatesOption, false, -1);		
+		record.setLocationMode(LocationMode.VSAM_CALC);
+		if (originalLocationMode == LocationMode.DIRECT) {
+			VsamType vsamType = SchemaFactory.eINSTANCE.createVsamType();
+			record.setVsamType(vsamType);
+			vsamType.setLengthType(VsamLengthType.FIXED);
+			vsamType.setSpanned(false);
+		}
+		stash(0);
 	}
 	
 	@Override
 	public void redo() {
-		throw new UnsupportedOperationException("not yet implemented");
+		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT ||
+				  	  record.getLocationMode() == LocationMode.VSAM, "record not DIRECT or VSAM");
+		restoreCalcKey(0);
+		restoreVsamType(0);
+		record.setLocationMode(LocationMode.VSAM_CALC);
+	}	
+	
+	@Override
+	public void undo() {
+		Assert.isTrue(record.getLocationMode() == LocationMode.VSAM_CALC, "record not VSAM CALC");
+		record.setLocationMode(originalLocationMode);
+		removeCalcKey();
+		removeVsamType();
 	}
+	
 }

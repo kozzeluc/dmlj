@@ -19,12 +19,19 @@ package org.lh.dmlj.schema.editor.command
 import static org.junit.Assert.fail
 
 import org.junit.Test
+import org.lh.dmlj.schema.editor.testtool.SchemaEntityBuilder
 
-class MakeRecordVsamCommandTest {
+import spock.lang.Specification
+
+class MakeRecordVsamCalcCommandSpec extends Specification implements SchemaEntityBuilder {
 
 	@Test
 	void test() {
-		fail 'not yet implemented'
+		
+		given: ""
+		when: ""
+		then: ""
+		fail "not yet implemented"
 	}
 	
 }

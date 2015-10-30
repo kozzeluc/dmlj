@@ -49,8 +49,8 @@ import org.lh.dmlj.schema.editor.command.LockEndpointsCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordCalcCommandTest;
 import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommandSpec;
 import org.lh.dmlj.schema.editor.command.MakeRecordViaCommandTest;
-import org.lh.dmlj.schema.editor.command.MakeRecordVsamCalcCommandTest;
-import org.lh.dmlj.schema.editor.command.MakeRecordVsamCommandTest;
+import org.lh.dmlj.schema.editor.command.MakeRecordVsamCalcCommandSpec;
+import org.lh.dmlj.schema.editor.command.MakeRecordVsamCommandSpec;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveGuideCommandTest;
@@ -122,8 +122,8 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	MakeRecordCalcCommandTest.class,
 	MakeRecordDirectCommandSpec.class,
 	MakeRecordViaCommandTest.class,
-	MakeRecordVsamCalcCommandTest.class,
-	MakeRecordVsamCommandTest.class,
+	MakeRecordVsamCalcCommandSpec.class,	
+	MakeRecordVsamCommandSpec.class,
 	MoveDiagramNodeCommandTest.class,
 	MoveEndpointCommandTest.class,
 	MoveGuideCommandTest.class,

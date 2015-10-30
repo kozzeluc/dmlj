@@ -16,6 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.SchemaRecord;
 
@@ -37,10 +38,8 @@ public class MakeRecordDirectCommand extends AbstractChangeLocationModeCommand {
 	@Override
 	public void execute() {
 		
-		if ((record.isVsam() || record.isVsamCalc()) && !record.getMemberRoles().isEmpty()) {
-			String message = "cannot make record DIRECT because it is a member of a VSAM index";
-			throw new AssertionError(message);
-		}
+		Assert.isTrue(!(record.isVsam() || record.isVsamCalc()) || record.getMemberRoles().isEmpty(), 
+					  "cannot make record DIRECT because it is a member of a VSAM index");
 		
 		// save the old data
 		stash(0);

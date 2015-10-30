@@ -30,6 +30,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.ViaSpecification;
+import org.lh.dmlj.schema.VsamLengthType;
 import org.lh.dmlj.schema.VsamType;
 
 public abstract class AbstractChangeLocationModeCommand extends ModelChangeBasicCommand {
@@ -143,6 +144,14 @@ public abstract class AbstractChangeLocationModeCommand extends ModelChangeBasic
 			set.getViaMembers().add(viaSpecification);
 		}
 		record.setViaSpecification(viaSpecification);			
+	}
+	
+	protected void createVsamType() {
+		Assert.isTrue(record.getVsamType() == null, "record's vsamType is already set");
+		VsamType vsamType = SchemaFactory.eINSTANCE.createVsamType();
+		record.setVsamType(vsamType);
+		vsamType.setLengthType(VsamLengthType.FIXED);
+		vsamType.setSpanned(false);		
 	}
 	
 	protected int getStashedCalcKeyIndex(int index) {
