@@ -222,9 +222,9 @@ class MakeRecordVsamCommandSpec extends Specification implements SchemaEntityBui
 		
 		then: "the record is made VSAM"
 		record.locationMode == LocationMode.VSAM
-		assert record.vsamType
-		assert record.vsamType.lengthType == VsamLengthType.FIXED
-		assert !record.vsamType.spanned
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.FIXED
+		!record.vsamType.spanned
 	}
 	
 	def "DIRECT record (undo)"() {
@@ -271,10 +271,10 @@ class MakeRecordVsamCommandSpec extends Specification implements SchemaEntityBui
 		
 		then: "the record is made VSAM"
 		record.locationMode == LocationMode.VSAM
-		assert !record.calcKey
-		assert record.vsamType
-		assert record.vsamType.lengthType == VsamLengthType.FIXED
-		assert !record.vsamType.spanned
+		!record.calcKey
+		record.vsamType
+		record.vsamType.lengthType == VsamLengthType.FIXED
+		!record.vsamType.spanned
 	}
 	
 	def "VSAM CALC record (undo)"() {

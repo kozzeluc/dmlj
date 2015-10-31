@@ -259,13 +259,23 @@ class RecordModelBuilder extends AbstractModelBuilder {
 		assert bodies == [ BODY_ELEMENTS ]		
 	}
 	
-	void element(String calcElementName) {
-		assert bodies == [ BODY_CALC ] || bodies == [ BODY_VSAM_CALC ]
-		Element placeHolderElement = SchemaFactory.eINSTANCE.createElement()
-		placeHolderElement.name = calcElementName
-		KeyElement keyElement = SchemaFactory.eINSTANCE.createKeyElement()
-		keyElement.element = placeHolderElement
-		record.calcKey.elements << keyElement
+	void element(String elementName) {
+		assert bodies == [ BODY_ELEMENTS ] || [ BODY_CALC ] || bodies == [ BODY_VSAM_CALC ]
+		if (bodies == [ BODY_ELEMENTS ]) {
+			short levelNumber = record.rootElements ? record.rootElements[0].level : 2
+			element { 
+				level levelNumber
+				name elementName
+				baseName elementName
+				picture 'X(8)'
+			}	
+		} else {
+			Element placeHolderElement = SchemaFactory.eINSTANCE.createElement()
+			placeHolderElement.name = elementName
+			KeyElement keyElement = SchemaFactory.eINSTANCE.createKeyElement()
+			keyElement.element = placeHolderElement
+			record.calcKey.elements << keyElement
+		}
 	}
 	
 	void elements(Closure definition) {

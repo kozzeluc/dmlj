@@ -31,7 +31,9 @@ import org.lh.dmlj.schema.VsamType;
 /**
  * A command that will change the record's location mode to VSAM CALC and set the CALC key.  This 
  * command can only be used for DIRECT and VSAM records (at the time of execution) and will 
- * definitely run into trouble when executed for a record that is defined otherwise.
+ * definitely run into trouble when executed for a record that is defined otherwise.  In contrast to
+ * the CA IDMS documentation, we allow more than 1 element to be part of the CALC key. 
+ * TODO allow only 1 element to be part of a VSAM CALC key
  */
 public class MakeRecordVsamCalcCommand extends AbstractChangeLocationModeCommand {
 
@@ -64,8 +66,16 @@ public class MakeRecordVsamCalcCommand extends AbstractChangeLocationModeCommand
 	
 	@Override
 	public void execute() {		
+		
 		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT ||
 					  record.getLocationMode() == LocationMode.VSAM, "record not DIRECT or VSAM");
+		Assert.isTrue(record.isVsam() || 
+				  	  record.getOwnerRoles().isEmpty() && record.getMemberRoles().isEmpty(), 
+				  	  "cannot make record VSAM CALC because it participates in 1 or more non-VSAM sets");
+		Assert.isTrue(duplicatesOption == DuplicatesOption.NOT_ALLOWED ||
+					  duplicatesOption == DuplicatesOption.UNORDERED,
+				  	  "unsupported duplicates option: " + duplicatesOption);
+		
 		originalLocationMode = record.getLocationMode();
 		if (calcKeyElementSupplier != null) {
 			calcKeyElements = new ArrayList<>(calcKeyElementSupplier.supply());
@@ -86,7 +96,9 @@ public class MakeRecordVsamCalcCommand extends AbstractChangeLocationModeCommand
 		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT ||
 				  	  record.getLocationMode() == LocationMode.VSAM, "record not DIRECT or VSAM");
 		restoreCalcKey(0);
-		restoreVsamType(0);
+		if (originalLocationMode == LocationMode.DIRECT) {
+			restoreVsamType(0);
+		}
 		record.setLocationMode(LocationMode.VSAM_CALC);
 	}	
 	
@@ -95,7 +107,9 @@ public class MakeRecordVsamCalcCommand extends AbstractChangeLocationModeCommand
 		Assert.isTrue(record.getLocationMode() == LocationMode.VSAM_CALC, "record not VSAM CALC");
 		record.setLocationMode(originalLocationMode);
 		removeCalcKey();
-		removeVsamType();
+		if (originalLocationMode == LocationMode.DIRECT) {
+			removeVsamType();
+		}
 	}
 	
 }

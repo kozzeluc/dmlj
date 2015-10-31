@@ -1284,6 +1284,32 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		error.message.startsWith('subarea and anything of [offsetPages, offsetPercent, pages, percent] area mutually exclusive')
 	}
 	
+	def "single simple root element (nothing else than the name specified)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record from te definition"
+		def definition = {
+			elements {
+				element 'DEPT-ID-0410'
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's element list will contain only the given element"
+		record
+		record.elements.size() == 1
+		record.rootElements.size() == 1
+		
+		record.elements[0] == record.rootElements[0]
+		record.elements[0].name == 'DEPT-ID-0410'
+		record.elements[0].level == 2
+		record.elements[0].picture == 'X(8)'
+		assert !record.elements[0].children
+		!record.elements[0].parent
+	}
+	
 	def "single simple root element"() {
 		
 		given: "a record builder without a schema"
@@ -1379,6 +1405,43 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		record.elements[1].name == 'DEPT-NAME-0410'
 		record.elements[1].level == 2
 		record.elements[1].picture == 'X(45)'
+		assert !record.elements[1].children
+		!record.elements[1].parent
+	}
+	
+	def "2 simple root elements (for the last one only a name is specified)"() {
+		
+		given: "a record builder without a schema"
+		def RecordModelBuilder builder = new RecordModelBuilder()
+		
+		when: "building the record from te definition"
+		def definition = {
+			elements {
+				element 'DEPT-ID-0410' {
+					level 3
+					picture '9(4)'
+				}
+				element 'DEPT-NAME-0410'
+			}
+		}
+		SchemaRecord record = builder.build(definition)
+		
+		then: "the record's element list will contain both elements"
+		record
+		record.elements.size() == 2
+		record.rootElements.size() == 2
+		
+		record.elements[0] == record.rootElements[0]
+		record.elements[0].name == 'DEPT-ID-0410'
+		record.elements[0].level == 3
+		record.elements[0].picture == '9(4)'
+		assert !record.elements[0].children
+		!record.elements[0].parent
+		
+		record.elements[1] == record.rootElements[1]
+		record.elements[1].name == 'DEPT-NAME-0410'
+		record.elements[1].level == 3
+		record.elements[1].picture == 'X(8)'
 		assert !record.elements[1].children
 		!record.elements[1].parent
 	}
