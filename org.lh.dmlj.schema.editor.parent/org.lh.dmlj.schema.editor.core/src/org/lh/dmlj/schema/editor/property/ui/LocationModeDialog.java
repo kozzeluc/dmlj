@@ -848,7 +848,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 			}
 		} else if (btnVsam.getSelection()) {
 			locationMode = LocationMode.VSAM;
-		} else if (btnCalc.getSelection()) {
+		} else if (btnVsamCalc.getSelection()) {
 			locationMode = LocationMode.VSAM_CALC;
 			if (comboVsamCalcDuplicatesOption.getSelectionIndex() > -1) {
 				for (DuplicatesOption aDuplicatesOption : DuplicatesOption.VALUES) {
