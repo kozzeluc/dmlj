@@ -685,12 +685,13 @@ public class SetOrderDialog extends Dialog {
 			tableSelectedSortElements.getItem(tableSelectedSortElements.getSelectionIndex())
 									 .getText(0) : 
 			null;
-		btnAsc.setEnabled(sorted && 
+		// ASCENDING must be specified for native VSAM sets -> disable the ASC and DESC buttons
+		btnAsc.setEnabled(sorted && !set.isVsam() &&
 						  tableSelectedSortElements.getSelectionCount() == 1 &&
 				  		  selectedSortElement.startsWith("DESC ") ||
 				  		  tableSelectedSortElements.getItemCount() == 1 &&
 				  		  tableSelectedSortElements.getItem(0).getText(0).equals("DESC DBKEY"));
-		btnDesc.setEnabled(sorted && 
+		btnDesc.setEnabled(sorted && !set.isVsam() && 
 						   tableSelectedSortElements.getSelectionCount() == 1 &&
 				   		   selectedSortElement.startsWith("ASC ") ||
 					  	   tableSelectedSortElements.getItemCount() == 1 &&
@@ -850,7 +851,15 @@ public class SetOrderDialog extends Dialog {
 		} else {
 			// SORTED
 			btnSorted.setSelection(true);
-		}	
+		}
+		
+		// VSAM indexes are always SORTED
+		if (set.isVsam()) {
+			btnFirst.setEnabled(false);
+			btnLast.setEnabled(false);
+			btnNext.setEnabled(false);
+			btnPrior.setEnabled(false);
+		}
 		
 		// we use a bold font to indicate that no sort elements are selected for a given member
 		// record; create that font
