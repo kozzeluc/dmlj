@@ -27,12 +27,12 @@ import org.lh.dmlj.schema.LocationMode
 import org.lh.dmlj.schema.Schema
 import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.VsamLengthType
-import org.lh.dmlj.schema.editor.testtool.SchemaEntityBuilder
+import org.lh.dmlj.schema.editor.dsl.builder.model.HasModelBuilderShortcuts;
 
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class MakeRecordVsamCalcCommandSpec extends Specification implements SchemaEntityBuilder {
+class MakeRecordVsamCalcCommandSpec extends Specification implements HasModelBuilderShortcuts {
 
 	private SchemaRecord createCalcRecord() {
 		SchemaRecord record = record {

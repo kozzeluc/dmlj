@@ -32,7 +32,7 @@ import org.lh.dmlj.schema.StorageMode
 import org.lh.dmlj.schema.Usage
 import org.lh.dmlj.schema.VsamLengthType
 
-class RecordModelBuilder extends AbstractModelBuilder {
+class RecordModelBuilder extends AbstractModelBuilder<SchemaRecord> {
 	
 	private static final String BODY_AREA = "area"
 	private static final String BODY_CALC = "calc"

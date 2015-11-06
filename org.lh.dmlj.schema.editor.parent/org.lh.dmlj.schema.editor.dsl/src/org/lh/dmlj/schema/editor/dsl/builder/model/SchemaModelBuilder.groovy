@@ -26,7 +26,7 @@ import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.Set
 import groovy.lang.Closure;
 
-class SchemaModelBuilder extends AbstractModelBuilder {
+class SchemaModelBuilder extends AbstractModelBuilder<Schema> {
 	
 	private static final String BODY_LABEL = "label"
 		
@@ -120,10 +120,7 @@ class SchemaModelBuilder extends AbstractModelBuilder {
 	}
 	
 	Schema buildFromFile(File file) {
-		def binding = new Binding()
-		binding.builder = this
-		def shell = new GroovyShell(binding)
-		shell.evaluate("builder.build( { $file.text } )")
+		buildFromString(file.text)
 	}
 	
 	void comments(String comments) {

@@ -32,11 +32,11 @@ import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.Set
 import org.lh.dmlj.schema.ViaSpecification
 import org.lh.dmlj.schema.VsamLengthType
-import org.lh.dmlj.schema.editor.testtool.SchemaEntityBuilder
+import org.lh.dmlj.schema.editor.dsl.builder.model.HasModelBuilderShortcuts;
 
 import spock.lang.Specification
 
-class MakeRecordDirectCommandSpec extends Specification implements SchemaEntityBuilder {
+class MakeRecordDirectCommandSpec extends Specification implements HasModelBuilderShortcuts {
 	
 	private SchemaRecord createCalcRecord() {
 		SchemaRecord record = record {

@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.model
 
+import java.io.File;
+
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation
 import org.lh.dmlj.schema.Procedure
@@ -24,7 +26,7 @@ import org.lh.dmlj.schema.SchemaFactory
 
 import groovy.lang.Closure;
 
-abstract class AbstractModelBuilder {
+abstract class AbstractModelBuilder<T> {
 	
 	protected static final String BODY_DIAGRAM = "diagram"
 	
@@ -60,6 +62,13 @@ abstract class AbstractModelBuilder {
 	protected void buildTemporarySchema() {
 		schema = new SchemaModelBuilder().build()
 		schemaIsAutomatic = true
+	}
+	
+	public T buildFromString(String definition) {
+		def binding = new Binding()
+		binding.builder = this
+		def shell = new GroovyShell(binding)
+		shell.evaluate("builder.build( { $definition } )")
 	}
 	
 	protected Procedure createOrGetProcedure(String name) {

@@ -26,7 +26,7 @@ import org.lh.dmlj.schema.Schema
 import org.lh.dmlj.schema.SchemaArea
 import org.lh.dmlj.schema.SchemaFactory
 
-class AreaModelBuilder extends AbstractModelBuilder {
+class AreaModelBuilder extends AbstractModelBuilder<SchemaArea> {
 	
 	private SchemaArea area
 	

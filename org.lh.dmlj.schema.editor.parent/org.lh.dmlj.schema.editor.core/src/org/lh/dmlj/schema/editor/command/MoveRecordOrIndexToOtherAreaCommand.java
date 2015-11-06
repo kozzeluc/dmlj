@@ -58,7 +58,8 @@ public class MoveRecordOrIndexToOtherAreaCommand extends ModelChangeBasicCommand
 		super("Move record '" + Tools.removeTrailingUnderscore(record.getName()) + "' to area '" + 
 			  newAreaName + "'");
 		this.record = record;		
-		this.newAreaName = newAreaName;   	    
+		this.newAreaName = newAreaName;  
+		schema = record.getSchema();
 	}
 	
 	public MoveRecordOrIndexToOtherAreaCommand(SystemOwner systemOwner, String newAreaName) {		
@@ -66,7 +67,8 @@ public class MoveRecordOrIndexToOtherAreaCommand extends ModelChangeBasicCommand
 		super("Move index '" + Tools.removeTrailingUnderscore(systemOwner.getSet().getName()) + 
 			  "' to area '" + newAreaName + "'");
 		this.systemOwner = systemOwner;		
-		this.newAreaName = newAreaName;   	    
+		this.newAreaName = newAreaName; 
+		schema = systemOwner.getSet().getSchema();
 	}	
 	
 	@Override
@@ -77,16 +79,24 @@ public class MoveRecordOrIndexToOtherAreaCommand extends ModelChangeBasicCommand
 					  "logic error: record == null && system owner == null");
 		Assert.isTrue(newAreaName != null, "logic error: newAreaName == null");
 		
+		newArea = schema.getArea(newAreaName);
+		if (newArea != null) {
+			String message = "area " + newArea.getName() + " is NOT compatible";
+			if (record != null) {
+				Assert.isTrue(Tools.areaMixesWithRecord(newArea, record), message);
+			} else {
+				Assert.isTrue(Tools.canHoldSystemOwners(newArea), message);
+			}
+		}
+		
 		// save the old data; when saving the area, we also keep the references to the (area)  
 		// procedure calls, which makes restoring the area easy
 		if (record != null) {
 			// we're moving a record to another area
-			schema = record.getSchema();
 			oldArea = record.getAreaSpecification().getArea();
 			areaSpecification = record.getAreaSpecification();			
 		} else {
-			// we're moving an index to another area
-			schema = systemOwner.getSet().getSchema();
+			// we're moving an index to another area			
 			oldArea = systemOwner.getAreaSpecification().getArea();
 			areaSpecification = systemOwner.getAreaSpecification();
 		}
@@ -95,7 +105,6 @@ public class MoveRecordOrIndexToOtherAreaCommand extends ModelChangeBasicCommand
 		
 		// if we're moving the record or index to a NEW area, create that area but don't hook it to 
 		// the schema yet
-		newArea = schema.getArea(newAreaName);
 		if (newArea == null) {		
 			// the record is moved to a NEW area; create it and set its name 
 			newArea = SchemaFactory.eINSTANCE.createSchemaArea();

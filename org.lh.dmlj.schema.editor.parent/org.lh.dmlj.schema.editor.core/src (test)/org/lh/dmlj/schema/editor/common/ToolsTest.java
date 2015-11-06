@@ -17,9 +17,14 @@
 package org.lh.dmlj.schema.editor.common;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.area;
+import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.record;
+import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.set;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -37,15 +42,25 @@ import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OccursSpecification;
 import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
+import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
 public class ToolsTest {
 	
 	private Schema schema;
+	
+	private SchemaArea emptyArea = area("name 'AREA1'");		
+	private SchemaArea areaWithNonVsamRecord;		
+	private SchemaArea areaWithSystemOwner;	
+	private SchemaArea areaWithVsamRecord;		
+	
+	private SchemaRecord nonVsamRecord;
+	private SchemaRecord vsamRecord;
 	
 	private static EList<KeyElement> generateKeyElementList(SortSequence... sortSequences) {
 		EList<KeyElement> keyElements = new BasicEList<>();
@@ -82,8 +97,18 @@ public class ToolsTest {
 
 	@Before
 	public void setup() {
-		// we'll use IDMSNTWK throughout these tests
+		// we'll use IDMSNTWK throughout (some) of these tests
 		schema = TestTools.getIdmsntwkSchema();
+		
+		// we also need a number of test records and areas, each containing a combination mix of VSAM and 
+		// non-VSAM records and system owners
+		nonVsamRecord = record("name 'RECORD1'; area 'AREA1'");
+		SystemOwner systemOwner = set("name 'INDEX1'; systemOwner { area 'AREA1' }").getSystemOwner();
+		vsamRecord = record("name 'RECORD1'; vsam");
+		emptyArea = area("name 'AREA1'");		
+		areaWithNonVsamRecord = nonVsamRecord.getAreaSpecification().getArea();		
+		areaWithSystemOwner = systemOwner.getAreaSpecification().getArea();			
+		areaWithVsamRecord = vsamRecord.getAreaSpecification().getArea();		
 	}
 	
 	@Test
@@ -388,6 +413,106 @@ public class ToolsTest {
 		
 		String sortKeysAsString = Tools.getSortKeys(memberRole);
 		assertEquals("ASC (DBKEY) DN", sortKeysAsString);
+	}
+	
+	@Test
+	public void testCanHoldNonVsamRecords_emptyArea() {		
+		assertTrue(Tools.canHoldNonVsamRecords(emptyArea));
+	}
+	
+	@Test
+	public void testCanHoldNonVsamRecords_areaWithNonVsamRecord() {	
+		assertTrue(Tools.canHoldNonVsamRecords(areaWithNonVsamRecord));	
+	}
+	
+	@Test
+	public void testCanHoldNonVsamRecords_areaWithSystemOwner() {	
+		assertTrue(Tools.canHoldNonVsamRecords(areaWithSystemOwner));
+	}
+	
+	@Test
+	public void testCanHoldNonVsamRecords_areaWithVsamRecord() {		
+		assertFalse(Tools.canHoldNonVsamRecords(areaWithVsamRecord));
+	}
+	
+	@Test
+	public void testCanHoldSystemOwners_emptyArea() {
+		assertTrue(Tools.canHoldSystemOwners(emptyArea));
+	}	
+	
+	@Test
+	public void testCanHoldSystemOwners_areaWithNonVsamRecord() {	
+		assertTrue(Tools.canHoldSystemOwners(areaWithNonVsamRecord));
+	}
+	
+	@Test
+	public void testCanHoldSystemOwners_areaWithSystemOwner() {	
+		assertTrue(Tools.canHoldSystemOwners(areaWithSystemOwner));
+	}
+	
+	@Test
+	public void testCanHoldSystemOwners_areaWithVsamRecord() {	
+		assertFalse(Tools.canHoldSystemOwners(areaWithVsamRecord));
+	}
+	
+	@Test
+	public void testCanHoldVsamRecords_emptyArea() {		
+		assertTrue(Tools.canHoldVsamRecords(emptyArea));
+	}
+	
+	@Test
+	public void testCanHoldVsamRecords_areaWithNonVsamRecord() {
+		assertFalse(Tools.canHoldVsamRecords(areaWithNonVsamRecord));
+	}
+	
+	@Test
+	public void testCanHoldVsamRecords_areaWithSystemOwner() {
+		assertFalse(Tools.canHoldVsamRecords(areaWithSystemOwner));	
+	}
+	
+	@Test
+	public void testCanHoldVsamRecords_areaWithVsamRecord() {
+		assertTrue(Tools.canHoldVsamRecords(areaWithVsamRecord));
+	}
+	
+	@Test
+	public void testAreaMixesWithRecord_NonVsamRecord_emptyArea() {
+		assertTrue(Tools.areaMixesWithRecord(emptyArea, nonVsamRecord));
+	}
+	
+	@Test
+	public void testAreaMixesWithRecord_NonVsamRecord_areaWithNonVsamRecord() {
+		assertTrue(Tools.areaMixesWithRecord(areaWithNonVsamRecord, nonVsamRecord));
+	}
+	
+	@Test
+	public void testAreaMixesWithRecord_NonVsamRecord_areaWithSystemOwner() {
+		assertTrue(Tools.areaMixesWithRecord(areaWithSystemOwner, nonVsamRecord));
+	}
+	
+	@Test
+	public void testAreaMixesWithRecord_NonVsamRecord_areaWithVsamRecord() {
+		assertFalse(Tools.areaMixesWithRecord(areaWithVsamRecord, nonVsamRecord));
+	}
+	
+	@Test
+	public void testAreaMixesWithRecord_VsamRecord_emptyArea() {
+		assertTrue(Tools.areaMixesWithRecord(emptyArea, vsamRecord));
+	}
+	
+	@Test
+	public void testAreaMixesWithRecord_VsamRecord_areaWithNonVsamRecord() {
+		assertFalse(Tools.areaMixesWithRecord(areaWithNonVsamRecord, vsamRecord));
+	}
+	
+	@Test
+	public void testAreaMixesWithRecord_VsamRecord_areaWithSystemOwner() {
+		assertFalse(Tools.areaMixesWithRecord(areaWithSystemOwner, vsamRecord));
+	}
+	
+	@Test
+	public void testAreaMixesWithRecord_VsamRecord_areaWithVsamRecord() {
+		assertTrue(Tools.areaMixesWithRecord(areaWithVsamRecord, vsamRecord));
 	}
 
 }

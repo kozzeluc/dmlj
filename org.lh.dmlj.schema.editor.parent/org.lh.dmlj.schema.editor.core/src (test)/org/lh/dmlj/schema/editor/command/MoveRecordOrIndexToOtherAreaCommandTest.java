@@ -21,7 +21,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.schema;
 
+import org.eclipse.core.runtime.AssertionFailedException;
 import org.junit.Test;
 import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
@@ -29,6 +32,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
 
@@ -353,6 +357,110 @@ public class MoveRecordOrIndexToOtherAreaCommandTest {
 		assertEquals(percent, offsetExpression4.getPercent());
 		assertNull(areaSpecification4.getSymbolicSubareaName());
 		
-	}	
+	}
+	
+	@Test
+	public void test_VsamAndNonVsamRecordsDontMix() {
+		
+		Schema schema = 
+			schema("record 'VSAM-RECORD' { vsam; area 'VSAM-AREA' }; " +
+				   "record 'VSAM-CALC-RECORD' { vsamCalc { element 'ELEMENT1' }; area 'VSAM-CALC-AREA' }; " +
+				   "record 'NON-VSAM-RECORD' { area 'NON-VSAM-AREA' }; " +
+				   "set 'INDEXED-SET' { systemOwner { area 'INDEX-AREA' }}");
+		
+		SchemaRecord vsamRecord = schema.getRecord("VSAM-RECORD");
+		assertNotNull("record VSAM-RECORD not found in schema", vsamRecord);
+		assertTrue("record VSAM-RECORD has wrong location mode", vsamRecord.isVsam());
+		assertEquals("VSAM-AREA", vsamRecord.getAreaSpecification().getArea().getName());
+		
+		SchemaRecord vsamCalcRecord = schema.getRecord("VSAM-CALC-RECORD");
+		assertNotNull("record VSAM-CALC-RECORD not found in schema", vsamCalcRecord);
+		assertTrue("record VSAM-RECORD has wrong location mode", vsamCalcRecord.isVsamCalc());
+		assertEquals("VSAM-CALC-AREA", vsamCalcRecord.getAreaSpecification().getArea().getName());
+		
+		SchemaRecord nonVsamRecord = schema.getRecord("NON-VSAM-RECORD");
+		assertNotNull("record NON-VSAM-RECORD not found in schema", nonVsamRecord);
+		assertTrue("record VSAM-RECORD has wrong location mode", nonVsamRecord.isDirect());
+		assertEquals("NON-VSAM-AREA", nonVsamRecord.getAreaSpecification().getArea().getName());
+		
+		Set set = schema.getSet("INDEXED-SET");
+		assertNotNull("set INDEXED-SET not found in schema", set);
+		SystemOwner systemOwner = set.getSystemOwner();
+		assertNotNull("set INDEXED-SET has no system owner", systemOwner);
+		assertEquals("INDEX-AREA", systemOwner.getAreaSpecification().getArea().getName());
+		
+		// moving a VSAM record to an area containing a non-VSAM record is NOT allowed
+		MoveRecordOrIndexToOtherAreaCommand command =
+			new MoveRecordOrIndexToOtherAreaCommand(vsamRecord, "NON-VSAM-AREA");
+		try {
+			command.execute();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: area NON-VSAM-AREA is NOT compatible", e.getMessage());
+		}
+		
+		// moving a VSAM record to an area containing a system owner is NOT allowed
+		command = new MoveRecordOrIndexToOtherAreaCommand(vsamRecord, "INDEX-AREA");				
+		try {
+			command.execute();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: area INDEX-AREA is NOT compatible", e.getMessage());
+		}
+		
+		// moving a VSAM CALC record to an area containing a non-VSAM record is NOT allowed
+		command = new MoveRecordOrIndexToOtherAreaCommand(vsamCalcRecord, "NON-VSAM-AREA");		
+		try {
+			command.execute();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: area NON-VSAM-AREA is NOT compatible", e.getMessage());
+		}
+		
+		// moving a VSAM CALC record to an area containing a system owner is NOT allowed
+		command = new MoveRecordOrIndexToOtherAreaCommand(vsamCalcRecord, "INDEX-AREA");
+		try {
+			command.execute();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: area INDEX-AREA is NOT compatible", e.getMessage());
+		}
+		
+		// moving a non-VSAM record to an area containing a VSAM record is NOT allowed
+		command = new MoveRecordOrIndexToOtherAreaCommand(nonVsamRecord, "VSAM-AREA");
+		try {
+			command.execute();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: area VSAM-AREA is NOT compatible", e.getMessage());
+		}
+		
+		// moving a non-VSAM record to an area containing a VSAM CALC record is NOT allowed
+		command = new MoveRecordOrIndexToOtherAreaCommand(nonVsamRecord, "VSAM-CALC-AREA");
+		try {
+			command.execute();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: area VSAM-CALC-AREA is NOT compatible", e.getMessage());
+		}
+		
+		// moving a system owner to an area containing a VSAM record is NOT allowed
+		command = new MoveRecordOrIndexToOtherAreaCommand(systemOwner, "VSAM-AREA");
+		try {
+			command.execute();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: area VSAM-AREA is NOT compatible", e.getMessage());
+		}
+				
+		// moving a system owner to an area containing a VSAM CALC record is NOT allowed
+		command = new MoveRecordOrIndexToOtherAreaCommand(systemOwner, "VSAM-CALC-AREA");
+		try {
+			command.execute();
+			fail("should throw an AssertionFailedException");
+		} catch (AssertionFailedException e) {
+			assertEquals("assertion failed: area VSAM-CALC-AREA is NOT compatible", e.getMessage());
+		}	
+	}
 	
 }

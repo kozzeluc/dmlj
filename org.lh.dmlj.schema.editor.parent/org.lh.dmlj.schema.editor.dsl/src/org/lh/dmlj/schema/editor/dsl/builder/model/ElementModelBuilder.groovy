@@ -22,7 +22,7 @@ import org.lh.dmlj.schema.SchemaFactory
 import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.Usage
 
-class ElementModelBuilder extends AbstractModelBuilder {
+class ElementModelBuilder extends AbstractModelBuilder<Element> {
 	
 	private static final String BODY_CHILDREN = "children"
 	private static final String BODY_INDEXED_BY = "indexedBy"

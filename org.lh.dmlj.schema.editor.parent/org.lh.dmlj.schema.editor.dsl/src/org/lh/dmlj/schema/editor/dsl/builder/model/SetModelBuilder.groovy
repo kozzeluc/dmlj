@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.SetMode
 import org.lh.dmlj.schema.SetOrder
 import org.lh.dmlj.schema.SortSequence
 
-class SetModelBuilder extends AbstractModelBuilder {
+class SetModelBuilder extends AbstractModelBuilder<Set> {
 	
 	private static final String BODY_AREA = "area"
 	private static final String BODY_BENDPOINT = "bendpoint"
