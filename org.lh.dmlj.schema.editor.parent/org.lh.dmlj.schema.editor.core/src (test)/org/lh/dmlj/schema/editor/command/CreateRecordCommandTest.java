@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.schema;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.junit.Test;
@@ -27,6 +28,7 @@ import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Element;
+import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaFactory;
@@ -178,5 +180,76 @@ public class CreateRecordCommandTest {
  									 .indexOf(newRecord2.getAreaSpecification()));
 		
 	}
+	
+	@Test
+	public void testVsamAndNonVsamRecordsDontMix_firstAreaContainsVsamRecord_newArea() {
+		
+		// a newly created record will always be non-VSAM, so make sure it doesn't get stored in an
+		// area containing a VSAM record
+		Schema schema = schema("record 'VSAM-RECORD' { vsam; area 'VSAM-AREA' }");
+		assertEquals(1, schema.getAreas().size());
+		
+		CreateRecordCommand command = new CreateRecordCommand(schema, new Point(0, 0));				
+		command.execute();
+		assertEquals(2, schema.getAreas().size());
+		SchemaRecord record = schema.getRecords().get(1);
+		assertEquals("NEW-RECORD-1", record.getName());
+		assertSame(LocationMode.DIRECT, record.getLocationMode());
+		assertEquals("RECORD-1-AREA", record.getAreaSpecification().getArea().getName());
+	}
+	
+	@Test
+	public void testVsamAndNonVsamRecordsDontMix_firstAreaContainsVsamCalcRecord_newArea() {
+		
+		// a newly created record will always be non-VSAM, so make sure it doesn't get stored in an
+		// area containing a VSAM CALC record
+		Schema schema = 
+			schema("record 'VSAM-RECORD' { vsamCalc { element 'ELEMENT-1' }; area 'VSAM-AREA' }");
+		assertEquals(1, schema.getAreas().size());
+		
+		CreateRecordCommand command = new CreateRecordCommand(schema, new Point(0, 0));				
+		command.execute();
+		assertEquals(2, schema.getAreas().size());
+		SchemaRecord record = schema.getRecords().get(1);
+		assertEquals("NEW-RECORD-1", record.getName());
+		assertEquals("RECORD-1-AREA", record.getAreaSpecification().getArea().getName());
+	}
+	
+	@Test
+	public void testVsamAndNonVsamRecordsDontMix_firstAreaContainsVsamRecord_reuseArea() {
+		
+		// a newly created record will always be non-VSAM, so make sure it doesn't get stored in an
+		// area containing a VSAM record
+		Schema schema = schema("record 'NON-VSAM-RECORD' { area 'NON-VSAM-AREA' }; " +
+							   "record 'VSAM-RECORD' { vsam; area 'AREA1' }");
+		assertEquals(2, schema.getAreas().size());
+		
+		CreateRecordCommand command = new CreateRecordCommand(schema, new Point(0, 0));				
+		command.execute();
+		assertEquals(2, schema.getAreas().size());
+		SchemaRecord record = schema.getRecords().get(2);
+		assertEquals("NEW-RECORD-1", record.getName());
+		assertSame(LocationMode.DIRECT, record.getLocationMode());
+		assertEquals("NON-VSAM-AREA", record.getAreaSpecification().getArea().getName());
+	}
+	
+	@Test
+	public void testVsamAndNonVsamRecordsDontMix_firstAreaContainsVsamCalcRecord_reuseArea() {
+		
+		// a newly created record will always be non-VSAM, so make sure it doesn't get stored in an
+		// area containing a VSAM CALC record
+		Schema schema = 
+			schema("record 'NON-VSAM-RECORD' { area 'NON-VSAM-AREA' }; " +
+				   "record 'VSAM-RECORD' { vsamCalc { element 'ELEMENT-1' }; area 'AREA1' }");
+		assertEquals(2, schema.getAreas().size());
+		
+		CreateRecordCommand command = new CreateRecordCommand(schema, new Point(0, 0));				
+		command.execute();
+		assertEquals(2, schema.getAreas().size());
+		SchemaRecord record = schema.getRecords().get(2);
+		assertEquals("NEW-RECORD-1", record.getName());
+		assertSame(LocationMode.DIRECT, record.getLocationMode());
+		assertEquals("NON-VSAM-AREA", record.getAreaSpecification().getArea().getName());
+	}	
 	
 }

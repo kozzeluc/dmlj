@@ -1951,7 +1951,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 			order 'SORTED'
 			member {
 				key {
-					ascending 'ELEMENT1'
+					ascending 'ELEMENT-1'
 					duplicates 'NOT_ALLOWED'
 				}
 			}
@@ -1972,7 +1972,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 			order 'SORTED'
 			member {
 				key {
-					descending 'ELEMENT1'
+					descending 'ELEMENT-1'
 					duplicates 'NOT_ALLOWED'
 				}
 			}
@@ -1995,7 +1995,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 			order 'SORTED'
 			member {
 				key {
-					ascending 'ELEMENT1'
+					ascending 'ELEMENT-1'
 					duplicates duplicatesOption
 				}
 			}
@@ -2672,7 +2672,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 			}
 			member 'SET1-M-4' {
 				key {
-					ascending 'ELEMENT1'
+					ascending 'ELEMENT-1'
 					duplicates 'FIRST'
 				}
 			}
@@ -2683,7 +2683,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 			member {
 				name 'SET1-M-6'
 				key {
-					descending 'ELEMENT1'
+					descending 'ELEMENT-1'
 				}
 			}
 		}
@@ -2736,7 +2736,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 				assert sortKey.elements
 				assert sortKey.elements.size() == 1
 				assert sortKey.elements[0].element
-				assert sortKey.elements[0].element.name == 'ELEMENT1'
+				assert sortKey.elements[0].element.name == 'ELEMENT-1'
 				assert sortKey.elements[0].sortSequence == SortSequence.ASCENDING
 				assert sortKey.elements[0].element.record == sortKey.memberRole.record
 				assert sortKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
@@ -2745,7 +2745,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 				assert sortKey.elements
 				assert sortKey.elements.size() == 1
 				assert sortKey.elements[0].element
-				assert sortKey.elements[0].element.name == 'ELEMENT1'
+				assert sortKey.elements[0].element.name == 'ELEMENT-1'
 				assert sortKey.elements[0].sortSequence == SortSequence.ASCENDING
 				assert sortKey.elements[0].element.record == sortKey.memberRole.record
 				assert sortKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
@@ -2754,7 +2754,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 				assert sortKey.elements
 				assert sortKey.elements.size() == 1
 				assert sortKey.elements[0].element
-				assert sortKey.elements[0].element.name == 'ELEMENT1'
+				assert sortKey.elements[0].element.name == 'ELEMENT-1'
 				assert sortKey.elements[0].sortSequence == SortSequence.ASCENDING
 				assert sortKey.elements[0].element.record == sortKey.memberRole.record
 				assert sortKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
@@ -2763,7 +2763,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 				assert sortKey.elements
 				assert sortKey.elements.size() == 1
 				assert sortKey.elements[0].element
-				assert sortKey.elements[0].element.name == 'ELEMENT1'
+				assert sortKey.elements[0].element.name == 'ELEMENT-1'
 				assert sortKey.elements[0].sortSequence == SortSequence.ASCENDING
 				assert sortKey.elements[0].element.record == sortKey.memberRole.record
 				assert sortKey.duplicatesOption == DuplicatesOption.FIRST
@@ -2772,7 +2772,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 				assert sortKey.elements
 				assert sortKey.elements.size() == 1
 				assert sortKey.elements[0].element
-				assert sortKey.elements[0].element.name == 'ELEMENT1'
+				assert sortKey.elements[0].element.name == 'ELEMENT-1'
 				assert sortKey.elements[0].sortSequence == SortSequence.ASCENDING
 				assert sortKey.elements[0].element.record == sortKey.memberRole.record
 				assert sortKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED
@@ -2781,7 +2781,7 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 				assert sortKey.elements
 				assert sortKey.elements.size() == 1
 				assert sortKey.elements[0].element
-				assert sortKey.elements[0].element.name == 'ELEMENT1'
+				assert sortKey.elements[0].element.name == 'ELEMENT-1'
 				assert sortKey.elements[0].sortSequence == SortSequence.DESCENDING
 				assert sortKey.elements[0].element.record == sortKey.memberRole.record
 				assert sortKey.duplicatesOption == DuplicatesOption.NOT_ALLOWED

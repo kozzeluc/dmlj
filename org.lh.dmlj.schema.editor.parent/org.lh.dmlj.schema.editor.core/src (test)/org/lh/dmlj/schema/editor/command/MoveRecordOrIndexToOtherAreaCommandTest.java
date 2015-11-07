@@ -364,7 +364,7 @@ public class MoveRecordOrIndexToOtherAreaCommandTest {
 		
 		Schema schema = 
 			schema("record 'VSAM-RECORD' { vsam; area 'VSAM-AREA' }; " +
-				   "record 'VSAM-CALC-RECORD' { vsamCalc { element 'ELEMENT1' }; area 'VSAM-CALC-AREA' }; " +
+				   "record 'VSAM-CALC-RECORD' { vsamCalc { element 'ELEMENT-1' }; area 'VSAM-CALC-AREA' }; " +
 				   "record 'NON-VSAM-RECORD' { area 'NON-VSAM-AREA' }; " +
 				   "set 'INDEXED-SET' { systemOwner { area 'INDEX-AREA' }}");
 		

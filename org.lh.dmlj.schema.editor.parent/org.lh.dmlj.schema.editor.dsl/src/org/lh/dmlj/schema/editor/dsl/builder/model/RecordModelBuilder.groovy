@@ -206,8 +206,8 @@ class RecordModelBuilder extends AbstractModelBuilder<SchemaRecord> {
 		record.elements << SchemaFactory.eINSTANCE.createElement()
 		record.rootElements << record.elements[0]
 		record.elements[0].level = 2
-		record.elements[0].name = 'ELEMENT1'
-		record.elements[0].baseName = 'ELEMENT1'
+		record.elements[0].name = 'ELEMENT-1'
+		record.elements[0].baseName = 'ELEMENT-1'
 		record.elements[0].picture = 'X(8)'
 		record.elements[0].usage = Usage.DISPLAY
 	}

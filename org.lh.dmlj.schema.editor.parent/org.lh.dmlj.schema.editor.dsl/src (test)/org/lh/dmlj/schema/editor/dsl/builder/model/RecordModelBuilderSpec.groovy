@@ -138,29 +138,29 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	private void assertOneSimpleElement(SchemaRecord record, String expectedName, 
 										String expectedPicture, Usage expectedUsage) {
 	
-		record.elements.size == 1
-		record.rootElements.size == 1
-		record.rootElements[0] == record.elements[0]
-		record.elements[0].level == 2
-		record.elements[0].name == expectedName
-		record.elements[0].baseName == expectedName
-		record.elements[0].picture == expectedPicture
-		record.elements[0].usage == expectedUsage
+		assert record.elements.size == 1
+		assert record.rootElements.size == 1
+		assert record.rootElements[0] == record.elements[0]
+		assert record.elements[0].level == 2
+		assert record.elements[0].name == expectedName
+		assert record.elements[0].baseName == expectedName
+		assert record.elements[0].picture == expectedPicture
+		assert record.elements[0].usage == expectedUsage
 		
-		record.elements[0].children.empty
-		record.elements[0].keyElements.empty
-		!record.elements[0].nullable
-		!record.elements[0].occursSpecification
-		!record.elements[0].parent
-		!record.elements[0].redefines
-		!record.elements[0].value
+		assert record.elements[0].children.empty
+		assert record.elements[0].keyElements.empty
+		assert !record.elements[0].nullable
+		assert !record.elements[0].occursSpecification
+		assert !record.elements[0].parent
+		assert !record.elements[0].redefines
+		assert !record.elements[0].value
 	}
 	
 	private void assertOtherDiagramDataAndLocation(SchemaRecord record, 
 												   StorageMode expectedStorageMode) {		
 		
 		assert record
-		record.storageMode == expectedStorageMode
+		assert record.storageMode == expectedStorageMode
 		
 		assert record.schema.diagramData.connectionLabels.empty
 		assert record.schema.diagramData.connectionParts.empty
@@ -216,7 +216,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertRecordNamesAndVersions(record, 'RECORD1', 1)		
 		assertSimpleAreaSpecification(record, 'RECORD1-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)					
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)					
 	}
 	
 	def "build the simpliest record, referencing a given schema, from only a name"() {
@@ -246,7 +246,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.areas.size == 1
 		assertSimpleAreaSpecification(record, 'RECORD1-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build the simpliest record, NOT referencing a given schema, from an empty closure"() {
@@ -269,7 +269,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertRecordNamesAndVersions(record, 'SR0010', 1)
 		assertSimpleAreaSpecification(record, 'SR0010-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build the simpliest record, referencing a given schema, from an empty closure"() {
@@ -300,7 +300,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.areas.size == 1
 		assertSimpleAreaSpecification(record, 'SR0010-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build the simpliest record, NOT referencing a given schema, passing nothing at all"() {
@@ -322,7 +322,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertRecordNamesAndVersions(record, 'SR0010', 1)
 		assertSimpleAreaSpecification(record, 'SR0010-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build the simpliest record, referencing a given schema, passing nothing at all"() {
@@ -352,7 +352,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.areas.size == 1
 		assertSimpleAreaSpecification(record, 'SR0010-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build the simpliest record, NOT referencing a given schema, from a closure specifying only a name"() {
@@ -377,7 +377,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertRecordNamesAndVersions(record, 'EMPLOYEE', 1)
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build the simpliest record, referencing a given schema, from a closure specifying only a name"() {
@@ -410,7 +410,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.areas.size == 1
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build the simpliest record, NOT referencing a given schema, from a name AND a closure"() {
@@ -435,7 +435,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertRecordNamesAndVersions(record, 'EMPLOYEE', 1)
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 415)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build the simpliest record, referencing a given schema, from a name AND a closure"() {
@@ -469,7 +469,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.areas.size == 1
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 415)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build a record, NOT referencing a given schema, from a closure only, controlling ALL names and versions"() {
@@ -502,7 +502,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert record.synonymVersion == 100		
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	def "build a record, referencing a given schema, from a closure only, controlling ALL names and versions"() {
@@ -542,7 +542,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.areas.size == 1
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 10)
-		assertOneSimpleElement(record, 'ELEMENT1', 'X(8)', Usage.DISPLAY)
+		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
 	}
 	
 	@Unroll
