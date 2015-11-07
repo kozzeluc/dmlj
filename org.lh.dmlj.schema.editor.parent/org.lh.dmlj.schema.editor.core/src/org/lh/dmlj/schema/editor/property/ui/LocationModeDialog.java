@@ -48,6 +48,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.ViaSpecification;
 import org.lh.dmlj.schema.editor.command.ILocationModeDetailsProvider;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class LocationModeDialog extends Dialog implements ILocationModeDetailsProvider {
@@ -866,28 +867,41 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 	}
 
 	private void enableAndDisableLocationModeRadioButtons() {
+		
 		boolean hasAtLeastOneKeyElementCandidate = !availableCalcElements.isEmpty();
-		btnCalc.setEnabled(record.isCalc() || 
-						   record.isDirect() && hasAtLeastOneKeyElementCandidate ||
-						   record.isVia() && hasAtLeastOneKeyElementCandidate ||
-						   record.isVsam() && hasAtLeastOneKeyElementCandidate && record.getMemberRoles().isEmpty() ||
-						   record.isVsamCalc() && record.getMemberRoles().isEmpty());
-		btnDirect.setEnabled(record.isCalc() ||
-							 record.isDirect() ||
-							 record.isVia() ||
-							 record.isVsam() && record.getMemberRoles().isEmpty() ||
-							 record.isVsamCalc() && record.getMemberRoles().isEmpty());
-		btnVia.setEnabled(record.isCalc() && !record.getMemberRoles().isEmpty() ||
-						  record.isDirect() && !record.getMemberRoles().isEmpty() ||
-						  record.isVia());
-		btnVsam.setEnabled(record.isCalc() && record.getMemberRoles().isEmpty() ||
-				 		   record.isDirect() && record.getMemberRoles().isEmpty() ||
-				 		   record.isVsam() ||
-				 		   record.isVsamCalc());
-		btnVsamCalc.setEnabled(record.isCalc() && record.getMemberRoles().isEmpty() ||
-		 		   		   	   record.isDirect() && hasAtLeastOneKeyElementCandidate && record.getMemberRoles().isEmpty() ||
-		 		   		   	   record.isVsam() && hasAtLeastOneKeyElementCandidate ||
-		 		   		   	   record.isVsamCalc());
+		btnCalc.setEnabled((record.isCalc() || 
+						    record.isDirect() && hasAtLeastOneKeyElementCandidate ||
+						    record.isVia() && hasAtLeastOneKeyElementCandidate ||
+						    record.isVsam() && hasAtLeastOneKeyElementCandidate && record.getMemberRoles().isEmpty() ||
+						    record.isVsamCalc() && record.getMemberRoles().isEmpty()) &&
+							(record.getAreaSpecification().getArea().getRecords().size() == 1 ||
+							 Tools.canHoldNonVsamRecords(record.getAreaSpecification().getArea())));
+		btnDirect.setEnabled((record.isCalc() ||
+							  record.isDirect() ||
+							  record.isVia() ||
+							  record.isVsam() && record.getMemberRoles().isEmpty() ||
+							  record.isVsamCalc() && record.getMemberRoles().isEmpty()) &&
+							 (record.getAreaSpecification().getArea().getRecords().size() == 1 ||
+							  Tools.canHoldNonVsamRecords(record.getAreaSpecification().getArea())));
+		btnVia.setEnabled((record.isCalc() && !record.getMemberRoles().isEmpty() ||
+						   record.isDirect() && !record.getMemberRoles().isEmpty() ||
+						   record.isVia()) &&
+						  (record.getAreaSpecification().getArea().getRecords().size() == 1 ||
+						   Tools.canHoldNonVsamRecords(record.getAreaSpecification().getArea())));
+		btnVsam.setEnabled((record.isCalc() && record.getMemberRoles().isEmpty() ||
+				 		    record.isDirect() && record.getMemberRoles().isEmpty() ||
+				 		    record.isVsam() ||
+				 		    record.isVsamCalc()) &&
+						   (record.getAreaSpecification().getArea().getRecords().size() == 1 &&
+							record.getAreaSpecification().getArea().getIndexes().isEmpty() ||
+						    Tools.canHoldVsamRecords(record.getAreaSpecification().getArea())));
+		btnVsamCalc.setEnabled((record.isCalc() && record.getMemberRoles().isEmpty() ||
+		 		   		   	    record.isDirect() && hasAtLeastOneKeyElementCandidate && record.getMemberRoles().isEmpty() ||
+		 		   		   	    record.isVsam() && hasAtLeastOneKeyElementCandidate ||
+		 		   		   	    record.isVsamCalc()) &&
+							   (record.getAreaSpecification().getArea().getRecords().size() == 1 &&
+								record.getAreaSpecification().getArea().getIndexes().isEmpty() ||
+								Tools.canHoldVsamRecords(record.getAreaSpecification().getArea())));
 	}
 
 	@Override
