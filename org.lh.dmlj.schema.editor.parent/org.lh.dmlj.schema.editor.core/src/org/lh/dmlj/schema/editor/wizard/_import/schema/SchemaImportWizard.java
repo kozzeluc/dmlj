@@ -25,6 +25,7 @@ import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.EXTENS
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -750,16 +751,22 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		try {
 			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 		} catch (Throwable e) {
-			Throwable cause = e.getCause();
 			StringBuilder message = new StringBuilder();
-			if (cause != null) {
-				// file niet in een project (folder) of project niet open
-				if (cause.getMessage() != null) {
-					message.append(cause.getMessage());
+			if (e.getCause() instanceof InvocationTargetException) {
+				InvocationTargetException ite = (InvocationTargetException) e.getCause();
+				if (ite.getMessage() != null) {
+					message.append(ite.getMessage());
+				} else if (ite.getTargetException() != null && 
+						   ite.getTargetException().getMessage() != null) {
+					message.append(ite.getTargetException().getMessage());
+				}
+			} else if (e.getCause() != null) {
+				if (e.getCause().getMessage() != null) {
+					message.append(e.getCause().getMessage());
 				}
 			} else if (e.getMessage() != null) {
 				message.append(e.getMessage());
-			}			
+			}
 			if (message.length() == 0) {
 				message.append("Unknown error while importing schema");
 			} else {
