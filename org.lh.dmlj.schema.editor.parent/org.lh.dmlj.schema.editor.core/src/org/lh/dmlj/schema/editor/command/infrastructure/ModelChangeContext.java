@@ -38,6 +38,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.VsamIndex;
+import org.lh.dmlj.schema.VsamType;
 
 public class ModelChangeContext {
 
@@ -491,6 +492,8 @@ public class ModelChangeContext {
 			putContextData((MemberRole) model);
 		} else if (model instanceof Ruler) {
 			putContextData((Ruler) model);
+		} else if (model instanceof VsamType) {
+			putContextData(((VsamType) model).getRecord());
 		} else if (model == null){
 			throw new IllegalArgumentException("Model type invalid: null");
 		} else {
