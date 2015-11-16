@@ -64,7 +64,7 @@ trait HasModelBuilderShortcuts {
 		builder.buildFromString definition
 	}
 	
-	Set set(Closure definition) {
+	Set set(@DelegatesTo(SetModelBuilder) Closure definition) {
 		SetModelBuilder builder = new SetModelBuilder()
 		builder.build definition
 	}

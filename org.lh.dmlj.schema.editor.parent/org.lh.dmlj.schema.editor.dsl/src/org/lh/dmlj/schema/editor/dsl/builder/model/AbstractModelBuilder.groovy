@@ -82,10 +82,9 @@ abstract class AbstractModelBuilder<T> {
 	}
 	
 	protected runClosure(Closure closure) {
-		Closure clonedClosure = closure.clone()
-		clonedClosure.delegate = this
-		clonedClosure.resolveStrategy = Closure.DELEGATE_ONLY
-		clonedClosure()
+		closure.delegate = this
+		closure.resolveStrategy = Closure.DELEGATE_ONLY
+		closure()
 	}
 	
 	void x(String x) {
