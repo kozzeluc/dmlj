@@ -279,6 +279,12 @@
          <propertyTab
                afterTab="org.lh.dmlj.schema.editor.propertyTabGeneralSet"
                category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabIndex"
+               label="Index">
+         </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabIndex"
+               category="schema"
                id="org.lh.dmlj.schema.editor.propertyTabOwnerSet"
                label="Owner">
          </propertyTab>
@@ -503,6 +509,12 @@
                filter="org.lh.dmlj.schema.editor.property.filter.ConnectionWithConnectorsFilter"
                id="org.lh.dmlj.schema.editor.propertySectionSetConnectors"
                tab="org.lh.dmlj.schema.editor.propertyTabConnectors">
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.section.SetIndexSection"
+               filter="org.lh.dmlj.schema.editor.property.filter.IndexedSetFilter"
+               id="org.lh.dmlj.schema.editor.propertySectionSetIndex"
+               tab="org.lh.dmlj.schema.editor.propertyTabIndex">
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.SetSyntaxSection"
