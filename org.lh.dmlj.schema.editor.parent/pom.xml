@@ -54,7 +54,7 @@
     </build>
     <repositories>
         <repository>
-            <id>luna</id>
+            <id>eclipse</id>
             <layout>p2</layout>
             <url>${eclipse}</url>
         </repository>
