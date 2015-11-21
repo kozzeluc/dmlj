@@ -881,14 +881,21 @@ public class SetOrderDialog extends Dialog {
 		} 
 		tableMemberRecords.select(0);
 		
-		// fill the combo containing the duplicates option values
-		comboDuplicatesOption.add(DuplicatesOption.FIRST.toString());
-		comboDuplicatesOption.add(DuplicatesOption.LAST.toString());
+		// fill the combo containing the duplicates option values taking care of limitations for
+		// both indexed sets and VSAM indexes
+		if (set.getMode() != SetMode.VSAM_INDEX) {
+			comboDuplicatesOption.add(DuplicatesOption.FIRST.toString());
+			comboDuplicatesOption.add(DuplicatesOption.LAST.toString());
+		}
 		comboDuplicatesOption.add(DuplicatesOption.NOT_ALLOWED.toString().replaceAll("_", " "));
 		if (set.getMode() == SetMode.INDEXED) {
 			// only indexed sets can have their duplicates sorted by dbkey
 			comboDuplicatesOption.add(DuplicatesOption.BY_DBKEY.toString().replaceAll("_", " "));
-		}		
+		}
+		if (set.getMode() == SetMode.VSAM_INDEX) {
+			// only VSAM indexes can have their duplicates unordered
+			comboDuplicatesOption.add(DuplicatesOption.UNORDERED.toString());
+		}
 		
 		// initialize the sorted set controls for the (alphabetically) first member record
 		memberRecordSelectionChanged(false);
@@ -1017,14 +1024,22 @@ public class SetOrderDialog extends Dialog {
 		
 		// select the appropriate duplicates option		
 		DuplicatesOption firstMemberDuplicatesOption = duplicatesOptions.get(recordName);
-		if (firstMemberDuplicatesOption == DuplicatesOption.FIRST) {
-			comboDuplicatesOption.select(0);
-		} else if (firstMemberDuplicatesOption == DuplicatesOption.LAST) {
-			comboDuplicatesOption.select(1);
-		} else if (firstMemberDuplicatesOption == DuplicatesOption.NOT_ALLOWED) {
-			comboDuplicatesOption.select(2);
+		if (set.getMode() != SetMode.VSAM_INDEX) {
+			if (firstMemberDuplicatesOption == DuplicatesOption.FIRST) {
+				comboDuplicatesOption.select(0);
+			} else if (firstMemberDuplicatesOption == DuplicatesOption.LAST) {
+				comboDuplicatesOption.select(1);
+			} else if (firstMemberDuplicatesOption == DuplicatesOption.NOT_ALLOWED) {
+				comboDuplicatesOption.select(2);
+			} else {
+				comboDuplicatesOption.select(3);
+			}
 		} else {
-			comboDuplicatesOption.select(3);
+			if (firstMemberDuplicatesOption == DuplicatesOption.NOT_ALLOWED) {
+				comboDuplicatesOption.select(0);
+			} else {
+				comboDuplicatesOption.select(1);
+			}
 		}
 		
 		if (callEnableOrDisable) {
