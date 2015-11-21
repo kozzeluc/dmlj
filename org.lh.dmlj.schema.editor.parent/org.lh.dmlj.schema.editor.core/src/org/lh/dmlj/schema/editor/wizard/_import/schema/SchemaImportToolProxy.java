@@ -312,6 +312,14 @@ public final class SchemaImportToolProxy {
 										  originalRecord.getLocationMode(), 
 									  	  viaSetName, "DDLCATLOD", true);
 			
+			// set the base name and version
+			record.setBaseName(originalRecord.getBaseName());
+			record.setBaseVersion(originalRecord.getBaseVersion());
+			
+			// set the synonym name and version
+			record.setSynonymName(originalRecord.getSynonymName());
+			record.setSynonymVersion(originalRecord.getSynonymVersion());
+			
 			// add the (validated) elements to the record
 			for (Element originalElement : originalRecord.getElements()) {
 	
@@ -325,6 +333,7 @@ public final class SchemaImportToolProxy {
 											   originalElement.getBaseName());	
 				
 				// set some of the element's attributes
+				element.setBaseName(originalElement.getBaseName());
 				element.setLevel(originalElement.getLevel());		
 				element.setUsage(originalElement.getUsage());						
 				element.setPicture(originalElement.getPicture());		

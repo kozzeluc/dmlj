@@ -20082,6 +20082,7 @@ record 'SYMBOL-1048' {
 }
 
 record 'LOOAK-155_' {
+    shareStructure 'LOOAK-155 version 1'
     recordId 155
 
     calc {
@@ -20108,6 +20109,7 @@ record 'LOOAK-155_' {
 }
 
 record 'LOADHDR-156_' {
+    shareStructure 'LOADHDR-156 version 1'
     recordId 156
 
     calc {
@@ -20199,6 +20201,7 @@ record 'LOADHDR-156_' {
 }
 
 record 'LOADTEXT-157_' {
+    shareStructure 'LOADTEXT-157 version 1'
     recordId 157
 
     via {
@@ -20222,6 +20225,7 @@ record 'LOADTEXT-157_' {
 }
 
 record 'LOADCTL-158_' {
+    shareStructure 'LOADCTL-158 version 1'
     recordId 158
 
     via {
@@ -20292,6 +20296,7 @@ record 'LOADCTL-158_' {
 }
 
 record 'DPROG-171_' {
+    shareStructure 'DPROG-171 version 1'
     recordId 171
 
     calc {
@@ -20383,6 +20388,7 @@ record 'DPROG-171_' {
 }
 
 record 'LOADJCT-172_' {
+    shareStructure 'LOADJCT-172 version 1'
     recordId 172
 
     via {
@@ -20446,6 +20452,7 @@ record 'LOADJCT-172_' {
 }
 
 record 'SYMHDR-174_' {
+    shareStructure 'SYMHDR-174 version 1'
     recordId 174
 
     via {
@@ -20507,6 +20514,7 @@ record 'SYMHDR-174_' {
 }
 
 record 'SYMTEXT-175_' {
+    shareStructure 'SYMTEXT-175 version 1'
     recordId 175
 
     via {
@@ -20530,6 +20538,7 @@ record 'SYMTEXT-175_' {
 }
 
 record 'SYMCTL-176_' {
+    shareStructure 'SYMCTL-176 version 1'
     recordId 176
 
     via {

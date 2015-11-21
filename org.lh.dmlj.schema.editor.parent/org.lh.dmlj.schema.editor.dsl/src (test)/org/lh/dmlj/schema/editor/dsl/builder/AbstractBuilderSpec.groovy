@@ -50,20 +50,6 @@ class AbstractBuilderSpec extends Specification {
 	
 	protected List<String> toCompareFriendlyXmi(Schema schema) {
 		
-		// we need to tweak the records in the DDLCATLOD area; these records are (optionally) copied
-		// from their DDLDCLOD counterparts during the import of the IDMSNTWK version 1 schema, but,
-		// apparently, doesn't seem to be be bullet proof
-		// TODO remove this tweak when the import schema feature is fixed
-		schema.getArea("DDLCATLOD")?.areaSpecifications*.record?.each { SchemaRecord record ->
-			record.baseName = null
-			record.baseVersion = 0
-			record.synonymName = null
-			record.synonymVersion = 0
-			record.elements.each { Element element ->
-				element.baseName = null
-			}
-		}
-		
 		List<SchemaArea> areas = new ArrayList<>(schema.areas)
 		areas.sort( { SchemaArea area1, SchemaArea area2 -> area1.name <=> area2.name } )
 		schema.areas.clear()
