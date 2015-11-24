@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -70,7 +70,15 @@ public enum DuplicatesOption implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	NOT_ALLOWED(3, "NOT_ALLOWED", "NOT_ALLOWED");
+	NOT_ALLOWED(3, "NOT_ALLOWED", "NOT_ALLOWED"), /**
+	 * The '<em><b>UNORDERED</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #UNORDERED_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	UNORDERED(4, "UNORDERED", "UNORDERED");
 
 	/**
 	 * The '<em><b>FIRST</b></em>' literal value.
@@ -133,6 +141,21 @@ public enum DuplicatesOption implements Enumerator {
 	public static final int NOT_ALLOWED_VALUE = 3;
 
 	/**
+	 * The '<em><b>UNORDERED</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>UNORDERED</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #UNORDERED
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int UNORDERED_VALUE = 4;
+
+	/**
 	 * An array of all the '<em><b>Duplicates Option</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -144,6 +167,7 @@ public enum DuplicatesOption implements Enumerator {
 			LAST,
 			BY_DBKEY,
 			NOT_ALLOWED,
+			UNORDERED,
 		};
 
 	/**
@@ -198,6 +222,7 @@ public enum DuplicatesOption implements Enumerator {
 			case LAST_VALUE: return LAST;
 			case BY_DBKEY_VALUE: return BY_DBKEY;
 			case NOT_ALLOWED_VALUE: return NOT_ALLOWED;
+			case UNORDERED_VALUE: return UNORDERED;
 		}
 		return null;
 	}

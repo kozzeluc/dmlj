@@ -146,7 +146,7 @@ public class CreateConnectorCommand extends ModelChangeBasicCommand {
 	public CreateConnectorCommand(MemberRole memberRole, Point location) {
 		super("Add connectors to connection");
 		this.memberRole = memberRole;
-		this.location = location;		
+		this.location = location;	
 	}
 	
 	public CreateConnectorCommand(ISupplier<MemberRole> memberRoleSupplier, Point location) {
@@ -258,13 +258,19 @@ public class CreateConnectorCommand extends ModelChangeBasicCommand {
 					source.x += 65;
 					source.y += 26;
 				}
-			} else {
+			} else if (memberRole.getSet().getSystemOwner() != null) {
 				// system owned indexed set: take the bottom center point
 				source.x = 
 					memberRole.getSet().getSystemOwner().getDiagramLocation().getX() + 11;
 				source.y = 
 					memberRole.getSet().getSystemOwner().getDiagramLocation().getY() + 22;			
-			}		
+			} else {
+				// VSAM index: take the bottom center point
+				source.x = 
+					memberRole.getSet().getVsamIndex().getDiagramLocation().getX() + 11;
+				source.y = 
+					memberRole.getSet().getVsamIndex().getDiagramLocation().getY() + 22;
+			}
 			target.x = memberRole.getRecord().getDiagramLocation().getX();
 			target.y = memberRole.getRecord().getDiagramLocation().getY();
 			if (firstConnectionPart.getTargetEndpointLocation() != null) {

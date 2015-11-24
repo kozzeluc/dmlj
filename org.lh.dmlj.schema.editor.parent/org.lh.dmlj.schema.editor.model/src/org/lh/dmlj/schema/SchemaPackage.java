@@ -2173,13 +2173,40 @@ public interface SchemaPackage extends EPackage {
 	int SCHEMA_RECORD__VIA_SPECIFICATION = DIAGRAM_NODE_FEATURE_COUNT + 28;
 
 	/**
+	 * The feature id for the '<em><b>Vsam</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__VSAM = DIAGRAM_NODE_FEATURE_COUNT + 29;
+
+	/**
+	 * The feature id for the '<em><b>Vsam Calc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__VSAM_CALC = DIAGRAM_NODE_FEATURE_COUNT + 30;
+
+	/**
+	 * The feature id for the '<em><b>Vsam Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCHEMA_RECORD__VSAM_TYPE = DIAGRAM_NODE_FEATURE_COUNT + 31;
+
+	/**
 	 * The number of structural features of the '<em>Record</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 29;
+	int SCHEMA_RECORD_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 32;
 
 	/**
 	 * The feature id for the '<em><b>Node Text</b></em>' attribute.
@@ -2191,13 +2218,31 @@ public interface SchemaPackage extends EPackage {
 	int SET__NODE_TEXT = INODE_TEXT_PROVIDER__NODE_TEXT;
 
 	/**
+	 * The feature id for the '<em><b>Chained</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__CHAINED = INODE_TEXT_PROVIDER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Indexed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__INDEXED = INODE_TEXT_PROVIDER_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Indexed Set Mode Specification</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SET__INDEXED_SET_MODE_SPECIFICATION = INODE_TEXT_PROVIDER_FEATURE_COUNT + 0;
+	int SET__INDEXED_SET_MODE_SPECIFICATION = INODE_TEXT_PROVIDER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Members</b></em>' containment reference list.
@@ -2206,7 +2251,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__MEMBERS = INODE_TEXT_PROVIDER_FEATURE_COUNT + 1;
+	int SET__MEMBERS = INODE_TEXT_PROVIDER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Mode</b></em>' attribute.
@@ -2215,7 +2260,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__MODE = INODE_TEXT_PROVIDER_FEATURE_COUNT + 2;
+	int SET__MODE = INODE_TEXT_PROVIDER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Multiple Member</b></em>' attribute.
@@ -2224,7 +2269,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__MULTIPLE_MEMBER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 3;
+	int SET__MULTIPLE_MEMBER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2233,7 +2278,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__NAME = INODE_TEXT_PROVIDER_FEATURE_COUNT + 4;
+	int SET__NAME = INODE_TEXT_PROVIDER_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Order</b></em>' attribute.
@@ -2242,7 +2287,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__ORDER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 5;
+	int SET__ORDER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Owner</b></em>' containment reference.
@@ -2251,7 +2296,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__OWNER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 6;
+	int SET__OWNER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Schema</b></em>' container reference.
@@ -2260,7 +2305,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__SCHEMA = INODE_TEXT_PROVIDER_FEATURE_COUNT + 7;
+	int SET__SCHEMA = INODE_TEXT_PROVIDER_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Sorted</b></em>' attribute.
@@ -2269,7 +2314,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__SORTED = INODE_TEXT_PROVIDER_FEATURE_COUNT + 8;
+	int SET__SORTED = INODE_TEXT_PROVIDER_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>System Owner</b></em>' containment reference.
@@ -2278,7 +2323,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__SYSTEM_OWNER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 9;
+	int SET__SYSTEM_OWNER = INODE_TEXT_PROVIDER_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Via Members</b></em>' reference list.
@@ -2287,7 +2332,25 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET__VIA_MEMBERS = INODE_TEXT_PROVIDER_FEATURE_COUNT + 10;
+	int SET__VIA_MEMBERS = INODE_TEXT_PROVIDER_FEATURE_COUNT + 12;
+
+	/**
+	 * The feature id for the '<em><b>Vsam</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__VSAM = INODE_TEXT_PROVIDER_FEATURE_COUNT + 13;
+
+	/**
+	 * The feature id for the '<em><b>Vsam Index</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SET__VSAM_INDEX = INODE_TEXT_PROVIDER_FEATURE_COUNT + 14;
 
 	/**
 	 * The number of structural features of the '<em>Set</em>' class.
@@ -2296,7 +2359,7 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SET_FEATURE_COUNT = INODE_TEXT_PROVIDER_FEATURE_COUNT + 11;
+	int SET_FEATURE_COUNT = INODE_TEXT_PROVIDER_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
@@ -2380,6 +2443,89 @@ public interface SchemaPackage extends EPackage {
 	int VIA_SPECIFICATION_FEATURE_COUNT = 4;
 
 	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.VsamIndexImpl <em>Vsam Index</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.VsamIndexImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getVsamIndex()
+	 * @generated
+	 */
+	int VSAM_INDEX = 32;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Location</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VSAM_INDEX__DIAGRAM_LOCATION = DIAGRAM_NODE__DIAGRAM_LOCATION;
+
+	/**
+	 * The feature id for the '<em><b>Set</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VSAM_INDEX__SET = DIAGRAM_NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Vsam Index</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VSAM_INDEX_FEATURE_COUNT = DIAGRAM_NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.impl.VsamTypeImpl <em>Vsam Type</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.impl.VsamTypeImpl
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getVsamType()
+	 * @generated
+	 */
+	int VSAM_TYPE = 33;
+
+	/**
+	 * The feature id for the '<em><b>Length Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VSAM_TYPE__LENGTH_TYPE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Record</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VSAM_TYPE__RECORD = 1;
+
+	/**
+	 * The feature id for the '<em><b>Spanned</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VSAM_TYPE__SPANNED = 2;
+
+	/**
+	 * The number of structural features of the '<em>Vsam Type</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VSAM_TYPE_FEATURE_COUNT = 3;
+
+	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetOrder <em>Set Order</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2387,7 +2533,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetOrder()
 	 * @generated
 	 */
-	int SET_ORDER = 41;
+	int SET_ORDER = 43;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.DuplicatesOption <em>Duplicates Option</em>}' enum.
@@ -2397,7 +2543,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getDuplicatesOption()
 	 * @generated
 	 */
-	int DUPLICATES_OPTION = 33;
+	int DUPLICATES_OPTION = 35;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.LabelAlignment <em>Label Alignment</em>}' enum.
@@ -2407,7 +2553,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getLabelAlignment()
 	 * @generated
 	 */
-	int LABEL_ALIGNMENT = 34;
+	int LABEL_ALIGNMENT = 36;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.LocationMode <em>Location Mode</em>}' enum.
@@ -2417,7 +2563,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getLocationMode()
 	 * @generated
 	 */
-	int LOCATION_MODE = 35;
+	int LOCATION_MODE = 37;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMode <em>Set Mode</em>}' enum.
@@ -2427,7 +2573,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetMode()
 	 * @generated
 	 */
-	int SET_MODE = 40;
+	int SET_MODE = 42;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.StorageMode <em>Storage Mode</em>}' enum.
@@ -2437,7 +2583,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getStorageMode()
 	 * @generated
 	 */
-	int STORAGE_MODE = 43;
+	int STORAGE_MODE = 45;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SetMembershipOption <em>Set Membership Option</em>}' enum.
@@ -2447,7 +2593,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSetMembershipOption()
 	 * @generated
 	 */
-	int SET_MEMBERSHIP_OPTION = 39;
+	int SET_MEMBERSHIP_OPTION = 41;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.SortSequence <em>Sort Sequence</em>}' enum.
@@ -2457,7 +2603,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getSortSequence()
 	 * @generated
 	 */
-	int SORT_SEQUENCE = 42;
+	int SORT_SEQUENCE = 44;
 
 
 	/**
@@ -2468,7 +2614,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getProcedureCallTime()
 	 * @generated
 	 */
-	int PROCEDURE_CALL_TIME = 36;
+	int PROCEDURE_CALL_TIME = 38;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.AreaProcedureCallFunction <em>Area Procedure Call Function</em>}' enum.
@@ -2478,7 +2624,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getAreaProcedureCallFunction()
 	 * @generated
 	 */
-	int AREA_PROCEDURE_CALL_FUNCTION = 32;
+	int AREA_PROCEDURE_CALL_FUNCTION = 34;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.RecordProcedureCallVerb <em>Record Procedure Call Verb</em>}' enum.
@@ -2488,7 +2634,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRecordProcedureCallVerb()
 	 * @generated
 	 */
-	int RECORD_PROCEDURE_CALL_VERB = 37;
+	int RECORD_PROCEDURE_CALL_VERB = 39;
 
 
 	/**
@@ -2499,7 +2645,7 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getRulerType()
 	 * @generated
 	 */
-	int RULER_TYPE = 38;
+	int RULER_TYPE = 40;
 
 	/**
 	 * The meta object id for the '{@link org.lh.dmlj.schema.Usage <em>Usage</em>}' enum.
@@ -2509,7 +2655,18 @@ public interface SchemaPackage extends EPackage {
 	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getUsage()
 	 * @generated
 	 */
-	int USAGE = 44;
+	int USAGE = 46;
+
+
+	/**
+	 * The meta object id for the '{@link org.lh.dmlj.schema.VsamLengthType <em>Vsam Length Type</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.lh.dmlj.schema.VsamLengthType
+	 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getVsamLengthType()
+	 * @generated
+	 */
+	int VSAM_LENGTH_TYPE = 47;
 
 
 	/**
@@ -2939,6 +3096,39 @@ public interface SchemaPackage extends EPackage {
 	EReference getSchemaRecord_ViaSpecification();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#isVsam <em>Vsam</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Vsam</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#isVsam()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_Vsam();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.SchemaRecord#isVsamCalc <em>Vsam Calc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Vsam Calc</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#isVsamCalc()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EAttribute getSchemaRecord_VsamCalc();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.SchemaRecord#getVsamType <em>Vsam Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Vsam Type</em>'.
+	 * @see org.lh.dmlj.schema.SchemaRecord#getVsamType()
+	 * @see #getSchemaRecord()
+	 * @generated
+	 */
+	EReference getSchemaRecord_VsamType();
+
+	/**
 	 * Returns the meta object for the reference list '{@link org.lh.dmlj.schema.SchemaRecord#getOwnerRoles <em>Owner Roles</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3035,6 +3225,28 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getSet();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Set#isChained <em>Chained</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Chained</em>'.
+	 * @see org.lh.dmlj.schema.Set#isChained()
+	 * @see #getSet()
+	 * @generated
+	 */
+	EAttribute getSet_Chained();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Set#isIndexed <em>Indexed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Indexed</em>'.
+	 * @see org.lh.dmlj.schema.Set#isIndexed()
+	 * @see #getSet()
+	 * @generated
+	 */
+	EAttribute getSet_Indexed();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Set#getName <em>Name</em>}'.
@@ -3145,6 +3357,28 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getSet_ViaMembers();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.Set#isVsam <em>Vsam</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Vsam</em>'.
+	 * @see org.lh.dmlj.schema.Set#isVsam()
+	 * @see #getSet()
+	 * @generated
+	 */
+	EAttribute getSet_Vsam();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.lh.dmlj.schema.Set#getVsamIndex <em>Vsam Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Vsam Index</em>'.
+	 * @see org.lh.dmlj.schema.Set#getVsamIndex()
+	 * @see #getSet()
+	 * @generated
+	 */
+	EReference getSet_VsamIndex();
 
 	/**
 	 * Returns the meta object for class '{@link org.lh.dmlj.schema.Role <em>Role</em>}'.
@@ -3665,6 +3899,70 @@ public interface SchemaPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getViaSpecification_SymbolicDisplacementName();
+
+	/**
+	 * Returns the meta object for class '{@link org.lh.dmlj.schema.VsamIndex <em>Vsam Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Vsam Index</em>'.
+	 * @see org.lh.dmlj.schema.VsamIndex
+	 * @generated
+	 */
+	EClass getVsamIndex();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.VsamIndex#getSet <em>Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Set</em>'.
+	 * @see org.lh.dmlj.schema.VsamIndex#getSet()
+	 * @see #getVsamIndex()
+	 * @generated
+	 */
+	EReference getVsamIndex_Set();
+
+	/**
+	 * Returns the meta object for class '{@link org.lh.dmlj.schema.VsamType <em>Vsam Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Vsam Type</em>'.
+	 * @see org.lh.dmlj.schema.VsamType
+	 * @generated
+	 */
+	EClass getVsamType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.VsamType#getLengthType <em>Length Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Length Type</em>'.
+	 * @see org.lh.dmlj.schema.VsamType#getLengthType()
+	 * @see #getVsamType()
+	 * @generated
+	 */
+	EAttribute getVsamType_LengthType();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.lh.dmlj.schema.VsamType#getRecord <em>Record</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Record</em>'.
+	 * @see org.lh.dmlj.schema.VsamType#getRecord()
+	 * @see #getVsamType()
+	 * @generated
+	 */
+	EReference getVsamType_Record();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.lh.dmlj.schema.VsamType#isSpanned <em>Spanned</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Spanned</em>'.
+	 * @see org.lh.dmlj.schema.VsamType#isSpanned()
+	 * @see #getVsamType()
+	 * @generated
+	 */
+	EAttribute getVsamType_Spanned();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.lh.dmlj.schema.ViaSpecification#getSet <em>Set</em>}'.
@@ -4855,6 +5153,16 @@ public interface SchemaPackage extends EPackage {
 	EEnum getUsage();
 
 	/**
+	 * Returns the meta object for enum '{@link org.lh.dmlj.schema.VsamLengthType <em>Vsam Length Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Vsam Length Type</em>'.
+	 * @see org.lh.dmlj.schema.VsamLengthType
+	 * @generated
+	 */
+	EEnum getVsamLengthType();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5195,6 +5503,30 @@ public interface SchemaPackage extends EPackage {
 		EReference SCHEMA_RECORD__VIA_SPECIFICATION = eINSTANCE.getSchemaRecord_ViaSpecification();
 
 		/**
+		 * The meta object literal for the '<em><b>Vsam</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__VSAM = eINSTANCE.getSchemaRecord_Vsam();
+
+		/**
+		 * The meta object literal for the '<em><b>Vsam Calc</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCHEMA_RECORD__VSAM_CALC = eINSTANCE.getSchemaRecord_VsamCalc();
+
+		/**
+		 * The meta object literal for the '<em><b>Vsam Type</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SCHEMA_RECORD__VSAM_TYPE = eINSTANCE.getSchemaRecord_VsamType();
+
+		/**
 		 * The meta object literal for the '<em><b>Owner Roles</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5267,6 +5599,22 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EClass SET = eINSTANCE.getSet();
+
+		/**
+		 * The meta object literal for the '<em><b>Chained</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SET__CHAINED = eINSTANCE.getSet_Chained();
+
+		/**
+		 * The meta object literal for the '<em><b>Indexed</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SET__INDEXED = eINSTANCE.getSet_Indexed();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -5347,6 +5695,22 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SET__VIA_MEMBERS = eINSTANCE.getSet_ViaMembers();
+
+		/**
+		 * The meta object literal for the '<em><b>Vsam</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SET__VSAM = eINSTANCE.getSet_Vsam();
+
+		/**
+		 * The meta object literal for the '<em><b>Vsam Index</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SET__VSAM_INDEX = eINSTANCE.getSet_VsamIndex();
 
 		/**
 		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.RoleImpl <em>Role</em>}' class.
@@ -5747,6 +6111,58 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute VIA_SPECIFICATION__SYMBOLIC_DISPLACEMENT_NAME = eINSTANCE.getViaSpecification_SymbolicDisplacementName();
+
+		/**
+		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.VsamIndexImpl <em>Vsam Index</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.lh.dmlj.schema.impl.VsamIndexImpl
+		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getVsamIndex()
+		 * @generated
+		 */
+		EClass VSAM_INDEX = eINSTANCE.getVsamIndex();
+
+		/**
+		 * The meta object literal for the '<em><b>Set</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VSAM_INDEX__SET = eINSTANCE.getVsamIndex_Set();
+
+		/**
+		 * The meta object literal for the '{@link org.lh.dmlj.schema.impl.VsamTypeImpl <em>Vsam Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.lh.dmlj.schema.impl.VsamTypeImpl
+		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getVsamType()
+		 * @generated
+		 */
+		EClass VSAM_TYPE = eINSTANCE.getVsamType();
+
+		/**
+		 * The meta object literal for the '<em><b>Length Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute VSAM_TYPE__LENGTH_TYPE = eINSTANCE.getVsamType_LengthType();
+
+		/**
+		 * The meta object literal for the '<em><b>Record</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VSAM_TYPE__RECORD = eINSTANCE.getVsamType_Record();
+
+		/**
+		 * The meta object literal for the '<em><b>Spanned</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute VSAM_TYPE__SPANNED = eINSTANCE.getVsamType_Spanned();
 
 		/**
 		 * The meta object literal for the '<em><b>Set</b></em>' reference feature.
@@ -6701,6 +7117,16 @@ public interface SchemaPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum USAGE = eINSTANCE.getUsage();
+
+		/**
+		 * The meta object literal for the '{@link org.lh.dmlj.schema.VsamLengthType <em>Vsam Length Type</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.lh.dmlj.schema.VsamLengthType
+		 * @see org.lh.dmlj.schema.impl.SchemaPackageImpl#getVsamLengthType()
+		 * @generated
+		 */
+		EEnum VSAM_LENGTH_TYPE = eINSTANCE.getVsamLengthType();
 
 	}
 

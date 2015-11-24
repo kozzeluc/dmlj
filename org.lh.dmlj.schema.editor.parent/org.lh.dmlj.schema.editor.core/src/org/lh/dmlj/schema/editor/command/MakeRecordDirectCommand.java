@@ -16,13 +16,15 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.SchemaRecord;
 
 /**
  * A command that will change the record's location mode to DIRECT.  This command can only be used 
- * for CALC and VIA records and will definitely run into trouble when executed for a record that is 
- * already defined as DIRECT.
+ * for CALC, VIA, VSAM and VSAM CALC records and will definitely run into trouble when executed for 
+ * a record that is already defined as DIRECT.  Records that are VSAM or VSAM CALC must NOT be a 
+ * member of a VSAM INDEX.
  */
 public class MakeRecordDirectCommand extends AbstractChangeLocationModeCommand {
 	
@@ -35,6 +37,9 @@ public class MakeRecordDirectCommand extends AbstractChangeLocationModeCommand {
 	
 	@Override
 	public void execute() {
+		
+		Assert.isTrue(!(record.isVsam() || record.isVsamCalc()) || record.getMemberRoles().isEmpty(), 
+					  "cannot make record DIRECT because it is a member of a VSAM index");
 		
 		// save the old data
 		stash(0);
@@ -50,26 +55,39 @@ public class MakeRecordDirectCommand extends AbstractChangeLocationModeCommand {
 		// set the record's location mode to DIRECT
 		record.setLocationMode(LocationMode.DIRECT);
 		
-		// remove the CALC key in the case of a CALC record, remove the VIA specification for a VIA 
-		// record
-		if (getStashedLocationMode(0) == LocationMode.CALC) {
+		// remove the CALC key in the case of a CALC or VSAM CALC record, remove the VIA 
+		// specification for a VIA record and the VSAM type for a VSAM or VSAM CALC record
+		if (getStashedLocationMode(0) == LocationMode.CALC ||
+			getStashedLocationMode(0) == LocationMode.VSAM_CALC) {
+			
 			removeCalcKey();
-		} else {
+		} else if (getStashedLocationMode(0) == LocationMode.VIA) {
 			// remove the VIA specification from the record AND set
 			removeViaSpecification();			
-		}		
-		
+		} 
+		if (getStashedLocationMode(0) == LocationMode.VSAM ||
+			getStashedLocationMode(0) == LocationMode.VSAM_CALC) {
+			
+			removeVsamType();
+		}
 	}
 	
 	@Override
 	public void undo() {
 		
-		// reconstruct the CALC key in the case of a CALC record, and the VIA specification in the 
-		// case of a VIA record
-		if (getStashedLocationMode(0) == LocationMode.CALC) {
+		// reconstruct the CALC key in the case of a CALC or VSAM CALC record, the VIA specification 
+		// in the case of a VIA record and the VSAM type in the case of a VSAM or VSAM CALC record
+		if (getStashedLocationMode(0) == LocationMode.CALC ||
+			getStashedLocationMode(0) == LocationMode.VSAM_CALC) {
+			
 			restoreCalcKey(0);
-		} else {
+		} else if (getStashedLocationMode(0) == LocationMode.VIA) {
 			restoreViaSpecification(0);
+		} 
+		if (getStashedLocationMode(0) == LocationMode.VSAM ||
+			getStashedLocationMode(0) == LocationMode.VSAM_CALC) {
+			
+			restoreVsamType(0);
 		}
 		
 		// restore the record's location mode

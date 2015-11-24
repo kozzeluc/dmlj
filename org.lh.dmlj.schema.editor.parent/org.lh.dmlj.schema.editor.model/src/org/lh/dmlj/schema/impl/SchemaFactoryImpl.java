@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -98,6 +98,8 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 			case SchemaPackage.SET: return createSet();
 			case SchemaPackage.SYSTEM_OWNER: return createSystemOwner();
 			case SchemaPackage.VIA_SPECIFICATION: return createViaSpecification();
+			case SchemaPackage.VSAM_INDEX: return createVsamIndex();
+			case SchemaPackage.VSAM_TYPE: return createVsamType();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -137,6 +139,8 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 				return createStorageModeFromString(eDataType, initialValue);
 			case SchemaPackage.USAGE:
 				return createUsageFromString(eDataType, initialValue);
+			case SchemaPackage.VSAM_LENGTH_TYPE:
+				return createVsamLengthTypeFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -176,6 +180,8 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 				return convertStorageModeToString(eDataType, instanceValue);
 			case SchemaPackage.USAGE:
 				return convertUsageToString(eDataType, instanceValue);
+			case SchemaPackage.VSAM_LENGTH_TYPE:
+				return convertVsamLengthTypeToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -279,6 +285,26 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	public ViaSpecification createViaSpecification() {
 		ViaSpecificationImpl viaSpecification = new ViaSpecificationImpl();
 		return viaSpecification;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VsamIndex createVsamIndex() {
+		VsamIndexImpl vsamIndex = new VsamIndexImpl();
+		return vsamIndex;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VsamType createVsamType() {
+		VsamTypeImpl vsamType = new VsamTypeImpl();
+		return vsamType;
 	}
 
 	/**
@@ -708,6 +734,26 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
 	 * @generated
 	 */
 	public String convertUsageToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VsamLengthType createVsamLengthTypeFromString(EDataType eDataType, String initialValue) {
+		VsamLengthType result = VsamLengthType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertVsamLengthTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

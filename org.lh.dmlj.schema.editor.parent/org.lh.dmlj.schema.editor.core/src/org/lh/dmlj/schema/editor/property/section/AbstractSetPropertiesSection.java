@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,6 +23,7 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.property.ISetProvider;
 
@@ -46,8 +47,9 @@ public abstract class AbstractSetPropertiesSection
 					  modelObject instanceof ConnectionLabel ||
 					  modelObject instanceof SystemOwner ||
 					  modelObject instanceof Connector ||
-					  modelObject instanceof Set,
-					  "not a ConnectionPart, ConnectionLabel, SystemOwner, Connector or Set");
+					  modelObject instanceof Set ||
+					  modelObject instanceof VsamIndex,
+					  "not a ConnectionPart, ConnectionLabel, SystemOwner, Connector, Set or VsamIndex");
 				
 		MemberRole memberRole;
 		if (modelObject instanceof ConnectionPart) {        	
@@ -62,6 +64,9 @@ public abstract class AbstractSetPropertiesSection
         } else if (modelObject instanceof Set) {	
         	Set set = (Set) modelObject;
         	memberRole = set.getMembers().get(0);
+        } else if (modelObject instanceof VsamIndex) {	
+        	VsamIndex vsamIndex = (VsamIndex) modelObject;
+        	memberRole = vsamIndex.getMemberRole();
         } else {
         	Connector connector = (Connector) modelObject;
         	memberRole = connector.getConnectionPart().getMemberRole();

@@ -30,6 +30,7 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -183,6 +184,8 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 			return (INodeTextProvider<?>) model;
 		} else if (model instanceof SystemOwner) {			
 			return ((SystemOwner) model).getSet();
+		} else if (model instanceof VsamIndex) {			
+			return ((VsamIndex) model).getSet();
 		}			
 		throw new IllegalArgumentException("unexpected: " + model.getClass().getSimpleName());
 	}

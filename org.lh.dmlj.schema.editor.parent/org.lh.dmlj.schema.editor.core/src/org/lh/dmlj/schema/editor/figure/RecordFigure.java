@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.figure;
 
 import java.text.DecimalFormat;
 
+import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Figure;
@@ -30,12 +31,21 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.graphics.Font;
 import org.lh.dmlj.schema.editor.Plugin;
 
 public class RecordFigure extends Figure {
 	
 	public static final int UNSCALED_WIDTH = 130;
 	public static final int UNSCALED_HEIGHT = 53;
+	
+	private static final Font standardFont = Plugin.getDefault().getFigureFont();
+	private static final Font vsamCalcFont = Plugin.getDefault().getFigureFontSmall();
+	
+	private static final Border standardBorder = 
+		new CompoundBorder(new LineBorder(1), new MarginBorder(0, 4, 0, 0));
+	private static final Border vsamCalcBorder =
+		new CompoundBorder(new LineBorder(1), new MarginBorder(0, 2, 0, 0));
 	
 	private static final DecimalFormat recordIdFormatter = 
 		new DecimalFormat("000");
@@ -113,7 +123,7 @@ public class RecordFigure extends Figure {
 		recordIdFigure = addLabel(0, 13, 38, 14);
 		storageModeFigure = addLabel(37, 13, 19, 14);
 		recordLengthFigure = addLabel(55, 13, 29, 14);
-		locationModeFigure = addLabel(83, 13, 47, 14);
+		locationModeFigure = addLabel(83, 13, 47, 14, false);
 		
 		locationModeDetailsFigure = addLabel(0, 26, 102, 14);
 		duplicatesOptionFigure = addLabel(101, 26, 29, 14);
@@ -121,15 +131,17 @@ public class RecordFigure extends Figure {
 		areaNameFigure = addLabel(0, 39, 130, 14);		
 		
 	}
-	
 	private Label addLabel(int x, int y, int width, int height) {
+		return addLabel(x, y, width, height, true);
+	}
+	private Label addLabel(int x, int y, int width, int height, boolean setFontAndBorder) {
 		Label label = new Label();
 		label.setLabelAlignment(PositionConstants.LEFT);
-		label.setFont(Plugin.getDefault().getFigureFont());
-		label.setBorder(new CompoundBorder(new LineBorder(1), 
-				 						   new MarginBorder(0, 4, 0, 0)));		
-		add(label, 
-			new Rectangle(new Point(x, y), new Dimension(width, height)));
+		if (setFontAndBorder) {
+			label.setFont(standardFont);
+			label.setBorder(standardBorder);		
+		}
+		add(label, new Rectangle(new Point(x, y), new Dimension(width, height)));
 		return label;
 	}	
 	
@@ -143,6 +155,17 @@ public class RecordFigure extends Figure {
 	
 	public void setLocationMode(String locationMode) {
 		locationModeFigure.setText(locationMode);
+		if (locationMode.equals("VSAM CALC")) {
+			if (locationModeFigure.getFont() != vsamCalcFont) {
+				locationModeFigure.setFont(vsamCalcFont);
+				locationModeFigure.setBorder(vsamCalcBorder);
+			}
+		} else {
+			if (locationModeFigure.getFont() != standardFont) {
+				locationModeFigure.setFont(standardFont);
+				locationModeFigure.setBorder(standardBorder);
+			}
+		}
 	}
 	
 	public void setLocationModeDetails(String locationModeDetails) {

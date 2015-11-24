@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.core;singleton:=true
-Bundle-Version: 1.7.5.qualifier
+Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: org.lh.dmlj.schema.editor.Plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
@@ -21,5 +21,7 @@ Bundle-Vendor: Luc Hermans
 Export-Package: org.lh.dmlj.schema.editor,
  org.lh.dmlj.schema.editor.importtool,
  org.lh.dmlj.schema.editor.importtool.elements
-Import-Package: org.lh.dmlj.schema.editor.service,
+Import-Package: org.lh.dmlj.schema.editor.dsl.builder.model;resolution:=optional,
+ org.lh.dmlj.schema.editor.dsl.builder.syntax;resolution:=optional,
+ org.lh.dmlj.schema.editor.service,
  org.lh.dmlj.schema.editor.service.api

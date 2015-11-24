@@ -66,6 +66,8 @@ public class SetDataCollector
 			return DuplicatesOption.LAST;
 		} else if (line.substring(32).startsWith("NOT ALLOWED")) {
 			return DuplicatesOption.NOT_ALLOWED;
+		} else if (line.substring(32).startsWith("UNORDERED")) {
+			return DuplicatesOption.UNORDERED;
 		} else {
 			return null;
 		}
@@ -249,6 +251,8 @@ public class SetDataCollector
 					return SetMode.CHAINED;
 				} else if (line.substring(17).startsWith("INDEX")) {
 					return SetMode.INDEXED;
+				} else if (line.substring(17).startsWith("VSAM INDEX")) {
+					return SetMode.VSAM_INDEX;
 				}
 			}
 		}

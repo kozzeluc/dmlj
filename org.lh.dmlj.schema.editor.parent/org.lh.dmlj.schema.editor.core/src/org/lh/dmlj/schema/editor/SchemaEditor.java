@@ -123,6 +123,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.SetZoomLevelCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -796,7 +797,7 @@ public class SchemaEditor
         	new ConnectionCreationToolEntry("Indexed Set", "Add user owned indexed set", 
         									new SimpleFactory(IIndexedSetPlaceHolder.class), 
         									indexedSet16, indexedSet24);
-        indexedSetCreationTool.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);        
+        indexedSetCreationTool.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);
         
         // index creation tool
         ImageDescriptor index16 = 
@@ -809,6 +810,17 @@ public class SchemaEditor
         									  new SimpleFactory(SystemOwner.class), 
         									  index16, 
         									  index24);
+        
+        // VSAM index creation tool
+        ImageDescriptor vsamIndex16 = 
+        	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/vsamIndex16.gif"));
+        ImageDescriptor vsamIndex24 = 
+           	ImageDescriptor.createFromImage(Plugin.getDefault().getImage("icons/vsamIndex24.gif"));
+        CombinedTemplateCreationEntry vsamIndexCreationTool = 
+        	new CombinedTemplateCreationEntry("VSAM Index", "Add VSAM index to record", 
+        									  new SimpleFactory(VsamIndex.class), 
+        									  vsamIndex16, vsamIndex24);
+        vsamIndexCreationTool.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);                
         
         // connector creation tool  
         ImageDescriptor connector16 = 
@@ -844,6 +856,7 @@ public class SchemaEditor
         createSetItemsDrawer.add(multipleMemberSetCreationTool);
         createSetItemsDrawer.add(indexedSetCreationTool);
         createSetItemsDrawer.add(indexCreationTool);
+        createSetItemsDrawer.add(vsamIndexCreationTool);
         createSetItemsDrawer.add(connectorCreationTool);
         palette.add(createSetItemsDrawer);
         

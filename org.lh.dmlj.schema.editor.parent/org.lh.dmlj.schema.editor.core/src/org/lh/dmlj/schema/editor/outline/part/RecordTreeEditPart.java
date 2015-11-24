@@ -31,6 +31,7 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -95,6 +96,21 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			// an add user owned set operation was undone
 			Set set = (Set) context.getListenerData();
 			findAndRemoveChild(set, false);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && 
+				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+					
+			// a VSAM index was added (execute/redo)
+			Set set = getLastSet();
+			if (isMemberOf(set)) {
+				createAndAddChild(set.getVsamIndex(), set);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && 
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
+				   context.getListenerData() instanceof VsamIndex) {
+					
+			// an add VSAM index to the model record operation was undone
+			VsamIndex vsamIndex = (VsamIndex) context.getListenerData();
+			findAndRemoveChild(vsamIndex, false);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET && 
 				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 				   context.getListenerData() instanceof SystemOwner) {
@@ -125,6 +141,21 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			if (isOwnerOf(set) || isMemberOf(set)) {
 				createAndAddSetAsChild(context);
 			}			 
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
+				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
+				   context.getListenerData() instanceof VsamIndex) {
+			
+			// a VSAM index was deleted (execute/redo)
+			VsamIndex vsamIndex = (VsamIndex) context.getListenerData();
+			findAndRemoveChild(vsamIndex, false);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
+				   atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+		
+			// a delete VSAM index operation was undone
+			Set set = findSet(context);
+			if (isMemberOf(set)) {
+				createAndAddVsamIndexAsChild(context);
+			}
 		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET && 
 				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
 				   context.getListenerData() instanceof Set) {
@@ -188,6 +219,14 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			if (isOwnerOf(set) || isMemberOf(set)) {				
 				context.setListenerData(set);
 			}		
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && atTopLevel &&
+				context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				
+				// an add VSAM index operation is being undone
+				Set set = getLastSet();
+				if (isMemberOf(set)) {
+					context.setListenerData(set.getVsamIndex());
+				}
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET && 
 				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
 		
@@ -203,6 +242,14 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			Set set = findSet(context);
 			if (isOwnerOf(set) || isMemberOf(set)) {
 				context.setListenerData(set);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
+				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
+		
+			// a VSAM index is being deleted
+			Set set = findSet(context);
+			if (isMemberOf(set)) {
+				context.setListenerData(set.getVsamIndex());
 			}
 		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET && 
 				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
@@ -237,12 +284,18 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 		createAndAddChild(set.getSystemOwner(), set);
 	}
 	
+	private void createAndAddVsamIndexAsChild(ModelChangeContext context) {
+		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		Set set = getModel().getSchema().getSet(setName);
+		createAndAddChild(set.getVsamIndex(), set);
+	}
+	
 	@Override
 	protected void createEditPolicies() {		
 		EObject parentModelObject = getParentModelObject();
 		if (parentModelObject instanceof Set) {
 			Set set = (Set) parentModelObject;
-			if (set.getOwner().getRecord() != getModel()) {
+			if (set.isVsam() || set.getOwner().getRecord() != getModel()) {
 				// the model record is a member of the parent edit part's model set; the next 
 				// edit policy allows for the removal of the record as a set member, without the
 				// ability to remove the set when the record is the last remaining member in the set 
@@ -290,7 +343,9 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 			} else {
 				return "icons/member_record.gif";
 			}
-		} else if (parentModelObject instanceof SystemOwner) {
+		} else if (parentModelObject instanceof SystemOwner ||
+				   parentModelObject instanceof VsamIndex) {
+			
 			return "icons/member_record.gif";
 		} else {
 			return "icons/record.gif";
@@ -326,14 +381,20 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 				if (set.getSystemOwner() != null) {
 					// the record is the member of a system owned indexed set; add the system owner
 					children.add(set.getSystemOwner());
-				} else if (set.getOwner().getRecord() == getModel()) {
+				} else if (set.getOwner() != null && set.getOwner().getRecord() == getModel()) {
 					// the record is the owner of the set; add the set
 					children.add(set);
 				} else {
-					// the record is a member of the set; add the set
-					for (MemberRole memberRole : set.getMembers()) {
-						if (memberRole.getRecord() == getModel()) {
-							children.add(memberRole.getSet());
+					// the record is a member of the set
+					if (set.isVsam()) {
+						// add the VSAM index
+						children.add(set.getVsamIndex());
+					} else {
+						// add the set (why are we traversing the list of members her ?)
+						for (MemberRole memberRole : set.getMembers()) {
+							if (memberRole.getRecord() == getModel()) {
+								children.add(memberRole.getSet());
+							}
 						}
 					}
 				}

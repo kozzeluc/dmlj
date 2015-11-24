@@ -91,6 +91,12 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 			} else if (scope == Scope.CONNECTORS_ONLY) {
 				toRefresh.add(set.getSystemOwner());
 			}
+		} else if (set.getVsamIndex() != null) {
+			if (scope == Scope.ALL) {
+				toCreateOrRemove.add(set.getVsamIndex());
+			} else if (scope == Scope.CONNECTORS_ONLY) {
+				toRefresh.add(set.getVsamIndex());
+			}		
 		} else {
 			toRefresh.add(set.getOwner().getRecord());
 		}
@@ -135,7 +141,7 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 			}
 			if (memberRole.getSet().getSystemOwner() != null) {
 				toCreate.add(memberRole.getSet().getSystemOwner());
-			} else {
+			} else if (memberRole.getSet().getOwner() != null) {
 				if (!toRefresh.contains(memberRole.getSet().getOwner().getRecord())) {
 					toRefresh.add(memberRole.getSet().getOwner().getRecord());
 				}
@@ -152,21 +158,23 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 	protected final void collectObjectsForSet(ModelChangeContext context, Set set) {		
 		
 		Map<String, List<EObject>> map = createModelChildrenActionMap(context);
-		List<EObject> toRemove = map.get(TO_CREATE_OR_REMOVE);		
+		List<EObject> toCreateOrRemove = map.get(TO_CREATE_OR_REMOVE);		
 		List<EObject> toRefresh = map.get(TO_REFRESH);
 		
 		if (set.getSystemOwner() != null) {
-			toRemove.add(set.getSystemOwner());			
-		} else {
+			toCreateOrRemove.add(set.getSystemOwner());			
+		} else if (set.getVsamIndex() != null) {
+				toCreateOrRemove.add(set.getVsamIndex());			
+		} else if (set.getOwner() != null) {
 			toRefresh.add(set.getOwner().getRecord());
 		}
 		for (MemberRole memberRole : set.getMembers()) {		
 			SchemaRecord memberRecord = memberRole.getRecord();
 			toRefresh.add(memberRecord);			
-			toRemove.add(memberRole.getConnectionLabel());
+			toCreateOrRemove.add(memberRole.getConnectionLabel());
 			if (memberRole.getConnectionParts().size() > 1) {
-				toRemove.add(memberRole.getConnectionParts().get(0).getConnector());
-				toRemove.add(memberRole.getConnectionParts().get(1).getConnector());
+				toCreateOrRemove.add(memberRole.getConnectionParts().get(0).getConnector());
+				toCreateOrRemove.add(memberRole.getConnectionParts().get(1).getConnector());
 			}		
 		}
 	}	

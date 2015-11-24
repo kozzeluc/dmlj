@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -80,6 +80,10 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
+			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
+			createAndAddChildren(context);
+			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
@@ -94,6 +98,9 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context); 
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+			findAndRemoveChildren(context);
+			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
@@ -119,6 +126,9 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
+			findAndRemoveChildren(context);
+			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			collectObjectsForMemberRole(context, Scope.CONNECTORS_ONLY);
 			createAndAddChildren(context);		
@@ -134,6 +144,10 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
+			collectObjectsForSet(context);
+			createAndAddChildren(context);
+			findAndRefreshChildren(context);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
 			collectObjectsForSet(context);
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
@@ -168,6 +182,8 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			collectObjectsForSet(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
 			collectObjectsForSet(context);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+			collectObjectsForSet(context);
 		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
 			collectObjectsForMemberRole(context, Scope.ALL);
 		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
@@ -187,6 +203,8 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET) {
 			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
+			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
 			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			collectObjectsForMemberRole(context, Scope.CONNECTORS_ONLY);
@@ -276,6 +294,13 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 				set.getSystemOwner() != null) {
 				
 				allObjects.add(set.getSystemOwner());
+			}
+		}
+		
+		// VSAM indexes
+		for (Set set : getModel().getSets()) {
+			if (set.getMode() == SetMode.VSAM_INDEX) {
+				allObjects.add(set.getVsamIndex());
 			}
 		}
 		

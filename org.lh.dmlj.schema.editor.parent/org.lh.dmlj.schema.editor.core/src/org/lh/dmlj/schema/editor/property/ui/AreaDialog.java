@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -39,7 +39,9 @@ import org.lh.dmlj.schema.AreaSpecification;
 import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
+import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class AreaDialog extends Dialog {
@@ -660,10 +662,18 @@ public class AreaDialog extends Dialog {
 	
 	private void initialize() {
 		
-		// fill the list of area names and select the current area - the 'Area'
-		// radio button is initially selected
+		// fill the list of area names and select the current area - the 'Area' radio button is 
+		// initially selected
 		for (SchemaArea area : schema.getAreas()) {
-			comboExistingArea.add(area.getName());
+			// make sure the user cannot mix VSAM and non-VSAM items in an area
+			SchemaRecord record = areaSpecification.getRecord();
+			if (record != null) {
+				if (Tools.areaMixesWithRecord(area, record)) {				
+					comboExistingArea.add(area.getName());	
+				}
+			} else if (Tools.canHoldSystemOwners(area)) {
+				comboExistingArea.add(area.getName());				
+			}
 		}
 		String areaName = areaSpecification.getArea().getName();
 		for (int i = 0; i < comboExistingArea.getItemCount(); i++) {

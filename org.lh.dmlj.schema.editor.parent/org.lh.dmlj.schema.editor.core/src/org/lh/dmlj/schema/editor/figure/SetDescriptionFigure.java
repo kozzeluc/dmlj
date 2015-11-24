@@ -103,8 +103,10 @@ public class SetDescriptionFigure extends Figure {
 		p.append(FILLER);
 		p.append("\n");
 		
-		p.append(pointers);
-		p.append(" ");
+		if (pointers != null && !pointers.trim().isEmpty()) {
+			p.append(pointers);
+			p.append(" ");
+		}
 		p.append(membershipOption);
 		p.append(" ");
 		p.append(order);

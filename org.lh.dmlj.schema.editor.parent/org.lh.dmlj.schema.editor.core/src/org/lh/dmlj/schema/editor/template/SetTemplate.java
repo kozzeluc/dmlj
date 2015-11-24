@@ -56,7 +56,7 @@ public class SetTemplate
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -97,7 +97,7 @@ if (set.getMode() == SetMode.CHAINED) {
     } else {
         mode = "CHAIN";
     }
-} else {
+} else if (set.getMode() == SetMode.INDEXED) {
     String id;
     if (set.getSchema().getName().equals("IDMSNTWK") &&
         set.getSchema().getVersion() == 1) {
@@ -137,6 +137,8 @@ if (set.getMode() == SetMode.CHAINED) {
          mode = "INDEX " + id + "BLOCK CONTAINS " + 
                indexedSetModeSpecification.getKeyCount() + " KEYS";
     }
+} else {
+    mode = "VSAM INDEX";
 }
 
     stringBuffer.append(TEXT_1);
@@ -170,7 +172,7 @@ if (set.getOwner() != null) {
     stringBuffer.append( set.getOwner().getPriorDbkeyPosition() );
     
     }
-} else {
+} else if (set.isIndexed()) {
     AreaSpecification areaSpecification = 
         set.getSystemOwner().getAreaSpecification();
     String areaName = areaSpecification.getArea().getName();

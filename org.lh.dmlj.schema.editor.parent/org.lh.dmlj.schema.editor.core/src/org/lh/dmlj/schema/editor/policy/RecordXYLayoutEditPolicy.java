@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,12 +21,15 @@ import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.CreateIndexCommand;
+import org.lh.dmlj.schema.editor.command.CreateVsamIndexCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
+import org.lh.dmlj.schema.editor.common.Tools;
 
 /**
- * An edit policy that enables creating indexes.
+ * An edit policy that enables creating system owned indexed sets and VSAM indexes.
  */
 public class RecordXYLayoutEditPolicy extends XYLayoutEditPolicy {
 
@@ -38,17 +41,25 @@ public class RecordXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	}
 	
 	@Override
-	protected Command getCreateCommand(CreateRequest request) {		
-		
-		// make sure the index tool is used
-		if (request.getNewObjectType() != SystemOwner.class) {			
+	protected Command getCreateCommand(CreateRequest request) {				
+		if (request.getNewObjectType() == SystemOwner.class) {
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_SYSTEM_OWNED_SET);
+			CreateIndexCommand command = new CreateIndexCommand(record);	
+			command.setContext(context);
+			return command;
+		} else if (request.getNewObjectType() == VsamIndex.class &&
+				   (record.isVsam() || record.isVsamCalc()) &&
+				   Tools.getDefaultSortKeyElement(record) != null) {
+			
+			// VSAM indexes are always SORTED so make we need to be sure we have a relevant element 
+			// that we can use as the sort key
+			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_VSAM_INDEX);
+			CreateVsamIndexCommand command = new CreateVsamIndexCommand(record);	
+			command.setContext(context);
+			return command;
+		} else {
 			return null;
-		}		
-		
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_SYSTEM_OWNED_SET);
-		CreateIndexCommand command = new CreateIndexCommand(record);	
-		command.setContext(context);
-		return command;
+		}				
 	}
 	
 }

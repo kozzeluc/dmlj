@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -50,7 +50,15 @@ public enum SetMode implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	INDEXED(1, "INDEXED", "INDEXED");
+	INDEXED(1, "INDEXED", "INDEXED"), /**
+	 * The '<em><b>VSAM INDEX</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #VSAM_INDEX_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	VSAM_INDEX(2, "VSAM_INDEX", "VSAM_INDEX");
 
 	/**
 	 * The '<em><b>CHAINED</b></em>' literal value.
@@ -83,6 +91,21 @@ public enum SetMode implements Enumerator {
 	public static final int INDEXED_VALUE = 1;
 
 	/**
+	 * The '<em><b>VSAM INDEX</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>VSAM INDEX</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #VSAM_INDEX
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int VSAM_INDEX_VALUE = 2;
+
+	/**
 	 * An array of all the '<em><b>Set Mode</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -92,6 +115,7 @@ public enum SetMode implements Enumerator {
 		new SetMode[] {
 			CHAINED,
 			INDEXED,
+			VSAM_INDEX,
 		};
 
 	/**
@@ -144,6 +168,7 @@ public enum SetMode implements Enumerator {
 		switch (value) {
 			case CHAINED_VALUE: return CHAINED;
 			case INDEXED_VALUE: return INDEXED;
+			case VSAM_INDEX_VALUE: return VSAM_INDEX;
 		}
 		return null;
 	}

@@ -22,6 +22,7 @@ import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SetMembershipOption;
 import org.lh.dmlj.schema.SetMode;
@@ -31,6 +32,50 @@ import org.lh.dmlj.schema.StorageMode;
 
 public abstract class Tools {
 	
+	public static boolean areaMixesWithRecord(SchemaArea area, SchemaRecord record) {
+		if (record.isCalc() || record.isDirect() || record.isVia()) {
+			return canHoldNonVsamRecords(area);
+		} else {
+			return canHoldVsamRecords(area);
+		}
+	}
+	
+	public static boolean canHoldNonVsamRecords(SchemaArea area) {
+		return !containsVsamRecord(area);
+	}
+	
+	public static boolean canHoldSystemOwners(SchemaArea area) {
+		return canHoldNonVsamRecords(area);
+	}
+	
+	public static boolean canHoldVsamRecords(SchemaArea area) {
+		return area.getIndexes().isEmpty() && !containsNonVsamRecord(area);
+	}
+	
+	private static boolean containsNonVsamRecord(SchemaArea area) {
+		if (area == null) {
+			throw new IllegalArgumentException("area is null");
+		}
+		for (SchemaRecord record : area.getRecords()) {
+			if (!record.isVsam() && !record.isVsamCalc()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean containsVsamRecord(SchemaArea area) {
+		if (area == null) {
+			throw new IllegalArgumentException("area is null");
+		}
+		for (SchemaRecord record : area.getRecords()) {
+			if (record.isVsam() || record.isVsamCalc()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static String getCalcKey(Key calcKey) {
 		if (calcKey == null) {
 			return "";
@@ -79,6 +124,8 @@ public abstract class Tools {
 			return "DF";
 		} else if (duplicatesOption == DuplicatesOption.LAST) {
 			return "DL";
+		} else if (duplicatesOption == DuplicatesOption.UNORDERED) {
+			return "DU";
 		} else {
 			return "DD";
 		}
@@ -150,6 +197,11 @@ public abstract class Tools {
 	}
 	
 	public static String getPointers(MemberRole memberRole) {
+		
+		if (memberRole.getSet().isVsam()) {
+			return "";
+		}
+		
 		StringBuilder p = new StringBuilder();
 		
 		if (memberRole.getSet().getMode() == SetMode.CHAINED) {

@@ -287,12 +287,13 @@ public class RecordEditPart
 			dataLength -= 4; 
 		}
 		figure.setRecordLength(dataLength);
-		figure.setLocationMode(record.getLocationMode().toString());
-		if (record.getLocationMode() == LocationMode.CALC) {
+		figure.setLocationMode(record.getLocationMode().toString().replaceAll("_", " "));
+		if (record.getLocationMode() == LocationMode.CALC ||
+			record.getLocationMode() == LocationMode.VSAM_CALC) {
+			
 			String calcKey = Tools.getCalcKey(record.getCalcKey());
 			figure.setLocationModeDetails(calcKey);
-			String duplicatesOption = 
-				Tools.getDuplicatesOption(record.getCalcKey());
+			String duplicatesOption = Tools.getDuplicatesOption(record.getCalcKey());
 			figure.setDuplicatesOption(duplicatesOption);
 		} else if (record.getLocationMode() == LocationMode.VIA) {
 			String setName;

@@ -49,6 +49,9 @@ import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.ViaSpecification;
+import org.lh.dmlj.schema.VsamIndex;
+import org.lh.dmlj.schema.VsamLengthType;
+import org.lh.dmlj.schema.VsamType;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.importtool.IAreaDataCollector;
 import org.lh.dmlj.schema.editor.importtool.IDataCollectorRegistry;
@@ -309,6 +312,14 @@ public final class SchemaImportToolProxy {
 										  originalRecord.getLocationMode(), 
 									  	  viaSetName, "DDLCATLOD", true);
 			
+			// set the base name and version
+			record.setBaseName(originalRecord.getBaseName());
+			record.setBaseVersion(originalRecord.getBaseVersion());
+			
+			// set the synonym name and version
+			record.setSynonymName(originalRecord.getSynonymName());
+			record.setSynonymVersion(originalRecord.getSynonymVersion());
+			
 			// add the (validated) elements to the record
 			for (Element originalElement : originalRecord.getElements()) {
 	
@@ -322,6 +333,7 @@ public final class SchemaImportToolProxy {
 											   originalElement.getBaseName());	
 				
 				// set some of the element's attributes
+				element.setBaseName(originalElement.getBaseName());
 				element.setLevel(originalElement.getLevel());		
 				element.setUsage(originalElement.getUsage());						
 				element.setPicture(originalElement.getPicture());		
@@ -799,11 +811,22 @@ public final class SchemaImportToolProxy {
 			dataCollector.getMinimumFragmentLength(recordContext);
 		record.setMinimumFragmentLength(minimumFragmentLength);
 	
-		// if the record has a location mode of CALC, create the CALC key
-		if (record.getLocationMode() == LocationMode.CALC) {									
+		// if the record has a location mode of CALC or VSAM CALC, create the CALC key
+		if (record.getLocationMode() == LocationMode.CALC ||
+			record.getLocationMode() == LocationMode.VSAM_CALC) {									
 		
 			DuplicatesOption duplicatesOption = 
 				dataCollector.getCalcKeyDuplicatesOption(recordContext);
+			if (record.getLocationMode() == LocationMode.VSAM_CALC) {
+				Assert.isTrue(duplicatesOption == DuplicatesOption.NOT_ALLOWED ||
+							  duplicatesOption == DuplicatesOption.UNORDERED, 
+							  "Duplicates option invalid for VSAMs: " + duplicatesOption +
+							  "(record=)" + record.getName());
+			} else {
+				Assert.isTrue(duplicatesOption != DuplicatesOption.UNORDERED, 
+							  "Duplicates option invalid for non-VSAMs: " + duplicatesOption +
+							  "(record=)" + record.getName());
+			}
 			// always set the naturalSequence attribute to false; this attribute
 			// is not applicable to CALC keys
 			Key key = modelFactory.createKey(record, duplicatesOption, false);
@@ -833,6 +856,18 @@ public final class SchemaImportToolProxy {
 				viaSpecification.setDisplacementPageCount(displacementPageCount);
 			}							
 			
+		}
+		
+		// if the record has a location mode of VSAM or VSAM CALC, create the VSAM type object
+		if (record.getLocationMode() == LocationMode.VSAM || 
+			record.getLocationMode() == LocationMode.VSAM_CALC) {
+			
+			VsamType vsamType = SchemaFactory.eINSTANCE.createVsamType();
+			vsamType.setRecord(record);
+			VsamLengthType vsamLengthType = dataCollector.getVsamLengthType(recordContext);
+			Assert.isNotNull(vsamLengthType, "VSAM length type is mandatory: " + record.getName());
+			vsamType.setLengthType(vsamLengthType);
+			vsamType.setSpanned(dataCollector.isVsamSpanned(recordContext));			
 		}
 	
 		// deal with the record's offset expression
@@ -891,6 +926,8 @@ public final class SchemaImportToolProxy {
 			} else {
 				handleUserOwnedIndexedSet(setContext);
 			}
+		} else if (setMode == SetMode.VSAM_INDEX) {
+			handleVsamIndexSet(setContext);
 		} else {
 			throw new RuntimeException("set mode is invalid: " + setMode);
 		}
@@ -918,8 +955,15 @@ public final class SchemaImportToolProxy {
 		if (sortedByDbkey) {
 			duplicatesOption = DuplicatesOption.NOT_ALLOWED;
 		} else {
-			duplicatesOption = 
-				dataCollector.getDuplicatesOption(setContext, recordName);			
+			duplicatesOption = dataCollector.getDuplicatesOption(setContext, recordName);
+			String message = "Duplicates option invalid: " + duplicatesOption + " (set=" + 
+							 memberRole.getSet().getName() + ")";
+			if (memberRole.getSet().getMode() == SetMode.VSAM_INDEX) {
+				Assert.isTrue(duplicatesOption == DuplicatesOption.NOT_ALLOWED ||
+							  duplicatesOption == DuplicatesOption.UNORDERED, message);
+			} else {
+				Assert.isTrue(duplicatesOption != DuplicatesOption.UNORDERED, message);
+			}
 		}
 		
 		// get the natural sequence indicator value (always ask the set data 
@@ -1160,6 +1204,38 @@ public final class SchemaImportToolProxy {
 			handleSortKey(setContext, memberRole);			
 		}			
 		
+	}
+
+	private void handleVsamIndexSet(Object setContext) {
+		
+		// get the data collector
+		@SuppressWarnings("unchecked")
+		ISetDataCollector<Object> dataCollector = 
+			(ISetDataCollector<Object>) dataCollectorRegistry.getSetDataCollector(setContext.getClass());
+		
+		// get the set name
+		String setName = dataCollector.getName(setContext);
+		
+		Plugin.logDebug("importing VSAM index set " + setName + "...");
+		
+		// create the set, which will always be SORTED
+		Set set = modelFactory.createSet(setName, SetMode.VSAM_INDEX, SetOrder.SORTED);
+		
+		// process the (one and only) set member
+		Collection<String> memberRecordNames = dataCollector.getMemberRecordNames(setContext);
+		Assertions.isSingleElementCollection(memberRecordNames, "1 member record name expected: " + 
+											 set.getName());		
+		String memberRecordName = memberRecordNames.iterator().next();
+		MemberRole memberRole = 
+			modelFactory.createSetMember(set, memberRecordName, SetMembershipOption.MANDATORY_AUTOMATIC);
+		
+		// deal with the sort key
+		handleSortKey(setContext, memberRole);
+		
+		// create a VsamIndex object and have it referenced by the set; we need this type to create
+		// edit parts when visualizing the VSAM index
+		VsamIndex vsamIndex = SchemaFactory.eINSTANCE.createVsamIndex();
+		vsamIndex.setSet(set);
 	}
 
 	public Schema invokeImportTool(IProgressMonitor progressMonitor) {

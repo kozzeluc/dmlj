@@ -33,6 +33,7 @@ import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.Usage;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.NamingConventions.Type;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.common.ValidationResult.Status;
 
@@ -94,10 +95,20 @@ public class CreateRecordCommand extends ModelChangeBasicCommand {
 
 	private void setAreaSpecification() {		
 		if (!schema.getAreas().isEmpty()) {
-			// use the first area in the alphabetically sorted list
+			// use the first area in the alphabetically sorted list, provided it is compatible with
+			// a non-VSAM record that we are creating here - if such an area doesn't exist, create a
+			// new area
 			List<SchemaArea> areas = new ArrayList<>(schema.getAreas());
 			Collections.sort(areas);
-			area = areas.get(0);
+			for (SchemaArea anArea : areas) {
+				if (Tools.canHoldNonVsamRecords(anArea)) {
+					area = anArea;
+					break;
+				}
+			}
+			if (area == null) {
+				createArea();
+			}
 		} else {
 			createArea();
 		}

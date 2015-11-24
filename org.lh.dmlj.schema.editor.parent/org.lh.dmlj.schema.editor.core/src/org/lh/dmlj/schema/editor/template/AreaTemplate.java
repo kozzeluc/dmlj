@@ -34,7 +34,7 @@ public class AreaTemplate
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -155,8 +155,10 @@ for (AreaProcedureCallSpecification callSpec : area.getProcedures()) {
     
 }
 
-     
-for (String symbolicSA : subareas.keySet()) {
+    
+List<String> symbolicSubareaNames = new ArrayList<>(subareas.keySet()); 
+Collections.sort(symbolicSubareaNames);
+for (String symbolicSA : symbolicSubareaNames) {
 
     stringBuffer.append(TEXT_6);
     stringBuffer.append( symbolicSA );
@@ -169,7 +171,9 @@ for (String symbolicSA : subareas.keySet()) {
     
     }
 }
-for (String symbolicD : displacements.keySet()) {
+List<String> symbolicDisplacementNames = new ArrayList<>(displacements.keySet());
+Collections.sort(symbolicDisplacementNames);
+for (String symbolicD : symbolicDisplacementNames) {
 
     stringBuffer.append(TEXT_9);
     stringBuffer.append( symbolicD );
@@ -181,7 +185,9 @@ for (String symbolicD : displacements.keySet()) {
     
 	}
 }
-for (String symbolicI : indexes.keySet()) {
+List<String> symbolicIndexNames = new ArrayList<>(indexes.keySet());
+Collections.sort(symbolicIndexNames);
+for (String symbolicI : symbolicIndexNames) {
 
     stringBuffer.append(TEXT_11);
     stringBuffer.append( symbolicI );

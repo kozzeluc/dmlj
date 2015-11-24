@@ -75,17 +75,6 @@ class ModelFactory {
 		} else {
 			return false;
 		}
-	}
-	
-	private static boolean isRedefinesInvolved(Element element) {
-		if (element.getRedefines() != null) {
-			return true;
-		}
-		if (element.getParent() != null) {
-			return isRedefinesInvolved(element.getParent());
-		} else {
-			return false;
-		}
 	}	
 
 	private static String toUppercaseWithValidation(String name,
@@ -303,15 +292,6 @@ class ModelFactory {
 										   "element subordinate to a " +
 										   "repeating element can be used in " +
 										   "a key");
-			}
-			
-			// redefines check (not for CALC keys)
-			if (!key.isCalcKey() && isRedefinesInvolved(element)) {
-				throw new RuntimeException("No element that redefines " +
-										   "another element or is " +
-										   "subordinate to an element that " +
-										   "redefines another element can be " +
-										   "used as a sort key element");
 			}
 			
 			keyElement.setElement(element);

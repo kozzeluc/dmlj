@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,6 +25,7 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 
 public class SortedSetFilter implements IFilter {
 
@@ -50,6 +51,8 @@ public class SortedSetFilter implements IFilter {
         } else if (modelObject instanceof SystemOwner) {
         	SystemOwner systemOwner = (SystemOwner) modelObject;
         	set = systemOwner.getSet();
+        } else if (modelObject instanceof VsamIndex) {
+        	return true;
         } else {
         	return false;
         }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,6 +25,7 @@ import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
@@ -49,6 +50,8 @@ public class SchemaDiagramEditPartFactory implements EditPartFactory {
 			return new ConnectorEditPart((Connector) model, modelChangeProvider);
 		} else if (model instanceof DiagramLabel) {
 			return new DiagramLabelEditPart((DiagramLabel) model, schemaEditor);
+		} else if (model instanceof VsamIndex) {
+			return new VsamIndexEditPart((VsamIndex) model, modelChangeProvider);
 		}
 		throw new IllegalStateException("No EditPart for " + model.getClass());		
 	}

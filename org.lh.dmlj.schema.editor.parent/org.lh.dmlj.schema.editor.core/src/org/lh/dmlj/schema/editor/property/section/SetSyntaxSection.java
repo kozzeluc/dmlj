@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,13 +23,14 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.template.SetTemplate;
 
 public class SetSyntaxSection extends AbstractSyntaxSection {
 
 	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS =
 		new Class[] {ConnectionLabel.class, ConnectionPart.class, 
-					 Connector.class, SystemOwner.class, Set.class};
+					 Connector.class, SystemOwner.class, Set.class, VsamIndex.class};
 	
 	public SetSyntaxSection() {
 		super(VALID_EDIT_PART_MODEL_OBJECTS, new SetTemplate());				
@@ -56,6 +57,10 @@ public class SetSyntaxSection extends AbstractSyntaxSection {
 			// set edit part model object
 			Set set = (Set) editPartModelObject;
 			return set;						
+		} else if (editPartModelObject instanceof VsamIndex) {
+			// VSAM index edit part model object
+			VsamIndex vsamIndex = (VsamIndex) editPartModelObject;
+			return vsamIndex.getSet();
 		} else {
 			// system owner edit part model object
 			SystemOwner systemOwner = (SystemOwner) editPartModelObject;

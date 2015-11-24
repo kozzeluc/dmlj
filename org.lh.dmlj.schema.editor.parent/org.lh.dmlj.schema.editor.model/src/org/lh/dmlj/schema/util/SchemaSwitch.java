@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -287,6 +287,19 @@ public class SchemaSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case SchemaPackage.VSAM_INDEX: {
+				VsamIndex vsamIndex = (VsamIndex)theEObject;
+				T1 result = caseVsamIndex(vsamIndex);
+				if (result == null) result = caseDiagramNode(vsamIndex);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case SchemaPackage.VSAM_TYPE: {
+				VsamType vsamType = (VsamType)theEObject;
+				T1 result = caseVsamType(vsamType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -468,6 +481,36 @@ public class SchemaSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseViaSpecification(ViaSpecification object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Vsam Index</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Vsam Index</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseVsamIndex(VsamIndex object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Vsam Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Vsam Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseVsamType(VsamType object) {
 		return null;
 	}
 

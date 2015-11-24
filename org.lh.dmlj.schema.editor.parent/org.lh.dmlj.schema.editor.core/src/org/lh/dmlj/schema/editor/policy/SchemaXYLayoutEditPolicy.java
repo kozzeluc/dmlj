@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,6 +35,7 @@ import org.lh.dmlj.schema.DiagramNode;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommand;
 import org.lh.dmlj.schema.editor.command.CreateRecordCommand;
@@ -159,6 +160,8 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 				return ModelChangeType.MOVE_RECORD;
 			} else if (diagramNode instanceof SystemOwner) {
 				return ModelChangeType.MOVE_INDEX;
+			} else if (diagramNode instanceof VsamIndex) {
+				return ModelChangeType.MOVE_VSAM_INDEX;
 			} else {
 				throw new IllegalStateException("Unexpected diagram node: " + diagramNode);
 			}

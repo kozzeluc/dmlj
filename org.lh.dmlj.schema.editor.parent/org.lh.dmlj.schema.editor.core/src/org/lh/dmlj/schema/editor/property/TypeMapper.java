@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,6 +24,7 @@ import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 
 public class TypeMapper extends AbstractTypeMapper {
 
@@ -36,7 +37,8 @@ public class TypeMapper extends AbstractTypeMapper {
             	modelObject instanceof ConnectionLabel ||
             	modelObject instanceof SystemOwner ||
             	modelObject instanceof Connector ||
-            	modelObject instanceof Set) {
+            	modelObject instanceof Set ||
+            	modelObject instanceof VsamIndex) {
             	
             	return MemberRole.class;
             } else { 

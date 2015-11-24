@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2015  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -79,6 +79,10 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 		// candidate member record type OR when he wants to add a member record type to an existing
 		// set, making it a multiple-member set if not so already
 		if (request.getStartCommand() instanceof CreateSetCommand) {
+			// if the member record is of type VSAM, make sure no command is returned
+			if (record.isVsam() || record.isVsamCalc()) {
+				return null;
+			}
 			// creation of new set in progress
 			CreateSetCommand command = (CreateSetCommand) request.getStartCommand();
 			if (record != command.getOwner()) {
@@ -90,8 +94,9 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 			// adding a member record type to an existing set 
 			AddMemberToSetCommand command = (AddMemberToSetCommand)request.getStartCommand();
 			Set set = command.getSet();
-			if (set.getOwner().getRecord() == record) {
-				// the record already participates in the given set as the owner record type
+			if (set.getOwner().getRecord() == record || record.isVsam() || record.isVsamCalc()) {
+				// the record already participates in the given set as the owner record type or is
+				// of type VSAM
 				return null;
 			}
 			for (MemberRole memberRole : set.getMembers()) {
@@ -123,9 +128,10 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 	@Override
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
 		// we should only instantiate a set creation command when we're adding either a chained or
-		// indexed set
+		// indexed set AND the (owner) record is NOT of type VSAM
 		if (request.getNewObjectType() != IChainedSetPlaceHolder.class &&
-			request.getNewObjectType() != IIndexedSetPlaceHolder.class) {
+			request.getNewObjectType() != IIndexedSetPlaceHolder.class ||
+			record.isVsam() || record.isVsamCalc()) {
 			
 			return null;
 		}

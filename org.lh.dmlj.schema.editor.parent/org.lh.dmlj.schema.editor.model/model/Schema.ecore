@@ -107,6 +107,7 @@
     <eLiterals name="LAST" value="1"/>
     <eLiterals name="BY_DBKEY" value="2"/>
     <eLiterals name="NOT_ALLOWED" value="3"/>
+    <eLiterals name="UNORDERED" value="4" literal="UNORDERED"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Element">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -196,6 +197,8 @@
     <eLiterals name="CALC" literal="CALC"/>
     <eLiterals name="DIRECT" value="1"/>
     <eLiterals name="VIA" value="2"/>
+    <eLiterals name="VSAM" value="3" literal="VSAM"/>
+    <eLiterals name="VSAM_CALC" value="4" literal="VSAM_CALC"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MemberRole" eSuperTypes="#//Role">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexDbkeyPosition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShortObject"/>
@@ -408,12 +411,26 @@
         changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="viaSpecification" eType="#//ViaSpecification"
         containment="true" eOpposite="#//ViaSpecification/record"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vsam" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" defaultValueLiteral="false"
+        derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vsamCalc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" defaultValueLiteral="false"
+        derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vsamType" eType="#//VsamType"
+        containment="true" eOpposite="#//VsamType/record"/>
     <eGenericSuperTypes eClassifier="#//DiagramNode"/>
     <eGenericSuperTypes eClassifier="#//INodeTextProvider">
       <eTypeArguments eClassifier="#//SchemaRecord"/>
     </eGenericSuperTypes>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Set">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="chained" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" defaultValueLiteral="false"
+        derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" defaultValueLiteral="false"
+        derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="indexedSetModeSpecification"
         eType="#//IndexedSetModeSpecification" containment="true" eOpposite="#//IndexedSetModeSpecification/set"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="members" lowerBound="1"
@@ -433,6 +450,11 @@
         containment="true" eOpposite="#//SystemOwner/set"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="viaMembers" upperBound="-1"
         eType="#//ViaSpecification" eOpposite="#//ViaSpecification/set"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vsam" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" defaultValueLiteral="false"
+        derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vsamIndex" eType="#//VsamIndex"
+        containment="true" eOpposite="#//VsamIndex/set"/>
     <eGenericSuperTypes eClassifier="#//INodeTextProvider">
       <eTypeArguments eClassifier="#//Set"/>
     </eGenericSuperTypes>
@@ -446,6 +468,7 @@
   <eClassifiers xsi:type="ecore:EEnum" name="SetMode">
     <eLiterals name="CHAINED"/>
     <eLiterals name="INDEXED" value="1"/>
+    <eLiterals name="VSAM_INDEX" value="2" literal="VSAM_INDEX"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="SetOrder">
     <eLiterals name="FIRST"/>
@@ -490,5 +513,22 @@
         eOpposite="#//Set/viaMembers"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="symbolicDisplacementName"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VsamIndex" eSuperTypes="#//DiagramNode">
+    <eOperations name="getMemberRole" ordered="false" lowerBound="1" eType="#//MemberRole"/>
+    <eOperations name="getRecord" ordered="false" lowerBound="1" eType="#//SchemaRecord"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//Set"
+        eOpposite="#//Set/vsamIndex"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="VsamLengthType">
+    <eLiterals name="FIXED" literal="FIXED"/>
+    <eLiterals name="VARIABLE" value="1" literal="VARIABLE"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VsamType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lengthType" eType="#//VsamLengthType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="record" lowerBound="1"
+        eType="#//SchemaRecord" eOpposite="#//SchemaRecord/vsamType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="spanned" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
   </eClassifiers>
 </ecore:EPackage>
