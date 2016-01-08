@@ -227,7 +227,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 			boolean active = false;
 			for (String line = in.readLine(); line != null; line = in.readLine()) {
 				if (line.startsWith("         MEMBER IS ")) {
-					active = line.startsWith("         MEMBER IS " + recordName);
+					active = line.trim().equals("         MEMBER IS " + recordName);
 				} else if (active && 
 						   (line.indexOf(" ASCENDING") > -1 || 
 							line.indexOf(" DESCENDING") > -1) &&
