@@ -61,7 +61,7 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	
 	private void comments() {
 		if (schema.comments) {
-			for (comment in schema.comments) {
+			schema.comments.each { comment ->
 				without_tab "comments ${withQuotes(comment)}"
 			}
 		}
@@ -138,7 +138,7 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	}
 	
 	private void areas() {
-		for (area in schema.areas) {
+		schema.areas.each { area ->
 			if (area.procedures || !area.areaSpecifications) {				
 				AreaSyntaxBuilder areaSyntaxBuilder = 
 					new AreaSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])								
@@ -151,7 +151,7 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	}
 	
 	private void records() {
-		for (record in schema.records) {
+		schema.records.each { record ->
 			
 			RecordSyntaxBuilder recordSyntaxBuilder =
 				new RecordSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])
@@ -164,7 +164,7 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	}
 	
 	private void sets() {
-		for (set in schema.sets) {
+		schema.sets.each { set ->
 			
 			SetSyntaxBuilder setSyntaxBuilder =
 				new SetSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])

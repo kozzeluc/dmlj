@@ -44,7 +44,7 @@ class AreaSyntaxBuilder extends AbstractSyntaxBuilder<SchemaArea> {
 		if (area.procedures && generateName) {
 			blank_line()
 		}
-		for (call in area.procedures) {
+		area.procedures.each { call ->
 			def procedureCallSpecification = call.getProcedure().name
 			procedureCallSpecification <<= ' '
 			procedureCallSpecification <<= call.callTime

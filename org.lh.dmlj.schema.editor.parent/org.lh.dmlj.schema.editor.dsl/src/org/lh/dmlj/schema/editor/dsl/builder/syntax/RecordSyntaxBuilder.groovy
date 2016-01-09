@@ -88,7 +88,7 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	
 	private void calc() {
 		without_tab 'calc {'
-		for (keyElement in record.calcKey.elements) {			
+		record.calcKey.elements.each { keyElement ->			
 			with_1_tab "element '${keyElement.element.name}'"
 		}			
 		with_1_tab "duplicates '${replaceUnderscoresBySpaces(record.calcKey.duplicatesOption)}'"
@@ -118,7 +118,7 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	
 	private void vsamCalc() {
 		without_tab 'vsamCalc {'
-		for (keyElement in record.calcKey.elements) {
+		record.calcKey.elements.each { keyElement ->
 			with_1_tab "element '${keyElement.element.name}'"
 		}
 		with_1_tab "duplicates '${replaceUnderscoresBySpaces(record.calcKey.duplicatesOption)}'"
@@ -188,7 +188,7 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 		if (record.procedures) {
 			blank_line()	
 		}
-		for (call in record.procedures) {
+		record.procedures.each { call ->
 			without_tab "procedure '${call.procedure.name} ${call.callTime} ${replaceUnderscoresBySpaces(call.verb)}'"
 		}
 	}
@@ -196,7 +196,7 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	private void elements() {
 		blank_line()
 		without_tab 'elements {'
-		for (element in record.rootElements) {
+		record.rootElements.each { element ->
 			if (element != record.rootElements[0]) {
 				blank_line()
 			}

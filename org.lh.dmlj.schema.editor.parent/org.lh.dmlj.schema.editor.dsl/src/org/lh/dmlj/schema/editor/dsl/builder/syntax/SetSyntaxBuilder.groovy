@@ -150,7 +150,7 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 	}
 	
 	private void members() {
-		for (memberRole in set.members) {
+		set.members.each { memberRole ->
 			blank_line()
 			without_tab "member '${memberRole.record.name}' {"
 			memberPointers(memberRole)
@@ -187,7 +187,7 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 		if (set.order == SetOrder.SORTED && memberRole.sortKey) {
 			blank_line()
 			with_1_tab "key {"
-			for (KeyElement keyElement in memberRole.sortKey.elements) {
+			memberRole.sortKey.elements.each { KeyElement keyElement ->
 				String sequence = keyElement.sortSequence.toString().toLowerCase()
 				String elementName = keyElement.dbkey ? 'dbkey' : keyElement.element.name
 				with_2_tabs "$sequence '$elementName'"
@@ -235,7 +235,7 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 			with_3_tabs "}"
 		}
 		
-		for (DiagramLocation bendpoint in firstConnectionPart.bendpointLocations) {			
+		firstConnectionPart.bendpointLocations.each { DiagramLocation bendpoint ->			
 			blank_line()
 			with_3_tabs "bendpoint {"
 			with_4_tabs "x ${xOrY(bendpoint.x)}"
@@ -247,7 +247,7 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 			blank_line()			
 			with_3_tabs "connectors {"
 			with_4_tabs "label ${withQuotes(firstConnectionPart.connector.label)}"
-			for (ConnectionPart connectionPart in memberRole.connectionParts) {
+			memberRole.connectionParts.each { ConnectionPart connectionPart ->
 				blank_line()
 				with_4_tabs "connector {"
 				with_5_tabs "x ${xOrY(connectionPart.getConnector().diagramLocation.x)}"
@@ -256,7 +256,7 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 			}
 			with_3_tabs "}"	
 			
-			for (DiagramLocation bendpoint in secondConnectionPart.bendpointLocations) {
+			secondConnectionPart.bendpointLocations.each {DiagramLocation bendpoint ->
 				blank_line()
 				with_3_tabs "bendpoint {"
 				with_4_tabs "x ${xOrY(bendpoint.x)}"

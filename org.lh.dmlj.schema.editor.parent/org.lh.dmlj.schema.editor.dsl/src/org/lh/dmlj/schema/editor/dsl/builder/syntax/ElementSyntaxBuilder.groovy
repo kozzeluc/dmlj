@@ -68,7 +68,7 @@ class ElementSyntaxBuilder extends AbstractSyntaxBuilder<Element> {
 	private void children() {
 		if (element.children) {
 			without_tab 'children {'
-			for (child in element.children) {
+			element.children.each { child ->
 				if (child != element.children[0]) {
 					blank_line()
 				}
@@ -110,7 +110,7 @@ class ElementSyntaxBuilder extends AbstractSyntaxBuilder<Element> {
 				if (occursSpecification.dependingOn) {
 					with_1_tab "dependingOn '${occursSpecification.dependingOn.name}'"		
 				}
-				for (indexElement in occursSpecification.indexElements) {
+				occursSpecification.indexElements.each { indexElement ->
 					if (indexElement.baseName || indexElement.baseName != indexElement.name) {
 						with_1_tab "indexedBy {"
 						with_2_tabs "name '${indexElement.name}'"
