@@ -9,21 +9,48 @@
     <packaging>pom</packaging>
     <properties>
         <tycho-version>0.24.0</tycho-version>
+        <groovy-eclipse-compiler-version>2.9.1-01</groovy-eclipse-compiler-version>
+        <groovy-eclipse-batch-version>2.3.7-01</groovy-eclipse-batch-version>
         <eclipse>http://download.eclipse.org/releases/mars</eclipse>
     </properties>
     <modules>
         <module>org.lh.dmlj.schema.editor.core</module>
+        <module>org.lh.dmlj.schema.editor.dsl</module>
         <module>org.lh.dmlj.schema.editor.dictionary.tools</module>
         <module>org.lh.dmlj.schema.editor.model</module>
         <module>org.lh.dmlj.schema.editor.service</module>
         <module>org.lh.dmlj.schema.editor.service.api</module>
         <module>org.lh.dmlj.schema.editor.tika_1.4</module>
         <module>org.lh.dmlj.schema.editor.help</module>
+        <module>org.lh.dmlj.schema.editor.groovy</module>
         <module>org.lh.dmlj.schema.editor.feature</module>
         <module>org.lh.dmlj.schema.editor.updatesite</module>
     </modules>
     <build>
         <plugins>
+        	<plugin>
+	        <groupId>org.eclipse.tycho</groupId>
+	    	<artifactId>tycho-compiler-plugin</artifactId>
+	    	<version>${tycho-version}</version>
+	    	<configuration>
+	    	    <compilerId>groovy-eclipse-compiler</compilerId>
+	    	    <verbose>false</verbose>
+	    	    <!-- make sure no sources are included in the target .jar files: -->
+	    	    <excludeResources>**/*.groovy</excludeResources>
+	    	</configuration>	    
+		    <dependencies>
+		        <dependency>
+			        <groupId>org.codehaus.groovy</groupId>
+			        <artifactId>groovy-eclipse-compiler</artifactId>
+			        <version>${groovy-eclipse-compiler-version}</version>
+		        </dependency>
+		        <dependency>
+			        <groupId>org.codehaus.groovy</groupId>
+			        <artifactId>groovy-eclipse-batch</artifactId>
+			        <version>${groovy-eclipse-batch-version}</version>
+		        </dependency>
+		    </dependencies>
+	    </plugin>
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-maven-plugin</artifactId>

@@ -71,4 +71,17 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.lh.dmlj.schema.editor.groovy"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.lh.dmlj.schema.editor.dsl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
