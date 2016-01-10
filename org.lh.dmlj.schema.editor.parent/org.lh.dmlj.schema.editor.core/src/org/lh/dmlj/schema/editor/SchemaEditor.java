@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -84,7 +84,6 @@ import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.gef.ui.rulers.RulerComposite;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -111,7 +110,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -333,13 +331,6 @@ public class SchemaEditor
 		IAction zoomOut = new ZoomOutAction(root.getZoomManager());
 		getActionRegistry().registerAction(zoomIn);
 		getActionRegistry().registerAction(zoomOut);		
-		
-		IHandlerService handlerService = 
-			(IHandlerService)PlatformUI.getWorkbench().getService(IHandlerService.class);
-		handlerService.activateHandler(zoomIn.getActionDefinitionId(), 
-									   new ActionHandler(zoomIn));
-		handlerService.activateHandler(zoomOut.getActionDefinitionId(), 
-				   					   new ActionHandler(zoomOut));		
 		
 		// configure the graphical viewer...
 		GraphicalViewer viewer = getGraphicalViewer();
