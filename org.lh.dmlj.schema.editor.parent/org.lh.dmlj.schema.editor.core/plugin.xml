@@ -336,6 +336,12 @@
                id="org.lh.dmlj.schema.editor.propertyTabSchemaSyntax"
                label="Syntax">
          </propertyTab>
+         <propertyTab
+               afterTab="org.lh.dmlj.schema.editor.propertyTabSyntax"
+               category="schema"
+               id="org.lh.dmlj.schema.editor.propertyTabDSL"
+               label="DSL">
+         </propertyTab>
       </propertyTabs>
    </extension>
    <extension
@@ -367,6 +373,14 @@
             </input>
          </propertySection>
          <propertySection
+               class="org.lh.dmlj.schema.editor.property.section.SchemaDSLSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSchemaDSL"
+               tab="org.lh.dmlj.schema.editor.propertyTabDSL">
+            <input
+                  type="org.lh.dmlj.schema.Schema">
+            </input>
+         </propertySection>
+         <propertySection
                class="org.lh.dmlj.schema.editor.property.section.DiagramLabelSection"
                id="org.lh.dmlj.schema.editor.propertySectionDiagramLabel"
                tab="org.lh.dmlj.schema.editor.propertyTabGeneral">
@@ -392,6 +406,14 @@
                class="org.lh.dmlj.schema.editor.property.section.AreaSyntaxSection"
                id="org.lh.dmlj.schema.editor.propertySectionAreaSyntax"
                tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
+            <input
+                  type="org.lh.dmlj.schema.SchemaArea">
+            </input>
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.section.AreaDSLSection"
+               id="org.lh.dmlj.schema.editor.propertySectionAreaDSL"
+               tab="org.lh.dmlj.schema.editor.propertyTabDSL">
             <input
                   type="org.lh.dmlj.schema.SchemaArea">
             </input>
@@ -448,6 +470,14 @@
                class="org.lh.dmlj.schema.editor.property.section.RecordSyntaxSection"
                id="org.lh.dmlj.schema.editor.propertySectionRecordSyntax"
                tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
+            <input
+                  type="org.lh.dmlj.schema.SchemaRecord">
+            </input>
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.section.RecordDSLSection"
+               id="org.lh.dmlj.schema.editor.propertySectionRecordDSL"
+               tab="org.lh.dmlj.schema.editor.propertyTabDSL">
             <input
                   type="org.lh.dmlj.schema.SchemaRecord">
             </input>
@@ -520,6 +550,14 @@
                class="org.lh.dmlj.schema.editor.property.section.SetSyntaxSection"
                id="org.lh.dmlj.schema.editor.propertySectionSetSyntax"
                tab="org.lh.dmlj.schema.editor.propertyTabSyntax">
+            <input
+                  type="org.lh.dmlj.schema.MemberRole">
+            </input>
+         </propertySection>
+         <propertySection
+               class="org.lh.dmlj.schema.editor.property.section.SetDSLSection"
+               id="org.lh.dmlj.schema.editor.propertySectionSetDSL"
+               tab="org.lh.dmlj.schema.editor.propertyTabDSL">
             <input
                   type="org.lh.dmlj.schema.MemberRole">
             </input>

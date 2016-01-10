@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,6 +28,9 @@ import groovy.transform.CompileStatic;
 class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	
 	private Schema schema
+	private boolean generateAreaDSL = true
+	private boolean generateRecordDSL = true
+	private boolean generateSetDSL = true
 	
 	@Override
 	protected String doBuild(Schema model) {	
@@ -138,41 +141,56 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	}
 	
 	private void areas() {
-		schema.areas.each { area ->
-			if (area.procedures || !area.areaSpecifications) {				
-				AreaSyntaxBuilder areaSyntaxBuilder = 
-					new AreaSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])								
-				blank_line()
-				without_tab "area '${area.name}' {"
-				areaSyntaxBuilder.build(area)
-				without_tab '}'
+		if (generateAreaDSL) {
+			schema.areas.each { area ->
+				if (area.procedures || !area.areaSpecifications) {				
+					AreaSyntaxBuilder areaSyntaxBuilder = 
+						new AreaSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])								
+					blank_line()
+					without_tab "area '${area.name}' {"
+					areaSyntaxBuilder.build(area)
+					without_tab '}'
+				}
 			}
+		} else {
+			blank_line()
+			without_tab '// suppressed: area DSL'
 		}
 	}
 	
 	private void records() {
-		schema.records.each { record ->
-			
-			RecordSyntaxBuilder recordSyntaxBuilder =
-				new RecordSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])
-			
+		if (generateRecordDSL) {
+			schema.records.each { record ->
+				
+				RecordSyntaxBuilder recordSyntaxBuilder =
+					new RecordSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])
+				
+				blank_line()
+				without_tab "record '${record.name}' {"
+				recordSyntaxBuilder.build(record)
+				without_tab '}'
+			}
+		} else {
 			blank_line()
-			without_tab "record '${record.name}' {"
-			recordSyntaxBuilder.build(record)
-			without_tab '}'
+			without_tab '// suppressed: record DSL'
 		}
 	}
 	
 	private void sets() {
-		schema.sets.each { set ->
-			
-			SetSyntaxBuilder setSyntaxBuilder =
-				new SetSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])
-			
+		if (generateSetDSL) {
+			schema.sets.each { set ->
+				
+				SetSyntaxBuilder setSyntaxBuilder =
+					new SetSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])
+				
+				blank_line()
+				without_tab "set '${set.name}' {"
+				setSyntaxBuilder.build(set)
+				without_tab '}'
+			}
+		} else {
 			blank_line()
-			without_tab "set '${set.name}' {"
-			setSyntaxBuilder.build(set)
-			without_tab '}'
+			without_tab '// suppressed: set DSL'
 		}
 	}	
 

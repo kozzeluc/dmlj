@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Groovy Wrapper Plug-in
+Bundle-Name: CA IDMS/DB Schema Diagram Editor Groovy Wrapper
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.groovy
 Bundle-Version: 2.4.5
 Bundle-ClassPath: groovy-2.4.5.jar
@@ -91,3 +91,4 @@ Export-Package: groovy.beans,
  org.codehaus.groovy.vmplugin.v6,
  org.codehaus.groovy.vmplugin.v7
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

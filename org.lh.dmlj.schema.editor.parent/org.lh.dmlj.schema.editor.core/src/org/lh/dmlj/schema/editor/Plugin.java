@@ -283,6 +283,9 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 			getPreferenceStore().getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
 		getPreferenceStore().addPropertyChangeListener(this);
 		
+		// avoid a delay the first time the user selects a DSL tab in the Properties view
+		// note: the delay can only be avoided AFTER the warm up job has completed
+		new DSLWarmUpJob().schedule(); 
 	}
 
 	/*

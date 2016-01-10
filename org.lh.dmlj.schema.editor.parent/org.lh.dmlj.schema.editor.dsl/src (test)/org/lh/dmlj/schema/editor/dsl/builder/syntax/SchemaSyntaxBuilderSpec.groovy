@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -541,6 +541,49 @@ diagram {
 		then: "the builder creates the syntax that describes the schema, explicitly defining the"
 			  "DDLDCSCR area"
 		syntax.indexOf("area 'DDLDCSCR'") > -1
+	}
+	
+	def "suppress the generation of area, record and set DSL"() {
+		
+		given: "a DSL syntax builder configured for not generating the DSL for areas, records and sets"
+		SchemaSyntaxBuilder builder = 
+			new SchemaSyntaxBuilder(generateAreaDSL : false, generateRecordDSL : false, generateSetDSL : false)
+		Schema schema = loadSchema('testdata/EMPSCHM version 100.schema')
+		assert schema
+		
+		when: "passing the schema to the builder's build method"
+		String syntax = builder.build(schema)
+		
+		then: "the builder creates the syntax that describes the schema but suppresses the DSL"
+		      "for areas, records and sets"
+		syntax == expected(
+"""
+name 'EMPSCHM'
+version 100
+description 'EMPLOYEE DEMO DATABASE'
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
+ 
+diagram {
+    label {
+        description "Employee Demo Database"
+        x 33
+        y 551
+        width 169
+        height 45
+    }
+    showRulersAndGuides
+    showGrid
+    snapToGuides
+    snapToGrid
+    snapToGeometry
+}
+
+// suppressed: area DSL
+
+// suppressed: record DSL
+
+// suppressed: set DSL
+""")
 	}
 	
 }
