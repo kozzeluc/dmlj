@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -246,7 +246,9 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 		if (secondConnectionPart) {
 			blank_line()			
 			with_3_tabs "connectors {"
-			with_4_tabs "label ${withQuotes(firstConnectionPart.connector.label)}"
+			if (firstConnectionPart.connector.label) {
+				with_4_tabs "label ${withQuotes(firstConnectionPart.connector.label)}"
+			}
 			memberRole.connectionParts.each { ConnectionPart connectionPart ->
 				blank_line()
 				with_4_tabs "connector {"

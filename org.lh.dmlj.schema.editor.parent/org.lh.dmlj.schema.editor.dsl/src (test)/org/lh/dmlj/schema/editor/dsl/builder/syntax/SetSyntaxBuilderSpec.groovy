@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -932,6 +932,55 @@ member 'EMPLOYEE' {
  
             end {
                 x 95
+                y 0
+            }
+        }
+    }
+}
+"""))
+	}
+	
+	def "Diagram: no connector label"() {
+		given: "a record syntax builder andthe IDMSNTWK version 1 (Release 18.5) schema"
+		SetSyntaxBuilder builder = new SetSyntaxBuilder()
+		Schema schema = loadSchema('testdata/IDMSNTWK version 1 (Release 18.5).schema')
+		org.lh.dmlj.schema.Set set = schema.getSet('OOAK-SYS')
+		set.members[0].connectionParts[0].connector.label = null
+		set.members[0].connectionParts[1].connector.label = null
+		
+		when: "passing the set to the builder's build method"
+		String syntax = builder.build(set)
+		
+		then: "the builder creates the syntax that describes the set"
+		syntax.endsWith(expected(
+"""
+    diagram {
+        label {
+            x 2594
+            y 295
+        }
+ 
+        line {
+            start {
+                x 25
+                y 0
+            }
+
+            connectors {
+
+                connector {
+                    x 152
+                    y 437
+                }
+
+                connector {
+                    x 2650
+                    y 294
+                }
+            }
+
+            end {
+                x 9
                 y 0
             }
         }
