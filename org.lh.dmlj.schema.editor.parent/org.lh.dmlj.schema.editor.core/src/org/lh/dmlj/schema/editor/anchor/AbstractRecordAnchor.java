@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,13 +25,12 @@ import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
-public abstract class AbstractLockedRecordAnchor extends ChopboxAnchor {
+public abstract class AbstractRecordAnchor extends ChopboxAnchor {
 
-	protected PrecisionPoint lockedOffset;
 	protected ConnectionPart connectionPart;
 	protected Schema		 schema;
 	
-	protected AbstractLockedRecordAnchor(RecordFigure figure, 
+	protected AbstractRecordAnchor(RecordFigure figure, 
 									     ConnectionPart connectionPart) {
 		super(figure);
 		this.connectionPart = connectionPart;	
@@ -64,25 +63,22 @@ public abstract class AbstractLockedRecordAnchor extends ChopboxAnchor {
 			DiagramLocation modelEndpoint = getModelEndpoint();
 			offset = 
 				new PrecisionPoint(modelEndpoint.getX(), modelEndpoint.getY());
-		} else if (lockedOffset == null) {			
-			// offset not stored in the model and not previously calculated;
-			// compute it using both the figure's current location and the 
-			// location returned by calling getDefaultLocation()...				
+		} else {
+			// offset not stored in the model; compute it using both the figure's current location 
+			// and the location returned by calling getDefaultLocation()...				
 			Rectangle figureBounds = getOwner().getBounds().getCopy();
 			getOwner().translateToAbsolute(figureBounds);
 			Point defaultLocation = getDefaultLocation(reference);							
-			lockedOffset = 
+			PrecisionPoint workOffset = 
 				new PrecisionPoint(defaultLocation.x - figureBounds.x, 
 								   defaultLocation.y - figureBounds.y);
 			// unscale the offset if needed...
 			double zoomLevel = schema.getDiagramData().getZoomLevel();
 			if (zoomLevel != 1.0) {
-				lockedOffset.setPreciseX(lockedOffset.preciseX() / zoomLevel);
-				lockedOffset.setPreciseY(lockedOffset.preciseY() / zoomLevel);
+				workOffset.setPreciseX(workOffset.preciseX() / zoomLevel);
+				workOffset.setPreciseY(workOffset.preciseY() / zoomLevel);
 			}
-			offset = lockedOffset.getPreciseCopy();
-		} else {
-			offset = lockedOffset.getPreciseCopy();
+			offset = workOffset.getPreciseCopy();
 		}
 		
 		// scale the (now available) offset...

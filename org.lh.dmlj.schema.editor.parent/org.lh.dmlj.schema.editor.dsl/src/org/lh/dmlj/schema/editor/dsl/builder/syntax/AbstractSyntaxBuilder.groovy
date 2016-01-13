@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -34,6 +34,9 @@ abstract class AbstractSyntaxBuilder<T> {
 	}
 	
 	protected static String withQuotes(Object anObject) {
+		if (!anObject) {
+			return "'null'"
+		}
 		String value = anObject.toString()
 		if (value.indexOf('\\') > -1) {
 			'$' + '/' + value + '/' + '$'

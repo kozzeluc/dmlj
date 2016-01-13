@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -42,20 +42,17 @@ import org.lh.dmlj.schema.editor.figure.RecordFigure;
  *         of the 4 corners on the record figure, depending on the reference 
  *         location.</li>
  *     </ul>
- *     In either case, the anchor location will be locked (i.e. the same value
- *     will be returned until the targetEndpointLocation attribute of the 
- *     connection's ConnectionPart model object is set)
  * </ul>
  */
-public class LockedRecordTargetAnchor extends AbstractLockedRecordAnchor {
+public class RecordTargetAnchor extends AbstractRecordAnchor {
 
 	/**
-	 * Constructs a LockedRecordTargetAnchor with the given record figure.
+	 * Constructs a RecordTargetAnchor with the given record figure.
 	 * @param figure The target (member) record figure
 	 * @param connectionPart The ConnectionPart model object representing the 
 	 *        connection
 	 */
-	public LockedRecordTargetAnchor(RecordFigure figure, 
+	public RecordTargetAnchor(RecordFigure figure, 
 									ConnectionPart connectionPart) {
 		super(figure, connectionPart);
 	}

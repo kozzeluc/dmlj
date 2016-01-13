@@ -35,8 +35,8 @@ import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.StorageMode;
-import org.lh.dmlj.schema.editor.anchor.LockedRecordSourceAnchor;
-import org.lh.dmlj.schema.editor.anchor.LockedRecordTargetAnchor;
+import org.lh.dmlj.schema.editor.anchor.RecordSourceAnchor;
+import org.lh.dmlj.schema.editor.anchor.RecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
@@ -220,7 +220,7 @@ public class RecordEditPart
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
-		return new LockedRecordSourceAnchor((RecordFigure) getFigure(), 
+		return new RecordSourceAnchor((RecordFigure) getFigure(), 
 									   		(ConnectionPart) connection.getModel());
 	}
 	
@@ -239,7 +239,7 @@ public class RecordEditPart
 	
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
-		return new LockedRecordTargetAnchor((RecordFigure) getFigure(), 
+		return new RecordTargetAnchor((RecordFigure) getFigure(), 
 										    (ConnectionPart) connection.getModel());
 	}
 	

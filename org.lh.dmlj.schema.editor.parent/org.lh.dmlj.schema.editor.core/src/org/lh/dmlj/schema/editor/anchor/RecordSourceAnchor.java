@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,20 +30,18 @@ import org.lh.dmlj.schema.editor.figure.RecordFigure;
  *     the connection endpoint.<br><br></li>
  * <li>If the sourceEndpointLocation attribute of the connection's 
  *     ConnectionPart model object is NOT set, the location returned by a 
- *     standard chopbox anchor for the record figure will be used and locked 
- *     (i.e. the same value will be returned until the sourceEndpointLocation 
- *     attribute of the connection's ConnectionPart model object is set).</li>
+ *     standard chopbox anchor for the record figure will be used.</li>
  * </ul>
  */
-public class LockedRecordSourceAnchor extends AbstractLockedRecordAnchor {
+public class RecordSourceAnchor extends AbstractRecordAnchor {
 
 	/**
-	 * Constructs a LockedRecordSourceAnchor with the given record figure.
+	 * Constructs a RecordSourceAnchor with the given record figure.
 	 * @param figure The source (owner) record figure
 	 * @param connectionPart The ConnectionPart model object representing the 
 	 *        connection
 	 */
-	public LockedRecordSourceAnchor(RecordFigure figure, 
+	public RecordSourceAnchor(RecordFigure figure, 
 									ConnectionPart connectionPart) {
 		super(figure, connectionPart);
 	}
