@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -112,6 +112,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 	public LocationModeDialog(Shell parentShell, SchemaRecord record) {
 		super(parentShell);
 		this.record = record;
+		setShellStyle(getShellStyle() | SWT.RESIZE); 
 	}	
 	
 	protected void addCalcElements() {

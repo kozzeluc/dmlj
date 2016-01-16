@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -41,5 +41,7 @@ public abstract class PreferenceConstants {
 	
 	public static final String SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX = 
 		"sortSchemaEntitiesOnExportToSyntax";
+	
+	public static final String OPERATING_SYSTEM_TEXT_SIZE = "operatingSystemTextSize";
 	
 }

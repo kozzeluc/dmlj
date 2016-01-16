@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,12 +28,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
-import org.eclipse.swt.widgets.Text;
 
 public class MainPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	
@@ -66,6 +66,13 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	private Text   textDiagramLabelOrganisation;
 	private Button btnDiagramLabelShowLastModified;
 	private Text textDiagramLabelLastModifiedPattern;
+	private Group grpFontSizeAdjustment;
+	private Button btnFontSize100;
+	private Button btnFontSize125;
+	private Button btnFontSize150;
+	private Button btnFontSize175;
+	private Label lblNewLabel;
+	private Label lblNewLabel_1;
 	
 	private static void initializeDiagramAttributeComboValues(Combo combo) {
 		combo.add(FALSE);
@@ -111,8 +118,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	protected Control createContents(Composite parent) {
 		
 		Composite container = new Composite(parent, SWT.NONE);		
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(3, false);
 		container.setLayout(layout);
+		new Label(container, SWT.NONE);
 		
 		Group compositeUnits = new Group(container, SWT.NONE);
 		compositeUnits.setText("Units");
@@ -129,13 +137,12 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		
 		btnPixels = new Button(compositeUnits, SWT.RADIO);
 		btnPixels.setText("Pixels");
+		new Label(container, SWT.NONE);
 		
 		Group compositeSchemaDiagramProperties = new Group(container, SWT.NONE);
 		compositeSchemaDiagramProperties.setText("Default diagram properties for new and imported schemas");
-		compositeSchemaDiagramProperties.setLayout(new GridLayout(2, false));
-		GridData gd_compositeSchemaDiagramProperties = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-		gd_compositeSchemaDiagramProperties.verticalIndent = 10;
-		compositeSchemaDiagramProperties.setLayoutData(gd_compositeSchemaDiagramProperties);
+		compositeSchemaDiagramProperties.setLayout(new GridLayout(4, false));
+		compositeSchemaDiagramProperties.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		
 		Label lblShowRulers = new Label(compositeSchemaDiagramProperties, SWT.NONE);
 		lblShowRulers.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SHOW_RULERS));
@@ -147,6 +154,20 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		comboShowRulers.setLayoutData(gd_comboShowRulers);
 		comboShowRulers.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_RULERS));
 		
+		Label lblSnapToGuides = new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		GridData gd_lblSnapToGuides = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblSnapToGuides.horizontalIndent = 10;
+		lblSnapToGuides.setLayoutData(gd_lblSnapToGuides);
+		lblSnapToGuides.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SNAP_TO_GUIDES));
+		lblSnapToGuides.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GUIDES));
+		
+		comboSnapToGuides = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
+		GridData gd_comboSnapToGuides = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_comboSnapToGuides.widthHint = 25;
+		comboSnapToGuides.setLayoutData(gd_comboSnapToGuides);
+		comboSnapToGuides.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GUIDES));
+		initializeDiagramAttributeComboValues(comboSnapToGuides);
+		
 		Label lblShowGrid = new Label(compositeSchemaDiagramProperties, SWT.NONE);
 		lblShowGrid.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SHOW_GRID));
 		lblShowGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_GRID));
@@ -157,17 +178,10 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		comboShowGrid.setLayoutData(gd_comboShowGrid);
 		comboShowGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_GRID));
 		
-		Label lblSnapToGuides = new Label(compositeSchemaDiagramProperties, SWT.NONE);
-		lblSnapToGuides.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SNAP_TO_GUIDES));
-		lblSnapToGuides.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GUIDES));
-		
-		comboSnapToGuides = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboSnapToGuides = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboSnapToGuides.widthHint = 25;
-		comboSnapToGuides.setLayoutData(gd_comboSnapToGuides);
-		comboSnapToGuides.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GUIDES));
-		
 		Label lblSnapToGrid = new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		GridData gd_lblSnapToGrid = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblSnapToGrid.horizontalIndent = 10;
+		lblSnapToGrid.setLayoutData(gd_lblSnapToGrid);
 		lblSnapToGrid.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SNAP_TO_GRID));
 		lblSnapToGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GRID));
 		
@@ -176,8 +190,14 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		gd_comboSnapToGrid.widthHint = 25;
 		comboSnapToGrid.setLayoutData(gd_comboSnapToGrid);
 		comboSnapToGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GRID));
+		initializeDiagramAttributeComboValues(comboSnapToGrid);
+		new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		new Label(compositeSchemaDiagramProperties, SWT.NONE);
 		
 		Label lblSnapToGeometry = new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		GridData gd_lblSnapToGeometry = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblSnapToGeometry.horizontalIndent = 10;
+		lblSnapToGeometry.setLayoutData(gd_lblSnapToGeometry);
 		lblSnapToGeometry.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SNAP_TO_GEOMETRY));
 		lblSnapToGeometry.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GEOMETRY));
 		
@@ -186,6 +206,8 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		gd_comboSnapToGeometry.widthHint = 25;
 		comboSnapToGeometry.setLayoutData(gd_comboSnapToGeometry);
 		comboSnapToGeometry.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GEOMETRY));
+		initializeDiagramAttributeComboValues(comboSnapToGeometry);
+		new Label(container, SWT.NONE);
 		
 		Group grpDiagramLabel = new Group(container, SWT.NONE);
 		grpDiagramLabel.setLayout(new GridLayout(3, false));
@@ -207,22 +229,53 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		
 		textDiagramLabelLastModifiedPattern = new Text(grpDiagramLabel, SWT.BORDER);
 		textDiagramLabelLastModifiedPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(container, SWT.NONE);
+		
+		grpFontSizeAdjustment = new Group(container, SWT.NONE);
+		grpFontSizeAdjustment.setLayout(new GridLayout(4, false));
+		grpFontSizeAdjustment.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 2, 1));
+		grpFontSizeAdjustment.setText("Font Size Adjustment");
+		
+		lblNewLabel = new Label(grpFontSizeAdjustment, SWT.NONE);
+		lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 4, 1));
+		lblNewLabel.setText("Select the text size configured in your OS:");
+		
+		btnFontSize100 = new Button(grpFontSizeAdjustment, SWT.RADIO);
+		btnFontSize100.setText("100%");
+		
+		btnFontSize125 = new Button(grpFontSizeAdjustment, SWT.RADIO);
+		btnFontSize125.setText("125%");
+		
+		btnFontSize150 = new Button(grpFontSizeAdjustment, SWT.RADIO);
+		btnFontSize150.setText("150%");
+		
+		btnFontSize175 = new Button(grpFontSizeAdjustment, SWT.RADIO);
+		btnFontSize175.setText("175%");
+		
+		lblNewLabel_1 = new Label(grpFontSizeAdjustment, SWT.WRAP);
+		GridData gd_lblNewLabel_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+		gd_lblNewLabel_1.widthHint = 400;
+		lblNewLabel_1.setLayoutData(gd_lblNewLabel_1);
+		lblNewLabel_1.setText("This setting affects the font size used in your diagrams; changing it requires a workbench restart.");
+		
+		new Label(container, SWT.NONE);
 		
 		btnLogDiagnosticMessages = new Button(container, SWT.CHECK);
-		btnLogDiagnosticMessages.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 2, 1));
+		GridData gd_btnLogDiagnosticMessages = new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 2, 1);
+		gd_btnLogDiagnosticMessages.verticalIndent = 10;
+		btnLogDiagnosticMessages.setLayoutData(gd_btnLogDiagnosticMessages);
 		btnLogDiagnosticMessages.setText("Log diagnostic messages to the workspace log");
+		new Label(container, SWT.NONE);
 		
 		lbldontCheckThis = new Label(container, SWT.NONE);
 		GridData gd_lbldontCheckThis = new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1);
+		gd_lbldontCheckThis.verticalIndent = -5;
 		gd_lbldontCheckThis.horizontalIndent = 17;
 		lbldontCheckThis.setLayoutData(gd_lbldontCheckThis);
 		lbldontCheckThis.setText("(don't check this option unless asked)");
 		
 		initializeDiagramAttributeComboValues(comboShowRulers);
 		initializeDiagramAttributeComboValues(comboShowGrid);
-		initializeDiagramAttributeComboValues(comboSnapToGuides);
-		initializeDiagramAttributeComboValues(comboSnapToGrid);
-		initializeDiagramAttributeComboValues(comboSnapToGeometry);
 		
 		initializeValues();
 		
@@ -271,6 +324,12 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		boolean snapToGeometry = store.getDefaultBoolean(PreferenceConstants.SNAP_TO_GEOMETRY);		
 		selectDiagramAttributeComboValue(comboSnapToGeometry, snapToGeometry);
 		
+		int operatingSystemTextSize = store.getDefaultInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
+		btnFontSize100.setSelection(operatingSystemTextSize == 100);
+		btnFontSize125.setSelection(operatingSystemTextSize == 125);
+		btnFontSize150.setSelection(operatingSystemTextSize == 150);
+		btnFontSize175.setSelection(operatingSystemTextSize == 175);
+		
 		boolean logDiagnosticMessages = 
 			store.getDefaultBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
 		btnLogDiagnosticMessages.setSelection(logDiagnosticMessages);
@@ -307,6 +366,12 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		selectDiagramAttributeComboValue(comboSnapToGrid, snapToGrid);
 		boolean snapToGeometry = store.getBoolean(PreferenceConstants.SNAP_TO_GEOMETRY);		
 		selectDiagramAttributeComboValue(comboSnapToGeometry, snapToGeometry);		
+		
+		int operatingSystemTextSize = store.getInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
+		btnFontSize100.setSelection(operatingSystemTextSize == 100);
+		btnFontSize125.setSelection(operatingSystemTextSize == 125);
+		btnFontSize150.setSelection(operatingSystemTextSize == 150);
+		btnFontSize175.setSelection(operatingSystemTextSize == 175);
 		
 		boolean logDiagnosticMessages = 
 			store.getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
@@ -363,7 +428,19 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		store.setValue(PreferenceConstants.SNAP_TO_GRID,
 					   getDiagramAttributeComboValue(comboSnapToGrid));
 		store.setValue(PreferenceConstants.SNAP_TO_GEOMETRY,
-					   getDiagramAttributeComboValue(comboSnapToGeometry));		
+					   getDiagramAttributeComboValue(comboSnapToGeometry));
+		
+		int operatingSystemTextSize;
+		if (btnFontSize125.getSelection()) {
+			operatingSystemTextSize = 125;
+		} else if (btnFontSize150.getSelection()) {
+			operatingSystemTextSize = 150;
+		} else if (btnFontSize175.getSelection()) {
+			operatingSystemTextSize = 175;
+		} else {
+			operatingSystemTextSize = 100;
+		}
+		store.setValue(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE, operatingSystemTextSize);
 		
 		store.setValue(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, 
 					   Boolean.valueOf(btnLogDiagnosticMessages.getSelection()));

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -80,6 +80,7 @@ public class AreaDialog extends Dialog {
 		super(parentShell);
 		this.areaSpecification = areaSpecification;
 		schema = areaSpecification.getArea().getSchema();
+		setShellStyle(getShellStyle() | SWT.RESIZE); 
 	}
 
 	private boolean anythingChanged() {

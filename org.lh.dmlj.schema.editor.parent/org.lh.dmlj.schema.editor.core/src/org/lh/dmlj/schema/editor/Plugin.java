@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -61,14 +61,10 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 	// The shared instance
 	private static Plugin 			plugin;
 			
-	private Font 					figureFont = 
-		new Font(Display.getCurrent(), "Arial", 6, SWT.NORMAL);
-	private Font 					figureFontBold = 
-		new Font(Display.getCurrent(), "Arial", 6, SWT.BOLD);
-	private Font 					figureFontItalic = 
-		new Font(Display.getCurrent(), "Arial", 6, SWT.ITALIC);
-	private Font 					figureFontSmall = 
-		new Font(Display.getCurrent(), "Arial", 5, SWT.NORMAL);
+	private Font 					figureFont;
+	private Font 					figureFontBold;
+	private Font 					figureFontItalic;
+	private Font 					figureFontSmall;
 	private Map<String, Image> 	 	images = new HashMap<String, Image>();
 	private boolean 				logDebugMessages;
 	private File 					tmpFolder;
@@ -259,6 +255,29 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		// create the fonts for the diagram editor
+		int operatingSystemTextSize = 
+			getPreferenceStore().getInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
+		int normalHeight;
+		int smallHeight;
+		if (operatingSystemTextSize == 100) {
+			normalHeight = 6;
+			smallHeight = 5;
+		} else if (operatingSystemTextSize == 125) {
+			normalHeight = 5;
+			smallHeight = 4;
+		} else if (operatingSystemTextSize == 150) {
+			normalHeight = 4;
+			smallHeight = 3;
+		} else {			
+			normalHeight = 3; // Note: 3 is too small and 4 too big...
+			smallHeight = 3;
+		}
+		figureFont = new Font(Display.getCurrent(), "Arial", normalHeight, SWT.NORMAL);
+		figureFontBold = new Font(Display.getCurrent(), "Arial", normalHeight, SWT.BOLD);
+		figureFontItalic = new Font(Display.getCurrent(), "Arial", normalHeight, SWT.ITALIC);
+		figureFontSmall = new Font(Display.getCurrent(), "Arial", smallHeight, SWT.NORMAL);
 		
 		// initialize the dictguide registry; this registry contains all imported dictionary guides
 		DictguidesRegistry.init(getStateLocation().toFile(),				 

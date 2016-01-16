@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -58,8 +58,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.SHOW_GRID, false);
 		store.setDefault(PreferenceConstants.SNAP_TO_GUIDES, true);
 		store.setDefault(PreferenceConstants.SNAP_TO_GRID, true);
-		store.setDefault(PreferenceConstants.SNAP_TO_GEOMETRY, true);		
+		store.setDefault(PreferenceConstants.SNAP_TO_GEOMETRY, true);	
 		
+		// operating system text size
+		store.setDefault(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE, 100);		
 	}
 
 }
