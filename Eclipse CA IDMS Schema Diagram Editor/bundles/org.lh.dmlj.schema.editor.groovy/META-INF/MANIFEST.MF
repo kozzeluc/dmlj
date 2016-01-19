@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor Groovy Wrapper
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.groovy
-Bundle-Version: 2.4.5
+Bundle-Version: 2.1.0.qualifier
 Bundle-ClassPath: groovy-2.4.5.jar
 Bundle-Vendor: Luc Hermans
 Export-Package: groovy.beans,
