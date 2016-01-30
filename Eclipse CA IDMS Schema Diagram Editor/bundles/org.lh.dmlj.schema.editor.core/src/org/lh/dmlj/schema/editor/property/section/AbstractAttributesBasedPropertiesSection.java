@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -236,7 +236,7 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 				return value.toString();
 			}
 		} else {
-			if (getHyperlinkHandler(attribute) != null) {
+			if (!isReadOnlyMode() && getHyperlinkHandler(attribute) != null) {
 				return "[...]";
 			} else {
 				return "";
@@ -283,8 +283,9 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 				// other cool things to happen in order to allow for more 
 				// sophisticated model manipulation; if a hyperlink is to be
 				// provided, make sure the user notices that by setting the 				
-				// cell's foreground color to blue...
-				if (getHyperlinkHandler(attribute) != null) {
+				// cell's foreground color to blue... don't show hyperlinks when
+				// in read-only mode
+				if (!isReadOnlyMode() && getHyperlinkHandler(attribute) != null) {
 					item.setForeground(1, ColorConstants.blue);
 				}				
 				item.setText(1, value);				
@@ -313,7 +314,9 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 	    target = getTarget(modelObject);
 	    
 	    // get the command stack from the editor and pass it to the property editor (all model 
-	    // changes are carried out via commands that are put and executed on the command stack)
+	    // changes are carried out via commands that are put and executed on the command stack);
+	    // always set the command stack, even when in read-only mode (the command stack shouldn't be
+	    // used)
 	    CommandStack commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
 	    Assert.isNotNull(commandStack, "no command stack available");
 	    propertyEditor.setCommandStack(commandStack);

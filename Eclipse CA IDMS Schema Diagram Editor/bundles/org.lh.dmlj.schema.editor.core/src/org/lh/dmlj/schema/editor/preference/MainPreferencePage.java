@@ -73,6 +73,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	private Button btnFontSize175;
 	private Label lblNewLabel;
 	private Label lblNewLabel_1;
+	private Button btnReadOnlyMode;
 	
 	private static void initializeDiagramAttributeComboValues(Combo combo) {
 		combo.add(FALSE);
@@ -259,14 +260,20 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		lblNewLabel_1.setText("This setting affects the font size used in your diagrams; changing it requires a workbench restart.");
 		
 		new Label(container, SWT.NONE);
+				
+		btnReadOnlyMode = new Button(container, SWT.CHECK);
+		GridData gd_btnReadOnly = new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 2, 1);
+		gd_btnReadOnly.verticalIndent = 10;
+		btnReadOnlyMode.setLayoutData(gd_btnReadOnly);
+		btnReadOnlyMode.setText("Open editors in read-only mode (requires close/re-open for open editors)");
+		new Label(container, SWT.NONE);
 		
 		btnLogDiagnosticMessages = new Button(container, SWT.CHECK);
-		GridData gd_btnLogDiagnosticMessages = new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 2, 1);
-		gd_btnLogDiagnosticMessages.verticalIndent = 10;
+		GridData gd_btnLogDiagnosticMessages = new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1);
 		btnLogDiagnosticMessages.setLayoutData(gd_btnLogDiagnosticMessages);
 		btnLogDiagnosticMessages.setText("Log diagnostic messages to the workspace log");
 		new Label(container, SWT.NONE);
-		
+				
 		lbldontCheckThis = new Label(container, SWT.NONE);
 		GridData gd_lbldontCheckThis = new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1);
 		gd_lbldontCheckThis.verticalIndent = -5;
@@ -330,6 +337,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnFontSize150.setSelection(operatingSystemTextSize == 150);
 		btnFontSize175.setSelection(operatingSystemTextSize == 175);
 		
+		boolean readOnlyMode = store.getDefaultBoolean(PreferenceConstants.READ_ONLY_MODE);
+		btnReadOnlyMode.setSelection(readOnlyMode);
+		
 		boolean logDiagnosticMessages = 
 			store.getDefaultBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
 		btnLogDiagnosticMessages.setSelection(logDiagnosticMessages);
@@ -372,6 +382,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnFontSize125.setSelection(operatingSystemTextSize == 125);
 		btnFontSize150.setSelection(operatingSystemTextSize == 150);
 		btnFontSize175.setSelection(operatingSystemTextSize == 175);
+		
+		boolean readOnlyMode = store.getBoolean(PreferenceConstants.READ_ONLY_MODE);
+		btnReadOnlyMode.setSelection(readOnlyMode);
 		
 		boolean logDiagnosticMessages = 
 			store.getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
@@ -441,6 +454,8 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 			operatingSystemTextSize = 100;
 		}
 		store.setValue(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE, operatingSystemTextSize);
+		
+		store.setValue(PreferenceConstants.READ_ONLY_MODE, Boolean.valueOf(btnReadOnlyMode.getSelection()));
 		
 		store.setValue(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, 
 					   Boolean.valueOf(btnLogDiagnosticMessages.getSelection()));

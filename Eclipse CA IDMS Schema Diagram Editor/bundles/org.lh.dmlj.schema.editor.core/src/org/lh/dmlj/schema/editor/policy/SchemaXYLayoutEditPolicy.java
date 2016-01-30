@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -51,16 +51,22 @@ import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 
 	private Schema schema;
+	private boolean readOnlyMode;
 	
-	public SchemaXYLayoutEditPolicy(Schema schema) {
+	public SchemaXYLayoutEditPolicy(Schema schema, boolean readOnlyMode) {
 		super();
 		this.schema = schema;
+		this.readOnlyMode = readOnlyMode;
 	}
 	
 	@Override
 	protected Command createChangeConstraintCommand(ChangeBoundsRequest request, 
 													EditPart child,
 													Object constraint) {
+		
+		if (readOnlyMode) {
+			return null;
+		}
 		
 		if (child.getModel() instanceof DiagramNode) {
 			// we're dealing with a DiagramNode, it can only be a
@@ -94,6 +100,10 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
+		
+		if (readOnlyMode) {
+			return null;
+		}
 		
 		if (request.getNewObjectType() != DiagramLabel.class && 
 			request.getNewObjectType() != SchemaRecord.class ||

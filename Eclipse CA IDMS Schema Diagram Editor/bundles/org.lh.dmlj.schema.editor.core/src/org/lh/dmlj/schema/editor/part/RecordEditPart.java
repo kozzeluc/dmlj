@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -174,6 +174,11 @@ public class RecordEditPart
 	
 	@Override
 	protected void createEditPolicies() {
+		
+		if (isReadOnlyMode()) {
+			return;
+		}
+		
 		RecordFigure figure = (RecordFigure) getFigure();
 		
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, 

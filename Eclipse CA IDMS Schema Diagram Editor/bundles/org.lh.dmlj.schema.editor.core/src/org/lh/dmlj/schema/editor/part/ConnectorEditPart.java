@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -106,8 +106,10 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 	
 	@Override
 	protected void createEditPolicies() {
-		// make sure we can delete connectors:
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ConnectorComponentEditPolicy());
+		if (!isReadOnlyMode()) {
+			// make sure we can delete connectors:
+			installEditPolicy(EditPolicy.COMPONENT_ROLE, new ConnectorComponentEditPolicy());
+		}
 	}
 	
 	@Override

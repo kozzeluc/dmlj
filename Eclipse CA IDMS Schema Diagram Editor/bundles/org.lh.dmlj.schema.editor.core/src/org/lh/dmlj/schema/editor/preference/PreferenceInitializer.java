@@ -32,6 +32,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		// general preferences...
 		store.setDefault(PreferenceConstants.UNITS, Unit.CENTIMETERS.toString());
+		store.setDefault(PreferenceConstants.READ_ONLY_MODE, false);
 		store.setDefault(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, false);
 		
 		// import preferences...

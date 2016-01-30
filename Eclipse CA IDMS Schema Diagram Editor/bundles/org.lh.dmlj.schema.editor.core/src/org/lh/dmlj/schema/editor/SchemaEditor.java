@@ -276,6 +276,7 @@ public class SchemaEditor
 	private URI uri;
 	private SchemaEditorRulerProvider verticalRulerProvider;
 	private IResource workspaceResource;
+	private boolean readOnlyFlag = false;
 	
 	public SchemaEditor() {
 		super();
@@ -881,6 +882,15 @@ public class SchemaEditor
 		return selectionSynchronizer;
 	}
 
+	@Override
+	public String getTitleToolTip() {
+		if (isReadOnlyMode()) {
+			return super.getTitleToolTip() + " (read-only)";
+		} else {
+			return super.getTitleToolTip();
+		}
+	}
+
 	private void hookActivePaletteViewerToEditDomain() {
 		// unless the workbench is closing, we need to make sure that editors for the same diagram
 		// (editor input) have a functioning palette; we need to hook an active palette viewer to 
@@ -912,6 +922,10 @@ public class SchemaEditor
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean isReadOnlyMode() {
+		return readOnlyFlag;
 	}
 	
 	@Override
@@ -1013,6 +1027,7 @@ public class SchemaEditor
 			Resource resource = resourceSet.getResource(uri, true);
 			schema = (Schema)resource.getContents().get(0);	
 		}
+		setReadOnlyFlag(input);
 			
 		if (!editorSaving) {
 			if (outlinePage != null) {
@@ -1022,6 +1037,14 @@ public class SchemaEditor
 		
 	}
 	
+	private void setReadOnlyFlag(IEditorInput input) {
+		boolean preferredReadOnlyFlag = 
+			Plugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.READ_ONLY_MODE);
+		// TODO always set to true in case of a remote file editor input (e.g. in the case of
+		//      opening a .schema file in Subclipse's SVN Repositories view
+		readOnlyFlag = preferredReadOnlyFlag; 	
+	}
+
 	@Override
 	protected void setSite(IWorkbenchPartSite site) {
 		super.setSite(site);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -184,6 +184,10 @@ public class SetDescriptionEditPart
 	
 	@Override
 	protected void createEditPolicies() {
+		
+		if (isReadOnlyMode()) {
+			return;
+		}
 		
 		// make sure we can delete a set by pressing the delete key on the line represented by this
 		// edit part:

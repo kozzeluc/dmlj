@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -88,8 +88,10 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 
 	@Override
 	protected void createEditPolicies() {			
-		// the next edit policy allows for the deletion of an index
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new IndexComponentEditPolicy());		
+		if (!isReadOnlyMode()) {
+			// the next edit policy allows for the deletion of an index
+			installEditPolicy(EditPolicy.COMPONENT_ROLE, new IndexComponentEditPolicy());
+		}
 	}
 	
 	@Override

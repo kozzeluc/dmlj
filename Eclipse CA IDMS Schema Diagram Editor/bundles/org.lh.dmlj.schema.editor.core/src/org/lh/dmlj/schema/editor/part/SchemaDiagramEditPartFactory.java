@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class SchemaDiagramEditPartFactory implements EditPartFactory {
 	
-	private IModelChangeProvider modelChangeProvider;	
+	private IModelChangeProvider modelChangeProvider; // null means we're in read-only mode	
 	private SchemaEditor schemaEditor;
 	
 	public static EditPart createEditPart(Object model, IModelChangeProvider modelChangeProvider, 
@@ -63,7 +63,9 @@ public class SchemaDiagramEditPartFactory implements EditPartFactory {
 	public SchemaDiagramEditPartFactory(SchemaEditor schemaEditor) {
 		super();
 		this.schemaEditor = schemaEditor;
-		modelChangeProvider = getModelChangeProvider(schemaEditor);
+		if (!schemaEditor.isReadOnlyMode()) {
+			modelChangeProvider = getModelChangeProvider(schemaEditor);
+		}
 	}
 	
 	@Override

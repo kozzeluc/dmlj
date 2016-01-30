@@ -44,4 +44,6 @@ public abstract class PreferenceConstants {
 	
 	public static final String OPERATING_SYSTEM_TEXT_SIZE = "operatingSystemTextSize";
 	
+	public static final String READ_ONLY_MODE = "readOnlyMode";
+	
 }

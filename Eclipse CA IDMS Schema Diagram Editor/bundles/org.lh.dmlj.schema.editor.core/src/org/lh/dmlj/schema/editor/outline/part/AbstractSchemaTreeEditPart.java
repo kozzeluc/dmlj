@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -192,11 +192,13 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 
 	protected AbstractSchemaTreeEditPart(T model, IModelChangeProvider modelChangeProvider) {
 		super(model);	
-		this.modelChangeProvider = modelChangeProvider;
+		this.modelChangeProvider = modelChangeProvider; // null means we're in read-only mode
 	}
 	
-	public final void activate() {		
-		modelChangeProvider.addModelChangeListener(this);
+	public final void activate() {	
+		if (!isReadOnlyMode()) {
+			modelChangeProvider.addModelChangeListener(this);
+		}
 		super.activate();
 	}
 	
@@ -231,8 +233,10 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 		addChild(child, index);
 	}
 
-	public final void deactivate() {		
-		modelChangeProvider.removeModelChangeListener(this);		
+	public final void deactivate() {
+		if (!isReadOnlyMode()) {
+			modelChangeProvider.removeModelChangeListener(this);
+		}
 		super.deactivate();
 	}
 	
@@ -306,6 +310,10 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 		} catch (IllegalArgumentException e) {
 			return false;
 		}		
+	}
+	
+	protected boolean isReadOnlyMode() {
+		return modelChangeProvider == null;
 	}
 	
 	/**
