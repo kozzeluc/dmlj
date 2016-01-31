@@ -88,11 +88,8 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		tableEditor = new TableEditor(table);
 		tableEditor.horizontalAlignment = SWT.LEFT;
 		tableEditor.minimumWidth = 50;
-		// when not running in read-only mode, add both mouse listeners
-		if (!section.isReadOnlyMode()) {
-			table.addMouseListener(this);
-			table.addMouseMoveListener(this);
-		}
+		table.addMouseListener(this);
+		table.addMouseMoveListener(this);
 	}
 	
 	public void dispose() {
@@ -193,6 +190,10 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 	@Override
 	public void mouseMove(MouseEvent e) {
 		
+		if (section.isReadOnlyMode()) {
+			return;
+		}
+		
 		// get the Table instance
 		Table table = (Table) e.getSource();
 		
@@ -284,7 +285,11 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 				
 	}
 
-	public void mouseUp(MouseEvent e) {					
+	public void mouseUp(MouseEvent e) {		
+		
+		if (section.isReadOnlyMode()) {
+			return;
+		}
 		
 		// get the Table instance
 		Table table = (Table) e.getSource();

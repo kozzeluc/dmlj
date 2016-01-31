@@ -101,9 +101,8 @@ public class RecordPrefixPropertiesSection
 		column4.setWidth(60);
 		column4.setText("Pointer");	
 		
-		if (!isReadOnlyMode()) {
-			hyperlinkOnlyPropertyEditor = new HyperlinkOnlyPropertyEditor<>(table, this, new int[] {1});
-		}
+		hyperlinkOnlyPropertyEditor = new HyperlinkOnlyPropertyEditor<>(table, this, new int[] {1});
+
 	}
 	
 	@Override
@@ -138,10 +137,8 @@ public class RecordPrefixPropertiesSection
 			String pointerTypeAsString = pointer.getType().toString();
 			item.setText(3, pointerTypeAsString.substring(pointerTypeAsString.indexOf("_") + 1));
 		}
-		if (!isReadOnlyMode()) {
-			hyperlinkOnlyPropertyEditor.refresh();
-		}
-		
+		hyperlinkOnlyPropertyEditor.refresh();
+	
 		// we don't want any vertical scrollbar in the table; the following
 		// sequence allows us to do just that (i.e. vertically stretch the table
 		// as needed)          
@@ -163,6 +160,9 @@ public class RecordPrefixPropertiesSection
 
 	@Override
 	public IHyperlinkHandler<Pointer<?>, Object> getHyperlinkHandler(int column) {
+		if (isReadOnlyMode()) {
+			return null;
+		}
 		if (column != 1) {
 			// we don't expect this to happen since we've only made 1 column hyperlink enabled
 			return null; 

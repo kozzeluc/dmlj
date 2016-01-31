@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -46,7 +46,7 @@ public class SchemaEditorRulerProvider
 	extends RulerProvider implements IModelChangeListener, IPropertyChangeListener {
 	
 	private GraphicalViewer 	 graphicalViewer;
-	private IModelChangeProvider modelChangeProvider;
+	private IModelChangeProvider modelChangeProvider; // null means we're in read-only mode
 	private Ruler 		  		 ruler;	
 	
 	public SchemaEditorRulerProvider(Ruler ruler, SchemaEditor schemaEditor) {
@@ -55,10 +55,12 @@ public class SchemaEditorRulerProvider
 		this.ruler = ruler;
 		this.graphicalViewer = (GraphicalViewer) schemaEditor.getAdapter(GraphicalViewer.class);
 		
-		// hookup to the model change provider
-		modelChangeProvider = 
-			(IModelChangeProvider) schemaEditor.getAdapter(IModelChangeProvider.class);
-		modelChangeProvider.addModelChangeListener(this);		
+		if (!schemaEditor.isReadOnlyMode()) {
+			// hookup to the model change provider
+			modelChangeProvider = 
+				(IModelChangeProvider) schemaEditor.getAdapter(IModelChangeProvider.class);
+			modelChangeProvider.addModelChangeListener(this);		
+		}
 		
 		// make sure we can track changes in the preferred units 
 		Plugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);		
@@ -133,8 +135,10 @@ public class SchemaEditorRulerProvider
 	 */
 	public void dispose() {
 		
-		// remove us as a listener from the model change provider
-		modelChangeProvider.removeModelChangeListener(this);		
+		if (modelChangeProvider != null) {
+			// remove us as a listener from the model change provider
+			modelChangeProvider.removeModelChangeListener(this);
+		}
 		
 		// remove the preference store listener
 		Plugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
@@ -152,6 +156,9 @@ public class SchemaEditorRulerProvider
 
 	@Override
 	public Command getCreateGuideCommand(int position) {
+		if (isReadOnlyMode()) {
+			return null;
+		}
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_GUIDE);
 		context.putContextData(ruler);
 		IModelChangeCommand command = new CreateGuideCommand(ruler, position);
@@ -161,6 +168,9 @@ public class SchemaEditorRulerProvider
 	
 	@Override
 	public Command getDeleteGuideCommand(Object guide) {
+		if (isReadOnlyMode()) {
+			return null;
+		}
 		if (!(guide instanceof Guide)) {
 			return null;
 		}
@@ -195,6 +205,9 @@ public class SchemaEditorRulerProvider
 	
 	@Override
 	public Command getMoveGuideCommand(Object guide, int positionDelta) {
+		if (isReadOnlyMode()) {
+			return null;
+		}
 		if (guide instanceof Guide) {
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_GUIDE);
 			context.putContextData((Guide) guide);
@@ -221,6 +234,10 @@ public class SchemaEditorRulerProvider
 		} else {
 			return UNIT_PIXELS;
 		}		
+	}
+	
+	private boolean isReadOnlyMode() {
+		return modelChangeProvider == null;
 	}
 	
 	@SuppressWarnings("unchecked")

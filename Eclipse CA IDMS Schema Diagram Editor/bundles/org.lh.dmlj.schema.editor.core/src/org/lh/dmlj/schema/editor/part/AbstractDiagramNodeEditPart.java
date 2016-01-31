@@ -65,8 +65,8 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	protected AbstractDiagramNodeEditPart(T diagramNode, IModelChangeProvider modelChangeProvider) {		
 		super();
 		setModel(diagramNode);
+		this.modelChangeProvider = modelChangeProvider;
 		if (!isReadOnlyMode()) {
-			this.modelChangeProvider = modelChangeProvider;
 			modelChangeProvider.addModelChangeListener(this);
 		}
 	}

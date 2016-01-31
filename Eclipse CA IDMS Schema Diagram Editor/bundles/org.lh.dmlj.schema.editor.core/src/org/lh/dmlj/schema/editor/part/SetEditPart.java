@@ -92,9 +92,7 @@ public class SetEditPart
 	public SetEditPart(ConnectionPart connectionPart, IModelChangeProvider modelChangeProvider) {
 		super();
 		setModel(connectionPart);
-		if (!isReadOnlyMode()) {
-			this.modelChangeProvider = modelChangeProvider;
-		}
+		this.modelChangeProvider = modelChangeProvider;
 		// keep track of the MemberRole because if connectors are involved and
 		// deleted, the reference to that MemberRole will be nullified in the
 		// ConnectionPart

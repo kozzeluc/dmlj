@@ -196,7 +196,7 @@ public abstract class AbstractPropertiesSection
 		return selection;
 	}	
 	
-	protected boolean isReadOnlyMode() {
+	public final boolean isReadOnlyMode() {
 		return modelChangeProvider == null;
 	}
 	

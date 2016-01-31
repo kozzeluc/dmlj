@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -104,6 +104,10 @@ public class HyperlinkOnlyPropertyEditor<T> implements MouseMoveListener {
 
 	@Override
 	public void mouseMove(MouseEvent e) {
+		
+		if (hyperlinkHandlerProvider.isReadOnlyMode()) {
+			return;
+		}
 	
 		// get the Table instance
 		Table table = (Table) e.getSource();
@@ -184,11 +188,13 @@ public class HyperlinkOnlyPropertyEditor<T> implements MouseMoveListener {
 		for (int i = 0; i < table.getItemCount(); i++) {
 			TableItem item = table.getItem(i);
 			for (int j : hyperlinkEnabledColumns) {
-				item.setForeground(j, ColorConstants.blue);
-				//item.setText(j, item.getText());
+				if (hyperlinkHandlerProvider.isReadOnlyMode()) {
+					item.setForeground(j, ColorConstants.black);
+				} else {
+					item.setForeground(j, ColorConstants.blue);
+				}
 			}
 		}
-		//table.redraw();
 	}
 	
 }
