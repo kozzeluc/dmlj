@@ -102,6 +102,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -128,6 +129,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -152,6 +154,7 @@ public class SchemaEditor
 	// 1) An open, saved file gets deleted -> close the editor
 	// 2) An open file gets renamed or moved -> change the editor's input
 	// accordingly
+	// It is assumed that the editor input is always of type IFileEditorInput.
 	class ResourceTracker 
 		implements IResourceChangeListener, IResourceDeltaVisitor {
 		public void resourceChanged(IResourceChangeEvent event) {
@@ -229,7 +232,9 @@ public class SchemaEditor
 			if (part != SchemaEditor.this) {
 				return;
 			}
-			if (!((IFileEditorInput) getEditorInput()).getFile().exists()) {
+			if (getEditorInput() instanceof IFileEditorInput &&
+				!((IFileEditorInput) getEditorInput()).getFile().exists()) {
+				
 				Shell shell = getSite().getShell();
 				String title = "File Deleted";
 				String message = 
@@ -299,7 +304,10 @@ public class SchemaEditor
 
 	@Override
 	public void commandStackChanged(EventObject event) {
-		firePropertyChange(IEditorPart.PROP_DIRTY);
+		if (!isReadOnlyMode()) {
+			// avoid the editor to become dirty
+			firePropertyChange(IEditorPart.PROP_DIRTY);
+		}
 		super.commandStackChanged(event);
 	}
 	
@@ -554,8 +562,9 @@ public class SchemaEditor
 		getSite().getWorkbenchWindow().getPartService()
 				.removePartListener(partListener);
 		partListener = null;
-		((IFileEditorInput) getEditorInput()).getFile().getWorkspace()
-				.removeResourceChangeListener(resourceListener);
+		if (getEditorInput() instanceof IFileEditorInput) {
+			((IFileEditorInput) getEditorInput()).getFile().getWorkspace().removeResourceChangeListener(resourceListener);
+		}
 		super.dispose();
 	}	
 	
@@ -911,6 +920,10 @@ public class SchemaEditor
 	
 	@Override
 	public boolean isDirty() {
+		if (isReadOnlyMode()) {
+			// we should never be dirty when in read-only mode but force it anyway
+			return false;
+		}
 		// if the workbench is NOT closing, refer to the super's method
 		if (!PlatformUI.getWorkbench().isClosing()) {			
 			return super.isDirty();
@@ -1027,7 +1040,6 @@ public class SchemaEditor
 			Resource resource = resourceSet.getResource(uri, true);
 			schema = (Schema)resource.getContents().get(0);	
 		}
-		setReadOnlyFlag(input);
 			
 		if (!editorSaving) {
 			if (outlinePage != null) {
@@ -1040,9 +1052,7 @@ public class SchemaEditor
 	private void setReadOnlyFlag(IEditorInput input) {
 		boolean preferredReadOnlyFlag = 
 			Plugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.READ_ONLY_MODE);
-		// TODO always set to true in case of a remote file editor input (e.g. in the case of
-		//      opening a .schema file in Subclipse's SVN Repositories view
-		readOnlyFlag = preferredReadOnlyFlag; 	
+		readOnlyFlag = preferredReadOnlyFlag || !(getEditorInput() instanceof IFileEditorInput); 	
 	}
 
 	@Override
@@ -1058,21 +1068,39 @@ public class SchemaEditor
 		// resourceListener is not necessary. But it is being done here for the sake of proper 
 		// implementation. Plus, the resourceListener needs to be added to the workspace the first 
 		// time around.
-		if (getEditorInput() != null) {
+		if (getEditorInput() != null && getEditorInput() instanceof IFileEditorInput) {
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 			file.getWorkspace().removeResourceChangeListener(resourceListener);
 		}
 
 		super.setInput(input);
 
-		if (getEditorInput() != null) {
-			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+		IEditorInput editorInput = getEditorInput();
+		if (editorInput instanceof IFileEditorInput) {
+			IFile file = ((IFileEditorInput) editorInput).getFile();
 			workspaceResource = 
 				ResourcesPlugin.getWorkspace().getRoot().findMember(file.getFullPath());
 			uri = URI.createFileURI(file.getLocation().toFile().getAbsolutePath());			
 			file.getWorkspace().addResourceChangeListener(resourceListener);
 			setPartName(file.getName());
+		} else if (editorInput instanceof IStorageEditorInput) {
+			// this will be the case when browsing a diagram from within the SVN Repositories view
+			// of Subversive or Subclipse; get the contents and write it to a temporary file...
+			IStorageEditorInput storageEditorInput = (IStorageEditorInput) editorInput; 
+			File tmpFile = Plugin.getDefault().createTmpFile("schema");
+			try {
+				byte[] buffer = Tools.writeToBuffer(storageEditorInput.getStorage().getContents());
+				Tools.writeToFile(buffer, tmpFile);
+			} catch (CoreException | IOException e) {
+				throw new RuntimeException("Error while retrieving diagram", e);
+			}
+			uri = URI.createFileURI(tmpFile.getAbsolutePath());
+			setPartName(storageEditorInput.getName());
+		} else {
+			throw new IllegalArgumentException("Unsupported editor input: " + input);
 		}
+		
+		setReadOnlyFlag(editorInput);
 	}
 
 }

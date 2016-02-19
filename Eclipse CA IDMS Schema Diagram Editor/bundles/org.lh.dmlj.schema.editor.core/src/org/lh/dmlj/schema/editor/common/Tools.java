@@ -16,6 +16,12 @@
  */
 package org.lh.dmlj.schema.editor.common;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
@@ -356,6 +362,25 @@ public abstract class Tools {
 			p.setLength(p.length() - 1);
 		}
 		return p.toString();
+	}
+	
+	/**
+	 * @param inputStream inputStream to process; will be closed by this method
+	 * @return
+	 * @throws IOException
+	 */
+	public static byte[] writeToBuffer(InputStream inputStream) throws IOException {
+	    byte[] buffer = new byte[inputStream.available()];
+	    inputStream.read(buffer);
+	    inputStream.close();
+	    return buffer;
+	}
+	
+	public static void writeToFile(byte[] buffer, File file) throws IOException {
+		OutputStream outputStream = new FileOutputStream(file);
+	    outputStream.write(buffer);
+		outputStream.flush();
+		outputStream.close();
 	}
 	
 }

@@ -59,9 +59,11 @@ public class DiagramLabelEditPart
 	public DiagramLabelEditPart(DiagramLabel diagramLabel, SchemaEditor schemaEditor) {
 		
 		super(diagramLabel, getModelChangeProvider(schemaEditor));
-		this.schemaEditor = schemaEditor;
-		FileEditorInput editorInput = (FileEditorInput) schemaEditor.getEditorInput();
-		diagramFile = editorInput.getFile().getLocation().toFile();
+		this.schemaEditor = schemaEditor;		
+		if (schemaEditor.getEditorInput() instanceof FileEditorInput) {
+			FileEditorInput editorInput = (FileEditorInput) schemaEditor.getEditorInput();
+			diagramFile = editorInput.getFile().getLocation().toFile();
+		}
 	}
 	
 	@Override
@@ -109,7 +111,8 @@ public class DiagramLabelEditPart
 
 	private String getLastModified() {
 		
-		if (!Plugin.getDefault()
+		if (diagramFile == null ||
+			!Plugin.getDefault()
 				   .getPreferenceStore()
 				   .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
 			
