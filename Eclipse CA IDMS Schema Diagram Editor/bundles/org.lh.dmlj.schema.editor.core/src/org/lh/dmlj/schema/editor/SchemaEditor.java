@@ -103,6 +103,8 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -130,6 +132,8 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
+import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -142,6 +146,8 @@ public class SchemaEditor
 	extends GraphicalEditorWithFlyoutPalette 
 	implements CommandStackEventListener, ITabbedPropertySheetPageContributor {
 	
+	private static final String FILE_EXTENSION_SCHEMA = "schema";
+	private static final String FILE_EXTENSION_SCHEMADSL = "schemadsl";	
 	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";
 	
 	private static final EAttribute ATTRIBUTE_SHOW_GRID = 
@@ -282,6 +288,7 @@ public class SchemaEditor
 	private SchemaEditorRulerProvider verticalRulerProvider;
 	private IResource workspaceResource;
 	private boolean readOnlyFlag = false;
+	private String fileExtension;
 	
 	public SchemaEditor() {
 		super();
@@ -572,19 +579,7 @@ public class SchemaEditor
 	public void doSave(IProgressMonitor monitor) {
 		editorSaving = true;
 		// Serialize the model
-		ResourceSet resourceSet = new ResourceSetImpl();
-		Resource resource = resourceSet.createResource(uri);
-		resource.getContents().add(schema);
-		try {
-			resource.save(null);
-		} catch (IOException e) {
-			e.printStackTrace();
-			Status status = 
-				new Status(IStatus.ERROR, ID,
-						   "An exception occurred while saving the file", e);
-			ErrorDialog.openError(getSite().getShell(), "Exception", 
-								  e.getMessage(), status);
-		}
+		writeSchemaToFile();
 		
 		// refresh the resource in the workspace to avoid 'Resource is out of 
 		// sync with the file system' messages
@@ -614,6 +609,7 @@ public class SchemaEditor
 		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		super.setInput(new FileEditorInput(iFile));
 		File file = iFile.getLocation().toFile();
+		setFileExtension(file);
 		uri = URI.createFileURI(file.getAbsolutePath());
 		doSave(null);
 		// refresh the resource in the workspace to avoid 'Resource is out of 
@@ -699,7 +695,9 @@ public class SchemaEditor
 			for (IWorkbenchPage workbenchPage : workbenchWindow.getPages()) {
 				for (IEditorReference editorReference : workbenchPage.getEditorReferences()) {					
 					try {
-						if (editorReference.getEditorInput().equals(editorInput)) {
+						if (editorReference.getEditor(false) instanceof SchemaEditor &&
+							editorReference.getEditorInput().equals(editorInput)) {
+							
 							SchemaEditor schemaEditor = (SchemaEditor) editorReference.getEditor(true);
 							if (schemaEditor != null && schemaEditor != this) {
 								return schemaEditor;
@@ -946,6 +944,20 @@ public class SchemaEditor
 		return true;
 	}
 	
+	private void loadSchemaFromFile() {
+		if (fileExtension.equals(FILE_EXTENSION_SCHEMA)) {
+			ResourceSet resourceSet = new ResourceSetImpl();
+			resourceSet.getResourceFactoryRegistry()
+			   		   .getExtensionToFactoryMap()
+			   		   .put(FILE_EXTENSION_SCHEMA, new XMIResourceFactoryImpl());
+			Resource resource = resourceSet.getResource(uri, true);
+			schema = (Schema)resource.getContents().get(0);
+		} else if (fileExtension.equals(FILE_EXTENSION_SCHEMADSL)) {
+			schema = ModelFromDslBuilderForJava.schema(new File(uri.toFileString()));			
+		} else {
+			throw new IllegalStateException("Invalid file extension: " + fileExtension);
+		}
+	}
 	private boolean performSaveAs() {
 		SaveAsDialog dialog = 
 			new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
@@ -1008,6 +1020,30 @@ public class SchemaEditor
 		return true;
 	}	
 	
+	private void setFileExtension(IEditorInput input) {
+		if (input instanceof IFileEditorInput) {
+			IFile file = ((IFileEditorInput) input).getFile();
+			fileExtension = file.getFileExtension();
+		} else if (input instanceof IStorageEditorInput) {
+			String name = ((IStorageEditorInput) input).getName();
+			if (name.indexOf(".schemadsl") > -1) {
+				fileExtension =  FILE_EXTENSION_SCHEMADSL;
+			} else {
+				fileExtension =  FILE_EXTENSION_SCHEMA;
+			}
+		} else {
+			throw new IllegalArgumentException("Unsupported editor input: " + input);
+		}		
+	}
+
+	private void setFileExtension(File file) {
+		int i = file.getName().lastIndexOf('.');
+		if (i < 0) {
+			fileExtension = FILE_EXTENSION_SCHEMA;
+		} else {
+			fileExtension = file.getName().substring(i + 1);
+		}
+	}
 	protected void setInput(IEditorInput input) {
 		
 		Plugin.logDebug(Plugin.DebugItem.CALLING_METHOD);
@@ -1033,12 +1069,7 @@ public class SchemaEditor
 			schema = firstEditorForSameInput.getSchema();
 		} else {
 			setEditDomain(new DefaultEditDomain(null));
-			ResourceSet resourceSet = new ResourceSetImpl();
-			resourceSet.getResourceFactoryRegistry()
-			   		   .getExtensionToFactoryMap()
-			   		   .put("schema", new XMIResourceFactoryImpl());
-			Resource resource = resourceSet.getResource(uri, true);
-			schema = (Schema)resource.getContents().get(0);	
+			loadSchemaFromFile();	
 		}
 			
 		if (!editorSaving) {
@@ -1047,6 +1078,45 @@ public class SchemaEditor
 			}
 		}
 		
+		// Opening a large schema diagram that is stored in a .schemadsl files can take a long time;
+		// for that reason we close ALL .schemadsl files on workbench shutdown to avoid a slow 
+		// workbench restart.  When closing such editors, we offer the opportunity to save changes, 
+		// if any.
+		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
+			@Override
+			public boolean preShutdown(IWorkbench workbench, boolean forced) {
+				if (fileExtension.equals(FILE_EXTENSION_SCHEMADSL)) {
+					if (!SchemaEditor.this.isReadOnlyMode() && SchemaEditor.this.isDirty()) {
+						Shell shell = getSite().getShell();
+						String title = "Save Resource";
+						String message = 
+							"A Schema Editor for a .schemadsl file is ALWAYS closed when the " +
+							"workbench shuts down (for performance reasons on workbench startup).\n\n'" + 
+							SchemaEditor.this.getTitle() + "' has been modified. Save changes?";
+						String[] buttons = { "Yes", "No", "Cancel" };
+						MessageDialog dialog = 
+							new MessageDialog(shell, title, null, message, MessageDialog.QUESTION, buttons, 0);
+						int response = dialog.open();
+						if (response == 2) {
+							return false;
+						} else if (response == 0) {
+							doSave(null);
+						} else {
+							// make sure to reset the dirty flag, or the user will be asked again
+							// whether to save or not:
+							getCommandStack().markSaveLocation();
+							SchemaEditor.this.firePropertyChange(PROP_DIRTY);
+						}
+					}
+					workbench.removeWorkbenchListener(this);
+					closeEditor(false);
+				}
+				return true;
+			}
+			@Override
+			public void postShutdown(IWorkbench workbench) {
+			}			
+		});		
 	}
 	
 	private void setReadOnlyFlag(IEditorInput input) {
@@ -1076,6 +1146,9 @@ public class SchemaEditor
 		super.setInput(input);
 
 		IEditorInput editorInput = getEditorInput();
+		setReadOnlyFlag(editorInput);
+		setFileExtension(editorInput);
+			
 		if (editorInput instanceof IFileEditorInput) {
 			IFile file = ((IFileEditorInput) editorInput).getFile();
 			workspaceResource = 
@@ -1086,8 +1159,8 @@ public class SchemaEditor
 		} else if (editorInput instanceof IStorageEditorInput) {
 			// this will be the case when browsing a diagram from within the SVN Repositories view
 			// of Subversive or Subclipse; get the contents and write it to a temporary file...
-			IStorageEditorInput storageEditorInput = (IStorageEditorInput) editorInput; 
-			File tmpFile = Plugin.getDefault().createTmpFile("schema");
+			IStorageEditorInput storageEditorInput = (IStorageEditorInput) editorInput;
+			File tmpFile = Plugin.getDefault().createTmpFile(fileExtension); 
 			try {
 				byte[] buffer = Tools.writeToBuffer(storageEditorInput.getStorage().getContents());
 				Tools.writeToFile(buffer, tmpFile);
@@ -1099,8 +1172,36 @@ public class SchemaEditor
 		} else {
 			throw new IllegalArgumentException("Unsupported editor input: " + input);
 		}
-		
-		setReadOnlyFlag(editorInput);
+	}
+
+	private void writeSchemaToFile() {
+		Throwable exception = null;
+		if (fileExtension.equals(FILE_EXTENSION_SCHEMA)) {
+			ResourceSet resourceSet = new ResourceSetImpl();
+			Resource resource = resourceSet.createResource(uri);
+			resource.getContents().add(schema);
+			try {
+				resource.save(null);
+			} catch (IOException e) {
+				exception = e;
+			}
+		} else if (fileExtension.equals(FILE_EXTENSION_SCHEMADSL)) {
+			SchemaSyntaxBuilder builder = new SchemaSyntaxBuilder();
+			String dsl = builder.build(schema);
+			try {
+				Tools.writeToFile(dsl, new File(uri.toFileString()));
+			} catch (IOException e) {
+				exception = e;
+			}
+		} else {
+			exception = new IllegalStateException("Invalid file extension: " + fileExtension);
+		}
+		if (exception != null) {
+			Status status = 
+				new Status(IStatus.ERROR, ID,
+						   "An exception occurred while saving the file", exception);
+			ErrorDialog.openError(getSite().getShell(), "Exception", exception.getMessage(), status);
+		}
 	}
 
 }

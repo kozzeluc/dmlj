@@ -50,7 +50,7 @@
             class="org.lh.dmlj.schema.editor.SchemaEditor"
             contributorClass="org.lh.dmlj.schema.editor.SchemaEditorActionBarContributor"
             default="true"
-            extensions="schema"
+            extensions="schema,schemadsl"
             icon="icons/schema.gif"
             id="org.lh.dmlj.schema.editor.schemaeditor"
             name="Schema Editor">

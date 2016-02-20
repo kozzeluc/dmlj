@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
@@ -380,6 +381,15 @@ public abstract class Tools {
 		OutputStream outputStream = new FileOutputStream(file);
 	    outputStream.write(buffer);
 		outputStream.flush();
+		outputStream.close();
+	}
+	
+	public static void writeToFile(String data, File file) throws IOException {
+		OutputStream outputStream = new FileOutputStream(file);
+		PrintWriter out = new PrintWriter(outputStream);
+	    out.print(data);
+	    out.flush();
+		out.close();
 		outputStream.close();
 	}
 	
