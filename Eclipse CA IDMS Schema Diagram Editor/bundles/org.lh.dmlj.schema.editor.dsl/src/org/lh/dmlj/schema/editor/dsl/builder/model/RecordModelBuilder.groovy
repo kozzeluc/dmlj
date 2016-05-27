@@ -247,41 +247,39 @@ class RecordModelBuilder extends AbstractModelBuilder<SchemaRecord> {
 			DuplicatesOption.valueOf(duplicatesOption.replaceAll(' ', '_'))
 	}
 	
-	void element(Closure definition) {
-		assert bodies == [ BODY_ELEMENTS ]
-		ElementModelBuilder elementBuilder = new ElementModelBuilder( [ record : record ] )
-		if (bufferedName) {
-			elementBuilder.build(bufferedName, definition)
-			bufferedName = null
-		} else {
-			elementBuilder.build(definition)
-		}
-		assert bodies == [ BODY_ELEMENTS ]		
-	}
-	
 	void element(String elementName) {
-		assert bodies == [ BODY_ELEMENTS ] || [ BODY_CALC ] || bodies == [ BODY_VSAM_CALC ]
-		if (bodies == [ BODY_ELEMENTS ]) {
-			short levelNumber = record.rootElements ? record.rootElements[0].level : 2
-			element { 
-				level levelNumber
-				name elementName
-				baseName elementName
-				picture 'X(8)'
-			}	
-		} else {
-			Element placeHolderElement = SchemaFactory.eINSTANCE.createElement()
-			placeHolderElement.name = elementName
-			KeyElement keyElement = SchemaFactory.eINSTANCE.createKeyElement()
-			keyElement.element = placeHolderElement
-			record.calcKey.elements << keyElement
-		}
+		assert bodies == [ BODY_CALC ] || bodies == [ BODY_VSAM_CALC ]		
+		Element placeHolderElement = SchemaFactory.eINSTANCE.createElement()
+		placeHolderElement.name = elementName
+		KeyElement keyElement = SchemaFactory.eINSTANCE.createKeyElement()
+		keyElement.element = placeHolderElement
+		record.calcKey.elements << keyElement		
 	}
 	
-	void elements(Closure definition) {
+	void elements(String definition) {
 		assert !bodies
 		bodies << BODY_ELEMENTS
-		runClosure(definition)
+		Stack<Element> parents = new Stack<>()
+		definition.split('\n').each { String line ->
+			if (line.trim()) {				
+				Element parent = null
+				if (record.elements) {
+					int level = ElementModelBuilder.extractLevel(line)
+					if (level > record.elements[-1].level) {
+						parent = record.elements[-1]
+						parents.push(parent)
+					} else if (level == record.elements[-1].level) {
+						parent = parents ? parents.peek() : null	
+					} else if (parents) {
+						while (parents && parents.peek().level >= level) {
+							parents.pop()
+						}
+						parent = parents ? parents.peek() : null
+					}
+				}			
+				Element element = new ElementModelBuilder( record : record, parent : parent ).build(line)
+			}
+		}
 		assert bodies == [ BODY_ELEMENTS ]
 		bodies -= BODY_ELEMENTS
 	}

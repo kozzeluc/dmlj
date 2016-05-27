@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.dsl.builder.model
 
 import org.lh.dmlj.schema.DuplicatesOption
+import org.lh.dmlj.schema.Element
 import org.lh.dmlj.schema.Key
 import org.lh.dmlj.schema.LocationMode
 import org.lh.dmlj.schema.Procedure
@@ -1284,32 +1285,6 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		error.message.startsWith('subarea and anything of [offsetPages, offsetPercent, pages, percent] area mutually exclusive')
 	}
 	
-	def "single simple root element (nothing else than the name specified)"() {
-		
-		given: "a record builder without a schema"
-		def RecordModelBuilder builder = new RecordModelBuilder()
-		
-		when: "building the record from te definition"
-		def definition = {
-			elements {
-				element 'DEPT-ID-0410'
-			}
-		}
-		SchemaRecord record = builder.build(definition)
-		
-		then: "the record's element list will contain only the given element"
-		record
-		record.elements.size() == 1
-		record.rootElements.size() == 1
-		
-		record.elements[0] == record.rootElements[0]
-		record.elements[0].name == 'DEPT-ID-0410'
-		record.elements[0].level == 2
-		record.elements[0].picture == 'X(8)'
-		assert !record.elements[0].children
-		!record.elements[0].parent
-	}
-	
 	def "single simple root element"() {
 		
 		given: "a record builder without a schema"
@@ -1317,42 +1292,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the record from te definition"
 		def definition = { 
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
-		}
-		SchemaRecord record = builder.build(definition)
-		
-		then: "the record's element list will contain only the given element"
-		record
-		record.elements.size() == 1
-		record.rootElements.size() == 1
-		
-		record.elements[0] == record.rootElements[0]
-		record.elements[0].name == 'DEPT-ID-0410'
-		record.elements[0].level == 2
-		record.elements[0].picture == '9(4)'
-		assert !record.elements[0].children
-		!record.elements[0].parent
-	}
-
-	def "single simple root element (element name in closure)"() {
-		
-		given: "a record builder without a schema"
-		def RecordModelBuilder builder = new RecordModelBuilder()
-		
-		when: "building the record from te definition"
-		def definition = {
-			elements {
-				element  {
-					level 2
-					name 'DEPT-ID-0410'
-					picture '9(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -1376,94 +1318,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the record from te definition"
 		def definition = {
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-				element 'DEPT-NAME-0410' {
-					level 2
-					picture 'X(45)'
-				}
-			}
-		}
-		SchemaRecord record = builder.build(definition)
-		
-		then: "the record's element list will contain both elements"
-		record
-		record.elements.size() == 2
-		record.rootElements.size() == 2
-		
-		record.elements[0] == record.rootElements[0]
-		record.elements[0].name == 'DEPT-ID-0410'
-		record.elements[0].level == 2
-		record.elements[0].picture == '9(4)'
-		assert !record.elements[0].children
-		!record.elements[0].parent
-		
-		record.elements[1] == record.rootElements[1]
-		record.elements[1].name == 'DEPT-NAME-0410'
-		record.elements[1].level == 2
-		record.elements[1].picture == 'X(45)'
-		assert !record.elements[1].children
-		!record.elements[1].parent
-	}
-	
-	def "2 simple root elements (for the last one only a name is specified)"() {
-		
-		given: "a record builder without a schema"
-		def RecordModelBuilder builder = new RecordModelBuilder()
-		
-		when: "building the record from te definition"
-		def definition = {
-			elements {
-				element 'DEPT-ID-0410' {
-					level 3
-					picture '9(4)'
-				}
-				element 'DEPT-NAME-0410'
-			}
-		}
-		SchemaRecord record = builder.build(definition)
-		
-		then: "the record's element list will contain both elements"
-		record
-		record.elements.size() == 2
-		record.rootElements.size() == 2
-		
-		record.elements[0] == record.rootElements[0]
-		record.elements[0].name == 'DEPT-ID-0410'
-		record.elements[0].level == 3
-		record.elements[0].picture == '9(4)'
-		assert !record.elements[0].children
-		!record.elements[0].parent
-		
-		record.elements[1] == record.rootElements[1]
-		record.elements[1].name == 'DEPT-NAME-0410'
-		record.elements[1].level == 3
-		record.elements[1].picture == 'X(8)'
-		assert !record.elements[1].children
-		!record.elements[1].parent
-	}
-
-	def "2 simple root elements (name specified in 2 different ways)"() {
-		
-		given: "a record builder without a schema"
-		def RecordModelBuilder builder = new RecordModelBuilder()
-		
-		when: "building the record from te definition"
-		def definition = {
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-				element {
-					level 2
-					name 'DEPT-NAME-0410'
-					picture 'X(45)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+				02 DEPT-NAME-0410 picture X(45)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -1494,21 +1352,11 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the record from te definition"
 		def definition = {
-			elements {
-				element 'EMP-NAME-0415' {
-					level 2
-					children {
-						element 'EMP-FIRST-NAME-0415' {
-							level 3
-							picture 'X(10)'
-						}
-						element 'EMP-LAST-NAME-0415' {
-							level 3
-							picture 'X(15)'
-						}
-					}
-				}
-			}
+			elements """
+				02 EMP-NAME-0415
+				   03 EMP-FIRST-NAME-0415 picture X(10)
+				   03 EMP-LAST-NAME-0415 picture X(15)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -1537,55 +1385,114 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		record.elements[2].parent == record.elements[0]
 	}
 
-	def "single group root element (names specified in 2 different ways)"() {
+	def "element structure of record COVERAGE"() {
 		
 		given: "a record builder without a schema"
 		def RecordModelBuilder builder = new RecordModelBuilder()
-		
-		when: "building the record from te definition"
+			
+		when: "building the record passing a description of the COVERAGE record"
 		def definition = {
-			elements {
-				element {
-					level 2
-					name 'EMP-NAME-0415'
-					children {
-						element 'EMP-FIRST-NAME-0415' {
-							level 3
-							picture 'X(10)'
-						}
-						element {
-							level 3
-							name 'EMP-LAST-NAME-0415'
-							picture 'X(15)'
-						}
-					}
-				}
+			name 'COVERAGE'
+			shareStructure 'COVERAGE version 100'
+			recordId 400
+		
+			via {
+				set 'EMP-COVERAGE'
+			}
+		
+			area 'INS-DEMO-REGION' {
+				offsetPages 5
+				pages 45
+			}
+		
+			elements """
+	            02 SELECTION-DATE-0400
+				   03 SELECTION-YEAR-0400 picture 9(4)
+				   03 SELECTION-MONTH-0400 picture 9(2)
+				   03 SELECTION-DAY-0400 picture 9(2)
+				02 TERMINATION-DATE-0400
+				   03 TERMINATION-YEAR-0400 picture 9(4)
+				   03 TERMINATION-MONTH-0400 picture 9(2)
+				   03 TERMINATION-DAY-0400 picture 9(2)
+				02 TYPE-0400 picture X
+				   88 MASTER-0400 value 'M'
+				   88 FAMILY-0400 value 'F'
+				   88 DEPENDENT-0400 value 'D'
+				02 INS-PLAN-CODE-0400 picture X(3)
+				   88 GROUP-LIFE-0400 value '001'
+				   88 HMO-0400 value '002'
+				   88 GROUP-HEALTH-0400 value '003'
+				   88 GROUP-DENTAL-0400 value '004'
+			"""
+		
+			diagram {
+				x 285
+				y 361
 			}
 		}
 		SchemaRecord record = builder.build(definition)
 		
-		then: "the record's element list will contain the given elements"
+		then: "the COVERAGE record will be built"
 		record
-		record.elements.size() == 3
-		record.rootElements.size() == 1
 		
-		record.elements[0] == record.rootElements[0]
-		record.elements[0].name == 'EMP-NAME-0415'
-		record.elements[0].level == 2
-		!record.elements[0].picture
-		record.elements[0].children.size() == 2
+		record.rootElements.size() == 4
 		
-		record.elements[1].name == 'EMP-FIRST-NAME-0415'
-		record.elements[1].level == 3
-		record.elements[1].picture == 'X(10)'
-		!record.elements[1].children
-		record.elements[1].parent == record.elements[0]
+		Element selectionDate = record.rootElements[0]
+		selectionDate
+		selectionDate.name == 'SELECTION-DATE-0400'
+		selectionDate.record.is(record)
+		!selectionDate.parent
+		selectionDate.children.size() == 3
+		selectionDate.children[0].name == 'SELECTION-YEAR-0400'
+		selectionDate.children[1].name == 'SELECTION-MONTH-0400'
+		selectionDate.children[2].name == 'SELECTION-DAY-0400'
+		selectionDate.children.each {
+			assert it.record.is(record)
+			assert it.parent.is(selectionDate)
+		}
 		
-		record.elements[2].name == 'EMP-LAST-NAME-0415'
-		record.elements[2].level == 3
-		record.elements[2].picture == 'X(15)'
-		!record.elements[2].children
-		record.elements[2].parent == record.elements[0]
+		Element terminationDate = record.rootElements[1]
+		terminationDate
+		terminationDate.name == 'TERMINATION-DATE-0400'
+		terminationDate.record.is(record)
+		!terminationDate.parent
+		terminationDate.children.size() == 3
+		terminationDate.children[0].name == 'TERMINATION-YEAR-0400'
+		terminationDate.children[1].name == 'TERMINATION-MONTH-0400'
+		terminationDate.children[2].name == 'TERMINATION-DAY-0400'
+		terminationDate.children.each {
+			assert it.record.is(record)
+			assert it.parent.is(terminationDate)
+		}
+		
+		Element type = record.rootElements[2]
+		type
+		type.name == 'TYPE-0400'
+		type.record.is(record)
+		!type.parent
+		type.children.size() == 3
+		type.children[0].name == 'MASTER-0400'
+		type.children[1].name == 'FAMILY-0400'
+		type.children[2].name == 'DEPENDENT-0400'
+		type.children.each {
+			assert it.record.is(record)
+			assert it.parent.is(type)
+		}
+		
+		Element insPlanCode = record.rootElements[3]
+		insPlanCode
+		insPlanCode.name == 'INS-PLAN-CODE-0400'
+		insPlanCode.record.is(record)
+		!insPlanCode.parent
+		insPlanCode.children.size() == 4
+		insPlanCode.children[0].name == 'GROUP-LIFE-0400'
+		insPlanCode.children[1].name == 'HMO-0400'
+		insPlanCode.children[2].name == 'GROUP-HEALTH-0400'
+		insPlanCode.children[3].name == 'GROUP-DENTAL-0400'
+		insPlanCode.children.each {
+			assert it.record.is(record)
+			assert it.parent.is(insPlanCode)
+		}
 	}
 
 	def "DIRECT record (default)"() {
@@ -1888,12 +1795,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				element 'DEPT-ID-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -1924,16 +1828,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				element 'DEPT-ID2-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-				element 'DEPT-ID2-0410' {
-					level 2
-					picture 'X(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+				02 DEPT-ID2-0410 picture X(4)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -1965,12 +1863,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				element 'DEPT-ID-0410'
 				duplicates _duplicates
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -2007,12 +1902,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				element 'DEPT-ID-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+				"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -2048,12 +1940,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				duplicates 'NOT ALLOWED'
 				type 'VARIABLE'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -2089,16 +1978,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				element 'DEPT-ID2-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-				element 'DEPT-ID2-0410' {
-					level 2
-					picture 'X(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+				02 DEPT-ID2-0410 picture X(4)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -2136,16 +2019,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				duplicates 'NOT ALLOWED'
 				spanned
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-				element 'DEPT-ID2-0410' {
-					level 2
-					picture 'X(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+				02 DEPT-ID2-0410 picture X(4)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -2184,12 +2061,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 				type 'VARIABLE'
 				spanned
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		SchemaRecord record = builder.build(definition)
 		

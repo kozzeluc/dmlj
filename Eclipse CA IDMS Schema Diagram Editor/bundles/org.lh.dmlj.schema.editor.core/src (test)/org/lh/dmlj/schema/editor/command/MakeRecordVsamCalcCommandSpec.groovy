@@ -40,12 +40,9 @@ class MakeRecordVsamCalcCommandSpec extends Specification implements HasModelBui
 				element 'DEPT-ID-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+                02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		assert record
 		assert record.locationMode == LocationMode.CALC
@@ -89,13 +86,13 @@ class MakeRecordVsamCalcCommandSpec extends Specification implements HasModelBui
 	private SchemaRecord createRecordWithMultipleElements() {
 		SchemaRecord record = record {
 			name 'RECORD1'
-			elements {
-				element 'ELEMENT1'
-				element 'ELEMENT2'
-				element 'ELEMENT3'
-				element 'ELEMENT4'
-				element 'ELEMENT5'
-			}
+			elements """
+				02 ELEMENT1 picture X
+				02 ELEMENT2 picture X
+				02 ELEMENT3 picture X
+				02 ELEMENT4 picture X
+				02 ELEMENT5 picture X
+			"""
 		}
 		assert record
 		assert record.locationMode == LocationMode.DIRECT
@@ -140,12 +137,9 @@ class MakeRecordVsamCalcCommandSpec extends Specification implements HasModelBui
 				element 'DEPT-ID-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+                02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		assert record
 		assert record.locationMode == LocationMode.VSAM_CALC

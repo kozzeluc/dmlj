@@ -44,12 +44,9 @@ class MakeRecordDirectCommandSpec extends Specification implements HasModelBuild
 				element 'DEPT-ID-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+				02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		assert record
 		assert record.locationMode == LocationMode.CALC 
@@ -82,12 +79,9 @@ class MakeRecordDirectCommandSpec extends Specification implements HasModelBuild
 				element 'DEPT-ID-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}			
+			elements """
+                02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		assert record
 		assert record.locationMode == LocationMode.VSAM_CALC
@@ -124,12 +118,9 @@ class MakeRecordDirectCommandSpec extends Specification implements HasModelBuild
 					element 'DEPT-ID-0410'
 					duplicates 'NOT ALLOWED'
 				}
-				elements {
-					element 'DEPT-ID-0410' {
-						level 2
-						picture '9(4)'
-					}
-				}
+				elements """
+                    02 DEPT-ID-0410 picture 9(4)
+                """
 			}
 			set 'SET1' {
 				vsamIndex

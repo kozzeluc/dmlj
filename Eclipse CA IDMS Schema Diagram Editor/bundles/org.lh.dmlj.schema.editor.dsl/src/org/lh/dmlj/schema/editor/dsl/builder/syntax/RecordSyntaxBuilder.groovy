@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -195,17 +195,12 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 	
 	private void elements() {
 		blank_line()
-		without_tab 'elements {'
+		without_tab 'elements """'
 		record.rootElements.each { element ->
-			if (element != record.rootElements[0]) {
-				blank_line()
-			}
-			with_1_tab "element '${element.name}' {"
-			new ElementSyntaxBuilder([ output : output , initialTabs : initialTabs + 2 , 
-									   generateName : false ]).build(element)
-			with_1_tab '}'
+			new ElementSyntaxBuilder([ output : output , indent : TAB.multiply(initialTabs + 1) ]).build(element)
+			output <<= '\n'
 		}
-		without_tab '}'
+		without_tab '"""'
 	}
 	
 	private void diagram() {
