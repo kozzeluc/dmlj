@@ -23,11 +23,11 @@ import groovy.transform.CompileStatic;;
 @CompileStatic
 abstract class AbstractSyntaxBuilder<T> {
 	
-	private static final String TAB = '    '
+	protected static final String TAB = '    '
 
 	protected StringBuilder output = new StringBuilder()
-	protected int initialTabs = 0;
-	protected boolean generateName = true; // not applicable for schemas
+	protected int initialTabs = 0
+	protected boolean generateName = true // not applicable for schemas
 	
 	protected static String replaceUnderscoresBySpaces(Object anObject) {
 		anObject.toString().replaceAll("_", " ")

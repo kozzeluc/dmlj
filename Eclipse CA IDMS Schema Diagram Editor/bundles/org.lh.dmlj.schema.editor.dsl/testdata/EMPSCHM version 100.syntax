@@ -31,94 +31,25 @@ record 'COVERAGE' {
         pages 45
     }
 
-    elements {
-        element 'SELECTION-DATE-0400' {
-            level 2
-            children {
-                element 'SELECTION-YEAR-0400' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'SELECTION-MONTH-0400' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'SELECTION-DAY-0400' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'TERMINATION-DATE-0400' {
-            level 2
-            children {
-                element 'TERMINATION-YEAR-0400' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'TERMINATION-MONTH-0400' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'TERMINATION-DAY-0400' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'TYPE-0400' {
-            level 2
-            children {
-                element 'MASTER-0400' {
-                    level 88
-                    value "'M'"
-                }
-
-                element 'FAMILY-0400' {
-                    level 88
-                    value "'F'"
-                }
-
-                element 'DEPENDENT-0400' {
-                    level 88
-                    value "'D'"
-                }
-            }
-            picture 'X'
-        }
-
-        element 'INS-PLAN-CODE-0400' {
-            level 2
-            children {
-                element 'GROUP-LIFE-0400' {
-                    level 88
-                    value "'001'"
-                }
-
-                element 'HMO-0400' {
-                    level 88
-                    value "'002'"
-                }
-
-                element 'GROUP-HEALTH-0400' {
-                    level 88
-                    value "'003'"
-                }
-
-                element 'GROUP-DENTAL-0400' {
-                    level 88
-                    value "'004'"
-                }
-            }
-            picture 'X(3)'
-        }
-    }
+    elements """
+        02 SELECTION-DATE-0400
+           03 SELECTION-YEAR-0400 picture 9(4)
+           03 SELECTION-MONTH-0400 picture 9(2)
+           03 SELECTION-DAY-0400 picture 9(2)
+        02 TERMINATION-DATE-0400
+           03 TERMINATION-YEAR-0400 picture 9(4)
+           03 TERMINATION-MONTH-0400 picture 9(2)
+           03 TERMINATION-DAY-0400 picture 9(2)
+        02 TYPE-0400 picture X
+           88 MASTER-0400 value 'M'
+           88 FAMILY-0400 value 'F'
+           88 DEPENDENT-0400 value 'D'
+        02 INS-PLAN-CODE-0400 picture X(3)
+           88 GROUP-LIFE-0400 value '001'
+           88 HMO-0400 value '002'
+           88 GROUP-HEALTH-0400 value '003'
+           88 GROUP-DENTAL-0400 value '004'
+    """
 
     diagram {
         x 285
@@ -142,193 +73,44 @@ record 'DENTAL-CLAIM' {
     minimumRootLength 132
     minimumFragmentLength 932
 
-    elements {
-        element 'CLAIM-DATE-0405' {
-            level 2
-            children {
-                element 'CLAIM-YEAR-0405' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'CLAIM-MONTH-0405' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'CLAIM-DAY-0405' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'PATIENT-NAME-0405' {
-            level 2
-            children {
-                element 'PATIENT-FIRST-NAME-0405' {
-                    level 3
-                    picture 'X(10)'
-                }
-
-                element 'PATIENT-LAST-NAME-0405' {
-                    level 3
-                    picture 'X(15)'
-                }
-            }
-        }
-
-        element 'PATIENT-BIRTH-DATE-0405' {
-            level 2
-            children {
-                element 'PATIENT-BIRTH-YEAR-0405' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'PATIENT-BIRTH-MONTH-0405' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'PATIENT-BIRTH-DAY-0405' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'PATIENT-SEX-0405' {
-            level 2
-            picture 'X'
-        }
-
-        element 'RELATION-TO-EMPLOYEE-0405' {
-            level 2
-            picture 'X(10)'
-        }
-
-        element 'DENTIST-NAME-0405' {
-            level 2
-            children {
-                element 'DENTIST-FIRST-NAME-0405' {
-                    level 3
-                    picture 'X(10)'
-                }
-
-                element 'DENTIST-LAST-NAME-0405' {
-                    level 3
-                    picture 'X(15)'
-                }
-            }
-        }
-
-        element 'DENTIST-ADDRESS-0405' {
-            level 2
-            children {
-                element 'DENTIST-STREET-0405' {
-                    level 3
-                    picture 'X(20)'
-                }
-
-                element 'DENTIST-CITY-0405' {
-                    level 3
-                    picture 'X(15)'
-                }
-
-                element 'DENTIST-STATE-0405' {
-                    level 3
-                    picture 'X(2)'
-                }
-
-                element 'DENTIST-ZIP-0405' {
-                    level 3
-                    children {
-                        element 'DENTIST-ZIP-FIRST-FIVE-0405' {
-                            level 4
-                            picture 'X(5)'
-                        }
-
-                        element 'DENTIST-ZIP-LAST-FOUR-0405' {
-                            level 4
-                            picture 'X(4)'
-                        }
-                    }
-                }
-            }
-        }
-
-        element 'DENTIST-LICENSE-NUMBER-0405' {
-            level 2
-            picture '9(6)'
-        }
-
-        element 'NUMBER-OF-PROCEDURES-0405' {
-            level 2
-            picture '9(2)'
-            usage 'COMPUTATIONAL'
-        }
-
-        element 'FILLER' {
-            level 2
-            picture 'X'
-        }
-
-        element 'DENTIST-CHARGES-0405' {
-            level 2
-            children {
-                element 'TOOTH-NUMBER-0405' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'SERVICE-DATE-0405' {
-                    level 3
-                    children {
-                        element 'SERVICE-YEAR-0405' {
-                            level 4
-                            picture '9(4)'
-                        }
-
-                        element 'SERVICE-MONTH-0405' {
-                            level 4
-                            picture '9(2)'
-                        }
-
-                        element 'SERVICE-DAY-0405' {
-                            level 4
-                            picture '9(2)'
-                        }
-                    }
-                }
-
-                element 'PROCEDURE-CODE-0405' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'DESCRIPTION-OF-SERVICE-0405' {
-                    level 3
-                    picture 'X(60)'
-                }
-
-                element 'FEE-0405' {
-                    level 3
-                    picture 'S9(7)V99'
-                    usage 'COMPUTATIONAL 3'
-                }
-
-                element 'FILLER' {
-                    level 3
-                    picture 'X'
-                }
-            }
-            occurs {
-                count 10
-                dependingOn 'NUMBER-OF-PROCEDURES-0405'
-            }
-        }
-    }
+    elements """
+        02 CLAIM-DATE-0405
+           03 CLAIM-YEAR-0405 picture 9(4)
+           03 CLAIM-MONTH-0405 picture 9(2)
+           03 CLAIM-DAY-0405 picture 9(2)
+        02 PATIENT-NAME-0405
+           03 PATIENT-FIRST-NAME-0405 picture X(10)
+           03 PATIENT-LAST-NAME-0405 picture X(15)
+        02 PATIENT-BIRTH-DATE-0405
+           03 PATIENT-BIRTH-YEAR-0405 picture 9(4)
+           03 PATIENT-BIRTH-MONTH-0405 picture 9(2)
+           03 PATIENT-BIRTH-DAY-0405 picture 9(2)
+        02 PATIENT-SEX-0405 picture X
+        02 RELATION-TO-EMPLOYEE-0405 picture X(10)
+        02 DENTIST-NAME-0405
+           03 DENTIST-FIRST-NAME-0405 picture X(10)
+           03 DENTIST-LAST-NAME-0405 picture X(15)
+        02 DENTIST-ADDRESS-0405
+           03 DENTIST-STREET-0405 picture X(20)
+           03 DENTIST-CITY-0405 picture X(15)
+           03 DENTIST-STATE-0405 picture X(2)
+           03 DENTIST-ZIP-0405
+              04 DENTIST-ZIP-FIRST-FIVE-0405 picture X(5)
+              04 DENTIST-ZIP-LAST-FOUR-0405 picture X(4)
+        02 DENTIST-LICENSE-NUMBER-0405 picture 9(6)
+        02 NUMBER-OF-PROCEDURES-0405 picture 9(2) usage 'COMPUTATIONAL'
+        02 FILLER picture X
+        02 DENTIST-CHARGES-0405 occurs 10 dependingOn NUMBER-OF-PROCEDURES-0405
+           03 TOOTH-NUMBER-0405 picture 9(2)
+           03 SERVICE-DATE-0405
+              04 SERVICE-YEAR-0405 picture 9(4)
+              04 SERVICE-MONTH-0405 picture 9(2)
+              04 SERVICE-DAY-0405 picture 9(2)
+           03 PROCEDURE-CODE-0405 picture 9(4)
+           03 DESCRIPTION-OF-SERVICE-0405 picture X(60)
+           03 FEE-0405 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 FILLER picture X
+    """
 
     diagram {
         storageMode 'VARIABLE'
@@ -351,27 +133,12 @@ record 'DEPARTMENT' {
         pages 45
     }
 
-    elements {
-        element 'DEPT-ID-0410' {
-            level 2
-            picture '9(4)'
-        }
-
-        element 'DEPT-NAME-0410' {
-            level 2
-            picture 'X(45)'
-        }
-
-        element 'DEPT-HEAD-ID-0410' {
-            level 2
-            picture '9(4)'
-        }
-
-        element 'FILLER' {
-            level 2
-            picture 'XXX'
-        }
-    }
+    elements """
+        02 DEPT-ID-0410 picture 9(4)
+        02 DEPT-NAME-0410 picture X(45)
+        02 DEPT-HEAD-ID-0410 picture 9(4)
+        02 FILLER picture XXX
+    """
 
     diagram {
         x 171
@@ -393,163 +160,39 @@ record 'EMPLOYEE' {
         pages 95
     }
 
-    elements {
-        element 'EMP-ID-0415' {
-            level 2
-            picture '9(4)'
-        }
-
-        element 'EMP-NAME-0415' {
-            level 2
-            children {
-                element 'EMP-FIRST-NAME-0415' {
-                    level 3
-                    picture 'X(10)'
-                }
-
-                element 'EMP-LAST-NAME-0415' {
-                    level 3
-                    picture 'X(15)'
-                }
-            }
-        }
-
-        element 'EMP-ADDRESS-0415' {
-            level 2
-            children {
-                element 'EMP-STREET-0415' {
-                    level 3
-                    picture 'X(20)'
-                }
-
-                element 'EMP-CITY-0415' {
-                    level 3
-                    picture 'X(15)'
-                }
-
-                element 'EMP-STATE-0415' {
-                    level 3
-                    picture 'X(2)'
-                }
-
-                element 'EMP-ZIP-0415' {
-                    level 3
-                    children {
-                        element 'EMP-ZIP-FIRST-FIVE-0415' {
-                            level 4
-                            picture 'X(5)'
-                        }
-
-                        element 'EMP-ZIP-LAST-FOUR-0415' {
-                            level 4
-                            picture 'X(4)'
-                        }
-                    }
-                }
-            }
-        }
-
-        element 'EMP-PHONE-0415' {
-            level 2
-            picture '9(10)'
-        }
-
-        element 'STATUS-0415' {
-            level 2
-            children {
-                element 'ACTIVE-0415' {
-                    level 88
-                    value "'01'"
-                }
-
-                element 'ST-DISABIL-0415' {
-                    level 88
-                    value "'02'"
-                }
-
-                element 'LT-DISABIL-0415' {
-                    level 88
-                    value "'03'"
-                }
-
-                element 'LEAVE-OF-ABSENCE-0415' {
-                    level 88
-                    value "'04'"
-                }
-
-                element 'TERMINATED-0415' {
-                    level 88
-                    value "'05'"
-                }
-            }
-            picture 'X(2)'
-        }
-
-        element 'SS-NUMBER-0415' {
-            level 2
-            picture '9(9)'
-        }
-
-        element 'START-DATE-0415' {
-            level 2
-            children {
-                element 'START-YEAR-0415' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'START-MONTH-0415' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'START-DAY-0415' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'TERMINATION-DATE-0415' {
-            level 2
-            children {
-                element 'TERMINATION-YEAR-0415' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'TERMINATION-MONTH-0415' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'TERMINATION-DAY-0415' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'BIRTH-DATE-0415' {
-            level 2
-            children {
-                element 'BIRTH-YEAR-0415' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'BIRTH-MONTH-0415' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'BIRTH-DAY-0415' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-    }
+    elements """
+        02 EMP-ID-0415 picture 9(4)
+        02 EMP-NAME-0415
+           03 EMP-FIRST-NAME-0415 picture X(10)
+           03 EMP-LAST-NAME-0415 picture X(15)
+        02 EMP-ADDRESS-0415
+           03 EMP-STREET-0415 picture X(20)
+           03 EMP-CITY-0415 picture X(15)
+           03 EMP-STATE-0415 picture X(2)
+           03 EMP-ZIP-0415
+              04 EMP-ZIP-FIRST-FIVE-0415 picture X(5)
+              04 EMP-ZIP-LAST-FOUR-0415 picture X(4)
+        02 EMP-PHONE-0415 picture 9(10)
+        02 STATUS-0415 picture X(2)
+           88 ACTIVE-0415 value '01'
+           88 ST-DISABIL-0415 value '02'
+           88 LT-DISABIL-0415 value '03'
+           88 LEAVE-OF-ABSENCE-0415 value '04'
+           88 TERMINATED-0415 value '05'
+        02 SS-NUMBER-0415 picture 9(9)
+        02 START-DATE-0415
+           03 START-YEAR-0415 picture 9(4)
+           03 START-MONTH-0415 picture 9(2)
+           03 START-DAY-0415 picture 9(2)
+        02 TERMINATION-DATE-0415
+           03 TERMINATION-YEAR-0415 picture 9(4)
+           03 TERMINATION-MONTH-0415 picture 9(2)
+           03 TERMINATION-DAY-0415 picture 9(2)
+        02 BIRTH-DATE-0415
+           03 BIRTH-YEAR-0415 picture 9(4)
+           03 BIRTH-MONTH-0415 picture 9(2)
+           03 BIRTH-DAY-0415 picture 9(2)
+    """
 
     diagram {
         x 285
@@ -570,81 +213,22 @@ record 'EMPOSITION' {
         pages 95
     }
 
-    elements {
-        element 'START-DATE-0420' {
-            level 2
-            children {
-                element 'START-YEAR-0420' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'START-MONTH-0420' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'START-DAY-0420' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'FINISH-DATE-0420' {
-            level 2
-            children {
-                element 'FINISH-YEAR-0420' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'FINISH-MONTH-0420' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'FINISH-DAY-0420' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'SALARY-GRADE-0420' {
-            level 2
-            picture '9(2)'
-        }
-
-        element 'SALARY-AMOUNT-0420' {
-            level 2
-            picture 'S9(7)V99'
-            usage 'COMPUTATIONAL 3'
-        }
-
-        element 'BONUS-PERCENT-0420' {
-            level 2
-            picture 'SV999'
-            usage 'COMPUTATIONAL 3'
-        }
-
-        element 'COMMISSION-PERCENT-0420' {
-            level 2
-            picture 'SV999'
-            usage 'COMPUTATIONAL 3'
-        }
-
-        element 'OVERTIME-RATE-0420' {
-            level 2
-            picture 'S9V99'
-            usage 'COMPUTATIONAL 3'
-        }
-
-        element 'FILLER' {
-            level 2
-            picture 'XXX'
-        }
-    }
+    elements """
+        02 START-DATE-0420
+           03 START-YEAR-0420 picture 9(4)
+           03 START-MONTH-0420 picture 9(2)
+           03 START-DAY-0420 picture 9(2)
+        02 FINISH-DATE-0420
+           03 FINISH-YEAR-0420 picture 9(4)
+           03 FINISH-MONTH-0420 picture 9(2)
+           03 FINISH-DAY-0420 picture 9(2)
+        02 SALARY-GRADE-0420 picture 9(2)
+        02 SALARY-AMOUNT-0420 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+        02 BONUS-PERCENT-0420 picture SV999 usage 'COMPUTATIONAL 3'
+        02 COMMISSION-PERCENT-0420 picture SV999 usage 'COMPUTATIONAL 3'
+        02 OVERTIME-RATE-0420 picture S9V99 usage 'COMPUTATIONAL 3'
+        02 FILLER picture XXX
+    """
 
     diagram {
         x 38
@@ -665,58 +249,18 @@ record 'EXPERTISE' {
         pages 95
     }
 
-    elements {
-        element 'SKILL-LEVEL-0425' {
-            level 2
-            children {
-                element 'EXPERT-0425' {
-                    level 88
-                    value "'04'"
-                }
-
-                element 'PROFICIENT-0425' {
-                    level 88
-                    value "'03'"
-                }
-
-                element 'COMPETENT-0425' {
-                    level 88
-                    value "'02'"
-                }
-
-                element 'ELEMENTARY-0425' {
-                    level 88
-                    value "'01'"
-                }
-            }
-            picture 'XX'
-        }
-
-        element 'EXPERTISE-DATE-0425' {
-            level 2
-            children {
-                element 'EXPERTISE-YEAR-0425' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'EXPERTISE-MONTH-0425' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'EXPERTISE-DAY-0425' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'FILLER' {
-            level 2
-            picture 'XX'
-        }
-    }
+    elements """
+        02 SKILL-LEVEL-0425 picture XX
+           88 EXPERT-0425 value '04'
+           88 PROFICIENT-0425 value '03'
+           88 COMPETENT-0425 value '02'
+           88 ELEMENTARY-0425 value '01'
+        02 EXPERTISE-DATE-0425
+           03 EXPERTISE-YEAR-0425 picture 9(4)
+           03 EXPERTISE-MONTH-0425 picture 9(2)
+           03 EXPERTISE-DAY-0425 picture 9(2)
+        02 FILLER picture XX
+    """
 
     diagram {
         x 532
@@ -737,237 +281,52 @@ record 'HOSPITAL-CLAIM' {
         pages 45
     }
 
-    elements {
-        element 'CLAIM-DATE-0430' {
-            level 2
-            children {
-                element 'CLAIM-YEAR-0430' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'CLAIM-MONTH-0430' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'CLAIM-DAY-0430' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'PATIENT-NAME-0430' {
-            level 2
-            children {
-                element 'PATIENT-FIRST-NAME-0430' {
-                    level 3
-                    picture 'X(10)'
-                }
-
-                element 'PATIENT-LAST-NAME-0430' {
-                    level 3
-                    picture 'X(15)'
-                }
-            }
-        }
-
-        element 'PATIENT-BIRTH-DATE-0430' {
-            level 2
-            children {
-                element 'PATIENT-BIRTH-YEAR-0430' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'PATIENT-BIRTH-MONTH-0430' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'PATIENT-BIRTH-DAY-0430' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'PATIENT-SEX-0430' {
-            level 2
-            picture 'X'
-        }
-
-        element 'RELATION-TO-EMPLOYEE-0430' {
-            level 2
-            picture 'X(10)'
-        }
-
-        element 'HOSPITAL-NAME-0430' {
-            level 2
-            picture 'X(25)'
-        }
-
-        element 'HOSP-ADDRESS-0430' {
-            level 2
-            children {
-                element 'HOSP-STREET-0430' {
-                    level 3
-                    picture 'X(20)'
-                }
-
-                element 'HOSP-CITY-0430' {
-                    level 3
-                    picture 'X(15)'
-                }
-
-                element 'HOSP-STATE-0430' {
-                    level 3
-                    picture 'X(2)'
-                }
-
-                element 'HOSP-ZIP-0430' {
-                    level 3
-                    children {
-                        element 'HOSP-ZIP-FIRST-FIVE-0430' {
-                            level 4
-                            picture 'X(5)'
-                        }
-
-                        element 'HOSP-ZIP-LAST-FOUR-0430' {
-                            level 4
-                            picture 'X(4)'
-                        }
-                    }
-                }
-            }
-        }
-
-        element 'ADMIT-DATE-0430' {
-            level 2
-            children {
-                element 'ADMIT-YEAR-0430' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'ADMIT-MONTH-0430' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'ADMIT-DAY-0430' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'DISCHARGE-DATE-0430' {
-            level 2
-            children {
-                element 'DISCHARGE-YEAR-0430' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'DISCHARGE-MONTH-0430' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'DISCHARGE-DAY-0430' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'DIAGNOSIS-0430' {
-            level 2
-            picture 'X(60)'
-            occurs 2
-        }
-
-        element 'HOSPITAL-CHARGES-0430' {
-            level 2
-            children {
-                element 'ROOM-AND-BOARD-0430' {
-                    level 3
-                    children {
-                        element 'WARD-0430' {
-                            level 4
-                            children {
-                                element 'WARD-DAYS-0430' {
-                                    level 5
-                                    picture 'S9(5)'
-                                    usage 'COMPUTATIONAL 3'
-                                }
-
-                                element 'WARD-RATE-0430' {
-                                    level 5
-                                    picture 'S9(7)V99'
-                                    usage 'COMPUTATIONAL 3'
-                                }
-
-                                element 'WARD-TOTAL-0430' {
-                                    level 5
-                                    picture 'S9(7)V99'
-                                    usage 'COMPUTATIONAL 3'
-                                }
-                            }
-                        }
-
-                        element 'SEMI-PRIVATE-0430' {
-                            level 4
-                            children {
-                                element 'SEMI-DAYS-0430' {
-                                    level 5
-                                    picture 'S9(5)'
-                                    usage 'COMPUTATIONAL 3'
-                                }
-
-                                element 'SEMI-RATE-0430' {
-                                    level 5
-                                    picture 'S9(7)V99'
-                                    usage 'COMPUTATIONAL 3'
-                                }
-
-                                element 'SEMI-TOTAL-0430' {
-                                    level 5
-                                    picture 'S9(7)V99'
-                                    usage 'COMPUTATIONAL 3'
-                                }
-                            }
-                        }
-                    }
-                }
-
-                element 'OTHER-CHARGES-0430' {
-                    level 3
-                    children {
-                        element 'DELIVERY-COST-0430' {
-                            level 4
-                            picture 'S9(7)V99'
-                            usage 'COMPUTATIONAL 3'
-                        }
-
-                        element 'ANESTHESIA-COST-0430' {
-                            level 4
-                            picture 'S9(7)V99'
-                            usage 'COMPUTATIONAL 3'
-                        }
-
-                        element 'LAB-COST-0430' {
-                            level 4
-                            picture 'S9(7)V99'
-                            usage 'COMPUTATIONAL 3'
-                        }
-                    }
-                }
-            }
-        }
-    }
+    elements """
+        02 CLAIM-DATE-0430
+           03 CLAIM-YEAR-0430 picture 9(4)
+           03 CLAIM-MONTH-0430 picture 9(2)
+           03 CLAIM-DAY-0430 picture 9(2)
+        02 PATIENT-NAME-0430
+           03 PATIENT-FIRST-NAME-0430 picture X(10)
+           03 PATIENT-LAST-NAME-0430 picture X(15)
+        02 PATIENT-BIRTH-DATE-0430
+           03 PATIENT-BIRTH-YEAR-0430 picture 9(4)
+           03 PATIENT-BIRTH-MONTH-0430 picture 9(2)
+           03 PATIENT-BIRTH-DAY-0430 picture 9(2)
+        02 PATIENT-SEX-0430 picture X
+        02 RELATION-TO-EMPLOYEE-0430 picture X(10)
+        02 HOSPITAL-NAME-0430 picture X(25)
+        02 HOSP-ADDRESS-0430
+           03 HOSP-STREET-0430 picture X(20)
+           03 HOSP-CITY-0430 picture X(15)
+           03 HOSP-STATE-0430 picture X(2)
+           03 HOSP-ZIP-0430
+              04 HOSP-ZIP-FIRST-FIVE-0430 picture X(5)
+              04 HOSP-ZIP-LAST-FOUR-0430 picture X(4)
+        02 ADMIT-DATE-0430
+           03 ADMIT-YEAR-0430 picture 9(4)
+           03 ADMIT-MONTH-0430 picture 9(2)
+           03 ADMIT-DAY-0430 picture 9(2)
+        02 DISCHARGE-DATE-0430
+           03 DISCHARGE-YEAR-0430 picture 9(4)
+           03 DISCHARGE-MONTH-0430 picture 9(2)
+           03 DISCHARGE-DAY-0430 picture 9(2)
+        02 DIAGNOSIS-0430 picture X(60) occurs 2
+        02 HOSPITAL-CHARGES-0430
+           03 ROOM-AND-BOARD-0430
+              04 WARD-0430
+                 05 WARD-DAYS-0430 picture S9(5) usage 'COMPUTATIONAL 3'
+                 05 WARD-RATE-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+                 05 WARD-TOTAL-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+              04 SEMI-PRIVATE-0430
+                 05 SEMI-DAYS-0430 picture S9(5) usage 'COMPUTATIONAL 3'
+                 05 SEMI-RATE-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+                 05 SEMI-TOTAL-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 OTHER-CHARGES-0430
+              04 DELIVERY-COST-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+              04 ANESTHESIA-COST-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+              04 LAB-COST-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+    """
 
     diagram {
         x 285
@@ -989,117 +348,29 @@ record 'INSURANCE-PLAN' {
         pages 4
     }
 
-    elements {
-        element 'INS-PLAN-CODE-0435' {
-            level 2
-            children {
-                element 'GROUP-LIFE-0435' {
-                    level 88
-                    value "'001'"
-                }
-
-                element 'HMO-0435' {
-                    level 88
-                    value "'002'"
-                }
-
-                element 'GROUP-HEALTH-0435' {
-                    level 88
-                    value "'003'"
-                }
-
-                element 'GROUP-DENTAL-0435' {
-                    level 88
-                    value "'004'"
-                }
-            }
-            picture 'X(3)'
-        }
-
-        element 'INS-CO-NAME-0435' {
-            level 2
-            picture 'X(45)'
-        }
-
-        element 'INS-CO-ADDRESS-0435' {
-            level 2
-            children {
-                element 'INS-CO-STREET-0435' {
-                    level 3
-                    picture 'X(20)'
-                }
-
-                element 'INS-CO-CITY-0435' {
-                    level 3
-                    picture 'X(15)'
-                }
-
-                element 'INS-CO-STATE-0435' {
-                    level 3
-                    picture 'X(2)'
-                }
-
-                element 'INS-CO-ZIP-0435' {
-                    level 3
-                    children {
-                        element 'INS-CO-ZIP-FIRST-FIVE-0435' {
-                            level 4
-                            picture 'X(5)'
-                        }
-
-                        element 'INS-CO-ZIP-LAST-FOUR-0435' {
-                            level 4
-                            picture 'X(4)'
-                        }
-                    }
-                }
-            }
-        }
-
-        element 'INS-CO-PHONE-0435' {
-            level 2
-            picture '9(10)'
-        }
-
-        element 'GROUP-NUMBER-0435' {
-            level 2
-            picture '9(6)'
-        }
-
-        element 'PLAN-DESCRIPTION-0435' {
-            level 2
-            children {
-                element 'DEDUCT-0435' {
-                    level 3
-                    picture 'S9(7)V99'
-                    usage 'COMPUTATIONAL 3'
-                }
-
-                element 'MAXIMUM-LIFE-COST-0435' {
-                    level 3
-                    picture 'S9(7)V99'
-                    usage 'COMPUTATIONAL 3'
-                }
-
-                element 'FAMILY-COST-0435' {
-                    level 3
-                    picture 'S9(7)V99'
-                    usage 'COMPUTATIONAL 3'
-                }
-
-                element 'DEP-COST-0435' {
-                    level 3
-                    picture 'S9(7)V99'
-                    usage 'COMPUTATIONAL 3'
-                }
-            }
-        }
-
-        element 'FILLER' {
-            level 2
-            picture 'XX'
-        }
-    }
+    elements """
+        02 INS-PLAN-CODE-0435 picture X(3)
+           88 GROUP-LIFE-0435 value '001'
+           88 HMO-0435 value '002'
+           88 GROUP-HEALTH-0435 value '003'
+           88 GROUP-DENTAL-0435 value '004'
+        02 INS-CO-NAME-0435 picture X(45)
+        02 INS-CO-ADDRESS-0435
+           03 INS-CO-STREET-0435 picture X(20)
+           03 INS-CO-CITY-0435 picture X(15)
+           03 INS-CO-STATE-0435 picture X(2)
+           03 INS-CO-ZIP-0435
+              04 INS-CO-ZIP-FIRST-FIVE-0435 picture X(5)
+              04 INS-CO-ZIP-LAST-FOUR-0435 picture X(4)
+        02 INS-CO-PHONE-0435 picture 9(10)
+        02 GROUP-NUMBER-0435 picture 9(6)
+        02 PLAN-DESCRIPTION-0435
+           03 DEDUCT-0435 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 MAXIMUM-LIFE-COST-0435 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 FAMILY-COST-0435 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 DEP-COST-0435 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+        02 FILLER picture XX
+    """
 
     diagram {
         x 532
@@ -1128,70 +399,20 @@ record 'JOB' {
     procedure 'IDMSCOMP BEFORE MODIFY'
     procedure 'IDMSDCOM AFTER GET'
 
-    elements {
-        element 'JOB-ID-0440' {
-            level 2
-            picture '9(4)'
-        }
-
-        element 'TITLE-0440' {
-            level 2
-            picture 'X(20)'
-        }
-
-        element 'DESCRIPTION-0440' {
-            level 2
-            children {
-                element 'DESCRIPTION-LINE-0440' {
-                    level 3
-                    picture 'X(60)'
-                    occurs 2
-                }
-            }
-        }
-
-        element 'REQUIREMENTS-0440' {
-            level 2
-            children {
-                element 'REQUIREMENT-LINE-0440' {
-                    level 3
-                    picture 'X(60)'
-                    occurs 2
-                }
-            }
-        }
-
-        element 'MINIMUM-SALARY-0440' {
-            level 2
-            picture 'S9(6)V99'
-        }
-
-        element 'MAXIMUM-SALARY-0440' {
-            level 2
-            picture 'S9(6)V99'
-        }
-
-        element 'SALARY-GRADES-0440' {
-            level 2
-            picture '9(2)'
-            occurs 4
-        }
-
-        element 'NUMBER-OF-POSITIONS-0440' {
-            level 2
-            picture '9(3)'
-        }
-
-        element 'NUMBER-OPEN-0440' {
-            level 2
-            picture '9(3)'
-        }
-
-        element 'FILLER' {
-            level 2
-            picture 'XX'
-        }
-    }
+    elements """
+        02 JOB-ID-0440 picture 9(4)
+        02 TITLE-0440 picture X(20)
+        02 DESCRIPTION-0440
+           03 DESCRIPTION-LINE-0440 picture X(60) occurs 2
+        02 REQUIREMENTS-0440
+           03 REQUIREMENT-LINE-0440 picture X(60) occurs 2
+        02 MINIMUM-SALARY-0440 picture S9(6)V99
+        02 MAXIMUM-SALARY-0440 picture S9(6)V99
+        02 SALARY-GRADES-0440 picture 9(2) occurs 4
+        02 NUMBER-OF-POSITIONS-0440 picture 9(3)
+        02 NUMBER-OPEN-0440 picture 9(3)
+        02 FILLER picture XX
+    """
 
     diagram {
         storageMode 'FIXED COMPRESSED'
@@ -1216,194 +437,44 @@ record 'NON-HOSP-CLAIM' {
     minimumRootLength 248
     minimumFragmentLength 1052
 
-    elements {
-        element 'CLAIM-DATE-0445' {
-            level 2
-            children {
-                element 'CLAIM-YEAR-0445' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'CLAIM-MONTH-0445' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'CLAIM-DAY-0445' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'PATIENT-NAME-0445' {
-            level 2
-            children {
-                element 'PATIENT-FIRST-NAME-0445' {
-                    level 3
-                    picture 'X(10)'
-                }
-
-                element 'PATIENT-LAST-NAME-0445' {
-                    level 3
-                    picture 'X(15)'
-                }
-            }
-        }
-
-        element 'PATIENT-BIRTH-DATE-0445' {
-            level 2
-            children {
-                element 'PATIENT-BIRTH-YEAR-0445' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'PATIENT-BIRTH-MONTH-0445' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'PATIENT-BIRTH-DAY-0445' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'PATIENT-SEX-0445' {
-            level 2
-            picture 'X'
-        }
-
-        element 'RELATION-TO-EMPLOYEE-0445' {
-            level 2
-            picture 'X(10)'
-        }
-
-        element 'PHYSICIAN-NAME-0445' {
-            level 2
-            children {
-                element 'PHYSICIAN-FIRST-NAME-0445' {
-                    level 3
-                    picture 'X(10)'
-                }
-
-                element 'PHYSICIAN-LAST-NAME-0445' {
-                    level 3
-                    picture 'X(15)'
-                }
-            }
-        }
-
-        element 'PHYSICIAN-ADDRESS-0445' {
-            level 2
-            children {
-                element 'PHYSICIAN-STREET-0445' {
-                    level 3
-                    picture 'X(20)'
-                }
-
-                element 'PHYSICIAN-CITY-0445' {
-                    level 3
-                    picture 'X(15)'
-                }
-
-                element 'PHYSICIAN-STATE-0445' {
-                    level 3
-                    picture 'X(2)'
-                }
-
-                element 'PHYSICIAN-ZIP-0445' {
-                    level 3
-                    children {
-                        element 'PHYSICIAN-ZIP-FIRST-FIVE-0445' {
-                            level 4
-                            picture 'X(5)'
-                        }
-
-                        element 'PHYSICIAN-ZIP-LAST-FOUR-0445' {
-                            level 4
-                            picture 'X(4)'
-                        }
-                    }
-                }
-            }
-        }
-
-        element 'PHYSICIAN-ID-0445' {
-            level 2
-            picture '9(6)'
-        }
-
-        element 'DIAGNOSIS-0445' {
-            level 2
-            picture 'X(60)'
-            occurs 2
-        }
-
-        element 'NUMBER-OF-PROCEDURES-0445' {
-            level 2
-            picture '9(2)'
-            usage 'COMPUTATIONAL'
-        }
-
-        element 'FILLER' {
-            level 2
-            picture 'X'
-        }
-
-        element 'PHYSICIAN-CHARGES-0445' {
-            level 2
-            children {
-                element 'SERVICE-DATE-0445' {
-                    level 3
-                    children {
-                        element 'SERVICE-YEAR-0445' {
-                            level 4
-                            picture '9(4)'
-                        }
-
-                        element 'SERVICE-MONTH-0445' {
-                            level 4
-                            picture '9(2)'
-                        }
-
-                        element 'SERVICE-DAY-0445' {
-                            level 4
-                            picture '9(2)'
-                        }
-                    }
-                }
-
-                element 'PROCEDURE-CODE-0445' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'DESCRIPTION-OF-SERVICE-0445' {
-                    level 3
-                    picture 'X(60)'
-                }
-
-                element 'FEE-0445' {
-                    level 3
-                    picture 'S9(7)V99'
-                    usage 'COMPUTATIONAL 3'
-                }
-
-                element 'FILLER' {
-                    level 3
-                    picture 'XXX'
-                }
-            }
-            occurs {
-                count 10
-                dependingOn 'NUMBER-OF-PROCEDURES-0445'
-            }
-        }
-    }
+    elements """
+        02 CLAIM-DATE-0445
+           03 CLAIM-YEAR-0445 picture 9(4)
+           03 CLAIM-MONTH-0445 picture 9(2)
+           03 CLAIM-DAY-0445 picture 9(2)
+        02 PATIENT-NAME-0445
+           03 PATIENT-FIRST-NAME-0445 picture X(10)
+           03 PATIENT-LAST-NAME-0445 picture X(15)
+        02 PATIENT-BIRTH-DATE-0445
+           03 PATIENT-BIRTH-YEAR-0445 picture 9(4)
+           03 PATIENT-BIRTH-MONTH-0445 picture 9(2)
+           03 PATIENT-BIRTH-DAY-0445 picture 9(2)
+        02 PATIENT-SEX-0445 picture X
+        02 RELATION-TO-EMPLOYEE-0445 picture X(10)
+        02 PHYSICIAN-NAME-0445
+           03 PHYSICIAN-FIRST-NAME-0445 picture X(10)
+           03 PHYSICIAN-LAST-NAME-0445 picture X(15)
+        02 PHYSICIAN-ADDRESS-0445
+           03 PHYSICIAN-STREET-0445 picture X(20)
+           03 PHYSICIAN-CITY-0445 picture X(15)
+           03 PHYSICIAN-STATE-0445 picture X(2)
+           03 PHYSICIAN-ZIP-0445
+              04 PHYSICIAN-ZIP-FIRST-FIVE-0445 picture X(5)
+              04 PHYSICIAN-ZIP-LAST-FOUR-0445 picture X(4)
+        02 PHYSICIAN-ID-0445 picture 9(6)
+        02 DIAGNOSIS-0445 picture X(60) occurs 2
+        02 NUMBER-OF-PROCEDURES-0445 picture 9(2) usage 'COMPUTATIONAL'
+        02 FILLER picture X
+        02 PHYSICIAN-CHARGES-0445 occurs 10 dependingOn NUMBER-OF-PROCEDURES-0445
+           03 SERVICE-DATE-0445
+              04 SERVICE-YEAR-0445 picture 9(4)
+              04 SERVICE-MONTH-0445 picture 9(2)
+              04 SERVICE-DAY-0445 picture 9(2)
+           03 PROCEDURE-CODE-0445 picture 9(4)
+           03 DESCRIPTION-OF-SERVICE-0445 picture X(60)
+           03 FEE-0445 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 FILLER picture XXX
+    """
 
     diagram {
         storageMode 'VARIABLE'
@@ -1426,63 +497,19 @@ record 'OFFICE' {
         pages 45
     }
 
-    elements {
-        element 'OFFICE-CODE-0450' {
-            level 2
-            picture 'X(3)'
-        }
-
-        element 'OFFICE-ADDRESS-0450' {
-            level 2
-            children {
-                element 'OFFICE-STREET-0450' {
-                    level 3
-                    picture 'X(20)'
-                }
-
-                element 'OFFICE-CITY-0450' {
-                    level 3
-                    picture 'X(15)'
-                }
-
-                element 'OFFICE-STATE-0450' {
-                    level 3
-                    picture 'X(2)'
-                }
-
-                element 'OFFICE-ZIP-0450' {
-                    level 3
-                    children {
-                        element 'OFFICE-ZIP-FIRST-FIVE-0450' {
-                            level 4
-                            picture 'X(5)'
-                        }
-
-                        element 'OFFICE-ZIP-LAST-FOUR-0450' {
-                            level 4
-                            picture 'X(4)'
-                        }
-                    }
-                }
-            }
-        }
-
-        element 'OFFICE-PHONE-0450' {
-            level 2
-            picture '9(7)'
-            occurs 3
-        }
-
-        element 'OFFICE-AREA-CODE-0450' {
-            level 2
-            picture 'X(3)'
-        }
-
-        element 'SPEED-DIAL-0450' {
-            level 2
-            picture 'X(3)'
-        }
-    }
+    elements """
+        02 OFFICE-CODE-0450 picture X(3)
+        02 OFFICE-ADDRESS-0450
+           03 OFFICE-STREET-0450 picture X(20)
+           03 OFFICE-CITY-0450 picture X(15)
+           03 OFFICE-STATE-0450 picture X(2)
+           03 OFFICE-ZIP-0450
+              04 OFFICE-ZIP-FIRST-FIVE-0450 picture X(5)
+              04 OFFICE-ZIP-LAST-FOUR-0450 picture X(4)
+        02 OFFICE-PHONE-0450 picture 9(7) occurs 3
+        02 OFFICE-AREA-CODE-0450 picture X(3)
+        02 SPEED-DIAL-0450 picture X(3)
+    """
 
     diagram {
         x 399
@@ -1504,22 +531,11 @@ record 'SKILL' {
         pages 45
     }
 
-    elements {
-        element 'SKILL-ID-0455' {
-            level 2
-            picture '9(4)'
-        }
-
-        element 'SKILL-NAME-0455' {
-            level 2
-            picture 'X(12)'
-        }
-
-        element 'SKILL-DESCRIPTION-0455' {
-            level 2
-            picture 'X(60)'
-        }
-    }
+    elements """
+        02 SKILL-ID-0455 picture 9(4)
+        02 SKILL-NAME-0455 picture X(12)
+        02 SKILL-DESCRIPTION-0455 picture X(60)
+    """
 
     diagram {
         x 532
@@ -1540,48 +556,16 @@ record 'STRUCTURE' {
         pages 95
     }
 
-    elements {
-        element 'STRUCTURE-CODE-0460' {
-            level 2
-            children {
-                element 'ADMIN-0460' {
-                    level 88
-                    value "'A'"
-                }
-
-                element 'PROJECT-0460' {
-                    level 88
-                    value "'P1' THRU 'P9'"
-                }
-            }
-            picture 'X(2)'
-        }
-
-        element 'STRUCTURE-DATE-0460' {
-            level 2
-            children {
-                element 'STRUCTURE-YEAR-0460' {
-                    level 3
-                    picture '9(4)'
-                }
-
-                element 'STRUCTURE-MONTH-0460' {
-                    level 3
-                    picture '9(2)'
-                }
-
-                element 'STRUCTURE-DAY-0460' {
-                    level 3
-                    picture '9(2)'
-                }
-            }
-        }
-
-        element 'FILLER' {
-            level 2
-            picture 'XX'
-        }
-    }
+    elements """
+        02 STRUCTURE-CODE-0460 picture X(2)
+           88 ADMIN-0460 value 'A'
+           88 PROJECT-0460 value 'P1' THRU 'P9'
+        02 STRUCTURE-DATE-0460
+           03 STRUCTURE-YEAR-0460 picture 9(4)
+           03 STRUCTURE-MONTH-0460 picture 9(2)
+           03 STRUCTURE-DAY-0460 picture 9(2)
+        02 FILLER picture XX
+    """
 
     diagram {
         x 39

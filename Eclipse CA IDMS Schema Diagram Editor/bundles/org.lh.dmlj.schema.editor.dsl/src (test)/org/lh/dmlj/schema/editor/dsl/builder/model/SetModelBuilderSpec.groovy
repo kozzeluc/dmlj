@@ -2064,42 +2064,16 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 			name 'EMPSCHM'
 			version 100
 			record 'EMPLOYEE' {
-				elements {
-					element 'EMP-ID-0415' { 
-						level 2
-						picture '9(4)' 
-					}
-					element 'EMP-NAME-0415' {
-						level 2
-						children {
-							element 'EMP-FIRST-NAME-0415' {
-								level 3	
-								picture 'X(10)'
-							}
-							element 'EMP-LAST-NAME-0415' {
-								level 3
-								picture 'X(15)'
-							}						
-						}
-					}
-					element 'EMP-ADDRESS-0415' {
-						level 2
-						children {
-							element 'EMP-STREET-0415' { 
-								level 3
-								picture 'X(20)'
-							}
-							element 'EMP-CITY-0415' { 
-								level 3
-								picture 'X(15)'
-							}
-							element 'EMP-STATE-0415' { 
-								level 3
-								picture 'X(2)'
-							}
-						}
-					}
-				}
+				elements """
+				   02 EMP-ID-0415 picture 9(4) 
+				   02 EMP-NAME-0415
+			          03 EMP-FIRST-NAME-0415 picture X(10)
+			          03 EMP-LAST-NAME-0415 picture X(15)
+			       02 EMP-ADDRESS-0415
+			          03 EMP-STREET-0415 picture X(20)
+                      03 EMP-CITY-0415 picture X(15)
+                      03 EMP-STATE-0415 picture X(2)
+			    """
 			}
 		})
 		SchemaRecord employee = schema.getRecord('EMPLOYEE')

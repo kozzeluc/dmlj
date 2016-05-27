@@ -30,45 +30,11 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			picture 'X(8)'
-		}
+		def definition = '02 ELEMENT-1 picture X(8)'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with its level, name and picture properties set to the"
 			  "given values, with a usage of DISPLAY, that does NOT reference a record"		
-		element
-		element.level == 2
-		element.name == 'ELEMENT-1'
-		element.picture == 'X(8)'
-		element.usage == Usage.DISPLAY
-		!element.record
-		element.baseName == element.name
-		!element.children
-		!element.keyElements
-		!element.nullable
-		!element.occursSpecification
-		!element.parent
-		!element.redefines
-		!element.value
-	}
-	
-	def "build the simpliest element, NOT referencing a given record, specifying the name apart from the closure"() {
-		
-		given: "an element model builder without a record"
-		def ElementModelBuilder builder = new ElementModelBuilder()
-		
-		when: "building the element"
-		def definition = {
-			level 2
-			picture 'X(8)'
-		}
-		Element element = builder.build('ELEMENT-1', definition)
-		
-		then: "the result will be an element with its level, name and picture properties set to the"
-			  "given values, with a usage of DISPLAY, that does NOT reference a record"
 		element
 		element.level == 2
 		element.name == 'ELEMENT-1'
@@ -96,11 +62,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
 		
 		when: "building the element"
-		def definition = {
-			level 2
-			name 'ELEMENT2'
-			picture 'X(8)'
-		}
+		def definition = '02 ELEMENT2 picture X(8)'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with its level, name and picture properties set to the"
@@ -128,55 +90,10 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		record.elements[1] == element
 	}
 	
-	def "build the simpliest element, referencing a given record, specifying the name apart from the closure"() {
-		
-		given: "an element model builder with a record"
-		SchemaRecord record = new RecordModelBuilder().build() // the record will contain 1 element
-		assert record.rootElements.size() == 1
-		assert record.elements.size() == 1
-		Element defaultElement = record.elements[0]
-		assert defaultElement.level == 2
-		def ElementModelBuilder builder = new ElementModelBuilder( record : record)
-		
-		when: "building the element"
-		def definition = {
-			level 2
-			picture 'X(8)'
-		}
-		Element element = builder.build('ELEMENT2', definition)
-		
-		then: "the result will be an element with its level, name and picture properties set to the"
-			  "given values, with a usage of DISPLAY, that references the given record"
-		element
-		element.level == 2
-		element.name == 'ELEMENT2'
-		element.picture == 'X(8)'
-		element.usage == Usage.DISPLAY
-		element.record == record
-		element.baseName == element.name
-		!element.children
-		!element.keyElements
-		!element.nullable
-		!element.occursSpecification
-		!element.parent
-		!element.redefines
-		!element.value
-		
-		record.rootElements.size() == 2
-		record.rootElements[0] == defaultElement
-		record.rootElements[1] == element
-		record.elements.size() == 2
-		record.elements[0] == defaultElement
-		record.elements[1] == element
-	}
-	
 	def "build a group element containing 1 subordinate element, NOT referencing a given record"() {
 		
 		given: "an element model builder with a parent but without a record"
-		Element parent = new ElementModelBuilder().build({
-			level 2
-			name 'PARENT1'
-		})
+		Element parent = new ElementModelBuilder().build('02 PARENT1')
 		assert parent
 		assert parent.name == 'PARENT1'
 		!parent.record
@@ -185,11 +102,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( parent : parent )
 		
 		when: "building the element"
-		def definition = {
-			level 3
-			name 'SUBO1'
-			picture 'X(8)'
-		}
+		def definition = '03 SUBO1 picture X(8)'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with its level, name and picture properties set to the"
@@ -221,10 +134,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert record.elements.size() == 1
 		Element defaultElement = record.elements[0]
 		assert defaultElement.level == 2
-		Element parent = new ElementModelBuilder( record : record ).build({
-			level 2
-			name 'PARENT1'
-		})
+		Element parent = new ElementModelBuilder( record : record ).build('02 PARENT1')
 		assert parent
 		assert parent.name == 'PARENT1'
 		parent.record == record
@@ -237,11 +147,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record, parent : parent )
 		
 		when: "building the element"
-		def definition = {
-			level 3
-			name 'SUBO1'
-			picture 'X(8)'
-		}
+		def definition = '03 SUBO1 picture X(8)'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with its level, name and picture properties set to the"
@@ -279,12 +185,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			baseName 'ELEMENT-1-BASE'
-			picture 'X(8)'
-		}
+		def definition = '02 ELEMENT-1 (ELEMENT-1-BASE) picture X(8)'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with its baseName set"
@@ -310,11 +211,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			picture 'X(8)'
-		}
+		def definition = '02 ELEMENT-1 picture X(8)'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with usage mode DISPLAY"
@@ -329,10 +226,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the element (note that we don't specify a value, under normal circumstances,"
 			  "a value is always specified for condition names)"
-		def definition = {
-			level 88
-			name 'ELEMENT-1'
-		}
+		def definition = '88 ELEMENT-1'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with usage mode CONDITION NAME"
@@ -347,11 +241,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element (note that we don't specify a picture)"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'	
-			usage _usage		
-		}
+		def definition = "02 ELEMENT-1 usage '$_usage'"
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with usage mode CONDITION NAME"
@@ -362,11 +252,11 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		_usage 	  		  | expected
 		'BIT' 	  		  | Usage.BIT
 		'COMPUTATIONAL'   | Usage.COMPUTATIONAL
-		'COMPUTATIONAL_1' | Usage.COMPUTATIONAL_1
-		'COMPUTATIONAL_2' | Usage.COMPUTATIONAL_2
-		'COMPUTATIONAL_3' | Usage.COMPUTATIONAL_3
+		'COMPUTATIONAL 1' | Usage.COMPUTATIONAL_1
+		'COMPUTATIONAL 2' | Usage.COMPUTATIONAL_2
+		'COMPUTATIONAL 3' | Usage.COMPUTATIONAL_3
 		'DISPLAY' 		  | Usage.DISPLAY
-		'DISPLAY_1' 	  | Usage.DISPLAY_1
+		'DISPLAY 1' 	  | Usage.DISPLAY_1
 		'POINTER' 	  	  | Usage.POINTER
 	}
 	
@@ -376,11 +266,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element (note that we don't specify a value for the condition name)"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			usage 'CONDITION NAME'
-		}
+		def definition = "02 ELEMENT-1 usage 'CONDITION NAME'"
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with usage mode CONDITION NAME"
@@ -394,12 +280,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			picture 'X(8)'
-			nullable
-		}
+		def definition = '02 ELEMENT-1 picture X(8) nullable'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with usage mode CONDITION NAME"
@@ -420,12 +301,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
 		
 		when: "building the element and specifying an element to redefine"
-		def definition = {
-			level 2
-			name 'ELEMENT-2'
-			picture '9(8)'
-			redefines 'ELEMENT-1'
-		}
+		def definition = '02 ELEMENT-2 picture 9(8) redefines ELEMENT-1'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element that redefines the given element"
@@ -435,78 +311,30 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 	
 	def "element redefining another element (non root element)"() {
 		
-		given: "an element model builder without a record"
-		def ElementModelBuilder builder = new ElementModelBuilder()
+		given: "an element model builder with a parent"
+		Element group = new ElementModelBuilder().build '02 GROUP1'
+		Element subo1 = new ElementModelBuilder( parent : group).build '03 SUBO1 PIC X(8)'
+		def ElementModelBuilder builder = new ElementModelBuilder( parent : group )
 		
-		when: "building a group element containing a subordinate element that redefines another"
-		 	  "subordinate element"
-		def definition = {
-			level 2
-			name 'GROUP1'
-			children {
-				element 'SUBO1' {
-					level 3
-					picture 'X(8)'
-				}
-				element 'SUBO2' {
-					level 3
-					picture '9(4)'
-					redefines 'SUBO1'
-				}
-			}
-		}
-		Element group = builder.build(definition)
+		when: "building an element that redefines an element that is a subordinate of the same parent"
+		def definition = '03 SUBO2 PIC 9(4) redefines SUBO1'	
+		Element element = builder.build(definition)
 		
-		then: "the result will be a group element containing the redefined element construction"
-		group
-		group.children.size() == 2
-		group.children[0].parent == group
-		group.children[0].name == 'SUBO1'
-		!group.children[0].redefines
-		group.children[1].parent == group
-		group.children[1].name == 'SUBO2'
-		group.children[1].redefines == group.children[0]
-	}
-	
-	def "element already redefines an element (assertion exception)"() {
-		
-		given: "an element model builder with a record"
-		SchemaRecord record = new RecordModelBuilder().build() // the record will contain 1 element
-		assert record.rootElements.size() == 1
-		assert record.elements.size() == 1
-		Element defaultElement = record.elements[0]
-		assert defaultElement.level == 2
-		assert defaultElement.name == 'ELEMENT-1'
-		assert defaultElement.picture == 'X(8)'
-		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
-		
-		when: "building the element and specifying an element to redefine"
-		def definition = {
-			level 2
-			name 'ELEMENT-2'
-			picture '9(8)'
-			redefines 'ELEMENT-1'
-			redefines 'XYZ'
-		}
-		builder.build(definition)
-		
-		then: "building the element will fail"
-		def error = thrown(AssertionError)
-		error.message.startsWith('element already redefines ELEMENT-1')
+		then: "the result will be an element that redefines the given element"
+		element
+		element.redefines == subo1
 	}
 	
 	def "redefines invalid for condition names (assertion exception)"() {
 		
-		given: "an element model builder without a record"
-		def ElementModelBuilder builder = new ElementModelBuilder()
+		given: "an element model builder with a parent"
+		Element element1 = new ElementModelBuilder().build '02 ELEMENT-1 PIC 9'
+		Element cond1 = new ElementModelBuilder( parent : element1).build '88 COND-1 value 1'
+		def ElementModelBuilder builder = new ElementModelBuilder( parent : element1 )
 		
 		when: "building the element and specifying an element to redefine (mind that we do not"
 		      "specify a value; we should do this in a real world situation)"
-		def definition = {
-			level 88
-			name 'ELEMENT2'
-			redefines 'ELEMENT-1'
-		}
+		def definition = '88 COND-2 redefines COND-1'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -520,12 +348,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element and specifying an element to redefine"
-		def definition = {
-			level 2
-			name 'ELEMENT2'
-			picture '9(8)'
-			redefines 'ELEMENT2'
-		}
+		def definition = '02 ELEMENT2 picture 9(8) redefines ELEMENT2'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -539,12 +362,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element and specifying an element to redefine"
-		def definition = {
-			level 3
-			name 'ELEMENT2'
-			picture '9(8)'
-			redefines 'ELEMENT-1'
-		}
+		def definition = '03 ELEMENT2 picture 9(8) redefines ELEMENT-1'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -560,12 +378,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record)
 		
 		when: "building the element and specifying an element to redefine"
-		def definition = {
-			level 2
-			name 'ELEMENT2'
-			picture '9(8)'
-			redefines 'ELEMENT-1X'
-		}
+		def definition = '02 ELEMENT2 picture 9(8) redefines ELEMENT-1X'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -575,35 +388,15 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 	
 	def "redefined element is NOT defined because not in same group (assertion exception)"() {
 		
-		given: "an element model builder without a record"
-		def ElementModelBuilder builder = new ElementModelBuilder()
+		given: "an element model builder with a parent"
+		Element group1 = new ElementModelBuilder().build('02 GROUP1')
+		Element group2 = new ElementModelBuilder( parent : group1 ).build('03 GROUP2')
+		new ElementModelBuilder( parent : group2 ).build('04 SUBO1 PIC X(8)')
+		Element group3 = new ElementModelBuilder( parent : group1 ).build('03 GROUP3')
+		def ElementModelBuilder builder = new ElementModelBuilder( parent : group3 )
 		
-		when: "building a group element containing some malicious redefines construction"
-		def definition = {
-			level 2
-			name 'GROUP1'
-			children {
-				element 'GROUP2' {
-					level 3
-					children {
-						element 'SUBO1' {
-							level 3
-							picture 'X(8)'
-						}
-					}
-				}
-				element 'GROUP3' {
-					level 3
-					children {
-						element 'SUBO2' {
-							level 3
-							picture 'X(8)'
-							redefines 'SUBO1'
-						}
-					}
-				}
-			}
-		}
+		when: "building an element containing some malicious redefines construction"
+		def definition = '04 SUBO2 picture X(8) redefines SUBO1'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -624,12 +417,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
 		
 		when: "building the element and specifying an element to redefine"
-		def definition = {
-			level 3
-			name 'ELEMENT-2'
-			picture '9(8)'
-			redefines 'ELEMENT-1'
-		}
+		def definition = '03 ELEMENT-2 picture 9(8) redefines ELEMENT-1'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -644,12 +432,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element and specifying a value"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			picture 'X(8)'
-			value _value
-		}
+		def definition = "02 ELEMENT-1 picture X(8) value $_value"
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with the given value"
@@ -671,12 +454,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element and specifying a value"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			picture 'X(8)'
-			occurs 5
-		}
+		def definition = '02 ELEMENT-1 picture X(8) occurs 5'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with the given occurs specification"
@@ -698,15 +476,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
 		
 		when: "building the element and specifying an occurs depending on"
-		def definition = {
-			level 2
-			name 'ELEMENT-2'
-			picture 'X(8)'
-			occurs {
-				count 3
-				dependingOn 'ELEMENT-1'
-			}
-		}
+		def definition = '02 ELEMENT-2 picture X(8) occurs 3 dependingOn ELEMENT-1'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with the given occurs specification"
@@ -715,34 +485,6 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		element.occursSpecification.count == 3
 		element.occursSpecification.dependingOn == defaultElement
 		!element.occursSpecification.indexElements
-	}
-	
-	def "occurs already depends on an element (assertion exception)"() {
-		
-		given: "an element model builder with a record"
-		SchemaRecord record = new RecordModelBuilder().build() // the record will contain 1 element
-		assert record.rootElements.size() == 1
-		assert record.elements.size() == 1
-		Element defaultElement = record.elements[0]
-		assert defaultElement.level == 2
-		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
-		
-		when: "building the element and specifying an occurs depending on"
-		def definition = {
-			level 2
-			name 'ELEMENT-2'
-			picture 'X(8)'
-			occurs {
-				count 3
-				dependingOn 'ELEMENT-1'
-				dependingOn 'ELEMENT-1'
-			}
-		}
-		builder.build(definition)
-		
-		then: "building the element will fail"
-		def error = thrown(AssertionError)
-		error.message.startsWith('occurs already depends on ELEMENT-1')
 	}
 	
 	def "occurs cannot depend on same element (assertion exception)"() {
@@ -756,15 +498,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
 		
 		when: "building the element and specifying an occurs depending on"
-		def definition = {
-			level 2
-			name 'ELEMENT2'
-			picture 'X(8)'
-			occurs {
-				count 3
-				dependingOn 'ELEMENT2'
-			}
-		}
+		def definition = '02 ELEMENT2 picture X(8) occurs 3 dependingOn ELEMENT2'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -783,15 +517,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
 		
 		when: "building the element and specifying an occurs depending on"
-		def definition = {
-			level 2
-			name 'ELEMENT2'
-			picture 'X(8)'
-			occurs {
-				count 3
-				dependingOn 'ELEMENT3'
-			}
-		}
+		def definition = '02 ELEMENT2 picture X(8) occurs 3 dependingOn ELEMENT3'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -801,28 +527,14 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 	
 	def "occurs depending on element is NOT defined in parent (assertion exception)"() {
 		
-		given: "an element model builder without a record"
-		def ElementModelBuilder builder = new ElementModelBuilder()
+		given: "an element model builder with a parent"
+		
+		Element group1 = new ElementModelBuilder().build('02 GROUP1')
+		new ElementModelBuilder( parent : group1 ).build('03 ELEMENT-1 picture X(8)')
+		def ElementModelBuilder builder = new ElementModelBuilder( parent : group1 )
 		
 		when: "building the element and specifying an occurs depending on"
-		def definition = {
-			level 2
-			name 'GROUP1'
-			children {
-				element 'ELEMENT-1' {
-					level 3
-					picture 'X(8)'
-				}
-				element 'ELEMENT2' {
-					level 3
-					picture 'X(8)'
-					occurs {
-						count 3
-						dependingOn 'ELEMENT3'
-					}
-				}
-			}			
-		}
+		def definition = '03 ELEMENT-2 picture X(8) occurs 3 dependingOn ELEMENT3'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -836,15 +548,7 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element and specifying an occurs depending on"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			picture 'X(8)'
-			occurs {
-				count 3
-				dependingOn 'ELEMENT3'
-			}
-		}
+		def definition = '02 ELEMENT-1 picture X(8) occurs 3 dependingOn ELEMENT3'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -854,32 +558,14 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 	
 	def "depending on element cannot be a condition name (assertion exception)"() {
 		
-		given: "an element model builder without a record"
-		def ElementModelBuilder builder = new ElementModelBuilder()
+		given: "an element model builder with a parent"
+		Element group1 = new ElementModelBuilder().build('02 GROUP1')
+		Element element1 = new ElementModelBuilder( parent : group1 ).build('03 ELEMENT-1 picture X(8)')
+		new ElementModelBuilder( parent : element1 ).build("88 ELEMENT-2 value 'XYZ'")
+		def ElementModelBuilder builder = new ElementModelBuilder( parent : group1 )
 		
 		when: "building the element and specifying an occurs depending on"
-		def definition = {
-			level 2
-			name 'GROUP1'
-			children {
-				element 'ELEMENT-1' {
-					level 3
-					picture 'X(8)'
-				}
-				element 'ELEMENT2' {
-					level 88
-					value "'XYZ'"
-				}
-				element 'ELEMENT3' {
-					level 3
-					picture 'X(8)'
-					occurs {
-						count 3
-						dependingOn 'ELEMENT2'
-					}
-				}
-			}
-		}
+		def definition = '03 ELEMENT3 picture X(8) occurs 3 dependingOn ELEMENT-2'
 		builder.build(definition)
 		
 		then: "building the element will fail"
@@ -887,28 +573,59 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		error.message.startsWith('depending on element cannot be a condition name')
 	}
 	
-	def "occurs specification with index elements"() {
+	def "occurs specification with a single index element (no base name specified)"() {
 		
 		given: "an element model builder without a record"
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element and specifying occurs index elements"
-		def definition = {
-			level 2
-			name 'ELEMENT-1'
-			picture 'X(8)'
-			occurs {
-				count 5
-				indexedBy 'ELEMENT-WITHOUT-BASE-NAME'
-				indexedBy {
-					name 'ELEMENT-WITH-BASE-NAME-1'
-					baseName 'INDEX-ELEMENT-BASE-NAME-1'	
-				}
-				indexedBy 'ELEMENT-WITH-BASE-NAME-2' {
-					baseName 'INDEX-ELEMENT-BASE-NAME-2'
-				}
-			}
-		}
+		def definition =
+			'02 ELEMENT-1 picture X(8) occurs 5 indexedBy ELEMENT-WITHOUT-BASE-NAME'
+		Element element = builder.build(definition)
+		
+		then: "the result will be an element with the given occurs specification"
+		element
+		element.occursSpecification
+		element.occursSpecification.count == 5
+		!element.occursSpecification.dependingOn
+		element.occursSpecification.indexElements.size() == 1
+		
+		element.occursSpecification.indexElements[0].name == 'ELEMENT-WITHOUT-BASE-NAME'
+		!element.occursSpecification.indexElements[0].baseName
+	}
+	
+	def "occurs specification with a single index element (base name specified)"() {
+		
+		given: "an element model builder without a record"
+		def ElementModelBuilder builder = new ElementModelBuilder()
+		
+		when: "building the element and specifying occurs index elements"
+		def definition =
+			'02 ELEMENT-1 picture X(8) occurs 5 indexedBy ELEMENT-WITH-BASE-NAME-1 (INDEX-ELEMENT-BASE-NAME-1)'
+		Element element = builder.build(definition)
+		
+		then: "the result will be an element with the given occurs specification"
+		element
+		element.occursSpecification
+		element.occursSpecification.count == 5
+		!element.occursSpecification.dependingOn
+		element.occursSpecification.indexElements.size() == 1
+		
+		element.occursSpecification.indexElements[0].name == 'ELEMENT-WITH-BASE-NAME-1'
+		element.occursSpecification.indexElements[0].baseName == 'INDEX-ELEMENT-BASE-NAME-1'
+	}
+	
+	def "occurs specification with multiple index elements"() {
+		
+		given: "an element model builder without a record"
+		def ElementModelBuilder builder = new ElementModelBuilder()
+		
+		when: "building the element and specifying occurs index elements"
+		def definition = 
+			'02 ELEMENT-1 picture X(8) occurs 5 ' + 
+			'indexedBy ELEMENT-WITHOUT-BASE-NAME, ' + 
+			'ELEMENT-WITH-BASE-NAME-1 (INDEX-ELEMENT-BASE-NAME-1), ' + 
+			'ELEMENT-WITH-BASE-NAME-2 (INDEX-ELEMENT-BASE-NAME-2)'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with the given occurs specification"
@@ -939,23 +656,11 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder( record : record )
 		
 		when: "building the element and specifying occurs index elements"
-		def definition = {
-			level 2
-			name 'ELEMENT2'
-			picture 'X(8)'
-			occurs {
-				count 5
-				dependingOn 'ELEMENT-1'
-				indexedBy 'ELEMENT-WITHOUT-BASE-NAME'
-				indexedBy {
-					name 'ELEMENT-WITH-BASE-NAME-1'
-					baseName 'INDEX-ELEMENT-BASE-NAME-1'
-				}
-				indexedBy 'ELEMENT-WITH-BASE-NAME-2' {
-					baseName 'INDEX-ELEMENT-BASE-NAME-2'
-				}
-			}
-		}
+		def definition = 
+			'02 ELEMENT2 picture X(8) occurs 5 dependingOn ELEMENT-1 ' + 
+			'indexedBy ELEMENT-WITHOUT-BASE-NAME, ' +
+			'ELEMENT-WITH-BASE-NAME-1 (INDEX-ELEMENT-BASE-NAME-1), ' +
+			'ELEMENT-WITH-BASE-NAME-2 (INDEX-ELEMENT-BASE-NAME-2)'
 		Element element = builder.build(definition)
 		
 		then: "the result will be an element with the given occurs specification"
@@ -974,6 +679,22 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		element.occursSpecification.indexElements[2].name == 'ELEMENT-WITH-BASE-NAME-2'
 		element.occursSpecification.indexElements[2].baseName == 'INDEX-ELEMENT-BASE-NAME-2'
+	}
+	
+	def "Problem case: SRHUDATA-139 (record SROOT-DCS-139)"() {
+		
+		given: "an element model builder with a parent"
+		Element reducedGroup = new ElementModelBuilder().build('02 SRHKEY-139')
+		new ElementModelBuilder( parent : reducedGroup ).build('03 SRHVSIZE-139 picture S9(4) usage COMPUTATIONAL')
+		def builder = new ElementModelBuilder( parent : reducedGroup )
+		
+		when: "building the element"
+		def definition = '02 SRHUDATA-139 picture X(01) occurs 500 dependingOn SRHVSIZE-139'
+		Element element = builder.build(definition)
+		
+		then: "the SRHUDATA-139 element is built"
+		element
+		element.picture == 'X(01)'		
 	}
 	
 }

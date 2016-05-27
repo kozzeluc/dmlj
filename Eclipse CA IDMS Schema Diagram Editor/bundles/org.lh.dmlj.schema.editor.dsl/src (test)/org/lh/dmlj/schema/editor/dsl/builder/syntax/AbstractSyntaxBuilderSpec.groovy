@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,6 +30,10 @@ abstract class AbstractSyntaxBuilderSpec extends AbstractBuilderSpec {
 			p = syntax
 		}
 		p.substring(1).replaceAll("\n \n", "\n\n").replaceAll("\\'", "\\\'")
+	}
+	
+	protected String stripLeadingAndTrailingNewLine(String syntax) {
+		syntax.substring(1, syntax.length() - 1)
 	}
 	
 	protected boolean mustMatchSyntaxInFile(String syntax, String filePath) {

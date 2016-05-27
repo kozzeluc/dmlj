@@ -38,12 +38,9 @@ class MakeRecordVsamCommandSpec extends Specification implements HasModelBuilder
 				element 'DEPT-ID-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+                02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		assert record
 		assert record.locationMode == LocationMode.CALC
@@ -111,12 +108,9 @@ class MakeRecordVsamCommandSpec extends Specification implements HasModelBuilder
 				element 'DEPT-ID-0410'
 				duplicates 'NOT ALLOWED'
 			}
-			elements {
-				element 'DEPT-ID-0410' {
-					level 2
-					picture '9(4)'
-				}
-			}
+			elements """
+                02 DEPT-ID-0410 picture 9(4)
+			"""
 		}
 		assert record
 		assert record.locationMode == LocationMode.VSAM_CALC
