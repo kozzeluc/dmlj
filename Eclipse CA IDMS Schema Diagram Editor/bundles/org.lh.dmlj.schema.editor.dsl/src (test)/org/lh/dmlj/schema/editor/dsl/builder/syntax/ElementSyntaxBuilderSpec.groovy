@@ -126,19 +126,19 @@ class ElementSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		then: "the builder creates the syntax that describes the element: an appropriate usage"
 			  "property is generated, or omitted in the case of non-level 88 elements with a usage"
-			  "other than DISPLAY"
+			  "other than DISPLAY; single quotes only surround the usage when a blank is involved"
 		syntax == expected
 		
 		where:
 		usage				  | expected
-		Usage.BIT 			  | "02 EL1 usage 'BIT'"
-		Usage.COMPUTATIONAL   | "02 EL1 usage 'COMPUTATIONAL'"
+		Usage.BIT 			  | "02 EL1 usage BIT"
+		Usage.COMPUTATIONAL   | "02 EL1 usage COMPUTATIONAL"
 		Usage.COMPUTATIONAL_1 | "02 EL1 usage 'COMPUTATIONAL 1'"
 		Usage.COMPUTATIONAL_2 | "02 EL1 usage 'COMPUTATIONAL 2'"
 		Usage.COMPUTATIONAL_3 | "02 EL1 usage 'COMPUTATIONAL 3'"
 		Usage.DISPLAY 		  | "02 EL1"								// default for non-level 88
 		Usage.DISPLAY_1 	  | "02 EL1 usage 'DISPLAY 1'"
-		Usage.POINTER 	  	  | "02 EL1 usage 'POINTER'"
+		Usage.POINTER 	  	  | "02 EL1 usage POINTER"
 	}
 	
 	def "Usage property for level 88 elements"() {

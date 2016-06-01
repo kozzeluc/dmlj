@@ -98,7 +98,7 @@ record 'DENTAL-CLAIM' {
               04 DENTIST-ZIP-FIRST-FIVE-0405 picture X(5)
               04 DENTIST-ZIP-LAST-FOUR-0405 picture X(4)
         02 DENTIST-LICENSE-NUMBER-0405 picture 9(6)
-        02 NUMBER-OF-PROCEDURES-0405 picture 9(2) usage 'COMPUTATIONAL'
+        02 NUMBER-OF-PROCEDURES-0405 picture 9(2) usage COMPUTATIONAL
         02 FILLER picture X
         02 DENTIST-CHARGES-0405 occurs 10 dependingOn NUMBER-OF-PROCEDURES-0405
            03 TOOTH-NUMBER-0405 picture 9(2)
@@ -463,7 +463,7 @@ record 'NON-HOSP-CLAIM' {
               04 PHYSICIAN-ZIP-LAST-FOUR-0445 picture X(4)
         02 PHYSICIAN-ID-0445 picture 9(6)
         02 DIAGNOSIS-0445 picture X(60) occurs 2
-        02 NUMBER-OF-PROCEDURES-0445 picture 9(2) usage 'COMPUTATIONAL'
+        02 NUMBER-OF-PROCEDURES-0445 picture 9(2) usage COMPUTATIONAL
         02 FILLER picture X
         02 PHYSICIAN-CHARGES-0445 occurs 10 dependingOn NUMBER-OF-PROCEDURES-0445
            03 SERVICE-DATE-0445

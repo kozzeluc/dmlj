@@ -75,7 +75,9 @@ class ElementSyntaxBuilder extends AbstractSyntaxBuilder<Element> {
 	
 	private void usage() {
 		if (element.usage != Usage.DISPLAY && element.usage != Usage.CONDITION_NAME) {
-			output <<= " usage '${replaceUnderscoresBySpaces(element.usage)}'"
+			String usage = replaceUnderscoresBySpaces(element.usage)
+			String quote = usage.indexOf(' ') > -1 ? "'" : ''
+			output <<= " usage $quote$usage$quote"
 		}
 	}
 	

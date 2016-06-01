@@ -241,23 +241,28 @@ class ElementModelBuilderSpec extends AbstractModelBuilderSpec {
 		def ElementModelBuilder builder = new ElementModelBuilder()
 		
 		when: "building the element (note that we don't specify a picture)"
-		def definition = "02 ELEMENT-1 usage '$_usage'"
+		def definition = "02 ELEMENT-1 usage $_usage"
 		Element element = builder.build(definition)
 		
-		then: "the result will be an element with usage mode CONDITION NAME"
+		then: "the result will be an element with usage mode CONDITION NAME; single quotes "
+			  "surrounding the usage are only required when the usage contains a blank"
 		element
 		element.usage == expected
 		
 		where:
 		_usage 	  		  | expected
 		'BIT' 	  		  | Usage.BIT
+		"'BIT'"   		  | Usage.BIT
 		'COMPUTATIONAL'   | Usage.COMPUTATIONAL
+		"'COMPUTATIONAL'" | Usage.COMPUTATIONAL
 		'COMPUTATIONAL 1' | Usage.COMPUTATIONAL_1
 		'COMPUTATIONAL 2' | Usage.COMPUTATIONAL_2
 		'COMPUTATIONAL 3' | Usage.COMPUTATIONAL_3
 		'DISPLAY' 		  | Usage.DISPLAY
+		"'DISPLAY'"		  | Usage.DISPLAY
 		'DISPLAY 1' 	  | Usage.DISPLAY_1
 		'POINTER' 	  	  | Usage.POINTER
+		"'POINTER'"	  	  | Usage.POINTER
 	}
 	
 	def "usage modes (level 88)"() {

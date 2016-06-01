@@ -38,6 +38,8 @@ class ElementModelBuilder extends AbstractModelBuilder<Element> {
 	private static final String[] ATTRIBUTES = 
 		[ ATTRIBUTE_DEPENDING_ON, ATTRIBUTE_INDEXED_BY, ATTRIBUTE_NULLABLE, ATTRIBUTE_OCCURS, 
 		  ATTRIBUTE_PICTURE, ATTRIBUTE_REDEFINES, ATTRIBUTE_USAGE, ATTRIBUTE_VALUE ]
+		
+	private static final char QUOTE = "'"
 	
 	private String definition
 	private Element element
@@ -54,6 +56,14 @@ class ElementModelBuilder extends AbstractModelBuilder<Element> {
 	
 	static String filterDefinition(String definition) {
 		definition.trim().replace('\t', ' ')
+	}
+	
+	private static String stripLeadingAndTrailing(String aString, char _char) {
+		if (aString && aString.length() > 1 && aString[0] == _char && aString[-1] == _char) {
+			return aString[1..-2]
+		} else {
+			return aString
+		}
 	}
 	
 	Element build(String definition) {
@@ -151,31 +161,28 @@ class ElementModelBuilder extends AbstractModelBuilder<Element> {
 		[ name, baseName ]
 	}
 	
-	private String extractAttribute(String attribute, boolean withinSingleQuotes) {
-		String quote = withinSingleQuotes ? "'" : ''
-		String searchItem = " $attribute $quote"
+	private String extractAttribute(String attribute, boolean stripSingleQuotes) {
+		stripSingleQuotes ? stripLeadingAndTrailing(extract(" $attribute "), QUOTE) : extract(" $attribute ")
+	}
+	
+	private String extract(String searchItem) {
 		int i = definition.indexOf(searchItem)
 		if (i > -1) {
 			int j = -1
-			if (withinSingleQuotes) {
-				j = definition.indexOf("'", i + searchItem.length())
-			} else {
-				int k = -1
-				for (String anAttribute in ATTRIBUTES) {
-					k = definition.indexOf(" $anAttribute", i + searchItem.length())
-					if (k > -1 && (j == -1 || k < j)) {
-						j = k
-					}
+			int k = -1
+			for (String anAttribute in ATTRIBUTES) {
+				k = definition.indexOf(" $anAttribute", i + searchItem.length())
+				if (k > -1 && (j == -1 || k < j)) {
+					j = k
 				}
-			}			
-			if (j > -1) {
-				definition[i + searchItem.length()..j - 1]
-			} else {
-				definition[i + searchItem.length()..-1]
 			}
-		} else {
-			null
+			if (j > -1) {
+				return definition[i + searchItem.length()..j - 1]
+			} else {
+				return definition[i + searchItem.length()..-1]
+			}
 		}
+		null
 	}
 	
 	private List<String[]> extractIndexNames(indexedBy) {
