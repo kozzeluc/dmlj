@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -34,9 +34,6 @@ import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool;
 
 public final class RecordElementsImportToolProxy {
 	
-	// the context holding all data entered in the wizard's pages
-	private IDataEntryContext dataEntryContext;
-	
 	// optional parameters configured in the import tool's defining plug-in
 	private Properties importToolParameters;
 	
@@ -44,10 +41,10 @@ public final class RecordElementsImportToolProxy {
 	private IRecordElementsImportTool tool;
 	
 	// the ROOT element list that we are building
-	private List<Element> rootElements = new ArrayList<>();
+	private ArrayList<Element> rootElements = new ArrayList<>();
 	
 	// a list with ALL elements that we keep to easily find elements
-	private List<Element> allElements = new ArrayList<>();
+	private ArrayList<Element> allElements = new ArrayList<>();
 	
 	// our data collector registry
 	IRecordElementsDataCollectorRegistry dataCollectorRegistry = 
@@ -71,12 +68,10 @@ public final class RecordElementsImportToolProxy {
 		return nameConvertedToUppercase;
 	}	
 	
-	public RecordElementsImportToolProxy(IRecordElementsImportTool tool, 
-										 IDataEntryContext dataEntryContext,
+	public RecordElementsImportToolProxy(IRecordElementsImportTool tool,
 								 		 Properties importToolParameters) {
 		super();		
 		this.tool = tool;
-		this.dataEntryContext = dataEntryContext;
 		this.importToolParameters = importToolParameters;		
 	}
 	
@@ -222,13 +217,17 @@ public final class RecordElementsImportToolProxy {
 		
 	}
 	
-	public List<Element> invokeImportTool() {		
-		tool.init(dataEntryContext, importToolParameters, dataCollectorRegistry);		
-		Collection<?> elementContexts = tool.getRootElementContexts(tool.getRecordPlaceholderContext());
+	public List<Element> invokeImportTool(IDataEntryContext dataEntryContext) {
+		
+		rootElements.clear();
+		allElements.clear();
+		
+		tool.setContext(dataEntryContext);
+		tool.init(importToolParameters, dataCollectorRegistry);		
+		Collection<?> elementContexts = tool.getRootElementContexts();
 		for (Object elementContext : elementContexts) {					
 			handleElement(null, elementContext);									
 		}
-		disposeImportTool();		
 		return rootElements;		
 	}
 	

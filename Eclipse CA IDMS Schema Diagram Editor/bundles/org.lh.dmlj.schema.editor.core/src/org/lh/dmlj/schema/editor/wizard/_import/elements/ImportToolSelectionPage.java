@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -54,7 +54,7 @@ public class ImportToolSelectionPage extends WizardPage {
 	public ImportToolSelectionPage(List<RecordElementsImportToolExtensionElement> extensionElements,
 								   SchemaRecord record) {
 		
-		super("_importToolSelectionPage", "Record Elements", null);
+		super("_importToolSelectionPage", "Elements for Record " + record.getName(), null);
 		// there will be at least 1 import tool
 		this.extensionElements = extensionElements;
 		this.record = record;

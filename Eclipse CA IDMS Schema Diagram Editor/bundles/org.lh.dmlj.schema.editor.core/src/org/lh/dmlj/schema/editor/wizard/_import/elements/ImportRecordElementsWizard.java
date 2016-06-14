@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -68,6 +68,8 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	private SchemaRecord record;
 	private boolean initOK;
 	private SchemaEditor editor;
+	private PreviewPage previewPage;
+	private RecordElementsImportToolProxy proxy;
 	
 	private static SchemaRecord extractRecord(IStructuredSelection selection) {
 		EditPart editPart = (EditPart) selection.getFirstElement();
@@ -107,7 +109,8 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	public void addPages() {
 		importToolSelectionPage = new ImportToolSelectionPage(importToolExtensionElements, record);		
 		addPage(importToolSelectionPage);
-		addPage(new DummyWizardPage());
+		previewPage = new PreviewPage(record);
+		addPage(previewPage);
 	}
 	
 	@Override
@@ -145,8 +148,8 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 		
 		// wrap the data entry page in a wizard page
 		ImportWizardPage importWizardPage = 
-			new ImportWizardPage(dataEntryPage, configElement.getName(), "Record Elements", 
-								 configElement.getMessage());
+			new ImportWizardPage(dataEntryPage, configElement.getName(), 
+								 "Elements for Record " + record.getName(), configElement.getMessage());
 		
 		// inject the context in the data entry page's @Context annotated field 
 		injectContext(dataEntryPage);		
@@ -169,6 +172,14 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 			
 			addDataEntryPages(importToolSelectionPage.getExtensionElement());
 			
+			// get a hold of the import tool and the parameters configured for it in the defining
+			// extension and create the import tool proxy 
+			IRecordElementsImportTool importTool = 
+				activeRecordElementsImportToolExtensionElement.getRecordElementsImportTool();
+			Properties importToolParms = activeRecordElementsImportToolExtensionElement.getParameters();
+			proxy = new RecordElementsImportToolProxy(importTool, importToolParms);
+			previewPage.setImportToolProxy(proxy);
+			
 			// return the first import tool data entry page or null if no data entry pages are
 			// defined
 			if (!dataEntryWizardPages.isEmpty()) {
@@ -190,8 +201,9 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 					nextPage.aboutToShow();
 					return nextPage;					
 				} else {
-					// there is no next data entry page (and we never show the dummy wizard page)
-					return null;
+					// no next data entry page, prepare the preview page and return it
+					previewPage.setContext(context);
+					return previewPage;
 				}
 			}
 		}
@@ -251,21 +263,12 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	@Override
 	public boolean performFinish() {
 		
-		// get a hold of the import tool and the parameters configured for it in the defining extension
-		IRecordElementsImportTool importTool = 
-			activeRecordElementsImportToolExtensionElement.getRecordElementsImportTool();
-		Properties importToolParms = activeRecordElementsImportToolExtensionElement.getParameters();
-		
-		// create the import tool proxy
-		final RecordElementsImportToolProxy proxy = 
-			new RecordElementsImportToolProxy(importTool, context, importToolParms);
-		
 		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {			
 			@Override
 			public void run(IProgressMonitor progressMonitor) {
 				progressMonitor.beginTask("Import RecordElements", IProgressMonitor.UNKNOWN);								
 				try {											
-					List<Element> newRootElements = proxy.invokeImportTool();										
+					List<Element> newRootElements = proxy.invokeImportTool(context);										
 					ModelChangeContext context = 
 						new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
 					context.putContextData(record);
@@ -278,10 +281,8 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 					throw new RuntimeException(t);					
 				}
 				finally {
-					if (!proxy.isImportToolDisposed()) {
-						// make sure the import tool is ALWAYS disposed of
-						proxy.disposeImportTool();
-					}
+					// make sure the import tool is ALWAYS disposed of
+					proxy.disposeImportTool();
 				}				
 				progressMonitor.done();				
 			}

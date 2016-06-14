@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -40,12 +40,7 @@ public class ImportRecordElementsFromDiagramImportTool implements IRecordElement
 	}
 
 	@Override
-	public Object getRecordPlaceholderContext() {
-		return record;
-	}
-
-	@Override
-	public Collection<?> getRootElementContexts(Object rootContext) {
+	public Collection<?> getRootElementContexts() {
 		List<Element> rootElements = new ArrayList<>();
 		rootElements.addAll(record.getRootElements());
 		return rootElements;
@@ -66,12 +61,14 @@ public class ImportRecordElementsFromDiagramImportTool implements IRecordElement
 	}
 
 	@Override
-	public void init(IDataEntryContext dataEntryContext, Properties parameters,
-					 IRecordElementsDataCollectorRegistry dataCollectorRegistry) {
-		
-		record = dataEntryContext.getAttribute(IDataEntryContext.RECORD);
+	public void init(Properties parameters, IRecordElementsDataCollectorRegistry dataCollectorRegistry) {
 		RecordElementsDataCollector dataCollector = new RecordElementsDataCollector();
 		dataCollectorRegistry.registerDataCollector(Element.class, dataCollector);
+	}
+
+	@Override
+	public void setContext(IDataEntryContext dataEntryContext) {
+		record = dataEntryContext.getAttribute(IDataEntryContext.RECORD);
 	}
 
 }
