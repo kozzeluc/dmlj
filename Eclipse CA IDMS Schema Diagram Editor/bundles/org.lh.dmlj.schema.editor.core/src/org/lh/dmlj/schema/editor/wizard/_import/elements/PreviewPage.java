@@ -24,14 +24,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.dsl.builder.model.RecordModelBuilder;
-import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
-import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
 public class PreviewPage extends WizardPage {
 	
-	private RecordElementsImportToolProxy proxy;
-	private IDataEntryContext dataEntryContext;
+	private String recordElementsDSL;
 	private Text textDSL;
 
 	public PreviewPage(SchemaRecord record) {
@@ -51,24 +47,14 @@ public class PreviewPage extends WizardPage {
 		setPageComplete(true);
 	}
 	
-	public void setImportToolProxy(RecordElementsImportToolProxy proxy) {
-		this.proxy = proxy;
-	}
-	
-	public void setContext(IDataEntryContext dataEntryContext) {
-		this.dataEntryContext = dataEntryContext;
+	public void setRecordElementsDSL(String recordElementsDSL) {
+		this.recordElementsDSL = recordElementsDSL;
 	}
 	
 	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
-			SchemaRecord record = new RecordModelBuilder().build("DUMMY");
-			record.getRootElements().clear();
-			record.getRootElements().addAll(proxy.invokeImportTool(dataEntryContext));
-			String dsl = new RecordSyntaxBuilder().build(record);
-			int i = dsl.indexOf("\"\"\"\n");
-			int j = dsl.lastIndexOf("\n\"\"\"");
-			textDSL.setText(dsl.substring(i + 3, j).replace("\n    ", "\n").substring(1));
+			textDSL.setText(recordElementsDSL);
 		}
 		super.setVisible(visible);
 	}

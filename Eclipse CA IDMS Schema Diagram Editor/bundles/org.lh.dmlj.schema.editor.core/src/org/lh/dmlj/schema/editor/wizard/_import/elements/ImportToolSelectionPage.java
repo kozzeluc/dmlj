@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.wizard._import.elements;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -30,10 +29,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.extension.RecordElementsImportToolExtensionElement;
-import org.lh.dmlj.schema.editor.template.RecordTemplate;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ImportToolSelectionPage extends WizardPage {
 	
@@ -48,16 +46,16 @@ public class ImportToolSelectionPage extends WizardPage {
 	private RecordElementsImportToolExtensionElement extensionElement;
 	private List<RecordElementsImportToolExtensionElement> extensionElements;		
 	private Text textDescription;
-	private Text textCurrentRecordStructure;
-	private SchemaRecord record;
+	private Text textCurrentRecordElementsDSL;
+	private String recordElementsDSL;
 	
 	public ImportToolSelectionPage(List<RecordElementsImportToolExtensionElement> extensionElements,
-								   SchemaRecord record) {
+								   SchemaRecord record, String recordElementsDSL) {
 		
 		super("_importToolSelectionPage", "Elements for Record " + record.getName(), null);
 		// there will be at least 1 import tool
 		this.extensionElements = extensionElements;
-		this.record = record;
+		this.recordElementsDSL = recordElementsDSL;
 		setMessage("Select the (data) source; the current record structure will be COMPLETELY " +
 				   "replaced");
 	}
@@ -126,14 +124,14 @@ public class ImportToolSelectionPage extends WizardPage {
 		GridData gd_lblCurrentRecordStructure = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
 		gd_lblCurrentRecordStructure.widthHint = 75;
 		lblCurrentRecordStructure.setLayoutData(gd_lblCurrentRecordStructure);
-		lblCurrentRecordStructure.setText("Current Record Structure:");
+		lblCurrentRecordStructure.setText("Current record elements DSL:");
 		
-		textCurrentRecordStructure = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		textCurrentRecordStructure.setFont(SWTResourceManager.getFont("Courier New", 8, SWT.NORMAL));
+		textCurrentRecordElementsDSL = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textCurrentRecordElementsDSL.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
 		GridData gd_textCurrentRecordStructure = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		gd_textCurrentRecordStructure.heightHint = 200;
 		gd_textCurrentRecordStructure.widthHint = 200;
-		textCurrentRecordStructure.setLayoutData(gd_textCurrentRecordStructure);
+		textCurrentRecordElementsDSL.setLayoutData(gd_textCurrentRecordStructure);
 		
 		if (extensionElements.size() > 1) {
 			// if there is more than 1 import tool available, pressing the 'Select' button will 
@@ -148,20 +146,17 @@ public class ImportToolSelectionPage extends WizardPage {
 			setPageComplete(true);		
 		}
 		
-		fillRecordStructure();
+		initialize();
 			
 	}	
 
-	private void fillRecordStructure() {
-		String ddl = new RecordTemplate().generate(Arrays.asList(new Object[] {record, false}));
-		int i = ddl.indexOf(" .");
-		String structure = i > -1 ? ddl.substring(i + 2).trim() : "";
-		textCurrentRecordStructure.setText(structure);
-	}
-
 	public RecordElementsImportToolExtensionElement getExtensionElement() {
 		return extensionElement;
-	}	
+	}
+
+	private void initialize() {
+		textCurrentRecordElementsDSL.setText(recordElementsDSL);		
+	}
 
 	private void selectImportTool() {		
 		

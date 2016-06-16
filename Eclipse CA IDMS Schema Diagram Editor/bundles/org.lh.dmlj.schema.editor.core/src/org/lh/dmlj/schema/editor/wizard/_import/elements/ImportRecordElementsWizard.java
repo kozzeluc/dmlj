@@ -46,6 +46,8 @@ import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssist
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
+import org.lh.dmlj.schema.editor.dsl.builder.model.RecordModelBuilder;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
 import org.lh.dmlj.schema.editor.extension.DataEntryPageExtensionElement;
 import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
 import org.lh.dmlj.schema.editor.extension.RecordElementsImportToolExtensionElement;
@@ -74,6 +76,13 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	private static SchemaRecord extractRecord(IStructuredSelection selection) {
 		EditPart editPart = (EditPart) selection.getFirstElement();
 		return (SchemaRecord) editPart.getModel();
+	}
+	
+	private static String generateRecordElementsDSL(SchemaRecord record) {
+		String dsl = new RecordSyntaxBuilder().build(record);
+		int i = dsl.indexOf("\"\"\"\n");
+		int j = dsl.lastIndexOf("\n\"\"\"");
+		return dsl.substring(i + 3, j).replace("\n    ", "\n").substring(1);
 	}
 	
 	public ImportRecordElementsWizard() {
@@ -107,7 +116,8 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 
 	@Override
 	public void addPages() {
-		importToolSelectionPage = new ImportToolSelectionPage(importToolExtensionElements, record);		
+		String dsl = generateRecordElementsDSL(record);
+		importToolSelectionPage = new ImportToolSelectionPage(importToolExtensionElements, record, dsl);		
 		addPage(importToolSelectionPage);
 		previewPage = new PreviewPage(record);
 		addPage(previewPage);
@@ -178,7 +188,6 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 				activeRecordElementsImportToolExtensionElement.getRecordElementsImportTool();
 			Properties importToolParms = activeRecordElementsImportToolExtensionElement.getParameters();
 			proxy = new RecordElementsImportToolProxy(importTool, importToolParms);
-			previewPage.setImportToolProxy(proxy);
 			
 			// return the first import tool data entry page or null if no data entry pages are
 			// defined
@@ -201,8 +210,12 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 					nextPage.aboutToShow();
 					return nextPage;					
 				} else {
-					// no next data entry page, prepare the preview page and return it
-					previewPage.setContext(context);
+					// no next data entry page, prepare the preview page and return it					
+					SchemaRecord record = new RecordModelBuilder().build("DUMMY");
+					record.getRootElements().clear();
+					record.getRootElements().addAll(proxy.invokeImportTool(context));
+					String recordElementsDSL = generateRecordElementsDSL(record);									
+					previewPage.setRecordElementsDSL(recordElementsDSL);
 					return previewPage;
 				}
 			}
