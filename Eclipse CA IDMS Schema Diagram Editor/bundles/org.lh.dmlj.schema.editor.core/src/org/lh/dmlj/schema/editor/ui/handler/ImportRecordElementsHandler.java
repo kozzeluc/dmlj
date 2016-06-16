@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -48,6 +48,7 @@ public class ImportRecordElementsHandler implements IHandler {
 		 					  			 .getSelection();
 		importWizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) selection);
 		final WizardDialog wizardDialog = new WizardDialog(shell, importWizard);
+		wizardDialog.setHelpAvailable(false);
 		wizardDialog.create();
 		// we should move the wizard title to plugin.properties...
 		wizardDialog.setTitle("Elements for Record " + importWizard.getRecordName());
