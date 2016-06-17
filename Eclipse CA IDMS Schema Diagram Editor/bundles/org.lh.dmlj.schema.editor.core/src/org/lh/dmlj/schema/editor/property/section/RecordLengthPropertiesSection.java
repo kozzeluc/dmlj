@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,12 +21,17 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.SchemaPackage;
+import org.lh.dmlj.schema.editor.property.handler.EditRecordElementsHandler;
 import org.lh.dmlj.schema.editor.property.handler.ErrorEditHandler;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
+import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 
 public class RecordLengthPropertiesSection 
 	extends AbstractRecordPropertiesSection {
+	
+	private EditRecordElementsHandler editRecordElementsHandler = new EditRecordElementsHandler(this);
 
 	public RecordLengthPropertiesSection() {
 		super();
@@ -138,6 +143,17 @@ public class RecordLengthPropertiesSection
 			}
 		}
 		return super.getEditHandler(attribute, newValue);
+	}
+	
+	@Override
+	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_DataLength() ||
+			attribute == SchemaPackage.eINSTANCE.getSchemaRecord_ControlLength()) {
+			
+			return editRecordElementsHandler;
+		} else {
+			return super.getHyperlinkHandler(attribute);
+		}
 	}
 
 }

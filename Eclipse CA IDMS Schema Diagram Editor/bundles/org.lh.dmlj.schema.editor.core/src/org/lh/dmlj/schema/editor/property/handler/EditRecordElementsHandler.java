@@ -14,64 +14,46 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.ui.handler;
+package org.lh.dmlj.schema.editor.property.handler;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.commands.IHandlerListener;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.lh.dmlj.schema.editor.property.IRecordProvider;
 import org.lh.dmlj.schema.editor.wizard._import.elements.ImportRecordElementsWizard;
 
-public class ImportRecordElementsHandler implements IHandler {
+public class EditRecordElementsHandler implements IHyperlinkHandler<EAttribute, Command> {
+	
+	private IRecordProvider recordProvider;		
 
-	@Override
-	public void addHandlerListener(IHandlerListener handlerListener) {
+	public EditRecordElementsHandler(IRecordProvider recordProvider) {
+		super();
+		this.recordProvider = recordProvider;
 	}
-
+	
 	@Override
-	public void dispose() {
-	}
-
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Shell shell = Display.getCurrent().getActiveShell();
-		ImportRecordElementsWizard importWizard = new ImportRecordElementsWizard();
+	public Command hyperlinkActivated(EAttribute context) {
+		ImportRecordElementsWizard importWizard = new ImportRecordElementsWizard(recordProvider.getRecord());
 		ISelection selection = PlatformUI.getWorkbench()
 		 					  			 .getActiveWorkbenchWindow()
 		 					  			 .getSelectionService()
 		 					  			 .getSelection();
 		importWizard.init(PlatformUI.getWorkbench(), (IStructuredSelection) selection);
-		final WizardDialog wizardDialog = new WizardDialog(shell, importWizard);
+		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), importWizard);
 		wizardDialog.setHelpAvailable(false);
 		wizardDialog.create();
 		// we should move the wizard title to plugin.properties...
 		wizardDialog.setTitle("Elements for Record " + importWizard.getRecordName());
-		Display.getCurrent().syncExec(new Runnable() {
-			public void run() {
-				wizardDialog.open();
-			}
-		});	
-		return null;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	@Override
-	public boolean isHandled() {
-		return true;
-	}
-
-	@Override
-	public void removeHandlerListener(IHandlerListener handlerListener) {
+		if (wizardDialog.open() == Dialog.OK) {
+			return (Command) importWizard.getCommand();
+		} else {
+			return null;
+		}
 	}
 
 }

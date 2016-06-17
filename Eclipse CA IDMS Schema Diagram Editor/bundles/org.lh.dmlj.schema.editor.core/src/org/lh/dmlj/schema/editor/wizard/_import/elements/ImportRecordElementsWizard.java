@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -40,7 +37,6 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssistant;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
@@ -69,14 +65,9 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	private ImportToolSelectionPage importToolSelectionPage;
 	private SchemaRecord record;
 	private boolean initOK;
-	private SchemaEditor editor;
 	private PreviewPage previewPage;
 	private RecordElementsImportToolProxy proxy;
-	
-	private static SchemaRecord extractRecord(IStructuredSelection selection) {
-		EditPart editPart = (EditPart) selection.getFirstElement();
-		return (SchemaRecord) editPart.getModel();
-	}
+	private IModelChangeCommand command;
 	
 	private static String generateRecordElementsDSL(SchemaRecord record) {
 		String dsl = new RecordSyntaxBuilder().build(record);
@@ -85,8 +76,9 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 		return dsl.substring(i + 3, j).replace("\n    ", "\n").substring(1);
 	}
 	
-	public ImportRecordElementsWizard() {
+	public ImportRecordElementsWizard(SchemaRecord record) {
 		super();
+		this.record = record;
 		setWindowTitle("Import");
 	}
 
@@ -172,6 +164,10 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 		
 	}
 	
+	public IModelChangeCommand getCommand() {
+		return command;
+	}
+
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == importToolSelectionPage) {
@@ -242,8 +238,6 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		editor = (SchemaEditor) workbench.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		record = extractRecord(selection);
 		context.setAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD, record);
 		importToolExtensionElements = 
 			ExtensionElementFactory.getExtensionElements(EXTENSION_POINT_IMPORT_RECORD_ELEMENTS_ID, 
@@ -285,11 +279,8 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 					ModelChangeContext context = 
 						new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
 					context.putContextData(record);
-					IModelChangeCommand command = 
-						SwapRecordElementsCommandCreationAssistant.getCommand(record, newRootElements);
+					command = SwapRecordElementsCommandCreationAssistant.getCommand(record, newRootElements);
 					command.setContext(context);
-					CommandStack commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
-					commandStack.execute((Command) command);
 				} catch (Throwable t) {
 					throw new RuntimeException(t);					
 				}
