@@ -43,7 +43,6 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.dsl.builder.model.RecordModelBuilder;
-import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
 import org.lh.dmlj.schema.editor.extension.DataEntryPageExtensionElement;
 import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
 import org.lh.dmlj.schema.editor.extension.RecordElementsImportToolExtensionElement;
@@ -68,13 +67,6 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	private PreviewPage previewPage;
 	private RecordElementsImportToolProxy proxy;
 	private IModelChangeCommand command;
-	
-	private static String generateRecordElementsDSL(SchemaRecord record) {
-		String dsl = new RecordSyntaxBuilder().build(record);
-		int i = dsl.indexOf("\"\"\"\n");
-		int j = dsl.lastIndexOf("\n\"\"\"");
-		return dsl.substring(i + 3, j).replace("\n    ", "\n").substring(1);
-	}
 	
 	public ImportRecordElementsWizard(SchemaRecord record) {
 		super();
@@ -108,7 +100,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 
 	@Override
 	public void addPages() {
-		String dsl = generateRecordElementsDSL(record);
+		String dsl = Tools.generateRecordElementsDSL(record);
 		importToolSelectionPage = new ImportToolSelectionPage(importToolExtensionElements, record, dsl);		
 		addPage(importToolSelectionPage);
 		previewPage = new PreviewPage(record);
@@ -210,7 +202,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 					SchemaRecord record = new RecordModelBuilder().build("DUMMY");
 					record.getRootElements().clear();
 					record.getRootElements().addAll(proxy.invokeImportTool(context));
-					String recordElementsDSL = generateRecordElementsDSL(record);									
+					String recordElementsDSL = Tools.generateRecordElementsDSL(record);									
 					previewPage.setRecordElementsDSL(recordElementsDSL);
 					return previewPage;
 				}

@@ -628,8 +628,21 @@
    <extension
          point="org.lh.dmlj.schema.editor.core.importRecordElements">
         <importTools>
+           <importTool
+                 class="org.lh.dmlj.schema.editor.importtool.elements.ImportRecordElementsFromRecordImportTool"
+                 description="Import record elements from DSL that you specify."
+                 id="org.lh.dmlj.schema.editor.importtool.elements.ImportRecordElementsFromDSL"
+                 name="Import from DSL"
+                 source="record elements DSL that you specify">
+              <dataEntryPage
+                    class="org.lh.dmlj.schema.editor.importtool.elements.dsl.DslEntryPage"
+                    id="org.lh.dmlj.schema.editor.importtool.elements.dslEntryPage"
+                    message="Edit and validate the record elements DSL"
+                    name="dslEntryPage">
+              </dataEntryPage>
+           </importTool>
 	      <importTool
-	            class="org.lh.dmlj.schema.editor.importtool.elements.diagram.ImportRecordElementsFromDiagramImportTool"
+	            class="org.lh.dmlj.schema.editor.importtool.elements.ImportRecordElementsFromRecordImportTool"
 	            description="Import record elements from a schema diagram in your workspace."
 	            id="org.lh.dmlj.schema.editor.importtool.elements.ImportRecordElementsFromAnotherSchemaImportTool"
 	            name="Import from another schema"

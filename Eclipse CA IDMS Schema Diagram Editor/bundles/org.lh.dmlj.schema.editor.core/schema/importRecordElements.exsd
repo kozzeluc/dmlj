@@ -127,10 +127,10 @@ A number of data entry pages can be configured for each import tool.
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The fully qualified name of the class that implements org.lh.dmlj.schema.editor.importtool.elements.IRecordElementImportTool.
+                  The fully qualified name of the class that implements org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.lh.dmlj.schema.editor.importtool.elements.IRecordElementImportTool"/>
+                  <meta.attribute kind="java" basedOn=":org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool"/>
                </appinfo>
             </annotation>
          </attribute>

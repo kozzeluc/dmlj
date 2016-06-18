@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.importtool.elements.diagram;
+package org.lh.dmlj.schema.editor.importtool.elements;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,14 +24,13 @@ import java.util.Properties;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
-import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollectorRegistry;
-import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool;
+import org.lh.dmlj.schema.editor.importtool.elements.diagram.RecordElementsDataCollector;
 
-public class ImportRecordElementsFromDiagramImportTool implements IRecordElementsImportTool {
+public class ImportRecordElementsFromRecordImportTool implements IRecordElementsImportTool {
 
 	private SchemaRecord record;
 	
-	public ImportRecordElementsFromDiagramImportTool() {
+	public ImportRecordElementsFromRecordImportTool() {
 		super();
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,6 +36,7 @@ import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
 
 public abstract class Tools {
 	
@@ -81,6 +82,13 @@ public abstract class Tools {
 			}
 		}
 		return false;
+	}
+	
+	public static String generateRecordElementsDSL(SchemaRecord record) {
+		String dsl = new RecordSyntaxBuilder().build(record);
+		int i = dsl.indexOf("\"\"\"\n");
+		int j = dsl.lastIndexOf("\n\"\"\"");
+		return dsl.substring(i + 3, j).replace("\n    ", "\n").substring(1);
 	}
 
 	public static String getCalcKey(Key calcKey) {
