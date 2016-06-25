@@ -155,7 +155,13 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 		return importWizardPage;
 		
 	}
-	
+
+	private void disposeImportTool() {
+		if (proxy != null) {
+			proxy.disposeImportTool();
+		}
+	}
+
 	public IModelChangeCommand getCommand() {
 		return command;
 	}
@@ -260,6 +266,12 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	}
 
 	@Override
+	public boolean performCancel() {
+		disposeImportTool();		
+		return super.performCancel();
+	}
+	
+	@Override
 	public boolean performFinish() {
 		
 		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {			
@@ -277,8 +289,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 					throw new RuntimeException(t);					
 				}
 				finally {
-					// make sure the import tool is ALWAYS disposed of
-					proxy.disposeImportTool();
+					disposeImportTool();					
 				}				
 				progressMonitor.done();				
 			}

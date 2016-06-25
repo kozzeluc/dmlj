@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -47,7 +47,11 @@ public class ImportWizardPage extends WizardPage {
 	public void createControl(Composite parent) {
 		setControl(getDataEntryPage().createControl(parent));		
 		aboutToShow();
-	}	
+	}
+	
+	public void dispose() {
+		dataEntryPage.dispose();
+	}
 
 	public AbstractDataEntryPage getDataEntryPage() {
 		return dataEntryPage;

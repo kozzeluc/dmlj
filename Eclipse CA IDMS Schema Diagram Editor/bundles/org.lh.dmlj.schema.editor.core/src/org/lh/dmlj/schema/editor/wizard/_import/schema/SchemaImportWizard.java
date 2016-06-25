@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -230,6 +230,12 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		// return the import wizard page
 		return importWizardPage;
 		
+	}
+
+	private void disposeImportTool(SchemaImportToolProxy proxy) {
+		if (!proxy.isImportToolDisposed()) {
+			proxy.disposeImportTool();
+		}
 	}
 	
 	protected void doPostProcessing(Schema targetSchema, Schema referenceSchema) {
@@ -576,6 +582,12 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 														 ELEMENT_LAYOUT_MANAGER, 
 														 LayoutManagerExtensionElement.class);		
 	}
+	
+	@Override
+	public boolean performCancel() {
+		// no import tool to dispose
+		return super.performCancel();
+	}
 
 	@Override
 	public boolean performFinish() {		
@@ -737,10 +749,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 					
 				}
 				finally {
-					if (!proxy.isImportToolDisposed()) {
-						// make sure the import tool is ALWAYS disposed of
-						proxy.disposeImportTool();
-					}
+					disposeImportTool(proxy);
 				}
 				
 				progressMonitor.done();

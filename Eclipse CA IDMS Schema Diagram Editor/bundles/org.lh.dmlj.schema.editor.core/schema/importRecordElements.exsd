@@ -81,7 +81,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  The fully qualified name of the class that implements org.lh.dmlj.schema.editor.importtool.IDataEntryPage; the class must extend org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage and should have a default constructor.
+                  The fully qualified name of the class that extends org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage; the given class must have a default constructor.
                </documentation>
                <appinfo>
                   <meta.attribute kind="java" basedOn="org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage:"/>
