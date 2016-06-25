@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,6 +35,8 @@ public interface IDataEntryContext {
 	public static final String CURRENT_SCHEMA_RECORD = "currentSchemaRecord";
 	public static final String SCHEMA = "schema";
 	public static final String RECORD = "record";
+	public static final String RECORD_SYNONYM_NAME = "recordSynonymName";
+	public static final String RECORD_SYNONYM_VERSION = "recordSynonymVersion";
 	
 	void clear();
 	

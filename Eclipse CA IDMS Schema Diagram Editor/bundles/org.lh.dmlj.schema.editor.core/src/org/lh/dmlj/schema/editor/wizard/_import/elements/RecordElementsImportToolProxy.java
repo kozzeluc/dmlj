@@ -28,7 +28,7 @@ import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
-import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollector;
+import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;
 import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollectorRegistry;
 import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool;
 
@@ -124,8 +124,8 @@ public final class RecordElementsImportToolProxy {
 		
 		// get the data collector
 		@SuppressWarnings("unchecked")
-		IRecordElementsDataCollector<Object> dataCollector =
-			(IRecordElementsDataCollector<Object>) dataCollectorRegistry.getDataCollector(elementContext.getClass());
+		IElementDataCollector<Object> dataCollector =
+			(IElementDataCollector<Object>) dataCollectorRegistry.getDataCollector(elementContext.getClass());
 		
 		// get the element name
 		String elementName = dataCollector.getName(elementContext);

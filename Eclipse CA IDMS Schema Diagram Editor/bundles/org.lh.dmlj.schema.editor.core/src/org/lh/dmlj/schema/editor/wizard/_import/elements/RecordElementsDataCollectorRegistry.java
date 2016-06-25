@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,12 +19,12 @@ package org.lh.dmlj.schema.editor.wizard._import.elements;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollector;
+import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;
 import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollectorRegistry;
 
 public class RecordElementsDataCollectorRegistry implements IRecordElementsDataCollectorRegistry {
 
-	private Map<Class<?>, IRecordElementsDataCollector<?>> dataCollectors = new HashMap<>();		
+	private Map<Class<?>, IElementDataCollector<?>> dataCollectors = new HashMap<>();		
 	
 	RecordElementsDataCollectorRegistry() {
 		super();
@@ -32,13 +32,13 @@ public class RecordElementsDataCollectorRegistry implements IRecordElementsDataC
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> IRecordElementsDataCollector<T> getDataCollector(Class<T> _class) {
+	public <T> IElementDataCollector<T> getDataCollector(Class<T> _class) {
 		if (dataCollectors.containsKey(_class)) {
-			return (IRecordElementsDataCollector<T>) dataCollectors.get(_class);
+			return (IElementDataCollector<T>) dataCollectors.get(_class);
 		} else {
 			for (Class<?> _interface : _class.getInterfaces()) {
 				if (dataCollectors.containsKey(_interface)) {
-					return (IRecordElementsDataCollector<T>) dataCollectors.get(_interface);
+					return (IElementDataCollector<T>) dataCollectors.get(_interface);
 				}
 			}
 			return null;
@@ -46,7 +46,7 @@ public class RecordElementsDataCollectorRegistry implements IRecordElementsDataC
 	}
 
 	@Override
-	public <T> void registerDataCollector(Class<T> _class, IRecordElementsDataCollector<T> dataCollector) {		
+	public <T> void registerDataCollector(Class<T> _class, IElementDataCollector<T> dataCollector) {		
 		dataCollectors.put(_class, dataCollector);
 	}
 

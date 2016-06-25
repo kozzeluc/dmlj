@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,9 +23,9 @@ import java.util.List;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.IndexElement;
 import org.lh.dmlj.schema.Usage;
-import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollector;
+import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;
 
-public class RecordElementsDataCollector implements IRecordElementsDataCollector<Element> {
+public class RecordElementsDataCollector implements IElementDataCollector<Element> {
 
 	@Override
 	public String getBaseName(Element element) {
