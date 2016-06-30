@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -42,6 +42,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementSynonymComment
 import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.RecordListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.RecordProcedureListQueryTemplate;
+import org.lh.dmlj.schema.editor.dictionary.tools.template.RecordSynonymListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.SchemaDescriptionAndCommentListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.SetListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.SetOwnerListQueryTemplate;
@@ -70,6 +71,7 @@ public class Query implements IQuery {
 	private static final IQueryTemplate elementListQueryTemplate = new ElementListQueryTemplate();
 	private static final IQueryTemplate elementSynonymCommentsListQueryTemplate = new ElementSynonymCommentListQueryTemplate();
 	private static final IQueryTemplate recordListQueryTemplate = new RecordListQueryTemplate();
+	private static final IQueryTemplate recordSynonymListQueryTemplate = new RecordSynonymListQueryTemplate();
 	private static final IQueryTemplate recordProcedureListQueryTemplate = new RecordProcedureListQueryTemplate();
 	private static final IQueryTemplate schemaDescriptionAndCommentListQueryTemplate = new SchemaDescriptionAndCommentListQueryTemplate();
 	private static final IQueryTemplate setListQueryTemplate = new SetListQueryTemplate();
@@ -152,7 +154,7 @@ public class Query implements IQuery {
 			return this;
 		}
 
-		public Builder forBaseRecordSynonymList(SchemaImportSession session, List<Sr_036> sr_036s) {
+		public Builder forBaseRecordSynonymList(DictionarySession session, List<Sr_036> sr_036s) {
 			description = "base record synonym list";
 			IQueryTemplate template = baseRecordSynonymListQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary(), sr_036s});
@@ -223,21 +225,21 @@ public class Query implements IQuery {
 			return this;
 		}
 
-		public Builder forElementCommentList(SchemaImportSession session, List<Rcdsyn_079> rcdsyn_079s) {
+		public Builder forElementCommentList(DictionarySession session, List<Rcdsyn_079> rcdsyn_079s) {
 			description = "element comment list";
 			sql = elementCommentListQueryTemplate.generate(new Object[] {session.getDictionary(),
 																		 rcdsyn_079s});			
 			return this;
 		}		
 		
-		public Builder forElementList(SchemaImportSession session, List<Rcdsyn_079> rcdsyn_079s) {
+		public Builder forElementList(DictionarySession session, List<Rcdsyn_079> rcdsyn_079s) {
 			description = "element list";
 			IQueryTemplate template = elementListQueryTemplate;
 			sql = template.generate(new Object[] {session.getDictionary(), rcdsyn_079s});			
 			return this;
 		}
 		
-		public Builder forElementSynonymCommentList(SchemaImportSession session, 
+		public Builder forElementSynonymCommentList(DictionarySession session, 
 													List<Rcdsyn_079> rcdsyn_079s) {
 			
 			description = "element synonym comment list";
@@ -252,6 +254,14 @@ public class Query implements IQuery {
 			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
 								 				  session.getSchemaName(),
 								 				  session.getSchemaVersion()});
+			return this;
+		}
+
+		public Builder forRecordSynonymList(RecordElementsImportSession session) {
+			description = "record synonym list";
+			IQueryTemplate template = recordSynonymListQueryTemplate;
+			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+								 				  session.getRecordSynonymName()});
 			return this;
 		}		
 		

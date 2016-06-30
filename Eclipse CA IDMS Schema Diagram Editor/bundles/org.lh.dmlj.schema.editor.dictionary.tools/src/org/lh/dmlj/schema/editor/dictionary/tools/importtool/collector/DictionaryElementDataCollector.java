@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.lh.dmlj.schema.Usage;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
@@ -42,7 +43,11 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 
 	private Map<Long, List<Namedes_186>> namedes_186Map;
 	private List<Rcdsyn_079> rcdsyn_079s;
-	private SchemaImportSession session;
+	private DictionarySession session;
+	
+	public DictionaryElementDataCollector() {
+		super();
+	}
 	
 	public DictionaryElementDataCollector(SchemaImportSession session) {
 		super();
@@ -198,6 +203,10 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 
 	public void setRcdsyn_079s(List<Rcdsyn_079> rcdsyn_079s) {
 		this.rcdsyn_079s = rcdsyn_079s;
+	}
+	
+	public void SetSession(DictionarySession session) {
+		this.session = session;
 	}
 
 }

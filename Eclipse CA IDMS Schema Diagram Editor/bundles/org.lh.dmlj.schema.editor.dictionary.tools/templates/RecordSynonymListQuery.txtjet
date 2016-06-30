@@ -1,0 +1,37 @@
+<%
+/**
+ * Copyright (C) 2016  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program.  If
+ * not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contact information: kozzeluc@gmail.com.
+ */
+%>
+<%@ jet package="org.lh.dmlj.schema.editor.dictionary.tools.template" 
+        class="RecordSynonymListQueryTemplate"
+        skeleton="query-template.skeleton"%>
+<%
+Object[] args = (Object[]) argument;
+String sysdirlSchema = (String) args[0];
+String recordSynonymName = (String) args[1];
+%>
+SELECT RCDSYN_079.ROWID AS RCDSYN_079_ROWID,                                  
+       RCDSYN_079.RSYN_NAME_079 AS RSYN_NAME_079,                   
+       RCDSYN_079.RSYN_VER_079 AS RSYN_VER_079,
+       SR_036.ROWID AS SR_036_ROWID,                                         
+       SR_036.SR_NAM_036 AS SR_NAM_036,
+       SR_036.RCD_VERS_036 AS RCD_VERS_036                      
+FROM "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079,
+     "<%= sysdirlSchema %>"."SR-036" AS SR_036                               
+WHERE RSYN_NAME_079 = '<%= recordSynonymName %>' AND
+      "SR-RCDSYN"                                          
+ORDER BY RCDSYN_079.RSYN_VER_079

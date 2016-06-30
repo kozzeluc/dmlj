@@ -52,6 +52,8 @@ public final class RecordElementsImportToolProxy {
 
 	// an indicator to track whether the import tool's dispose() method was called
 	private boolean importToolIsDisposed = false;
+	
+	private boolean toolInitialized = false;
 
 	private static String toUppercaseWithValidation(String name) {
 		if (name == null) {
@@ -222,12 +224,18 @@ public final class RecordElementsImportToolProxy {
 		rootElements.clear();
 		allElements.clear();
 		
+		if (!toolInitialized) {
+			tool.init(importToolParameters, dataCollectorRegistry);
+			toolInitialized = true;
+		}
+		
 		tool.setContext(dataEntryContext);
-		tool.init(importToolParameters, dataCollectorRegistry);		
+		
 		Collection<?> elementContexts = tool.getRootElementContexts();
 		for (Object elementContext : elementContexts) {					
 			handleElement(null, elementContext);									
 		}
+		
 		return rootElements;		
 	}
 	
