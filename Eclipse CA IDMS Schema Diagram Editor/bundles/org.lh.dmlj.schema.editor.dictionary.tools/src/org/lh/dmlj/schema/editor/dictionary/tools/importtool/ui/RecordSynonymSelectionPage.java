@@ -109,17 +109,13 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		TableColumn tblclmnSynonymVersion = new TableColumn(table, SWT.RIGHT);
-		tblclmnSynonymVersion.setWidth(75);
-		tblclmnSynonymVersion.setText("Syn. Version");
+		TableColumn tblclmnRecordSynonym = new TableColumn(table, SWT.RIGHT);
+		tblclmnRecordSynonym.setWidth(225);
+		tblclmnRecordSynonym.setText("Record Synonym");
 		
-		TableColumn tblclmnRecordName = new TableColumn(table, SWT.LEFT);
-		tblclmnRecordName.setWidth(250);
-		tblclmnRecordName.setText("Record Name");	
-		
-		TableColumn tblclmnRecordVersion = new TableColumn(table, SWT.RIGHT);
-		tblclmnRecordVersion.setWidth(105);
-		tblclmnRecordVersion.setText("Record Version");
+		TableColumn tblclmnBaseRecord = new TableColumn(table, SWT.LEFT);
+		tblclmnBaseRecord.setWidth(225);
+		tblclmnBaseRecord.setText("Base Record");
 		
 		validatePage(null);
 		
@@ -127,6 +123,10 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 	}
 	
 	protected void findRecordSynonyms() {
+		
+		String recordSynonymName = textRecordSynonymName.getText().trim().toUpperCase();
+		textRecordSynonymName.setText(recordSynonymName);
+		
 		table.deselectAll();
 		table.removeAll();		
 		
@@ -136,8 +136,6 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
 		Throwable throwableToPass = null;
 		try {
-			String recordSynonymName = textRecordSynonymName.getText().trim().toUpperCase();
-			textRecordSynonymName.setText(recordSynonymName);
 			RecordElementsImportSession session = 
 				new RecordElementsImportSession(dictionary, recordSynonymName);
 			session.open();	
@@ -174,9 +172,8 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 		Collections.sort(tableEntries);
 		for (TableEntry tableEntry : tableEntries) {
 			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(0, String.valueOf(tableEntry.recordSynonymVersion));
-			item.setText(1, tableEntry.recordName);
-			item.setText(2, String.valueOf(tableEntry.recordVersion));
+			item.setText(0, recordSynonymName + " version " + tableEntry.recordSynonymVersion);
+			item.setText(1, tableEntry.recordName + " version " + tableEntry.recordVersion);
 		}
 		table.redraw();
 		
