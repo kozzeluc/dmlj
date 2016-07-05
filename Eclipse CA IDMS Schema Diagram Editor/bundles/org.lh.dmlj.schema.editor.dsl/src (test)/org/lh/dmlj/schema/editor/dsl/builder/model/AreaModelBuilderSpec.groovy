@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -102,10 +102,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "referring to 2 distinct procedures"
 		def definition = {
 			name 'AREA2'
-			procedure 'PROC2 BEFORE EVERY DML FUNCTION'
-			procedure 'PROC1 AFTER READY EXCLUSIVE'
-			procedure 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
-			procedure 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
+			call 'PROC2 BEFORE EVERY DML FUNCTION'
+			call 'PROC1 AFTER READY EXCLUSIVE'
+			call 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
+			call 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
 		}
 		SchemaArea area = builder.build(definition)
 		
@@ -145,10 +145,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "referring to 2 distinct procedures"
 		def definition = {
 			name 'AREA2'
-			procedure 'PROC2 BEFORE EVERY DML FUNCTION'
-			procedure 'PROC1 AFTER READY EXCLUSIVE'
-			procedure 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
-			procedure 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
+			call 'PROC2 BEFORE EVERY DML FUNCTION'
+			call 'PROC1 AFTER READY EXCLUSIVE'
+			call 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
+			call 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
 		}
 		SchemaArea area = builder.build(definition)
 		
@@ -227,10 +227,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with the area name and a closure containing 4 procedure calls,"
 			  " referring to 2 distinct procedures"
 		def definition = {
-			procedure 'PROC2 BEFORE EVERY DML FUNCTION'
-			procedure 'PROC1 AFTER READY EXCLUSIVE'
-			procedure 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
-			procedure 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
+			call 'PROC2 BEFORE EVERY DML FUNCTION'
+			call 'PROC1 AFTER READY EXCLUSIVE'
+			call 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
+			call 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
 		}
 		SchemaArea area = builder.build('AREA2', definition)
 		
@@ -269,10 +269,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with the area name and a closure containing 4 procedure calls,"
 			  "referring to 2 distinct procedures"
 		def definition = {
-			procedure 'PROC2 BEFORE EVERY DML FUNCTION'
-			procedure 'PROC1 AFTER READY EXCLUSIVE'
-			procedure 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
-			procedure 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
+			call 'PROC2 BEFORE EVERY DML FUNCTION'
+			call 'PROC1 AFTER READY EXCLUSIVE'
+			call 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
+			call 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
 		}
 		SchemaArea area = builder.build('AREA2', definition)
 		
@@ -309,7 +309,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with a closure containing a procedure call"
 		def definition = {
 			name 'AREA1'
-			procedure 'PROC1 ' + closureCallTime + ' EVERY DML FUNCTION'
+			call 'PROC1 ' + closureCallTime
 		}
 		SchemaArea area = builder.build(definition)
 		
@@ -318,9 +318,9 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		callTime == expected
 		
 		where:
-		closureCallTime	| expected
-		'BEFORE'		| ProcedureCallTime.BEFORE
-		'AFTER'			| ProcedureCallTime.AFTER
+		closureCallTime	|| expected
+		'BEFORE'		|| ProcedureCallTime.BEFORE
+		'AFTER'			|| ProcedureCallTime.AFTER
 	}
 	
 	@Unroll
@@ -332,7 +332,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with a closure containing a procedure call"
 		def definition = {
 			name 'AREA1'
-			procedure 'PROC1 BEFORE ' + closureFunction
+			call 'PROC1 BEFORE' + closureFunction
 		}
 		SchemaArea area = builder.build(definition)
 		
@@ -341,22 +341,22 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		function == expected
 		
 		where:
-		closureFunction					| expected
-		'EVERY DML FUNCTION'			| AreaProcedureCallFunction.EVERY_DML_FUNCTION
-		'READY EXCLUSIVE'				| AreaProcedureCallFunction.READY_EXCLUSIVE
-		'READY EXCLUSIVE UPDATE'		| AreaProcedureCallFunction.READY_EXCLUSIVE_UPDATE
-		'READY EXCLUSIVE RETRIEVAL'		| AreaProcedureCallFunction.READY_EXCLUSIVE_RETRIEVAL
-		'READY PROTECTED'				| AreaProcedureCallFunction.READY_PROTECTED
-		'READY PROTECTED UPDATE'		| AreaProcedureCallFunction.READY_PROTECTED_UPDATE
-		'READY PROTECTED RETRIEVAL'		| AreaProcedureCallFunction.READY_PROTECTED_RETRIEVAL
-		'READY SHARED'					| AreaProcedureCallFunction.READY_SHARED
-		'READY SHARED UPDATE'			| AreaProcedureCallFunction.READY_SHARED_UPDATE
-		'READY SHARED RETRIEVAL'		| AreaProcedureCallFunction.READY_SHARED_RETRIEVAL
-		'READY UPDATE'					| AreaProcedureCallFunction.READY_UPDATE
-		'READY RETRIEVAL'				| AreaProcedureCallFunction.READY_RETRIEVAL
-		'FINISH'						| AreaProcedureCallFunction.FINISH
-		'COMMIT'						| AreaProcedureCallFunction.COMMIT
-		'ROLLBACK'						| AreaProcedureCallFunction.ROLLBACK
+		closureFunction					|| expected
+		''								|| AreaProcedureCallFunction.EVERY_DML_FUNCTION
+		' READY EXCLUSIVE'				|| AreaProcedureCallFunction.READY_EXCLUSIVE
+		' READY EXCLUSIVE UPDATE'		|| AreaProcedureCallFunction.READY_EXCLUSIVE_UPDATE
+		' READY EXCLUSIVE RETRIEVAL'	|| AreaProcedureCallFunction.READY_EXCLUSIVE_RETRIEVAL
+		' READY PROTECTED'				|| AreaProcedureCallFunction.READY_PROTECTED
+		' READY PROTECTED UPDATE'		|| AreaProcedureCallFunction.READY_PROTECTED_UPDATE
+		' READY PROTECTED RETRIEVAL'	|| AreaProcedureCallFunction.READY_PROTECTED_RETRIEVAL
+		' READY SHARED'					|| AreaProcedureCallFunction.READY_SHARED
+		' READY SHARED UPDATE'			|| AreaProcedureCallFunction.READY_SHARED_UPDATE
+		' READY SHARED RETRIEVAL'		|| AreaProcedureCallFunction.READY_SHARED_RETRIEVAL
+		' READY UPDATE'					|| AreaProcedureCallFunction.READY_UPDATE
+		' READY RETRIEVAL'				|| AreaProcedureCallFunction.READY_RETRIEVAL
+		' FINISH'						|| AreaProcedureCallFunction.FINISH
+		' COMMIT'						|| AreaProcedureCallFunction.COMMIT
+		' ROLLBACK'						|| AreaProcedureCallFunction.ROLLBACK
 	}
 
 }

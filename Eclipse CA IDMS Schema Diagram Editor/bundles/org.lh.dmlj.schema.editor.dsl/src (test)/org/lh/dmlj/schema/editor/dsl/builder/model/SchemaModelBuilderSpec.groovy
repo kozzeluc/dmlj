@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -268,7 +268,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 			name 'EMPSCHM'
 			version 100
 			area 'EMP-DEMO-REGION' {
-				procedure 'IDMSCOMP BEFORE FINISH'	
+				callProcedure 'IDMSCOMP BEFORE FINISH'	
 			}
 		}
 		Schema schema = builder.build(definition)
@@ -300,7 +300,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 			version 100
 			area {
 				name 'EMP-DEMO-REGION'
-				procedure 'IDMSCOMP BEFORE FINISH'
+				callProcedure 'IDMSCOMP BEFORE FINISH'
 			}
 		}
 		Schema schema = builder.build(definition)
@@ -783,7 +783,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		SchemaModelBuilder builder = new SchemaModelBuilder()		
 		
 		when: "building the schema from a file containing the schema syntax"
-		Schema schema = builder.buildFromFile(new File('testdata/EMPSCHM version 100.syntax'))
+		Schema schema = builder.buildFromFile(new File('testdata/EMPSCHM version 100.schemadsl'))
 		
 		then: "the result will be a schema conforming to the syntax in the file"
 		schema
@@ -798,7 +798,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the schema from a file containing the schema syntax"
 		Schema schema = 
-			builder.buildFromFile(new File('testdata/IDMSNTWK version 1 (Release 18.5).syntax'))
+			builder.buildFromFile(new File('testdata/IDMSNTWK version 1 (Release 18.5).schemadsl'))
 		
 		then: "the result will be a schema conforming to the syntax in the file"
 		schema

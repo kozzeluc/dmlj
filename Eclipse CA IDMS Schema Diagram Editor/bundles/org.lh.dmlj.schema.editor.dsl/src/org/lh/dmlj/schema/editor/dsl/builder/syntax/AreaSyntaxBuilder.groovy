@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -48,9 +48,11 @@ class AreaSyntaxBuilder extends AbstractSyntaxBuilder<SchemaArea> {
 			def procedureCallSpecification = call.getProcedure().name
 			procedureCallSpecification <<= ' '
 			procedureCallSpecification <<= call.callTime
-			procedureCallSpecification <<= ' '
-			procedureCallSpecification <<= replaceUnderscoresBySpaces(call.function)
-			without_tab "procedure '$procedureCallSpecification'"
+			if (call.function.value != -1) {
+				procedureCallSpecification <<= ' '
+				procedureCallSpecification <<= replaceUnderscoresBySpaces(call.function)
+			}
+			without_tab "call '$procedureCallSpecification'"
 		}
 	}
 

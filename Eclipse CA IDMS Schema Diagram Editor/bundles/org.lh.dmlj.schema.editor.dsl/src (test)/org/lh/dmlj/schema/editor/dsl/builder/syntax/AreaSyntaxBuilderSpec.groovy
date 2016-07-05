@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -66,42 +66,42 @@ name 'EMP-DEMO-REGION'
 """
 name 'DDLDML'
 
-procedure 'IDMSCOMP $syntaxPart'
-procedure 'IDMSDCOM $syntaxPart'
+call 'IDMSCOMP$syntaxPart'
+call 'IDMSDCOM$syntaxPart'
 """)
 		
 		where: "the procedure call is specified as follows"
-		callTime 				 | function 										   | syntaxPart
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.EVERY_DML_FUNCTION 	   | 'BEFORE EVERY DML FUNCTION'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_EXCLUSIVE 		   | 'BEFORE READY EXCLUSIVE'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_EXCLUSIVE_UPDATE	   | 'BEFORE READY EXCLUSIVE UPDATE'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_EXCLUSIVE_RETRIEVAL | 'BEFORE READY EXCLUSIVE RETRIEVAL'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_PROTECTED 		   | 'BEFORE READY PROTECTED'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_PROTECTED_UPDATE	   | 'BEFORE READY PROTECTED UPDATE'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_PROTECTED_RETRIEVAL | 'BEFORE READY PROTECTED RETRIEVAL'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_SHARED 			   | 'BEFORE READY SHARED'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_SHARED_UPDATE	   | 'BEFORE READY SHARED UPDATE'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_SHARED_RETRIEVAL	   | 'BEFORE READY SHARED RETRIEVAL'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_UPDATE			   | 'BEFORE READY UPDATE'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_RETRIEVAL		   | 'BEFORE READY RETRIEVAL'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.FINISH					   | 'BEFORE FINISH'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.COMMIT					   | 'BEFORE COMMIT'
-		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.ROLLBACK				   | 'BEFORE ROLLBACK'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.EVERY_DML_FUNCTION 	   | 'AFTER EVERY DML FUNCTION'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_EXCLUSIVE 		   | 'AFTER READY EXCLUSIVE'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_EXCLUSIVE_UPDATE	   | 'AFTER READY EXCLUSIVE UPDATE'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_EXCLUSIVE_RETRIEVAL | 'AFTER READY EXCLUSIVE RETRIEVAL'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_PROTECTED 		   | 'AFTER READY PROTECTED'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_PROTECTED_UPDATE	   | 'AFTER READY PROTECTED UPDATE'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_PROTECTED_RETRIEVAL | 'AFTER READY PROTECTED RETRIEVAL'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_SHARED 			   | 'AFTER READY SHARED'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_SHARED_UPDATE	   | 'AFTER READY SHARED UPDATE'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_SHARED_RETRIEVAL	   | 'AFTER READY SHARED RETRIEVAL'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_UPDATE			   | 'AFTER READY UPDATE'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_RETRIEVAL		   | 'AFTER READY RETRIEVAL'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.FINISH					   | 'AFTER FINISH'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.COMMIT					   | 'AFTER COMMIT'
-		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.ROLLBACK				   | 'AFTER ROLLBACK'
+		callTime 				 | function 										   || syntaxPart
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.EVERY_DML_FUNCTION 	   || ' BEFORE'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_EXCLUSIVE 		   || ' BEFORE READY EXCLUSIVE'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_EXCLUSIVE_UPDATE	   || ' BEFORE READY EXCLUSIVE UPDATE'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_EXCLUSIVE_RETRIEVAL || ' BEFORE READY EXCLUSIVE RETRIEVAL'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_PROTECTED 		   || ' BEFORE READY PROTECTED'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_PROTECTED_UPDATE	   || ' BEFORE READY PROTECTED UPDATE'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_PROTECTED_RETRIEVAL || ' BEFORE READY PROTECTED RETRIEVAL'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_SHARED 			   || ' BEFORE READY SHARED'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_SHARED_UPDATE	   || ' BEFORE READY SHARED UPDATE'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_SHARED_RETRIEVAL	   || ' BEFORE READY SHARED RETRIEVAL'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_UPDATE			   || ' BEFORE READY UPDATE'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.READY_RETRIEVAL		   || ' BEFORE READY RETRIEVAL'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.FINISH					   || ' BEFORE FINISH'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.COMMIT					   || ' BEFORE COMMIT'
+		ProcedureCallTime.BEFORE | AreaProcedureCallFunction.ROLLBACK				   || ' BEFORE ROLLBACK'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.EVERY_DML_FUNCTION 	   || ' AFTER'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_EXCLUSIVE 		   || ' AFTER READY EXCLUSIVE'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_EXCLUSIVE_UPDATE	   || ' AFTER READY EXCLUSIVE UPDATE'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_EXCLUSIVE_RETRIEVAL || ' AFTER READY EXCLUSIVE RETRIEVAL'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_PROTECTED 		   || ' AFTER READY PROTECTED'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_PROTECTED_UPDATE	   || ' AFTER READY PROTECTED UPDATE'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_PROTECTED_RETRIEVAL || ' AFTER READY PROTECTED RETRIEVAL'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_SHARED 			   || ' AFTER READY SHARED'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_SHARED_UPDATE	   || ' AFTER READY SHARED UPDATE'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_SHARED_RETRIEVAL	   || ' AFTER READY SHARED RETRIEVAL'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_UPDATE			   || ' AFTER READY UPDATE'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.READY_RETRIEVAL		   || ' AFTER READY RETRIEVAL'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.FINISH					   || ' AFTER FINISH'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.COMMIT					   || ' AFTER COMMIT'
+		ProcedureCallTime.AFTER  | AreaProcedureCallFunction.ROLLBACK				   || ' AFTER ROLLBACK'
 	}
 	
 	def "Syntax for inclusion in a schema"() {
@@ -118,8 +118,8 @@ procedure 'IDMSDCOM $syntaxPart'
 		      "property and indent the syntax with 1 'tab' (being actually spaces)"
 		syntax == expected(
 """
-    procedure 'IDMSCOMP BEFORE EVERY DML FUNCTION'
-    procedure 'IDMSDCOM BEFORE EVERY DML FUNCTION'
+    call 'IDMSCOMP BEFORE'
+    call 'IDMSDCOM BEFORE'
 """)
 	}
 	

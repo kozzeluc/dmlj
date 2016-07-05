@@ -31,10 +31,10 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		when: "passing the schema to the builder's build method"
 		String syntax = builder.build(schema)
-		//new File('testdata/EMPSCHM version 100.syntax').text = syntax
+		//new File('testdata/EMPSCHM version 100.schemadsl').text = syntax
 		
 		then: "the builder creates the syntax that describes the schema"		
-		mustMatchSyntaxInFile(syntax, 'testdata/EMPSCHM version 100.syntax')		
+		mustMatchSyntaxInFile(syntax, 'testdata/EMPSCHM version 100.schemadsl')		
 	}
 	
 	def "IDMSNTWK version 1 (Release 18.5)"() {
@@ -45,10 +45,10 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		when: "passing the schema to the builder's build method"
 		String syntax = builder.build(schema)
-		//new File('testdata/IDMSNTWK version 1 (Release 18.5).syntax').text = syntax
+		//new File('testdata/IDMSNTWK version 1 (Release 18.5).schemadsl').text = syntax
 		
 		then: "the builder creates the syntax that describes the schema"		
-		mustMatchSyntaxInFile(syntax, 'testdata/IDMSNTWK version 1 (Release 18.5).syntax')
+		mustMatchSyntaxInFile(syntax, 'testdata/IDMSNTWK version 1 (Release 18.5).schemadsl')
 	}
 	
 	def "Schema without a description"() {

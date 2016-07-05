@@ -629,31 +629,31 @@ area 'ORG-DEMO-REGION' {
 minimumRootLength 24
 minimumFragmentLength 296
  
-procedure 'IDMSCOMP $syntaxPart'
-procedure 'IDMSCOMP $syntaxPart'
-procedure 'IDMSDCOM $syntaxPart'
+call 'IDMSCOMP$syntaxPart'
+call 'IDMSCOMP$syntaxPart'
+call 'IDMSDCOM$syntaxPart'
  
 elements \"\"\"
 """))
 		
 		where:
-		callTime 				 | verb 						   	  		  | syntaxPart
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.CONNECT 	  		  | 'BEFORE CONNECT'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.DISCONNECT 		  | 'BEFORE DISCONNECT'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.ERASE 	  		  | 'BEFORE ERASE'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.EVERY_DML_FUNCTION | 'BEFORE EVERY DML FUNCTION'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.FIND 			  | 'BEFORE FIND'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.GET 				  | 'BEFORE GET'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.MODIFY 			  | 'BEFORE MODIFY'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.STORE 			  | 'BEFORE STORE'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.CONNECT 			  | 'AFTER CONNECT'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.DISCONNECT 		  | 'AFTER DISCONNECT'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.ERASE 			  | 'AFTER ERASE'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.EVERY_DML_FUNCTION | 'AFTER EVERY DML FUNCTION'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.FIND 			  | 'AFTER FIND'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.GET 				  | 'AFTER GET'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.MODIFY 			  | 'AFTER MODIFY'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.STORE 			  | 'AFTER STORE'
+		callTime 				 | verb 						   	  		  || syntaxPart
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.CONNECT 	  		  || ' BEFORE CONNECT'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.DISCONNECT 		  || ' BEFORE DISCONNECT'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.ERASE 	  		  || ' BEFORE ERASE'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.EVERY_DML_FUNCTION || ' BEFORE'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.FIND 			  || ' BEFORE FIND'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.GET 				  || ' BEFORE GET'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.MODIFY 			  || ' BEFORE MODIFY'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.STORE 			  || ' BEFORE STORE'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.CONNECT 			  || ' AFTER CONNECT'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.DISCONNECT 		  || ' AFTER DISCONNECT'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.ERASE 			  || ' AFTER ERASE'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.EVERY_DML_FUNCTION || ' AFTER'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.FIND 			  || ' AFTER FIND'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.GET 				  || ' AFTER GET'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.MODIFY 			  || ' AFTER MODIFY'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.STORE 			  || ' AFTER STORE'
 		
 	}
 	

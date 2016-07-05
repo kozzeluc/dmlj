@@ -189,7 +189,11 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 			blank_line()	
 		}
 		record.procedures.each { call ->
-			without_tab "procedure '${call.procedure.name} ${call.callTime} ${replaceUnderscoresBySpaces(call.verb)}'"
+			def verb = ''
+			if (call.verb.value != -1) {
+				verb = " ${replaceUnderscoresBySpaces(call.verb)}"
+			}
+			without_tab "call '${call.procedure.name} ${call.callTime}$verb'"			
 		}
 	}
 	

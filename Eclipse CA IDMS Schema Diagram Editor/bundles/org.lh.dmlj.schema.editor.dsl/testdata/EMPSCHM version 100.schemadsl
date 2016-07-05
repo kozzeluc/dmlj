@@ -395,9 +395,9 @@ record 'JOB' {
     minimumRootLength 24
     minimumFragmentLength 296
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JOB-ID-0440 picture 9(4)

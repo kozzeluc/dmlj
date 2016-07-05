@@ -15,13 +15,13 @@ diagram {
 }
 
 area 'DDLDML' {
-    procedure 'IDMSCOMP BEFORE EVERY DML FUNCTION'
-    procedure 'IDMSDCOM BEFORE EVERY DML FUNCTION'
+    call 'IDMSCOMP BEFORE'
+    call 'IDMSDCOM BEFORE'
 }
 
 area 'DDLDCMSG' {
-    procedure 'IDMSCOMP BEFORE EVERY DML FUNCTION'
-    procedure 'IDMSDCOM BEFORE EVERY DML FUNCTION'
+    call 'IDMSCOMP BEFORE'
+    call 'IDMSDCOM BEFORE'
 }
 
 area 'DDLDCSCR' {
@@ -41,9 +41,9 @@ record 'S-010' {
     minimumRootLength 12
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 S-NAME-010
@@ -155,9 +155,9 @@ record 'SA-018' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SA-NAM-018 picture X(32)
@@ -240,9 +240,9 @@ record 'SACALL-020' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 CALL-SEQ-CTL-020
@@ -349,9 +349,9 @@ record 'SSA-024' {
     minimumRootLength 40
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SSA-CNTRL-024
@@ -390,9 +390,9 @@ record 'TASK-025' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 TASK-NAME-025 picture X(08)
@@ -461,9 +461,9 @@ record 'SS-026' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SS-NAM-026 picture X(08)
@@ -549,9 +549,9 @@ record 'DEST-028' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 DEST-NAME-028 picture X(08)
@@ -619,9 +619,9 @@ record 'QUEUE-030' {
     minimumRootLength 16
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 QUEUE-NAME-030 picture X(16)
@@ -665,9 +665,9 @@ record 'MODNEST-031' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEST-CODE-031 picture S9(8) usage COMPUTATIONAL
@@ -703,9 +703,9 @@ record 'SSR-032' {
     minimumRootLength 44
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SSR-CNTRL-032
@@ -749,9 +749,9 @@ record 'QUEUECMT-033' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-033 picture S9(8) usage COMPUTATIONAL
@@ -781,9 +781,9 @@ record 'SSOR-034' {
     minimumRootLength 44
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SSOR-CNTRL-034
@@ -817,9 +817,9 @@ record 'USERNEST-035' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEST-CODE-035 picture S9(8) usage COMPUTATIONAL
@@ -848,9 +848,9 @@ record 'SR-036' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SR-NAM-036 picture X(32)
@@ -897,9 +897,9 @@ record 'SFK-037' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 FK-POS-037 picture S9(4) usage COMPUTATIONAL
@@ -933,9 +933,9 @@ record 'SYSCMT-038' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-038 picture S9(8) usage COMPUTATIONAL
@@ -1008,9 +1008,9 @@ record 'SRCALL-040' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 CALL-SEQ-CTL-040
@@ -1041,9 +1041,9 @@ record 'SYS-041' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SYS-NAME-041 picture X(32)
@@ -1217,9 +1217,9 @@ record 'SDR-042' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SEQ-042 picture 9(06)
@@ -1281,9 +1281,9 @@ record 'SYSNEST-043' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEST-CODE-043 picture S9(8) usage COMPUTATIONAL
@@ -1311,9 +1311,9 @@ record 'SDES-044' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-044 picture S9(8) usage COMPUTATIONAL
@@ -1388,9 +1388,9 @@ record 'ACCESS-045' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 PRIORITY-045 picture X(08) usage BIT
@@ -1421,9 +1421,9 @@ record 'SOR-046' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SET-NAM-046 picture X(32)
@@ -1480,9 +1480,9 @@ record 'USER-047' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-NAME-047 picture X(32)
@@ -1597,9 +1597,9 @@ record 'USERCMT-048' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-048 picture S9(8) usage COMPUTATIONAL
@@ -1628,9 +1628,9 @@ record 'PROGLST-049' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 PROG-NAME-049 picture X(08)
@@ -1670,9 +1670,9 @@ record 'PROGCMT-050' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-050 picture S9(8) usage COMPUTATIONAL
@@ -1722,9 +1722,9 @@ record 'PROG-051' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 PROG-NAME-051 picture X(08)
@@ -1777,9 +1777,9 @@ record 'SMR-052' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SET-NAM-052 picture X(32)
@@ -1825,9 +1825,9 @@ record 'PROGNEST-053' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEST-CODE-053 picture S9(8) usage COMPUTATIONAL
@@ -1856,9 +1856,9 @@ record 'SCR-054' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SCR-POS-054 picture S9(4) usage COMPUTATIONAL
@@ -1896,9 +1896,9 @@ record 'MODLST-055' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-055 picture X(40)
@@ -1938,9 +1938,9 @@ record 'SAM-056' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SR-NAM-056 picture X(32)
@@ -1972,9 +1972,9 @@ record 'AFACT-057' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 AF-FUNCT-057 picture S9(4) usage COMPUTATIONAL
@@ -2021,9 +2021,9 @@ record 'INQ-058' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 INQ-NAM-058 picture X(32)
@@ -2076,9 +2076,9 @@ record 'RCDACT-059' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 RA-FUNCT-059 picture S9(4) usage COMPUTATIONAL
@@ -2120,9 +2120,9 @@ record 'SYSATTR-060' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-060 picture X(40)
@@ -2148,9 +2148,9 @@ record 'SETACT-061' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SA-FUNCT-061 picture S9(4) usage COMPUTATIONAL
@@ -2189,9 +2189,9 @@ record 'USERELEM-062' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-062 picture X(08) usage BIT
@@ -2258,9 +2258,9 @@ record 'USERATTR-064' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-064 picture X(40)
@@ -2286,9 +2286,9 @@ record 'PROGATTR-065' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-065 picture X(40)
@@ -2336,9 +2336,9 @@ record 'MODULE-067' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 MOD-NAME-067 picture X(32)
@@ -2392,9 +2392,9 @@ record 'SSMR-068' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 MR-ID-068 picture S9(8) usage COMPUTATIONAL
@@ -2434,9 +2434,9 @@ record 'MODATTR-069' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-069 picture X(40)
@@ -2462,9 +2462,9 @@ record 'SSCR-070' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 CR-ID-070 picture S9(8) usage COMPUTATIONAL
@@ -2499,9 +2499,9 @@ record 'FILENEST-071' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEST-CODE-071 picture S9(8) usage COMPUTATIONAL
@@ -2529,9 +2529,9 @@ record 'FILECMT-072' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-072 picture S9(8) usage COMPUTATIONAL
@@ -2560,9 +2560,9 @@ record 'FILEATTR-073' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-073 picture X(40)
@@ -2589,9 +2589,9 @@ record 'PTRM-074' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 PTRM-NAME-074 picture X(08)
@@ -2673,9 +2673,9 @@ record 'SSFK-076' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 FK-ID-076 picture S9(8) usage COMPUTATIONAL
@@ -2730,9 +2730,9 @@ record 'OOAKEXT-078' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 FILLER picture X(0100)
@@ -2759,9 +2759,9 @@ record 'RCDSYN-079' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 RSYN-NAME-079 picture X(32)
@@ -2799,9 +2799,9 @@ record 'RCDCMT-080' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-080 picture S9(8) usage COMPUTATIONAL
@@ -2830,9 +2830,9 @@ record 'RCDATTR-081' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-081 picture X(40)
@@ -2858,9 +2858,9 @@ record 'ELEMCMT-082' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-082 picture S9(8) usage COMPUTATIONAL
@@ -2895,9 +2895,9 @@ record 'NAMESYN-083' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SYN-NAME-083 picture X(32)
@@ -2930,9 +2930,9 @@ record 'MODCMT-084' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-084 picture S9(8) usage COMPUTATIONAL
@@ -3008,9 +3008,9 @@ record 'ELEMSYN-085' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 ES-NAME-085 picture X(32)
@@ -3041,9 +3041,9 @@ record 'CLASSCMT-086' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-086 picture S9(8) usage COMPUTATIONAL
@@ -3072,9 +3072,9 @@ record 'ELEMNEST-087' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEST-CODE-087 picture S9(8) usage COMPUTATIONAL
@@ -3103,9 +3103,9 @@ record 'TEXT-088' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-088 picture S9(8) usage COMPUTATIONAL
@@ -3132,9 +3132,9 @@ record 'ELEMRNG-089' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 RNG-BGN-089 picture X(34)
@@ -3162,9 +3162,9 @@ record 'ELEMATTR-090' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-090 picture X(40)
@@ -3279,9 +3279,9 @@ record 'ATTRCMT-094' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-094 picture S9(8) usage COMPUTATIONAL
@@ -3338,9 +3338,9 @@ record 'TASKCMT-096' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-096 picture S9(8) usage COMPUTATIONAL
@@ -3369,9 +3369,9 @@ record 'MAPLST-097' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-097 picture X(40)
@@ -3399,9 +3399,9 @@ record 'MAP-098' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 MAP-NAME-098 picture X(08)
@@ -3492,9 +3492,9 @@ record 'DESTCMT-101' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-101 picture S9(8) usage COMPUTATIONAL
@@ -3523,9 +3523,9 @@ record 'DESTATTR-102' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-102 picture X(40)
@@ -3672,9 +3672,9 @@ record 'LTRM-106' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 LTRM-NAME-106 picture X(08)
@@ -3719,9 +3719,9 @@ record 'LTRMCMT-107' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-107 picture S9(8) usage COMPUTATIONAL
@@ -3750,9 +3750,9 @@ record 'LTRMATTR-108' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-108 picture X(40)
@@ -3779,9 +3779,9 @@ record 'LINE-109' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 LINE-NAME-109 picture X(08)
@@ -3829,9 +3829,9 @@ record 'LINECMT-110' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-110 picture S9(8) usage COMPUTATIONAL
@@ -3860,9 +3860,9 @@ record 'LINEATTR-111' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-111 picture X(40)
@@ -3888,9 +3888,9 @@ record 'TASKATTR-112' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-112 picture X(40)
@@ -3916,9 +3916,9 @@ record 'SRCD-113' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 S-NAME-113
@@ -3993,9 +3993,9 @@ record 'USERSYS-114' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-114 picture X(08) usage BIT
@@ -4024,9 +4024,9 @@ record 'USERLINE-115' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-115 picture X(08) usage BIT
@@ -4056,9 +4056,9 @@ record 'MESSAGE-116' {
     minimumRootLength 8
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 MSG-KEY-116 picture X(08)
@@ -4116,9 +4116,9 @@ record 'PANEL-118' {
     minimumRootLength 32
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 PANEL-NAME-118 picture X(32)
@@ -4158,9 +4158,9 @@ record 'PANELCMT-119' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-119 picture S9(8) usage COMPUTATIONAL
@@ -4189,9 +4189,9 @@ record 'PANELATTR-120' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-120 picture X(40)
@@ -4217,9 +4217,9 @@ record 'PANELFLD-121' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 PFLNAME-121 picture X(32)
@@ -4251,9 +4251,9 @@ record 'MAPCMT-122' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-122 picture S9(8) usage COMPUTATIONAL
@@ -4282,9 +4282,9 @@ record 'MAPATTR-123' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-123 picture X(40)
@@ -4310,9 +4310,9 @@ record 'MAPFLD-124' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 DATAFLD-INDEX-124 picture S9(4) usage COMPUTATIONAL
@@ -4390,9 +4390,9 @@ record 'MAPRCD-125' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 MAP-INDEX-125 picture S9(4) usage COMPUTATIONAL
@@ -4423,9 +4423,9 @@ record 'PROGMAP-126' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-126 picture X(40)
@@ -4478,9 +4478,9 @@ record 'PTRMCMT-128' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-128 picture S9(8) usage COMPUTATIONAL
@@ -4509,9 +4509,9 @@ record 'PTRMATTR-129' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-129 picture X(40)
@@ -4537,9 +4537,9 @@ record 'QUEUEATTR-130' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-130 picture X(40)
@@ -4586,9 +4586,9 @@ record 'ATTRNEST-132' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEST-CODE-132 picture S9(8) usage COMPUTATIONAL
@@ -4618,9 +4618,9 @@ record 'USERRCD-133' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-133 picture X(08) usage BIT
@@ -4649,9 +4649,9 @@ record 'USERFILE-134' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-134 picture X(08) usage BIT
@@ -4680,9 +4680,9 @@ record 'USERPROG-135' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-135 picture X(08) usage BIT
@@ -4711,9 +4711,9 @@ record 'USERMOD-136' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-136 picture X(08) usage BIT
@@ -4742,9 +4742,9 @@ record 'USERMAP-137' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-137 picture X(08) usage BIT
@@ -4851,9 +4851,9 @@ record 'RCDSYNATTR-141' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-141 picture X(40)
@@ -4879,9 +4879,9 @@ record 'CVGDEFS-142' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 CVG-TYPE-142 picture X(08) usage BIT
@@ -5330,9 +5330,9 @@ record 'MSG-LINE-144' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 CMT-ID-144 picture S9(8) usage COMPUTATIONAL
@@ -5369,9 +5369,9 @@ record 'RCDNEST-145' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEST-CODE-145 picture S9(8) usage COMPUTATIONAL
@@ -5399,9 +5399,9 @@ record 'MSGCMT-146' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-146 picture S9(8) usage COMPUTATIONAL
@@ -5430,9 +5430,9 @@ record 'PFLD-DATA-147' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 NEXT-DEV-147 picture S9(8) usage COMPUTATIONAL
@@ -5467,9 +5467,9 @@ record 'USERPTRM-148' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-148 picture X(08) usage BIT
@@ -5498,9 +5498,9 @@ record 'USERLTRM-149' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-149 picture X(08) usage BIT
@@ -5529,9 +5529,9 @@ record 'USERDEST-150' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-150 picture X(08) usage BIT
@@ -5560,9 +5560,9 @@ record 'USERQUEUE-151' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-151 picture X(08) usage BIT
@@ -5591,9 +5591,9 @@ record 'USERTASK-152' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-152 picture X(08) usage BIT
@@ -5622,9 +5622,9 @@ record 'USERPANEL-153' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-153 picture X(08) usage BIT
@@ -5653,9 +5653,9 @@ record 'SYSMOD-154' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-154 picture X(40)
@@ -5789,9 +5789,9 @@ record 'ELEMACT-159' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 EA-FUNCT-159 picture S9(4) usage COMPUTATIONAL
@@ -5828,9 +5828,9 @@ record 'CATENTRY-160' {
     minimumRootLength 64
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 CAT-IDENTIFICATION-160
@@ -5946,9 +5946,9 @@ record 'CATPASSKEY-162' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 CAT-PASSKEYS-162 usage BIT
@@ -6028,9 +6028,9 @@ record 'SYSMO-170' {
     minimumRootLength 32
     minimumFragmentLength 512
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SYS-NAME-170 picture X(32)
@@ -6261,9 +6261,9 @@ record 'ATTRUSER-173' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-173 picture X(08) usage BIT
@@ -6370,9 +6370,9 @@ record 'SCHEMAATTR-180' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-180 picture X(40)
@@ -6398,9 +6398,9 @@ record 'SCHEMACMT-181' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-181 picture S9(8) usage COMPUTATIONAL
@@ -6429,9 +6429,9 @@ record 'USERSCHEMA-182' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-182 picture X(08) usage BIT
@@ -6460,9 +6460,9 @@ record 'SSATTR-183' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TEXT-183 picture X(40)
@@ -6488,9 +6488,9 @@ record 'SSCMT-184' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-184 picture S9(8) usage COMPUTATIONAL
@@ -6519,9 +6519,9 @@ record 'USERSS-185' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 USER-AUTH-FLAG-185 picture X(08) usage BIT
@@ -6550,9 +6550,9 @@ record 'NAMEDES-186' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-186 picture S9(8) usage COMPUTATIONAL
@@ -6674,9 +6674,9 @@ record 'PATHDEF-192' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 TYP-192 picture S9(4) usage COMPUTATIONAL
@@ -6789,9 +6789,9 @@ record 'LRCMT-194' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 IDD-SEQ-194 picture S9(8) usage COMPUTATIONAL
@@ -6820,9 +6820,9 @@ record 'MODMAP-195' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 JCT-TYPE-195 picture S9(8) usage COMPUTATIONAL
@@ -6849,9 +6849,9 @@ record 'SYMNAME-200' {
     minimumRootLength 20
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SYMBOL-TYPE-200 picture S9(4) usage COMPUTATIONAL
@@ -6879,9 +6879,9 @@ record 'SYMREC-201' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SYMBOL-TYPE-201 picture S9(4) usage COMPUTATIONAL
@@ -6908,9 +6908,9 @@ record 'SYMSET-202' {
     minimumRootLength 0
     minimumFragmentLength 4
 
-    procedure 'IDMSCOMP BEFORE STORE'
-    procedure 'IDMSCOMP BEFORE MODIFY'
-    procedure 'IDMSDCOM AFTER GET'
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
 
     elements """
         02 SYMBOL-TYPE-202 picture S9(4) usage COMPUTATIONAL

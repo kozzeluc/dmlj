@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -40,6 +40,19 @@ class AreaModelBuilder extends AbstractModelBuilder<SchemaArea> {
 		area = SchemaFactory.eINSTANCE.createSchemaArea()
 		schema.areas.add(area)
 		
+		// Define 'call' as an alias for 'callProcedure', this makes the DSL groovier.
+		// Note that a closure already has a 'call' method defined; we must override it to get the
+		// procedure call details (the string argument) and pass them to our 'callProcedure' method
+		// to define the procedure call.
+		// FYI: 'doCall' is the closure method that is invoked when, for a closure x, we code x()
+		//      or invoke its 'call' method.  It is clear that invoking 'call' from within the
+		//      closure causes a stack overflow error.  We don't directly invoke the closure's
+		//      'call' method anywhere else, so we get away with the override.
+		definition.metaClass {
+			call = { callSpec ->
+				callProcedure callSpec
+			}
+		}
 		runClosure definition
 		
 		assert !bodies
@@ -71,15 +84,22 @@ class AreaModelBuilder extends AbstractModelBuilder<SchemaArea> {
 		area.name = name	
 	}
 
-	void procedure(String procedureCallSpecAsString) {
+	void callProcedure(String procedureCallSpecAsString) {
 		
 		assert !bodies
 		
 		int i = procedureCallSpecAsString.indexOf(" ")
 		int j = procedureCallSpecAsString.indexOf(" ", i + 1)
 		String procedureName = procedureCallSpecAsString.substring(0, i);
-		String callTimeAsString = procedureCallSpecAsString.substring(i + 1, j).replaceAll(" ", "_")
-		String functionAsString = procedureCallSpecAsString.substring(j + 1).replaceAll(" ", "_")
+		String callTimeAsString
+		String functionAsString
+		if (j > -1) {
+			callTimeAsString = procedureCallSpecAsString.substring(i + 1, j).replaceAll(" ", "_")
+			functionAsString = procedureCallSpecAsString.substring(j + 1).replaceAll(" ", "_")
+		} else {
+			callTimeAsString = procedureCallSpecAsString.substring(i + 1).replaceAll(" ", "_")
+			functionAsString = AreaProcedureCallFunction.EVERY_DML_FUNCTION.toString()
+		}
 			
 		ProcedureCallTime callTime = ProcedureCallTime.valueOf(callTimeAsString)
 		AreaProcedureCallFunction function = AreaProcedureCallFunction.valueOf(functionAsString)

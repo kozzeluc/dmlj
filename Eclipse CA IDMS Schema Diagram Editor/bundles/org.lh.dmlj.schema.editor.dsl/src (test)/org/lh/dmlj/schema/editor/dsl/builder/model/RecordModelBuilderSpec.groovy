@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -580,10 +580,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the record with a closure containing 4 procedure calls,"
 			  "referring to 2 distinct procedures"
 		def definition = {
-			procedure 'PROC2 BEFORE STORE'
-			procedure 'PROC1 AFTER GET'
-			procedure 'PROC1 BEFORE FIND'
-			procedure 'PROC2 AFTER ERASE'
+			call 'PROC2 BEFORE STORE'
+			call 'PROC1 AFTER GET'
+			call 'PROC1 BEFORE FIND'
+			call 'PROC2 AFTER ERASE'
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -611,7 +611,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		def schemaDefinition = {
 			name 'EMPSCHM'
 			area 'EMP-DEMO-REGION' {
-				procedure 'PROC1 BEFORE FINISH'
+				call 'PROC1 BEFORE FINISH'
 			}
 		}
 		def schemaBuilder = new SchemaModelBuilder()
@@ -626,10 +626,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "distinct procedures, of which 1 is already defined in the schema"						
 		def definition = {																				
 			area 'EMP-DEMO-REGION'
-			procedure 'PROC2 BEFORE STORE'
-			procedure 'PROC1 AFTER GET'
-			procedure 'PROC1 BEFORE FIND'
-			procedure 'PROC2 AFTER ERASE'
+			call 'PROC2 BEFORE STORE'
+			call 'PROC1 AFTER GET'
+			call 'PROC1 BEFORE FIND'
+			call 'PROC2 AFTER ERASE'
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -659,7 +659,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the record with a closure containing a procedure call"
 		def definition = {
-			procedure 'PROC1 ' + closureCallTime + ' STORE'
+			call 'PROC1 ' + closureCallTime + ' STORE'
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -668,9 +668,9 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		callTime == expected
 		
 		where:
-		closureCallTime	| expected
-		'BEFORE'		| ProcedureCallTime.BEFORE
-		'AFTER'			| ProcedureCallTime.AFTER
+		closureCallTime	|| expected
+		'BEFORE'		|| ProcedureCallTime.BEFORE
+		'AFTER'			|| ProcedureCallTime.AFTER
 	}
 	
 	@Unroll
@@ -681,7 +681,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the record with a closure containing a procedure call"
 		def definition = {
-			procedure 'PROC1 BEFORE ' + closureVerb
+			call 'PROC1 BEFORE ' + closureVerb
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -690,15 +690,15 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		verb == expected
 		
 		where:
-		closureVerb			 | expected
-		'CONNECT'			 | RecordProcedureCallVerb.CONNECT
-		'DISCONNECT'		 | RecordProcedureCallVerb.DISCONNECT
-		'ERASE'				 | RecordProcedureCallVerb.ERASE
-		'EVERY DML FUNCTION' | RecordProcedureCallVerb.EVERY_DML_FUNCTION
-		'FIND'				 | RecordProcedureCallVerb.FIND
-		'GET'				 | RecordProcedureCallVerb.GET
-		'MODIFY'			 | RecordProcedureCallVerb.MODIFY
-		'STORE'				 | RecordProcedureCallVerb.STORE		
+		closureVerb			 || expected
+		'CONNECT'			 || RecordProcedureCallVerb.CONNECT
+		'DISCONNECT'		 || RecordProcedureCallVerb.DISCONNECT
+		'ERASE'				 || RecordProcedureCallVerb.ERASE
+		'EVERY DML FUNCTION' || RecordProcedureCallVerb.EVERY_DML_FUNCTION
+		'FIND'				 || RecordProcedureCallVerb.FIND
+		'GET'				 || RecordProcedureCallVerb.GET
+		'MODIFY'			 || RecordProcedureCallVerb.MODIFY
+		'STORE'				 || RecordProcedureCallVerb.STORE		
 	}
 	
 	def "the minimum root en fragment lengths should be taken from what's in the closure"() {
