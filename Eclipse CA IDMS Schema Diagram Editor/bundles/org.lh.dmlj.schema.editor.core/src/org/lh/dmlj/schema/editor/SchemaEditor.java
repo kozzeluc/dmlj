@@ -320,6 +320,16 @@ public class SchemaEditor
 	
 	@Override
 	public void stackChanged(CommandStackEvent event) {
+		
+		// As of GEF 3.11 (Eclipse Neon), CommandStackEventListener instances are also notified when:
+		// - flushing the stack (event.detail == 64/256)
+		// - marking the save location of the stack (event.detail == 128/512)
+		// In both cases, the event's command is set to null so there is nothing we should do (apart
+		// from preventing a NPE further down the line, e.g. when saving a diagram).		
+		if (event.getCommand() == null) {
+			return;
+		}
+		
 		modelChangeDispatcher.setSchema(schema);
 		modelChangeDispatcher.dispatch(event);				
 	}
