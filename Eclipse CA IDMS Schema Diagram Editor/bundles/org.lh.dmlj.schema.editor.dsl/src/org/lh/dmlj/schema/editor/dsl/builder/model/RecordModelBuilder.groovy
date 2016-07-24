@@ -398,9 +398,16 @@ class RecordModelBuilder extends AbstractModelBuilder<SchemaRecord> {
 		int i = procedureCallSpecAsString.indexOf(" ")
 		int j = procedureCallSpecAsString.indexOf(" ", i + 1)
 		String procedureName = procedureCallSpecAsString.substring(0, i);
-		String callTimeAsString = procedureCallSpecAsString.substring(i + 1, j).replaceAll(" ", "_")
-		String verbAsString = procedureCallSpecAsString.substring(j + 1).replaceAll(" ", "_")
-			
+		String callTimeAsString
+		String verbAsString
+		if (j > -1) {
+			callTimeAsString = procedureCallSpecAsString.substring(i + 1, j).replaceAll(" ", "_")
+			verbAsString = procedureCallSpecAsString.substring(j + 1).replaceAll(" ", "_")
+		} else {
+			callTimeAsString = procedureCallSpecAsString.substring(i + 1).replaceAll(" ", "_")
+			verbAsString = RecordProcedureCallVerb.EVERY_DML_FUNCTION.toString()
+		}
+		
 		ProcedureCallTime callTime = ProcedureCallTime.valueOf(callTimeAsString)
 		RecordProcedureCallVerb verb = RecordProcedureCallVerb.valueOf(verbAsString)
 		

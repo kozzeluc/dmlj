@@ -673,15 +673,15 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		'AFTER'			|| ProcedureCallTime.AFTER
 	}
 	
-	@Unroll
-	def "the function should be derived from what's in the closure's procedure value"() {
+	@Unroll("verb:#closureVerb")
+	def "the verb should be derived from what's in the closure's procedure value"() {
 		
 		given: "a record builder"
 		def RecordModelBuilder builder = new RecordModelBuilder()
 		
 		when: "building the record with a closure containing a procedure call"
 		def definition = {
-			call 'PROC1 BEFORE ' + closureVerb
+			call "PROC1 BEFORE$closureVerb"
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -691,14 +691,14 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		where:
 		closureVerb			 || expected
-		'CONNECT'			 || RecordProcedureCallVerb.CONNECT
-		'DISCONNECT'		 || RecordProcedureCallVerb.DISCONNECT
-		'ERASE'				 || RecordProcedureCallVerb.ERASE
-		'EVERY DML FUNCTION' || RecordProcedureCallVerb.EVERY_DML_FUNCTION
-		'FIND'				 || RecordProcedureCallVerb.FIND
-		'GET'				 || RecordProcedureCallVerb.GET
-		'MODIFY'			 || RecordProcedureCallVerb.MODIFY
-		'STORE'				 || RecordProcedureCallVerb.STORE		
+		''					 || RecordProcedureCallVerb.EVERY_DML_FUNCTION
+		' CONNECT'			 || RecordProcedureCallVerb.CONNECT
+		' DISCONNECT'		 || RecordProcedureCallVerb.DISCONNECT
+		' ERASE'			 || RecordProcedureCallVerb.ERASE
+		' FIND'				 || RecordProcedureCallVerb.FIND
+		' GET'				 || RecordProcedureCallVerb.GET
+		' MODIFY'			 || RecordProcedureCallVerb.MODIFY
+		' STORE'			 || RecordProcedureCallVerb.STORE		
 	}
 	
 	def "the minimum root en fragment lengths should be taken from what's in the closure"() {

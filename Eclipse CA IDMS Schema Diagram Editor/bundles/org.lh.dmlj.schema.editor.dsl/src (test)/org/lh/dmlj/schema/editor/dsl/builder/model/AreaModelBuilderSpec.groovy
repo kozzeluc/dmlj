@@ -323,7 +323,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		'AFTER'			|| ProcedureCallTime.AFTER
 	}
 	
-	@Unroll
+	@Unroll("verb:#closureFunction")
 	def "the function should be derived from what's in the closure's procedure value"() {
 		
 		given: "a SchemaArea builder"
@@ -332,7 +332,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with a closure containing a procedure call"
 		def definition = {
 			name 'AREA1'
-			call 'PROC1 BEFORE' + closureFunction
+			call "PROC1 BEFORE$closureFunction"
 		}
 		SchemaArea area = builder.build(definition)
 		
