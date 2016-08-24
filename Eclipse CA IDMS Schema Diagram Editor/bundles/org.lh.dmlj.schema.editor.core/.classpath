@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="mockito-all-1.9.5.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="lib" path="spock-core-1.0-groovy-2.4.jar"/>
+	<classpathentry kind="lib" path="cglib-nodep-3.2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

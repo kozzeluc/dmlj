@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,26 +14,24 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.property.filter;
+package org.lh.dmlj.schema.editor.property.ui;
 
-import org.eclipse.gef.EditPart;
-import org.eclipse.jface.viewers.IFilter;
-import org.lh.dmlj.schema.SchemaArea;
+import org.eclipse.gef.commands.Command;
+import org.lh.dmlj.schema.editor.property.exception.DSLFacetValidationException;
 
-public class AreaWithProceduresFilter implements IFilter {
+public interface IDslFacetModifier {
 
-	@Override
-	public boolean select(Object object) {
-		if (!(object instanceof EditPart)) {
-			return false;
-		}
-        Object modelObject = ((EditPart) object).getModel();        
-        if (modelObject instanceof SchemaArea) {
-        	SchemaArea area = (SchemaArea) modelObject;
-        	return !area.getProcedures().isEmpty();
-        } else {
-        	return false;
-        }        
-	}
+	Command getCommand();
 
+	String getModelName();
+	
+	String getModelType();
+	
+	String getModifiedFacetDefinition();
+
+	String getOriginalFacetDefinition();
+
+	boolean hasChanges();
+	
+	void setModifiedFacetDefinition(String modifiedFacetDefinition) throws DSLFacetValidationException;
 }

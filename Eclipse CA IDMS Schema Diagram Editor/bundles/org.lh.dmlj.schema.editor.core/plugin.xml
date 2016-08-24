@@ -368,9 +368,11 @@
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.CalledProceduresPropertiesSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.AreaWithProceduresFilter"
                id="org.lh.dmlj.schema.editor.propertySectionAreaProcedures"
                tab="org.lh.dmlj.schema.editor.propertyTabProcedures">
+            <input
+                  type="org.lh.dmlj.schema.SchemaArea">
+            </input>
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.AreaSyntaxSection"
@@ -406,9 +408,11 @@
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.CalledProceduresPropertiesSection"
-               filter="org.lh.dmlj.schema.editor.property.filter.RecordWithProceduresFilter"
                id="org.lh.dmlj.schema.editor.propertySectionRecordProcedures"
                tab="org.lh.dmlj.schema.editor.propertyTabProcedures">
+            <input
+                  type="org.lh.dmlj.schema.SchemaRecord">
+            </input>
          </propertySection>
          <propertySection
                class="org.lh.dmlj.schema.editor.property.section.RecordCalcOrVsamCalcPropertiesSection"

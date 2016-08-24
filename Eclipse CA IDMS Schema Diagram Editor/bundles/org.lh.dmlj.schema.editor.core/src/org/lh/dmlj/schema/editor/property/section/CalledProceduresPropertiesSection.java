@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,12 +17,18 @@
 package org.lh.dmlj.schema.editor.property.section;        
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -32,6 +38,8 @@ import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.property.ui.EditProcedureCallsDialog;
+import org.lh.dmlj.schema.editor.property.ui.IDslFacetModifier;
                       
 /**
  * A properties section that shows the procedures being called for either an area or a record.
@@ -43,11 +51,16 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 	private Table		 table;
 	private SchemaArea 	 targetArea;	// either an area...
 	private SchemaRecord targetRecord;  // or a record are set, not both
+	
+	private CommandStack commandStack;
 		       
 	public CalledProceduresPropertiesSection() {
 		super();
 	}	
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	@Override
 	public final void createControls(Composite parent,
 							   		 TabbedPropertySheetPage page) {
@@ -82,8 +95,39 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
 		column2.setWidth(200);
 		column2.setText("Called");		
-
+		
+		Link link = new Link(composite, SWT.NONE);
+		link.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));		
+		GridData gd_link = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_link.horizontalIndent = 5;
+		link.setLayoutData(gd_link);
+		link.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				editProcedureCalls();
+			}
+		});
+		link.setText("<a>Add, edit or remove a procedure call</a>");
 	}		
+
+	protected void editProcedureCalls() {
+		
+		Shell parentShell = getPart().getSite().getShell();
+		
+		IDslFacetModifier dslFacetModifier; 
+		if (targetArea != null) {
+			dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(targetArea);
+		} else {
+			dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(targetRecord);
+		}
+		
+		EditProcedureCallsDialog dialog = new EditProcedureCallsDialog(parentShell, dslFacetModifier);
+		if (dialog.open() == IDialogConstants.CANCEL_ID || !dslFacetModifier.hasChanges()) {			
+			return;
+		}
+		
+		commandStack.execute(dslFacetModifier.getCommand());
+	}
 
 	@Override
 	public final void refresh() {		
@@ -135,7 +179,9 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
         	targetArea = null;
         	targetRecord = (SchemaRecord) modelObject;
         }
-
+        
+        commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
+	    Assert.isNotNull(commandStack, "no command stack available");
 	}	
 
 }
