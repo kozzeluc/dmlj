@@ -46,4 +46,6 @@ public abstract class PreferenceConstants {
 	
 	public static final String READ_ONLY_MODE = "readOnlyMode";
 	
+	public static final String DEFAULT_FILE_EXTENSION = "defaultFileExtension";
+	
 }
