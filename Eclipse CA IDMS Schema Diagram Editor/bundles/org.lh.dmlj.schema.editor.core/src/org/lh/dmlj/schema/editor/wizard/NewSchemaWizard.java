@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,10 +24,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
@@ -46,6 +42,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.wizard.helper.IDiagramDataAttributeProvider;
 import org.lh.dmlj.schema.editor.wizard.helper.NewSchemaWizardHelper;
@@ -81,7 +78,7 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {		
     			
 		// gather all information from the wizard pages...				
-		File targetFile = page.getSchemaFile();						
+		final File targetFile = page.getSchemaFile();						
 						    	    	
 		// create the schema and persist it to the file specified by the 
     	// user; do the work within an operation.		
@@ -131,26 +128,7 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 							new NewSchemaWizardHelper(diagramDataAttributeProvider);
 						Schema schema = helper.createSchema();
 						
-						// Create a resource set
-						//
-						ResourceSet resourceSet = new ResourceSetImpl();
-
-						// Get the URI of the model file.
-						//
-						URI fileURI = 
-							URI.createPlatformResourceURI(modelFile.getFullPath().toString(), true);
-
-						// Create a resource for this file.
-						//
-						Resource resource = resourceSet.createResource(fileURI);
-
-						// Add the initial model object to the contents.
-						//												
-						resource.getContents().add(schema);						
-
-						// Save the contents of the resource to the file system.
-						//
-						resource.save(null);
+						Tools.writeToFile(schema, targetFile);
 					} catch (Exception exception) {
 						throw new RuntimeException(exception);
 					}
@@ -179,13 +157,9 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 		// refresh the resource in the workspace to avoid 'Resource is out of 
 		// sync with the file system' messages
 		try {
-			IResource resource = 
-				ResourcesPlugin.getWorkspace()
-							   .getRoot()
-							   .findMember(modelFile.getFullPath());
-			resource.refreshLocal(IResource.DEPTH_ZERO, null);
+			modelFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
-			e.printStackTrace(); // just log whatever problem we encounter
+			Plugin.logError("Error while refreshing workspace", e);
 		}
 		
 		// Select the new file resource in the current view.

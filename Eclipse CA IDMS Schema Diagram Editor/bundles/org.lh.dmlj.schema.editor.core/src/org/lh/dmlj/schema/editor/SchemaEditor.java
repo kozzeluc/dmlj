@@ -133,7 +133,6 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
-import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -239,7 +238,7 @@ public class SchemaEditor
 				return;
 			}
 			if (getEditorInput() instanceof IFileEditorInput &&
-				!((IFileEditorInput) getEditorInput()).getFile().exists()) {
+				!((IFileEditorInput) getEditorInput()).getFile().getLocation().toFile().exists()) {
 				
 				Shell shell = getSite().getShell();
 				String title = "File Deleted";
@@ -1185,32 +1184,13 @@ public class SchemaEditor
 	}
 
 	private void writeSchemaToFile() {
-		Throwable exception = null;
-		if (fileExtension.equals(FILE_EXTENSION_SCHEMA)) {
-			ResourceSet resourceSet = new ResourceSetImpl();
-			Resource resource = resourceSet.createResource(uri);
-			resource.getContents().add(schema);
-			try {
-				resource.save(null);
-			} catch (IOException e) {
-				exception = e;
-			}
-		} else if (fileExtension.equals(FILE_EXTENSION_SCHEMADSL)) {
-			SchemaSyntaxBuilder builder = new SchemaSyntaxBuilder();
-			String dsl = builder.build(schema);
-			try {
-				Tools.writeToFile(dsl, new File(uri.toFileString()));
-			} catch (IOException e) {
-				exception = e;
-			}
-		} else {
-			exception = new IllegalStateException("Invalid file extension: " + fileExtension);
-		}
-		if (exception != null) {
+		try {
+			Tools.writeToFile(schema, new File(uri.toFileString()));
+		} catch (IOException | IllegalArgumentException e) {
 			Status status = 
 				new Status(IStatus.ERROR, ID,
-						   "An exception occurred while saving the file", exception);
-			ErrorDialog.openError(getSite().getShell(), "Exception", exception.getMessage(), status);
+						   "An exception occurred while saving the file", e);
+			ErrorDialog.openError(getSite().getShell(), "Exception", e.getMessage(), status);
 		}
 	}
 

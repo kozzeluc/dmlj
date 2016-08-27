@@ -23,12 +23,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SetMembershipOption;
@@ -37,6 +42,7 @@ import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder;
 
 public abstract class Tools {
 	
@@ -399,6 +405,28 @@ public abstract class Tools {
 	    out.flush();
 		out.close();
 		outputStream.close();
+	}
+	
+	public static void writeToFile(Schema schema, File file) throws IOException {
+		if (file.getName().endsWith(".schema")) {
+			writeToFileAsXMI(schema, file);
+		} else if (file.getName().endsWith(".schemadsl")) {
+			writeToFileAsDSL(schema, file);
+		} else {
+			throw new IllegalArgumentException("invalid file name (wrong extension): " + file.getName());
+		}
+	}
+	
+	private static void writeToFileAsXMI(Schema schema, File file) throws IOException {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		URI fileURI = URI.createFileURI(file.getAbsolutePath());
+		Resource resource = resourceSet.createResource(fileURI);
+		resource.getContents().add(schema);						
+		resource.save(null);
+	}
+	
+	private static void writeToFileAsDSL(Schema schema, File file) throws IOException {
+		writeToFile(new SchemaSyntaxBuilder().build(schema), file);
 	}
 	
 }

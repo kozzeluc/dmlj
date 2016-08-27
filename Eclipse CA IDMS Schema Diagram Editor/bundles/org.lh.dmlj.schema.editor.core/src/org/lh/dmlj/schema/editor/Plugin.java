@@ -191,6 +191,10 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		return new SimpleDateFormat(pattern);
 	}
 	
+	public String getDefaultFileExtension() {
+		return getPreferenceStore().getString(PreferenceConstants.DEFAULT_FILE_EXTENSION);
+	}
+
 	public Font getFigureFont() {
 		return figureFont;
 	}
