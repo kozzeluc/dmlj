@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -58,22 +58,39 @@ public class SchemaFileSelectedPropertyTester extends PropertyTester {
 		IFile iFile = (IFile) ss.getFirstElement();
 		File file = iFile.getLocation().toFile();		
 		
-		boolean validSchema = false; 		
-		try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-			String line = in.readLine();
-			if (line == null || 
-				!line.trim().equals("<?xml version=\"1.0\" encoding=\"ASCII\"?>")) {
-				
-				throw new RuntimeException("not a valid schema file");
+		boolean validSchema = false;
+		if (file.getName().endsWith(".schema")) {
+			try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+				String line = in.readLine();
+				if (line == null || 
+					!line.trim().equals("<?xml version=\"1.0\" encoding=\"ASCII\"?>")) {
+					
+					throw new RuntimeException("not a valid schema file");
+				}
+				line = in.readLine();
+				if (line == null || 
+					!line.trim().startsWith("<org.lh.dmlj.schema:Schema")) {
+					
+					throw new RuntimeException("not a valid schema file");
+				}
+				validSchema = true;
+			} catch (Throwable t) {
 			}
-			line = in.readLine();
-			if (line == null || 
-				!line.trim().startsWith("<org.lh.dmlj.schema:Schema")) {
-				
-				throw new RuntimeException("not a valid schema file");
+		} else if (file.getName().endsWith(".schemadsl")) {
+			try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+				String line = in.readLine();
+				if (line == null || !line.trim().startsWith("name '") ||
+					!line.trim().endsWith("'")) {
+					
+					throw new RuntimeException("not a valid schemadsl file");
+				}
+				line = in.readLine();
+				if (line == null || !line.trim().startsWith("version ")) {					
+					throw new RuntimeException("not a valid schemadsl file");
+				}
+				validSchema = true;
+			} catch (Throwable t) {
 			}
-			validSchema = true;
-		} catch (Throwable t) {
 		}
 		return validSchema;
 	}

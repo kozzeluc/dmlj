@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.extension.ImportToolExtensionElement;
 
 public class OutputFileSelectionPage extends WizardNewFileCreationPage {		
@@ -35,7 +36,7 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 	public OutputFileSelectionPage(IStructuredSelection selection) {
 		super("_outputFileSelectionPage", selection);	
 		setTitle("CA IDMS/DB Schema");
-		setFileName("My.schema");
+		setFileName("My." + Plugin.getDefault().getDefaultFileExtension());
 	}	
 	
 	public File getOutputFile() {
@@ -91,8 +92,10 @@ public class OutputFileSelectionPage extends WizardNewFileCreationPage {
 		setErrorMessage(null);
 		if (super.validatePage()) {
 			String extension = new Path(getFileName()).getFileExtension();
-	        if (extension == null || !extension.equals("schema")) {
-	        	setErrorMessage("The file extension must be .schema");
+	        if (extension == null ||
+		        !(extension.equals("schema") || extension.equals("schemadsl"))) {
+	        	
+	        	setErrorMessage("The file extension must be '.schema' or '.schemadsl'");
 	        	return false;
 	        }
 	       return true;

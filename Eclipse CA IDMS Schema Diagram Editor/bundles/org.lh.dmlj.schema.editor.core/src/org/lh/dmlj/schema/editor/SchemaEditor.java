@@ -44,7 +44,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -132,7 +131,6 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
-import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -685,7 +683,7 @@ public class SchemaEditor
 				for (IEditorReference editorReference : workbenchPage.getEditorReferences()) {					
 					try {
 						if (editorReference.getEditorInput().equals(editorInput)) {
-							SchemaEditor schemaEditor = (SchemaEditor) editorReference.getEditor(true);
+							SchemaEditor schemaEditor = (SchemaEditor) editorReference.getEditor(true); // FIXME what if the file was opened with the text editor ?
 							if (schemaEditor != null) {
 								editors.add(schemaEditor);
 							}
@@ -952,21 +950,7 @@ public class SchemaEditor
 	public boolean isSaveAsAllowed() {
 		return true;
 	}
-	
-	private void loadSchemaFromFile() {
-		if (fileExtension.equals(FILE_EXTENSION_SCHEMA)) {
-			ResourceSet resourceSet = new ResourceSetImpl();
-			resourceSet.getResourceFactoryRegistry()
-			   		   .getExtensionToFactoryMap()
-			   		   .put(FILE_EXTENSION_SCHEMA, new XMIResourceFactoryImpl());
-			Resource resource = resourceSet.getResource(uri, true);
-			schema = (Schema)resource.getContents().get(0);
-		} else if (fileExtension.equals(FILE_EXTENSION_SCHEMADSL)) {
-			schema = ModelFromDslBuilderForJava.schema(new File(uri.toFileString()));			
-		} else {
-			throw new IllegalStateException("Invalid file extension: " + fileExtension);
-		}
-	}
+
 	private boolean performSaveAs() {
 		SaveAsDialog dialog = 
 			new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
@@ -1078,7 +1062,7 @@ public class SchemaEditor
 			schema = firstEditorForSameInput.getSchema();
 		} else {
 			setEditDomain(new DefaultEditDomain(null));
-			loadSchemaFromFile();	
+			schema = Tools.readFromFile(new File(uri.toFileString()));	
 		}
 			
 		if (!editorSaving) {
@@ -1091,6 +1075,7 @@ public class SchemaEditor
 		// for that reason we close ALL .schemadsl files on workbench shutdown to avoid a slow 
 		// workbench restart.  When closing such editors, we offer the opportunity to save changes, 
 		// if any.
+		// FIXME remove the workbench listener when the editor is closed by the user
 		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 			@Override
 			public boolean preShutdown(IWorkbench workbench, boolean forced) {

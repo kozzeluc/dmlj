@@ -27,6 +27,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
@@ -41,6 +42,7 @@ import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
+import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder;
 
@@ -361,6 +363,22 @@ public abstract class Tools {
 		return false;
 		
 	}
+	
+	public static Schema readFromFile(File file) {
+		if (file.getName().toLowerCase().endsWith(".schema")) {
+			ResourceSet resourceSet = new ResourceSetImpl();
+			resourceSet.getResourceFactoryRegistry()
+			   		   .getExtensionToFactoryMap()
+			   		   .put("schema", new XMIResourceFactoryImpl());
+			URI uri = URI.createFileURI(file.getAbsolutePath());
+			Resource resource = resourceSet.getResource(uri, true);
+			return (Schema) resource.getContents().get(0);
+		} else if (file.getName().toLowerCase().endsWith(".schemadsl")) {
+			return ModelFromDslBuilderForJava.schema(file);
+		} else {
+			throw new IllegalArgumentException("invalid file name (wrong extension): " + file.getName());
+		}
+	}
 
 	/**
 	 * Removes the trailing underscore from the given name (DDLCATLOD related
@@ -408,9 +426,9 @@ public abstract class Tools {
 	}
 	
 	public static void writeToFile(Schema schema, File file) throws IOException {
-		if (file.getName().endsWith(".schema")) {
+		if (file.getName().toLowerCase().endsWith(".schema")) {
 			writeToFileAsXMI(schema, file);
-		} else if (file.getName().endsWith(".schemadsl")) {
+		} else if (file.getName().toLowerCase().endsWith(".schemadsl")) {
 			writeToFileAsDSL(schema, file);
 		} else {
 			throw new IllegalArgumentException("invalid file name (wrong extension): " + file.getName());
