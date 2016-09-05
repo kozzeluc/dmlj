@@ -102,8 +102,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -683,9 +681,9 @@ public class SchemaEditor
 				for (IEditorReference editorReference : workbenchPage.getEditorReferences()) {					
 					try {
 						if (editorReference.getEditorInput().equals(editorInput)) {
-							SchemaEditor schemaEditor = (SchemaEditor) editorReference.getEditor(true); // FIXME what if the file was opened with the text editor ?
-							if (schemaEditor != null) {
-								editors.add(schemaEditor);
+							IEditorPart editor = editorReference.getEditor(true);
+							if (editor != null && editor instanceof SchemaEditor) {
+								editors.add((SchemaEditor) editor);
 							}
 						}
 					} catch (PartInitException e) {
@@ -951,6 +949,11 @@ public class SchemaEditor
 		return true;
 	}
 
+	public void markSaveLocationAndResetDirtyFlag() {
+		getCommandStack().markSaveLocation();
+		firePropertyChange(SchemaEditor.PROP_DIRTY);
+	}
+
 	private boolean performSaveAs() {
 		SaveAsDialog dialog = 
 			new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
@@ -1011,7 +1014,7 @@ public class SchemaEditor
 			e.printStackTrace();
 		}
 		return true;
-	}	
+	}
 	
 	private void setFileExtension(IEditorInput input) {
 		if (input instanceof IFileEditorInput) {
@@ -1070,47 +1073,6 @@ public class SchemaEditor
 				outlinePage.setSchema(schema);
 			}
 		}
-		
-		// Opening a large schema diagram that is stored in a .schemadsl files can take a long time;
-		// for that reason we close ALL .schemadsl files on workbench shutdown to avoid a slow 
-		// workbench restart.  When closing such editors, we offer the opportunity to save changes, 
-		// if any.
-		// FIXME remove the workbench listener when the editor is closed by the user
-		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
-			@Override
-			public boolean preShutdown(IWorkbench workbench, boolean forced) {
-				if (fileExtension.equals(FILE_EXTENSION_SCHEMADSL)) {
-					if (!SchemaEditor.this.isReadOnlyMode() && SchemaEditor.this.isDirty()) {
-						Shell shell = getSite().getShell();
-						String title = "Save Resource";
-						String message = 
-							"A Schema Editor for a .schemadsl file is ALWAYS closed when the " +
-							"workbench shuts down (for performance reasons on workbench startup).\n\n'" + 
-							SchemaEditor.this.getTitle() + "' has been modified. Save changes?";
-						String[] buttons = { "Yes", "No", "Cancel" };
-						MessageDialog dialog = 
-							new MessageDialog(shell, title, null, message, MessageDialog.QUESTION, buttons, 0);
-						int response = dialog.open();
-						if (response == 2) {
-							return false;
-						} else if (response == 0) {
-							doSave(null);
-						} else {
-							// make sure to reset the dirty flag, or the user will be asked again
-							// whether to save or not:
-							getCommandStack().markSaveLocation();
-							SchemaEditor.this.firePropertyChange(PROP_DIRTY);
-						}
-					}
-					workbench.removeWorkbenchListener(this);
-					closeEditor(false);
-				}
-				return true;
-			}
-			@Override
-			public void postShutdown(IWorkbench workbench) {
-			}			
-		});		
 	}
 	
 	private void setReadOnlyFlag(IEditorInput input) {

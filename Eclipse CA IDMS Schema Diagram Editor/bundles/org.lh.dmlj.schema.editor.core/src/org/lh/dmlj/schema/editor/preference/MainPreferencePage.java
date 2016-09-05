@@ -24,11 +24,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.lh.dmlj.schema.editor.Plugin;
-import org.eclipse.swt.widgets.Group;
 
 public class MainPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	
@@ -41,6 +41,10 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	private Group grpDefaultFileExtension;
 	private Button btnFileExtensionSchema;
 	private Button btnFileExtensionSchemadsl;
+	private Group grpCloseschemadslEditors;
+	private Button btnCloseSchemaDslYes;
+	private Button btnCloseSchemaDslNo;
+	private Button btnCloseSchemaDslAskMe;
 
 	/**
 	 * @wbp.parser.constructor
@@ -67,6 +71,22 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		
 		btnFileExtensionSchemadsl = new Button(grpDefaultFileExtension, SWT.RADIO);
 		btnFileExtensionSchemadsl.setText(".schemadsl (DSL)");
+		
+		grpCloseschemadslEditors = new Group(container, SWT.NONE);
+		grpCloseschemadslEditors.setLayout(new GridLayout(3, false));
+		GridData gd_grpCloseschemadslEditors = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_grpCloseschemadslEditors.verticalIndent = 5;
+		grpCloseschemadslEditors.setLayoutData(gd_grpCloseschemadslEditors);
+		grpCloseschemadslEditors.setText("Close editors on workbench shutdown (.schemadsl files only) ?");
+		
+		btnCloseSchemaDslYes = new Button(grpCloseschemadslEditors, SWT.RADIO);
+		btnCloseSchemaDslYes.setText("Yes");
+		
+		btnCloseSchemaDslNo = new Button(grpCloseschemadslEditors, SWT.RADIO);
+		btnCloseSchemaDslNo.setText("No");
+		
+		btnCloseSchemaDslAskMe = new Button(grpCloseschemadslEditors, SWT.RADIO);
+		btnCloseSchemaDslAskMe.setText("Ask me");
 				
 		btnReadOnlyMode = new Button(container, SWT.CHECK);
 		GridData gd_btnReadOnly = new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1);
@@ -111,6 +131,11 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnFileExtensionSchema.setSelection(defaultFileExtension.equals(FILE_EXTENSION_SCHEMA));
 		btnFileExtensionSchemadsl.setSelection(defaultFileExtension.equals(FILE_EXTENSION_SCHEMADSL));
 		
+		int closeSchemaDslEditors = store.getDefaultInt(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS);
+		btnCloseSchemaDslYes.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_YES);
+		btnCloseSchemaDslNo.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_NO);
+		btnCloseSchemaDslAskMe.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
+		
 		boolean readOnlyMode = store.getDefaultBoolean(PreferenceConstants.READ_ONLY_MODE);
 		btnReadOnlyMode.setSelection(readOnlyMode);
 		
@@ -129,6 +154,11 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		String defaultFileExtension = store.getString(PreferenceConstants.DEFAULT_FILE_EXTENSION);
 		btnFileExtensionSchema.setSelection(defaultFileExtension.equals(FILE_EXTENSION_SCHEMA));
 		btnFileExtensionSchemadsl.setSelection(defaultFileExtension.equals(FILE_EXTENSION_SCHEMADSL));
+		
+		int closeSchemaDslEditors = store.getInt(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS);
+		btnCloseSchemaDslYes.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_YES);
+		btnCloseSchemaDslNo.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_NO);
+		btnCloseSchemaDslAskMe.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
 		
 		boolean readOnlyMode = store.getBoolean(PreferenceConstants.READ_ONLY_MODE);
 		btnReadOnlyMode.setSelection(readOnlyMode);
@@ -166,6 +196,16 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		String defaultFileExtension = 
 			btnFileExtensionSchemadsl.getSelection() ? FILE_EXTENSION_SCHEMADSL : FILE_EXTENSION_SCHEMA;
 		store.setValue(PreferenceConstants.DEFAULT_FILE_EXTENSION, defaultFileExtension);
+		
+		int closeSchemaDslEditors;
+		if (btnCloseSchemaDslYes.getSelection()) {
+			closeSchemaDslEditors = PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_YES;
+		} else if (btnCloseSchemaDslNo.getSelection()) {
+			closeSchemaDslEditors = PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_NO;
+		} else {
+			closeSchemaDslEditors = PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK;
+		}
+		store.setValue(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS, closeSchemaDslEditors);
 		
 		store.setValue(PreferenceConstants.READ_ONLY_MODE, Boolean.valueOf(btnReadOnlyMode.getSelection()));
 		

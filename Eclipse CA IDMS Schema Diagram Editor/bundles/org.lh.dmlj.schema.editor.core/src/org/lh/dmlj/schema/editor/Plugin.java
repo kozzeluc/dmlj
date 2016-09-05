@@ -36,6 +36,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.IProgressService;
@@ -68,6 +69,8 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 	private Map<String, Image> 	 	images = new HashMap<String, Image>();
 	private boolean 				logDebugMessages;
 	private File 					tmpFolder;
+	
+	private IWorkbenchListener workbenchListener = new WorkbenchListener();
 	
 	private static IStatus createStatus(int severity, int code, String message, 
 										Throwable exception) {
@@ -232,6 +235,11 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		return tmpFolder;
 	}
 
+	private void hookWorkbenchListener() {
+		// we may need to close .schemadsl editors on workbench shutdown 
+		PlatformUI.getWorkbench().addWorkbenchListener(workbenchListener);
+	}
+
 	private boolean isLogDebugMessages() {
 		return logDebugMessages;
 	}
@@ -309,6 +317,8 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		// avoid a delay the first time the user selects a DSL tab in the Properties view
 		// note: the delay can only be avoided AFTER the warm up job has completed
 		new DSLWarmUpJob().schedule(); 
+		
+		hookWorkbenchListener();
 	}
 
 	/*
@@ -316,6 +326,8 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {		
+		
+		unhookWorkbenchListener();
 		
 		getPreferenceStore().removePropertyChangeListener(this);
 		
@@ -336,6 +348,10 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener 
 		
 		plugin = null;
 		super.stop(context);
-	}	
+	}
+
+	private void unhookWorkbenchListener() {
+		PlatformUI.getWorkbench().removeWorkbenchListener(workbenchListener);
+	}
 
 }

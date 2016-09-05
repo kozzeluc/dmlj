@@ -18,6 +18,10 @@ package org.lh.dmlj.schema.editor.preference;
 
 public abstract class PreferenceConstants {
 	
+	public static final int CLOSE_SCHEMADSL_EDITORS_YES = 1;
+	public static final int CLOSE_SCHEMADSL_EDITORS_NO = 0;
+	public static final int CLOSE_SCHEMADSL_EDITORS_ASK = 2;
+	
 	public static final String UNITS = "units";
 	public static final String LOG_DIAGNISTIC_MESSAGES = "logDiagnosticMessages";
 	
@@ -47,5 +51,7 @@ public abstract class PreferenceConstants {
 	public static final String READ_ONLY_MODE = "readOnlyMode";
 	
 	public static final String DEFAULT_FILE_EXTENSION = "defaultFileExtension";
+	
+	public static final String CLOSE_SCHEMADSL_EDITORS = "closeSchemaDslEditors";
 	
 }

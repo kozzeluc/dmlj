@@ -34,6 +34,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		// general preferences...
 		store.setDefault(PreferenceConstants.DEFAULT_FILE_EXTENSION, DEFAULT_FILE_EXTENSION);
+		store.setDefault(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS, PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
 		store.setDefault(PreferenceConstants.READ_ONLY_MODE, false);
 		store.setDefault(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, false);
 		
