@@ -641,8 +641,8 @@ diagram {
 		String syntax = builder.build(schema)
 		
 		then: "the builder creates the syntax that describes the schema, explicitly defining the"
-			  "DDLDCSCR area"
-		syntax.indexOf("area 'DDLDCSCR'") > -1
+			  "DDLDCSCR area (mind that the area body is suppressed)"
+		syntax.indexOf("area 'DDLDCSCR'\n") > -1
 	}
 	
 	def "suppress the generation of area, record and set DSL"() {

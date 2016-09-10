@@ -181,13 +181,19 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	private void areas() {
 		if (generateAreaDSL) {
 			schema.areas.each { area ->
-				if (area.procedures || !area.areaSpecifications) {				
+				if (area.procedures) {				
 					AreaSyntaxBuilder areaSyntaxBuilder = 
 						new AreaSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])								
 					blank_line()
 					without_tab "area '${area.name}' {"
 					areaSyntaxBuilder.build(area)
 					without_tab '}'
+				} else if (!area.areaSpecifications) {
+					// the area doesn't contain any records or indexes, so we need to explicitly
+					// define it; we only need a builder when procedure calls are specified for
+					// the area, so we can generate everything ourselves here				
+					blank_line()
+					without_tab "area '${area.name}'"
 				}
 			}
 		} else {

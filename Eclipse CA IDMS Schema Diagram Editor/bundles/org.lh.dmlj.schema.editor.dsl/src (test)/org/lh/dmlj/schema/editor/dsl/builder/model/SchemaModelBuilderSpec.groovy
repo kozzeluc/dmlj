@@ -241,7 +241,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		given: "a Schema builder"
 		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
-		when: "building the schema with a name, version and an area with a procedure called"
+		when: "building the schema with a name, version and an area without any procedures called"
 		def definition = {
 			name 'EMPSCHM'
 			version 100
@@ -266,7 +266,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		given: "a Schema builder"
 		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
-		when: "building the schema with a name, version and an area with a procedure called"
+		when: "building the schema with a name, version and an area without any procedures called"
 		def definition = {
 			name 'EMPSCHM'
 			version 100
