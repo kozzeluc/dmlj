@@ -16,6 +16,8 @@ diagram {
     snapToGuides
     snapToGrid
     snapToGeometry
+    horizontalGuides '199,344,431'
+    verticalGuides '253,579'
 }
 
 record 'COVERAGE' {

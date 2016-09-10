@@ -206,6 +206,36 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		diagramData.snapToGeometry
 	}
 	
+	def "define a schema containing guides"() {
+		
+		given: "a Schema builder and "
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		and: "schema DSL containing 2 horizontal and 3 vertical guides"
+		def syntax = {
+			name 'TESTSCHM'
+			version 1
+			diagram {
+				horizontalGuides '1,2'
+				verticalGuides '3,4,5'
+			}
+		}
+		
+		when: "building the schema"
+		Schema schema = builder.build(syntax)
+		
+		then: "the verical ruler owns the 2 horizontal guides"
+		schema.diagramData.verticalRuler.guides.size() == 2
+		schema.diagramData.verticalRuler.guides[0].position == 1
+		schema.diagramData.verticalRuler.guides[1].position == 2
+		
+		and : "the horizontal ruler owns the 2 verical guides"
+		schema.diagramData.horizontalRuler.guides.size() == 3
+		schema.diagramData.horizontalRuler.guides[0].position == 3
+		schema.diagramData.horizontalRuler.guides[1].position == 4
+		schema.diagramData.horizontalRuler.guides[2].position == 5
+	}
+	
 	def "define an area without procedure calls: area name passed as string argument, no area closure"() {
 		
 		given: "a Schema builder"

@@ -155,8 +155,15 @@
     <locations eyecatcher="set connector[1] OFFICE-EMPLOYEE (EMPLOYEE)" x="454" y="132"/>
     <locations eyecatcher="bendpoint [1] set OFFICE-EMPLOYEE (EMPLOYEE)" x="35" y="77"/>
     <locations eyecatcher="bendpoint [0] set OFFICE-EMPLOYEE (EMPLOYEE)" x="65" y="77"/>
-    <rulers type="VERTICAL"/>
-    <rulers/>
+    <rulers type="VERTICAL">
+      <guides position="431"/>
+      <guides position="344"/>
+      <guides position="199"/>
+    </rulers>
+    <rulers>
+      <guides position="253"/>
+      <guides position="579"/>
+    </rulers>
   </diagramData>
   <procedures name="IDMSCOMP"/>
   <procedures name="IDMSDCOM"/>

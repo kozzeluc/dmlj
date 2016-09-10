@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,17 +18,26 @@ package org.lh.dmlj.schema.editor.dsl.builder.model
 
 import org.lh.dmlj.schema.DiagramData
 import org.lh.dmlj.schema.DiagramLabel
+import org.lh.dmlj.schema.Guide
+import org.lh.dmlj.schema.Ruler
 import org.lh.dmlj.schema.RulerType
 import org.lh.dmlj.schema.Schema
 import org.lh.dmlj.schema.SchemaArea
 import org.lh.dmlj.schema.SchemaFactory
 import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.Set
-import groovy.lang.Closure;
 
 class SchemaModelBuilder extends AbstractModelBuilder<Schema> {
 	
 	private static final String BODY_LABEL = "label"
+	
+	private static void createGuides(String positions, Ruler ruler) {		
+		positions.split(',').each {
+			Guide guide = SchemaFactory.eINSTANCE.createGuide()
+			guide.ruler = ruler
+			guide.position = Integer.valueOf(it)
+		}		
+	}
 		
 	def propertyMissing(String name) {
 		if (name == 'showRulersAndGuides') {
@@ -151,6 +160,12 @@ class SchemaModelBuilder extends AbstractModelBuilder<Schema> {
 		schema.diagramData.label.height = (short) height
 	}
 	
+	void horizontalGuides(String positions) {
+		assert bodies == [ BODY_DIAGRAM ]
+		// mind that the HORIZONTAL guides are owned by the VERTICAL ruler		
+		createGuides(positions, schema.diagramData.verticalRuler)
+	}
+	
 	DiagramLabel label(Closure definition) {
 		assert bodies == [ BODY_DIAGRAM ]
 		bodies << BODY_LABEL
@@ -241,6 +256,12 @@ class SchemaModelBuilder extends AbstractModelBuilder<Schema> {
 	void version(int version) {
 		assert !bodies
 		schema.version = (short) version
+	}
+	
+	void verticalGuides(String positions) {
+		assert bodies == [ BODY_DIAGRAM ]
+		// mind that the VERTICAL guides are owned by the HORIZONTAL ruler
+		createGuides(positions, schema.diagramData.horizontalRuler)
 	}
 	
 	void width(int width) {
