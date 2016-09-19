@@ -301,10 +301,10 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 			Throwable cause = e.getCause();
 			if (cause != null) {
 				MessageDialog.openError(Display.getCurrent().getActiveShell(), 
-										"Import Record Elements", cause.getMessage());
+										"Edit Record Elements", cause.getMessage());
 			} else {
 				MessageDialog.openError(Display.getCurrent().getActiveShell(), 
-										"Import Record Elements", e.getMessage());
+										"Edit Record Elements", e.getMessage());
 			}
 			return false;
 		}		
