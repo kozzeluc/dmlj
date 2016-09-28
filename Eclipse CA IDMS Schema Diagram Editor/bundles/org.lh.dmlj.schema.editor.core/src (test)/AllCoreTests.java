@@ -23,6 +23,7 @@ import org.lh.dmlj.schema.editor.command.ChangeCalcKeyCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeIndexedSetModeSpecificationCommandSpec;
 import org.lh.dmlj.schema.editor.command.ChangeLocationModeCommandFactoryTest;
 import org.lh.dmlj.schema.editor.command.ChangePointerOrderCommandTest;
+import org.lh.dmlj.schema.editor.command.ChangeSchemaCommentsCommandSpec;
 import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeSortKeysCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeViaSpecificationCommandTest;
@@ -102,6 +103,7 @@ import org.lh.dmlj.schema.editor.property.section.ProcedureCallsDslFacetModifier
 	ChangeIndexedSetModeSpecificationCommandSpec.class,
 	ChangeLocationModeCommandFactoryTest.class,
 	ChangePointerOrderCommandTest.class,
+	ChangeSchemaCommentsCommandSpec.class,
 	ChangeSetOrderCommandTest.class,
 	ChangeSortKeysCommandTest.class,
 	ChangeViaSpecificationCommandTest.class,

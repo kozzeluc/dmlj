@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,15 +25,19 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.Procedure;
+import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
+import org.lh.dmlj.schema.editor.property.handler.EditSchemaCommentsHandler;
 import org.lh.dmlj.schema.editor.property.handler.ErrorEditHandler;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
+import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 
 public class SchemaGeneralPropertiesSection 
 	extends AbstractSchemaPropertiesSection {
@@ -41,6 +45,19 @@ public class SchemaGeneralPropertiesSection
 	private static final DateFormat MEMO_DATE_FORMAT = 
 		new SimpleDateFormat("MM/dd/yy");
 	
+	private IHyperlinkHandler<EAttribute, Command> schemaCommentsHandler = 
+		new EditSchemaCommentsHandler(this);
+	
+	private static String getPrettyComments(Schema schema) {
+		if (schema.getComments() == null || schema.getComments().isEmpty()) {
+			return "";
+		} else if (schema.getComments().size() == 1) {
+			return schema.getComments().get(0);
+		} else {
+			return schema.getComments().get(0) + "...";
+		}
+	}
+
 	public SchemaGeneralPropertiesSection() {
 		super();
 	}
@@ -52,6 +69,7 @@ public class SchemaGeneralPropertiesSection
 		attributes.add(SchemaPackage.eINSTANCE.getSchema_Version());
 		attributes.add(SchemaPackage.eINSTANCE.getSchema_Description());
 		attributes.add(SchemaPackage.eINSTANCE.getSchema_MemoDate());
+		attributes.add(SchemaPackage.eINSTANCE.getSchema_Comments());
 		return attributes;
 	}
 
@@ -158,6 +176,24 @@ public class SchemaGeneralPropertiesSection
 			return super.getEditHandler(attribute, newMemoDate);
 		}
 		return super.getEditHandler(attribute, newValue);
+	}
+	
+	@Override
+	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchema_Comments()) {			
+			return schemaCommentsHandler;
+		} else {
+			return super.getHyperlinkHandler(attribute);
+		}
+	}
+	
+	@Override
+	protected String getValue(EAttribute attribute) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchema_Comments()) {			
+			return getPrettyComments(target);
+		} else {
+			return super.getValue(attribute);
+		}
 	}
 
 }
