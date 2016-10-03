@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -27,15 +27,17 @@ import org.lh.dmlj.schema.ConnectionLabel
 import org.lh.dmlj.schema.ConnectionPart
 import org.lh.dmlj.schema.Connector
 import org.lh.dmlj.schema.DiagramLocation
-import org.lh.dmlj.schema.Element
+import org.lh.dmlj.schema.Guide
 import org.lh.dmlj.schema.Schema
 import org.lh.dmlj.schema.SchemaArea
 import org.lh.dmlj.schema.SchemaPackage
-import org.lh.dmlj.schema.SchemaRecord
 
 import spock.lang.Specification
 
 class AbstractBuilderSpec extends Specification {
+	
+	private static final def GUIDE_POSITION = 
+		{ Guide guide1, Guide guide2 -> guide1.position <=> guide2.position } 
 	
 	private SchemaPackage schemaPackage = SchemaPackage.eINSTANCE
 
@@ -86,6 +88,16 @@ class AbstractBuilderSpec extends Specification {
 		} )
 		schema.diagramData.connectors.clear()
 		connectors.each { schema.diagramData.connectors << it }
+		
+		List<Guide> horizontalGuides = new ArrayList<>(schema.diagramData.verticalRuler.guides)
+		horizontalGuides.sort GUIDE_POSITION
+		schema.diagramData.verticalRuler.guides.clear()
+		horizontalGuides.each { schema.diagramData.verticalRuler.guides << it }
+		
+		List<Guide> verticalGuides = new ArrayList<>(schema.diagramData.horizontalRuler.guides)
+		verticalGuides.sort GUIDE_POSITION
+		schema.diagramData.horizontalRuler.guides.clear()
+		verticalGuides.each { schema.diagramData.horizontalRuler.guides << it }
 		
 		Resource resource = new XMIResourceImpl()
 		XMLProcessor xmlProcessor = new XMLProcessor()

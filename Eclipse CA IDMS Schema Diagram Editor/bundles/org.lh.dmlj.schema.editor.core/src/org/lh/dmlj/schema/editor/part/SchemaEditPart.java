@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -214,10 +214,15 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 	}	
 
 	@Override
-	protected void createEditPolicies() {
+	protected void createEditPolicies() {		
 		
-		// install the edit policy for creating, moving and resizing diagram nodes...
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new SchemaXYLayoutEditPolicy(getModel()));
+		// install the edit policy for selecting, creating, moving and resizing diagram nodes...
+		// (we always need this edit policy to give visual feedback that the edit part is selected) 
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new SchemaXYLayoutEditPolicy(getModel(), isReadOnlyMode()));
+		
+		if (isReadOnlyMode()) {
+			return;
+		}
 		
 		// install the snap feedback policy...
 		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy());	  

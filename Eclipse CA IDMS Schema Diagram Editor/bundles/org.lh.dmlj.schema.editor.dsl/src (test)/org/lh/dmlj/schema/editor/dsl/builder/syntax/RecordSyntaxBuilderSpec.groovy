@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -44,7 +44,7 @@ class RecordSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		then: "the builder creates the syntax that describes the record"
 		syntax == expected(
-"""
+'''
 name 'EMPLOYEE'
 shareStructure 'EMPLOYEE version 100'
 recordId 415
@@ -59,169 +59,45 @@ area 'EMP-DEMO-REGION' {
     pages 95
 }
 
-elements {
-    element 'EMP-ID-0415' {
-        level 2
-        picture '9(4)'
-    }
-
-    element 'EMP-NAME-0415' {
-        level 2
-        children {
-            element 'EMP-FIRST-NAME-0415' {
-                level 3
-                picture 'X(10)'
-            }
-
-            element 'EMP-LAST-NAME-0415' {
-                level 3
-                picture 'X(15)'
-            }
-        }
-    }
-
-    element 'EMP-ADDRESS-0415' {
-        level 2
-        children {
-            element 'EMP-STREET-0415' {
-                level 3
-                picture 'X(20)'
-            }
-
-            element 'EMP-CITY-0415' {
-                level 3
-                picture 'X(15)'
-            }
-
-            element 'EMP-STATE-0415' {
-                level 3
-                picture 'X(2)'
-            }
-
-            element 'EMP-ZIP-0415' {
-                level 3
-                children {
-                    element 'EMP-ZIP-FIRST-FIVE-0415' {
-                        level 4
-                        picture 'X(5)'
-                    }
-
-                    element 'EMP-ZIP-LAST-FOUR-0415' {
-                        level 4
-                        picture 'X(4)'
-                    }
-                }
-            }
-        }
-    }
-
-    element 'EMP-PHONE-0415' {
-        level 2
-        picture '9(10)'
-    }
-
-    element 'STATUS-0415' {
-        level 2
-        children {
-            element 'ACTIVE-0415' {
-                level 88
-                value "'01'"
-            }
-
-            element 'ST-DISABIL-0415' {
-                level 88
-                value "'02'"
-            }
-
-            element 'LT-DISABIL-0415' {
-                level 88
-                value "'03'"
-            }
-
-            element 'LEAVE-OF-ABSENCE-0415' {
-                level 88
-                value "'04'"
-            }
-
-            element 'TERMINATED-0415' {
-                level 88
-                value "'05'"
-            }
-        }
-        picture 'X(2)'
-    }
-
-    element 'SS-NUMBER-0415' {
-        level 2
-        picture '9(9)'
-    }
-
-    element 'START-DATE-0415' {
-        level 2
-        children {
-            element 'START-YEAR-0415' {
-                level 3
-                picture '9(4)'
-            }
-
-            element 'START-MONTH-0415' {
-                level 3
-                picture '9(2)'
-            }
-
-            element 'START-DAY-0415' {
-                level 3
-                picture '9(2)'
-            }
-        }
-    }
-
-    element 'TERMINATION-DATE-0415' {
-        level 2
-        children {
-            element 'TERMINATION-YEAR-0415' {
-                level 3
-                picture '9(4)'
-            }
-
-            element 'TERMINATION-MONTH-0415' {
-                level 3
-                picture '9(2)'
-            }
-
-            element 'TERMINATION-DAY-0415' {
-                level 3
-                picture '9(2)'
-            }
-        }
-    }
-
-    element 'BIRTH-DATE-0415' {
-        level 2
-        children {
-            element 'BIRTH-YEAR-0415' {
-                level 3
-                picture '9(4)'
-            }
-
-            element 'BIRTH-MONTH-0415' {
-                level 3
-                picture '9(2)'
-            }
-
-            element 'BIRTH-DAY-0415' {
-                level 3
-                picture '9(2)'
-            }
-        }
-    }
-}
+elements """
+    02 EMP-ID-0415 picture 9(4)
+    02 EMP-NAME-0415
+       03 EMP-FIRST-NAME-0415 picture X(10)
+       03 EMP-LAST-NAME-0415 picture X(15)
+    02 EMP-ADDRESS-0415
+       03 EMP-STREET-0415 picture X(20)
+       03 EMP-CITY-0415 picture X(15)
+       03 EMP-STATE-0415 picture X(2)
+       03 EMP-ZIP-0415
+          04 EMP-ZIP-FIRST-FIVE-0415 picture X(5)
+          04 EMP-ZIP-LAST-FOUR-0415 picture X(4)
+    02 EMP-PHONE-0415 picture 9(10)
+    02 STATUS-0415 picture X(2)
+       88 ACTIVE-0415 value '01'
+       88 ST-DISABIL-0415 value '02'
+       88 LT-DISABIL-0415 value '03'
+       88 LEAVE-OF-ABSENCE-0415 value '04'
+       88 TERMINATED-0415 value '05'
+    02 SS-NUMBER-0415 picture 9(9)
+    02 START-DATE-0415
+       03 START-YEAR-0415 picture 9(4)
+       03 START-MONTH-0415 picture 9(2)
+       03 START-DAY-0415 picture 9(2)
+    02 TERMINATION-DATE-0415
+       03 TERMINATION-YEAR-0415 picture 9(4)
+       03 TERMINATION-MONTH-0415 picture 9(2)
+       03 TERMINATION-DAY-0415 picture 9(2)
+    02 BIRTH-DATE-0415
+       03 BIRTH-YEAR-0415 picture 9(4)
+       03 BIRTH-MONTH-0415 picture 9(2)
+       03 BIRTH-DAY-0415 picture 9(2)
+"""
 
 diagram {
     x 285
     y 247
 }
-""")
+''')
 	}
 	
 	def "Record with a baseName and baseVersion property (different name and version)"() {
@@ -335,7 +211,7 @@ calc {
 		then: "the builder creates the syntax that describes the record: direct is the default and"
 		      "as such, no direct specification is generated"
 		syntax.startsWith(expected(
-"""
+'''
 name 'LOGREC-143'
 shareStructure 'LOGREC-143 version 1'
 recordId 143
@@ -345,8 +221,8 @@ area 'DDLDCLOG'
 minimumRootLength 0
 minimumFragmentLength 4
  
-elements {
-"""))
+elements """
+'''))
 	}
 		
 	@Unroll
@@ -384,7 +260,7 @@ area 'EMP-DEMO-REGION' {
     pages 95
 }
  
-elements {
+elements \"\"\"
 """))
 		
 		where:
@@ -430,7 +306,7 @@ area 'EMP-DEMO-REGION' {
     pages 95
 }
  
-elements {
+elements \"\"\"
 """))
 		
 		where: "the displacement is specified as follows"
@@ -461,7 +337,7 @@ elements {
 		then: "the builder creates the syntax that describes the record: a 'vsam' specification is"
 			  "generated"
 		syntax.startsWith(expected(
-"""
+'''
 name 'INSURANCE-PLAN'
 shareStructure 'INSURANCE-PLAN version 100'
 recordId 435
@@ -473,8 +349,8 @@ area 'INS-DEMO-REGION' {
     pages 4
 }
  
-elements {
-"""))
+elements """
+'''))
 	}
 	
 	@Unroll
@@ -512,7 +388,7 @@ area 'INS-DEMO-REGION' {
     pages 4
 }
  
-elements {
+elements \"\"\"
 """))
 		
 		where: "the VSAM type is specified as follows"
@@ -558,7 +434,7 @@ area 'INS-DEMO-REGION' {
     pages 4
 }
  
-elements {
+elements \"\"\"
 """))
 	
 	where: "the duplicates option is specified as follows:"
@@ -604,7 +480,7 @@ area 'INS-DEMO-REGION' {
     pages 4
 }
  
-elements {
+elements \"\"\"
 """))
 		
 		where: "the duplicates option and VSAM type are specified as follows:"
@@ -656,7 +532,7 @@ calc {
  
 area 'EMP-DEMO-REGION'$areaBody
  
-elements {
+elements \"\"\"
 """))
 		
 		where: "the symbolic offset or offset expression are specified as follows:"
@@ -705,7 +581,7 @@ area 'EMP-DEMO-REGION' {
     pages 95
 }
 $expectedSyntax 
-elements {
+elements \"\"\"
 """))
 		
 		where: "the minimum root- and fragment lengths are specified as follows"
@@ -753,31 +629,31 @@ area 'ORG-DEMO-REGION' {
 minimumRootLength 24
 minimumFragmentLength 296
  
-procedure 'IDMSCOMP $syntaxPart'
-procedure 'IDMSCOMP $syntaxPart'
-procedure 'IDMSDCOM $syntaxPart'
+call 'IDMSCOMP$syntaxPart'
+call 'IDMSCOMP$syntaxPart'
+call 'IDMSDCOM$syntaxPart'
  
-elements {
+elements \"\"\"
 """))
 		
 		where:
-		callTime 				 | verb 						   	  		  | syntaxPart
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.CONNECT 	  		  | 'BEFORE CONNECT'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.DISCONNECT 		  | 'BEFORE DISCONNECT'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.ERASE 	  		  | 'BEFORE ERASE'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.EVERY_DML_FUNCTION | 'BEFORE EVERY DML FUNCTION'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.FIND 			  | 'BEFORE FIND'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.GET 				  | 'BEFORE GET'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.MODIFY 			  | 'BEFORE MODIFY'
-		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.STORE 			  | 'BEFORE STORE'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.CONNECT 			  | 'AFTER CONNECT'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.DISCONNECT 		  | 'AFTER DISCONNECT'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.ERASE 			  | 'AFTER ERASE'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.EVERY_DML_FUNCTION | 'AFTER EVERY DML FUNCTION'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.FIND 			  | 'AFTER FIND'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.GET 				  | 'AFTER GET'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.MODIFY 			  | 'AFTER MODIFY'
-		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.STORE 			  | 'AFTER STORE'
+		callTime 				 | verb 						   	  		  || syntaxPart
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.CONNECT 	  		  || ' BEFORE CONNECT'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.DISCONNECT 		  || ' BEFORE DISCONNECT'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.ERASE 	  		  || ' BEFORE ERASE'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.EVERY_DML_FUNCTION || ' BEFORE'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.FIND 			  || ' BEFORE FIND'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.GET 				  || ' BEFORE GET'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.MODIFY 			  || ' BEFORE MODIFY'
+		ProcedureCallTime.BEFORE | RecordProcedureCallVerb.STORE 			  || ' BEFORE STORE'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.CONNECT 			  || ' AFTER CONNECT'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.DISCONNECT 		  || ' AFTER DISCONNECT'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.ERASE 			  || ' AFTER ERASE'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.EVERY_DML_FUNCTION || ' AFTER'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.FIND 			  || ' AFTER FIND'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.GET 				  || ' AFTER GET'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.MODIFY 			  || ' AFTER MODIFY'
+		ProcedureCallTime.AFTER  | RecordProcedureCallVerb.STORE 			  || ' AFTER STORE'
 		
 	}
 	

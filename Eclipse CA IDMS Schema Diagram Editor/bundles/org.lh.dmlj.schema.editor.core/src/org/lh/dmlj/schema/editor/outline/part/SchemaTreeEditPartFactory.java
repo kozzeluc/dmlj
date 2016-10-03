@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class SchemaTreeEditPartFactory implements EditPartFactory {
 	
-	private IModelChangeProvider modelChangeProvider;
+	private IModelChangeProvider modelChangeProvider; // null means we're in read-only mode
 	
 	public static EditPart createEditPart(Object model, IModelChangeProvider modelChangeProvider) {
 		if (model instanceof Schema) {
@@ -54,8 +54,10 @@ public class SchemaTreeEditPartFactory implements EditPartFactory {
 	
 	public SchemaTreeEditPartFactory(SchemaEditor editor) {
 		super();
-		modelChangeProvider = (IModelChangeProvider) editor.getAdapter(IModelChangeProvider.class);
-		Assert.isNotNull(modelChangeProvider, "modelChangeProvider == null");
+		if (!editor.isReadOnlyMode()) {
+			modelChangeProvider = (IModelChangeProvider) editor.getAdapter(IModelChangeProvider.class);
+			Assert.isNotNull(modelChangeProvider, "modelChangeProvider == null");
+		}
 	}
 
 	@Override

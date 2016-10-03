@@ -56,5 +56,28 @@
          </importTool>
       </importTools>
    </extension>
+   <extension
+         point="org.lh.dmlj.schema.editor.core.importRecordElements">
+      <importTools>
+         <importTool
+               class="org.lh.dmlj.schema.editor.dictionary.tools.importtool.RecordElementsImportTool"
+               description="Import record elements from a record synonym in an IDMS dictionary on your mainframe."
+               id="org.lh.dmlj.schema.editor.dictionary.tools.import.elements.importTool1"
+               name="recordElementsImportTool"
+               source="an IDMS dictionary on your mainframe">
+            <dataEntryPage
+                  class="org.lh.dmlj.schema.editor.dictionary.tools.importtool.ui.DictionarySelectionPage"
+                  id="org.lh.dmlj.schema.editor.dictionary.tools.import.elements.dataEntryPage1"
+                  message="Select a dictionary"
+                  name="dictionarySelectionPage">
+            </dataEntryPage>
+            <dataEntryPage
+                  class="org.lh.dmlj.schema.editor.dictionary.tools.importtool.ui.RecordSynonymSelectionPage"
+                  id="org.lh.dmlj.schema.editor.dictionary.tools.import.elements.dataEntryPage2"
+                  name="recordSynonymSelectionPage">
+            </dataEntryPage>
+         </importTool>
+      </importTools>
+   </extension>
 
 </plugin>

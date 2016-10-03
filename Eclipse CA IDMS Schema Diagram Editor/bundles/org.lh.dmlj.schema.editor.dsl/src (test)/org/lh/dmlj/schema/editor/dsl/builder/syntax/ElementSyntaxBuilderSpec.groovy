@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,12 +38,7 @@ class ElementSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		then: "the builder creates the syntax that describes the element: only a level, name and "
 			  "picture property are generated; a usage property is NOT generated because DISPLAY is"
 			  "considered the default"
-		syntax == expected(
-"""
-level 2
-name 'EMP-ID-0415'
-picture '9(4)'
-""")
+		syntax == '02 EMP-ID-0415 picture 9(4)'
 	}
 	
 	def "Element with a baseName different from the element name"() {
@@ -59,48 +54,23 @@ picture '9(4)'
 		
 		then: "the builder creates the syntax that describes the element: a baseName property is "
 			  "generated"
-		syntax == expected(
-"""
-level 2
-name 'EMP-ID-0415'
-baseName 'EMP-ID'
-picture '9(4)'
-""")
+		syntax == '02 EMP-ID-0415 (EMP-ID) picture 9(4)'
 	}
 	
-	def "Element with a baseName equal the element name"() {
+	def "Element with a baseName equal to the element name"() {
 		
 		given: "an element syntax builder and the EMPSCHM version 100 schema"
 		ElementSyntaxBuilder builder = new ElementSyntaxBuilder()
 		Schema schema = loadSchema('testdata/EMPSCHM version 100.schema')
-		Element element = schema.getRecord('COVERAGE').getElement('SELECTION-DATE-0400')
+		Element element = schema.getRecord('EMPLOYEE').getElement('EMP-ID-0415')
+		element.setBaseName("EMP-ID-0415")
 		
 		when: "passing the element to the builder's build method"
 		String syntax = builder.build(element)
 		
 		then: "the builder creates the syntax that describes the element: a baseName property is "
 			  "generated"
-		syntax == expected(
-"""
-level 2
-name 'SELECTION-DATE-0400'
-children {
-    element 'SELECTION-YEAR-0400' {
-        level 3
-        picture '9(4)'
-    }
- 
-    element 'SELECTION-MONTH-0400' {
-        level 3
-        picture '9(2)'
-    }
- 
-    element 'SELECTION-DAY-0400' {
-        level 3
-        picture '9(2)'
-    }
-}
-""")
+		syntax == '02 EMP-ID-0415 picture 9(4)'
 	}
 	
 	def "Element with a redefines property"() {
@@ -115,13 +85,7 @@ children {
 		
 		then: "the builder creates the syntax that describes the element: a redefines property is "
 			  "generated"
-		syntax == expected(
-"""
-level 2
-name 'MAP-EXT-NAME-098'
-redefines 'MAP-CURSOR-098'
-picture 'X(32)'
-""")
+		syntax == '02 MAP-EXT-NAME-098 redefines MAP-CURSOR-098 picture X(32)'
 	}
 	
 	def "Element with children"() {
@@ -134,43 +98,15 @@ picture 'X(32)'
 		when: "passing the element to the builder's build method"
 		String syntax = builder.build(element)
 		
-		then: "the builder creates the syntax that describes the element: 2 chilren are generated "
-			  "generated"
-		syntax == expected(
-"""
-level 2
-name 'EMP-ADDRESS-0415'
-children {
-    element 'EMP-STREET-0415' {
-        level 3
-        picture 'X(20)'
-    }
-
-    element 'EMP-CITY-0415' {
-        level 3
-        picture 'X(15)'
-    }
-
-    element 'EMP-STATE-0415' {
-        level 3
-        picture 'X(2)'
-    }
-
-    element 'EMP-ZIP-0415' {
-        level 3
-        children {
-            element 'EMP-ZIP-FIRST-FIVE-0415' {
-                level 4
-                picture 'X(5)'
-            }
-
-            element 'EMP-ZIP-LAST-FOUR-0415' {
-                level 4
-                picture 'X(4)'
-            }
-        }
-    }
-}
+		then: "the builder creates the syntax that describes the element and its children"
+		syntax == stripLeadingAndTrailingNewLine("""
+02 EMP-ADDRESS-0415
+   03 EMP-STREET-0415 picture X(20)
+   03 EMP-CITY-0415 picture X(15)
+   03 EMP-STATE-0415 picture X(2)
+   03 EMP-ZIP-0415
+      04 EMP-ZIP-FIRST-FIVE-0415 picture X(5)
+      04 EMP-ZIP-LAST-FOUR-0415 picture X(4)
 """)
 	}
 	
@@ -178,7 +114,7 @@ children {
 	def "Usage property for non-level 88 elements"() {
 		
 		given: "an element syntax builder"
-		ElementSyntaxBuilder builder = new ElementSyntaxBuilder( [ generateName : false ] )
+		ElementSyntaxBuilder builder = new ElementSyntaxBuilder()
 		
 		when: "passing an element to the builder's build method"
 		Element element = [ getLevel : { (short) 2 }, getName : { "EL1" }, getBaseName : { null },
@@ -190,19 +126,19 @@ children {
 		
 		then: "the builder creates the syntax that describes the element: an appropriate usage"
 			  "property is generated, or omitted in the case of non-level 88 elements with a usage"
-			  "other than DISPLAY"
+			  "other than DISPLAY; single quotes only surround the usage when a blank is involved"
 		syntax == expected
 		
 		where:
 		usage				  | expected
-		Usage.BIT | "level 2\nusage 'BIT'\n"
-		Usage.COMPUTATIONAL   | "level 2\nusage 'COMPUTATIONAL'\n"
-		Usage.COMPUTATIONAL_1 | "level 2\nusage 'COMPUTATIONAL 1'\n"
-		Usage.COMPUTATIONAL_2 | "level 2\nusage 'COMPUTATIONAL 2'\n"
-		Usage.COMPUTATIONAL_3 | "level 2\nusage 'COMPUTATIONAL 3'\n"
-		Usage.DISPLAY 		  | "level 2\n"								// default for non-level 88
-		Usage.DISPLAY_1 	  | "level 2\nusage 'DISPLAY 1'\n"
-		Usage.POINTER 	  	  | "level 2\nusage 'POINTER'\n"
+		Usage.BIT 			  | "02 EL1 usage BIT"
+		Usage.COMPUTATIONAL   | "02 EL1 usage COMPUTATIONAL"
+		Usage.COMPUTATIONAL_1 | "02 EL1 usage 'COMPUTATIONAL 1'"
+		Usage.COMPUTATIONAL_2 | "02 EL1 usage 'COMPUTATIONAL 2'"
+		Usage.COMPUTATIONAL_3 | "02 EL1 usage 'COMPUTATIONAL 3'"
+		Usage.DISPLAY 		  | "02 EL1"								// default for non-level 88
+		Usage.DISPLAY_1 	  | "02 EL1 usage 'DISPLAY 1'"
+		Usage.POINTER 	  	  | "02 EL1 usage POINTER"
 	}
 	
 	def "Usage property for level 88 elements"() {
@@ -219,9 +155,8 @@ children {
 		String syntax = builder.build(element)
 		
 		then: "the builder creates the syntax that describes the element: an appropriate usage"
-			  "property is generated, or omitted in the case of non-level 88 elements with a usage"
-			  "other than DISPLAY"
-		syntax == "level 88\n"											// default for level 88
+			  "property is omitted in the case of level 88 element"
+		syntax == "88 EL1"												// default for level 88
 	}
 	
 	def "Element with a value property (nothing special involved)"() {
@@ -238,12 +173,7 @@ children {
 		
 		then: "the builder creates the syntax that describes the element: a value property is "
 			  "generated"
-		syntax == expected(
-"""
-level 88
-name 'ACTIVE-0415'
-value '123'
-""")
+		syntax == "88 ACTIVE-0415 value 123"
 	}
 	
 	def "Element with a value property (single quotes involved)"() {
@@ -258,12 +188,7 @@ value '123'
 		
 		then: "the builder creates the syntax that describes the element: a value property is "
 			  "generated"
-		syntax == expected(
-"""
-level 88
-name 'ACTIVE-0415'
-value "'01'"
-""")
+		syntax == "88 ACTIVE-0415 value '01'"
 	}
 	
 	def "Element with a value property (double quotes involved)"() {
@@ -280,12 +205,7 @@ value "'01'"
 		
 		then: "the builder creates the syntax that describes the element: a value property is "
 			  "generated"
-		syntax == expected(
-"""
-level 88
-name 'ACTIVE-0415'
-value '"abc"'
-""")
+		syntax == '88 ACTIVE-0415 value "abc"'
 	}
 	
 	def "Element with a value property (single AND double quotes involved)"() {
@@ -295,19 +215,14 @@ value '"abc"'
 		ElementSyntaxBuilder builder = new ElementSyntaxBuilder()
 		Schema schema = loadSchema('testdata/EMPSCHM version 100.schema')
 		Element element = schema.getRecord('EMPLOYEE').getElement('ACTIVE-0415')
-		element.setValue('''a"b'c''')
+		element.setValue("""'a"b"c'""")
 		
 		when: "passing the element to the builder's build method"
 		String syntax = builder.build(element)
 		
 		then: "the builder creates the syntax that describes the element: a value property is "
 			  "generated"
-		syntax == expected(
-"""
-level 88
-name 'ACTIVE-0415'
-value '''a"b'c'''
-""")
+		syntax == """88 ACTIVE-0415 value 'a"b"c'"""
 	}
 	
 	def "Element with a value property (backslashes involved)"() {
@@ -317,19 +232,14 @@ value '''a"b'c'''
 		ElementSyntaxBuilder builder = new ElementSyntaxBuilder()
 		Schema schema = loadSchema('testdata/EMPSCHM version 100.schema')
 		Element element = schema.getRecord('EMPLOYEE').getElement('ACTIVE-0415')
-		element.setValue($/a\b\c/$)
+		element.setValue("'a\\b\\c'")
 		
 		when: "passing the element to the builder's build method"
 		String syntax = builder.build(element)
 		
 		then: "the builder creates the syntax that describes the element: a value property is "
 			  "generated"
-		syntax == expected(
-"""
-level 88
-name 'ACTIVE-0415'
-value \$/a\\b\\c/\$
-""")
+		syntax == "88 ACTIVE-0415 value 'a\\b\\c'"
 	}
 	
 	def "Element with an occurs property containing only a count"() {
@@ -344,13 +254,7 @@ value \$/a\\b\\c/\$
 		
 		then: "the builder creates the syntax that describes the element: an occurs property is "
 			  "generated, specifying (only) a count"
-		syntax == expected(
-"""
-level 2
-name 'DIAGNOSIS-0430'
-picture 'X(60)'
-occurs 2
-""")
+		syntax == '02 DIAGNOSIS-0430 picture X(60) occurs 2'
 	}
 	
 	def "Element with an occurs property containing a dependingOn specification"() {
@@ -365,16 +269,7 @@ occurs 2
 		
 		then: "the builder creates the syntax that describes the element: an occurs property is "
 			  "generated, specifying a count and the depending on element name"
-		syntax == expected(
-"""
-level 2
-name 'CAT-EXTENSION-DATA-163'
-picture 'X(01)'
-occurs {
-    count 510
-    dependingOn 'CAT-EXTENSION-LENGTH-163'
-}
-""")
+		syntax == '02 CAT-EXTENSION-DATA-163 picture X(01) occurs 510 dependingOn CAT-EXTENSION-LENGTH-163'
 	}
 	
 	def "Element with an occurs property containing 2 index element specifications"() {
@@ -398,23 +293,7 @@ occurs {
 		
 		then: "the builder creates the syntax that describes the element: an occurs property is "
 			  "generated, specifying a count and both index elements"
-		syntax == expected(
-"""
-level 2
-name 'DIAGNOSIS-0430'
-picture 'X(60)'
-occurs {
-    count 2
-    indexedBy {
-        name 'INDEX1'
-        baseName 'INDEX1-BASE'
-    }
-    indexedBy {
-        name 'INDEX2'
-        baseName 'INDEX2-BASE'
-    }
-}
-""")
+		syntax == '02 DIAGNOSIS-0430 picture X(60) occurs 2 indexedBy INDEX1 (INDEX1-BASE), INDEX2 (INDEX2-BASE)'
 	}
 	
 	def "Element with an occurs property containing a dependingOn specification and 2 index element specifications"() {
@@ -438,24 +317,7 @@ occurs {
 		
 		then: "the builder creates the syntax that describes the element: an occurs property is "
 			  "generated, specifying a count, the depending on element name and index elements"
-		syntax == expected(
-"""
-level 2
-name 'CAT-EXTENSION-DATA-163'
-picture 'X(01)'
-occurs {
-    count 510
-    dependingOn 'CAT-EXTENSION-LENGTH-163'
-    indexedBy {
-        name 'INDEX1'
-        baseName 'INDEX1-BASE'
-    }
-    indexedBy {
-        name 'INDEX2'
-        baseName 'INDEX2-BASE'
-    }
-}
-""")
+		syntax == '02 CAT-EXTENSION-DATA-163 picture X(01) occurs 510 dependingOn CAT-EXTENSION-LENGTH-163 indexedBy INDEX1 (INDEX1-BASE), INDEX2 (INDEX2-BASE)'
 	}
 	
 	def "Element with a nullable property"() {
@@ -470,12 +332,6 @@ occurs {
 		
 		then: "the builder creates the syntax that describes the element: a nullable property is "
 			  "generated"
-		syntax == expected(
-"""
-level 2
-name 'AREA-1041'
-picture 'X(18)'
-nullable
-""")
+		syntax == '02 AREA-1041 picture X(18) nullable'
 	}
 }

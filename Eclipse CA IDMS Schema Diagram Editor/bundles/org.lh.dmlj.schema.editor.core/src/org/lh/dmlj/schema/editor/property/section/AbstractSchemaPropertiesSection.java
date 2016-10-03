@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,12 +19,19 @@ package org.lh.dmlj.schema.editor.property.section;
 import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.property.ISchemaProvider;
 
 public abstract class AbstractSchemaPropertiesSection 
-	extends AbstractAttributesBasedPropertiesSection<Schema> {	
+	extends AbstractAttributesBasedPropertiesSection<Schema> 
+	implements ISchemaProvider {	
 
 	public AbstractSchemaPropertiesSection() {
 		super(Plugin.getDefault());
+	}
+	
+	@Override
+	public Schema getSchema() {
+		return target;
 	}
 
 	@Override

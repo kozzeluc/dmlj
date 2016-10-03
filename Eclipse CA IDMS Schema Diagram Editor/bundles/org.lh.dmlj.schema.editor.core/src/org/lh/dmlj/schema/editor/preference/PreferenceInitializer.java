@@ -21,6 +21,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.lh.dmlj.schema.editor.Plugin;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
+	
+	private static final String DEFAULT_FILE_EXTENSION = "schema";
 
 	public PreferenceInitializer() {
 		super();
@@ -31,7 +33,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
 		
 		// general preferences...
-		store.setDefault(PreferenceConstants.UNITS, Unit.CENTIMETERS.toString());
+		store.setDefault(PreferenceConstants.DEFAULT_FILE_EXTENSION, DEFAULT_FILE_EXTENSION);
+		store.setDefault(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS, PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
+		store.setDefault(PreferenceConstants.READ_ONLY_MODE, false);
 		store.setDefault(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, false);
 		
 		// import preferences...
@@ -45,6 +49,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.BOTTOM_MARGIN, 0);	
 		store.setDefault(PreferenceConstants.LEFT_MARGIN, 0);	
 		store.setDefault(PreferenceConstants.RIGHT_MARGIN, 0);
+		
+		// the remainder of the preference initialization concerns the diagram preferences...
+		store.setDefault(PreferenceConstants.UNITS, Unit.CENTIMETERS.toString());
 		
 		// default diagram label preferences
 		store.setDefault(PreferenceConstants.DIAGRAMLABEL_ORGANISATION, 

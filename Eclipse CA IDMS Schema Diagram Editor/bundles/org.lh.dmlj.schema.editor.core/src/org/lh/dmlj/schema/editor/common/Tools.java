@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,12 +16,25 @@
  */
 package org.lh.dmlj.schema.editor.common;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
+import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SetMembershipOption;
@@ -29,6 +42,9 @@ import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
+import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder;
 
 public abstract class Tools {
 	
@@ -74,6 +90,13 @@ public abstract class Tools {
 			}
 		}
 		return false;
+	}
+	
+	public static String generateRecordElementsDSL(SchemaRecord record) {
+		String dsl = new RecordSyntaxBuilder().build(record);
+		int i = dsl.indexOf("\"\"\"\n");
+		int j = dsl.lastIndexOf("\n\"\"\"");
+		return dsl.substring(i + 3, j).replace("\n    ", "\n").substring(1);
 	}
 
 	public static String getCalcKey(Key calcKey) {
@@ -340,6 +363,22 @@ public abstract class Tools {
 		return false;
 		
 	}
+	
+	public static Schema readFromFile(File file) {
+		if (file.getName().toLowerCase().endsWith(".schema")) {
+			ResourceSet resourceSet = new ResourceSetImpl();
+			resourceSet.getResourceFactoryRegistry()
+			   		   .getExtensionToFactoryMap()
+			   		   .put("schema", new XMIResourceFactoryImpl());
+			URI uri = URI.createFileURI(file.getAbsolutePath());
+			Resource resource = resourceSet.getResource(uri, true);
+			return (Schema) resource.getContents().get(0);
+		} else if (file.getName().toLowerCase().endsWith(".schemadsl")) {
+			return ModelFromDslBuilderForJava.schema(file);
+		} else {
+			throw new IllegalArgumentException("invalid file name (wrong extension): " + file.getName());
+		}
+	}
 
 	/**
 	 * Removes the trailing underscore from the given name (DDLCATLOD related
@@ -356,6 +395,56 @@ public abstract class Tools {
 			p.setLength(p.length() - 1);
 		}
 		return p.toString();
+	}
+	
+	/**
+	 * @param inputStream inputStream to process; will be closed by this method
+	 * @return
+	 * @throws IOException
+	 */
+	public static byte[] writeToBuffer(InputStream inputStream) throws IOException {
+	    byte[] buffer = new byte[inputStream.available()];
+	    inputStream.read(buffer);
+	    inputStream.close();
+	    return buffer;
+	}
+	
+	public static void writeToFile(byte[] buffer, File file) throws IOException {
+		OutputStream outputStream = new FileOutputStream(file);
+	    outputStream.write(buffer);
+		outputStream.flush();
+		outputStream.close();
+	}
+	
+	public static void writeToFile(String data, File file) throws IOException {
+		OutputStream outputStream = new FileOutputStream(file);
+		PrintWriter out = new PrintWriter(outputStream);
+	    out.print(data);
+	    out.flush();
+		out.close();
+		outputStream.close();
+	}
+	
+	public static void writeToFile(Schema schema, File file) throws IOException {
+		if (file.getName().toLowerCase().endsWith(".schema")) {
+			writeToFileAsXMI(schema, file);
+		} else if (file.getName().toLowerCase().endsWith(".schemadsl")) {
+			writeToFileAsDSL(schema, file);
+		} else {
+			throw new IllegalArgumentException("invalid file name (wrong extension): " + file.getName());
+		}
+	}
+	
+	private static void writeToFileAsXMI(Schema schema, File file) throws IOException {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		URI fileURI = URI.createFileURI(file.getAbsolutePath());
+		Resource resource = resourceSet.createResource(fileURI);
+		resource.getContents().add(schema);						
+		resource.save(null);
+	}
+	
+	private static void writeToFileAsDSL(Schema schema, File file) throws IOException {
+		writeToFile(new SchemaSyntaxBuilder().build(schema), file);
 	}
 	
 }

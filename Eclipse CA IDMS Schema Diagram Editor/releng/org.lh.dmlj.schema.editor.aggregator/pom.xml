@@ -6,13 +6,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lh.dmlj.schema.editor</groupId>
     <artifactId>org.lh.dmlj.schema.editor.aggregator</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>org.lh.dmlj.schema.editor</groupId>
         <artifactId>org.lh.dmlj.schema.editor.parent</artifactId>
-        <version>2.1.0-SNAPSHOT</version>
+        <version>3.0.0-SNAPSHOT</version>
         <relativePath>../org.lh.dmlj.schema.editor.parent</relativePath>
     </parent>
     

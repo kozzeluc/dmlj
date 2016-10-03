@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -42,11 +42,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -74,6 +70,7 @@ import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.extension.DataEntryPageExtensionElement;
 import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
 import org.lh.dmlj.schema.editor.extension.ImportToolExtensionElement;
@@ -230,6 +227,12 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		// return the import wizard page
 		return importWizardPage;
 		
+	}
+
+	private void disposeImportTool(SchemaImportToolProxy proxy) {
+		if (!proxy.isImportToolDisposed()) {
+			proxy.disposeImportTool();
+		}
 	}
 	
 	protected void doPostProcessing(Schema targetSchema, Schema referenceSchema) {
@@ -576,6 +579,12 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 														 ELEMENT_LAYOUT_MANAGER, 
 														 LayoutManagerExtensionElement.class);		
 	}
+	
+	@Override
+	public boolean performCancel() {
+		// no import tool to dispose
+		return super.performCancel();
+	}
 
 	@Override
 	public boolean performFinish() {		
@@ -639,12 +648,13 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		// populate the schema and persist it to the file specified by the user;
     	// do the work within an operation.		
 		IPath fullPath;
+		final File targetFile;
 		if (!updateMode) {
-			fullPath = new Path(outputFileSelectionPage.getOutputFile()
-													   .getAbsolutePath());
+			targetFile = outputFileSelectionPage.getOutputFile();
 		} else {
-			fullPath = new Path(fileToUpdate.getAbsolutePath());
+			targetFile = fileToUpdate;			
 		}
+		fullPath = new Path(targetFile.getAbsolutePath());
 		IPath workspacePath = 
 			ResourcesPlugin.getWorkspace().getRoot().getLocation();
 		p = fullPath.toString().substring(workspacePath.toString().length());
@@ -694,24 +704,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 								 		 layoutManager.getReferenceSchema());
 					}
 					
-					// Create a resource set
-					ResourceSet resourceSet = new ResourceSetImpl();
-
-					// Get the URI of the model file.
-					//
-					URI fileURI = 
-						URI.createPlatformResourceURI(modelFile.getFullPath().toString(), true);
-
-					// Create a resource for this file.
-					Resource resource = resourceSet.createResource(fileURI);
-
-					// Add the initial model object to the contents.												
-					resource.getContents().add(schema);						
-
-					// Save the contents of the resource to the file system.
-					// (currently no backup of the original file in update mode)
-					resource.save(null);					
-					
+					Tools.writeToFile(schema, targetFile);					
 				} catch (Exception exception) {
 					
 					// try to delete the file created if it exists
@@ -737,10 +730,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 					
 				}
 				finally {
-					if (!proxy.isImportToolDisposed()) {
-						// make sure the import tool is ALWAYS disposed of
-						proxy.disposeImportTool();
-					}
+					disposeImportTool(proxy);
 				}
 				
 				progressMonitor.done();
@@ -780,11 +770,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		// refresh the resource in the workspace to avoid 'Resource is out of 
 		// sync with the file system' messages
 		try {
-			IResource resource = 
-				ResourcesPlugin.getWorkspace()
-							   .getRoot()
-							   .findMember(modelFile.getFullPath());
-			resource.refreshLocal(IResource.DEPTH_ZERO, null);
+			modelFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
 			Plugin.logError("Error while refreshing workspace", e);
 		}

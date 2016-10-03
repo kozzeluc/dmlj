@@ -34,6 +34,7 @@ import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.property.IAreaSpecificationProvider;
 import org.lh.dmlj.schema.editor.property.handler.AreaHandler;
+import org.lh.dmlj.schema.editor.property.handler.EditRecordElementsHandler;
 import org.lh.dmlj.schema.editor.property.handler.ErrorEditHandler;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
@@ -55,6 +56,8 @@ public class RecordGeneralPropertiesSection
 	private IHyperlinkHandler<EAttribute, Command> locationModeHandler = 
 		new LocationModeHandler(this);
 	
+	private EditRecordElementsHandler editRecordElementsHandler = new EditRecordElementsHandler(this);
+
 	public RecordGeneralPropertiesSection() {
 		super();
 	}	
@@ -76,6 +79,11 @@ public class RecordGeneralPropertiesSection
 	@Override
 	public List<EAttribute> getAttributes() {		
 		return Arrays.asList(ATTRIBUTES);
+	}
+
+	@Override
+	protected String getBottomHyperlinkText() {
+		return "Edit record element(s)";
 	}
 
 	@Override
@@ -193,7 +201,9 @@ public class RecordGeneralPropertiesSection
 	
 	@Override
 	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()) {
+		if (attribute == null) {
+			return editRecordElementsHandler;
+		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_LocationMode()) {
 			return locationModeHandler;
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
 			return areaHandler;

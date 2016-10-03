@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,11 +18,6 @@ package org.lh.dmlj.schema.editor.wizard._import.schema;
 
 import java.io.File;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
@@ -36,6 +31,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 public class UpdateLayoutManager implements ILayoutManager {
@@ -54,13 +50,7 @@ public class UpdateLayoutManager implements ILayoutManager {
 		this.targetSchema = targetSchema;
 		
 		// get the reference schema from the reference schema file
-		ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry()
-		   		   .getExtensionToFactoryMap()
-		   		   .put("schema", new XMIResourceFactoryImpl());
-		URI uri = URI.createFileURI(referenceSchemaFile.getAbsolutePath());
-		Resource resource = resourceSet.getResource(uri, true);
-		referenceSchema = (Schema)resource.getContents().get(0);
+		referenceSchema = Tools.readFromFile(referenceSchemaFile);
 		
 	}
 	

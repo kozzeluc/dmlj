@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,15 +23,19 @@ import org.lh.dmlj.schema.editor.command.ChangeCalcKeyCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeIndexedSetModeSpecificationCommandSpec;
 import org.lh.dmlj.schema.editor.command.ChangeLocationModeCommandFactoryTest;
 import org.lh.dmlj.schema.editor.command.ChangePointerOrderCommandTest;
+import org.lh.dmlj.schema.editor.command.ChangeSchemaCommentsCommandSpec;
 import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeSortKeysCommandTest;
 import org.lh.dmlj.schema.editor.command.ChangeViaSpecificationCommandTest;
+import org.lh.dmlj.schema.editor.command.CreateAreaProcedureCallSpecificationCommandSpec;
 import org.lh.dmlj.schema.editor.command.CreateBendpointCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateConnectorCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateIndexCommandTest;
+import org.lh.dmlj.schema.editor.command.CreateProcedureCommandSpec;
 import org.lh.dmlj.schema.editor.command.CreateRecordCommandTest;
+import org.lh.dmlj.schema.editor.command.CreateRecordProcedureCallSpecificationCommandSpec;
 import org.lh.dmlj.schema.editor.command.CreateSetCommandTest;
 import org.lh.dmlj.schema.editor.command.CreateVsamIndexCommandTest;
 import org.lh.dmlj.schema.editor.command.DeleteAreaCommandTest;
@@ -56,6 +60,7 @@ import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveGuideCommandTest;
 import org.lh.dmlj.schema.editor.command.MoveRecordOrIndexToOtherAreaCommandTest;
+import org.lh.dmlj.schema.editor.command.ProcedureCallCommandFactorySpec;
 import org.lh.dmlj.schema.editor.command.RemoveAreaProcedureCallSpecificationCommandTest;
 import org.lh.dmlj.schema.editor.command.RemoveMemberFromSetCommandTest;
 import org.lh.dmlj.schema.editor.command.RemoveRecordProcedureCallSpecificationCommandTest;
@@ -81,6 +86,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixFactoryTest;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendageTest;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerRemovalTest;
 import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
+import org.lh.dmlj.schema.editor.property.section.ProcedureCallsDslFacetModifierSpec;
 
 
 @RunWith(Suite.class)
@@ -97,15 +103,19 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	ChangeIndexedSetModeSpecificationCommandSpec.class,
 	ChangeLocationModeCommandFactoryTest.class,
 	ChangePointerOrderCommandTest.class,
+	ChangeSchemaCommentsCommandSpec.class,
 	ChangeSetOrderCommandTest.class,
 	ChangeSortKeysCommandTest.class,
 	ChangeViaSpecificationCommandTest.class,
+	CreateAreaProcedureCallSpecificationCommandSpec.class,
 	CreateBendpointCommandTest.class,
 	CreateConnectorCommandTest.class,
 	CreateDiagramLabelCommandTest.class,
 	CreateGuideCommandTest.class,
 	CreateIndexCommandTest.class,
+	CreateProcedureCommandSpec.class,
 	CreateRecordCommandTest.class,
+	CreateRecordProcedureCallSpecificationCommandSpec.class,
 	CreateSetCommandTest.class,
 	CreateVsamIndexCommandTest.class,
 	DeleteAreaCommandTest.class,
@@ -139,6 +149,7 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	PrefixForPointerAppendageTest.class,
 	PrefixForPointerRemovalTest.class,
 	PrefixUtilTest.class,
+	ProcedureCallCommandFactorySpec.class,
 	RemovableMemberRoleTest.class,
 	RemovableOwnerRoleTest.class,
 	RemoveAreaProcedureCallSpecificationCommandTest.class,
@@ -156,7 +167,10 @@ import org.lh.dmlj.schema.editor.prefix.PrefixUtilTest;
 	AbstractSchemaTreeEditPartTest.class,
 	
 	// utility class tests
-	ToolsTest.class
+	ToolsTest.class,
+	
+	// other
+	ProcedureCallsDslFacetModifierSpec.class
 	
 })
 public class AllCoreTests {	

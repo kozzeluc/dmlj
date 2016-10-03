@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016 Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,15 +24,26 @@ import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
 public interface IRecordElementsImportTool {
 	
+	/**
+	 * Disposes the import tool; this method is invoked only once and no methods will be invoked
+	 * on the import tool after this method was invoked. 
+	 */
 	void dispose();
-	
-	Object getRecordPlaceholderContext();
 
-	Collection<?> getRootElementContexts(Object rootContext);
+	Collection<?> getRootElementContexts();
 	
 	<T> Collection<T> getSubordinateElementContexts(T elementContext);
 	
-	void init(IDataEntryContext dataEntryContext, Properties parameters,
-			  IRecordElementsDataCollectorRegistry recordElementDataCollectorRegistry);
+	/**
+	 * Initializes the import tool; this method is invoked only once. 
+	 */
+	void init(Properties parameters, IRecordElementsDataCollectorRegistry recordElementDataCollectorRegistry);
+	
+	/**
+	 * Sets the data entry context; this method is invoked each time immediately before the 
+	 * getRootElementContexts() method.
+	 * @param dataEntryContext the data entry context
+	 */
+	void setContext(IDataEntryContext dataEntryContext);
 	
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 Luc Hermans
+ * Copyright (C) 2016 Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -88,7 +88,6 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		tableEditor = new TableEditor(table);
 		tableEditor.horizontalAlignment = SWT.LEFT;
 		tableEditor.minimumWidth = 50;
-		// add both mouse listeners
 		table.addMouseListener(this);
 		table.addMouseMoveListener(this);
 	}
@@ -191,6 +190,10 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 	@Override
 	public void mouseMove(MouseEvent e) {
 		
+		if (section.isReadOnlyMode()) {
+			return;
+		}
+		
 		// get the Table instance
 		Table table = (Table) e.getSource();
 		
@@ -282,7 +285,11 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 				
 	}
 
-	public void mouseUp(MouseEvent e) {					
+	public void mouseUp(MouseEvent e) {		
+		
+		if (section.isReadOnlyMode()) {
+			return;
+		}
 		
 		// get the Table instance
 		Table table = (Table) e.getSource();

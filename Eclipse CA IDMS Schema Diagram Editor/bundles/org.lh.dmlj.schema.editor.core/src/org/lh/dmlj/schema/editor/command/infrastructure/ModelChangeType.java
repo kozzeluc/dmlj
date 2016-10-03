@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,10 +30,12 @@ public enum ModelChangeType {
     
     ADD_OR_REMOVE_SET_POINTERS,
     
+    CHANGE_AREA_PROCEDURE_CALL_SPECIFICATION,
     CHANGE_AREA_SPECIFICATION,
     CHANGE_CALCKEY,
     CHANGE_INDEXED_SET_MODE_SPECIFICATION,
     CHANGE_LOCATION_MODE,
+    CHANGE_RECORD_PROCEDURE_CALL_SPECIFICATION,
     CHANGE_SET_ORDER,
     CHANGE_SORTKEYS,
     CHANGE_VIA_SPECIFICATION,

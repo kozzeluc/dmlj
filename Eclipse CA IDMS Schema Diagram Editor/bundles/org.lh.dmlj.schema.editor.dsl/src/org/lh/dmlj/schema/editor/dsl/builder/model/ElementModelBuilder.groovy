@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.model
 
+import java.util.List;
+
 import org.lh.dmlj.schema.Element
 import org.lh.dmlj.schema.IndexElement
 import org.lh.dmlj.schema.SchemaFactory
@@ -24,69 +26,106 @@ import org.lh.dmlj.schema.Usage
 
 class ElementModelBuilder extends AbstractModelBuilder<Element> {
 	
-	private static final String BODY_CHILDREN = "children"
-	private static final String BODY_INDEXED_BY = "indexedBy"
-	private static final String BODY_OCCURS = "occurs"
+	private static final String ATTRIBUTE_DEPENDING_ON = 'dependingOn'
+	private static final String ATTRIBUTE_INDEXED_BY = 'indexedBy'
+	private static final String ATTRIBUTE_NULLABLE = 'nullable' // attribute without a value
+	private static final String ATTRIBUTE_OCCURS = 'occurs'
+	private static final String ATTRIBUTE_PICTURE = 'picture'
+	private static final String ATTRIBUTE_REDEFINES = 'redefines' 
+	private static final String ATTRIBUTE_USAGE = 'usage'
+	private static final String ATTRIBUTE_VALUE = 'value'
 	
+	private static final String[] ATTRIBUTES = 
+		[ ATTRIBUTE_DEPENDING_ON, ATTRIBUTE_INDEXED_BY, ATTRIBUTE_NULLABLE, ATTRIBUTE_OCCURS, 
+		  ATTRIBUTE_PICTURE, ATTRIBUTE_REDEFINES, ATTRIBUTE_USAGE, ATTRIBUTE_VALUE ]
+		
+	private static final char QUOTE = "'"
+	
+	private String definition
 	private Element element
-	private SchemaRecord record
-	private Element parent
 	
-	def propertyMissing(String name) {
-		if (name == 'nullable') {
-			nullable()
+	SchemaRecord record
+	Element parent
+	
+	static int extractLevel(String line) {
+		assert line, 'line is mandatory'
+		String definition = filterDefinition(line)
+		int i = definition.indexOf(' ') - 1
+		Integer.valueOf(definition[0..i])
+	}
+	
+	static String filterDefinition(String definition) {
+		definition.trim().replace('\t', ' ')
+	}
+	
+	private static String stripLeadingAndTrailing(String aString, char _char) {
+		if (aString && aString.length() > 1 && aString[0] == _char && aString[-1] == _char) {
+			return aString[1..-2]
 		} else {
-			throw new MissingPropertyException('no such property: ' + name + ' for class: ' +
-											   getClass().getName())
+			return aString
 		}
 	}
 	
-	void baseName(String baseName) {
-		assert !bodies || [ BODY_OCCURS, BODY_INDEXED_BY ]
-		if (!bodies) {
-			element.baseName = baseName
-		} else {
-			element.occursSpecification.indexElements[-1].baseName = baseName
-		}
-	}
-	
-	Element build(Closure definition) {		
-		build(null, definition)
-	}
-	
-	Element build(String name, Closure definition) {		
-		assert !bodies
-		element = createElement(name)
-		runClosure definition
-		assert !bodies
-		assert element.name, 'element name is NOT set'
-		if (!element.baseName) {
-			element.baseName = element.name
-		}
-		element
-	}
-	
-	void children(Closure definition) {
-		assert !bodies
-		bodies << BODY_CHILDREN
-		runClosure(definition)
-		assert bodies == [ BODY_CHILDREN ]
-		bodies -= BODY_CHILDREN
-	}
-	
-	void count(int count) {
-		assert bodies == [ BODY_OCCURS ]
-		assert !element.occursSpecification
-		element.occursSpecification = SchemaFactory.eINSTANCE.createOccursSpecification()
-		element.occursSpecification.count = count
-	}
-	
-	private Element createElement(String name) {
-		assert !element
+	Element build(String definition) {
+		
+		this.definition = filterDefinition(definition)
+		
+		int level = extractLevel(this.definition)
+		def (name, baseName) = extractNames()
+		String picture = extractAttribute(ATTRIBUTE_PICTURE, false)
+		String usage = extractAttribute(ATTRIBUTE_USAGE, true)
+		String redefinedElementName = extractAttribute(ATTRIBUTE_REDEFINES, false)
+		String value = extractAttribute(ATTRIBUTE_VALUE, false)
+		int occurs = Integer.valueOf(extractAttribute(ATTRIBUTE_OCCURS, false) ?: '0')
+		boolean nullable = definition.endsWith('nullable') || definition.indexOf(' nullable ') > -1
+		
 		element = SchemaFactory.eINSTANCE.createElement()
-		if (name) {
-			element.name = name
+		element.name = name
+		element.baseName = baseName
+		element.level = level
+		element.picture = picture
+		if (level == 88) {
+			element.usage = Usage.CONDITION_NAME
+		} else if (usage) {
+			element.usage = Usage.valueOf(usage.replace(' ', '_'))
+		} else {
+			element.usage = Usage.DISPLAY
 		}
+		element.value = value
+		if (occurs) {
+			element.occursSpecification = SchemaFactory.eINSTANCE.createOccursSpecification()
+			element.occursSpecification.count = occurs
+			String occursDependingOnElementName = extractAttribute(ATTRIBUTE_DEPENDING_ON, false)
+			if (occursDependingOnElementName) {				
+				assert occursDependingOnElementName != element.name, "occurs cannot depend on same element"
+				Element candidate = findElement(occursDependingOnElementName)
+				assert candidate, "occurs depending on element is NOT defined in record or parent: $occursDependingOnElementName"
+				assert candidate.level != 88, 'depending on element cannot be a condition name'
+				element.occursSpecification.dependingOn = candidate	
+			}
+			String indexedBy = extractAttribute(ATTRIBUTE_INDEXED_BY, false)
+			if (indexedBy) {
+				List<String[]> indexNames = extractIndexNames(indexedBy)	
+				for (String[] indexNameCombination : indexNames) {
+					IndexElement indexElement = SchemaFactory.eINSTANCE.createIndexElement()
+					element.occursSpecification.indexElements << indexElement
+					indexElement.name = indexNameCombination[0]
+					if (indexNameCombination[1]) {
+						indexElement.baseName = indexNameCombination[1]
+					}
+				}
+			}
+		}
+		element.nullable = nullable
+		if (redefinedElementName) {
+			assert element.level != 88, 'redefines invalid for condition names'
+			assert redefinedElementName != element.name, 'element cannot redefine itself'
+			Element candidate = findElement(redefinedElementName)
+			assert candidate, "redefined element is NOT defined in record or (same) parent: $redefinedElementName"			
+			assert candidate.level == element.level, 'level of redefined element mismatch'
+			element.redefines = candidate
+		}
+		
 		if (record) {
 			record.elements << element
 		}
@@ -95,130 +134,98 @@ class ElementModelBuilder extends AbstractModelBuilder<Element> {
 		} else if (record) {
 			record.rootElements << element
 		}
-		element
+		element				
 	}
 	
-	void dependingOn(String dependingOnElementName) {
-		assert bodies == [ BODY_OCCURS ]
-		assert !element.occursSpecification.dependingOn, 
-			   "occurs already depends on ${element.occursSpecification.dependingOn.name}"
-		assert dependingOnElementName != element.name, "occurs cannot depend on same element"
-		List<Element> candidates = []
-		if (record) {
-			candidates = record.elements
-		} else if (parent) {
-			candidates = parent.children
-		}
-		Element candidate = 
-			candidates.find { Element element -> element.name == dependingOnElementName }
-		assert candidate, 
-			   "occurs depending on element is NOT defined in record or parent: $dependingOnElementName"
-		assert candidate.level != 88, 'depending on element cannot be a condition name'
-		element.occursSpecification.dependingOn = candidate
-	}
-	
-	void element(Closure definition) {
-		assert bodies == [ BODY_CHILDREN ]
-		ElementModelBuilder elementBuilder = 
-			new ElementModelBuilder( [ record : record, parent : element ] )
-		if (bufferedName) {
-			elementBuilder.build(bufferedName, definition)
-			bufferedName = null
+	private String[] extractNames() {
+		String name
+		String baseName
+		
+		int i = definition.indexOf(' ')
+		int j = definition.indexOf(' ', i + 1)
+		if (j > -1) {
+			name = definition[i + 1..j - 1]
+			int k = definition.indexOf(' (', i + 1)
+			if (k == j) {
+				k = definition.indexOf(')', i + 1)
+				baseName = definition[j + 2..k - 1]
+			} else {
+				baseName = name
+			}
 		} else {
-			elementBuilder.build(definition)
+			name = definition[i + 1..-1]
+			baseName = name
 		}
-		assert bodies == [ BODY_CHILDREN ]
+		assert name, 'element name is NOT set'
+		assert baseName, 'element base name is NOT set'
+		[ name, baseName ]
 	}
 	
-	void indexedBy(String indexElementName) {
-		assert bodies == [ BODY_OCCURS ]
-		IndexElement indexElement = SchemaFactory.eINSTANCE.createIndexElement()
-		indexElement.name = indexElementName
-		element.occursSpecification.indexElements << indexElement
+	private String extractAttribute(String attribute, boolean stripSingleQuotes) {
+		stripSingleQuotes ? stripLeadingAndTrailing(extract(" $attribute "), QUOTE) : extract(" $attribute ")
 	}
 	
-	void indexedBy(Closure definition) {
-		assert bodies == [ BODY_OCCURS ]
-		if (bufferedName) {
-			indexedBy(bufferedName)
-		} else {
-			IndexElement indexElement = SchemaFactory.eINSTANCE.createIndexElement()
-			element.occursSpecification.indexElements << indexElement
+	private String extract(String searchItem) {
+		int i = definition.indexOf(searchItem)
+		if (i > -1) {
+			int j = -1
+			int k = -1
+			for (String anAttribute in ATTRIBUTES) {
+				k = definition.indexOf(" $anAttribute", i + searchItem.length())
+				if (k > -1 && (j == -1 || k < j)) {
+					j = k
+				}
+			}
+			if (j > -1) {
+				return definition[i + searchItem.length()..j - 1]
+			} else {
+				return definition[i + searchItem.length()..-1]
+			}
 		}
-		bodies << BODY_INDEXED_BY
-		runClosure(definition)
-		assert bodies == [ BODY_OCCURS, BODY_INDEXED_BY ]
-		bodies -= BODY_INDEXED_BY
-		bufferedName = null
+		null
 	}
 	
-	void level(int level) {
-		assert !bodies
-		element.level = level
-		if (level == 88) {
-			element.usage = Usage.CONDITION_NAME
+	private List<String[]> extractIndexNames(indexedBy) {
+		List<String[]> indexNames = [ ]
+		for (String token in indexedBy.split(',')) {
+			String[] indexNameCombination = new String[2]
+			indexNames << indexNameCombination
+			String p = token.trim()
+			int i = p.indexOf(' (')	
+			if (i > -1) {
+				assert p[-1] == ')', "missing closing bracket: $p"
+				indexNameCombination[0] = p[0..(i - 1)].trim()
+				indexNameCombination[1] = p[i + 2..-2]
+			} else {
+				indexNameCombination[0] = p
+				indexNameCombination[1] = null
+			}
 		}
+		indexNames
 	}
-	
-	void name(String name) {
-		assert !bodies || [ BODY_OCCURS, BODY_INDEXED_BY ]
-		if (!bodies) {
-			element.name = name
-		} else {
-			element.occursSpecification.indexElements[-1].name = name
-		}
-	}
-	
-	void nullable() {
-		assert !bodies
-		element.nullable = true
-	}
-	
-	void occurs(int count) {
-		assert !bodies
-		assert !element.occursSpecification
-		element.occursSpecification = SchemaFactory.eINSTANCE.createOccursSpecification()
-		element.occursSpecification.count = count
-	}
-	
-	void occurs(Closure definition) {
-		assert !bodies
-		bodies << BODY_OCCURS
-		runClosure(definition)
-		assert bodies == [ BODY_OCCURS ]
-		bodies -= BODY_OCCURS
-	}
-	
-	void picture(String picture) {
-		assert !bodies
-		element.picture = picture
-	}
-	
-	void redefines(String elementName) {
-		assert !bodies
-		assert !element.redefines, "element already redefines ${element.redefines.name}"
-		assert element.level != 88, "redefines invalid for condition names"
-		assert elementName != element.name, "element cannot redefine itself"
+
+	private Element findElement(String name) {
 		List<Element> candidates = []
 		if (parent) {
-			candidates = parent.children	
+			findElement(name, parent.children)
 		} else if (record) {
-			candidates = record.elements
+			findElement(name, record.elements)
+		} else {
+			null
 		}
-		Element candidate = candidates.find { Element element -> element.name == elementName }
-		assert candidate, "redefined element is NOT defined in record or (same) parent: $elementName"
-		assert candidate.level == element.level, 'level of redefined element mismatch'
-		element.redefines = candidate
 	}
 	
-	void usage(String usage) {
-		assert !bodies
-		element.usage = Usage.valueOf(usage.replaceAll(' ', '_'))
-	}
-	
-	void value(String value) {
-		assert !bodies
-		element.value = value
+	private Element findElement(String name, List<Element> candidates) {
+		for (Element candidate : candidates) {
+			if (candidate.name == name) {
+				return candidate	
+			} else if (candidate.children) {
+				Element someChildOfCandidate = findElement(name, candidate.children)
+				if (someChildOfCandidate) {
+					return someChildOfCandidate
+				}
+			}
+		}
 	}
 
 }

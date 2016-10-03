@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,6 +36,7 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
@@ -195,6 +196,10 @@ public abstract class AbstractPropertiesSection
 		return selection;
 	}	
 	
+	public final boolean isReadOnlyMode() {
+		return modelChangeProvider == null;
+	}
+	
 	@Override
 	public void setInput(IWorkbenchPart part, ISelection selection) {
 		
@@ -232,9 +237,14 @@ public abstract class AbstractPropertiesSection
 		// make sure the undo and redo actions are available
 		addGlobalActionHandlers((ActionRegistry) editor.getAdapter(ActionRegistry.class));
 		
-	    // we need the editor's model change provider to change the model data
-	    modelChangeProvider = (IModelChangeProvider) editor.getAdapter(IModelChangeProvider.class);
-	    modelChangeProvider.addModelChangeListener(this);
+	    // only when we're not in read-only mode, get the editor's model change provider to change 
+		// the model data
+		if (!((SchemaEditor) editor).isReadOnlyMode()) {
+			modelChangeProvider = (IModelChangeProvider) editor.getAdapter(IModelChangeProvider.class);
+			modelChangeProvider.addModelChangeListener(this);
+		} else {
+			modelChangeProvider = null;
+		}
 	
 	}	
 	

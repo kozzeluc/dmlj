@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -59,9 +59,11 @@ public class DiagramLabelEditPart
 	public DiagramLabelEditPart(DiagramLabel diagramLabel, SchemaEditor schemaEditor) {
 		
 		super(diagramLabel, getModelChangeProvider(schemaEditor));
-		this.schemaEditor = schemaEditor;
-		FileEditorInput editorInput = (FileEditorInput) schemaEditor.getEditorInput();
-		diagramFile = editorInput.getFile().getLocation().toFile();
+		this.schemaEditor = schemaEditor;		
+		if (schemaEditor.getEditorInput() instanceof FileEditorInput) {
+			FileEditorInput editorInput = (FileEditorInput) schemaEditor.getEditorInput();
+			diagramFile = editorInput.getFile().getLocation().toFile();
+		}
 	}
 	
 	@Override
@@ -86,10 +88,10 @@ public class DiagramLabelEditPart
 	
 	@Override
 	protected void createEditPolicies() {		
-	
-		// the next edit policy allows for the deletion of a (the) diagram label
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DiagramLabelComponentEditPolicy());
-		
+		if (!isReadOnlyMode()) {
+			// the next edit policy allows for the deletion of a (the) diagram label
+			installEditPolicy(EditPolicy.COMPONENT_ROLE, new DiagramLabelComponentEditPolicy());
+		}
 	}
 	
 	@Override
@@ -109,7 +111,8 @@ public class DiagramLabelEditPart
 
 	private String getLastModified() {
 		
-		if (!Plugin.getDefault()
+		if (diagramFile == null ||
+			!Plugin.getDefault()
 				   .getPreferenceStore()
 				   .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
 			

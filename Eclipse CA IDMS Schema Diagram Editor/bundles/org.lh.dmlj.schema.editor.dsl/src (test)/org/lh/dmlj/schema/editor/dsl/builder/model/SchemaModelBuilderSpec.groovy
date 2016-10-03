@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -206,12 +206,42 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		diagramData.snapToGeometry
 	}
 	
+	def "define a schema containing guides"() {
+		
+		given: "a Schema builder and "
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		and: "schema DSL containing 2 horizontal and 3 vertical guides"
+		def syntax = {
+			name 'TESTSCHM'
+			version 1
+			diagram {
+				horizontalGuides '1,2'
+				verticalGuides '3,4,5'
+			}
+		}
+		
+		when: "building the schema"
+		Schema schema = builder.build(syntax)
+		
+		then: "the verical ruler owns the 2 horizontal guides"
+		schema.diagramData.verticalRuler.guides.size() == 2
+		schema.diagramData.verticalRuler.guides[0].position == 1
+		schema.diagramData.verticalRuler.guides[1].position == 2
+		
+		and : "the horizontal ruler owns the 2 verical guides"
+		schema.diagramData.horizontalRuler.guides.size() == 3
+		schema.diagramData.horizontalRuler.guides[0].position == 3
+		schema.diagramData.horizontalRuler.guides[1].position == 4
+		schema.diagramData.horizontalRuler.guides[2].position == 5
+	}
+	
 	def "define an area without procedure calls: area name passed as string argument, no area closure"() {
 		
 		given: "a Schema builder"
 		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
-		when: "building the schema with a name, version and an area with a procedure called"
+		when: "building the schema with a name, version and an area without any procedures called"
 		def definition = {
 			name 'EMPSCHM'
 			version 100
@@ -236,7 +266,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		given: "a Schema builder"
 		def SchemaModelBuilder builder = new SchemaModelBuilder()
 		
-		when: "building the schema with a name, version and an area with a procedure called"
+		when: "building the schema with a name, version and an area without any procedures called"
 		def definition = {
 			name 'EMPSCHM'
 			version 100
@@ -268,7 +298,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 			name 'EMPSCHM'
 			version 100
 			area 'EMP-DEMO-REGION' {
-				procedure 'IDMSCOMP BEFORE FINISH'	
+				callProcedure 'IDMSCOMP BEFORE FINISH'	
 			}
 		}
 		Schema schema = builder.build(definition)
@@ -300,7 +330,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 			version 100
 			area {
 				name 'EMP-DEMO-REGION'
-				procedure 'IDMSCOMP BEFORE FINISH'
+				callProcedure 'IDMSCOMP BEFORE FINISH'
 			}
 		}
 		Schema schema = builder.build(definition)
@@ -783,7 +813,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		SchemaModelBuilder builder = new SchemaModelBuilder()		
 		
 		when: "building the schema from a file containing the schema syntax"
-		Schema schema = builder.buildFromFile(new File('testdata/EMPSCHM version 100.syntax'))
+		Schema schema = builder.buildFromFile(new File('testdata/EMPSCHM version 100.schemadsl'))
 		
 		then: "the result will be a schema conforming to the syntax in the file"
 		schema
@@ -798,7 +828,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the schema from a file containing the schema syntax"
 		Schema schema = 
-			builder.buildFromFile(new File('testdata/IDMSNTWK version 1 (Release 18.5).syntax'))
+			builder.buildFromFile(new File('testdata/IDMSNTWK version 1 (Release 18.5).schemadsl'))
 		
 		then: "the result will be a schema conforming to the syntax in the file"
 		schema

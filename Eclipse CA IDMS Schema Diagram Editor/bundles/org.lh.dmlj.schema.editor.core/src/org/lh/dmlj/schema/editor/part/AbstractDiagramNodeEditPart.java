@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -42,7 +42,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode> 
 	extends AbstractGraphicalEditPart implements IModelChangeListener, NodeEditPart {
 	
-	private IModelChangeProvider modelChangeProvider;
+	private IModelChangeProvider modelChangeProvider; // null means we're in read-only mode
 	
 	/**
 	 * Checks whether the feature of interest is set in a grouped model change.
@@ -66,13 +66,17 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		super();
 		setModel(diagramNode);
 		this.modelChangeProvider = modelChangeProvider;
-		modelChangeProvider.addModelChangeListener(this);
+		if (!isReadOnlyMode()) {
+			modelChangeProvider.addModelChangeListener(this);
+		}
 	}
 	
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		modelChangeProvider.addModelChangeListener(this);		
+		if (!isReadOnlyMode()) {
+			modelChangeProvider.addModelChangeListener(this);
+		}
 	}
 
 	@Override
@@ -119,6 +123,10 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 		return new ChopboxAnchor(getFigure());
 	}	
 	
+	protected boolean isReadOnlyMode() {
+		return modelChangeProvider == null;
+	}
+	
 	protected void refreshConnections() {
 	}
 
@@ -126,7 +134,9 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	public void removeNotify() {
 		// note: this method is NOT invoked when the editor is closed (i.e. when the viewer is 
 		//disposed)
-		modelChangeProvider.removeModelChangeListener(this);
+		if (!isReadOnlyMode()) {
+			modelChangeProvider.removeModelChangeListener(this);
+		}
 		super.removeNotify();
 	}
 

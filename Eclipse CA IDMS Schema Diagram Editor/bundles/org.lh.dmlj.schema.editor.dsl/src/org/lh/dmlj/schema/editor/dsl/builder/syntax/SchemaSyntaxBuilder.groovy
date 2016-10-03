@@ -16,13 +16,14 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.syntax
 
+import groovy.transform.CompileStatic
+
 import org.lh.dmlj.schema.DiagramData
+import org.lh.dmlj.schema.Guide
 import org.lh.dmlj.schema.Schema
 import org.lh.dmlj.schema.SchemaArea
 import org.lh.dmlj.schema.SchemaRecord
 import org.lh.dmlj.schema.Set
-
-import groovy.transform.CompileStatic;
 
 @CompileStatic
 class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
@@ -31,6 +32,18 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	private boolean generateAreaDSL = true
 	private boolean generateRecordDSL = true
 	private boolean generateSetDSL = true
+	
+	static String guidesAsString(List<Guide> guides) {
+		StringBuilder guidesAsString = new StringBuilder()
+		guidesAsString << "'"
+		guides.collect { it.position }.sort().each {
+			if (guidesAsString.length() > 1) {
+				guidesAsString << ','
+			}
+			guidesAsString << "$it"
+		}
+		guidesAsString << "'"
+	}
 	
 	@Override
 	protected String doBuild(Schema model) {	
@@ -79,6 +92,7 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 		snapToGuides()
 		snapToGrid()
 		snapToGeometry()
+		guides()
 		endDiagram()	
 	}
 	
@@ -136,6 +150,30 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 		}
 	}
 	
+	private void guides() {
+		DiagramData diagramData = schema.diagramData
+		if (diagramData.horizontalRuler.guides || diagramData.verticalRuler.guides) {
+			verticalRulerGuides()
+			horizontalRulerGuides()
+		}
+	}
+	
+	private void horizontalRulerGuides() {
+		DiagramData diagramData = schema.diagramData
+		if (diagramData.horizontalRuler.guides) {
+			// mind that the HORIZONTAL ruler guides are in fact VERTICAL lines			
+			with_1_tab "verticalGuides ${guidesAsString(diagramData.horizontalRuler.guides)}"
+		}
+	}
+	
+	private void verticalRulerGuides() {
+		DiagramData diagramData = schema.diagramData
+		if (diagramData.verticalRuler.guides) {
+			// mind that the VERTICAL ruler guides are in fact HORIZONTAL lines			
+			with_1_tab "horizontalGuides ${guidesAsString(diagramData.verticalRuler.guides)}"
+		}
+	}
+	
 	private void endDiagram() {
 		without_tab '}'
 	}
@@ -143,13 +181,19 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	private void areas() {
 		if (generateAreaDSL) {
 			schema.areas.each { area ->
-				if (area.procedures || !area.areaSpecifications) {				
+				if (area.procedures) {				
 					AreaSyntaxBuilder areaSyntaxBuilder = 
 						new AreaSyntaxBuilder([ output : output , initialTabs : 1 , generateName : false ])								
 					blank_line()
 					without_tab "area '${area.name}' {"
 					areaSyntaxBuilder.build(area)
 					without_tab '}'
+				} else if (!area.areaSpecifications) {
+					// the area doesn't contain any records or indexes, so we need to explicitly
+					// define it; we only need a builder when procedure calls are specified for
+					// the area, so we can generate everything ourselves here				
+					blank_line()
+					without_tab "area '${area.name}'"
 				}
 			}
 		} else {

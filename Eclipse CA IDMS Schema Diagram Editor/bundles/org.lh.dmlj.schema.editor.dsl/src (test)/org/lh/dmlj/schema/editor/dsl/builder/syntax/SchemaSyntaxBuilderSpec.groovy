@@ -16,10 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.syntax
 
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
-import org.eclipse.emf.ecore.xmi.util.XMLProcessor
 import org.lh.dmlj.schema.Schema
+import org.lh.dmlj.schema.editor.dsl.builder.model.SchemaModelBuilder
 
 class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 	
@@ -31,10 +29,10 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		when: "passing the schema to the builder's build method"
 		String syntax = builder.build(schema)
-		//new File('testdata/EMPSCHM version 100.syntax').text = syntax
+		//new File('testdata/EMPSCHM version 100.schemadsl').text = syntax
 		
 		then: "the builder creates the syntax that describes the schema"		
-		mustMatchSyntaxInFile(syntax, 'testdata/EMPSCHM version 100.syntax')		
+		mustMatchSyntaxInFile(syntax, 'testdata/EMPSCHM version 100.schemadsl')		
 	}
 	
 	def "IDMSNTWK version 1 (Release 18.5)"() {
@@ -45,10 +43,10 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		when: "passing the schema to the builder's build method"
 		String syntax = builder.build(schema)
-		//new File('testdata/IDMSNTWK version 1 (Release 18.5).syntax').text = syntax
+		//new File('testdata/IDMSNTWK version 1 (Release 18.5).schemadsl').text = syntax
 		
 		then: "the builder creates the syntax that describes the schema"		
-		mustMatchSyntaxInFile(syntax, 'testdata/IDMSNTWK version 1 (Release 18.5).syntax')
+		mustMatchSyntaxInFile(syntax, 'testdata/IDMSNTWK version 1 (Release 18.5).schemadsl')
 	}
 	
 	def "Schema without a description"() {
@@ -485,8 +483,7 @@ diagram {
     snapToGuides
     snapToGrid
     snapToGeometry
-}
-"""))
+    horizontalGuides"""))
 	}
 	
 	def "Schema without snapToGeometry"() {
@@ -523,6 +520,111 @@ diagram {
     showGrid
     snapToGuides
     snapToGrid
+    horizontalGuides"""))
+	}
+	
+	def "Vertical ruler owned guides are horizontal guides"() {
+		
+		given: "a schema with 3 vertical ruler owned guides and a schema syntax builder"
+		Schema schema = new SchemaModelBuilder().build {
+			name 'TESTSCHM'
+			version 1
+			
+			diagram {
+				showRulersAndGuides
+				horizontalGuides '1,2,3'
+			}
+		}
+		SchemaSyntaxBuilder builder = 
+			new SchemaSyntaxBuilder(generateAreaDSL : false, generateRecordDSL : false, generateSetDSL : false)
+		
+		expect: "no horizontal ruler guides and 3 vertical ruler owned guides"
+		!schema.diagramData.horizontalRuler.guides
+		schema.diagramData.verticalRuler.guides.size() == 3
+		
+		when: "building the DSL"
+		String syntax = builder.build(schema)
+		
+		then: "the DSL contains the definition for the 3 horizontal guides"
+		syntax.startsWith(expected(
+"""
+name 'TESTSCHM'
+version 1
+ 
+diagram {
+    showRulersAndGuides
+    horizontalGuides '1,2,3'
+}
+"""))
+	}
+	
+	def "Horizontal ruler owned guides are vertical guides"() {
+		
+		given: "a schema with 3 horizontal ruler owned guides and a schema syntax builder"
+		Schema schema = new SchemaModelBuilder().build {
+			name 'TESTSCHM'
+			version 1
+			
+			diagram {
+				verticalGuides '4,5,6'
+			}
+		}
+		SchemaSyntaxBuilder builder =
+			new SchemaSyntaxBuilder(generateAreaDSL : false, generateRecordDSL : false, generateSetDSL : false)
+		
+		expect: "3 horizontal ruler owned guides and no vertical ruler guides"
+		schema.diagramData.horizontalRuler.guides.size() == 3
+		!schema.diagramData.verticalRuler.guides		
+		
+		when: "building the DSL"
+		String syntax = builder.build(schema)
+		
+		then: "the DSL contains the definition for the 3 vertical guides"
+		syntax.startsWith(expected(
+"""
+name 'TESTSCHM'
+version 1
+ 
+diagram {
+    verticalGuides '4,5,6'
+}
+"""))
+	}
+	
+	def "Horizontal guides preceed vertical guides"() {
+		
+		given: "a schema with 4 horizontal ruler owned guides and 5 vertical ruler owned guides and "
+			   "a schema syntax builder"
+		Schema schema = new SchemaModelBuilder().build {
+			name 'TESTSCHM'
+			version 1
+			
+			diagram {
+				showRulersAndGuides
+				verticalGuides '1,2,3,4'
+				horizontalGuides '5,6,7,8,9'
+			}
+		}
+		SchemaSyntaxBuilder builder =
+			new SchemaSyntaxBuilder(generateAreaDSL : false, generateRecordDSL : false, generateSetDSL : false)
+		
+		expect: "4 horizontal ruler owned guides and 5 vertical ruler guides"
+		schema.diagramData.horizontalRuler.guides.size() == 4
+		schema.diagramData.verticalRuler.guides.size() == 5
+		
+		when: "building the DSL"
+		String syntax = builder.build(schema)
+		
+		then: "in the DSL, the vertical ruler owned guides preceed those owned by the horizontal ruler"
+		syntax.startsWith(expected(
+"""
+name 'TESTSCHM'
+version 1
+ 
+diagram {
+    showRulersAndGuides
+    horizontalGuides '5,6,7,8,9'
+    verticalGuides '1,2,3,4'
 }
 """))
 	}
@@ -539,8 +641,8 @@ diagram {
 		String syntax = builder.build(schema)
 		
 		then: "the builder creates the syntax that describes the schema, explicitly defining the"
-			  "DDLDCSCR area"
-		syntax.indexOf("area 'DDLDCSCR'") > -1
+			  "DDLDCSCR area (mind that the area body is suppressed)"
+		syntax.indexOf("area 'DDLDCSCR'\n") > -1
 	}
 	
 	def "suppress the generation of area, record and set DSL"() {
@@ -576,6 +678,8 @@ diagram {
     snapToGuides
     snapToGrid
     snapToGeometry
+    horizontalGuides '199,344,431'
+    verticalGuides '253,579'
 }
 
 // suppressed: area DSL

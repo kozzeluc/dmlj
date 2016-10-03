@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -160,6 +160,9 @@ public class RecordPrefixPropertiesSection
 
 	@Override
 	public IHyperlinkHandler<Pointer<?>, Object> getHyperlinkHandler(int column) {
+		if (isReadOnlyMode()) {
+			return null;
+		}
 		if (column != 1) {
 			// we don't expect this to happen since we've only made 1 column hyperlink enabled
 			return null; 

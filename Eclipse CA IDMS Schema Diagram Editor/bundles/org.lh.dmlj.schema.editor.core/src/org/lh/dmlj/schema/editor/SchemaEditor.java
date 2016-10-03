@@ -44,7 +44,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -102,6 +101,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -128,6 +128,7 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -140,6 +141,8 @@ public class SchemaEditor
 	extends GraphicalEditorWithFlyoutPalette 
 	implements CommandStackEventListener, ITabbedPropertySheetPageContributor {
 	
+	private static final String FILE_EXTENSION_SCHEMA = "schema";
+	private static final String FILE_EXTENSION_SCHEMADSL = "schemadsl";	
 	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";
 	
 	private static final EAttribute ATTRIBUTE_SHOW_GRID = 
@@ -152,6 +155,7 @@ public class SchemaEditor
 	// 1) An open, saved file gets deleted -> close the editor
 	// 2) An open file gets renamed or moved -> change the editor's input
 	// accordingly
+	// It is assumed that the editor input is always of type IFileEditorInput.
 	class ResourceTracker 
 		implements IResourceChangeListener, IResourceDeltaVisitor {
 		public void resourceChanged(IResourceChangeEvent event) {
@@ -229,7 +233,9 @@ public class SchemaEditor
 			if (part != SchemaEditor.this) {
 				return;
 			}
-			if (!((IFileEditorInput) getEditorInput()).getFile().exists()) {
+			if (getEditorInput() instanceof IFileEditorInput &&
+				!((IFileEditorInput) getEditorInput()).getFile().getLocation().toFile().exists()) {
+				
 				Shell shell = getSite().getShell();
 				String title = "File Deleted";
 				String message = 
@@ -276,6 +282,8 @@ public class SchemaEditor
 	private URI uri;
 	private SchemaEditorRulerProvider verticalRulerProvider;
 	private IResource workspaceResource;
+	private boolean readOnlyFlag = false;
+	private String fileExtension;
 	
 	public SchemaEditor() {
 		super();
@@ -298,12 +306,25 @@ public class SchemaEditor
 
 	@Override
 	public void commandStackChanged(EventObject event) {
-		firePropertyChange(IEditorPart.PROP_DIRTY);
+		if (!isReadOnlyMode()) {
+			// avoid the editor to become dirty
+			firePropertyChange(IEditorPart.PROP_DIRTY);
+		}
 		super.commandStackChanged(event);
 	}
 	
 	@Override
 	public void stackChanged(CommandStackEvent event) {
+		
+		// As of GEF 3.11 (Eclipse Neon), CommandStackEventListener instances are also notified when:
+		// - flushing the stack (event.detail == 64/256)
+		// - marking the save location of the stack (event.detail == 128/512)
+		// In both cases, the event's command is set to null so there is nothing we should do (apart
+		// from preventing a NPE further down the line, e.g. when saving a diagram).		
+		if (event.getCommand() == null) {
+			return;
+		}
+		
 		modelChangeDispatcher.setSchema(schema);
 		modelChangeDispatcher.dispatch(event);				
 	}
@@ -553,8 +574,9 @@ public class SchemaEditor
 		getSite().getWorkbenchWindow().getPartService()
 				.removePartListener(partListener);
 		partListener = null;
-		((IFileEditorInput) getEditorInput()).getFile().getWorkspace()
-				.removeResourceChangeListener(resourceListener);
+		if (getEditorInput() instanceof IFileEditorInput) {
+			((IFileEditorInput) getEditorInput()).getFile().getWorkspace().removeResourceChangeListener(resourceListener);
+		}
 		super.dispose();
 	}	
 	
@@ -562,19 +584,7 @@ public class SchemaEditor
 	public void doSave(IProgressMonitor monitor) {
 		editorSaving = true;
 		// Serialize the model
-		ResourceSet resourceSet = new ResourceSetImpl();
-		Resource resource = resourceSet.createResource(uri);
-		resource.getContents().add(schema);
-		try {
-			resource.save(null);
-		} catch (IOException e) {
-			e.printStackTrace();
-			Status status = 
-				new Status(IStatus.ERROR, ID,
-						   "An exception occurred while saving the file", e);
-			ErrorDialog.openError(getSite().getShell(), "Exception", 
-								  e.getMessage(), status);
-		}
+		writeSchemaToFile();
 		
 		// refresh the resource in the workspace to avoid 'Resource is out of 
 		// sync with the file system' messages
@@ -604,6 +614,7 @@ public class SchemaEditor
 		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		super.setInput(new FileEditorInput(iFile));
 		File file = iFile.getLocation().toFile();
+		setFileExtension(file);
 		uri = URI.createFileURI(file.getAbsolutePath());
 		doSave(null);
 		// refresh the resource in the workspace to avoid 'Resource is out of 
@@ -670,9 +681,9 @@ public class SchemaEditor
 				for (IEditorReference editorReference : workbenchPage.getEditorReferences()) {					
 					try {
 						if (editorReference.getEditorInput().equals(editorInput)) {
-							SchemaEditor schemaEditor = (SchemaEditor) editorReference.getEditor(true);
-							if (schemaEditor != null) {
-								editors.add(schemaEditor);
+							IEditorPart editor = editorReference.getEditor(true);
+							if (editor != null && editor instanceof SchemaEditor) {
+								editors.add((SchemaEditor) editor);
 							}
 						}
 					} catch (PartInitException e) {
@@ -689,7 +700,9 @@ public class SchemaEditor
 			for (IWorkbenchPage workbenchPage : workbenchWindow.getPages()) {
 				for (IEditorReference editorReference : workbenchPage.getEditorReferences()) {					
 					try {
-						if (editorReference.getEditorInput().equals(editorInput)) {
+						if (editorReference.getEditor(false) instanceof SchemaEditor &&
+							editorReference.getEditorInput().equals(editorInput)) {
+							
 							SchemaEditor schemaEditor = (SchemaEditor) editorReference.getEditor(true);
 							if (schemaEditor != null && schemaEditor != this) {
 								return schemaEditor;
@@ -881,6 +894,15 @@ public class SchemaEditor
 		return selectionSynchronizer;
 	}
 
+	@Override
+	public String getTitleToolTip() {
+		if (isReadOnlyMode()) {
+			return super.getTitleToolTip() + " (read-only)";
+		} else {
+			return super.getTitleToolTip();
+		}
+	}
+
 	private void hookActivePaletteViewerToEditDomain() {
 		// unless the workbench is closing, we need to make sure that editors for the same diagram
 		// (editor input) have a functioning palette; we need to hook an active palette viewer to 
@@ -901,6 +923,10 @@ public class SchemaEditor
 	
 	@Override
 	public boolean isDirty() {
+		if (isReadOnlyMode()) {
+			// we should never be dirty when in read-only mode but force it anyway
+			return false;
+		}
 		// if the workbench is NOT closing, refer to the super's method
 		if (!PlatformUI.getWorkbench().isClosing()) {			
 			return super.isDirty();
@@ -914,11 +940,20 @@ public class SchemaEditor
 		}
 	}
 	
+	public boolean isReadOnlyMode() {
+		return readOnlyFlag;
+	}
+	
 	@Override
 	public boolean isSaveAsAllowed() {
 		return true;
 	}
-	
+
+	public void markSaveLocationAndResetDirtyFlag() {
+		getCommandStack().markSaveLocation();
+		firePropertyChange(SchemaEditor.PROP_DIRTY);
+	}
+
 	private boolean performSaveAs() {
 		SaveAsDialog dialog = 
 			new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
@@ -979,8 +1014,32 @@ public class SchemaEditor
 			e.printStackTrace();
 		}
 		return true;
-	}	
+	}
 	
+	private void setFileExtension(IEditorInput input) {
+		if (input instanceof IFileEditorInput) {
+			IFile file = ((IFileEditorInput) input).getFile();
+			fileExtension = file.getFileExtension();
+		} else if (input instanceof IStorageEditorInput) {
+			String name = ((IStorageEditorInput) input).getName();
+			if (name.indexOf(".schemadsl") > -1) {
+				fileExtension =  FILE_EXTENSION_SCHEMADSL;
+			} else {
+				fileExtension =  FILE_EXTENSION_SCHEMA;
+			}
+		} else {
+			throw new IllegalArgumentException("Unsupported editor input: " + input);
+		}		
+	}
+
+	private void setFileExtension(File file) {
+		int i = file.getName().lastIndexOf('.');
+		if (i < 0) {
+			fileExtension = FILE_EXTENSION_SCHEMA;
+		} else {
+			fileExtension = file.getName().substring(i + 1);
+		}
+	}
 	protected void setInput(IEditorInput input) {
 		
 		Plugin.logDebug(Plugin.DebugItem.CALLING_METHOD);
@@ -1006,12 +1065,7 @@ public class SchemaEditor
 			schema = firstEditorForSameInput.getSchema();
 		} else {
 			setEditDomain(new DefaultEditDomain(null));
-			ResourceSet resourceSet = new ResourceSetImpl();
-			resourceSet.getResourceFactoryRegistry()
-			   		   .getExtensionToFactoryMap()
-			   		   .put("schema", new XMIResourceFactoryImpl());
-			Resource resource = resourceSet.getResource(uri, true);
-			schema = (Schema)resource.getContents().get(0);	
+			schema = Tools.readFromFile(new File(uri.toFileString()));	
 		}
 			
 		if (!editorSaving) {
@@ -1019,9 +1073,14 @@ public class SchemaEditor
 				outlinePage.setSchema(schema);
 			}
 		}
-		
 	}
 	
+	private void setReadOnlyFlag(IEditorInput input) {
+		boolean preferredReadOnlyFlag = 
+			Plugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.READ_ONLY_MODE);
+		readOnlyFlag = preferredReadOnlyFlag || !(getEditorInput() instanceof IFileEditorInput); 	
+	}
+
 	@Override
 	protected void setSite(IWorkbenchPartSite site) {
 		super.setSite(site);
@@ -1035,20 +1094,50 @@ public class SchemaEditor
 		// resourceListener is not necessary. But it is being done here for the sake of proper 
 		// implementation. Plus, the resourceListener needs to be added to the workspace the first 
 		// time around.
-		if (getEditorInput() != null) {
+		if (getEditorInput() != null && getEditorInput() instanceof IFileEditorInput) {
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 			file.getWorkspace().removeResourceChangeListener(resourceListener);
 		}
 
 		super.setInput(input);
 
-		if (getEditorInput() != null) {
-			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
+		IEditorInput editorInput = getEditorInput();
+		setReadOnlyFlag(editorInput);
+		setFileExtension(editorInput);
+			
+		if (editorInput instanceof IFileEditorInput) {
+			IFile file = ((IFileEditorInput) editorInput).getFile();
 			workspaceResource = 
 				ResourcesPlugin.getWorkspace().getRoot().findMember(file.getFullPath());
 			uri = URI.createFileURI(file.getLocation().toFile().getAbsolutePath());			
 			file.getWorkspace().addResourceChangeListener(resourceListener);
 			setPartName(file.getName());
+		} else if (editorInput instanceof IStorageEditorInput) {
+			// this will be the case when browsing a diagram from within the SVN Repositories view
+			// of Subversive or Subclipse; get the contents and write it to a temporary file...
+			IStorageEditorInput storageEditorInput = (IStorageEditorInput) editorInput;
+			File tmpFile = Plugin.getDefault().createTmpFile(fileExtension); 
+			try {
+				byte[] buffer = Tools.writeToBuffer(storageEditorInput.getStorage().getContents());
+				Tools.writeToFile(buffer, tmpFile);
+			} catch (CoreException | IOException e) {
+				throw new RuntimeException("Error while retrieving diagram", e);
+			}
+			uri = URI.createFileURI(tmpFile.getAbsolutePath());
+			setPartName(storageEditorInput.getName());
+		} else {
+			throw new IllegalArgumentException("Unsupported editor input: " + input);
+		}
+	}
+
+	private void writeSchemaToFile() {
+		try {
+			Tools.writeToFile(schema, new File(uri.toFileString()));
+		} catch (IOException | IllegalArgumentException e) {
+			Status status = 
+				new Status(IStatus.ERROR, ID,
+						   "An exception occurred while saving the file", e);
+			ErrorDialog.openError(getSite().getShell(), "Exception", e.getMessage(), status);
 		}
 	}
 

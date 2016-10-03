@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -68,7 +68,7 @@ public class SetEditPart
 	extends AbstractConnectionEditPart implements IModelChangeListener {
 
 	private MemberRole 			 memberRole;	
-	private IModelChangeProvider modelChangeProvider;
+	private IModelChangeProvider modelChangeProvider; // null means we're in read-only mode
 	private boolean tooltipSet;
 	
 	/**
@@ -102,7 +102,9 @@ public class SetEditPart
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		modelChangeProvider.addModelChangeListener(this);
+		if (!isReadOnlyMode()) {
+			modelChangeProvider.addModelChangeListener(this);
+		}
 	}
 
 	@Override
@@ -156,12 +158,16 @@ public class SetEditPart
 	@Override
 	protected void createEditPolicies() {
 		
-		PolylineConnection connection = (PolylineConnection) getFigure();
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, 
-						  new SetXYLayoutEditPolicy(getModel(), connection));	
-		
 		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE,
 						  new ConnectionEndpointEditPolicy());		
+		
+		if (isReadOnlyMode()) {
+			return;
+		}
+		
+		PolylineConnection connection = (PolylineConnection) getFigure();
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, 
+						  new SetXYLayoutEditPolicy(getModel(), connection));
 		
 		// make sure we can remove a member record type from a set (or remove the set altogether if
 		// it's not a multiple-memberset) by pressing the delete key on the line represented by this
@@ -254,9 +260,14 @@ public class SetEditPart
 		
 	}
 	
+	protected boolean isReadOnlyMode() {
+		return modelChangeProvider == null;
+	}
+	
 	private void refreshBendpointEditPolicy() {
-		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, 
-						  new SetBendpointEditPolicy(this));
+		if (!isReadOnlyMode()) {
+			installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new SetBendpointEditPolicy(this));
+		}
 	}
 	
 	private void refreshTooltip() {
@@ -301,7 +312,9 @@ public class SetEditPart
 	public void removeNotify() {
 		// note: this method is NOT invoked when the editor is closed (i.e. when the viewer is 		
 		//disposed)
-		modelChangeProvider.removeModelChangeListener(this);			 
+		if (!isReadOnlyMode()) {
+			modelChangeProvider.removeModelChangeListener(this);
+		}
 		super.removeNotify();
 	}	
 	

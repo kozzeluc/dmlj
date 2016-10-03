@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2016  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,6 +19,7 @@ package org.lh.dmlj.schema.editor.dictionary.tools.importtool.context;
 public abstract class ContextAttributeKeys {
 	
 	public static final String ADD_MISSING_CATALOG_COMPONENTS = "addMissingCatalogComponents";
-	public static final String DICTIONARY = "dictionary";	
+	public static final String DICTIONARY = "dictionary";
+	public static final String RCDSYN_079 = "rcdsyn_079";
 
 }
