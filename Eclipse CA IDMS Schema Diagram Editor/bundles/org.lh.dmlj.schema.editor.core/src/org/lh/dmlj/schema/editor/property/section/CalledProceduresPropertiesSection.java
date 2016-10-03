@@ -53,6 +53,7 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 	private SchemaRecord targetRecord;  // or a record are set, not both
 	
 	private CommandStack commandStack;
+	private Link link;
 		       
 	public CalledProceduresPropertiesSection() {
 		super();
@@ -96,7 +97,7 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 		column2.setWidth(200);
 		column2.setText("Called");		
 		
-		Link link = new Link(composite, SWT.NONE);
+		link = new Link(composite, SWT.NONE);
 		link.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));		
 		GridData gd_link = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_link.horizontalIndent = 5;
@@ -162,7 +163,8 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 		     
 			parent.layout();                                          
 		}
-	
+		
+		link.setVisible(!isReadOnlyMode());
 	}
 
 	@Override

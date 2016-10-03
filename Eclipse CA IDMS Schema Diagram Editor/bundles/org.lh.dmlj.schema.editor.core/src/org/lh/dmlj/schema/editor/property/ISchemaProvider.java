@@ -14,30 +14,12 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.property.section;
+package org.lh.dmlj.schema.editor.property;
 
-import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.editor.Plugin;
-import org.lh.dmlj.schema.editor.property.ISchemaProvider;
 
-public abstract class AbstractSchemaPropertiesSection 
-	extends AbstractAttributesBasedPropertiesSection<Schema> 
-	implements ISchemaProvider {	
+public interface ISchemaProvider {
 
-	public AbstractSchemaPropertiesSection() {
-		super(Plugin.getDefault());
-	}
-	
-	@Override
-	public Schema getSchema() {
-		return target;
-	}
-
-	@Override
-	protected final Schema getTarget(Object modelObject) {				
-		Assert.isTrue(modelObject instanceof Schema, "not a Schema");				
-		return (Schema) modelObject;		
-	}
+	Schema getSchema();
 	
 }

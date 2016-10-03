@@ -29,10 +29,13 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -52,7 +55,8 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 	private Plugin 					plugin;
 	private PropertyEditor	    	propertyEditor;
 	private Table			    	table;
-	protected T	   			    	target;	
+	protected T	   			    	target;
+	private Link bottomLink;	
 	
 	public AbstractAttributesBasedPropertiesSection(Plugin plugin) {
 		super();
@@ -92,6 +96,27 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 		column2.setWidth(300);
 		column2.setText("Value");
 		
+		String linkText = getBottomHyperlinkText();
+		if (linkText != null && !linkText.trim().isEmpty()) {
+			bottomLink = new Link(composite, SWT.NONE);
+			bottomLink.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));		
+			GridData gd_link = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+			gd_link.horizontalIndent = 5;
+			bottomLink.setLayoutData(gd_link);
+			bottomLink.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					Command command = getHyperlinkHandler(null).hyperlinkActivated(null);
+					if (command != null) {
+						CommandStack commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
+						commandStack.execute(command);
+						refresh();
+					}
+				}
+			});
+			bottomLink.setText("<a>" + linkText + "</a>");
+		}
+		
 		// add the description manager
 		descriptionManager = new DescriptionManager(page, this, table);		
 		
@@ -125,6 +150,19 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 	}
 
 	public abstract List<EAttribute> getAttributes();	
+
+	/**
+	 * Subclasses should override this method if a hyperlink is to be shown below the table containing
+	 * the attributes.  This hyperlink is NOT related to any of the attributes in the property section
+	 * and can be used to produce a command to change the model (beware that the editor can be open in
+	 * read-only mode; the bottom hyperlink will NEVER be shown when in read-only mode).<br><br>
+	 * Note that the <i>target</i> model object will NOT be available when this method is called, so
+	 * it is advised to return a fixed string.
+	 * @return the bottom hyperlink text or null if no bottom hyperlink is to be shown
+	 */
+	protected String getBottomHyperlinkText() {
+		return null;
+	}
 
 	public String getDescription(EAttribute attribute) {
 		String key = "description." + attribute.getContainerClass().getName() + 
@@ -191,9 +229,9 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 	
 	/**
 	 * Subclasses should override this method if a hyperlink has to be created
-	 * when the mouse pointer above the attribute value.  
+	 * when the mouse pointer hovers above the attribute value.  
 	 * This method is called multiple times.
-	 * @param attribute
+	 * @param attribute the attribute or null for the bottom hyperlink handler
 	 * @return 
 	 */
 	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
@@ -302,6 +340,9 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 			parent.layout();                                          
 		}
 	
+		if (bottomLink != null) {
+			bottomLink.setVisible(!isReadOnlyMode());
+		}
 	}	
 
 	@Override
