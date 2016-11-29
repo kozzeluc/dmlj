@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor DSL
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.dsl
-Bundle-Version: 3.0.0.qualifier
+Bundle-Version: 3.0.1.qualifier
 Bundle-Activator: org.lh.dmlj.schema.editor.dsl.Plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi,
