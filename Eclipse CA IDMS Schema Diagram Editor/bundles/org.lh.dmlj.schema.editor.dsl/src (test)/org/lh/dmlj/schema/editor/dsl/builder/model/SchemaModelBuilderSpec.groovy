@@ -110,6 +110,22 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		schema.comments[0] == 'INSTALLATION: COMMONWEATHER CORPORATION'
 	}
 	
+	def "build a schema with a memoDate"() {
+		
+		given: "a Schema builder"
+		def SchemaModelBuilder builder = new SchemaModelBuilder()
+		
+		when: "building the schema with a memoDate"
+		def definition = {
+			memoDate '01/02/03'
+		}
+		Schema schema = builder.build(definition)
+		
+		then: "the result will be a schema with the given memoDate"
+		schema
+		schema.memoDate == '01/02/03'
+	}
+	
 	def "build a schema with (only) a diagram label"() {
 		
 		given: "a Schema builder"

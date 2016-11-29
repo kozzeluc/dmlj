@@ -177,6 +177,11 @@ class SchemaModelBuilder extends AbstractModelBuilder<Schema> {
 		schema.diagramData.label
 	}
 	
+	void memoDate(String memoDate) {
+		assert !bodies
+		schema.memoDate = memoDate		
+	}
+	
 	void name(String name) {
 		assert !bodies
 		schema.name = name
