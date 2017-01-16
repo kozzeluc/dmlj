@@ -129,6 +129,12 @@ public class SetDescriptionEditPart
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
 				refreshVisuals();
 			}
+		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS &&				   
+				   context.appliesTo(getModel().getMemberRole().getRecord())) {
+			
+			// the structure of the member record has changed and this could have an impact on the
+			// set order
+			refreshVisuals();
 		}
 	}
 	
