@@ -19,7 +19,7 @@
    </license>
 
    <url>
-      <update label="CA IDMS/DB Schema Diagram Editor Update Site" url="http://users.skynet.be/luc_h/dmlj"/>
+      <update label="CA IDMS/DB Schema Diagram Editor Update Site" url="https://dl.bintray.com/kozzeluc/dmlj/latest/"/>
    </url>
 
    <plugin
