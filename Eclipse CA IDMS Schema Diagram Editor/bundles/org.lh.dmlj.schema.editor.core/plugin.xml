@@ -39,6 +39,10 @@
             id="org.lh.dmlj.schema.editor.ui.command.update"
             name="Update">
       </command>
+      <command
+            id="org.lh.dmlj.schema.editor.ui.command.copydiagramtoclipboard"
+            name="Copy diagram to clipboard">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -101,6 +105,10 @@
             </or>
          </activeWhen>
       </handler>
+      <handler
+            class="org.lh.dmlj.schema.editor.ui.handler.CopyDiagramToClipboardHandler"
+            commandId="org.lh.dmlj.schema.editor.ui.command.copydiagramtoclipboard">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -111,6 +119,18 @@
                id="org.lh.dmlj.schema.editor.menu.diagram"
                label="Diagram"
                mnemonic="D">
+            <command
+                  commandId="org.lh.dmlj.schema.editor.ui.command.copydiagramtoclipboard"
+                  label="Copy to clipboard"
+                  style="push">
+            <visibleWhen
+                     checkEnabled="false">
+                  <test
+                        forcePluginActivation="true"
+                        property="org.lh.dmlj.schema.editor.ui.properties.diagramMenuVisible">
+                  </test>
+               </visibleWhen>
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
