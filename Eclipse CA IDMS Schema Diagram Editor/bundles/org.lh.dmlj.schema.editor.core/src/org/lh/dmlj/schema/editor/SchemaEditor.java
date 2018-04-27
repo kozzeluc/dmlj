@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -129,6 +129,8 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
+import org.lh.dmlj.schema.editor.log.DebugItem;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -140,6 +142,8 @@ import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
 public class SchemaEditor 
 	extends GraphicalEditorWithFlyoutPalette 
 	implements CommandStackEventListener, ITabbedPropertySheetPageContributor {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	private static final String FILE_EXTENSION_SCHEMA = "schema";
 	private static final String FILE_EXTENSION_SCHEMADSL = "schemadsl";	
@@ -1042,7 +1046,7 @@ public class SchemaEditor
 	}
 	protected void setInput(IEditorInput input) {
 		
-		Plugin.logDebug(Plugin.DebugItem.CALLING_METHOD);
+		logger.debug(DebugItem.CALLING_METHOD);
 		
 		superSetInput(input);
 		

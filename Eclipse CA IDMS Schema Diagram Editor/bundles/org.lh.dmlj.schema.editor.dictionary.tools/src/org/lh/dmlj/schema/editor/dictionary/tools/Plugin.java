@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,12 +28,17 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.encryption.EncDec;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.IDefaultDictionaryPropertyProvider;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceConstants;
+import org.lh.dmlj.schema.editor.log.LogProvidingPlugin;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
-public class Plugin extends AbstractUIPlugin implements IDefaultDictionaryPropertyProvider {
+public class Plugin extends AbstractUIPlugin
+	implements IDefaultDictionaryPropertyProvider, LogProvidingPlugin {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.lh.dmlj.schema.editor.dictionary.tools";
 
@@ -129,7 +134,7 @@ public class Plugin extends AbstractUIPlugin implements IDefaultDictionaryProper
 			driverBundleName = bundle.getHeaders().get("Bundle-Name");
 			driverBundleVendor = bundle.getHeaders().get("Bundle-Vendor");
 		} catch (Throwable t) {
-			org.lh.dmlj.schema.editor.Plugin.logError("IDMS JDBC Driver could not be loaded", t);
+			logger.error("IDMS JDBC Driver could not be loaded", t);
 		}
 	}
 
@@ -151,6 +156,11 @@ public class Plugin extends AbstractUIPlugin implements IDefaultDictionaryProper
 	
 	public boolean isDriverInstalledInThisSession() {
 		return driverInstalledInThisSession;
+	}
+
+	@Override
+	public boolean isDebugEnabled() {
+		return false;
 	}
 
 	private void prepareDictionaryFolder() {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,9 +36,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class CopyDiagramToClipboardHandler implements IHandler {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
 	}
@@ -74,7 +77,7 @@ public class CopyDiagramToClipboardHandler implements IHandler {
 			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Information", message);
 		} catch (Throwable t) {
 			String message = "An error occurred while copying your diagram to the clipboard.";
-			Plugin.logError(message, t);
+			logger.error(message, t);
 			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error",
 									message + "  See log.");
 		} finally {

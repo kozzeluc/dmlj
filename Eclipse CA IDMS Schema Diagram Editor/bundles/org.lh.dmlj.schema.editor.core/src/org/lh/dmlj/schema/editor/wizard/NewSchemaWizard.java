@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -43,6 +43,7 @@ import org.eclipse.ui.part.ISetSelectionTarget;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.common.Tools;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.wizard.helper.IDiagramDataAttributeProvider;
 import org.lh.dmlj.schema.editor.wizard.helper.NewSchemaWizardHelper;
@@ -50,6 +51,8 @@ import org.lh.dmlj.schema.editor.wizard.helper.NewSchemaWizardHelper;
 
 public class NewSchemaWizard extends Wizard implements INewWizard {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private NewSchemaPage 		 page;
 	private IStructuredSelection selection;
 	
@@ -159,7 +162,7 @@ public class NewSchemaWizard extends Wizard implements INewWizard {
 		try {
 			modelFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
-			Plugin.logError("Error while refreshing workspace", e);
+			logger.error("Error while refreshing workspace", e);
 		}
 		
 		// Select the new file resource in the current view.
