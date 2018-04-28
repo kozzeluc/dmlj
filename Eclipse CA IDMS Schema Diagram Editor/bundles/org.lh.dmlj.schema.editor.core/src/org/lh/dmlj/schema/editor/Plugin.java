@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor;
 
+import static org.lh.dmlj.schema.editor.common.Tools.getRootMessage;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -173,7 +175,7 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 		try {
 			progressService.runInUI(progressService, runnableWithProgress, null);
 		} catch (InvocationTargetException | InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			logger.error(getRootMessage(e), e);
 			throw new RuntimeException(e);
 		}
 	}

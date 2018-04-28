@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.preference.ui;
 
+import static org.lh.dmlj.schema.editor.common.Tools.getRootMessage;
+
 import java.io.File;
 import java.net.URI;
 import java.util.List;
@@ -363,13 +365,9 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(task);
 			return true;
 		} catch (Throwable e) {
-			logger.error(e.getMessage(), e);
-			Throwable cause = e.getCause();
-			if (cause != null) {
-				MessageDialog.openError(getShell(), "Install IDMS JDBC Driver", cause.getMessage());
-			} else {
-				MessageDialog.openError(getShell(), "File Creation", e.getMessage());
-			}
+			// the plug-in's runWithOperationInProgressIndicator method has already logged the error
+			String message = getRootMessage(e);
+			MessageDialog.openError(getShell(), "Install IDMS JDBC Driver", message);
 			return false;
 		}	
 	}
