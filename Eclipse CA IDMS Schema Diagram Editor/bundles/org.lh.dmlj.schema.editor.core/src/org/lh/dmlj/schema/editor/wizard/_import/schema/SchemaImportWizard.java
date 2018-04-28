@@ -765,7 +765,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 			} else {
 				message.insert(0, "Error while importing schema: ");
 			}
-			logger.error(message.toString(), e);
+			// the plug-in's runWithOperationInProgressIndicator method has already logged the error
 			MessageDialog.openError(workbenchWindow.getShell(), "File Creation", message.toString());
 			return false;
 		}		
