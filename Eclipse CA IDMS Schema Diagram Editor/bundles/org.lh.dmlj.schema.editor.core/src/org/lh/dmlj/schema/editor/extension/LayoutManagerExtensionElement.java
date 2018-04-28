@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,9 +26,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class LayoutManagerExtensionElement extends AbstractExtensionElement {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 
 	private ImageDescriptor          	   imageDescriptor;
 	private AbstractRecordLayoutManager    layoutManager;
@@ -77,8 +81,9 @@ public class LayoutManagerExtensionElement extends AbstractExtensionElement {
 			layoutManager = (AbstractRecordLayoutManager) executableExtension;
 			return layoutManager;
 		} catch (CoreException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+			String message = e.getMessage();
+			logger.error(message, e);
+			throw new RuntimeException(message);
 		}
 	}
 

@@ -595,7 +595,7 @@ public class SchemaEditor
 		try {			
 			workspaceResource.refreshLocal(IResource.DEPTH_ZERO, null);
 		} catch (Throwable e) {
-			e.printStackTrace(); // just log whatever problem we encounter
+			logger.error(e.getMessage(), e); // just log whatever problem we encounter
 		}		
 		
 		// Update the editor state to indicate that the contents have been saved 
@@ -984,7 +984,7 @@ public class SchemaEditor
 					try {
 						resource.save(null);
 					} catch (IOException e) {
-						e.printStackTrace();						
+						logger.error(e.getMessage(), e);
 					}
 				}
 			};
@@ -992,7 +992,7 @@ public class SchemaEditor
 				new ProgressMonitorDialog(getSite().getWorkbenchWindow()
 						.getShell()).run(false, true, op);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -1003,7 +1003,7 @@ public class SchemaEditor
 					container.refreshLocal(IResource.DEPTH_INFINITE, null);
 				}
 			} catch (Throwable e) {
-				e.printStackTrace(); // just log whatever problem we encounter
+				logger.error(e.getMessage(), e); // just log whatever problem we encounter
 			}
 			superSetInput(new FileEditorInput(file));
 			try {
@@ -1011,11 +1011,11 @@ public class SchemaEditor
 					workspaceResource.refreshLocal(IResource.DEPTH_ZERO, null);
 				}
 			} catch (Throwable e) {
-				e.printStackTrace(); // just log whatever problem we encounter
+				logger.error(e.getMessage(), e); // just log whatever problem we encounter
 			}
 			getCommandStack().markSaveLocation();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return true;
 	}

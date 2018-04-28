@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -46,11 +46,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.common.ImageCache;
 import org.lh.dmlj.schema.editor.extension.LayoutManagerExtensionElement;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class LayoutManagerSelectionPage extends WizardPage {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private Button 								btnBrowse;
 	private Canvas 						  		canvas;
 	private Combo 						  		combo;
@@ -236,7 +240,7 @@ public class LayoutManagerSelectionPage extends WizardPage {
 				in.close();
 			}
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error(t.getMessage(), t);
 		}
 		return properties;
 	}

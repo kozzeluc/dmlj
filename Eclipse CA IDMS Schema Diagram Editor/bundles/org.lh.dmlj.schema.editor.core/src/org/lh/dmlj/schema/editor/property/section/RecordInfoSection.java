@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,13 +31,16 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.property.RecordInfoValueObject;
 import org.lh.dmlj.schema.editor.template.RecordInfoTemplate;
 
 public class RecordInfoSection extends AbstractPropertiesSection {
 	
 	private static RecordInfoTemplate TEMPLATE = new RecordInfoTemplate();
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	private Browser 		browser;
 	private Control 		control;
@@ -94,7 +97,7 @@ public class RecordInfoSection extends AbstractPropertiesSection {
 				DictguidesRegistry.INSTANCE
 							  	  .getRecordInfoValueObject(record.getName());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		if (valueObject == null) {
 			browser.setText("");

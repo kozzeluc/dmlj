@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -37,6 +37,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssistant;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
@@ -50,12 +51,15 @@ import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryPageController;
 import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.wizard._import.ImportWizardPage;
 import org.lh.dmlj.schema.editor.wizard._import.schema.Context;
 import org.lh.dmlj.schema.editor.wizard._import.schema.Controller;
 import org.lh.dmlj.schema.editor.wizard._import.schema.DataEntryContext;
 
 public class ImportRecordElementsWizard extends Wizard implements IImportWizard {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 
 	private RecordElementsImportToolExtensionElement activeRecordElementsImportToolExtensionElement;	
 	private IDataEntryContext context = new DataEntryContext();
@@ -297,7 +301,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 		try {
 			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			Throwable cause = e.getCause();
 			if (cause != null) {
 				MessageDialog.openError(Display.getCurrent().getActiveShell(), 

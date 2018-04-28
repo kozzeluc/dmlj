@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,10 +36,12 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.property.IGraphicalEditorProvider;
 
 /**
@@ -66,6 +68,8 @@ import org.lh.dmlj.schema.editor.property.IGraphicalEditorProvider;
 public abstract class AbstractPropertiesSection 
 	extends AbstractPropertySection implements IModelChangeListener {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private boolean					addedRedo; 	
 	private boolean 				addedUndo; 
 	protected GraphicalEditor  		editor;		  			
@@ -190,7 +194,7 @@ public abstract class AbstractPropertiesSection
 			selection = (ISelection) field.get(page);
 		} catch (Throwable t) {
 			// in the case of trouble: just log the exception and return an empty selection
-			t.printStackTrace(); 
+			logger.error(t.getMessage(), t);
 			selection = new StructuredSelection();
 		}
 		return selection;

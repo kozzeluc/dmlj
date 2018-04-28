@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,10 +25,14 @@ import java.util.Properties;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class RecordElementsImportToolExtensionElement extends AbstractExtensionElement {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private Properties parameters;
 	private List<DataEntryPageExtensionElement> dataEntryPageExtensionElements;	
 	private IRecordElementsImportTool recordElementsImportTool;	
@@ -76,8 +80,9 @@ public class RecordElementsImportToolExtensionElement extends AbstractExtensionE
 			recordElementsImportTool = (IRecordElementsImportTool) executableExtension;
 			return recordElementsImportTool;
 		} catch (CoreException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+			String message = e.getMessage();
+			logger.error(message, e);
+			throw new RuntimeException(message);
 		}
 	}
 

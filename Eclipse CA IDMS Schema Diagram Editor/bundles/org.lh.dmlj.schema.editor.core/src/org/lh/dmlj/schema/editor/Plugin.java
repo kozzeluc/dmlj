@@ -40,6 +40,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.IProgressService;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
 import org.lh.dmlj.schema.editor.log.LogProvidingPlugin;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.service.ServicesPlugin;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
@@ -49,7 +50,7 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle
  */
 public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener, LogProvidingPlugin {
-
+	
 	// The plug-in ID
 	public static final String 		PLUGIN_ID = 
 		"org.lh.dmlj.schema.editor.core"; //$NON-NLS-1$
@@ -57,6 +58,8 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 	// The shared instance
 	private static Plugin 			plugin;
 			
+	private final Logger logger = Logger.getLogger(this);
+	
 	private Font 					figureFont;
 	private Font 					figureFontBold;
 	private Font 					figureFontItalic;
@@ -170,7 +173,7 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 		try {
 			progressService.runInUI(progressService, runnableWithProgress, null);
 		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
 	}

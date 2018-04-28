@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,11 +35,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.template.SchemaTemplate;
 
 public class ExportWizard extends Wizard implements IExportWizard {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private ExportOptionsPage exportOptionsPage;
 	private OutputFileSelectionPage outputFileSelectionPage;
 	private SchemaSelectionPage schemaSelectionPage;
@@ -115,7 +118,7 @@ public class ExportWizard extends Wizard implements IExportWizard {
 			in.close();
 			
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error(t.getMessage(), t);
 			String title = "Error";
 			String p = t.getMessage() != null ? " (" + t.getMessage() + ")": "";
 			String message = "An error occurred: " + 
@@ -141,13 +144,12 @@ public class ExportWizard extends Wizard implements IExportWizard {
         	IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), 
             			   uri, "org.eclipse.ui.DefaultTextEditor", true);
 	    } catch (Throwable t) {
-	            // something went wrong while opening the file in a text editor, provide the user 
-	    		// with some feedback...
-	            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error", 
-	            						"Cannot open syntax file '" + file.getAbsolutePath() + 
-	            						"'.");
-	            // and print a stack trace...
-	            t.printStackTrace();
+            // something went wrong while opening the file in a text editor, provide the user 
+    		// with some feedback...
+            MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error", 
+            						"Cannot open syntax file '" + file.getAbsolutePath() + "'.");
+            // and log the stack trace...
+            logger.error(t.getMessage(), t);
 	    }
         
         return true;
