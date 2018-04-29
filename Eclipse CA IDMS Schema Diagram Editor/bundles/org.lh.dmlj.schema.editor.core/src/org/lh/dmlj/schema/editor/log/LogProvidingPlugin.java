@@ -25,6 +25,8 @@ public interface LogProvidingPlugin {
 	
 	ILog getLog();
 	
-	boolean isDebugEnabled();
+	default boolean isDebugEnabled() {
+		return false;
+	}
 	
 }

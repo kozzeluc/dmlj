@@ -158,11 +158,6 @@ public class Plugin extends AbstractUIPlugin
 		return driverInstalledInThisSession;
 	}
 
-	@Override
-	public boolean isDebugEnabled() {
-		return false;
-	}
-
 	private void prepareDictionaryFolder() {
 		dictionaryFolder = new File(Plugin.getDefault().getStateLocation().toFile(), "dictionaries");
 		if (!dictionaryFolder.exists()) {

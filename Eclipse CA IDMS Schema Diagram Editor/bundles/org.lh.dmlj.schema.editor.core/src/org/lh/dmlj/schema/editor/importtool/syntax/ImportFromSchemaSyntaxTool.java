@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -62,9 +62,9 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		// if the user has not checked one of the 'add suffix' options, we will
 		// not correct anything
 		short digitCount = -1;
-		if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_3_DIGITS)) {
+		if (dataEntryContext.<Boolean>getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_3_DIGITS)) {
 			digitCount = 3;
-		} else if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS)) {
+		} else if (dataEntryContext.<Boolean>getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS)) {
 			digitCount = 4;
 		}
 		if (digitCount == -1) {
@@ -539,11 +539,11 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		// available options, while also honoring the digit count assigned to 
 		// the selected option
 		short digitCount = -1;
-		if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_3_DIGITS)) {
+		if (dataEntryContext.<Boolean>getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_3_DIGITS)) {
 			digitCount = 3;
-		} else if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS)) {
+		} else if (dataEntryContext.<Boolean>getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS)) {
 			digitCount = 4;
-		} else if (dataEntryContext.getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_PROMPT)) {
+		} else if (dataEntryContext.<Boolean>getAttribute(SyntaxContextAttributeKeys.DIGIT_COUNT_FOR_MISSING_SUFFIXES_PROMPT)) {
 			if (promptForDigitCountResolver != null) {
 				// get the digit count from the resolver (TEST circumstances only)
 				digitCount = 
