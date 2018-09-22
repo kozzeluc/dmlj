@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,6 +20,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.eclipse.emf.ecore.EObject;
+import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 /**
  * An abstract superclass for sections in the tabbed properties that show the 
@@ -30,6 +32,8 @@ import org.eclipse.emf.ecore.EObject;
  */
 public abstract class AbstractSyntaxSection 
 	extends AbstractSectionWithStyledText {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	private Method generateMethod;
 	private Object template;	
@@ -42,7 +46,7 @@ public abstract class AbstractSyntaxSection
 			generateMethod = 
 				template.getClass().getDeclaredMethod("generate", Object.class);
 		} catch (Throwable t) {			
-			t.printStackTrace();
+			logger.error(t.getMessage(), t);
 			throw new Error(t);
 		}
 	}
@@ -76,9 +80,10 @@ public abstract class AbstractSyntaxSection
 			}
 			syntax = (String) generateMethod.invoke(template, Arrays.asList(args));						
 		} catch (Throwable t) {
-			t.printStackTrace();
+			String message = t.getMessage();
+			logger.error(message, t);
 			syntax = "an error occurred while generating the DDL: " + 
-					 t.getClass().getName() + "(" + t.getMessage() + ")";
+					 t.getClass().getName() + "(" + message + ")";
 		}
 		return syntax;
 	}

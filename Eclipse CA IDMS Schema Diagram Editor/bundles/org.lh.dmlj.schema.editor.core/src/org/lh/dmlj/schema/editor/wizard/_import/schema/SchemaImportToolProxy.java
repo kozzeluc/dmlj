@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -61,8 +61,11 @@ import org.lh.dmlj.schema.editor.importtool.IRecordDataCollector;
 import org.lh.dmlj.schema.editor.importtool.ISchemaDataCollector;
 import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 import org.lh.dmlj.schema.editor.importtool.ISetDataCollector;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public final class SchemaImportToolProxy {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	// the context holding all data entered in the wizard's pages
 	private IDataEntryContext dataEntryContext;
@@ -156,7 +159,7 @@ public final class SchemaImportToolProxy {
 		// get the area name
 		String areaName = dataCollector.getName(areaContext);
 		
-		Plugin.logDebug("importing area " + areaName + "...");
+		logger.debug("importing area " + areaName + "...");
 		
 		// create the area
 		SchemaArea area = modelFactory.createArea(areaName);
@@ -164,15 +167,15 @@ public final class SchemaImportToolProxy {
 		// deal with area procedures
 		List<String> procedureNames = 
 			new ArrayList<>(dataCollector.getProceduresCalled(areaContext));
-		Plugin.logDebug("  (" + procedureNames.size() + ") procedures called: " + procedureNames);
+		logger.debug("  (" + procedureNames.size() + ") procedures called: " + procedureNames);
 		List<ProcedureCallTime> procedureCallTimes = 
 			new ArrayList<>(dataCollector.getProcedureCallTimes(areaContext));
-		Plugin.logDebug("  (" + procedureCallTimes.size() + ") procedure call times: " + 
-					    procedureCallTimes);
+		logger.debug("  (" + procedureCallTimes.size() + ") procedure call times: " + 
+					 procedureCallTimes);
 		List<AreaProcedureCallFunction> procedureCallFunctions = 
 			new ArrayList<>(dataCollector.getProcedureCallFunctions(areaContext));
-		Plugin.logDebug("  (" + procedureCallFunctions.size() + ") procedure call functions: " + 
-						procedureCallFunctions);
+		logger.debug("  (" + procedureCallFunctions.size() + ") procedure call functions: " + 
+					 procedureCallFunctions);
 		Assertions.isEqualInSize(procedureCallTimes,  procedureNames, 
 				 				 "#procedure call times != #procedures called");
 		Assertions.isEqualInSize(procedureCallFunctions,  procedureNames, 
@@ -195,7 +198,7 @@ public final class SchemaImportToolProxy {
 		// get the set name
 		String setName = dataCollector.getName(setContext);
 		
-		Plugin.logDebug("importing chained set " + setName + "...");
+		logger.debug("importing chained set " + setName + "...");
 		
 		// create the set
 		Set set = modelFactory.createSet(setName, SetMode.CHAINED,
@@ -281,7 +284,7 @@ public final class SchemaImportToolProxy {
 	
 	private void handleDDLCATLOD() {
 			
-		Plugin.logDebug("handling DDLCATLOD...");
+		logger.debug("handling DDLCATLOD...");
 		
 		// create the DDLCATLOD area
 		SchemaArea area = modelFactory.createArea("DDLCATLOD");
@@ -622,7 +625,7 @@ public final class SchemaImportToolProxy {
 		// get the element name
 		String elementName = dataCollector.getName(elementContext);
 		
-		Plugin.logDebug("importing element " + elementName + "...");
+		logger.debug("importing element " + elementName + "...");
 		
 		// get the base element name
 		String baseName = dataCollector.getBaseName(elementContext);		
@@ -731,7 +734,7 @@ public final class SchemaImportToolProxy {
 		// get the record name
 		String recordName = dataCollector.getName(recordContext);
 		
-		Plugin.logDebug("importing record " + recordName + "...");
+		logger.debug("importing record " + recordName + "...");
 		
 		// get the record id
 		short recordId = dataCollector.getRecordId(recordContext);
@@ -771,15 +774,15 @@ public final class SchemaImportToolProxy {
 		// deal with record procedures
 		List<String> procedureNames = 
 			new ArrayList<>(dataCollector.getProceduresCalled(recordContext));
-		Plugin.logDebug("  (" + procedureNames.size() + ") procedures called: " + procedureNames);
+		logger.debug("  (" + procedureNames.size() + ") procedures called: " + procedureNames);
 		List<ProcedureCallTime> procedureCallTimes = 
 			new ArrayList<>(dataCollector.getProcedureCallTimes(recordContext));
-		Plugin.logDebug("  (" + procedureCallTimes.size() + ") procedure call times: " + 
-					    procedureCallTimes);
+		logger.debug("  (" + procedureCallTimes.size() + ") procedure call times: " + 
+					 procedureCallTimes);
 		List<RecordProcedureCallVerb> procedureCallVerbs = 
 			new ArrayList<>(dataCollector.getProcedureCallVerbs(recordContext));
-		Plugin.logDebug("  (" + procedureCallVerbs.size() + ") procedure call verbs: " + 
-						procedureCallVerbs);
+		logger.debug("  (" + procedureCallVerbs.size() + ") procedure call verbs: " + 
+					 procedureCallVerbs);
 		Assertions.isEqualInSize(procedureCallTimes,  procedureNames, 
 				 				 "#procedure call times != #procedures called (record=" + 
 				 				recordName + ")");
@@ -794,8 +797,7 @@ public final class SchemaImportToolProxy {
 		
 		// add the (validated) elements to the record
 		Collection<?> elementContexts = tool.getRootElementContexts(recordContext);
-		Plugin.logDebug("importing " + elementContexts.size() + " root elements for " + recordName + 
-						"...");
+		logger.debug("importing " + elementContexts.size() + " root elements for " + recordName + "...");
 		for (Object elementContext : elementContexts) {					
 			handleElement(record, null, elementContext);									
 		}
@@ -1018,7 +1020,7 @@ public final class SchemaImportToolProxy {
 		// get the set name
 		String setName = dataCollector.getName(setContext);
 		
-		Plugin.logDebug("importing system-owned indexed set " + setName + "...");
+		logger.debug("importing system-owned indexed set " + setName + "...");
 		
 		// create the set in the schema		
 		Set set = 
@@ -1121,7 +1123,7 @@ public final class SchemaImportToolProxy {
 		// get the set name
 		String setName = dataCollector.getName(setContext);
 		
-		Plugin.logDebug("importing user-owned indexed set " + setName + "...");
+		logger.debug("importing user-owned indexed set " + setName + "...");
 		
 		// create the set		
 		Set set = 
@@ -1216,7 +1218,7 @@ public final class SchemaImportToolProxy {
 		// get the set name
 		String setName = dataCollector.getName(setContext);
 		
-		Plugin.logDebug("importing VSAM index set " + setName + "...");
+		logger.debug("importing VSAM index set " + setName + "...");
 		
 		// create the set, which will always be SORTED
 		Set set = modelFactory.createSet(setName, SetMode.VSAM_INDEX, SetOrder.SORTED);
@@ -1241,7 +1243,7 @@ public final class SchemaImportToolProxy {
 	public Schema invokeImportTool(IProgressMonitor progressMonitor) {
 		
 		progressMonitor.subTask("(Schema)");
-		Plugin.logDebug("importing schema...");
+		logger.debug("importing schema...");
 		
 		// create the model factory
 		modelFactory = new ModelFactory(schema);

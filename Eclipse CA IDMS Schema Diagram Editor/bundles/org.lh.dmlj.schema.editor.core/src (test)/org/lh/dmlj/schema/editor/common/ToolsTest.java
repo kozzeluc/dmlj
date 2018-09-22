@@ -514,5 +514,89 @@ public class ToolsTest {
 	public void testAreaMixesWithRecord_VsamRecord_areaWithVsamRecord() {
 		assertTrue(Tools.areaMixesWithRecord(areaWithVsamRecord, vsamRecord));
 	}
+	
+	@Test
+	public void testGetRootMessageWithTopLevelMessage() {
+		
+		Throwable level3 = mock(Throwable.class);
+		when(level3.getMessage()).thenReturn("Level 3's message");
+		when(level3.getCause()).thenReturn(null);
+		
+		Throwable level2 = mock(Throwable.class);
+		when(level2.getMessage()).thenReturn("Level 2's message");
+		when(level2.getCause()).thenReturn(level3);
+		
+		Throwable level1 = mock(Throwable.class);
+		when(level1.getMessage()).thenReturn("Level 1's message");
+		when(level1.getCause()).thenReturn(level2);
+		
+		assertEquals("Level 3's message", Tools.getRootMessage(level1));
+	}
+	
+	@Test
+	public void testGetRootMessageWithoutTopLevelMessage() {
+		
+		Throwable level3 = mock(Throwable.class);
+		when(level3.getMessage()).thenReturn("Level 3's message");
+		when(level3.getCause()).thenReturn(null);
+		
+		Throwable level2 = mock(Throwable.class);
+		when(level2.getMessage()).thenReturn("Level 2's message");
+		when(level2.getCause()).thenReturn(level3);
+		
+		Throwable level1 = mock(Throwable.class);
+		when(level1.getMessage()).thenReturn(null);
+		when(level1.getCause()).thenReturn(level2);
+		
+		assertEquals("Level 3's message", Tools.getRootMessage(level1));
+		
+		when(level1.getMessage()).thenReturn("");
+		assertEquals("Level 3's message", Tools.getRootMessage(level1));
+		
+		when(level1.getMessage()).thenReturn(" ");
+		assertEquals("Level 3's message", Tools.getRootMessage(level1));
+	}
+	
+	@Test
+	public void testGetRootMessageWithoutBottomLevelMessage() {
+		
+		Throwable level3 = mock(Throwable.class);
+		when(level3.getMessage()).thenReturn(null);
+		when(level3.getCause()).thenReturn(null);
+		
+		Throwable level2 = mock(Throwable.class);
+		when(level2.getMessage()).thenReturn("Level 2's message");
+		when(level2.getCause()).thenReturn(level3);
+		
+		Throwable level1 = mock(Throwable.class);
+		when(level1.getMessage()).thenReturn("Level 1's message");
+		when(level1.getCause()).thenReturn(level2);
+		
+		assertEquals("Level 2's message", Tools.getRootMessage(level1));
+		
+		when(level3.getMessage()).thenReturn("");
+		assertEquals("Level 2's message", Tools.getRootMessage(level1));
+		
+		when(level3.getMessage()).thenReturn(" ");
+		assertEquals("Level 2's message", Tools.getRootMessage(level1));
+	}
+	
+	@Test
+	public void testGetRootMessageWithoutAnylMessage() {
+		
+		Throwable level3 = mock(Throwable.class);
+		when(level3.getMessage()).thenReturn(null);
+		when(level3.getCause()).thenReturn(null);
+		
+		Throwable level2 = mock(Throwable.class);
+		when(level2.getMessage()).thenReturn(null);
+		when(level2.getCause()).thenReturn(level3);
+		
+		Throwable level1 = mock(Throwable.class);
+		when(level1.getMessage()).thenReturn(null);
+		when(level1.getCause()).thenReturn(level2);
+		
+		assertEquals("An error occurred", Tools.getRootMessage(level1));
+	}
 
 }

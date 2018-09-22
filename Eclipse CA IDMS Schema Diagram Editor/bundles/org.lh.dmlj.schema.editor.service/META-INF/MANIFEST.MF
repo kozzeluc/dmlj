@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor Service Hook
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.service;singleton:=true
 Bundle-Version: 1.5.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.lh.dmlj.schema.editor.service.api,
  org.osgi.framework
 Service-Component: OSGI-INF/component.xml
@@ -11,3 +11,4 @@ Export-Package: org.lh.dmlj.schema.editor.service;x-friends:="org.lh.dmlj.schema
 Bundle-Vendor: Luc Hermans
 Bundle-Activator: org.lh.dmlj.schema.editor.service.ServicesPlugin
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.lh.dmlj.schema.editor.service

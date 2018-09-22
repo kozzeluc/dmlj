@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -45,9 +45,12 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class SchemaSelectionPage extends WizardPage {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private Image 				iconFolder = 
 		Plugin.getDefault().getImage("icons/fldr_obj.gif");
 	private Image 				iconProject = 
@@ -134,7 +137,7 @@ public class SchemaSelectionPage extends WizardPage {
 					addTreeItems(projectTreeItem, projectFolder);
 				} catch (NullPointerException e) {
 					// this situation usually indicates an open project without any .schema file
-					Plugin.logDebug("caught NPE (export) : " + project.getName());
+					logger.debug("caught NPE (export) : " + project.getName());
 				}
 				if (projectTreeItem.getItemCount() == 0) {
 					projectTreeItem.dispose();

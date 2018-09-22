@@ -9,8 +9,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.lh.dmlj.schema.editor.groovy,
  org.lh.dmlj.schema.editor.model
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.lh.dmlj.schema.editor.dsl.builder.model,
  org.lh.dmlj.schema.editor.dsl.builder.syntax
 Bundle-Vendor: Luc Hermans
+Automatic-Module-Name: org.lh.dmlj.schema.editor.dsl

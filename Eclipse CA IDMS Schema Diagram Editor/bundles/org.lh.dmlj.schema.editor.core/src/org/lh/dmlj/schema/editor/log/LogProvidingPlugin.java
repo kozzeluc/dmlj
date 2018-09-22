@@ -14,25 +14,19 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.property.section
+package org.lh.dmlj.schema.editor.log;
 
-import org.lh.dmlj.schema.Schema
-import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder
+import org.eclipse.core.runtime.ILog;
+import org.osgi.framework.Bundle;
 
-public class SchemaDSLSection extends AbstractSectionWithStyledText {
+public interface LogProvidingPlugin {
 	
-	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS = [ Schema.class ]
-
-	public SchemaDSLSection() {
-		super(VALID_EDIT_PART_MODEL_OBJECTS)
+	Bundle getBundle();
+	
+	ILog getLog();
+	
+	default boolean isDebugEnabled() {
+		return false;
 	}
-
-	@Override
-	protected String getValue(Object editPartModelObject) {
-		// TODO avoid showing the DSL for all areas, records and sets
-		SchemaSyntaxBuilder builder = 
-			new SchemaSyntaxBuilder(generateAreaDSL : false, generateRecordDSL : false, generateSetDSL : false) 
-		return builder.build((Schema) editPartModelObject)	
-	}
-
+	
 }

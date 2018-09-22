@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,10 +36,14 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.wizard._import.schema.SchemaImportWizard;
 
 public class UpdateSchemaHandler implements IHandler {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {		
 	}
@@ -57,7 +61,7 @@ public class UpdateSchemaHandler implements IHandler {
 					 			  .getSelectionService()
 					 			  .getSelection();
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error(t.getMessage(), t);
 			return null;
 		}
 		if (selection.isEmpty() || 

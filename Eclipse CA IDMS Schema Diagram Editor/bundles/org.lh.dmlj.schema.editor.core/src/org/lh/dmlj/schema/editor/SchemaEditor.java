@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -129,6 +129,8 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcher;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
+import org.lh.dmlj.schema.editor.log.DebugItem;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 import org.lh.dmlj.schema.editor.palette.IChainedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
@@ -140,6 +142,8 @@ import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
 public class SchemaEditor 
 	extends GraphicalEditorWithFlyoutPalette 
 	implements CommandStackEventListener, ITabbedPropertySheetPageContributor {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	private static final String FILE_EXTENSION_SCHEMA = "schema";
 	private static final String FILE_EXTENSION_SCHEMADSL = "schemadsl";	
@@ -591,7 +595,7 @@ public class SchemaEditor
 		try {			
 			workspaceResource.refreshLocal(IResource.DEPTH_ZERO, null);
 		} catch (Throwable e) {
-			e.printStackTrace(); // just log whatever problem we encounter
+			logger.error(e.getMessage(), e); // just log whatever problem we encounter
 		}		
 		
 		// Update the editor state to indicate that the contents have been saved 
@@ -980,7 +984,7 @@ public class SchemaEditor
 					try {
 						resource.save(null);
 					} catch (IOException e) {
-						e.printStackTrace();						
+						logger.error(e.getMessage(), e);
 					}
 				}
 			};
@@ -988,7 +992,7 @@ public class SchemaEditor
 				new ProgressMonitorDialog(getSite().getWorkbenchWindow()
 						.getShell()).run(false, true, op);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -999,7 +1003,7 @@ public class SchemaEditor
 					container.refreshLocal(IResource.DEPTH_INFINITE, null);
 				}
 			} catch (Throwable e) {
-				e.printStackTrace(); // just log whatever problem we encounter
+				logger.error(e.getMessage(), e); // just log whatever problem we encounter
 			}
 			superSetInput(new FileEditorInput(file));
 			try {
@@ -1007,11 +1011,11 @@ public class SchemaEditor
 					workspaceResource.refreshLocal(IResource.DEPTH_ZERO, null);
 				}
 			} catch (Throwable e) {
-				e.printStackTrace(); // just log whatever problem we encounter
+				logger.error(e.getMessage(), e); // just log whatever problem we encounter
 			}
 			getCommandStack().markSaveLocation();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return true;
 	}
@@ -1042,7 +1046,7 @@ public class SchemaEditor
 	}
 	protected void setInput(IEditorInput input) {
 		
-		Plugin.logDebug(Plugin.DebugItem.CALLING_METHOD);
+		logger.debug(DebugItem.CALLING_METHOD);
 		
 		superSetInput(input);
 		

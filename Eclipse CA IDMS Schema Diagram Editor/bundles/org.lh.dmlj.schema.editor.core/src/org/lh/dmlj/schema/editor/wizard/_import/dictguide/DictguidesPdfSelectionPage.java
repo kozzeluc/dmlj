@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -40,11 +40,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.service.ServicesPlugin;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
 public class DictguidesPdfSelectionPage extends WizardPage {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private String   description;
 	private Label 	 lblPdfExtractorServiceDescription;
 	private Label    lblTitle;
@@ -270,7 +275,7 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 			}
 			lblTitle.setText(title);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error(t.getMessage(), t);
 			setErrorMessage("Not a " + manualType);
 			pageComplete = false;
 		}		

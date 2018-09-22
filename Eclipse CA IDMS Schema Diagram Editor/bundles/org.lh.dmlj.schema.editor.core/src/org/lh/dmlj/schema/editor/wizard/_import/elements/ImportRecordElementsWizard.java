@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -297,7 +297,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 		try {
 			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			// the plug-in's runWithOperationInProgressIndicator method has already logged the error
 			Throwable cause = e.getCause();
 			if (cause != null) {
 				MessageDialog.openError(Display.getCurrent().getActiveShell(), 
