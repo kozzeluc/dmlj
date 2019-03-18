@@ -25,21 +25,13 @@ public class SchemaTemplate
   protected final String TEXT_5 = "         " + NL + "         MEMO DATE IS ";
   protected final String TEXT_6 = NL + "         ASSIGN RECORD IDS FROM 1001" + NL + "         PUBLIC ACCESS IS ALLOWED FOR ALL";
   protected final String TEXT_7 = NL + "         COMMENTS" + NL + "             '";
-  protected final String TEXT_8 = "'";
-  protected final String TEXT_9 = NL + "       -     '";
-  protected final String TEXT_10 = "'";
-  protected final String TEXT_11 = NL + "         COMMENTS" + NL + "             '";
-  protected final String TEXT_12 = "'" + NL + "       +     '";
-  protected final String TEXT_13 = "'             ";
-  protected final String TEXT_14 = NL + "       -     '";
-  protected final String TEXT_15 = "'" + NL + "       +     '";
-  protected final String TEXT_16 = "'       ";
-  protected final String TEXT_17 = "         " + NL + "         .";
-  protected final String TEXT_18 = NL;
-  protected final String TEXT_19 = NL;
-  protected final String TEXT_20 = "         ";
-  protected final String TEXT_21 = NL;
-  protected final String TEXT_22 = "         ";
+  protected final String TEXT_8 = NL + "       -     '";
+  protected final String TEXT_9 = "'" + NL + "       +     '";
+  protected final String TEXT_10 = "'             ";
+  protected final String TEXT_11 = "'       ";
+  protected final String TEXT_12 = "         " + NL + "         .";
+  protected final String TEXT_13 = NL;
+  protected final String TEXT_14 = "         ";
 
   public String generate(Object argument)
   {
@@ -105,38 +97,38 @@ for (String line : schema.getComments()) {
 
     stringBuffer.append(TEXT_7);
     stringBuffer.append( line );
-    stringBuffer.append(TEXT_8);
+    stringBuffer.append(TEXT_4);
     
         } else {
 
-    stringBuffer.append(TEXT_9);
+    stringBuffer.append(TEXT_8);
     stringBuffer.append( line );
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_4);
     
         } 
     } else {
         if (first) {
             first = false;            
 
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_7);
     stringBuffer.append( line.substring(0, 56) );
-    stringBuffer.append(TEXT_12);
+    stringBuffer.append(TEXT_9);
     stringBuffer.append( line.substring(56) );
-    stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_10);
     
         } else {
 
-    stringBuffer.append(TEXT_14);
+    stringBuffer.append(TEXT_8);
     stringBuffer.append( line.substring(0, 56) );
-    stringBuffer.append(TEXT_15);
+    stringBuffer.append(TEXT_9);
     stringBuffer.append( line.substring(56) );
-    stringBuffer.append(TEXT_16);
+    stringBuffer.append(TEXT_11);
             
         }
     }
 }
 
-    stringBuffer.append(TEXT_17);
+    stringBuffer.append(TEXT_12);
     
 if (fullSyntax) {
 	AreaTemplate areaTemplate = new AreaTemplate();
@@ -147,7 +139,7 @@ if (fullSyntax) {
 	for (SchemaArea area : areaList) {    
     	String syntax = areaTemplate.generate(Arrays.asList(new Object[] {area, Boolean.valueOf(sortSchemaEntities)}));
 
-    stringBuffer.append(TEXT_18);
+    stringBuffer.append(TEXT_13);
     stringBuffer.append( syntax );
     
 	} 
@@ -160,9 +152,9 @@ if (fullSyntax) {
 	    String syntax = 
 	    	recordTemplate.generate(Arrays.asList(new Object[] {record, Boolean.valueOf(sortSchemaEntities)}));
 
-    stringBuffer.append(TEXT_19);
+    stringBuffer.append(TEXT_13);
     stringBuffer.append( syntax );
-    stringBuffer.append(TEXT_20);
+    stringBuffer.append(TEXT_14);
     
 	}
 	SetTemplate setTemplate = new SetTemplate();
@@ -173,9 +165,9 @@ if (fullSyntax) {
 	for (Set set : setList) {    
     	String syntax = setTemplate.generate(Arrays.asList(new Object[] {set, Boolean.valueOf(sortSchemaEntities)}));
 
-    stringBuffer.append(TEXT_21);
+    stringBuffer.append(TEXT_13);
     stringBuffer.append( syntax );
-    stringBuffer.append(TEXT_22);
+    stringBuffer.append(TEXT_14);
     
 	}
 }

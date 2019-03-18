@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.figure;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolygonShape;
@@ -36,9 +35,7 @@ public class ConnectorFigure extends PolygonShape {
 	public ConnectorFigure() {
 		super();
 		
-		
-		setBackgroundColor(ColorConstants.white);
-		setForegroundColor(ColorConstants.black);
+		setOpaque(true);
 		
 		XYLayout layout = new XYLayout();
 		setLayoutManager(layout);

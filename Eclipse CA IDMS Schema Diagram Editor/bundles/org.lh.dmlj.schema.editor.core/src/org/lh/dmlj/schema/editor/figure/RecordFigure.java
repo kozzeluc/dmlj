@@ -19,7 +19,6 @@ package org.lh.dmlj.schema.editor.figure;
 import java.text.DecimalFormat;
 
 import org.eclipse.draw2d.Border;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Label;
@@ -109,9 +108,7 @@ public class RecordFigure extends Figure {
 	public RecordFigure() {
 		super();
 		
-		setBackgroundColor(ColorConstants.white);
 		setOpaque(true);
-		setForegroundColor(ColorConstants.black);
 		
 		XYLayout layout = new XYLayout();
 		setLayoutManager(layout);

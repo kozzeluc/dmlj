@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.figure;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.PolygonShape;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
@@ -30,9 +29,8 @@ public class VsamIndexFigure extends PolygonShape {
 	public VsamIndexFigure() {
 		super();
 		
-		setBackgroundColor(ColorConstants.white);
 		setOpaque(true);
-		setForegroundColor(ColorConstants.black);
+		
 		setLineStyle(SWT.LINE_DASH);
 		
 		Rectangle r = new Rectangle(0, 0, UNSCALED_WIDTH, UNSCALED_HEIGHT);
