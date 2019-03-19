@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,6 +18,8 @@ package org.lh.dmlj.schema.editor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
@@ -1069,7 +1071,18 @@ public class SchemaEditor
 			schema = firstEditorForSameInput.getSchema();
 		} else {
 			setEditDomain(new DefaultEditDomain(null));
-			schema = Tools.readFromFile(new File(uri.toFileString()));	
+			try {
+				schema = Tools.readFromFile(new File(uri.toFileString()));
+			} catch (Throwable t) {
+				String message = "An error occurred while opening file '" + uri.toFileString() + "'";
+				logger.error(message, t);
+				try (StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw)) {
+					t.printStackTrace(pw);
+					throw new IllegalArgumentException(message + "\n\n" + sw.toString());
+				} catch (IOException e) {
+					throw new IllegalArgumentException(message);
+				}
+			}
 		}
 			
 		if (!editorSaving) {
