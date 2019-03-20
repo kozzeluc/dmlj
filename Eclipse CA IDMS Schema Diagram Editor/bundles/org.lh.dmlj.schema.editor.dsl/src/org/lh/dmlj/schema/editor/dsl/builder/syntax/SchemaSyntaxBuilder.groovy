@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -116,7 +116,8 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 	
 	private void zoom() {
 		if (schema.diagramData.zoomLevel != 1.0) {
-			with_1_tab "zoom ${(int) schema.diagramData.zoomLevel * 100}"
+			int zoom = (int) (schema.diagramData.zoomLevel * 100)
+			with_1_tab "zoom $zoom"
 		}
 	}
 	
