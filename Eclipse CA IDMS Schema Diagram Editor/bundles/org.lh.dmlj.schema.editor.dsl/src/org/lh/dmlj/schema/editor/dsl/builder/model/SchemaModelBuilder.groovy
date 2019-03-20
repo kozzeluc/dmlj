@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -141,7 +141,7 @@ class SchemaModelBuilder extends AbstractModelBuilder<Schema> {
 		assert !bodies || bodies == [ BODY_DIAGRAM, BODY_LABEL ]
 		if (!bodies) {
 			schema.description = description
-		} else {
+		} else if (description != 'null') { // clear label descriptions that were erroneously saved when null
 			schema.diagramData.label.description = description
 		}
 	}

@@ -105,7 +105,9 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 		DiagramData diagramData = schema.diagramData
 		if (diagramData.label) {
 			with_1_tab 'label {'
-			with_2_tabs "description \"${diagramData.label.description}\""
+			if (diagramData.label.description) {
+				with_2_tabs "description \"${diagramData.label.description}\""
+			}
 			with_2_tabs "x ${xOrY(diagramData.label.diagramLocation.x)}"
 			with_2_tabs "y ${xOrY(diagramData.label.diagramLocation.y)}"
 			with_2_tabs "width ${diagramData.label.width}"
