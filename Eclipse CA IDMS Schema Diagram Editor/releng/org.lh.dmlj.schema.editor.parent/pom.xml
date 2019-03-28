@@ -8,9 +8,9 @@
     <version>3.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
-        <tycho-version>0.24.0</tycho-version>
-        <groovy-eclipse-compiler-version>2.9.1-01</groovy-eclipse-compiler-version>
-        <groovy-eclipse-batch-version>2.3.7-01</groovy-eclipse-batch-version>
+        <tycho-version>1.3.0</tycho-version>
+        <groovy-eclipse-compiler-version>2.9.2-01</groovy-eclipse-compiler-version>
+        <groovy-eclipse-batch-version>2.5.6-02</groovy-eclipse-batch-version>
         <eclipse>http://download.eclipse.org/releases/mars</eclipse>
     </properties>
     <build>
