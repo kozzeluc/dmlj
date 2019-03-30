@@ -7,7 +7,8 @@ Bundle-Activator: org.lh.dmlj.schema.editor.dictionary.tools.Plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.lh.dmlj.schema.editor.core,
- org.lh.dmlj.schema.editor.model
+ org.lh.dmlj.schema.editor.model,
+ org.lh.dmlj.schema.editor.jaxb
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: ca.idms.jdbc;resolution:=optional

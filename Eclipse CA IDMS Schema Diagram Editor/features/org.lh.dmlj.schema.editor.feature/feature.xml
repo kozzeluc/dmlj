@@ -84,4 +84,10 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.lh.dmlj.schema.editor.jaxb"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>

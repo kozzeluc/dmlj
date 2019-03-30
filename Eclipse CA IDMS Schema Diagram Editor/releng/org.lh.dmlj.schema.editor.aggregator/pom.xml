@@ -26,6 +26,7 @@
         <module>../../bundles/org.lh.dmlj.schema.editor.tika_1.4</module>
         <module>../../bundles/org.lh.dmlj.schema.editor.help</module>
         <module>../../bundles/org.lh.dmlj.schema.editor.groovy</module>
+        <module>../../bundles/org.lh.dmlj.schema.editor.jaxb</module>
         <module>../../features/org.lh.dmlj.schema.editor.feature</module>
         <module>../../products/org.lh.dmlj.schema.editor.updatesite</module>
     </modules>
