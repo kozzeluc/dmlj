@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,6 +30,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandlerProvider;
 
@@ -190,6 +192,8 @@ public class HyperlinkOnlyPropertyEditor<T> implements MouseMoveListener {
 			for (int j : hyperlinkEnabledColumns) {
 				if (hyperlinkHandlerProvider.isReadOnlyMode()) {
 					item.setForeground(j, ColorConstants.black);
+				} else if (Plugin.getDefault().isDarkThemeActive()) {
+					item.setForeground(1, SWTResourceManager.getColor(131, 196, 234));
 				} else {
 					item.setForeground(j, ColorConstants.blue);
 				}
