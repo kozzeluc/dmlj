@@ -164,6 +164,18 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 		// we may need to close .schemadsl editors on workbench shutdown 
 		PlatformUI.getWorkbench().addWorkbenchListener(workbenchListener);
 	}
+	
+	@SuppressWarnings("restriction")
+	public boolean isDarkThemeActive() {
+		// TODO find a better way to find out which theme is active and whether it is a dark theme
+		try {
+			org.eclipse.e4.ui.css.swt.theme.IThemeEngine engine = 
+				(org.eclipse.e4.ui.css.swt.theme.IThemeEngine) Display.getDefault().getData("org.eclipse.e4.ui.css.swt.theme");
+			return engine.getActiveTheme().getLabel().toLowerCase().contains("dark");
+		} catch (Throwable t) {
+			return false;
+		}
+	}
 
 	@Override
 	public boolean isDebugEnabled() {

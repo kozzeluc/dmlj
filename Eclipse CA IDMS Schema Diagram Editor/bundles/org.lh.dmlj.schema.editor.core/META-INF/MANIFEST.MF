@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.views.properties.tabbed,
  org.lh.dmlj.schema.editor.groovy,
- org.lh.dmlj.schema.editor.model
+ org.lh.dmlj.schema.editor.model,
+ org.eclipse.e4.ui.css.swt.theme
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
