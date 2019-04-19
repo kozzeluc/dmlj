@@ -88,7 +88,7 @@ public class RecordInfoSection extends AbstractPropertiesSection {
 		dataComposite = new Composite(stackComposite, SWT.NONE);
 		dataComposite.setLayout(new GridLayout(2, false));
 		
-		browser = new Browser(dataComposite, SWT.FULL_SELECTION);
+		browser = new Browser(dataComposite, SWT.NONE);
 		gd_browser = new GridData(SWT.LEFT, SWT.FILL, false, false, 2, 1);
 		gd_browser.verticalIndent = 5;
 		gd_browser.widthHint = pageControl.getBounds().width - 100;
