@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -99,7 +99,9 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 				validate();
 			}
 		});
-		comboOpenEditor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_comboOpenEditor = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_comboOpenEditor.widthHint = 375;
+		comboOpenEditor.setLayoutData(gd_comboOpenEditor);
 		new Label(container, SWT.NONE);
 		
 		btnFileSystem = new Button(container, SWT.RADIO);
@@ -124,7 +126,7 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 				validate();
 			}
 		});
-		textFileSystem.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textFileSystem.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		btnBrowse = new Button(container, SWT.NONE);
 		btnBrowse.addSelectionListener(new SelectionAdapter() {

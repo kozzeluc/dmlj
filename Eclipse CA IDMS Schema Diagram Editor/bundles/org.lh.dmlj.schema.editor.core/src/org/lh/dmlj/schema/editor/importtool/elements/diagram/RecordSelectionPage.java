@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -70,7 +70,9 @@ public class RecordSelectionPage extends AbstractDataEntryPage {
 				validate();
 			}
 		});
-		listRecords.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gd_listRecords = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_listRecords.heightHint = 300;
+		listRecords.setLayoutData(gd_listRecords);
 		
 		return container;
 	}
