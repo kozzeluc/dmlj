@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -43,6 +43,9 @@ public class EditProcedureCallsDialog extends Dialog {
 	private Text textDsl;
 	private Button btnValidate;
 	private Text textMessage;
+	private Text textExample;
+	private Label lblExample;
+	private Label lblProcedureDefinitionDsl;
 
 	public EditProcedureCallsDialog(Shell parentShell, IDslFacetModifier dslFacetModifier) {
 		super(parentShell);
@@ -71,6 +74,10 @@ public class EditProcedureCallsDialog extends Dialog {
 		gl_area.marginWidth = 11;
 		gl_area.marginHeight = 13;
 		area.setLayout(gl_area);
+		
+		lblProcedureDefinitionDsl = new Label(area, SWT.NONE);
+		lblProcedureDefinitionDsl.setText("Procedure Definition DSL:");
+		new Label(area, SWT.NONE);
 		
 		textDsl = new Text(area, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textDsl.addKeyListener(new KeyAdapter() {
@@ -106,7 +113,7 @@ public class EditProcedureCallsDialog extends Dialog {
 		btnReset.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnReset.setText("Reset");
 		
-		textMessage = new Text(area, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		textMessage = new Text(area, SWT.NO_FOCUS | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		textMessage.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -114,10 +121,25 @@ public class EditProcedureCallsDialog extends Dialog {
 			}
 		});
 		textMessage.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		textMessage.setBackground(area.getBackground());
 		GridData gd_textMessage = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_textMessage.heightHint = 50;
 		textMessage.setLayoutData(gd_textMessage);
 		textMessage.setText("<message>");
+		new Label(area, SWT.NONE);
+		
+		lblExample = new Label(area, SWT.NONE);
+		GridData gd_lblExample = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblExample.verticalIndent = 5;
+		lblExample.setLayoutData(gd_lblExample);
+		lblExample.setText("Example:");
+		new Label(area, SWT.NONE);
+		
+		textExample = new Text(area, SWT.NO_FOCUS | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		textExample.setText("call 'IDMSCOMP BEFORE STORE'\ncall 'IDMSCOMP BEFORE MODIFY'\ncall 'IDMSDCOM AFTER GET'");
+		textExample.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		textExample.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
+		textExample.setBackground(area.getBackground());
 		new Label(area, SWT.NONE);
 		
 		initialize();
