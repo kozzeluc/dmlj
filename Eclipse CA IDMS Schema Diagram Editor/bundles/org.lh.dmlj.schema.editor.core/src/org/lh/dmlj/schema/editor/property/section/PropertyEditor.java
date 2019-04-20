@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Luc Hermans
+ * Copyright (C) 2019 Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,6 +38,8 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Combo;
@@ -87,7 +89,7 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		// create the editor for the table cells
 		tableEditor = new TableEditor(table);
 		tableEditor.horizontalAlignment = SWT.LEFT;
-		tableEditor.minimumWidth = 50;
+		tableEditor.minimumWidth = 100;
 		table.addMouseListener(this);
 		table.addMouseMoveListener(this);
 	}
@@ -429,40 +431,13 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 						}
 					}
 				}
-			}			
+			}
 			
-			// hookup a key listener to set the property value, if 
-			// changed, when enter is pressed, and disposes of the
-			// editor control when escape is pressed:
-			combo.addKeyListener(new KeyAdapter() {
+			// hookup a selection listener to set the property value if changed and disposes of the editor control 
+			// when escape is pressed:
+			combo.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void keyReleased(KeyEvent e) {
-					if (e.keyCode == 13 || 
-						e.keyCode == 16777296) { // enter-keys								
-						
-						String sNewValue;
-						if (attribute.getEType().getName().equals("EBoolean")) {
-							boolean newValue = combo.getSelectionIndex() == 1;
-							sNewValue = String.valueOf(newValue);
-						} else {
-							sNewValue = 
-								combo.getItem(combo.getSelectionIndex());
-						}
-
-						combo.dispose();
-						
-						handleCellEdit(attribute, oldValue, sNewValue);
-					} else if (e.keyCode == SWT.ESC) {
-						combo.dispose();
-					}
-				}					
-			});
-			
-			// hookup a focus listener to set the property value, if 
-			// changed, when the editor control loses focus
-			combo.addFocusListener(new FocusAdapter() {
-				public void focusLost(FocusEvent e) {
-					
+				public void widgetSelected(SelectionEvent e) {
 					String sNewValue;
 					if (attribute.getEType().getName().equals("EBoolean")) {
 						boolean newValue = combo.getSelectionIndex() == 1;
@@ -470,12 +445,10 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 					} else {
 						sNewValue = combo.getItem(combo.getSelectionIndex());
 					}
-					
-					combo.dispose();					
-					
+					combo.dispose();
 					handleCellEdit(attribute, oldValue, sNewValue);
-				}					
-			});						
+				}
+			});
 			
 			// start editing the cell in which the user clicked the
 			// mouse
