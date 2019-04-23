@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.lh.dmlj.schema.editor.Plugin;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
-	
+		
 	private static final String DEFAULT_FILE_EXTENSION = "schema";
+	private static final String TM_CHAR = "\u2122";
 
 	public PreferenceInitializer() {
 		super();
@@ -55,7 +56,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		// default diagram label preferences
 		store.setDefault(PreferenceConstants.DIAGRAMLABEL_ORGANISATION, 
-						 "Eclipse CA IDMS™/DB Schema Diagram Editor");
+						 "Eclipse CA IDMS" + TM_CHAR + "/DB Schema Diagram Editor");
 		store.setDefault(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED, true);
 		store.setDefault(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN, 
 						 "dd-MM-yyyy HH:mm:ss");
