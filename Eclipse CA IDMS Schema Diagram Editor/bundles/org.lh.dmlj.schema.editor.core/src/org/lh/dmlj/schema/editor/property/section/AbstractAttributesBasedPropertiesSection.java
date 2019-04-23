@@ -326,6 +326,8 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 				// in read-only mode
 				if (!isReadOnlyMode() && getHyperlinkHandler(attribute) != null) {
 					if (Plugin.getDefault().isDarkThemeActive()) {
+						// note: on Windows, setting the foreground color doesn't seem to have any effect
+						//       when a dark theme is active (at least, this is the case with Eclipse 2019-03)
 						item.setForeground(1, SWTResourceManager.getColor(131, 196, 234));
 					} else {
 						item.setForeground(1, ColorConstants.blue);
