@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -242,7 +242,8 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		return title.endsWith(" (r16 SP2)") ||
 			   title.endsWith(" (r17)") ||
 			   title.endsWith(" (Version 18.0.00)") ||
-			   title.endsWith(" (Release 18.5.00)");
+			   title.endsWith(" (Release 18.5.00)") ||
+			   title.endsWith(" (Release 18.5.00, 2nd Edition)");
 	}
 
 	private void validatePage() {
