@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,11 +26,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -45,35 +40,33 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class SchemaSelectionPage extends WizardPage {
 
+	private static final String FILE_EXTENSION_SCHEMA = ".schema";
+	private static final String FILE_EXTENSION_SCHEMADSL = ".schemadsl";
+
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
-	
-	private Image 				iconFolder = 
-		Plugin.getDefault().getImage("icons/fldr_obj.gif");
-	private Image 				iconProject = 
-		Plugin.getDefault().getImage("icons/prj_obj.gif");
-	private Image 				iconSchema = 
-		Plugin.getDefault().getImage("icons/schema.gif");		
-	private Map<TreeItem, File> map = new HashMap<>();
-	private Schema			    schema;
-	private ISelection 			selection;
-	private Tree 				tree;
-	
+		
 	private static final FilenameFilter FILTER = new FilenameFilter() {
 		@Override
 		public boolean accept(File dir, String name) {
 			File fileOrFolder = new File(dir, name);
-			return fileOrFolder.isDirectory() || 
-				   fileOrFolder.getName().endsWith(".schema");
+			return fileOrFolder.isDirectory() || fileOrFolder.getName().endsWith(FILE_EXTENSION_SCHEMA) || 
+				   fileOrFolder.getName().endsWith(FILE_EXTENSION_SCHEMADSL);
 		}
 	};
+	
+	private Image iconFolder =Plugin.getDefault().getImage("icons/fldr_obj.gif");
+	private Image iconProject = Plugin.getDefault().getImage("icons/prj_obj.gif");
+	private Image iconSchema = Plugin.getDefault().getImage("icons/schema.gif");		
+	private Map<TreeItem, File> map = new HashMap<>();
+	private Schema schema;
+	private ISelection selection;
+	private Tree tree;
 
-	/**
-	 * Create the wizard.
-	 */
 	public SchemaSelectionPage(ISelection selection) {
 		super("schemaSelectionPage");
 		this.selection = selection;
@@ -105,10 +98,6 @@ public class SchemaSelectionPage extends WizardPage {
 		}		
 	}
 
-	/**
-	 * Create contents of the wizard.
-	 * @param parent
-	 */
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 
@@ -173,7 +162,6 @@ public class SchemaSelectionPage extends WizardPage {
 		}
 		
 		validatePage();
-		
 	}	
 
 	public Schema getSchema() {
@@ -189,20 +177,11 @@ public class SchemaSelectionPage extends WizardPage {
 		if (selection.length == 1 && map.containsKey(selection[0])) {
 			File selectedFileOrFolder = map.get(selection[0]);
 			if (!selectedFileOrFolder.isDirectory()) {
-				
 				try {
-					ResourceSet resourceSet = new ResourceSetImpl();
-					resourceSet.getResourceFactoryRegistry()
-					   		   .getExtensionToFactoryMap()
-					   		   .put("schema", new XMIResourceFactoryImpl());
-					URI uri = 
-						URI.createFileURI(selectedFileOrFolder.getAbsolutePath());					
-					Resource resource = resourceSet.getResource(uri, true);
-					schema = (Schema)resource.getContents().get(0);	
+					schema = Tools.readFromFile(selectedFileOrFolder);
 				} catch (Throwable t) {
 					pageComplete = false;
-					String p = 
-						t.getMessage() == null ? "" : ": " + t.getMessage();
+					String p = t.getMessage() == null ? "" : ": " + t.getMessage();
 					setErrorMessage(t.getClass().getSimpleName() + p);
 				}
 				
@@ -214,7 +193,6 @@ public class SchemaSelectionPage extends WizardPage {
 		}
 				
 		setPageComplete(pageComplete);
-		
 	}
 	
 }
