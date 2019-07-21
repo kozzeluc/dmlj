@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,7 +18,9 @@ package org.lh.dmlj.schema.editor.wizard._import.dictguide;
 
 import java.io.File;
 import java.util.MissingResourceException;
+import java.util.Stack;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -118,24 +120,34 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 		// create a Runnable so that we can show the busy pointer when the 
 		// DictguidesRegistry instance creates the .zip file, this can take a
 		// few seconds
+		Stack<Throwable> errors = new Stack<>();
 		Runnable runnable = new Runnable() {
 			public void run() {		
-				DictguidesRegistry.INSTANCE
-								  .createEntry(dictionaryStructureFile,
-										  	   dictionaryStructureTitle,
-										  	   sqlFile,
-										  	   sqlTitle,
-										  	   id,
-										  	   defaultForInfoTab,
-										  	   Plugin.getDefault().createTmpFolder());						
+				try {
+					DictguidesRegistry.INSTANCE
+									  .createEntry(dictionaryStructureFile,
+											  	   dictionaryStructureTitle,
+											  	   sqlFile,
+											  	   sqlTitle,
+											  	   id,
+											  	   defaultForInfoTab,
+											  	   Plugin.getDefault().createTmpFolder());
+				} catch (Throwable t) {
+					errors.push(t);
+				}
 			}
 		};
 		
 		// have the DictguidesRegistry instance create the .zip file while 
 		// the busy cursor is shown
-		BusyIndicator.showWhile(Display.getCurrent(), runnable);		
+		BusyIndicator.showWhile(Display.getCurrent(), runnable);
 		
-		return true;
+		if (!errors.isEmpty()) {
+			MessageDialog.openError(getShell(), "Error", errors.pop().getMessage());
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -140,18 +140,8 @@ public class DictguidesRegistry {
 			throw new IllegalArgumentException("Id is already in use: " + id);
 		}
 		
-		if (dictionaryStructureTitle.indexOf(",") > -1 ||
-			dictionaryStructureTitle.indexOf("\n") > -1) {
-			
-			String message = 
-				"comma's and new line characters are not allowed in a " +
-				"document title: " + dictionaryStructureTitle;
-			throw new IllegalArgumentException(message);
-		}
-		
-		if (sqlTitle.indexOf(",") > -1) {
-			String message = "comma's and new line characters are not " +
-							 "allowed in a document title: " + sqlTitle;
+		if (dictionaryStructureTitle.indexOf("\n") > -1) {
+			String message = "new line characters are not allowed in a document title: " + dictionaryStructureTitle;
 			throw new IllegalArgumentException(message);
 		}
 	
