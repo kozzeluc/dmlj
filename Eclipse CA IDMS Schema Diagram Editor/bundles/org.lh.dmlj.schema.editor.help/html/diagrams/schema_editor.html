@@ -11,11 +11,19 @@
 <h2>Contents</h2>
 <ul>
 <li><a href="#opening">Opening the Schema Editor</a></li>
-<li><a href="#schema_properties">Schema properties</a></li>
+<li><a href="#properties">Properties</a></li>
+<ul>
+<li><a href="#syntax_tab">Syntax tab</a></li>
+<li><a href="#dsl_tab">DSL tab</a></li>
+<li><a href="#schema_properties">Schema</a></li>
 <ul>
 <li><a href="#rulers_and_guides">Rulers and Guides</a></li>
 <li><a href="#grid">Grid</a></li>
 <li><a href="#snap_to_geo">Snap to Geometry</a></li>
+</ul>
+<li><a href="#area_properties">Area</a></li>
+<li><a href="#record_properties">Record</a></li>
+<li><a href="#set_properties">Set</a></li>
 </ul>
 <li><a href="#zooming">Zooming</a></li>
 <li><a href="#undo_redo">Undo/Redo</a></li>
@@ -29,27 +37,42 @@ The Schema Editor is the component with which you can work on CA IDMS/DB schema 
 open open as much diagrams in parallel as you want and the editors are always placed in the 
 workbench's editor area. 
 <br><br>
-Opening a diagram (.schema file) is as easy as double-clicking it in the Package Explorer view, or  
+Opening a diagram (a .schema or .schemadsl file) is as easy as double-clicking it in the Package Explorer view, or  
 selecting it in that view and pressing the F3 key.  If, for whatever reason the diagram is opened  
-with another editor (e.g. the Text Editor), right-click on the .schema file in the Package Explorer 
+with another editor (e.g. the Text Editor), right-click on the .schema (or .schemadsl) file in the Package Explorer 
 view and select the Schema Editor :
 <br><br>
 <img src="../../images/open_diagram.png" alt="[open diagram]">
 <br><br><br>
 When you open the Employee Demo Database diagram (which you can download 
-<a href="https://sites.google.com/site/idmsschemasineclipse/examples/EMPSCHM version 100.schema">here</a>), 
+<a href="https://sites.google.com/site/idmsschemasineclipse/examples/EMPSCHM%20version%20100.schema?attredirects=0&d=1">here</a>;
+save this file in your project folder and refresh the project in the Package Explorer view), 
 the Schema Editor will open and look like this : 
 <br><br>
 <img src="../../images/diagram_opened.png" alt="[diagram_opened]">
 <br><br><br>
 Note how the Properties- and Outline view work together with the Schema Editor (the Employee node in 
-the Outline view has been selected and expanded to illustrate this).
+the Outline view has been selected and expanded to illustrate this).  Also note that <i>your</i> diagram may look 
+somewhat different because of a different screen resolution or font size (you can adjust the diagram font size in the 
+Diagram Editor's preferences).
 <br><br>
 The Properties view is a standard Eclipse view and it will always show properties for the current 
 selection, in whatever editor or view is active.  The Outline view is also a standard Eclipse view
 and allows to describe the structure of the content in the active editor.
-<br><br>
-<a id="schema_properties"><h2>Schema properties</h2></a>
+<a id="properties"><h2>Properties</h2></a>
+<a id="syntax_tab"><h3>Syntax tab</h3></a>
+Each diagram component has a <i>Syntax</i> tab in the Properties view, which shows you the IDMS schema compiler syntax
+(for that component) :<br><br>
+<img src="../../images/syntax_tab.png" alt="[syntax_tab]">
+<br><br>Note that for the schema (component), the area-, record- and set syntax is NOT shown.  For area syntax, select  
+the area in the Outline view.
+<a id="dsl_tab"><h3>DSL tab</h3></a>
+Each diagram component has a <i>DSL</i> tab in the Properties view, which shows you the Schema Editor DSL representation
+(for that component) :<br><br>
+<img src="../../images/dsl_tab.png" alt="[dsl_tab]">
+<br><br>Note that for the schema (component), the area-, record- and set DSL is NOT shown.  For area DSL, select the 
+area in the Outline view.
+<a id="schema_properties"><h3>Schema properties</h3></a>
 To have the Properties view display the schema properties (with a “General”, “Diagram” and "Syntax" 
 tab, like the image below), you have to left-click your mouse somewhere in the Schema Editor's 
 "white space" (so not on a record, index or any other diagram item).  By clicking somewhere in the 
@@ -57,7 +80,11 @@ Schema Editor's white space, you’ll make the schema contained in the active Sche
 current selection.
 <br><br>
 <img src="../../images/general_schema_properties.png" alt="[general schema properties]">
-<br><br><br>
+<br><br>Note that the value for the 'Comments' property has a blue font and when you move your mouse pointer over it you'll see
+that it actually is a hyperlink.  To change the schema comments, click on the hyperlink and an edit dialog will appear.
+You will see similar hyperlinks elsewhere in the Properties view.
+<br><br>I assume that you are familiar with IDMS schema attributes and thus will not elaborate on them here.
+<br><br>
 If you select the Properties view’s “Diagram” tab, you’ll see a couple of interesting diagram
 properties (for which you can set the defaults on the main preference page) :
 <br><br>
@@ -73,7 +100,7 @@ You can change the ruler’s units on the diagram editor’s main preference page (“
 menu item; choose either “Centimeters” (the default), “Inches” or “Pixels”).
 <br><br>
 Guides make it easier to align diagram figures. Once a guide is created, you can move or delete it 
-using its handle. To delete a guide, select its handle and press the Delete button.
+using its handle. To delete a guide, select its handle and press the Delete button (<i>fn+backspace</i> on a Mac).
 <br><br>
 Note that enabling the “Show rulers and guides” option produces another one :  “Snap to guides” 
 (whereas disabling it will hide the “Snap to guides” property); by enabling both the “Show rulers 
@@ -89,8 +116,8 @@ Enabling the "Show grid" option will show a grid in the diagram editor :
 <br><br>
 <img src="../../images/grid_enabled.png" alt="[grid enabled]">
 <br><br><br>
-The grid spacing in the current versions of the diagram editor is fixed at around half a centimeter; 
-a future version might make this configurable while respecting the preferred units.
+The grid spacing in the current version of the diagram editor is fixed at around half a centimeter; 
+a future version <i>might</i> make this configurable while respecting the preferred units.
 <br><br>
 Note that enabling the “Show grid” option produces another one : “Snap to grid”; enabling both the
 "Show grid" option and the “Snap to grid” option will make diagram figures “snap” to the grid when 
@@ -98,7 +125,24 @@ you move them, thus making diagram figure alignment even easier.
 <a id="snap_to_geo"><h4>Snap to Geometry</h4></a>
 Enabling the "Snap to geometry" option will allow diagram figures to be aligned to other figures in 
 the diagram when you move them.
-<br><br>
+<a id="area_properties"><h3>Area properties</h3></a>
+You can manage an area's definition via the Properties view; select an area (in the Outline view) and then use the 
+Properties view to adjust its properties.<br><br>
+<img src="../../images/area_properties.png" alt="[area properties]">
+<br><br>I assume that you are familiar with IDMS area attributes and thus will not elaborate on them here.
+<a id="record_properties"><h3>Record properties</h3></a>
+You can manage a record type's definition via the Properties view; select a record type and then use the Properties
+view to adjust its properties.<br><br>
+<img src="../../images/record_properties.png" alt="[record properties]">
+<br><br>There are quite a lot of IDMS record attributes to set and I assume that you are familiar with all of them and 
+thus will not elaborate on them here.
+<a id="set_properties"><h3>Set properties</h3></a>
+You can manage the definition of a set, index or VSAM index via the Properties view; select a set connection (the line
+that connects 2 records or an index/VSAM index and a record), set connection label (the set description that is put near
+the set connection), index, VSAM index or connector and then use the Properties view to adjust its properties.<br><br>
+<img src="../../images/set_properties.png" alt="[set properties]">
+<br><br>There are quite a lot of IDMS setattributes to set and I assume that you are familiar with all of them and thus 
+will not elaborate on them here.
 <a id="zooming"><h2>Zooming</h2></a>
 Zooming can be done by either using the “Diagram” menu’s “Zoom In” and “Zoom Out” menu items (or 
 their keyboard shortcuts) or using the zoom level combo :
@@ -106,12 +150,12 @@ their keyboard shortcuts) or using the zoom level combo :
 <img src="../../images/diagram_zoom_menuitems.png" alt="[diagram zoom menu-items]" align="top">
 <img src="../../images/zoom_combo.png" alt="[zoom combo]" align="top">
 <br><br><br>
-Changing any of the above options or the zoom level will make the diagram editor dirty because all 
-of this information is kept in the .schema file.
+Changing any of the above options or the zoom level will make the diagram editor <i>dirty</i> because all 
+of this information is kept in the .schema (or .schemadsl) file.
 <br><br>
 <a id="undo_redo"><h2>Undo/Redo</h2></a>
-Undo/Redo functionality is available via the standard keyboard shortcuts CTRL+Z (undo) and CTRL+Y 
-(redo) or via the “Edit” menu’s “Undo…” and “Redo…” menu items.
+Undo/Redo functionality is available via the standard keyboard shortcuts CTRL+z (undo; <i>Command+z</i> on a Mac) and 
+CTRL+y (redo; <i>Command+y</i> on a Mac) or via the “Edit” menu’s “Undo…” and “Redo…” menu items.
 <br><br>
 <a id="saving"><h2>Saving the diagram</h2></a>
 You can drop items from the palette, move items around, change line characteristics, change the 
@@ -121,7 +165,7 @@ appears to the left of the diagram’s file on the editor’s tab when you make 1 or
 <br><br>
 <img src="../../images/dirty_editor_mark.png" alt="[dirty editor mark]">
 <br><br><br>
-The asterisk indicates that your changes have not been saved to disk (the editor is dirty).  Saving 
+The asterisk indicates that your changes have not been saved to disk (the editor is <i>dirty</i>).  Saving 
 your diagram can be done in several ways, e.g. by using the “File”/”Save” menu item or clicking on 
 the floppy disk icon in the toolbar :
 <br><br>
@@ -134,8 +178,7 @@ triangle (which has been flipped) again will make the palette disappear :
 <img src="../../images/palette_collapsed.png" alt="[palette colapsed]" align="top">
 <img src="../../images/palette_visible.png" alt="[palette visible]" algin="top">
 <br><br><br>
-As you can see, the palette is still incomplete in the current version of the Eclipse CA IDMS/DB 
-Schema Diagram Editor (you cannot create records).
+[TODO provide an updated screenshot for the palette]
 <br><br>
 The first 2 palette tools can be used to select 1 or more items in the diagram :
 <ul>
@@ -169,6 +212,12 @@ a description of the date (Last Modified) format.
 The diagram label's second line contains the schema name and version whereas the third line can be
 controlled in the Properties view (Description).
 </ul><br>
+<li>Records</li><br>
+<ul>
+<li><img src="../../images/palette_record.png" alt="[record tool]" align="middle"> (Record) :  after selecting this tool 
+and clicking somewhere in the diagram's whitespace, a new record type will appear at that location.  Use the Properties
+view to enter the details for the new record type.</li><br>
+</ul>
 <li>Sets</li><br>
 <ul>
 <li><img src="../../images/palette_chained_set.png" alt="[chained set tool]" align="middle"> (Chained 
@@ -176,23 +225,30 @@ Set) :  first click on the owner record and then on the member record of the set
 create; you'll notice that a line, starting at the owner record, will be visible and following the 
 mouse pointer after clicking the owner record (press the "Esc" key if you change your mind half way 
 through).  A chained set called "NEW-SET-n" will be created after clicking on the member record, 
-where "n" denotes a sequence number starting with 1.</li><br>
+where "n" denotes a sequence number starting with 1.  Use the Properties view to enter the details for the new 
+chained set.</li><br>
 <li><img src="../../images/palette_multiple_member_set.png" alt="[multiple-member set tool]" align="middle"> (Multiple-member Set) :  
 first click on the line that connects the owner record with an existing member record of the set you
 want to add a member record to (remember :  indexed sets can only have 1 member record).  You'll 
 notice that a line, starting at the owner record, will be visible and following the mouse pointer 
 after clicking that line (press the "Esc" key if you change your mind half way through).  Then click 
-on the record that you want to add as a member record of that set.</li><br>
+on the record that you want to add as a member record of that set.  Use the Properties view to enter the details for the 
+new multiple-member set.</li><br>
 <li><img src="../../images/palette_indexed_set.png" alt="[indexed set tool]" align="middle"> (Indexed 
 Set) :  first click on the owner record and then on the member record of the set that you want to 
 create; you'll notice that a line, starting at the owner record, will be visible and following the 
 mouse pointer after clicking the owner record (press the "Esc" key if you change your mind half way 
 through).  An indexed set called "NEW-SET-n" will be created after clicking on the member record, 
-where "n" denotes a sequence number starting with 1.</li><br>
+where "n" denotes a sequence number starting with 1.  Use the Properties view to enter the details for the new indexed 
+set.</li><br>
 <li><img src="../../images/palette_index.png" alt="[index tool]" align="middle"> (Index) :  
 click on the record that you want an index added.  An index (system-owned indexed set) called 
 "NEW-INDEX-n" will be created after clicking on the member record, where "n" denotes a sequence 
-number starting with 1.</li><br>
+number starting with 1.  Use the Properties view to enter the details for the new index.</li><br>
+<li><img src="../../images/palette_vsam_index.png" alt="[VSAM index tool]" align="middle"> (VSAM Index) :  
+click on the record that you want a VSAM index added.  A VSAM index called "NEW-VSAM-INDEX-n" will be created after 
+clicking on the record, where "n" denotes a sequence number starting with 1.  Use the Properties view to enter the 
+details for the new VSAM index.</li><br>
 <li><img src="../../images/palette_connector.png" alt="[connector tool]" align="middle"> (Connector) :  
 click on the line that connects the owner record of a set with one of its members.  A set of 2
 connectors will be added, effectively splitting the line in 2.  You can (only) add 1 label in the 
@@ -200,13 +256,13 @@ Properties view for both connectors.</li>
 </ul>
 </ul>
 <a id="figures"><h2>Working with Figures</h2></a>
-You can easily drag a figure (a record, index, connector, set connection label or diagram label) to 
+You can easily drag a figure (a record, index, VSAM index, connector, set connection label or diagram label) to 
 another location.
 <br><br>
 <img src="../../images/working_with_figures.png" alt="[working with figures]">
 <br><br>
 <a id="connections"><h2>Working with Connections</h2></a>
-At first, every set connection is a straight line between the owner and member figure (multiple-member 
+Every set connection is initially a straight line between the owner and member figure (multiple-member 
 sets will have 1 set connection per set member).  You can move both set connection endpoints (marked 
 in red on the image below) as well as add set connection bendpoints (blue) by moving the handles :
 <br><br>

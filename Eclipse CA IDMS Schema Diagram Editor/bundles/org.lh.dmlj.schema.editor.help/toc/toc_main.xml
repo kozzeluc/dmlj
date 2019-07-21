@@ -5,6 +5,8 @@
    <topic label="Getting Started">
       <anchor id="gettingstarted"/>
    </topic>
+   <topic href="html/file_extensions.html" label="File Extensions">
+   </topic>
    <topic label="Diagrams">
       <anchor id="diagrams"/>
    </topic>
