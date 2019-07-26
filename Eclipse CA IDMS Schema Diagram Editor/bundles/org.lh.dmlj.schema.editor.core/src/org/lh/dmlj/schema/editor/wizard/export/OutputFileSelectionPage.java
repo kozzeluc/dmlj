@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -81,7 +81,7 @@ public class OutputFileSelectionPage extends WizardPage {
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(container.getShell());
+				FileDialog fileDialog = new FileDialog(container.getShell(), SWT.SAVE);
 				fileDialog.setFileName(textFile.getText());
 				String newValue = fileDialog.open();							
 				if (newValue != null) {
