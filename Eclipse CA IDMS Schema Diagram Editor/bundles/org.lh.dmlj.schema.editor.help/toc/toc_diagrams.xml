@@ -5,7 +5,7 @@
    <topic href="html/diagrams/schema_editor.html" label="Schema Editor">
       <topic href="html/diagrams/schema_editor.html#opening" label="Opening the Schema Editor">
       </topic>
-      <topic label="Properties">
+      <topic href="html/diagrams/schema_editor.html#properties" label="Properties">
          <topic href="html/diagrams/schema_editor.html#syntax_tab" label="Syntax tab">
          </topic>
          <topic href="html/diagrams/schema_editor.html#dsl_tab" label="DSL tab">
