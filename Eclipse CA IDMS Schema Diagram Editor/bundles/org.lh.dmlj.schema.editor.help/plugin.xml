@@ -11,6 +11,9 @@
             file="toc/toc_gettingstarted.xml">
       </toc>
       <toc
+            file="toc/toc_preferences.xml">
+      </toc>
+      <toc
             file="toc/toc_diagrams.xml">
       </toc>
    </extension>

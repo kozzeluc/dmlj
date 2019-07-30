@@ -7,7 +7,12 @@
    </topic>
    <topic href="html/file_extensions.html" label="File Extensions">
    </topic>
+   <topic label="Preferences">
+      <anchor id="preferences"/>
+   </topic>
    <topic label="Diagrams">
       <anchor id="diagrams"/>
+   </topic>
+   <topic href="html/idmsntwk.html" label="The IDMSNTWK Schema">
    </topic>
 </toc>

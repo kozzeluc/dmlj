@@ -50,4 +50,8 @@
     <topic href="html/diagrams/import_diagram.html#custom" label="Custom Import Tools">
     </topic>
  </topic>
+ <topic href="html/diagrams/update_diagram.html" label="Updating Diagrams">
+ </topic>
+ <topic href="html/diagrams/export_diagram.html" label="Exporting Diagrams">
+ </topic>
 </toc>

@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Dictionaries</title>
+</head>
+
+<body>
+<h1>Dictionaries</h1>
+In the Eclipse <a href="preferences_dialog">preferences dialog</a> you can define 1 or more <i>dictionaries</i> that are 
+used to import schema diagrams directly from IDMS application dictionaries on your mainframe(s) using SQL Web Connect 
+(or the SQL Option) and IDMS Server.  Make sure you have installed the IDMS JDBC driver and set up the mainframe part
+(i.e. an application dictionary with a catalog component and IDMS Server exposing this outside of your mainframe) before
+defining dictionaries in Eclipse.  If you see the following message, first go ahead with the <a href="JDBC_driver.html">
+installation of the JDBC driver</a> into your Eclipse workbench :
+<br><br>
+<img src="../../images/preferences_JDBC_driver_not_installed_message.png" alt="[JDBC driver not installed message]">
+<br><br>
+Without a backing application dictionary on a mainframe, the definition of a dictionary for the diagram editor is 
+useless.
+<br><br>
+In your mainframe application dictionary/catalog, you will need to create a relational schema for IDMSNTWK as well; the
+diagram editor will execute queries against this schema to retrieve the data it needs to generate diagrams.  Note that
+you can define several such (relational) schemas, each targeting a different dictionary (different dictionaries share
+the same structure, which is described in the IDMSNTWK schema).
+<br><br>
+[TODO include definition of SYSDICT_APPLDICT schema]
+</body>
+</html>
