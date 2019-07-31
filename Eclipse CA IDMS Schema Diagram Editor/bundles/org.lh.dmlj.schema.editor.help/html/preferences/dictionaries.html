@@ -40,8 +40,11 @@ Note the <i>SYSDIRL ?</i> column; you can mark dictionaries containing the IDMSN
 diagram for this schema should want to do this.  The buttons on the right of the table allow you to <b>add, remove or 
 edit dictionary definitions</b> as well as <b>test</b> whether the connection (to the dictionary/catalog on your 
 mainframe) works correctly.  You can also set the default name (SYSDICT) for the relational-version of the IDMSNTWK 
-schema in this section.  You shouldn't touch the <b>magic number 47</b> unless you want to interfere with the 
-performance of the diagram editor queries. 
+schema in this section.  You shouldn't normally touch the <b>magic number 47</b> unless you experience performance 
+issues when importing diagrams directly from a dictionary :  it turns out that, in queries, the maximum number of dbkeys 
+that can be specified in a list, before the query does no longer perform and consumes excessive I/Os and CPU on the 
+mainframe, is 47 (at least for the dictionary I’m working against).  It’s up to you to play around with this figure, but 
+you’re on your own…  Dbkey lists are a substitute for subqueries, which I’ve found to not always perform as they should. 
 <br><br>
 Press the <i>Add...</i> button to create your first dictionary :
 <br><br>
