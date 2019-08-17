@@ -1,0 +1,1114 @@
+name 'EMPSCHM'
+version 100
+description 'EMPLOYEE DEMO DATABASE'
+comments 'INSTALLATION: COMMONWEATHER CORPORATION'
+
+diagram {
+    showRulersAndGuides
+    snapToGuides
+}
+
+record 'COVERAGE' {
+    shareStructure 'COVERAGE version 100'
+    recordId 400
+
+    via {
+        set 'EMP-COVERAGE'
+    }
+
+    area 'INS-DEMO-REGION' {
+        offsetPages 5
+        pages 45
+    }
+
+    elements """
+        02 SELECTION-DATE-0400
+           03 SELECTION-YEAR-0400 picture 9(4)
+           03 SELECTION-MONTH-0400 picture 9(2)
+           03 SELECTION-DAY-0400 picture 9(2)
+        02 TERMINATION-DATE-0400
+           03 TERMINATION-YEAR-0400 picture 9(4)
+           03 TERMINATION-MONTH-0400 picture 9(2)
+           03 TERMINATION-DAY-0400 picture 9(2)
+        02 TYPE-0400 picture X
+           88 MASTER-0400 value 'M'
+           88 FAMILY-0400 value 'F'
+           88 DEPENDENT-0400 value 'D'
+        02 INS-PLAN-CODE-0400 picture X(3)
+           88 GROUP-LIFE-0400 value '001'
+           88 HMO-0400 value '002'
+           88 GROUP-HEALTH-0400 value '003'
+           88 GROUP-DENTAL-0400 value '004'
+    """
+
+    diagram {
+        x 285
+        y 361
+    }
+}
+
+record 'DENTAL-CLAIM' {
+    shareStructure 'DENTAL-CLAIM version 100'
+    recordId 405
+
+    via {
+        set 'COVERAGE-CLAIMS'
+    }
+
+    area 'INS-DEMO-REGION' {
+        offsetPages 5
+        pages 45
+    }
+
+    minimumRootLength 132
+    minimumFragmentLength 932
+
+    elements """
+        02 CLAIM-DATE-0405
+           03 CLAIM-YEAR-0405 picture 9(4)
+           03 CLAIM-MONTH-0405 picture 9(2)
+           03 CLAIM-DAY-0405 picture 9(2)
+        02 PATIENT-NAME-0405
+           03 PATIENT-FIRST-NAME-0405 picture X(10)
+           03 PATIENT-LAST-NAME-0405 picture X(15)
+        02 PATIENT-BIRTH-DATE-0405
+           03 PATIENT-BIRTH-YEAR-0405 picture 9(4)
+           03 PATIENT-BIRTH-MONTH-0405 picture 9(2)
+           03 PATIENT-BIRTH-DAY-0405 picture 9(2)
+        02 PATIENT-SEX-0405 picture X
+        02 RELATION-TO-EMPLOYEE-0405 picture X(10)
+        02 DENTIST-NAME-0405
+           03 DENTIST-FIRST-NAME-0405 picture X(10)
+           03 DENTIST-LAST-NAME-0405 picture X(15)
+        02 DENTIST-ADDRESS-0405
+           03 DENTIST-STREET-0405 picture X(20)
+           03 DENTIST-CITY-0405 picture X(15)
+           03 DENTIST-STATE-0405 picture X(2)
+           03 DENTIST-ZIP-0405
+              04 DENTIST-ZIP-FIRST-FIVE-0405 picture X(5)
+              04 DENTIST-ZIP-LAST-FOUR-0405 picture X(4)
+        02 DENTIST-LICENSE-NUMBER-0405 picture 9(6)
+        02 NUMBER-OF-PROCEDURES-0405 picture 9(2) usage COMPUTATIONAL
+        02 FILLER picture X
+        02 DENTIST-CHARGES-0405 occurs 10 dependingOn NUMBER-OF-PROCEDURES-0405
+           03 TOOTH-NUMBER-0405 picture 9(2)
+           03 SERVICE-DATE-0405
+              04 SERVICE-YEAR-0405 picture 9(4)
+              04 SERVICE-MONTH-0405 picture 9(2)
+              04 SERVICE-DAY-0405 picture 9(2)
+           03 PROCEDURE-CODE-0405 picture 9(4)
+           03 DESCRIPTION-OF-SERVICE-0405 picture X(60)
+           03 FEE-0405 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 FILLER picture X
+    """
+
+    diagram {
+        storageMode 'VARIABLE'
+        x 475
+        y 475
+    }
+}
+
+record 'DEPARTMENT' {
+    shareStructure 'DEPARTMENT version 100'
+    recordId 410
+
+    calc {
+        element 'DEPT-ID-0410'
+        duplicates 'NOT ALLOWED'
+    }
+
+    area 'ORG-DEMO-REGION' {
+        offsetPages 5
+        pages 45
+    }
+
+    elements """
+        02 DEPT-ID-0410 picture 9(4)
+        02 DEPT-NAME-0410 picture X(45)
+        02 DEPT-HEAD-ID-0410 picture 9(4)
+        02 FILLER picture XXX
+    """
+
+    diagram {
+        x 171
+        y 19
+    }
+}
+
+record 'EMPLOYEE' {
+    shareStructure 'EMPLOYEE version 100'
+    recordId 415
+
+    calc {
+        element 'EMP-ID-0415'
+        duplicates 'NOT ALLOWED'
+    }
+
+    area 'EMP-DEMO-REGION' {
+        offsetPages 5
+        pages 95
+    }
+
+    elements """
+        02 EMP-ID-0415 picture 9(4)
+        02 EMP-NAME-0415
+           03 EMP-FIRST-NAME-0415 picture X(10)
+           03 EMP-LAST-NAME-0415 picture X(15)
+        02 EMP-ADDRESS-0415
+           03 EMP-STREET-0415 picture X(20)
+           03 EMP-CITY-0415 picture X(15)
+           03 EMP-STATE-0415 picture X(2)
+           03 EMP-ZIP-0415
+              04 EMP-ZIP-FIRST-FIVE-0415 picture X(5)
+              04 EMP-ZIP-LAST-FOUR-0415 picture X(4)
+        02 EMP-PHONE-0415 picture 9(10)
+        02 STATUS-0415 picture X(2)
+           88 ACTIVE-0415 value '01'
+           88 ST-DISABIL-0415 value '02'
+           88 LT-DISABIL-0415 value '03'
+           88 LEAVE-OF-ABSENCE-0415 value '04'
+           88 TERMINATED-0415 value '05'
+        02 SS-NUMBER-0415 picture 9(9)
+        02 START-DATE-0415
+           03 START-YEAR-0415 picture 9(4)
+           03 START-MONTH-0415 picture 9(2)
+           03 START-DAY-0415 picture 9(2)
+        02 TERMINATION-DATE-0415
+           03 TERMINATION-YEAR-0415 picture 9(4)
+           03 TERMINATION-MONTH-0415 picture 9(2)
+           03 TERMINATION-DAY-0415 picture 9(2)
+        02 BIRTH-DATE-0415
+           03 BIRTH-YEAR-0415 picture 9(4)
+           03 BIRTH-MONTH-0415 picture 9(2)
+           03 BIRTH-DAY-0415 picture 9(2)
+    """
+
+    diagram {
+        x 285
+        y 247
+    }
+}
+
+record 'EMPOSITION' {
+    shareStructure 'EMPOSITION version 100'
+    recordId 420
+
+    via {
+        set 'EMP-EMPOSITION'
+    }
+
+    area 'EMP-DEMO-REGION' {
+        offsetPages 5
+        pages 95
+    }
+
+    elements """
+        02 START-DATE-0420
+           03 START-YEAR-0420 picture 9(4)
+           03 START-MONTH-0420 picture 9(2)
+           03 START-DAY-0420 picture 9(2)
+        02 FINISH-DATE-0420
+           03 FINISH-YEAR-0420 picture 9(4)
+           03 FINISH-MONTH-0420 picture 9(2)
+           03 FINISH-DAY-0420 picture 9(2)
+        02 SALARY-GRADE-0420 picture 9(2)
+        02 SALARY-AMOUNT-0420 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+        02 BONUS-PERCENT-0420 picture SV999 usage 'COMPUTATIONAL 3'
+        02 COMMISSION-PERCENT-0420 picture SV999 usage 'COMPUTATIONAL 3'
+        02 OVERTIME-RATE-0420 picture S9V99 usage 'COMPUTATIONAL 3'
+        02 FILLER picture XXX
+    """
+
+    diagram {
+        x 38
+        y 247
+    }
+}
+
+record 'EXPERTISE' {
+    shareStructure 'EXPERTISE version 100'
+    recordId 425
+
+    via {
+        set 'EMP-EXPERTISE'
+    }
+
+    area 'EMP-DEMO-REGION' {
+        offsetPages 5
+        pages 95
+    }
+
+    elements """
+        02 SKILL-LEVEL-0425 picture XX
+           88 EXPERT-0425 value '04'
+           88 PROFICIENT-0425 value '03'
+           88 COMPETENT-0425 value '02'
+           88 ELEMENTARY-0425 value '01'
+        02 EXPERTISE-DATE-0425
+           03 EXPERTISE-YEAR-0425 picture 9(4)
+           03 EXPERTISE-MONTH-0425 picture 9(2)
+           03 EXPERTISE-DAY-0425 picture 9(2)
+        02 FILLER picture XX
+    """
+
+    diagram {
+        x 532
+        y 247
+    }
+}
+
+record 'HOSPITAL-CLAIM' {
+    shareStructure 'HOSPITAL-CLAIM version 100'
+    recordId 430
+
+    via {
+        set 'COVERAGE-CLAIMS'
+    }
+
+    area 'INS-DEMO-REGION' {
+        offsetPages 5
+        pages 45
+    }
+
+    elements """
+        02 CLAIM-DATE-0430
+           03 CLAIM-YEAR-0430 picture 9(4)
+           03 CLAIM-MONTH-0430 picture 9(2)
+           03 CLAIM-DAY-0430 picture 9(2)
+        02 PATIENT-NAME-0430
+           03 PATIENT-FIRST-NAME-0430 picture X(10)
+           03 PATIENT-LAST-NAME-0430 picture X(15)
+        02 PATIENT-BIRTH-DATE-0430
+           03 PATIENT-BIRTH-YEAR-0430 picture 9(4)
+           03 PATIENT-BIRTH-MONTH-0430 picture 9(2)
+           03 PATIENT-BIRTH-DAY-0430 picture 9(2)
+        02 PATIENT-SEX-0430 picture X
+        02 RELATION-TO-EMPLOYEE-0430 picture X(10)
+        02 HOSPITAL-NAME-0430 picture X(25)
+        02 HOSP-ADDRESS-0430
+           03 HOSP-STREET-0430 picture X(20)
+           03 HOSP-CITY-0430 picture X(15)
+           03 HOSP-STATE-0430 picture X(2)
+           03 HOSP-ZIP-0430
+              04 HOSP-ZIP-FIRST-FIVE-0430 picture X(5)
+              04 HOSP-ZIP-LAST-FOUR-0430 picture X(4)
+        02 ADMIT-DATE-0430
+           03 ADMIT-YEAR-0430 picture 9(4)
+           03 ADMIT-MONTH-0430 picture 9(2)
+           03 ADMIT-DAY-0430 picture 9(2)
+        02 DISCHARGE-DATE-0430
+           03 DISCHARGE-YEAR-0430 picture 9(4)
+           03 DISCHARGE-MONTH-0430 picture 9(2)
+           03 DISCHARGE-DAY-0430 picture 9(2)
+        02 DIAGNOSIS-0430 picture X(60) occurs 2
+        02 HOSPITAL-CHARGES-0430
+           03 ROOM-AND-BOARD-0430
+              04 WARD-0430
+                 05 WARD-DAYS-0430 picture S9(5) usage 'COMPUTATIONAL 3'
+                 05 WARD-RATE-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+                 05 WARD-TOTAL-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+              04 SEMI-PRIVATE-0430
+                 05 SEMI-DAYS-0430 picture S9(5) usage 'COMPUTATIONAL 3'
+                 05 SEMI-RATE-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+                 05 SEMI-TOTAL-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 OTHER-CHARGES-0430
+              04 DELIVERY-COST-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+              04 ANESTHESIA-COST-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+              04 LAB-COST-0430 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+    """
+
+    diagram {
+        x 285
+        y 475
+    }
+}
+
+record 'INSURANCE-PLAN' {
+    shareStructure 'INSURANCE-PLAN version 100'
+    recordId 435
+
+    calc {
+        element 'INS-PLAN-CODE-0435'
+        duplicates 'NOT ALLOWED'
+    }
+
+    area 'INS-DEMO-REGION' {
+        offsetPages 1
+        pages 4
+    }
+
+    elements """
+        02 INS-PLAN-CODE-0435 picture X(3)
+           88 GROUP-LIFE-0435 value '001'
+           88 HMO-0435 value '002'
+           88 GROUP-HEALTH-0435 value '003'
+           88 GROUP-DENTAL-0435 value '004'
+        02 INS-CO-NAME-0435 picture X(45)
+        02 INS-CO-ADDRESS-0435
+           03 INS-CO-STREET-0435 picture X(20)
+           03 INS-CO-CITY-0435 picture X(15)
+           03 INS-CO-STATE-0435 picture X(2)
+           03 INS-CO-ZIP-0435
+              04 INS-CO-ZIP-FIRST-FIVE-0435 picture X(5)
+              04 INS-CO-ZIP-LAST-FOUR-0435 picture X(4)
+        02 INS-CO-PHONE-0435 picture 9(10)
+        02 GROUP-NUMBER-0435 picture 9(6)
+        02 PLAN-DESCRIPTION-0435
+           03 DEDUCT-0435 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 MAXIMUM-LIFE-COST-0435 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 FAMILY-COST-0435 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 DEP-COST-0435 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+        02 FILLER picture XX
+    """
+
+    diagram {
+        x 532
+        y 361
+    }
+}
+
+record 'JOB' {
+    shareStructure 'JOB version 100'
+    recordId 440
+
+    calc {
+        element 'JOB-ID-0440'
+        duplicates 'NOT ALLOWED'
+    }
+
+    area 'ORG-DEMO-REGION' {
+        offsetPages 5
+        pages 45
+    }
+
+    minimumRootLength 24
+    minimumFragmentLength 296
+
+    call 'IDMSCOMP BEFORE STORE'
+    call 'IDMSCOMP BEFORE MODIFY'
+    call 'IDMSDCOM AFTER GET'
+
+    elements """
+        02 JOB-ID-0440 picture 9(4)
+        02 TITLE-0440 picture X(20)
+        02 DESCRIPTION-0440
+           03 DESCRIPTION-LINE-0440 picture X(60) occurs 2
+        02 REQUIREMENTS-0440
+           03 REQUIREMENT-LINE-0440 picture X(60) occurs 2
+        02 MINIMUM-SALARY-0440 picture S9(6)V99
+        02 MAXIMUM-SALARY-0440 picture S9(6)V99
+        02 SALARY-GRADES-0440 picture 9(2) occurs 4
+        02 NUMBER-OF-POSITIONS-0440 picture 9(3)
+        02 NUMBER-OPEN-0440 picture 9(3)
+        02 FILLER picture XX
+    """
+
+    diagram {
+        storageMode 'FIXED COMPRESSED'
+        x 38
+        y 133
+    }
+}
+
+record 'NON-HOSP-CLAIM' {
+    shareStructure 'NON-HOSP-CLAIM version 100'
+    recordId 445
+
+    via {
+        set 'COVERAGE-CLAIMS'
+    }
+
+    area 'INS-DEMO-REGION' {
+        offsetPages 5
+        pages 45
+    }
+
+    minimumRootLength 248
+    minimumFragmentLength 1052
+
+    elements """
+        02 CLAIM-DATE-0445
+           03 CLAIM-YEAR-0445 picture 9(4)
+           03 CLAIM-MONTH-0445 picture 9(2)
+           03 CLAIM-DAY-0445 picture 9(2)
+        02 PATIENT-NAME-0445
+           03 PATIENT-FIRST-NAME-0445 picture X(10)
+           03 PATIENT-LAST-NAME-0445 picture X(15)
+        02 PATIENT-BIRTH-DATE-0445
+           03 PATIENT-BIRTH-YEAR-0445 picture 9(4)
+           03 PATIENT-BIRTH-MONTH-0445 picture 9(2)
+           03 PATIENT-BIRTH-DAY-0445 picture 9(2)
+        02 PATIENT-SEX-0445 picture X
+        02 RELATION-TO-EMPLOYEE-0445 picture X(10)
+        02 PHYSICIAN-NAME-0445
+           03 PHYSICIAN-FIRST-NAME-0445 picture X(10)
+           03 PHYSICIAN-LAST-NAME-0445 picture X(15)
+        02 PHYSICIAN-ADDRESS-0445
+           03 PHYSICIAN-STREET-0445 picture X(20)
+           03 PHYSICIAN-CITY-0445 picture X(15)
+           03 PHYSICIAN-STATE-0445 picture X(2)
+           03 PHYSICIAN-ZIP-0445
+              04 PHYSICIAN-ZIP-FIRST-FIVE-0445 picture X(5)
+              04 PHYSICIAN-ZIP-LAST-FOUR-0445 picture X(4)
+        02 PHYSICIAN-ID-0445 picture 9(6)
+        02 DIAGNOSIS-0445 picture X(60) occurs 2
+        02 NUMBER-OF-PROCEDURES-0445 picture 9(2) usage COMPUTATIONAL
+        02 FILLER picture X
+        02 PHYSICIAN-CHARGES-0445 occurs 10 dependingOn NUMBER-OF-PROCEDURES-0445
+           03 SERVICE-DATE-0445
+              04 SERVICE-YEAR-0445 picture 9(4)
+              04 SERVICE-MONTH-0445 picture 9(2)
+              04 SERVICE-DAY-0445 picture 9(2)
+           03 PROCEDURE-CODE-0445 picture 9(4)
+           03 DESCRIPTION-OF-SERVICE-0445 picture X(60)
+           03 FEE-0445 picture S9(7)V99 usage 'COMPUTATIONAL 3'
+           03 FILLER picture XXX
+    """
+
+    diagram {
+        storageMode 'VARIABLE'
+        x 95
+        y 475
+    }
+}
+
+record 'OFFICE' {
+    shareStructure 'OFFICE version 100'
+    recordId 450
+
+    calc {
+        element 'OFFICE-CODE-0450'
+        duplicates 'NOT ALLOWED'
+    }
+
+    area 'ORG-DEMO-REGION' {
+        offsetPages 5
+        pages 45
+    }
+
+    elements """
+        02 OFFICE-CODE-0450 picture X(3)
+        02 OFFICE-ADDRESS-0450
+           03 OFFICE-STREET-0450 picture X(20)
+           03 OFFICE-CITY-0450 picture X(15)
+           03 OFFICE-STATE-0450 picture X(2)
+           03 OFFICE-ZIP-0450
+              04 OFFICE-ZIP-FIRST-FIVE-0450 picture X(5)
+              04 OFFICE-ZIP-LAST-FOUR-0450 picture X(4)
+        02 OFFICE-PHONE-0450 picture 9(7) occurs 3
+        02 OFFICE-AREA-CODE-0450 picture X(3)
+        02 SPEED-DIAL-0450 picture X(3)
+    """
+
+    diagram {
+        x 399
+        y 19
+    }
+}
+
+record 'SKILL' {
+    shareStructure 'SKILL version 100'
+    recordId 455
+
+    calc {
+        element 'SKILL-ID-0455'
+        duplicates 'NOT ALLOWED'
+    }
+
+    area 'ORG-DEMO-REGION' {
+        offsetPages 5
+        pages 45
+    }
+
+    elements """
+        02 SKILL-ID-0455 picture 9(4)
+        02 SKILL-NAME-0455 picture X(12)
+        02 SKILL-DESCRIPTION-0455 picture X(60)
+    """
+
+    diagram {
+        x 532
+        y 133
+    }
+}
+
+record 'STRUCTURE' {
+    shareStructure 'STRUCTURE version 100'
+    recordId 460
+
+    via {
+        set 'MANAGES'
+    }
+
+    area 'EMP-DEMO-REGION' {
+        offsetPages 5
+        pages 95
+    }
+
+    elements """
+        02 STRUCTURE-CODE-0460 picture X(2)
+           88 ADMIN-0460 value 'A'
+           88 PROJECT-0460 value 'P1' THRU 'P9'
+        02 STRUCTURE-DATE-0460
+           03 STRUCTURE-YEAR-0460 picture 9(4)
+           03 STRUCTURE-MONTH-0460 picture 9(2)
+           03 STRUCTURE-DAY-0460 picture 9(2)
+        02 FILLER picture XX
+    """
+
+    diagram {
+        x 39
+        y 361
+    }
+}
+
+set 'COVERAGE-CLAIMS' {
+    order 'LAST'
+
+    owner 'COVERAGE' {
+        next 4
+        prior 5
+    }
+
+    member 'HOSPITAL-CLAIM' {
+        next 1
+        prior 2
+
+        diagram {
+            label {
+                x 358
+                y 445
+            }
+
+            line {
+                start {
+                    x 65
+                    y 53
+                }
+            }
+        }
+    }
+
+    member 'NON-HOSP-CLAIM' {
+        next 1
+        prior 2
+
+        diagram {
+            label {
+                x 163
+                y 445
+            }
+
+            line {
+                start {
+                    x 65
+                    y 53
+                }
+
+                bendpoint {
+                    x 65
+                    y 76
+                }
+
+                bendpoint {
+                    x '-127'
+                    y 76
+                }
+
+                end {
+                    x 63
+                    y 0
+                }
+            }
+        }
+    }
+
+    member 'DENTAL-CLAIM' {
+        next 1
+        prior 2
+
+        diagram {
+            label {
+                x 544
+                y 445
+            }
+
+            line {
+                start {
+                    x 65
+                    y 53
+                }
+
+                bendpoint {
+                    x 65
+                    y 76
+                }
+
+                bendpoint {
+                    x 254
+                    y 76
+                }
+
+                end {
+                    x 64
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'DEPT-EMPLOYEE' {
+    order 'SORTED'
+
+    owner 'DEPARTMENT' {
+        next 1
+        prior 2
+    }
+
+    member 'EMPLOYEE' {
+        next 1
+        prior 2
+        owner 3
+
+        membership 'OPTIONAL AUTOMATIC'
+
+        key {
+            ascending 'EMP-LAST-NAME-0415'
+            ascending 'EMP-FIRST-NAME-0415'
+            naturalSequence
+            duplicates 'LAST'
+        }
+
+        diagram {
+            label {
+                x 242
+                y 84
+            }
+
+            line {
+                start {
+                    x 66
+                    y 53
+                }
+
+                bendpoint {
+                    x 66
+                    y 114
+                }
+
+                bendpoint {
+                    x 152
+                    y 114
+                }
+
+                end {
+                    x 38
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'EMP-COVERAGE' {
+    order 'FIRST'
+
+    owner 'EMPLOYEE' {
+        next 7
+        prior 8
+    }
+
+    member 'COVERAGE' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 358
+                y 324
+            }
+
+            line {
+                start {
+                    x 65
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'EMP-EMPOSITION' {
+    order 'FIRST'
+
+    owner 'EMPLOYEE' {
+        next 9
+        prior 10
+    }
+
+    member 'EMPOSITION' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 190
+                y 276
+            }
+        }
+    }
+}
+
+set 'EMP-EXPERTISE' {
+    order 'SORTED'
+
+    owner 'EMPLOYEE' {
+        next 11
+        prior 12
+    }
+
+    member 'EXPERTISE' {
+        next 1
+        prior 2
+        owner 3
+
+        key {
+            descending 'SKILL-LEVEL-0425'
+            naturalSequence
+            duplicates 'FIRST'
+        }
+
+        diagram {
+            label {
+                x 419
+                y 276
+            }
+        }
+    }
+}
+
+set 'EMP-NAME-NDX' {
+    order 'SORTED'
+
+    index {
+        keys 40
+    }
+
+    systemOwner {
+        area 'EMP-DEMO-REGION' {
+            offsetPages 1
+            pages 4
+        }
+
+        diagram {
+            x 274
+            y 190
+        }
+    }
+
+    member 'EMPLOYEE' {
+        index 4
+
+        membership 'OPTIONAL AUTOMATIC'
+
+        key {
+            ascending 'EMP-LAST-NAME-0415'
+            ascending 'EMP-FIRST-NAME-0415'
+            naturalSequence
+            compressed
+            duplicates 'LAST'
+        }
+
+        diagram {
+            label {
+                x 178
+                y 139
+            }
+        }
+    }
+}
+
+set 'JOB-EMPOSITION' {
+    owner 'JOB' {
+        next 2
+        prior 3
+    }
+
+    member 'EMPOSITION' {
+        next 4
+        prior 5
+        owner 6
+
+        membership 'OPTIONAL MANUAL'
+
+        diagram {
+            label {
+                x 27
+                y 209
+            }
+
+            line {
+                start {
+                    x 64
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'JOB-TITLE-NDX' {
+    order 'SORTED'
+
+    index {
+        keys 30
+    }
+
+    systemOwner {
+        area 'ORG-DEMO-REGION' {
+            offsetPages 1
+            pages 4
+        }
+
+        diagram {
+            x 27
+            y 76
+        }
+    }
+
+    member 'JOB' {
+        index 1
+
+        membership 'OPTIONAL AUTOMATIC'
+
+        key {
+            ascending 'TITLE-0440'
+            naturalSequence
+            duplicates 'NOT ALLOWED'
+        }
+
+        diagram {
+            label {
+                x 28
+                y 29
+            }
+        }
+    }
+}
+
+set 'MANAGES' {
+    owner 'EMPLOYEE' {
+        next 13
+        prior 14
+    }
+
+    member 'STRUCTURE' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 139
+                y 336
+            }
+
+            line {
+                start {
+                    x 38
+                    y 53
+                }
+
+                bendpoint {
+                    x 38
+                    y 87
+                }
+
+                bendpoint {
+                    x '-151'
+                    y 87
+                }
+
+                end {
+                    x 95
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'OFFICE-EMPLOYEE' {
+    order 'SORTED'
+
+    index {
+        keys 30
+    }
+
+    owner 'OFFICE' {
+        next 1
+        prior 2
+    }
+
+    member 'EMPLOYEE' {
+        index 5
+        owner 6
+
+        membership 'OPTIONAL AUTOMATIC'
+
+        key {
+            ascending 'EMP-LAST-NAME-0415'
+            ascending 'EMP-FIRST-NAME-0415'
+            naturalSequence
+            compressed
+            duplicates 'LAST'
+        }
+
+        diagram {
+            label {
+                x 384
+                y 198
+            }
+
+            line {
+                start {
+                    x 65
+                    y 53
+                }
+
+                bendpoint {
+                    x 65
+                    y 171
+                }
+
+                bendpoint {
+                    x '-19'
+                    y 171
+                }
+
+                end {
+                    x 95
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'REPORTS-TO' {
+    owner 'EMPLOYEE' {
+        next 15
+        prior 16
+    }
+
+    member 'STRUCTURE' {
+        next 4
+        prior 5
+        owner 6
+
+        membership 'OPTIONAL MANUAL'
+
+        diagram {
+            label {
+                x 39
+                y 332
+            }
+
+            line {
+                start {
+                    x 19
+                    y 53
+                }
+
+                bendpoint {
+                    x 19
+                    y 77
+                }
+
+                bendpoint {
+                    x '-183'
+                    y 77
+                }
+
+                end {
+                    x 63
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'SKILL-EXPERTISE' {
+    order 'SORTED'
+
+    index {
+        keys 30
+    }
+
+    owner 'SKILL' {
+        next 2
+        prior 3
+    }
+
+    member 'EXPERTISE' {
+        index 4
+        owner 5
+
+        key {
+            descending 'SKILL-LEVEL-0425'
+            naturalSequence
+            duplicates 'FIRST'
+        }
+
+        diagram {
+            label {
+                x 602
+                y 200
+            }
+        }
+    }
+}
+
+set 'SKILL-NAME-NDX' {
+    order 'SORTED'
+
+    index {
+        keys 30
+    }
+
+    systemOwner {
+        area 'ORG-DEMO-REGION' {
+            offsetPages 1
+            pages 4
+        }
+
+        diagram {
+            x 651
+            y 76
+        }
+    }
+
+    member 'SKILL' {
+        index 1
+
+        membership 'OPTIONAL AUTOMATIC'
+
+        key {
+            ascending 'SKILL-NAME-0455'
+            naturalSequence
+            duplicates 'NOT ALLOWED'
+        }
+
+        diagram {
+            label {
+                x 535
+                y 77
+            }
+        }
+    }
+}

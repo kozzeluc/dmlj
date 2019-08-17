@@ -27,9 +27,16 @@ define <i>several</i> such (relational) schemas in the same catalog, each target
 dictionaries share the same structure, which is described in the IDMSNTWK schema).  In a freshly defined application 
 catalog there is a schema called <b>SYSDICT</b>; you can use this schema if the non-relational schemas for which you 
 want to generate diagrams are in the same dictionary.  If this is <i>not</i> the case, create (an)other relational 
-schema(s) pointing to the dictionar(y)(ies) containing your non-relational schemas :
-<br><br>
-[TODO include definition of SYSDICT_APPLDICT schema]
+schema(s) pointing to the dictionar(y)(ies) containing your non-relational schemas (via the <code>DBNAME</code> keyword) :
+<br>
+<pre>
+     CREATE SCHEMA SYSDICT_APPLDICT                  
+         FOR NONSQL SCHEMA SYSDIRL.IDMSNTWK VERSION 1
+             DBNAME APPLDICT                         
+         ; 
+</pre>
+Note that the reference to the IDMSNTWK schema is prefixed by the <code>SYSDIRL</code> dictionary name (which might be 
+different for you).
 <h2>Defining a Dictionary</h2>
 Open the the <b>Import/Dictionary section</b> in the <a href="preferences_dialog">preferences dialog</a>; there you have
 an overview of the dictionaries you have defined :
@@ -52,7 +59,8 @@ Press the <i>Add...</i> button to create your first dictionary :
 <br><br>
 Most of the fields should be self-explaining by now.  Each dictionary needs an <b>identifier (id)</b>, so give your 
 dictionary a meaningful name.  The <i>dictname</i> field maps to the <b>DBNAME</b> in your DBTABLE that includes the 
-dictionary and catalog segments making up your dictionary/catalog.
+dictionary and catalog segments making up your dictionary/catalog (where the schema you specify in the <i>Schema</i>
+section is defined).
 <br><br>
 You are not obliged to enter your <b>password</b> but beware that if you don't, the diagram editor will ask you for it 
 whenever needed :  
@@ -72,7 +80,7 @@ will get an error message dialog if the connection failed :
 <br><br>
 In the case the connection was successful you will be informed as well :
 <br><br>
-[TODO provide screenshot of connection successful informational message dialog]
+<img src="../../images/dictionary_connection_ok.png" alt="[dictionary connection ok]">
 <br><br>
 Press the OK button to <b>save</b> the dictionary definition in your workspace.
 <br><br>

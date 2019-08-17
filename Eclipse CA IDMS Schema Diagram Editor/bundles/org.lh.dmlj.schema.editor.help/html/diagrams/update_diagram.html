@@ -8,5 +8,36 @@
 
 <body>
 <h1>Updating Diagrams</h1>
+To prevent you from having to create a new diagram when you have modified a schema in the IDMS dictionary, the diagram
+editor provides an <b><i>update</i> feature</b>.  Just right-click on a diagram in the Package Explorer view to open the
+Update wizard :
+<br><br>
+<img src="../../images/file_menu_update.png" alt="[file menu update]">
+<br><br>
+The Update wizard is actually very similar to the <a href="import_diagram.html#importwizard">Import wizard</a>; on the 
+first page you'll need to check the source from which to update your diagram.  Select a source and confirm by pressing 
+the <i>Select</i> button :
+<br><br>
+<img src="../../images/update_wizard_tool_selection.png" alt="[update wizard tool selection]">
+<br><br>
+The <i>Next</i> button will be <i>enabled</i> only after you have selected a source <i>and</i> confirmed your selection 
+with the <i>Select</i> button.
+<br><br>
+The possible sources are the same as for the Import wizard :
+<ul>
+<li>An IDMS dictionary on your mainframe</li>
+<li>A file that contains CA IDMS/DB schema syntax</li>
+</ul>
+If you have developed your own custom import functionality, (an)other source(s) will be listed as well.
+<br><br> 
+Mind the important <b>warning message</b> at the bottom of the wizard page :  if you're not using a version control 
+system like GIT or Subversion, I strongly advise you to create a copy of your .schema or .schemadsl file <i>before</i> 
+updating your diagram.  If something goes wrong while updating your diagram, you'll have something to revert to.  Have a
+look at this 
+<a href="https://kozzeluc.wordpress.com/2017/02/26/managing-diagram-versions-with-git/" target="_blank">blog post</a> to 
+see how easy it is to start using GIT for your IDMS diagrams.
+<br><br>
+All remaining pages are the same as for the Import wizard, with the exception that <b>no record layout manager</b> has 
+to be selected; any new records will be placed on the right side of your existing diagram.
 </body>
 </html>
