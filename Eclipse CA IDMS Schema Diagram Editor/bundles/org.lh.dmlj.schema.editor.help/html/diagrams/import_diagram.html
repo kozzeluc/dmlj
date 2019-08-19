@@ -101,10 +101,27 @@ diagrams directly from an <b>IDMS application dictionary</b>.  In order to be ab
 dictionary however, you must have installed the <a href="../preferences/JDBC_driver.html">IDMS JDBC driver</a> and have 
 defined at least 1 <a href="../preferences/dictionaries.html">dictionary</a>.
 <br><br>
-[TODO further describe the procedure to import schema diagrams from a dictionary]
+When importing from a dictionary on your mainframe, you will first need to select the 
+<a href="../preferences/dictionaries.html">dictionary</a> that contains the schema :
+<br><br>
+[TODO provide screenshot of the dictionary selection wizard page]
+<br><br>
+Then select the <b>schema</b> of interest in the list that was built when accessing your mainframe dictionary :
+<br><br>
+[TODO provide screenshot of the schema selection wizard page]
+<br><br>
+Finally, and only when you're importing the <a href="../idmsntwk.html">IDMSNTWK</a> schema, you will be presented the 
+option of also <b>importing the catalog tables</b> :
+<br><br>
+[TODO provide screenshot of the options wizard page]
+<br><br>
+You are free to create your own version of the <a href="../idmsntwk.html">IDMSNTWK</a> diagram, but be informed that an 
+excellent <a href="../../resources/IDMSNTWK version 1 (Release 18.5).schemadsl" target="_blank">example</a> is provided, 
+saving you <i>a lot</i> of work.
 <a id="custom"><h2>Custom Import Tools</h2></a>
 You can create your own diagram import tools via the <b>org.lh.dmlj.schema.editor.core.import</b> extension point.  The 
-custom import tools you create will show up on the very first import wizard page (see above).
+<b>custom <i>import tools</i></b> you create will show up in the list of data sources on the first 
+<a href="#importwizard">import wizard page</a> (see above).
 <br><br>
 Describing in detail how to build your own custom import tool (data source) is beyond the scope of this help document.  
 You can take the "an IDMS dictionary on your mainframe" data source, which is defined in the 
