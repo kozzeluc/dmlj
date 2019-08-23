@@ -17,5 +17,12 @@
             file="toc/toc_diagrams.xml">
       </toc>
    </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="welcome/welcome.xml">
+      </configExtension>
+   </extension>
 
 </plugin>

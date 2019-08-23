@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<introContent>
+	<extensionContent id="org.lh.dmlj.schema.editor.help.intro" name="Welcome Extension" path="overview/@">
+		<group style-id="content-group" id="org.lh.dmlj.schema.editor.help.intro.group">
+			<link label="CA IDMS™/DB Schema Diagram Editor" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.lh.dmlj.schema.editor.help/html/gettingstarted/introduction.html" id="org.lh.dmlj.schema.editor.help.intro.link" style-id="content-link">
+				<text>You'll find everything you need to know about the Eclipse CA IDMS™/DB Schema Diagram Editor by selecting 
+				  	  Help/Help Contents (or just click on the above link or the image on the left).</text>
+			 </link>
+		 </group>
+	</extensionContent>
+</introContent>
