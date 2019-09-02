@@ -87,8 +87,8 @@ syntax :
 <br><br>
 Make sure the schema syntax is the output from a <code>PUNCH SCHEMA NAME IS <i>schema-name</i> VERSION IS <i>version-number</i> AS SYNTAX</code> statement.
 <br><br>
-Enter the names of the <b>database procedures</b> you use for database compression; this will allow for setting all 
-record's storage modes correctly :
+Enter the names of the <b>database procedures</b> you use for <i>compression</i>; this will allow for setting all record's 
+<i>storage modes</i> correctly :
 <br><br>
 <img src="../../images/import_syntax_options.png" alt="[import from syntax options]">
 <br><br>
@@ -104,16 +104,21 @@ defined at least 1 <a href="../preferences/dictionaries.html">dictionary</a>.
 When importing from a dictionary on your mainframe, you will first need to select the 
 <a href="../preferences/dictionaries.html">dictionary</a> that contains the schema :
 <br><br>
-[TODO provide screenshot of the dictionary selection wizard page]
+<img src="../../images/import_dictionary_selection.png" alt="[dictionary selection]">
 <br><br>
 Then select the <b>schema</b> of interest in the list that was built when accessing your mainframe dictionary :
 <br><br>
-[TODO provide screenshot of the schema selection wizard page]
+<img src="../../images/import_schema_selection.png" alt="[schema selection]">
 <br><br>
-Finally, and only when you're importing the <a href="../idmsntwk.html">IDMSNTWK</a> schema, you will be presented the 
-option of also <b>importing the catalog tables</b> :
+Finally, you can set some <b>options</b>, currently limited to specifying the database procedures used for <i>compression</i>; 
+this will allow for setting all record's <i>storage modes</i> correctly :
 <br><br>
-[TODO provide screenshot of the options wizard page]
+<img src="../../images/import_from_dictionary_options.png" alt="[options]">
+<br><br>
+When you're importing the <a href="../idmsntwk.html">IDMSNTWK</a> schema, you will be offered a few more options, all related to
+making the IDMSNTWK schema as complete as possible :
+<br><br>
+<img src="../../images/import_from_dictionary_options_idmsntwk.png" alt="[options (idmsntwk)]">
 <br><br>
 You are free to create your own version of the <a href="../idmsntwk.html">IDMSNTWK</a> diagram, but be informed that an 
 excellent <a href="../../resources/IDMSNTWK version 1 (Release 18.5).schemadsl" target="_blank">example</a> is provided, 
