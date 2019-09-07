@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lh.dmlj.schema.editor</groupId>
     <artifactId>org.lh.dmlj.schema.editor.parent</artifactId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <tycho-version>1.3.0</tycho-version>
