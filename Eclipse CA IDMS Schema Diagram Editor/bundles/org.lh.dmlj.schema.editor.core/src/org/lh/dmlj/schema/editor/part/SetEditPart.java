@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.BendpointConnectionRouter;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -188,7 +187,6 @@ public class SetEditPart
 		connection.setConnectionRouter(router);
 		
 		connection.setLineWidth(1);
-		connection.setForegroundColor(ColorConstants.black);
 		
 		MemberRole memberRole = getModel().getMemberRole();
 		Set set = memberRole.getSet();

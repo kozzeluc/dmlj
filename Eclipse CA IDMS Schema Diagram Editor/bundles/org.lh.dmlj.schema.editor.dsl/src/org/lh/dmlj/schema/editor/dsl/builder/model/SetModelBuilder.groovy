@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -170,8 +170,10 @@ class SetModelBuilder extends AbstractModelBuilder<Set> {
 		assert set.members
 		assert set.members[-1].record
 		assert set.members[-1].connectionParts
-		assert set.members[-1].connectionParts[0].sourceEndpointLocation,
-			'source- and target endpoints are mandatory when bendpoints are defined'
+		if (!set.systemOwner) {
+			assert set.members[-1].connectionParts[0].sourceEndpointLocation,
+				'source- and target endpoints are mandatory when bendpoints are defined'
+		}
 		assert !set.members[-1].connectionParts[-1].targetEndpointLocation,
 			"target endpoint must be defined AFTER the line's bendpoints"
 		
@@ -606,13 +608,15 @@ class SetModelBuilder extends AbstractModelBuilder<Set> {
 		bodies << BODY_LINE
 		runClosure definition
 		assert bodies == [ BODY_MEMBER, BODY_DIAGRAM, BODY_LINE ]
-		if (set.members[-1].connectionParts[0].bendpointLocations ||
-			set.members[-1].connectionParts.size() > 1 &&
-			set.members[-1].connectionParts[1].bendpointLocations) {
-			
-			assert set.members[-1].connectionParts[0].sourceEndpointLocation &&
-				   set.members[-1].connectionParts[-1].targetEndpointLocation
-				   'source- and target endpoints are mandatory when bendpoints are defined'
+		if (!set.systemOwner) {
+			if (set.members[-1].connectionParts[0].bendpointLocations ||
+				set.members[-1].connectionParts.size() > 1 &&
+				set.members[-1].connectionParts[1].bendpointLocations) {
+				
+				assert set.members[-1].connectionParts[0].sourceEndpointLocation &&
+					   set.members[-1].connectionParts[-1].targetEndpointLocation,
+					   'source- and target endpoints are mandatory when bendpoints are defined'
+			}
 		}
 		bodies -= BODY_LINE		
 	}

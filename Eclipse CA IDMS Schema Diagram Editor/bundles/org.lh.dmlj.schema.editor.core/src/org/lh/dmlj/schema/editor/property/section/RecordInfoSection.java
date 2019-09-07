@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2019 Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,36 +17,51 @@
 package org.lh.dmlj.schema.editor.property.section;
 
 import java.io.IOException;
+import java.util.Optional;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.property.RecordInfoValueObject;
 import org.lh.dmlj.schema.editor.template.RecordInfoTemplate;
 
 public class RecordInfoSection extends AbstractPropertiesSection {
+		
+	private static RecordInfoTemplate template = new RecordInfoTemplate();
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+		
+	private Control pageControl;
+	private Composite stackComposite;
+	private StackLayout stackLayout;
+	private Composite dataComposite;
+	private Browser browser;
+	private GridData gd_browser;
+	private Label emptyLabel;
 	
-	private static RecordInfoTemplate TEMPLATE = new RecordInfoTemplate();
-	
-	private Browser 		browser;
-	private Control 		control;
+	private Optional<String> html;
 	
 	private ControlListener controlListener = new ControlAdapter() {			
 		@Override
 		public void controlResized(ControlEvent e) {
-			Rectangle bounds = control.getBounds();
-			browser.setBounds(0, 0, 0, bounds.height);
+			stackComposite.setBounds(0, 0, pageControl.getBounds().width - 100, pageControl.getBounds().height);
+			gd_browser.widthHint = pageControl.getBounds().width - 100;
+			gd_browser.heightHint = pageControl.getBounds().height;
 		}			
 	};
 		
@@ -54,63 +69,72 @@ public class RecordInfoSection extends AbstractPropertiesSection {
 		super();		
 	}
 	
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	@Override
-	public final void createControls(Composite parent, 
-							   		 TabbedPropertySheetPage aTabbedPropertySheetPage) {
-		
-		// We'll keep the browser width and height in sync with the tabbed
-		// property sheet page; it seems that when we set the width to zero that
-		// it always stretches horizontally, which is what we need; we need to
-		// take care of the heigth though.
-		
+	public final void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);        		
+				
+		pageControl = aTabbedPropertySheetPage.getControl();
+		pageControl.addControlListener(controlListener);		
 		
-		control = aTabbedPropertySheetPage.getControl();
+		stackComposite = new Composite(parent, SWT.NONE);
+		stackComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		stackComposite.setBounds(0, 0, pageControl.getBounds().width - 100, pageControl.getBounds().height);
+		stackLayout = new StackLayout();
+		stackComposite.setLayout(stackLayout);
+				
+		dataComposite = new Composite(stackComposite, SWT.NONE);
+		dataComposite.setLayout(new GridLayout(2, false));
 		
-		browser = new Browser(parent, SWT.NONE);
-		Rectangle bounds = control.getBounds();
-		browser.setBounds(0, 0, 0, bounds.height);
+		browser = new Browser(dataComposite, SWT.NONE);
+		gd_browser = new GridData(SWT.LEFT, SWT.FILL, false, false, 2, 1);
+		gd_browser.verticalIndent = 5;
+		gd_browser.widthHint = pageControl.getBounds().width - 100;
+		gd_browser.heightHint = pageControl.getBounds().height;
+		browser.setLayoutData(gd_browser);
 		
-		// whenever the container control changes size, adjust the browser size
-		// as well...
-		control.addControlListener(controlListener);
-        
+		emptyLabel = new Label(stackComposite, SWT.NO_FOCUS);
+		stackLayout.topControl = emptyLabel;
+		stackComposite.layout();
 	}
 	
 	@Override
 	public void dispose() {
-		if (control != null && !control.isDisposed()) {
-			control.removeControlListener(controlListener);
+		if (pageControl != null && !pageControl.isDisposed()) {
+			pageControl.removeControlListener(controlListener);
 		}
 		super.dispose();
 	}
 	
 	@Override
 	public final void refresh() {
-		SchemaRecord record = (SchemaRecord) modelObject;
-		RecordInfoValueObject valueObject = null;
-		try {
-			valueObject = 
-				DictguidesRegistry.INSTANCE
-							  	  .getRecordInfoValueObject(record.getName());
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (html.isPresent()) {
+			browser.setText(html.get());
+			stackLayout.topControl = dataComposite;
+		} else {
+			stackLayout.topControl = emptyLabel;
 		}
-		if (valueObject == null) {
-			browser.setText("");
-			return;
-		}		
-		String html = TEMPLATE.generate(valueObject);		
-		browser.setText(html);		
+		stackComposite.layout();
 	}
 
 	@Override
 	public final void setInput(IWorkbenchPart part, ISelection selection) {
-		
-		super.setInput(part, selection);		
-		
-        Assert.isTrue(modelObject instanceof SchemaRecord, "not a SchemaRecord");
-                
+		super.setInput(part, selection);
+        try {
+        	String recordName = ((SchemaRecord) modelObject).getName();
+        	Optional<RecordInfoValueObject> data = 
+        		Optional.ofNullable(DictguidesRegistry.INSTANCE.getRecordInfoValueObject(recordName));
+        	if (data.isPresent()) {
+        		html = Optional.of(template.generate(data.get()));
+        	} else {
+        		html = Optional.empty();
+        	}
+        } catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			html = Optional.empty();
+		}
 	}
 	
 }

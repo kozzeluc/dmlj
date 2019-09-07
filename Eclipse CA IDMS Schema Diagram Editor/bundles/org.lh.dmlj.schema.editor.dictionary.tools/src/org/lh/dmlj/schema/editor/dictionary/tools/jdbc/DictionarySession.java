@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,8 +30,11 @@ import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ui.PromptForPasswordDialog;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class DictionarySession {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	protected Connection connection;
 	private long connectionClosed = -1;
@@ -70,18 +73,6 @@ public class DictionarySession {
 			password = dictionary.getPassword();
 		}		
 		return connect(dictionary.getConnectionUrl(), dictionary.getUser(), password);		
-	}	
-	
-	private static void logDebug(String message) {
-		org.lh.dmlj.schema.editor.Plugin.logDebug(message);
-	}
-	
-	private static void logError(String message, Throwable t) {
-		org.lh.dmlj.schema.editor.Plugin.logError(message, t);
-	}
-
-	private static void logInfo(String message) {
-		org.lh.dmlj.schema.editor.Plugin.logInfo(message);
 	}
 
 	@SuppressWarnings("unused")
@@ -129,7 +120,7 @@ public class DictionarySession {
 			p.append(queryStatistics.toString());
 			p.append("\n");
 		}
-		logInfo(p.toString());
+		logger.info(p.toString());
 	}
 	
 	public final void open() {
@@ -169,11 +160,11 @@ public class DictionarySession {
 		int rowsProcessed = 0;
 		long start = System.currentTimeMillis();
 		try {
-			logDebug("Start execution of " + query);
+			logger.debug("Start execution of " + query);
 			PreparedStatement ps = connection.prepareStatement(query.getSql());
 			ResultSet rs = ps.executeQuery();
 			end1 = System.currentTimeMillis();
-			logDebug("Start processing rows for query '" + query.getDescription() + "'");
+			logger.debug("Start processing rows for query '" + query.getDescription() + "'");
 			while (rs.next()) {
 				int row = rs.getRow();
 				rowProcessor.processRow(rs);
@@ -184,15 +175,15 @@ public class DictionarySession {
 			}
 			ps.close();	
 			end2 = System.currentTimeMillis();
-			logDebug("Processed " + rowsProcessed + " rows for query '" + query.getDescription() + 
-					 "'");
+			logger.debug("Processed " + rowsProcessed + " rows for query '" +
+						 query.getDescription() + "'");
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, null));
 			runningQueryCount -= 1;
 		} catch (Throwable t) {
 			String message = "Exception while executing query '" + query.getDescription() + 
 							 "'; see log for details.";
-			logError("Exception while running query '" + query.getDescription() + "': " +
-					 t.getClass().getName() + " (" + t.getMessage() + ")", t);
+			logger.error("Exception while running query '" + query.getDescription() + 
+						 "': " + t.getClass().getName() + " (" + t.getMessage() + ")", t);
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, t));
 			runningQueryCount -= 1;
 			throw new RuntimeException(message, t);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,10 +19,14 @@ package org.lh.dmlj.schema.editor.extension;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class DataEntryPageExtensionElement extends AbstractExtensionElement {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private AbstractDataEntryPage dataEntryPage;
 
 	public DataEntryPageExtensionElement(IConfigurationElement configElement) {
@@ -43,8 +47,9 @@ public class DataEntryPageExtensionElement extends AbstractExtensionElement {
 			dataEntryPage = (AbstractDataEntryPage) executableExtension;			
 			return dataEntryPage;
 		} catch (CoreException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+			String message = e.getMessage();
+			logger.error(message, e);
+			throw new RuntimeException(message);
 		}
 	}
 

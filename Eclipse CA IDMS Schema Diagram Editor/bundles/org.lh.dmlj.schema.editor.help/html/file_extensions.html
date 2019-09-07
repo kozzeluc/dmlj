@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Creating a new Diagram</title>
+</head>
+
+<body>
+<h1>File Extensions</h1>
+Each diagram is maintained as a Java object graph that is implemented with the <b>Eclipse Modeling Framework (EMF)</b>.
+Without going into details about EMF, it is fairly easy from a technical point of view to persist such object models to 
+disk as an XML file (file extension :  .<b>schema</b>), as well as to rebuild that object model (in memory) from such an 
+XML file.  This is the original way the Schema Editor used (and still can use) to persist and restore its diagram object 
+graphs.
+<br><br>
+We all like to tweak the internals of the products we use and the problem with the XML style of persisting the object
+object models is that they can be <b>hard to understand</b> because of the numerous references between objects :  the
+Schema Editor's object model isn't purely hierarchical.
+<br><br>
+That's why, along the way of the Schema Editor's development, an alternative file format was designed :  a simple <b>DSL
+(Domain Specific Language)</b> was developed to represent the diagram in a much more readable (and tweakable) text 
+format that is also, when saved to disk, suitable to rebuild to object model.  The file extension here is 
+.<b>schemadsl</b>.You can see the DSL version of your diagram (schema) components in action in the DSL tabs :<br><br>
+<img src="../images/DSL_tab_example.png" alt="[DSL tab example]">
+<br><br>
+Which of the 2 file extensions you prefer is really up to you.  The <b>default file extension</b> (in your Eclipse 
+preferences) is still .<b>schema</b> because from time to time bugs come to the surface and these can prevent you from
+doing your job with the Schema Editor.  This shouldn't scare you off to use the .schemadsl file extension however 
+because it's easy to convert a diagram from 1 file format to the other using the File/Save As... menu item (or to fix the
+issue directly in the file).
+<br><br>
+You will notice that .schemadsl files take more time to load in Eclipse, especially for large schemas.  It is my believe
+however that this file format offers more opportunities, e.g. nobody prevents you from generating the .schemadsl files
+yourself (using whatever source comes to your mind); doing that with the XML file format would be very hard.  Moreover,
+<b>comparing 2 </b>.<b>schemadsl files</b> will likely produce a better result than comparing 2 .schema files, so working with 
+.schemadsl files in a version control system like GIT offers more opportunities.
+<br><br>
+The Diagram Editor registers itself in the Eclipse workbench as the default editor for .schema and .schemadsl files :
+<br><br>
+<img src="../images/file_associations.png" alt="[file associations]">
+</body>
+</html>

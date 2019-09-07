@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -33,8 +33,11 @@ import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class ModelChangeDispatcher implements IModelChangeProvider {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	public enum Availability {MANDATORY, OPTIONAL};	
 	
@@ -161,7 +164,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 						EditPart editPart = (EditPart) listener;
 						message.append("\n         Model:    " + editPart.getModel().toString());
 					}
-					Plugin.logError(message.toString(), t);
+					logger.error(message.toString(), t);
 				}
 				Object listenerData = contextCopy.getListenerData();
 				if (listenerData != null) {
@@ -201,7 +204,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 						EditPart editPart = (EditPart) listener;
 						message.append("\n         Model:    " + editPart.getModel().toString());
 					}
-					Plugin.logError(message.toString(), t);
+					logger.error(message.toString(), t);
 				}
 			}
 		}

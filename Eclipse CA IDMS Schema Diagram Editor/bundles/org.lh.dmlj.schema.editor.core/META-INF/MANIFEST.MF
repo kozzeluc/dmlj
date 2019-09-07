@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.core;singleton:=true
-Bundle-Version: 3.1.0.qualifier
+Bundle-Version: 3.2.0.qualifier
 Bundle-Activator: org.lh.dmlj.schema.editor.Plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
@@ -14,15 +14,19 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.views.properties.tabbed,
  org.lh.dmlj.schema.editor.groovy,
- org.lh.dmlj.schema.editor.model
+ org.lh.dmlj.schema.editor.model,
+ org.eclipse.e4.ui.css.swt.theme
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .
 Bundle-Vendor: Luc Hermans
 Export-Package: org.lh.dmlj.schema.editor,
+ org.lh.dmlj.schema.editor.common,
  org.lh.dmlj.schema.editor.importtool,
- org.lh.dmlj.schema.editor.importtool.elements
+ org.lh.dmlj.schema.editor.importtool.elements,
+ org.lh.dmlj.schema.editor.log
 Import-Package: org.lh.dmlj.schema.editor.dsl.builder.model,
  org.lh.dmlj.schema.editor.dsl.builder.syntax,
  org.lh.dmlj.schema.editor.service,
  org.lh.dmlj.schema.editor.service.api
+Automatic-Module-Name: org.lh.dmlj.schema.editor.core

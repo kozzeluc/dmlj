@@ -11,8 +11,18 @@
             file="toc/toc_gettingstarted.xml">
       </toc>
       <toc
+            file="toc/toc_preferences.xml">
+      </toc>
+      <toc
             file="toc/toc_diagrams.xml">
       </toc>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="welcome/welcome.xml">
+      </configExtension>
    </extension>
 
 </plugin>

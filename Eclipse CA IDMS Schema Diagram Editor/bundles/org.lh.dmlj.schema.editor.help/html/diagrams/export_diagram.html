@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Exporting Diagrams</title>
+</head>
+
+<body>
+<h1>Exporting Diagrams</h1>
+You can share the .schema or .schemadsl files you have created with your colleagues in a number of ways :
+<ul>
+<li>By means of a shared network drive</li>
+<li>By e-mail</li>
+<li>Through a version control system like 
+<a href="https://kozzeluc.wordpress.com/2017/02/26/managing-diagram-versions-with-git/" target="_blank">GIT</a> or 
+Subversion</li>
+<li>...</li>
+</ul>
+Since a .schema or .schemadsl file (a diagram file) contains each and every aspect of an IDMS schema, you can also 
+export the complete <b>IDMS schema compiler syntax</b> to a text file of your choice.  Al you need to do is start the
+diagram editor's <b>Export wizard</b> via the File/Export... menu item :
+<br><br>
+<img src="../../images/file_menu_export.png" alt="[file export menu-item]">
+<br><br>
+Select the <b>CA IDMS/DB Schema Syntax export wizard</b> in the Export wizard selection dialog :
+<br><br>
+<img src="../../images/export_wizard_selection_dialog.png" alt="[export wizard selection dialog]">
+<br><br>
+On the Export wizard's first page, select the <b>diagram</b> for which you want to generate IDMS schema compiler syntax :
+<br><br>
+<img src="../../images/export_wizard_diagram_selection.png" alt="[export wizard diagram selection]">
+<br><br>
+On the next wizard page, select the <b>output file</b>, i.e. the file you want the IDMS schema compiler syntax written 
+to :
+<br><br>
+<img src="../../images/export_wizard_output_file_selection.png" alt="[export wizard output file selection]">
+<br><br>
+Finally, on the last wizard page, you can currently set 1 <b>option</b> :  whether you want the entities (areas, 
+records and sets) to be sorted before generating syntax or not :
+<br><br>
+<img src="../../images/export_wizard_options.png" alt="[export wizard options]">
+<br><br>
+Sorting entities can be useful when comparing 2 files that each contain IDMS schema compiler syntax for the same schema,
+after you have done some modifications (though comparing the .schemadsl file before and after may be a better practice;
+note that the diagram editor does <i>not</i> have a specialized Eclipse <i>compare editor</i> [yet]).
+<br><br>
+When you press the <i>Finish</i> button, the IDMS schema compiler syntax will be written to the file you selected.
+<br><br>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>IDMSNTWK</title>
+</head>
+
+<body>
+<h1>IDMSNTWK</h1>
+The IDMSNTWK schema defines the (logical) structure of an IDMS dictionary and the <b>official IDMS documentation</b> 
+contains a <b>diagram</b> for it.  Together with that diagram you'll need the <b>Dictionary Structure Reference Guide</b> 
+and possibly also the <b>SQL Reference Guide</b> if you want to access the records and sets directly in your own 
+<i>tooling</i> or <i>reports</i> or just want to understand the <i>internals</i> of IDMS dictionaries.
+<br><br>
+I've been using the above combination for numerous years while building tools and reports that needed programmatic 
+access to our dictionaries.
+<b></b>
+The diagram editor offers an <b>interactive</b> way to explore the IDMSNTWK schema by providing a ready-to-use
+<a href="../resources/IDMSNTWK version 1 (Release 18.5).schemadsl" target="_blank">diagram</a> (Release 18.5) and the 
+functionality that allows you to <b>import selected chapters</b> from the following IDMS manuals :
+<ul>
+<li>The Dictionary Structure Reference Guide</li>
+<li>The SQL Reference Guide</li>
+</ul>
+Save the IDMSNTWK diagram in a project in your Eclipse workspace and you can immediately start exploring the IDMSNTWK 
+schema using the diagram editor (you will NOT have the record and table descriptions available in the Properties view
+yet).
+<br><br>
+To enjoy the <i>full</i> interactive experience, import the above mentioned manuals into your workplace using the 
+provided <b>import wizard</b>.  You can start this wizard either via the 
+<a href="preferences/preferences_dialog.html#idmsntwk">Preferences dialog</a>'s IDMSNTWK section or via the 
+<b>File/Import... menu item</b>:
+<br><br>
+<img src="../images/import_wizard_selection_dialog_manuals.png" alt="[import wizard selection dialog]">
+<br><br>
+On the first wizard page, select the Dictionary Structure Reference Guide manual; you'll see the document title when it
+was successfully processed :
+<br><br>
+<img src="../images/import_idmsntwk_manual_structure.png" alt="[IDMSNTWK manuals - structure]">
+<br><br>
+On the next wizard page, select the SQL Reference Guide manual; you'll see the document title when it
+was successfully processed :
+<br><br>
+<img src="../images/import_idmsntwk_manual_sql.png" alt="[IDMSNTWK manuals - SQL]">
+<br><br>
+On the final wizard page (and unlike the example below), give your manual combination a useful name and indicate if you 
+would like it to be used in the Properties view when viewing the IDMSNTWK diagram; if this is your first manual 
+combination, you would normally check this option :
+<br><br>
+<img src="../images/import_idmsntwk_manual_id.png" alt="[IDMSNTWK manuals - id]">
+<br><br>
+Important remark :  currently, only the following manual versions will be accepted by the import wizard :
+<ul>
+<li>r16 SP2</li>
+<li>r17</li>
+<li>Version 18.0.00</li>
+<li>Release 18.5.00</li>
+<li>Release 18.5.00, 2nd Edition</li>
+</ul>
+Imported manuals can be managed via the <a href="preferences/preferences_dialog.html#idmsntwk">Preferences dialog</a>;
+select the combination you want to be used when exploring the IDMSNTWK schema, import a new manual combination or remove
+an obsolete manual combination :
+<br><br>
+<img src="../images/preferences_IDMSNTWK_buttons.png" alt="[preferences IDMSNTWK buttons]">
+<br><br>
+From now on, whenever you view the IDMSNTWK diagram (more precisely any schema named <i>IDMSNTWK</i> with its version 
+equal to <i>1</i>) and select a <i>record type</i>, you will have the record (or table) information from the imported 
+IDMS manuals at your disposal in the Properties view (<i>Info</i> tab) :
+<br><br>
+<img src="../images/idmsntwk_properties_view.png" alt="[IDMSNTWK Properties view]">
+<br><br>
+</body>
+</html>

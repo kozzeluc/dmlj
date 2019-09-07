@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -147,7 +147,7 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		
 		comboShowRulers = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
 		GridData gd_comboShowRulers = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboShowRulers.widthHint = 25;
+		gd_comboShowRulers.widthHint = 75;
 		comboShowRulers.setLayoutData(gd_comboShowRulers);
 		comboShowRulers.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_RULERS));
 		
@@ -160,7 +160,7 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		
 		comboSnapToGuides = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
 		GridData gd_comboSnapToGuides = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboSnapToGuides.widthHint = 25;
+		gd_comboSnapToGuides.widthHint = 75;
 		comboSnapToGuides.setLayoutData(gd_comboSnapToGuides);
 		comboSnapToGuides.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GUIDES));
 		initializeDiagramAttributeComboValues(comboSnapToGuides);
@@ -170,7 +170,7 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		lblShowGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_GRID));
 		
 		comboShowGrid = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboShowGrid = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_comboShowGrid = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_comboShowGrid.widthHint = 25;
 		comboShowGrid.setLayoutData(gd_comboShowGrid);
 		comboShowGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_GRID));
@@ -183,7 +183,7 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		lblSnapToGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GRID));
 		
 		comboSnapToGrid = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboSnapToGrid = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_comboSnapToGrid = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_comboSnapToGrid.widthHint = 25;
 		comboSnapToGrid.setLayoutData(gd_comboSnapToGrid);
 		comboSnapToGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GRID));
@@ -199,7 +199,7 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		lblSnapToGeometry.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GEOMETRY));
 		
 		comboSnapToGeometry = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboSnapToGeometry = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_comboSnapToGeometry = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_comboSnapToGeometry.widthHint = 25;
 		comboSnapToGeometry.setLayoutData(gd_comboSnapToGeometry);
 		comboSnapToGeometry.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GEOMETRY));

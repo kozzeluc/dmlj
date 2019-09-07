@@ -76,6 +76,7 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRoleTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContextTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
 import org.lh.dmlj.schema.editor.common.ToolsTest;
+import org.lh.dmlj.schema.editor.log.LoggerSpec;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 import org.lh.dmlj.schema.editor.prefix.PointerFactoryTest;
 import org.lh.dmlj.schema.editor.prefix.PointerTest;
@@ -170,7 +171,10 @@ import org.lh.dmlj.schema.editor.property.section.ProcedureCallsDslFacetModifier
 	ToolsTest.class,
 	
 	// other
-	ProcedureCallsDslFacetModifierSpec.class
+	ProcedureCallsDslFacetModifierSpec.class,
+	
+	// logger tests
+	LoggerSpec.class
 	
 })
 public class AllCoreTests {	

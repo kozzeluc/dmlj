@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -351,9 +351,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 		listCalcElements.setLayoutData(gd_listCalcElements);
 		
 		btnMoveCalcElementUp = new Button(container, SWT.NONE);
-		GridData gd_btnMoveCalcElementUp = new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 1, 1);
-		gd_btnMoveCalcElementUp.widthHint = 40;
-		btnMoveCalcElementUp.setLayoutData(gd_btnMoveCalcElementUp);
+		btnMoveCalcElementUp.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1));
 		btnMoveCalcElementUp.setText("Up");
 		
 		btnRemoveCalcElements = new Button(container, SWT.NONE);
@@ -361,9 +359,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 		btnRemoveCalcElements.setText("<");
 		
 		btnMoveCalcElementDown = new Button(container, SWT.NONE);
-		GridData gd_btnMoveCalcElementDown = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
-		gd_btnMoveCalcElementDown.widthHint = 40;
-		btnMoveCalcElementDown.setLayoutData(gd_btnMoveCalcElementDown);
+		btnMoveCalcElementDown.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnMoveCalcElementDown.setText("Down");
 		
 		lblCalcDuplicates = new Label(container, SWT.NONE);
@@ -377,7 +373,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 		comboCalcDuplicatesOption = new Combo(container, SWT.READ_ONLY);
 		GridData gd_comboCalcDuplicatesOption = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
 		gd_comboCalcDuplicatesOption.verticalIndent = 5;
-		gd_comboCalcDuplicatesOption.widthHint = 100;
+		gd_comboCalcDuplicatesOption.widthHint = 200;
 		comboCalcDuplicatesOption.setLayoutData(gd_comboCalcDuplicatesOption);
 		
 		Label label_1 = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -402,7 +398,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 		
 		comboViaSet = new Combo(container, SWT.READ_ONLY);
 		GridData gd_comboViaSet = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
-		gd_comboViaSet.widthHint = 100;
+		gd_comboViaSet.widthHint = 200;
 		comboViaSet.setLayoutData(gd_comboViaSet);
 		
 		Label lblDisplacement = new Label(container, SWT.NONE);
@@ -508,6 +504,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 		listVsamCalcElements.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 2));
 		
 		btnMoveVsamCalcElementUp = new Button(container, SWT.NONE);
+		btnMoveVsamCalcElementUp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnMoveVsamCalcElementUp.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -515,9 +512,6 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 			}
 		});
 		btnMoveVsamCalcElementUp.setEnabled(false);
-		GridData gd_btnMoveVsamCalcElementUp = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnMoveVsamCalcElementUp.widthHint = 40;
-		btnMoveVsamCalcElementUp.setLayoutData(gd_btnMoveVsamCalcElementUp);
 		btnMoveVsamCalcElementUp.setText("Up");
 		
 		btnRemoveVsamCalcElements = new Button(container, SWT.NONE);
@@ -539,9 +533,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 			}
 		});
 		btnMoveVsamCalcElementDown.setEnabled(false);
-		GridData gd_btnMoveVsamCalcElementDown = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
-		gd_btnMoveVsamCalcElementDown.widthHint = 40;
-		btnMoveVsamCalcElementDown.setLayoutData(gd_btnMoveVsamCalcElementDown);
+		btnMoveVsamCalcElementDown.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnMoveVsamCalcElementDown.setText("Down");
 		
 		lblVsamCalcDuplicates = new Label(container, SWT.NONE);
@@ -562,7 +554,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 		comboVsamCalcDuplicatesOption.setEnabled(false);
 		GridData gd_comboVsamCalcDuplicatesOption = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
 		gd_comboVsamCalcDuplicatesOption.verticalIndent = 5;
-		gd_comboVsamCalcDuplicatesOption.widthHint = 100;
+		gd_comboVsamCalcDuplicatesOption.widthHint = 200;
 		comboVsamCalcDuplicatesOption.setLayoutData(gd_comboVsamCalcDuplicatesOption);
 
 		btnCalc.addSelectionListener(new SelectionAdapter() {
@@ -951,7 +943,7 @@ public class LocationModeDialog extends Dialog implements ILocationModeDetailsPr
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(485, 625);
+		return new Point(550, 625);
 	}
 	
 	@Override

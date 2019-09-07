@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Dictionaries</title>
+</head>
+
+<body>
+<h1>Dictionaries</h1>
+<h2>Introduction</h2>
+In the Eclipse <a href="preferences_dialog">preferences dialog</a> you can define 1 or more <i>dictionaries</i> that are 
+used to import schema diagrams directly from IDMS application dictionaries on your mainframe(s) using SQL Web Connect 
+(or the SQL Option) and IDMS Server.  Make sure you have installed the IDMS JDBC driver and set up the mainframe part
+(i.e. an application dictionary with a catalog component and IDMS Server exposing this outside of your mainframe) before
+defining dictionaries in Eclipse.  If you see the following message, first go ahead with the <a href="JDBC_driver.html">
+installation of the JDBC driver</a> into your Eclipse workbench :
+<br><br>
+<img src="../../images/preferences_JDBC_driver_not_installed_message.png" alt="[JDBC driver not installed message]">
+<br><br>
+<i>Without</i> a backing application dictionary (<i>with</i> a catalog component) on a mainframe, the definition of a 
+dictionary for the diagram editor in the preferences dialog is useless.
+<br><br>
+In your mainframe application dictionary/catalog, you need a <b>relational schema for IDMSNTWK</b>; the diagram editor 
+will execute queries referring to this schema to retrieve the data it needs to generate diagrams.  Note that you can 
+define <i>several</i> such (relational) schemas in the same catalog, each targeting a different dictionary (different 
+dictionaries share the same structure, which is described in the IDMSNTWK schema).  In a freshly defined application 
+catalog there is a schema called <b>SYSDICT</b>; you can use this schema if the non-relational schemas for which you 
+want to generate diagrams are in the same dictionary.  If this is <i>not</i> the case, create (an)other relational 
+schema(s) pointing to the dictionar(y)(ies) containing your non-relational schemas (via the <code>DBNAME</code> keyword) :
+<br>
+<pre>
+     CREATE SCHEMA SYSDICT_APPLDICT                  
+         FOR NONSQL SCHEMA SYSDIRL.IDMSNTWK VERSION 1
+             DBNAME APPLDICT                         
+         ; 
+</pre>
+Note that the reference to the IDMSNTWK schema is prefixed by the <code>SYSDIRL</code> dictionary name (which might be 
+different for you).
+<h2>Defining a Dictionary</h2>
+Open the the <b>Import/Dictionary section</b> in the <a href="preferences_dialog">preferences dialog</a>; there you have
+an overview of the dictionaries you have defined :
+<br><br>
+<img src="../../images/preferences_import_dictionary.png" alt="[preferences import dictionary]">
+<br><br>
+Note the <i>SYSDIRL ?</i> column; you can mark dictionaries containing the IDMSNTWK schema so that you can generate a 
+diagram for this schema should want to do this.  The buttons on the right of the table allow you to <b>add, remove or 
+edit dictionary definitions</b> as well as <b>test</b> whether the connection (to the dictionary/catalog on your 
+mainframe) works correctly.  You can also set the default name (SYSDICT) for the relational-version of the IDMSNTWK 
+schema in this section.  You shouldn't normally touch the <b>magic number 47</b> unless you experience performance 
+issues when importing diagrams directly from a dictionary :  it turns out that, in queries, the maximum number of dbkeys 
+that can be specified in a list, before the query does no longer perform and consumes excessive I/Os and CPU on the 
+mainframe, is 47 (at least for the dictionary I’m working against).  It’s up to you to play around with this figure, but 
+you’re on your own…  Dbkey lists are a substitute for subqueries, which I’ve found to not always perform as they should. 
+<br><br>
+Press the <i>Add...</i> button to create your first dictionary :
+<br><br>
+<img src="../../images/preferences_add_dictionary.png" alt="[preferences add dictionary]">
+<br><br>
+Most of the fields should be self-explaining by now.  Each dictionary needs an <b>identifier (id)</b>, so give your 
+dictionary a meaningful name.  The <i>dictname</i> field maps to the <b>DBNAME</b> in your DBTABLE that includes the 
+dictionary and catalog segments making up your dictionary/catalog (where the schema you specify in the <i>Schema</i>
+section is defined).
+<br><br>
+You are not obliged to enter your <b>password</b> but beware that if you don't, the diagram editor will ask you for it 
+whenever needed :  
+<br><br>
+<img src="../../images/enter_dictionary_password_dialog.png" alt="[enter dictionary password dialog]">
+<br><br>
+If you do store your password, don't forget to change it in Eclipse when you have changed your 
+mainframe password (you'll need to do this in <i>every</i> dictionary).  There is something to say for both approaches.
+The password is stored in an encrypted format that can only be decrypted by the diagram editor on <i>your</i> machine.
+If you ever get tired of entering your password, either modify the dictionary definition or check the option to store 
+your password in the 'Password required' dialog above.
+<br><br>
+Press the <i>Test Connection</i> button to check whether the connection to your mainframe dictionary/catalog works.  You
+will get an error message dialog if the connection failed :
+<br><br>
+<img src="../../images/dictionary_connection_not_successful.png" alt="[dictionary connection not successful]">
+<br><br>
+In the case the connection was successful you will be informed as well :
+<br><br>
+<img src="../../images/dictionary_connection_ok.png" alt="[dictionary connection ok]">
+<br><br>
+Press the OK button to <b>save</b> the dictionary definition in your workspace.
+<br><br>
+</body>
+</html>

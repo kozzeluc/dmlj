@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.ecore.EAttribute;
@@ -41,6 +40,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
 import org.lh.dmlj.schema.editor.property.filter.IEnumFilter;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
@@ -324,7 +325,13 @@ public abstract class AbstractAttributesBasedPropertiesSection<T extends EObject
 				// cell's foreground color to blue... don't show hyperlinks when
 				// in read-only mode
 				if (!isReadOnlyMode() && getHyperlinkHandler(attribute) != null) {
-					item.setForeground(1, ColorConstants.blue);
+					if (Plugin.getDefault().isDarkThemeActive()) {
+						// note: on Windows, setting the foreground color doesn't seem to have any effect
+						//       when a dark theme is active (at least, this is the case with Eclipse 2019-03)
+						item.setForeground(1, SWTResourceManager.getColor(131, 196, 234));
+					} else {
+						item.setForeground(1, ColorConstants.blue);
+					}
 				}				
 				item.setText(1, value);				
 			} else {

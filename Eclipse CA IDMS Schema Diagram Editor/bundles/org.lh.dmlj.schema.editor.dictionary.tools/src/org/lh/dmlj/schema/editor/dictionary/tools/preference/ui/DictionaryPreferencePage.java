@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -15,6 +15,8 @@
  * Contact information: kozzeluc@gmail.com.
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.preference.ui;
+
+import static org.lh.dmlj.schema.editor.common.Tools.getRootMessage;
 
 import java.io.File;
 import java.net.URI;
@@ -48,8 +50,11 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jar.JarHelper;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceConstants;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public class DictionaryPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	private Button btnAddDictionary;
 	private Button btnDeleteDictionary;
@@ -78,7 +83,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		try {
 			dictionary = Dictionary.newInstance(dictionaryFolder);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error(t.getMessage(), t);
 			MessageDialog.openError(getShell(), "Error while preparing new dictionary", 
 									t.getMessage());
 			return;
@@ -95,7 +100,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		try {
 			dictionary.toFile(dictionaryFolder);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error(t.getMessage(), t);
 			MessageDialog.openError(getShell(), "Error while saving dictionary data", 
 									t.getMessage());
 		}
@@ -272,7 +277,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		try {
 			dictionary.toFile(dictionaryFolder);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error(t.getMessage(), t);
 			MessageDialog.openError(getShell(), "Error while saving dictionary data", 
 									t.getMessage());
 		}
@@ -360,13 +365,9 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(task);
 			return true;
 		} catch (Throwable e) {
-			e.printStackTrace();
-			Throwable cause = e.getCause();
-			if (cause != null) {
-				MessageDialog.openError(getShell(), "Install IDMS JDBC Driver", cause.getMessage());
-			} else {
-				MessageDialog.openError(getShell(), "File Creation", e.getMessage());
-			}
+			// the plug-in's runWithOperationInProgressIndicator method has already logged the error
+			String message = getRootMessage(e);
+			MessageDialog.openError(getShell(), "Install IDMS JDBC Driver", message);
 			return false;
 		}	
 	}

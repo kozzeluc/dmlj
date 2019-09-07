@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -13,7 +13,8 @@
  * not, see <http://www.gnu.org/licenses/>.
  * 
  * Contact information: kozzeluc@gmail.com.
- */package org.lh.dmlj.schema.editor.property.section;
+ */
+package org.lh.dmlj.schema.editor.property.section;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
@@ -30,6 +31,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandlerProvider;
 
@@ -188,8 +191,16 @@ public class HyperlinkOnlyPropertyEditor<T> implements MouseMoveListener {
 		for (int i = 0; i < table.getItemCount(); i++) {
 			TableItem item = table.getItem(i);
 			for (int j : hyperlinkEnabledColumns) {
+				// note: on Windows, setting the foreground color doesn't seem to have any effect when a
+				//       dark theme is active (at least, this is the case with Eclipse 2019-03)
 				if (hyperlinkHandlerProvider.isReadOnlyMode()) {
-					item.setForeground(j, ColorConstants.black);
+					if (Plugin.getDefault().isDarkThemeActive()) {
+						item.setForeground(j, ColorConstants.lightGray);
+					} else {
+						item.setForeground(j, ColorConstants.black);
+					}
+				} else if (Plugin.getDefault().isDarkThemeActive()) {
+					item.setForeground(1, SWTResourceManager.getColor(131, 196, 234));
 				} else {
 					item.setForeground(j, ColorConstants.blue);
 				}

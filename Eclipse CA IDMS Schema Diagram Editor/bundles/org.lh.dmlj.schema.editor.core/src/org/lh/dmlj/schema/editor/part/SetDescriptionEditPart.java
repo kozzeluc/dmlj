@@ -25,6 +25,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateConnectionRequest;
+import org.eclipse.swt.graphics.Color;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
@@ -48,6 +49,8 @@ import org.lh.dmlj.schema.editor.policy.SetDescriptionGraphicalNodeEditPolicy;
 
 public class SetDescriptionEditPart 
     extends AbstractNonResizableDiagramNodeEditPart<ConnectionLabel>  {
+	
+	private Color foregroundColorToRestore;
 
 	private SetDescriptionEditPart() {
 		super(null, null); // disabled constructor
@@ -228,7 +231,7 @@ public class SetDescriptionEditPart
 				PolylineConnection connection = 
 					(PolylineConnection) setEditPart.getFigure();
 				connection.setLineWidth(1);
-				connection.setForegroundColor(ColorConstants.black);
+				connection.setForegroundColor(foregroundColorToRestore);
 				
 				Connector connector = connectionPart.getConnector();
 				if (connector != null) {
@@ -237,7 +240,7 @@ public class SetDescriptionEditPart
 													   .get(connector);
 					((ConnectorFigure)connectorEditPart.getFigure()).setLineWidth(1);
 					connectorEditPart.getFigure()
-								     .setForegroundColor(ColorConstants.black);
+								     .setForegroundColor(foregroundColorToRestore);
 				}
 			}
 		}
@@ -303,6 +306,9 @@ public class SetDescriptionEditPart
 				PolylineConnection connection = 
 					(PolylineConnection) setEditPart.getFigure();
 				connection.setLineWidth(2);
+				if (foregroundColorToRestore == null) {
+					foregroundColorToRestore = connection.getForegroundColor();
+				}
 				connection.setForegroundColor(ColorConstants.red);
 				
 				Connector connector = connectionPart.getConnector();

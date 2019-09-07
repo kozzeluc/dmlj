@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.figure;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Label;
@@ -76,10 +75,8 @@ public class DiagramLabelFigure extends Figure {
 
 	public DiagramLabelFigure() {
 		super();
-		
-		setBackgroundColor(ColorConstants.white);
+				
 		setOpaque(true);
-		setForegroundColor(ColorConstants.black);
 		
 		XYLayout layout = new XYLayout();
 		setLayoutManager(layout);

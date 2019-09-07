@@ -19,50 +19,38 @@ public class RecordTemplate
   protected final String TEXT_2 = NL + "         SHARE STRUCTURE OF RECORD ";
   protected final String TEXT_3 = " VERSION ";
   protected final String TEXT_4 = NL + "*+           SYNONYM OF PRIMARY RECORD ";
-  protected final String TEXT_5 = " VERSION ";
-  protected final String TEXT_6 = "         " + NL + "         RECORD ID IS ";
-  protected final String TEXT_7 = NL;
-  protected final String TEXT_8 = NL;
-  protected final String TEXT_9 = NL + "               )";
-  protected final String TEXT_10 = NL;
-  protected final String TEXT_11 = ")";
-  protected final String TEXT_12 = NL + "             DUPLICATES ARE ";
-  protected final String TEXT_13 = "         ";
-  protected final String TEXT_14 = NL + "         LOCATION MODE IS VIA ";
-  protected final String TEXT_15 = " SET";
-  protected final String TEXT_16 = NL + "             DISPLACEMENT USING ";
-  protected final String TEXT_17 = NL + "             DISPLACEMENT ";
-  protected final String TEXT_18 = " PAGES";
-  protected final String TEXT_19 = NL + "         LOCATION MODE IS DIRECT";
-  protected final String TEXT_20 = NL + "         LOCATION MODE IS VSAM";
-  protected final String TEXT_21 = NL + "         VSAM TYPE IS ";
-  protected final String TEXT_22 = " LENGTH ";
-  protected final String TEXT_23 = NL + "         MINIMUM ROOT LENGTH IS ";
-  protected final String TEXT_24 = " CHARACTERS         ";
-  protected final String TEXT_25 = NL + "         MINIMUM FRAGMENT LENGTH IS ";
-  protected final String TEXT_26 = " CHARACTERS         ";
-  protected final String TEXT_27 = NL + "         CALL ";
-  protected final String TEXT_28 = " ";
-  protected final String TEXT_29 = " ";
-  protected final String TEXT_30 = NL + "         WITHIN AREA ";
-  protected final String TEXT_31 = " SUBAREA ";
-  protected final String TEXT_32 = NL + "         WITHIN AREA ";
-  protected final String TEXT_33 = " OFFSET ";
-  protected final String TEXT_34 = " FOR ";
-  protected final String TEXT_35 = " ";
-  protected final String TEXT_36 = NL + "         WITHIN AREA ";
-  protected final String TEXT_37 = "         " + NL + "*+       OWNER OF SET ";
-  protected final String TEXT_38 = NL + "*+           NEXT DBKEY POSITION IS ";
-  protected final String TEXT_39 = NL + "*+           PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_40 = NL + "*+       MEMBER OF SET ";
-  protected final String TEXT_41 = NL + "*+           NEXT DBKEY POSITION IS ";
-  protected final String TEXT_42 = NL + "*+           PRIOR DBKEY POSITION IS ";
-  protected final String TEXT_43 = NL + "*+           INDEX DBKEY POSITION IS ";
-  protected final String TEXT_44 = NL + "*+           INDEX DBKEY POSITION IS OMITTED";
-  protected final String TEXT_45 = NL + "*+           OWNER DBKEY POSITION IS ";
-  protected final String TEXT_46 = NL + "         .";
-  protected final String TEXT_47 = NL;
-  protected final String TEXT_48 = "         ";
+  protected final String TEXT_5 = "         " + NL + "         RECORD ID IS ";
+  protected final String TEXT_6 = NL;
+  protected final String TEXT_7 = NL + "               )";
+  protected final String TEXT_8 = ")";
+  protected final String TEXT_9 = NL + "             DUPLICATES ARE ";
+  protected final String TEXT_10 = "         ";
+  protected final String TEXT_11 = NL + "         LOCATION MODE IS VIA ";
+  protected final String TEXT_12 = " SET";
+  protected final String TEXT_13 = NL + "             DISPLACEMENT USING ";
+  protected final String TEXT_14 = NL + "             DISPLACEMENT ";
+  protected final String TEXT_15 = " PAGES";
+  protected final String TEXT_16 = NL + "         LOCATION MODE IS DIRECT";
+  protected final String TEXT_17 = NL + "         LOCATION MODE IS VSAM";
+  protected final String TEXT_18 = NL + "         VSAM TYPE IS ";
+  protected final String TEXT_19 = " LENGTH ";
+  protected final String TEXT_20 = NL + "         MINIMUM ROOT LENGTH IS ";
+  protected final String TEXT_21 = " CHARACTERS         ";
+  protected final String TEXT_22 = NL + "         MINIMUM FRAGMENT LENGTH IS ";
+  protected final String TEXT_23 = NL + "         CALL ";
+  protected final String TEXT_24 = " ";
+  protected final String TEXT_25 = NL + "         WITHIN AREA ";
+  protected final String TEXT_26 = " SUBAREA ";
+  protected final String TEXT_27 = " OFFSET ";
+  protected final String TEXT_28 = " FOR ";
+  protected final String TEXT_29 = "         " + NL + "*+       OWNER OF SET ";
+  protected final String TEXT_30 = NL + "*+           NEXT DBKEY POSITION IS ";
+  protected final String TEXT_31 = NL + "*+           PRIOR DBKEY POSITION IS ";
+  protected final String TEXT_32 = NL + "*+       MEMBER OF SET ";
+  protected final String TEXT_33 = NL + "*+           INDEX DBKEY POSITION IS ";
+  protected final String TEXT_34 = NL + "*+           INDEX DBKEY POSITION IS OMITTED";
+  protected final String TEXT_35 = NL + "*+           OWNER DBKEY POSITION IS ";
+  protected final String TEXT_36 = NL + "         .";
 
   public String generate(Object argument)
   {
@@ -126,12 +114,12 @@ if (record.getBaseName() != null &&
 
     stringBuffer.append(TEXT_4);
     stringBuffer.append( record.getBaseName() );
-    stringBuffer.append(TEXT_5);
+    stringBuffer.append(TEXT_3);
     stringBuffer.append(record.getBaseVersion());
     
 }
 
-    stringBuffer.append(TEXT_6);
+    stringBuffer.append(TEXT_5);
     stringBuffer.append( record.getId() );
     
 if (record.isCalc() || record.isVsamCalc()) {    
@@ -143,7 +131,7 @@ if (record.isCalc() || record.isVsamCalc()) {
         String q = keyElement.getElement().getName();
         if (keyElements.length() + q.length() > 72) {
 
-    stringBuffer.append(TEXT_7);
+    stringBuffer.append(TEXT_6);
     stringBuffer.append( keyElements.toString() );
     
 			keyElements = new StringBuilder();
@@ -154,21 +142,21 @@ if (record.isCalc() || record.isVsamCalc()) {
     }
     if (keyElements.length() + 1 > 72) {
 
-    stringBuffer.append(TEXT_8);
+    stringBuffer.append(TEXT_6);
     stringBuffer.append( keyElements.toString() );
-    stringBuffer.append(TEXT_9);
+    stringBuffer.append(TEXT_7);
     		
 	} else {
 
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_6);
     stringBuffer.append( keyElements.toString() );
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_8);
             	    
 	}
 
-    stringBuffer.append(TEXT_12);
+    stringBuffer.append(TEXT_9);
     stringBuffer.append( record.getCalcKey().getDuplicatesOption().toString().replaceAll("_", " ") );
-    stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_10);
                  
 } else if (record.getLocationMode() == LocationMode.VIA) {
     String setName;
@@ -179,66 +167,66 @@ if (record.isCalc() || record.isVsamCalc()) {
         setName =  record.getViaSpecification().getSet().getName();
     }
 
-    stringBuffer.append(TEXT_14);
+    stringBuffer.append(TEXT_11);
     stringBuffer.append( setName );
-    stringBuffer.append(TEXT_15);
+    stringBuffer.append(TEXT_12);
      
     if (record.getViaSpecification().getSymbolicDisplacementName() != null) {
          String symbolicName = 
              record.getViaSpecification().getSymbolicDisplacementName();
 
-    stringBuffer.append(TEXT_16);
+    stringBuffer.append(TEXT_13);
     stringBuffer.append( symbolicName );
                  
     } else if (record.getViaSpecification().getDisplacementPageCount() != null) {
          short pages = 
              record.getViaSpecification().getDisplacementPageCount().shortValue();
 
-    stringBuffer.append(TEXT_17);
+    stringBuffer.append(TEXT_14);
     stringBuffer.append( pages );
-    stringBuffer.append(TEXT_18);
+    stringBuffer.append(TEXT_15);
                  
     }
 } else if (record.getLocationMode() == LocationMode.DIRECT) {
 
-    stringBuffer.append(TEXT_19);
+    stringBuffer.append(TEXT_16);
     
 } else {
 
-    stringBuffer.append(TEXT_20);
+    stringBuffer.append(TEXT_17);
     
 }
 if (record.isVsam() || record.isVsamCalc()) {
     String vsamLengthType = record.getVsamType().getLengthType().toString();
     String spannedOrNot = record.getVsamType().isSpanned() ? "SPANNED" : "NONSPANNED";
 
-    stringBuffer.append(TEXT_21);
+    stringBuffer.append(TEXT_18);
     stringBuffer.append( vsamLengthType );
-    stringBuffer.append(TEXT_22);
+    stringBuffer.append(TEXT_19);
     stringBuffer.append( spannedOrNot );
     
 }
 if (record.getMinimumRootLength() != null) {
 
-    stringBuffer.append(TEXT_23);
+    stringBuffer.append(TEXT_20);
     stringBuffer.append( record.getMinimumRootLength() );
-    stringBuffer.append(TEXT_24);
+    stringBuffer.append(TEXT_21);
     
 }
 if (record.getMinimumFragmentLength() != null) {
 
-    stringBuffer.append(TEXT_25);
+    stringBuffer.append(TEXT_22);
     stringBuffer.append( record.getMinimumFragmentLength() );
-    stringBuffer.append(TEXT_26);
+    stringBuffer.append(TEXT_21);
     
 }
 for (RecordProcedureCallSpecification procedureCall : record.getProcedures()) {
 
-    stringBuffer.append(TEXT_27);
+    stringBuffer.append(TEXT_23);
     stringBuffer.append( procedureCall.getProcedure().getName() );
-    stringBuffer.append(TEXT_28);
+    stringBuffer.append(TEXT_24);
     stringBuffer.append( procedureCall.getCallTime().toString() );
-    stringBuffer.append(TEXT_29);
+    stringBuffer.append(TEXT_24);
     stringBuffer.append( procedureCall.getVerb().toString() );
     	
 }
@@ -249,9 +237,9 @@ OffsetExpression offsetExpression =
     record.getAreaSpecification().getOffsetExpression();
 if (symbolicSubareaName != null) {
 
-    stringBuffer.append(TEXT_30);
+    stringBuffer.append(TEXT_25);
     stringBuffer.append( areaName );
-    stringBuffer.append(TEXT_31);
+    stringBuffer.append(TEXT_26);
     stringBuffer.append( symbolicSubareaName );
     
 } else if (offsetExpression != null) { 
@@ -272,17 +260,17 @@ if (symbolicSubareaName != null) {
         q = "100 PERCENT";
     }
 
-    stringBuffer.append(TEXT_32);
+    stringBuffer.append(TEXT_25);
     stringBuffer.append( areaName );
-    stringBuffer.append(TEXT_33);
+    stringBuffer.append(TEXT_27);
     stringBuffer.append( p );
-    stringBuffer.append(TEXT_34);
+    stringBuffer.append(TEXT_28);
     stringBuffer.append( q );
-    stringBuffer.append(TEXT_35);
+    stringBuffer.append(TEXT_24);
     
 } else {
 
-    stringBuffer.append(TEXT_36);
+    stringBuffer.append(TEXT_25);
     stringBuffer.append( areaName );
     
 }
@@ -303,14 +291,14 @@ for (OwnerRole role : ownerRoles) {
         setName = role.getSet().getName();
     }
 
-    stringBuffer.append(TEXT_37);
+    stringBuffer.append(TEXT_29);
     stringBuffer.append( setName );
-    stringBuffer.append(TEXT_38);
+    stringBuffer.append(TEXT_30);
     stringBuffer.append( role.getNextDbkeyPosition() );
     
     if (role.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_39);
+    stringBuffer.append(TEXT_31);
     stringBuffer.append( role.getPriorDbkeyPosition() );
     
     }
@@ -343,48 +331,48 @@ for (MemberRole role : memberRoles) {
         setName = role.getSet().getName();
     }
 
-    stringBuffer.append(TEXT_40);
+    stringBuffer.append(TEXT_32);
     stringBuffer.append( setName );
     
     if (role.getNextDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_41);
+    stringBuffer.append(TEXT_30);
     stringBuffer.append( role.getNextDbkeyPosition() );
     
     }
     if (role.getPriorDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_42);
+    stringBuffer.append(TEXT_31);
     stringBuffer.append( role.getPriorDbkeyPosition() );
     
     }
     if (role.getIndexDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_43);
+    stringBuffer.append(TEXT_33);
     stringBuffer.append( role.getIndexDbkeyPosition() );
     
     } else if (role.getSet().getSystemOwner() != null) {
 
-    stringBuffer.append(TEXT_44);
+    stringBuffer.append(TEXT_34);
     
     }
     if (role.getOwnerDbkeyPosition() != null) {
 
-    stringBuffer.append(TEXT_45);
+    stringBuffer.append(TEXT_35);
     stringBuffer.append( role.getOwnerDbkeyPosition() );
     
     }
 }
 
-    stringBuffer.append(TEXT_46);
+    stringBuffer.append(TEXT_36);
     
 ElementTemplate elementTemplate = new ElementTemplate();
 for (Element element : record.getElements()) {
     String syntax = elementTemplate.generate(element);
 
-    stringBuffer.append(TEXT_47);
+    stringBuffer.append(TEXT_6);
     stringBuffer.append( syntax );
-    stringBuffer.append(TEXT_48);
+    stringBuffer.append(TEXT_10);
         
 }
 

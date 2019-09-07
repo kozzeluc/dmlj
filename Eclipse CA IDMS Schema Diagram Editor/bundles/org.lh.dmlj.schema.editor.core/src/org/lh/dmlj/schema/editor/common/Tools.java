@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Stack;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -253,6 +254,20 @@ public abstract class Tools {
 		return p.toString();
 	}
 
+	public static String getRootMessage(Throwable t) {
+		Stack<String> messages = new Stack<>();
+		String message = t.getMessage();
+		messages.push(message != null && !message.trim().isEmpty() ? message : "An error occurred");
+		for (Throwable next = t.getCause(); next != null; next = next.getCause()) {
+		    message = next.getMessage();
+		    if (message != null && !message.trim().isEmpty()) {
+		    	messages.push(message);
+		    }
+		}
+		message = messages.pop();
+		return message;
+	}
+	
 	public static String getSortKeys(MemberRole memberRole) {
 		
 		if (memberRole.getSet().getOrder() != SetOrder.SORTED || memberRole.getSortKey() == null) { 				

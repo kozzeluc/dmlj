@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="groovy-all-2.4.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-ant-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-bsf-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-cli-commons-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-cli-picocli-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-console-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-datetime-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-dateutil-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-docgenerator-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-groovydoc-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-groovysh-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-jaxb-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-jmx-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-json-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-json-direct-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-jsr223-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-macro-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-nio-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-servlet-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-sql-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-swing-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-templates-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-test-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-test-junit5-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-testng-2.5.6-indy.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-xml-2.5.6-indy.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

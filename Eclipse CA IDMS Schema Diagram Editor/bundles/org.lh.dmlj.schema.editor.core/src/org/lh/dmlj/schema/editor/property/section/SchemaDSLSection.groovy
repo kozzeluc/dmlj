@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,7 +21,6 @@ import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder
 
 public class SchemaDSLSection extends AbstractSectionWithStyledText {
 	
-	@SuppressWarnings("rawtypes")
 	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS = [ Schema.class ]
 
 	public SchemaDSLSection() {

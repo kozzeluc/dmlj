@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -206,7 +206,7 @@ public class AreaDialog extends Dialog {
 		
 		comboExistingArea = new Combo(container, SWT.READ_ONLY);
 		GridData gd_comboExistingArea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_comboExistingArea.widthHint = 136;
+		gd_comboExistingArea.widthHint = 150;
 		comboExistingArea.setLayoutData(gd_comboExistingArea);
 		
 		btnNewArea = new Button(container, SWT.RADIO);
@@ -277,7 +277,7 @@ public class AreaDialog extends Dialog {
 		
 		comboOffsetUnits = new Combo(composite, SWT.READ_ONLY);
 		GridData gd_comboOffsetUnits = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboOffsetUnits.widthHint = 40;
+		gd_comboOffsetUnits.widthHint = 100;
 		comboOffsetUnits.setLayoutData(gd_comboOffsetUnits);
 		
 		Label lblNewLabel = new Label(composite, SWT.CENTER);
@@ -294,7 +294,7 @@ public class AreaDialog extends Dialog {
 		
 		comboSizeUnits = new Combo(composite, SWT.READ_ONLY);
 		GridData gd_comboSizeUnits = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboSizeUnits.widthHint = 40;
+		gd_comboSizeUnits.widthHint = 100;
 		comboSizeUnits.setLayoutData(gd_comboSizeUnits);
 
 		comboOffsetUnits.add("pages");
@@ -586,7 +586,7 @@ public class AreaDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 300);
+		return new Point(500, 300);
 	}
 	
 	public Integer getOffsetPageCount() {

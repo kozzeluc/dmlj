@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2018  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -83,6 +83,7 @@ import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryPageController;
 import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
+import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 import org.lh.dmlj.schema.editor.wizard._import.ImportWizardPage;
 
@@ -93,6 +94,8 @@ import org.lh.dmlj.schema.editor.wizard._import.ImportWizardPage;
  */
 public class SchemaImportWizard extends Wizard implements IImportWizard {
 
+	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	
 	private ImportToolExtensionElement 	  	 	activeImportToolExtensionElement;	
 	private IDataEntryContext 		  	  	 	context = new DataEntryContext();
 	private List<ImportWizardPage>	   	  		dataEntryWizardPages;
@@ -722,7 +725,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 								outputFileSelectionPage.getOutputFile()
 													   .getAbsolutePath() +
 								" after a failed CA IDMS/DB schema import";
-							Plugin.logWarning(message);
+							logger.warning(message);
 						}
 					}
 					
@@ -762,7 +765,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 			} else {
 				message.insert(0, "Error while importing schema: ");
 			}
-			Plugin.logError(message.toString(), e);
+			// the plug-in's runWithOperationInProgressIndicator method has already logged the error
 			MessageDialog.openError(workbenchWindow.getShell(), "File Creation", message.toString());
 			return false;
 		}		
@@ -772,7 +775,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 		try {
 			modelFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
-			Plugin.logError("Error while refreshing workspace", e);
+			logger.error("Error while refreshing workspace", e);
 		}
 		
 		// Select the new file resource in the current view.
@@ -792,7 +795,7 @@ public class SchemaImportWizard extends Wizard implements IImportWizard {
 											 				    .toString())
 											 				    .getId());	
 		} catch (PartInitException exception) {
-			Plugin.logError("Error while opening imported schema", exception);			
+			logger.error("Error while opening imported schema", exception);			
 			MessageDialog.openError(workbenchWindow.getShell(), "Open Editor", 
 									exception.getMessage());
 			return false;

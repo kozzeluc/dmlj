@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Preferences" link_to="toc/toc_main.xml#preferences">
+   <topic href="html/preferences/preferences_dialog.html" label="Preferences Dialog">
+   </topic>
+   <topic href="html/preferences/JDBC_driver.html" label="IDMS JDBC Driver">
+   </topic>
+   <topic href="html/preferences/dictionaries.html" label="Dictionaries">
+   </topic>
+</toc>

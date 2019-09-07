@@ -3,11 +3,19 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<title>Schema Editor</title>
+	<title>Importing a Diagram</title>
 </head>
 
 <body>
 <h1>Importing a Diagram</h1>
+You'll probably want to create diagrams for all or some of your <i>existing</i> IDMS schemas.  Of course you do NOT have 
+to do this manually because the diagram editor plug-ins include an import feature that allows you to create a diagram 
+from either <b>schema syntax</b> or via a <b>direct connection to a dictionary</b> in one of your central versions; if 
+this isn't enough, you can also develop your own <b>custom import functionality</b>, but for that you need to have some 
+experience with Java and developing Eclipse plug-ins.
+<br><br>
+Note that although there is an automated way to create your diagrams, you will <b>always</b> have some work with making
+the schema look nice and the way you want it to look.
 <h2>Contents</h2>
 <ul>
 <li><a href="#wizard">Starting the Import Wizard</a></li>
@@ -16,24 +24,25 @@
 <li><a href="#custom">Custom Import Tools</a></li>
 </ul>
 <a id="wizard"><h2>Starting the Import Wizard</h2></a>
-You can create a diagram for an existing CA IDMS/DB schema via a dedicated import wizard.  This 
-wizard can be selected on the import wizard selection dialog, which is accessed via the 
-"File"/"Import" menu item :
+You can create a diagram for an existing CA IDMS/DB schema via a dedicated import wizard.  This wizard can be selected 
+on the import wizard selection dialog, which is accessed via the File/Import menu item :
 <br><br>
 <img src="../../images/file_import_menuitem.png" alt="[file import menu-item]">
 <br><br>
 Select the import wizard in the import wizard selection dialog :
 <br><br>
 <img src="../../images/import_wizard_selection_dialog.png" alt="[import wizard selection dialog]">
+<a id="importwizard"/>
 <br><br>
 The first thing you need to do in the import wizard is to select the data source.  There will be at
 least 2 available data sources :
 <br><br>
 <img src="../../images/import_wizard_data_source_selection.png" alt="[import wizard data source selection]">
 <br><br>
-If you have installed 1 or more custom import tools, they will show up in the above list as well.
-Press the "Select" button before going to the next wizard page.  Select the parent folder and name
-of the file that will hold the diagram; the file extension MUST be ".schema" :
+If you have developed (and installed) 1 or more custom import tools, they will show up in the above list as well. Press 
+the "Select" button before going to the next wizard page.  Select the parent folder and name of the file that will hold 
+the diagram; the file extension MUST be ".schema" or ".schemadsl" (see <a href="../file_extensions.html"> file 
+extensions</a>) :
 <br><br>
 <img src="../../images/import_file_selection.png" alt="[import file selection]">
 <br><br>
@@ -48,10 +57,10 @@ diagram should be placed initially :
 Note that 2 dedicated record layout managers are available, 1 for the EMPSCHM version 100 schema and
 1 for IDMSNTWK version 1 (none of these will be listed for any other schema).
 <br><br>
-The standard record layout manager places all records adjacent to each other and will produce an 
+The <b>standard</b> record layout manager places all records adjacent to each other and will produce an 
 equal number of rows and columns.
 <br><br>
-The grid record layout manager allows you to provide a properties file that contains the location of 
+The <b>grid</b> record layout manager allows you to provide a properties file that contains the location of 
 each record :
 <pre>
 COVERAGE=D3
@@ -68,19 +77,61 @@ OFFICE=A4
 SKILL=B5
 STRUCTURE=D1
 </pre>
+Play around with both of these layout managers and see which one you prefer to work with when importing your schemas to 
+create diagrams.
 <a id="syntax"><h2>Importing from Schema Syntax</h2></a>
 When importing a diagram from schema syntax, you need to select the file containing the schema 
 syntax :
 <br><br>
 <img src="../../images/import_from_syntax_file_selection.png" alt="[syntax file selection]">
-<a id="dictionary"><h2>Importing from a Dictionary</h2></a>
-<a id="custom"><h2>Custom Import Tools</h2></a>
-You can create your own diagram import tools via the "org.lh.dmlj.schema.editor.core.import" 
-extension point.  The custom import tools you create will show up on the very first import wizard 
-page (see above).
 <br><br>
-Describing in detail how to build your own custom import tool (data source) is beyond the scope of 
-this help document.  You can take the "an IDMS dictionary on your mainframe" data source, which is 
-defined in the "org.lh.dmlj.schema.editor.dictionary.tools" plug-in project, as an example.
+Make sure the schema syntax is the output from a <code>PUNCH SCHEMA NAME IS <i>schema-name</i> VERSION IS <i>version-number</i> AS SYNTAX</code> statement.
+<br><br>
+Enter the names of the <b>database procedures</b> you use for <i>compression</i>; this will allow for setting all record's 
+<i>storage modes</i> correctly :
+<br><br>
+<img src="../../images/import_syntax_options.png" alt="[import from syntax options]">
+<br><br>
+You also can help the import tool in determining the correct <b>base record- and record synonym names</b> if there is a 
+relation with their record ids.  Note that there is only 1 method to have these 100% correct :  import your schema
+diagrams directly from your dictionaries...
+<a id="dictionary"><h2>Importing from a Dictionary</h2></a>
+Although it is fairly easy to import diagrams from schema <i>syntax</i>, it is much more efficient and precise to import
+diagrams directly from an <b>IDMS application dictionary</b>.  In order to be able to import schema diagrams from a 
+dictionary however, you must have installed the <a href="../preferences/JDBC_driver.html">IDMS JDBC driver</a> and have 
+defined at least 1 <a href="../preferences/dictionaries.html">dictionary</a>.
+<br><br>
+When importing from a dictionary on your mainframe, you will first need to select the 
+<a href="../preferences/dictionaries.html">dictionary</a> that contains the schema :
+<br><br>
+<img src="../../images/import_dictionary_selection.png" alt="[dictionary selection]">
+<br><br>
+Then select the <b>schema</b> of interest in the list that was built when accessing your mainframe dictionary :
+<br><br>
+<img src="../../images/import_schema_selection.png" alt="[schema selection]">
+<br><br>
+Finally, you can set some <b>options</b>, currently limited to specifying the database procedures used for <i>compression</i>; 
+this will allow for setting all record's <i>storage modes</i> correctly :
+<br><br>
+<img src="../../images/import_from_dictionary_options.png" alt="[options]">
+<br><br>
+When you're importing the <a href="../idmsntwk.html">IDMSNTWK</a> schema, you will be offered a few more options, all related to
+making the IDMSNTWK schema as complete as possible :
+<br><br>
+<img src="../../images/import_from_dictionary_options_idmsntwk.png" alt="[options (idmsntwk)]">
+<br><br>
+You are free to create your own version of the <a href="../idmsntwk.html">IDMSNTWK</a> diagram, but be informed that an 
+excellent <a href="../../resources/IDMSNTWK version 1 (Release 18.5).schemadsl" target="_blank">example</a> is provided, 
+saving you <i>a lot</i> of work.
+<a id="custom"><h2>Custom Import Tools</h2></a>
+You can create your own diagram import tools via the <b>org.lh.dmlj.schema.editor.core.import</b> extension point.  The 
+<b>custom <i>import tools</i></b> you create will show up in the list of data sources on the first 
+<a href="#importwizard">import wizard page</a> (see above).
+<br><br>
+Describing in detail how to build your own custom import tool (data source) is beyond the scope of this help document.  
+You can take the "an IDMS dictionary on your mainframe" data source, which is defined in the 
+"org.lh.dmlj.schema.editor.dictionary.tools" plug-in project, as an example.  See the diagram editor's source code 
+repository on <a href="https://github.com/kozzeluc/dmlj" target="_blank">GitHub</a>.
+<br><br>
 </body>
 </html>

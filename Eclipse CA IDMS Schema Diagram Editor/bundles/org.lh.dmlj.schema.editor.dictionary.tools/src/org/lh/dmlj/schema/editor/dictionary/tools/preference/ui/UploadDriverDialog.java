@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.dictionary.tools.jar.JarHelper;
 
 public class UploadDriverDialog extends TitleAreaDialog {
+	
+	private static final String TM_CHAR = "\u2122";
 	
 	private Text textJarFilePath;
 	private File selectedJarFile;
@@ -101,7 +103,7 @@ public class UploadDriverDialog extends TitleAreaDialog {
 		gd_labelComment.widthHint = 100;
 		labelComment.setLayoutData(gd_labelComment);
 		labelComment.setText("Note: the file you're looking for is probably called 'idmsjdbc.jar' " +
-							 "and is provided with CA IDMS™ Server.\n\nThe file you select will " +
+							 "and is provided with CA IDMS" + TM_CHAR + " Server.\n\nThe file you select will " +
 							 "be copied to your Eclipse installation's 'dropins' folder and the " +
 							 "necessary OSGi headers will be added to its 'META-INF/MANIFEST.MF' " +
 							 "file so that it effectively becomes an OSGi bundle.\n\nYou will " +

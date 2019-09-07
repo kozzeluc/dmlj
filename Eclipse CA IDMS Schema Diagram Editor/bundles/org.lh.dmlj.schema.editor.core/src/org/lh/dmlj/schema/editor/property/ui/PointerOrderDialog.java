@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2019  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
@@ -55,6 +56,7 @@ public class PointerOrderDialog extends Dialog {
 	private Prefix originalPrefix;
 	private Table table;
 	private Button btnReset;
+	private Text textGroupDescriptions;
 	 
 	private static boolean areListsEqual(List<?> list1, List<?> list2) {
 		for (int i = 0; i < list1.size(); i++) {
@@ -208,7 +210,7 @@ public class PointerOrderDialog extends Dialog {
 			}
 		});
 		btnGroupPlus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnGroupPlus.setToolTipText("Same as Group plus order pointers (N/I/P/O)");
+		btnGroupPlus.setToolTipText("Same as 'Group' plus order pointers (N/I/P/O)");
 		btnGroupPlus.setText("Group+");
 		
 		btnGroupDoublePlus = new Button(container, SWT.NONE);
@@ -218,7 +220,7 @@ public class PointerOrderDialog extends Dialog {
 				group(idealPointerList);
 			}
 		});
-		btnGroupDoublePlus.setToolTipText("Same as Group+ plus order sets alphabetically");
+		btnGroupDoublePlus.setToolTipText("Same as 'Group+' plus order sets alphabetically");
 		btnGroupDoublePlus.setText("Group++");
 		
 		btnReset = new Button(container, SWT.NONE);
@@ -232,6 +234,11 @@ public class PointerOrderDialog extends Dialog {
 		btnReset.setToolTipText("Move each pointer to its original position again");
 		btnReset.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnReset.setText("Reset");
+		
+		textGroupDescriptions = new Text(container, SWT.NO_FOCUS | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		textGroupDescriptions.setBackground(container.getBackground());
+		textGroupDescriptions.setText("Group: group pointers by set\nGroup+: same as 'Group' plus order pointers (N/I/P/O)\nGroup++: same as 'Group+' plus order sets alphabetically");
+		textGroupDescriptions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		refreshTable();
 
@@ -279,7 +286,7 @@ public class PointerOrderDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(425, 300);
+		return new Point(450, 400);
 	}
 	
 	private List<Pointer<?>> getPointerListGroupedBySet() {
