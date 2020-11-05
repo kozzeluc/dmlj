@@ -201,12 +201,19 @@ for (MemberRole memberRole : memberRoles) {
 <%
     if (set.getOrder() == SetOrder.SORTED) {
         Key key = memberRole.getSortKey();
+        boolean sortedByDbkey = key.getElements().size() == 1 && key.getElements().get(0).isDbkey(); 
+        if (sortedByDbkey) {
+%>
+             KEY IS
+<%
+        } else {
 %>
              KEY IS (
 <%
+        }
         for (KeyElement keyElement : key.getElements()) {
             String bracket;
-            if (keyElement == key.getElements().get(key.getElements().size() - 1)) {
+            if (!sortedByDbkey && keyElement == key.getElements().get(key.getElements().size() - 1)) {
                 bracket = ")";
             } else {
                 bracket = "";
