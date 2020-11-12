@@ -249,7 +249,7 @@ if (symbolicSubareaName != null) {
     } else if (offsetExpression.getOffsetPercent() != null) {
     	p = offsetExpression.getOffsetPercent() + " PERCENT";
     } else {
-        p = "0";
+        p = "0 PERCENT";
     }
     String q;
     if (offsetExpression.getPercent() != null) {
