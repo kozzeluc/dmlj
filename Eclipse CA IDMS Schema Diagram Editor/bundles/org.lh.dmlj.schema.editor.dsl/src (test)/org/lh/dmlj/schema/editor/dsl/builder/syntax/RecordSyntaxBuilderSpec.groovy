@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -547,6 +547,8 @@ elements \"\"\"
 		null				| 11			  |	null	  	  | null  	  |	12		| ' {\n    offsetPages 11\n    percent 12\n}'
 		null				| null			  |	21	  	  	  | null	  |	22		| ' {\n    offsetPercent 21\n    percent 22\n}'
 		null				| null			  |	21	  	  	  | 22		  |	null	| ' {\n    offsetPercent 21\n    pages 22\n}'
+		null				| 0			  	  |	null	  	  | 12	  	  |	null	| ' {\n    offsetPages 0\n    pages 12\n}'
+		null				| null			  |	0	  	  	  | null  	  |	20		| ' {\n    offsetPercent 0\n    percent 20\n}'
 	}
 	
 	@Unroll
