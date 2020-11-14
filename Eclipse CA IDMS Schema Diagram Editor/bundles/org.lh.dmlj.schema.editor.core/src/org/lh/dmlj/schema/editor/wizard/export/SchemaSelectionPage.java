@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -178,13 +178,12 @@ public class SchemaSelectionPage extends WizardPage {
 			File selectedFileOrFolder = map.get(selection[0]);
 			if (!selectedFileOrFolder.isDirectory()) {
 				try {
-					schema = Tools.readFromFile(selectedFileOrFolder);
+					schema = Tools.executeWithCursorBusy(() -> Tools.readFromFile(selectedFileOrFolder));
 				} catch (Throwable t) {
 					pageComplete = false;
 					String p = t.getMessage() == null ? "" : ": " + t.getMessage();
 					setErrorMessage(t.getClass().getSimpleName() + p);
 				}
-				
 			} else {
 				pageComplete = false;
 			}

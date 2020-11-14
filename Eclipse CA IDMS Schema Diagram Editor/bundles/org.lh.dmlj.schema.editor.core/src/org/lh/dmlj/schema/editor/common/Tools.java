@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,12 +23,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Stack;
+import java.util.function.Supplier;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.ui.PlatformUI;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
@@ -43,9 +46,11 @@ import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.StorageMode;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder;
+import org.lh.dmlj.schema.editor.log.Logger;
 
 public abstract class Tools {
 	
@@ -93,6 +98,25 @@ public abstract class Tools {
 		return false;
 	}
 	
+	public static <T> T executeWithCursorBusy(Supplier<T> code) {
+		Stack<T> result = new Stack<>();
+		Stack<Throwable> exceptionToThrow = new Stack<>();
+		BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), () -> {
+			try {
+				result.push(code.get());
+			} catch (Throwable t) {
+				exceptionToThrow.push(t);				
+			}
+		});
+		if (!exceptionToThrow.isEmpty()) {
+			Throwable t = exceptionToThrow.pop();			
+			Logger.getLogger(Plugin.getDefault()).error("", t);
+			throw new IllegalStateException(t.getMessage(), t);
+		} else {
+			return result.pop();
+		}
+	}
+
 	public static String generateRecordElementsDSL(SchemaRecord record) {
 		String dsl = new RecordSyntaxBuilder().build(record);
 		int i = dsl.indexOf("\"\"\"\n");
