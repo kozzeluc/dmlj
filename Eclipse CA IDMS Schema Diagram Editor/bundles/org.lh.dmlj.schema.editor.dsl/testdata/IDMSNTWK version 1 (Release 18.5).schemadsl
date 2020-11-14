@@ -24,7 +24,21 @@ area 'DDLDCMSG' {
     call 'IDMSDCOM BEFORE'
 }
 
+area 'DDLDCRUN'
+
+area 'DDLDCLOG'
+
+area 'DDLDCTRC'
+
+area 'DDLDCLOD'
+
 area 'DDLDCSCR'
+
+area 'DDLCAT'
+
+area 'DDLCATX'
+
+area 'DDLCATLOD'
 
 record 'S-010' {
     shareStructure 'S-010 version 1'

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,7 +29,6 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		when: "passing the schema to the builder's build method"
 		String syntax = builder.build(schema)
-		//new File('testdata/EMPSCHM version 100.schemadsl').text = syntax
 		
 		then: "the builder creates the syntax that describes the schema"		
 		mustMatchSyntaxInFile(syntax, 'testdata/EMPSCHM version 100.schemadsl')		
@@ -43,7 +42,6 @@ class SchemaSyntaxBuilderSpec extends AbstractSyntaxBuilderSpec {
 		
 		when: "passing the schema to the builder's build method"
 		String syntax = builder.build(schema)
-		//new File('testdata/IDMSNTWK version 1 (Release 18.5).schemadsl').text = syntax
 		
 		then: "the builder creates the syntax that describes the schema"		
 		mustMatchSyntaxInFile(syntax, 'testdata/IDMSNTWK version 1 (Release 18.5).schemadsl')
