@@ -57,7 +57,7 @@ public class RecordTemplate
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
