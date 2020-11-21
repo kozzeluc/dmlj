@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.lh.dmlj.schema.editor</groupId>
         <artifactId>org.lh.dmlj.schema.editor.parent</artifactId>
-        <version>3.2.1-SNAPSHOT</version>
+        <version>3.3.0-SNAPSHOT</version>
         <relativePath>../../releng/org.lh.dmlj.schema.editor.parent</relativePath>
     </parent>
     <groupId>org.lh.dmlj.schema.editor</groupId>
     <artifactId>org.lh.dmlj.schema.editor.updatesite</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>3.3.0-SNAPSHOT</version>
     <packaging>eclipse-repository</packaging>
 </project>
