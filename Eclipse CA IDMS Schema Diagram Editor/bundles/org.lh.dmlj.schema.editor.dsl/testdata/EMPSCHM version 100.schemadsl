@@ -20,6 +20,12 @@ diagram {
     verticalGuides '253,579'
 }
 
+area 'EMP-DEMO-REGION'
+
+area 'ORG-DEMO-REGION'
+
+area 'INS-DEMO-REGION'
+
 record 'COVERAGE' {
     shareStructure 'COVERAGE version 100'
     recordId 400

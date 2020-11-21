@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -191,13 +191,10 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 					without_tab "area '${area.name}' {"
 					areaSyntaxBuilder.build(area)
 					without_tab '}'
-				} else if (!area.areaSpecifications) {
-					// the area doesn't contain any records or indexes, so we need to explicitly
-					// define it; we only need a builder when procedure calls are specified for
-					// the area, so we can generate everything ourselves here				
+				} else {
 					blank_line()
 					without_tab "area '${area.name}'"
-				}
+				}				
 			}
 		} else {
 			blank_line()

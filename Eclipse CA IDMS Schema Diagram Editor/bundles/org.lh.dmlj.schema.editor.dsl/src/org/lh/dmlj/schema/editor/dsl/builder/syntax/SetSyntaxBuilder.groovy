@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -117,14 +117,14 @@ class SetSyntaxBuilder extends AbstractSyntaxBuilder<Set> {
 					with_2_tabs "subarea '${areaSpecification.symbolicSubareaName}'"
 				} else if (areaSpecification.offsetExpression) {
 					OffsetExpression offsetExpression = areaSpecification.offsetExpression
-					if (offsetExpression.offsetPageCount) {
+					if (offsetExpression.offsetPageCount != null) {
 						with_2_tabs "offsetPages ${offsetExpression.offsetPageCount}"
-					} else if (offsetExpression.offsetPercent) {
+					} else if (offsetExpression.offsetPercent != null) {
 						with_2_tabs "offsetPercent ${offsetExpression.offsetPercent}"
 					}
-					if (offsetExpression.pageCount) {
+					if (offsetExpression.pageCount != null) {
 						with_2_tabs "pages ${offsetExpression.pageCount}"
-					} else if (offsetExpression.percent) {
+					} else if (offsetExpression.percent != null) {
 						with_2_tabs "percent ${offsetExpression.percent}"
 					}
 				}

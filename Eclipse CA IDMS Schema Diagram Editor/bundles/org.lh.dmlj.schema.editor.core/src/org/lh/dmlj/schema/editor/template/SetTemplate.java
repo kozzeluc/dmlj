@@ -36,20 +36,21 @@ public class SetTemplate
   protected final String TEXT_16 = NL + "             INDEX DBKEY POSITION IS OMITTED";
   protected final String TEXT_17 = NL + "             LINKED TO OWNER" + NL + "             OWNER DBKEY POSITION IS ";
   protected final String TEXT_18 = NL + "             ";
-  protected final String TEXT_19 = NL + "             KEY IS (";
-  protected final String TEXT_20 = NL + "                 ";
-  protected final String TEXT_21 = NL + "                 DUPLICATES ARE ";
-  protected final String TEXT_22 = NL + "                 NATURAL SEQUENCE";
-  protected final String TEXT_23 = NL + "                 COMPRESSED";
-  protected final String TEXT_24 = NL + "                 UNCOMPRESSED";
-  protected final String TEXT_25 = NL + "         .";
+  protected final String TEXT_19 = NL + "             KEY IS";
+  protected final String TEXT_20 = NL + "             KEY IS (";
+  protected final String TEXT_21 = NL + "                 ";
+  protected final String TEXT_22 = NL + "                 DUPLICATES ARE ";
+  protected final String TEXT_23 = NL + "                 NATURAL SEQUENCE";
+  protected final String TEXT_24 = NL + "                 COMPRESSED";
+  protected final String TEXT_25 = NL + "                 UNCOMPRESSED";
+  protected final String TEXT_26 = NL + "         .";
 
   public String generate(Object argument)
   {
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -188,7 +189,7 @@ if (set.getOwner() != null) {
 	    } else if (offsetExpression.getOffsetPercent() != null) {
 	    	p = offsetExpression.getOffsetPercent() + " PERCENT";
 	    } else {
-	        p = "0";
+	        p = "0 PERCENT";
 	    }
 	    String q;
 	    if (offsetExpression.getPercent() != null) {
@@ -271,12 +272,19 @@ for (MemberRole memberRole : memberRoles) {
     
     if (set.getOrder() == SetOrder.SORTED) {
         Key key = memberRole.getSortKey();
+        boolean sortedByDbkey = key.getElements().size() == 1 && key.getElements().get(0).isDbkey(); 
+        if (sortedByDbkey) {
 
     stringBuffer.append(TEXT_19);
     
+        } else {
+
+    stringBuffer.append(TEXT_20);
+    
+        }
         for (KeyElement keyElement : key.getElements()) {
             String bracket;
-            if (keyElement == key.getElements().get(key.getElements().size() - 1)) {
+            if (!sortedByDbkey && keyElement == key.getElements().get(key.getElements().size() - 1)) {
                 bracket = ")";
             } else {
                 bracket = "";
@@ -288,7 +296,7 @@ for (MemberRole memberRole : memberRoles) {
             	elementOrDbkey = "DBKEY";
             }
 
-    stringBuffer.append(TEXT_20);
+    stringBuffer.append(TEXT_21);
     stringBuffer.append( elementOrDbkey );
     stringBuffer.append(TEXT_13);
     stringBuffer.append( keyElement.getSortSequence() );
@@ -297,27 +305,27 @@ for (MemberRole memberRole : memberRoles) {
     
         }
 
-    stringBuffer.append(TEXT_21);
+    stringBuffer.append(TEXT_22);
     stringBuffer.append( key.getDuplicatesOption().toString().replaceAll("_", " ") );
     
         if (key.isNaturalSequence()) {
 
-    stringBuffer.append(TEXT_22);
+    stringBuffer.append(TEXT_23);
     
         }
         if (set.getMode() == SetMode.INDEXED && key.isCompressed()) {
 
-    stringBuffer.append(TEXT_23);
-    
-        } else if (set.getMode() == SetMode.INDEXED) {
-
     stringBuffer.append(TEXT_24);
+    
+        } else if (set.getMode() == SetMode.INDEXED && !set.getMembers().get(0).getSortKey().getElements().get(0).isDbkey()) {
+
+    stringBuffer.append(TEXT_25);
     
         }
     }
 }
 
-    stringBuffer.append(TEXT_25);
+    stringBuffer.append(TEXT_26);
     return stringBuffer.toString();
   }
 }

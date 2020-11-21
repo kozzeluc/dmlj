@@ -365,16 +365,21 @@ class SetModelBuilder extends AbstractModelBuilder<Set> {
 		assert memberRole.record
 		assert memberRole.record.elements
 		assert memberRole.sortKey
-		Element element
-		if (elementName) {
-			element = memberRole.record.getElement(elementName)
-		} else {
-			element = memberRole.record.elements[0]
-		}
-		assert element
+		
 		memberRole.sortKey.elements << SchemaFactory.eINSTANCE.createKeyElement()
-		memberRole.sortKey.elements[-1].element = element
 		memberRole.sortKey.elements[-1].sortSequence = sortSequence
+		if (elementName != 'dbkey') {
+			Element element
+			if (elementName) {
+				element = memberRole.record.getElement(elementName)
+			} else {
+				element = memberRole.record.elements[0]
+			}
+			assert element
+			memberRole.sortKey.elements[-1].element = element
+		} else {
+			assert memberRole.getSet().indexed, "not an indexed set: ${memberRole.set.name}"
+		}
 	}
 
 	private void createMemberRole() {
@@ -454,8 +459,12 @@ class SetModelBuilder extends AbstractModelBuilder<Set> {
 		assert set.members
 		assert set.members[-1].sortKey
 		assert set.members[-1].record
-		set.members[-1].sortKey.duplicatesOption = 
-			DuplicatesOption.valueOf(duplicatesOption.replaceAll(' ', '_'))
+		
+		DuplicatesOption resolvedDuplicatesOption = DuplicatesOption.valueOf(duplicatesOption.replaceAll(' ', '_'))
+		if (set.members[-1].sortKey.elements[-1].dbkey) {
+			assert resolvedDuplicatesOption == DuplicatesOption.NOT_ALLOWED, "'$duplicatesOption' is not allowed for indexed sets: ${set.name}"
+		}
+		set.members[-1].sortKey.duplicatesOption = resolvedDuplicatesOption
 	}
 	
 	void end(Closure definition) {

@@ -2015,6 +2015,37 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 		'UNORDERED'	 	 | DuplicatesOption.UNORDERED
 	}
 	
+	@Unroll
+	def "sort key: duplicates MUST be 'NOT ALLOWED' when sorted by dbkey: #duplicatesOption"() {
+		
+		given: 
+		def SetModelBuilder builder = new SetModelBuilder()
+		
+		when: 
+		def definition = {
+			index 'SET1'
+			order 'SORTED'
+			member {
+				key {
+					ascending 'dbkey'
+					duplicates duplicatesOption
+				}
+			}
+		}
+		Set set = builder.build(definition)
+		
+		then: 
+		def e = thrown(AssertionError)
+		e.message.startsWith("'$duplicatesOption' is not allowed for indexed sets: SET1")
+		
+		where:
+		duplicatesOption | expectedDuplicatesOption
+		'BY DBKEY'	 	 | DuplicatesOption.BY_DBKEY
+		'FIRST'	 		 | DuplicatesOption.FIRST
+		'LAST'	 		 | DuplicatesOption.LAST		
+		'UNORDERED'	 	 | DuplicatesOption.UNORDERED
+	}
+	
 	def "sort key: natural sequence option"() {
 		
 		given: "a set model builder without a schema"
@@ -2112,6 +2143,97 @@ class SetModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertChainedSet(set, 'SET1', schema, [ setOrder : SetOrder.SORTED,
 												memberRecord : employee,
 												sortKeyChecker : sortKeyChecker ] )
+	}	
+	
+	
+	def "sort key ascending dbkey"() {
+		
+		given: 
+		def SetModelBuilder builder = new SetModelBuilder()
+		
+		when: 
+		def definition = {
+			index 'SET1'
+			order 'SORTED'
+			member {
+				key {
+					ascending 'dbkey'
+					duplicates 'NOT ALLOWED'
+				}
+			}
+		}
+		Set set = builder.build(definition)
+		
+		then: 		
+		set.members[0].sortKey.elements.size() == 1
+		set.members[0].sortKey.elements[0].isDbkey()
+	}
+	
+	def "sort key descending dbkey"() {
+		
+		given:
+		def SetModelBuilder builder = new SetModelBuilder()
+		
+		when:
+		def definition = {
+			index 'SET1'
+			order 'SORTED'
+			member {
+				key {
+					descending 'dbkey'
+					duplicates 'NOT ALLOWED'
+				}
+			}
+		}
+		Set set = builder.build(definition)
+		
+		then:
+		set.members[0].sortKey.elements.size() == 1
+		set.members[0].sortKey.elements[0].isDbkey()
+	}
+	
+	def "sort key ascending dbkey invalid for chained sets"() {
+		
+		given:
+		def SetModelBuilder builder = new SetModelBuilder()
+		
+		when:
+		def definition = {			
+			order 'SORTED'
+			member {
+				key {
+					ascending 'dbkey'
+					duplicates 'NOT ALLOWED'
+				}
+			}
+		}
+		Set set = builder.build(definition)
+		
+		then:
+		def e = thrown(AssertionError)	
+		e.message.startsWith("not an indexed set: SET1")
+	}
+	
+	def "sort key descending dbkey invalid for chained sets"() {
+		
+		given:
+		def SetModelBuilder builder = new SetModelBuilder()
+		
+		when:
+		def definition = {
+			order 'SORTED'
+			member {
+				key {
+					descending 'dbkey'
+					duplicates 'NOT ALLOWED'
+				}
+			}
+		}
+		Set set = builder.build(definition)
+		
+		then:
+		def e = thrown(AssertionError)
+		e.message.startsWith("not an indexed set: SET1")
 	}
 	
 	def "connection label specification"() {
