@@ -44,7 +44,10 @@ now you should see the IDMS JDBC driver version information for the file you ins
 <br><br>
 <img src="../../images/JDBC_driver_installed.png" alt="[JDBC driver installed]">
 <br><br>
-When you see the version information, the JDBC driver was installed correctly.
+When you see the version information, the JDBC driver was installed correctly.  The driver version is retrieved from the
+actual driver (the <code>javax.sql.Driver</code> implementation); the diagram editor just reports this version.  The
+provider plug-in information is taken from the <i>OSGI bundle</i> properties that were added to the META-INF/MANIFEST.MF 
+file when importing the idmsjdbc.jar file.
 <h2>Troubleshooting</h2>
 Should the above procedure not work for you then you can try to install the IDMS JDBC driver into your Eclipse workbench
 like so :
@@ -56,8 +59,8 @@ and add the following lines to it :<br>
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS Server JDBC Driver
 Bundle-SymbolicName: com.ca.idms.jdbc.driver
-Bundle-Version: 17.0.23.0
-Bundle-Vendor: CA, Inc.
+Bundle-Version: 17.1.4.0
+Bundle-Vendor: Broadcom, Inc.
 Export-Package: ca.idms.dsi,
  ca.idms.io,
  ca.idms.jdbc,
@@ -68,10 +71,10 @@ Export-Package: ca.idms.dsi,
  ca.idms.xa,
  com.ca.idms.hibernate,
  com.ca.idms.was
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 </pre></code>
 Copy the version information from <code>Implementation-Version</code> to <code>Bundle-Version</code> and make sure to 
-have an empty line after <code>Bundle-RequiredExecutionEnvironment: JavaSE-1.7</code>.  Don't forget to save your work
+have an empty line after <code>Bundle-RequiredExecutionEnvironment: JavaSE-1.8</code>.  Don't forget to save your work
 (in the idmsjdbc.jar file).
 <br><br>
 You have just transformed the idmsjdbc.jar file to an <b>OSGI bundle</b> that is ready to be picked up by Eclipse.
@@ -92,7 +95,10 @@ it isn't already there.<br><br></li>
 </li>
 </ul>
 This is what happens behind the scenes when you install the IDMS JDBC driver via the diagram editor, so if something 
-goes wrong there you now know how to fix this yourself.
+goes wrong there, you now know how to fix this yourself.
+<br><br>
+When replacing idmsjdbc.jar by a more recent version, it may be necessary to start Eclipse with the -clean command line
+argument.
 <br><br>
 </body>
 </html>
