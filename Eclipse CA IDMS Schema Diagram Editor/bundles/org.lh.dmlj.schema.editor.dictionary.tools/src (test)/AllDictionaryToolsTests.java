@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector.DictionaryElementDataCollectorGetValuesTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcToolsTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymListQueryTemplateTest;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementCommentListQueryTemplateTest;
@@ -31,7 +32,8 @@ import org.lh.dmlj.schema.editor.dictionary.tools.template.ElementSynonymComment
 	BaseRecordSynonymListQueryTemplateTest.class,
 	ElementListQueryTemplateTest.class,
 	ElementCommentListQueryTemplateTest.class,
-	ElementSynonymCommentListQueryTemplateTest.class
+	ElementSynonymCommentListQueryTemplateTest.class,
+	DictionaryElementDataCollectorGetValuesTest.class
 	
 })
 public class AllDictionaryToolsTests {	

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -75,7 +75,10 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRoleTest;
 import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRoleTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContextTest;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeDispatcherTest;
+import org.lh.dmlj.schema.editor.common.ElementValueTransformerToValueListTest;
+import org.lh.dmlj.schema.editor.common.ElementValueTransformerToValueStringTest;
 import org.lh.dmlj.schema.editor.common.ToolsTest;
+import org.lh.dmlj.schema.editor.importtool.syntax.ElementDataCollectorGetValuesTest;
 import org.lh.dmlj.schema.editor.log.LoggerSpec;
 import org.lh.dmlj.schema.editor.outline.part.AbstractSchemaTreeEditPartTest;
 import org.lh.dmlj.schema.editor.prefix.PointerFactoryTest;
@@ -169,6 +172,11 @@ import org.lh.dmlj.schema.editor.property.section.ProcedureCallsDslFacetModifier
 	
 	// utility class tests
 	ToolsTest.class,
+	ElementValueTransformerToValueListTest.class,
+	ElementValueTransformerToValueStringTest.class,
+	
+	// syntax import tests
+	ElementDataCollectorGetValuesTest.class,
 	
 	// other
 	ProcedureCallsDslFacetModifierSpec.class,

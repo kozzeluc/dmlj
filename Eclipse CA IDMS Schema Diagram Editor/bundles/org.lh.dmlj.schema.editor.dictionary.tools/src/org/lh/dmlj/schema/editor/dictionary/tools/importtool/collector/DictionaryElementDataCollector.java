@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -183,7 +183,8 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 	}
 
 	@Override
-	public String getValue(Namesyn_083 namesyn_083) {
+	public List<String> getValues(Namesyn_083 namesyn_083) {
+		List<String> values = new ArrayList<>();
 		Sdr_042 sdr_042 = namesyn_083.getSdr_042();
 		for (Sdes_044 sdes_044 : sdr_042.getSdes_044s()) {
 			// CMT-ID-044 == -3: VALUES (ELEMCMT-082 and SDES-044 only)
@@ -195,10 +196,10 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 					p.append(" THRU ");					
 					p.append(val2_044);
 				}
-				return p.toString();
+				values.add(p.toString());
 			}
 		}
-		return null;
+		return values;
 	}
 
 	public void setRcdsyn_079s(List<Rcdsyn_079> rcdsyn_079s) {

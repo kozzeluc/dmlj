@@ -1,6 +1,6 @@
 <%
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,7 @@
  * Contact information: kozzeluc@gmail.com.
  */
 %>
-<%@ jet package="org.lh.dmlj.schema.editor.template" imports="org.lh.dmlj.schema.*" class="ElementTemplate"%>
+<%@ jet package="org.lh.dmlj.schema.editor.template" imports="java.util.* org.lh.dmlj.schema.* org.lh.dmlj.schema.editor.common.*" class="ElementTemplate"%>
 <%
 
 /*
@@ -126,10 +126,25 @@ if (element.getOccursSpecification() != null) {
 		}
 	}        
 }
-if (element.getValue() != null) {
+List<String> valueList = ElementValueTransformer.toValueList(element.getValue());
+if (valueList != null && !valueList.isEmpty()) {
+    if (valueList.size() == 1) {   
 %>
-<%= left %>    VALUE IS ( <%= element.getValue() %> )
+<%= left %>    VALUE IS ( <%= valueList.get(0) %> )
 <%
+    } else {
+%>
+<%= left %>    VALUE IS ( <%= valueList.get(0) %>
+<%
+        for (int i = 1; i < (valueList.size() - 1); i++) {
+%>
+<%= left %>               <%= valueList.get(i) %>
+<%
+        }
+%>
+<%= left %>               <%= valueList.get(valueList.size() - 1) %> )
+<%
+    }
 }
 %>
 <%= left %>    .

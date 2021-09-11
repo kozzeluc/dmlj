@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.importtool;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.lh.dmlj.schema.Usage;
 
@@ -44,6 +45,6 @@ public interface IElementDataCollector<T> {
 	
 	Usage getUsage(T context);
 	
-	String getValue(T context);
+	List<String> getValues(T context);
 	
 }
