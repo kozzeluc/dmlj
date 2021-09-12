@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,6 +36,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// general preferences...
 		store.setDefault(PreferenceConstants.DEFAULT_FILE_EXTENSION, DEFAULT_FILE_EXTENSION);
 		store.setDefault(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS, PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
+		store.setDefault(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP, false);
 		store.setDefault(PreferenceConstants.READ_ONLY_MODE, false);
 		store.setDefault(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, false);
 		
