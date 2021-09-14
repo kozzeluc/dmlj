@@ -1,10 +1,10 @@
 name 'IDMSNTWK'
 version 1
-description 'IDMS/DB RELEASE 18.5'
+description 'IDMS/DB RELEASE 19.0'
 
 diagram {
     label {
-        description "IDMS/DB RELEASE 18.5"
+        description "IDMS/DB RELEASE 19.0"
         x 50
         y 100
         width 169
@@ -24,7 +24,21 @@ area 'DDLDCMSG' {
     call 'IDMSDCOM BEFORE'
 }
 
+area 'DDLDCRUN'
+
+area 'DDLDCLOG'
+
+area 'DDLDCTRC'
+
+area 'DDLDCLOD'
+
 area 'DDLDCSCR'
+
+area 'DDLCAT'
+
+area 'DDLCATX'
+
+area 'DDLCATLOD'
 
 record 'S-010' {
     shareStructure 'S-010 version 1'
@@ -7909,6 +7923,7 @@ record 'INDEX-1041' {
         02 UNIQUE-1041 picture X(1)
         02 CLUSTER-1041 picture X(1)
         02 COMPRESS-1041 picture X(1)
+        02 GENERATED-1041 picture X(1)
         02 IXBLKLENGTH-1041 picture S9(4) SYNC usage COMPUTATIONAL
         02 IXBLKCONTAINS-1041 picture S9(4) SYNC usage COMPUTATIONAL
         02 DISPLACEMENT-1041 picture S9(4) SYNC usage COMPUTATIONAL
@@ -7946,7 +7961,8 @@ record 'INDEX-1041' {
         02 AVGPAGESPERKEY-1041 picture S9(8) SYNC usage COMPUTATIONAL
         02 PROCKEY-1041 picture X(1)
         02 PRIMEKEY-1041 picture X(1)
-        02 FILLER picture X(38)
+        02 ENFORCE-1041 picture X(1)
+        02 FILLER picture X(37)
     """
 
     diagram {
@@ -8031,6 +8047,7 @@ record 'SCHEMA-1045' {
         02 NODE-1045 picture X(8)
         02 DICTIONARY-1045 picture X(8)
         02 NTWKSCHEMA-1045 picture X(8)
+        02 INCLVIRTKEYS-1045 picture X(1)
         02 VERSION-1045 picture S9(4) SYNC usage COMPUTATIONAL
         02 CHARSET-1045 picture X(18)
         02 REFDSQLSCHEMA-1045 picture X(18)
