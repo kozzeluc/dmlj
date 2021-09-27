@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -53,9 +53,9 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 	private Button btnDefaultSchema;
 	private Button btnCustomSchema;
 	private Text textCustomSchema;
-	private Button btnDefaultQueryDbkeyListSizeMaximum;
-	private Button btnCustomQueryDbkeyListSizeMaximum;
-	private Text textCustomQueryDbkeyListSizeMaximum;
+	private Button btnDefaultQueryRowidListSizeMaximum;
+	private Button btnCustomQueryRowidListSizeMaximum;
+	private Text textCustomQueryRowidListSizeMaximum;
 	private Button btnSysdirl;
 	private Button btnTestConnection;
 	
@@ -68,7 +68,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 	private String dictionaryUser;
 	private String dictionaryPassword;
 	private String dictionarySchema;
-	private int dictionaryQueryDbkeyListSizeMaximum;
+	private int dictionaryQueryRowidListSizeMaximum;
 	private boolean dictionarySysdirl;
 	
 	private boolean idTouched;
@@ -78,7 +78,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 	private boolean userTouched;
 	private boolean passwordTouched;
 	private boolean schemaTouched;
-	private boolean queryDbkeyListSizeMaximumTouched;
+	private boolean queryRowidListSizeMaximumTouched;
 	
 	public EditDictionaryDialog(Shell parentShell, Dictionary dictionary) {
 		super(parentShell);
@@ -118,7 +118,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		textId.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
@@ -144,7 +144,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		textHostname.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
@@ -171,7 +171,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		textPort.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
@@ -200,7 +200,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		textDictname.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
@@ -229,7 +229,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		textUser.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
@@ -258,7 +258,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		textPassword.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
@@ -316,7 +316,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		textCustomSchema.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
@@ -338,56 +338,56 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 			}
 		});
 		
-		Group grpQueryDbkeyListSizeMaximum = new Group(container, SWT.NONE);
-		grpQueryDbkeyListSizeMaximum.setLayout(new GridLayout(2, false));
-		grpQueryDbkeyListSizeMaximum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
-		grpQueryDbkeyListSizeMaximum.setText("Maximum dbkey list size in queries");
+		Group grpQueryRowidListSizeMaximum = new Group(container, SWT.NONE);
+		grpQueryRowidListSizeMaximum.setLayout(new GridLayout(2, false));
+		grpQueryRowidListSizeMaximum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+		grpQueryRowidListSizeMaximum.setText("Maximum rowid list size in queries");
 		
-		btnDefaultQueryDbkeyListSizeMaximum = new Button(grpQueryDbkeyListSizeMaximum, SWT.RADIO);
-		btnDefaultQueryDbkeyListSizeMaximum.addSelectionListener(new SelectionAdapter() {
+		btnDefaultQueryRowidListSizeMaximum = new Button(grpQueryRowidListSizeMaximum, SWT.RADIO);
+		btnDefaultQueryRowidListSizeMaximum.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				validate();
 				enableAndDisable();
 			}
 		});
-		btnDefaultQueryDbkeyListSizeMaximum.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
-		btnDefaultQueryDbkeyListSizeMaximum.setText("Default (47)");
+		btnDefaultQueryRowidListSizeMaximum.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
+		btnDefaultQueryRowidListSizeMaximum.setText("Default (47)");
 		
-		btnCustomQueryDbkeyListSizeMaximum = new Button(grpQueryDbkeyListSizeMaximum, SWT.RADIO);
-		btnCustomQueryDbkeyListSizeMaximum.addSelectionListener(new SelectionAdapter() {
+		btnCustomQueryRowidListSizeMaximum = new Button(grpQueryRowidListSizeMaximum, SWT.RADIO);
+		btnCustomQueryRowidListSizeMaximum.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				validate();
 				enableAndDisable();
 			}
 		});
-		btnCustomQueryDbkeyListSizeMaximum.setText("Custom:");
+		btnCustomQueryRowidListSizeMaximum.setText("Custom:");
 		
-		textCustomQueryDbkeyListSizeMaximum = new Text(grpQueryDbkeyListSizeMaximum, SWT.BORDER | SWT.RIGHT);
-		textCustomQueryDbkeyListSizeMaximum.addKeyListener(new KeyAdapter() {
+		textCustomQueryRowidListSizeMaximum = new Text(grpQueryRowidListSizeMaximum, SWT.BORDER | SWT.RIGHT);
+		textCustomQueryRowidListSizeMaximum.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
-		textCustomQueryDbkeyListSizeMaximum.addTraverseListener(new TraverseListener() {
+		textCustomQueryRowidListSizeMaximum.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validateAndMoveToNextFieldWhenApplicable(e);
 			}
 		});
-		textCustomQueryDbkeyListSizeMaximum.addFocusListener(new FocusAdapter() {
+		textCustomQueryRowidListSizeMaximum.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				queryDbkeyListSizeMaximumTouched = true;
+				queryRowidListSizeMaximumTouched = true;
 				validate();
 			}
 		});
-		GridData gd_textCustomQueryDbkeyListSizeMaximum = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textCustomQueryDbkeyListSizeMaximum.widthHint = 25;
-		textCustomQueryDbkeyListSizeMaximum.setLayoutData(gd_textCustomQueryDbkeyListSizeMaximum);
+		GridData gd_textCustomQueryRowidListSizeMaximum = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_textCustomQueryRowidListSizeMaximum.widthHint = 25;
+		textCustomQueryRowidListSizeMaximum.setLayoutData(gd_textCustomQueryRowidListSizeMaximum);
 		
 		btnSysdirl = new Button(container, SWT.CHECK);
 		btnSysdirl.addFocusListener(new FocusAdapter() {
@@ -432,7 +432,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 	
 	private void enableAndDisable() {
 		textCustomSchema.setEnabled(btnCustomSchema.getSelection());
-		textCustomQueryDbkeyListSizeMaximum.setEnabled(btnCustomQueryDbkeyListSizeMaximum.getSelection());
+		textCustomQueryRowidListSizeMaximum.setEnabled(btnCustomQueryRowidListSizeMaximum.getSelection());
 	}
 
 	public String getDictionaryDictname() {
@@ -455,8 +455,8 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		return dictionaryPort;
 	}
 
-	public int getDictionaryQueryDbkeyListSizeMaximum() {
-		return dictionaryQueryDbkeyListSizeMaximum;
+	public int getDictionaryQueryRowidListSizeMaximum() {
+		return dictionaryQueryRowidListSizeMaximum;
 	}
 
 	public String getDictionarySchema() {
@@ -481,11 +481,11 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 			Plugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DEFAULT_SCHEMA);
 		btnDefaultSchema.setText("Default (" + defaultSchema + ")");
 		
-		int defaultQueryDbkeyListSizeMaximum =
+		int defaultQueryRowidListSizeMaximum =
 			Plugin.getDefault()
 				  .getPreferenceStore()
-				  .getInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM);
-		btnDefaultQueryDbkeyListSizeMaximum.setText("Default (" + defaultQueryDbkeyListSizeMaximum + ")");
+				  .getInt(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM);
+		btnDefaultQueryRowidListSizeMaximum.setText("Default (" + defaultQueryRowidListSizeMaximum + ")");
 		
 		if (dictionary != null) {			
 			
@@ -507,14 +507,13 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				textCustomSchema.setText(schema);
 			}
 			
-			int queryDbkeyListSizeMaximum = dictionary.getQueryDbkeyListSizeMaximum();
-			selectDefault = 
-				queryDbkeyListSizeMaximum == Dictionary.USE_DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM_INDICATOR;
-			btnDefaultQueryDbkeyListSizeMaximum.setSelection(selectDefault);
-			btnCustomQueryDbkeyListSizeMaximum.setSelection(!selectDefault);
-			textCustomQueryDbkeyListSizeMaximum.setEnabled(!selectDefault);
+			int queryRowidListSizeMaximum = dictionary.getQueryRowidListSizeMaximum();
+			selectDefault = queryRowidListSizeMaximum == Dictionary.USE_DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM_INDICATOR;
+			btnDefaultQueryRowidListSizeMaximum.setSelection(selectDefault);
+			btnCustomQueryRowidListSizeMaximum.setSelection(!selectDefault);
+			textCustomQueryRowidListSizeMaximum.setEnabled(!selectDefault);
 			if (!selectDefault) {
-				textCustomQueryDbkeyListSizeMaximum.setText(String.valueOf(queryDbkeyListSizeMaximum));
+				textCustomQueryRowidListSizeMaximum.setText(String.valueOf(queryRowidListSizeMaximum));
 			}
 			
 			btnSysdirl.setSelection(dictionary.isSysdirl());
@@ -523,8 +522,8 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 			textPort.setText("3709");
 			btnDefaultSchema.setSelection(true);
 			textCustomSchema.setEnabled(false);
-			btnDefaultQueryDbkeyListSizeMaximum.setSelection(true);
-			textCustomQueryDbkeyListSizeMaximum.setEnabled(false);
+			btnDefaultQueryRowidListSizeMaximum.setSelection(true);
+			textCustomQueryRowidListSizeMaximum.setEnabled(false);
 		}
 		
 		enableAndDisable();
@@ -593,12 +592,12 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 			} else {
 				dictionarySchema = textCustomSchema.getText().trim();							
 			}
-			if (btnDefaultQueryDbkeyListSizeMaximum.getSelection()) {
-				dictionaryQueryDbkeyListSizeMaximum = 
-					Dictionary.USE_DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM_INDICATOR;
+			if (btnDefaultQueryRowidListSizeMaximum.getSelection()) {
+				dictionaryQueryRowidListSizeMaximum = 
+					Dictionary.USE_DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM_INDICATOR;
 			} else {
-				dictionaryQueryDbkeyListSizeMaximum = 
-					Integer.valueOf(textCustomQueryDbkeyListSizeMaximum.getText().trim());						
+				dictionaryQueryRowidListSizeMaximum = 
+					Integer.valueOf(textCustomQueryRowidListSizeMaximum.getText().trim());						
 			}
 			dictionarySysdirl = btnSysdirl.getSelection();
 		}
@@ -631,18 +630,18 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		} else if (e.getSource() == textPassword) {
 			if (btnCustomSchema.getSelection()) {
 				setFocusAndSelectText(textCustomSchema, inputValidationResult);
-			} else if (btnCustomQueryDbkeyListSizeMaximum.getSelection()) {
-				setFocusAndSelectText(textCustomQueryDbkeyListSizeMaximum, inputValidationResult);
+			} else if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
+				setFocusAndSelectText(textCustomQueryRowidListSizeMaximum, inputValidationResult);
 			} else {
 				setFocusAndSelectText(btnTestConnection, inputValidationResult);
 			}
 		} else if (e.getSource() == textCustomSchema) {
-			if (btnCustomQueryDbkeyListSizeMaximum.getSelection()) {
-				setFocusAndSelectText(textCustomQueryDbkeyListSizeMaximum, inputValidationResult);
+			if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
+				setFocusAndSelectText(textCustomQueryRowidListSizeMaximum, inputValidationResult);
 			} else {
 				setFocusAndSelectText(btnTestConnection, inputValidationResult);
 			}
-		} else if (e.getSource() == textCustomQueryDbkeyListSizeMaximum) {
+		} else if (e.getSource() == textCustomQueryRowidListSizeMaximum) {
 			setFocusAndSelectText(btnTestConnection, inputValidationResult);
 		}
 		if (e.detail == SWT.TRAVERSE_RETURN) {
@@ -692,23 +691,23 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 			String message = "Custom schema cannot exceed 18 characters in length";
 			return new InputValidationResult(false, message, textCustomSchema);
 		}
-		if (btnCustomQueryDbkeyListSizeMaximum.getSelection() && 
-			textCustomQueryDbkeyListSizeMaximum.getText().trim().equals("")) {
+		if (btnCustomQueryRowidListSizeMaximum.getSelection() && 
+			textCustomQueryRowidListSizeMaximum.getText().trim().equals("")) {
 			
-			String message = queryDbkeyListSizeMaximumTouched ? 
-							 "Custom maximum dbkey list size in queries is mandatory" : null;
-			return new InputValidationResult(false, message, textCustomQueryDbkeyListSizeMaximum);
+			String message = queryRowidListSizeMaximumTouched ? 
+							 "Custom maximum rowid list size in queries is mandatory" : null;
+			return new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum);
 		}
-		if (btnCustomQueryDbkeyListSizeMaximum.getSelection()) {
-			String message = "Custom maximum dbkey list size in queries must be a positive " +
+		if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
+			String message = "Custom maximum rowid list size in queries must be a positive " +
 							 "number in the range 1 to 1000";
 			try {
-				int i = Integer.valueOf(textCustomQueryDbkeyListSizeMaximum.getText().trim());
+				int i = Integer.valueOf(textCustomQueryRowidListSizeMaximum.getText().trim());
 				if (i < 1 || i > 1000) {
-					return new InputValidationResult(false, message, textCustomQueryDbkeyListSizeMaximum);
+					return new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum);
 				}	
 			} catch (NumberFormatException e) {
-				return new InputValidationResult(false, message, textCustomQueryDbkeyListSizeMaximum);
+				return new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum);
 			}
 		}
 		return new InputValidationResult(true, null, null);

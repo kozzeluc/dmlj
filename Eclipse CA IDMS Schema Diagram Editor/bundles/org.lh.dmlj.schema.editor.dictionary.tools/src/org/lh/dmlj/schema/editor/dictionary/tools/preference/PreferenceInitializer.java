@@ -30,7 +30,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.DEFAULT_SCHEMA, "SYSDICT");
-		store.setDefault(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM, 47);
+		store.setDefault(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM, 47);
 	}
 
 }

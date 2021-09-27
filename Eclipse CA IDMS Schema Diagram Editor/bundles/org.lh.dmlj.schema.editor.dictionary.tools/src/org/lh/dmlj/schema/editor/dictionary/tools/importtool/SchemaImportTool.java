@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -40,6 +40,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttr
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
@@ -74,12 +75,8 @@ public class SchemaImportTool implements ISchemaImportTool {
 	private IDataCollectorRegistry dataCollectorRegistry;
 	private DictionaryElementDataCollector dictionaryElementDataCollector;
 	private SchemaImportSession session;
-	private Map<Long, Srcd_113> srcd_113s = new HashMap<>();
-	private Map<Long, Table_1050> table_1050s = new HashMap<>();
-	
-	public SchemaImportTool() {
-		super();
-	}
+	private Map<Rowid, Srcd_113> srcd_113s = new HashMap<>();
+	private Map<Rowid, Table_1050> table_1050s = new HashMap<>();
 
 	@Override
 	public void dispose() {	
@@ -100,16 +97,16 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		final List<Sa_018> list = new ArrayList<>();
 		
-		final Map<Long, Sa_018> sa_018s = new HashMap<>();
+		final Map<Rowid, Sa_018> sa_018s = new HashMap<>();
 		IQuery areaListQuery = new Query.Builder().forAreaList(session).build();
 		session.runQuery(areaListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {	
 				Sa_018 sa_018 = new Sa_018();
-				sa_018.setDbkey(JdbcTools.getDbkey(row, Sa_018.ROWID));
+				sa_018.setRowid(JdbcTools.getRowid(row, Sa_018.ROWID));
 				sa_018.setSaNam_018(row.getString(Sa_018.SA_NAM_018));
 				list.add(sa_018);
-				sa_018s.put(Long.valueOf(sa_018.getDbkey()), sa_018);				
+				sa_018s.put(sa_018.getRowid(), sa_018);
 			}			
 		});	
 		
@@ -125,9 +122,8 @@ public class SchemaImportTool implements ISchemaImportTool {
 				sacall_020.setDbpFunc_020(row.getString(Sacall_020.DBP_FUNC_020));
 				sacall_020.setDbpMode_020(row.getString(Sacall_020.DBP_MODE_020));				
 				
-				Sa_018 sa_018 = sa_018s.get(Long.valueOf(JdbcTools.getDbkey(row, Sa_018.ROWID)));
+				Sa_018 sa_018 = sa_018s.get(JdbcTools.getRowid(row, Sa_018.ROWID));
 				sa_018.getSacall_020s().add(sacall_020);
-				
 			}			
 		});				
 		return list;
@@ -137,9 +133,9 @@ public class SchemaImportTool implements ISchemaImportTool {
 	public Collection<?> getRecordContexts() {
 		
 		final List<Object> list = new ArrayList<>();
-		final Map<Long, Sr_036> sr_036s = new HashMap<>();
-		final Map<Long, Rcdsyn_079> rcdsyn_079s = new HashMap<>();
-		final Map<Long, Rcdsyn_079> rcdsyn_079bs = new HashMap<>();		
+		final Map<Rowid, Sr_036> sr_036s = new HashMap<>();
+		final Map<Rowid, Rcdsyn_079> rcdsyn_079s = new HashMap<>();
+		final Map<Rowid, Rcdsyn_079> rcdsyn_079bs = new HashMap<>();		
 		
 		// regular records
 		final List<String> regularRecords = new ArrayList<>();
@@ -149,25 +145,25 @@ public class SchemaImportTool implements ISchemaImportTool {
 			public void processRow(ResultSet row) throws SQLException {
 				
 				final Sr_036 sr_036 = new Sr_036();
-				sr_036.setDbkey(JdbcTools.getDbkey(row, Sr_036.ROWID));
+				sr_036.setRowid(JdbcTools.getRowid(row, Sr_036.ROWID));
 				sr_036.setSrNam_036(row.getString(Sr_036.SR_NAM_036));
 				sr_036.setRcdVers_036(row.getShort(Sr_036.RCD_VERS_036));
-				sr_036s.put(Long.valueOf(sr_036.getDbkey()), sr_036);
+				sr_036s.put(sr_036.getRowid(), sr_036);
 								
 				final Rcdsyn_079 rcdsyn_079 = new Rcdsyn_079();
-				rcdsyn_079.setDbkey(JdbcTools.getDbkey(row, Rcdsyn_079.ROWID));
+				rcdsyn_079.setRowid(JdbcTools.getRowid(row, Rcdsyn_079.ROWID));
 				rcdsyn_079.setRsynName_079(row.getString(Rcdsyn_079.RSYN_NAME_079));
 				rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
 				rcdsyn_079.setSr_036(sr_036);
 				sr_036.setRcdsyn_079(rcdsyn_079);
-				rcdsyn_079s.put(Long.valueOf(rcdsyn_079.getDbkey()), rcdsyn_079);
+				rcdsyn_079s.put(rcdsyn_079.getRowid(), rcdsyn_079);
 								
 				Sam_056 sam_056 = new Sam_056();
 				sam_056.setSrNam_056(row.getString(Sam_056.SR_NAM_056));
 				sam_056.setSaNam_056(row.getString(Sam_056.SA_NAM_056));
 								
 				final Srcd_113 srcd_113 = new Srcd_113();
-				srcd_113.setDbkey(JdbcTools.getDbkey(row, Srcd_113.ROWID));
+				srcd_113.setRowid(JdbcTools.getRowid(row, Srcd_113.ROWID));
 				srcd_113.setDspl_113(row.getShort(Srcd_113.DSPL_113));
 				srcd_113.setMinFrag_113(row.getShort(Srcd_113.MIN_FRAG_113));
 				srcd_113.setMinRoot_113(row.getShort(Srcd_113.MIN_ROOT_113));
@@ -183,7 +179,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 				srcd_113.setVsamType_113(row.getString(Srcd_113.VSAM_TYPE_113));
 				srcd_113.setRcdsyn_079(rcdsyn_079);
 				srcd_113.setSam_056(sam_056);
-				srcd_113s.put(Long.valueOf(srcd_113.getDbkey()), srcd_113);
+				srcd_113s.put(srcd_113.geRowid(), srcd_113);
 				
 				// definitions for INDEX-1041 and TABLE-1050 are much more complete in the catalog, 
 				// so defer the creation of these records in case we're dealing with IDMSNTWK 
@@ -209,12 +205,12 @@ public class SchemaImportTool implements ISchemaImportTool {
 		session.runQuery(baseRecordSynonymListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				long dbkeySr_036 = JdbcTools.getDbkey(row, Sr_036.ROWID);
-				if (sr_036s.containsKey(Long.valueOf(dbkeySr_036))) {
-					Sr_036 sr_036 = sr_036s.get(Long.valueOf(dbkeySr_036));
-					long dbkeyRcdsyn_079b = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);
+				Rowid rowidSr_036 = JdbcTools.getRowid(row, Sr_036.ROWID);
+				if (sr_036s.containsKey(rowidSr_036)) {
+					Sr_036 sr_036 = sr_036s.get(rowidSr_036);
+					Rowid rowidRcdsyn_079b = JdbcTools.getRowid(row, Rcdsyn_079.ROWID);
 					Rcdsyn_079 currentRcdsyn_079b = sr_036.getRcdsyn_079();
-					if (dbkeyRcdsyn_079b != currentRcdsyn_079b.getDbkey()) {
+					if (rowidRcdsyn_079b != currentRcdsyn_079b.getRowid()) {
 						String rsynName_079 = row.getString(Rcdsyn_079.RSYN_NAME_079).trim();
 						short rsynVer_079 = row.getShort(Rcdsyn_079.RSYN_VER_079);
 						if (!rsynName_079.equals(currentRcdsyn_079b.getRsynName_079()) || 
@@ -223,12 +219,12 @@ public class SchemaImportTool implements ISchemaImportTool {
 							// only set the base RCDSYN-079 occurrence when the name or version are
 							// different from the RCDSYN-079 that is connected to the schema
 							Rcdsyn_079 newRcdsyn_079 = new Rcdsyn_079();
-							newRcdsyn_079.setDbkey(dbkeyRcdsyn_079b);
+							newRcdsyn_079.setRowid(rowidRcdsyn_079b);
 							newRcdsyn_079.setRsynName_079(rsynName_079);
 							newRcdsyn_079.setRsynVer_079(rsynVer_079);
 							newRcdsyn_079.setSr_036(sr_036);
 							sr_036.setRcdsyn_079b(newRcdsyn_079);
-							rcdsyn_079bs.put(Long.valueOf(dbkeyRcdsyn_079b), newRcdsyn_079);
+							rcdsyn_079bs.put(rowidRcdsyn_079b, newRcdsyn_079);
 						}
 					}
 				}
@@ -237,7 +233,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 		
 		List<Rcdsyn_079> listOfRcdsyn_079sInvolved = new ArrayList<>(rcdsyn_079s.values());
 		for (Rcdsyn_079 rcdsyn_079b : rcdsyn_079bs.values()) {		
-			if (!rcdsyn_079s.containsKey(Long.valueOf(rcdsyn_079b.getDbkey()))) {
+			if (!rcdsyn_079s.containsKey(rcdsyn_079b.getRowid())) {
 				listOfRcdsyn_079sInvolved.add(rcdsyn_079b);
 			}
 		}
@@ -253,34 +249,33 @@ public class SchemaImportTool implements ISchemaImportTool {
 		});
 		
 		// get ALL elements for ALL regular records
-		final Map<Long, Long> sdr_042_dbkeys = new HashMap<>(); // for postprocessing RCDSYN-079bs
-		IQuery elementListQuery = 
-			new Query.Builder().forElementList(session, listOfRcdsyn_079sInvolved).build();
+		final Map<Rowid, Rowid> sdr_042_rowids = new HashMap<>(); // for postprocessing RCDSYN-079bs
+		IQuery elementListQuery = new Query.Builder().forElementList(session, listOfRcdsyn_079sInvolved).build();
 		session.runQuery(elementListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {				
-				long dbkeyOfRcdsyn_079 = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);
-				if (rcdsyn_079s.containsKey(Long.valueOf(dbkeyOfRcdsyn_079))) {					
-					Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(Long.valueOf(dbkeyOfRcdsyn_079));					
+				Rowid rowidOfRcdsyn_079 = JdbcTools.getRowid(row, Rcdsyn_079.ROWID);
+				if (rcdsyn_079s.containsKey(rowidOfRcdsyn_079)) {					
+					Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(rowidOfRcdsyn_079);					
 					Namesyn_083 namesyn_083 = new Namesyn_083();	
-					namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
+					namesyn_083.setRowid(JdbcTools.getRowid(row, Namesyn_083.ROWID));
 					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
 					namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
 					namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
 					namesyn_083.setRcdsyn_079(rcdsyn_079);
 					rcdsyn_079.getNamesyn_083s().add(namesyn_083);					
 					Sdr_042 sdr_042 = new Sdr_042();					
-					sdr_042.setDbkey(JdbcTools.getDbkey(row, Sdr_042.ROWID));
+					sdr_042.setRowid(JdbcTools.getRowid(row, Sdr_042.ROWID));
 					sdr_042.setDrLvl_042(row.getShort(Sdr_042.DR_LVL_042));
 					sdr_042.setDrNam_042(row.getString(Sdr_042.DR_NAM_042));
 					sdr_042.setOcc_042(row.getShort(Sdr_042.OCC_042));
 					sdr_042.setPic_042(row.getString(Sdr_042.PIC_042));
 					sdr_042.setUse_042(row.getShort(Sdr_042.USE_042));
 					namesyn_083.setSdr_042(sdr_042);					
-				} else if (rcdsyn_079bs.containsKey(Long.valueOf(dbkeyOfRcdsyn_079))) {					
-					Rcdsyn_079 rcdsyn_079b = rcdsyn_079bs.get(Long.valueOf(dbkeyOfRcdsyn_079));
+				} else if (rcdsyn_079bs.containsKey(rowidOfRcdsyn_079)) {					
+					Rcdsyn_079 rcdsyn_079b = rcdsyn_079bs.get(rowidOfRcdsyn_079);
 					Namesyn_083 namesyn_083 = new Namesyn_083();	
-					namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
+					namesyn_083.setRowid(JdbcTools.getRowid(row, Namesyn_083.ROWID));
 					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
 					namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
 					namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
@@ -289,12 +284,10 @@ public class SchemaImportTool implements ISchemaImportTool {
 					// we have no control over the order in which record synonyms are returned, so 
 					// defer setting the NAMESYN-083's SDR-042 reference until all rows are 
 					// processed
-					long dbkeyOfSdr_042 = JdbcTools.getDbkey(row, Sdr_042.ROWID);
-					sdr_042_dbkeys.put(Long.valueOf(namesyn_083.getDbkey()), 
-									   Long.valueOf(dbkeyOfSdr_042));
+					Rowid rowidOfSdr_042 = JdbcTools.getRowid(row, Sdr_042.ROWID);
+					sdr_042_rowids.put(namesyn_083.getRowid(), rowidOfSdr_042);
 				} else {
-					throw new RuntimeException("unexpected row; dbkey of RCDSYN-079=X'" +
-											   JdbcTools.toHexString(dbkeyOfRcdsyn_079) + "'");
+					throw new RuntimeException("unexpected row; rowid of RCDSYN-079=" + rowidOfRcdsyn_079);
 				}			
 			}				
 		});
@@ -302,9 +295,8 @@ public class SchemaImportTool implements ISchemaImportTool {
 			// RCDSYN-079b postprocessing: set each NAMESYN-083's SDR-042 reference
 			Rcdsyn_079 rcdsyn_079 = rcdsyn_079b.getSr_036().getRcdsyn_079();
 			for (Namesyn_083 namesyn_083 : rcdsyn_079b.getNamesyn_083s()) {
-				long dbkeyOfSdr_042 = 
-					sdr_042_dbkeys.get(Long.valueOf(namesyn_083.getDbkey())).longValue();
-				Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(dbkeyOfSdr_042).getSdr_042();				
+				Rowid rowidOfSdr_042 = sdr_042_rowids.get(namesyn_083.getRowid());
+				Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(rowidOfSdr_042).getSdr_042();				
 				namesyn_083.setSdr_042(sdr_042);
 			}
 		}
@@ -315,19 +307,17 @@ public class SchemaImportTool implements ISchemaImportTool {
 		session.runQuery(elementCommentListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {				
-				long dbkeyOfRcdsyn_079 = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);				
-				if (rcdsyn_079s.containsKey(Long.valueOf(dbkeyOfRcdsyn_079))) {	
-					Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(Long.valueOf(dbkeyOfRcdsyn_079));				
-					Sdr_042 sdr_042 = 
-						rcdsyn_079.getNamesyn_083(JdbcTools.getDbkey(row, Sdr_042.ROWID)).getSdr_042();					
+				Rowid rowidOfRcdsyn_079 = JdbcTools.getRowid(row, Rcdsyn_079.ROWID);
+				if (rcdsyn_079s.containsKey(rowidOfRcdsyn_079)) {	
+					Rcdsyn_079 rcdsyn_079 = rcdsyn_079s.get(rowidOfRcdsyn_079);				
+					Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(JdbcTools.getRowid(row, Sdr_042.ROWID)).getSdr_042();					
 					Sdes_044 sdes_044 = new Sdes_044();
 					sdes_044.setCmtId_044(row.getInt(Sdes_044.CMT_ID_044));
 					sdes_044.setCmtInfo_044_1(row.getString(Sdes_044.CMT_INFO_044_1));
 					sdes_044.setCmtInfo_044_2(row.getString(Sdes_044.CMT_INFO_044_2));
 					sdr_042.getSdes_044s().add(sdes_044);				
 				} else {
-					throw new RuntimeException("unexpected row; dbkey of RCDSYN-079=X'" +
-											   JdbcTools.toHexString(dbkeyOfRcdsyn_079) + "'");
+					throw new RuntimeException("unexpected row; rowid of RCDSYN-079=" + rowidOfRcdsyn_079);
 				}				
 			}				
 		});	
@@ -344,8 +334,8 @@ public class SchemaImportTool implements ISchemaImportTool {
 				srcall_040.setCallTime_040(row.getString(Srcall_040.CALL_TIME_040));
 				srcall_040.setDbpFunc_040(row.getString(Srcall_040.DBP_FUNC_040));
 				
-				long dbkeySrcd_113 = JdbcTools.getDbkey(row, Srcd_113.ROWID);
-				Srcd_113 srcd_113 = srcd_113s.get(Long.valueOf(dbkeySrcd_113));
+				Rowid rowidSrcd_113 = JdbcTools.getRowid(row, Srcd_113.ROWID);
+				Srcd_113 srcd_113 = srcd_113s.get(rowidSrcd_113);
 				srcd_113.getSrcall_040s().add(srcall_040);
 				
 			}			
@@ -364,12 +354,12 @@ public class SchemaImportTool implements ISchemaImportTool {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {
 					Table_1050 table_1050 = new Table_1050();
-					table_1050.setDbkey(JdbcTools.getDbkey(row, Table_1050.ROWID));
+					table_1050.setRowid(JdbcTools.getRowid(row, Table_1050.ROWID));
 					table_1050.setArea_1050(row.getString(Table_1050.AREA_1050));
 					table_1050.setLocmode_1050(row.getString(Table_1050.LOCMODE_1050));
 					table_1050.setName_1050(row.getString(Table_1050.NAME_1050));
 					table_1050.setTableid_1050(row.getShort(Table_1050.TABLEID_1050));
-					table_1050s.put(Long.valueOf(table_1050.getDbkey()), table_1050);
+					table_1050s.put(table_1050.getRowid(), table_1050);
 					String recordName = rdc.getName(table_1050);
 					if (!regularRecords.contains(recordName)) {									
 						list.add(table_1050);	
@@ -383,8 +373,8 @@ public class SchemaImportTool implements ISchemaImportTool {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {
 					
-					long dbkeyOfTable_1050 = JdbcTools.getDbkey(row, Table_1050.ROWID);
-					Table_1050 table_1050 = table_1050s.get(Long.valueOf(dbkeyOfTable_1050));
+					Rowid rowidOfTable_1050 = JdbcTools.getRowid(row, Table_1050.ROWID);
+					Table_1050 table_1050 = table_1050s.get(rowidOfTable_1050);
 					
 					Column_1028 column_1028 = new Column_1028();
 					column_1028.setName_1028(row.getString(Column_1028.NAME_1028));
@@ -440,33 +430,31 @@ public class SchemaImportTool implements ISchemaImportTool {
 		final List<Object> list = new ArrayList<>();
 		
 		// regular sets
-		final Map<Long, Long> sor_046ToSrcdMappings = new HashMap<>();
+		final Map<Rowid, Rowid> sor_046ToSrcdMappings = new HashMap<>();
 		IQuery setOwnerListQuery = new Query.Builder().forSetOwnerList(session).build();
 		session.runQuery(setOwnerListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				long dbkeyOfSor_046 = JdbcTools.getDbkey(row, Sor_046.ROWID);
-				long dbkeyOfSrcd_113 = JdbcTools.getDbkey(row, Srcd_113.ROWID);
-				sor_046ToSrcdMappings.put(Long.valueOf(dbkeyOfSor_046), 
-										  Long.valueOf(dbkeyOfSrcd_113));
+				Rowid rowidOfSor_046 = JdbcTools.getRowid(row, Sor_046.ROWID);
+				Rowid rowidOfSrcd_113 = JdbcTools.getRowid(row, Srcd_113.ROWID);
+				sor_046ToSrcdMappings.put(rowidOfSor_046, rowidOfSrcd_113);
 			}
 		});				
 		final List<String> regularSets = new ArrayList<>();
-		final Map<Long, Sor_046> sor_046s = new HashMap<>();
+		final Map<Rowid, Sor_046> sor_046s = new HashMap<>();
 		IQuery setListQuery = new Query.Builder().forSetList(session).build();
 		session.runQuery(setListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				long dbkeyOfSor_046 = JdbcTools.getDbkey(row, Sor_046.ROWID);
+				Rowid rowidOfSor_046 = JdbcTools.getRowid(row, Sor_046.ROWID);
 				Sor_046 sor_046;
-				if (!sor_046s.containsKey(Long.valueOf(dbkeyOfSor_046))) {				
+				if (!sor_046s.containsKey(rowidOfSor_046)) {				
 					
-					Srcd_113 srcd_113 = 
-						srcd_113s.get(sor_046ToSrcdMappings.get(Long.valueOf(dbkeyOfSor_046))); 
+					Srcd_113 srcd_113 = srcd_113s.get(sor_046ToSrcdMappings.get(rowidOfSor_046)); 
 					
 					sor_046 = new Sor_046();
 					sor_046.setSrcd_113(srcd_113);
-					sor_046.setDbkey(dbkeyOfSor_046);
+					sor_046.setRowid(rowidOfSor_046);
 					sor_046.setIndexDisp_046(row.getShort(Sor_046.INDEX_DISP_046));
 					sor_046.setIndexMembers_046(row.getShort(Sor_046.INDEX_MEMBERS_046));
 					sor_046.setNxtDbk_046(row.getShort(Sor_046.NXT_DBK_046));
@@ -483,7 +471,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 					sor_046.setSorId_046(row.getShort(Sor_046.SOR_ID_046));
 					sor_046.setSymbolIndex_046(row.getString(Sor_046.SYMBOL_INDEX_046));
 					sor_046.setSubarea_046(row.getString(Sor_046.SUBAREA_046));
-					sor_046s.put(Long.valueOf(dbkeyOfSor_046), sor_046);
+					sor_046s.put(rowidOfSor_046, sor_046);
 					
 					// defer the creation of "AREA-INDEX", "AREA-TABLE" and "TABLE-INDEX" since they are 
 					// stored in the catalog too...
@@ -497,14 +485,14 @@ public class SchemaImportTool implements ISchemaImportTool {
 					}
 					
 				} else {
-					sor_046 = sor_046s.get(Long.valueOf(dbkeyOfSor_046));
+					sor_046 = sor_046s.get(rowidOfSor_046);
 				}
 				
-				long dbkeyOfSrcd_113 = JdbcTools.getDbkey(row, Srcd_113.ROWID);
-				Srcd_113 srcd_113 = srcd_113s.get(Long.valueOf(dbkeyOfSrcd_113));
+				Rowid rowidOfSrcd_113 = JdbcTools.getRowid(row, Srcd_113.ROWID);
+				Srcd_113 srcd_113 = srcd_113s.get(rowidOfSrcd_113);
 				
 				Smr_052 smr_052 = new Smr_052();
-				smr_052.setDbkey(JdbcTools.getDbkey(row, Smr_052.ROWID));
+				smr_052.setRowid(JdbcTools.getRowid(row, Smr_052.ROWID));
 				smr_052.setSrcd_113(srcd_113);
 				smr_052.setDup_052(row.getShort(Smr_052.DUP_052));
 				smr_052.setMrCntrl_052(row.getShort(Smr_052.MR_CNTRL_052));
@@ -527,12 +515,10 @@ public class SchemaImportTool implements ISchemaImportTool {
 					Constraint_1029 constraint_1029 = new Constraint_1029();
 					constraint_1029.setName_1029(row.getString(Constraint_1029.NAME_1029));															
 					if (!regularSets.contains(constraint_1029.getName_1029())) {
-						long dbkeyOfReferencedTable_1050 = JdbcTools.getDbkey(row, Table_1050.ROWID);
-						Table_1050 referencedTable_1050 = 
-							table_1050s.get(Long.valueOf(dbkeyOfReferencedTable_1050));
+						Rowid rowidOfReferencedTable_1050 = JdbcTools.getRowid(row, Table_1050.ROWID);
+						Table_1050 referencedTable_1050 = table_1050s.get(rowidOfReferencedTable_1050);
 						constraint_1029.setReferencedTable_1050(referencedTable_1050);
-						String referencingTableName = 
-							JdbcTools.removeTrailingSpaces(row.getString(Constraint_1029.TABLE_1029));
+						String referencingTableName = JdbcTools.removeTrailingSpaces(row.getString(Constraint_1029.TABLE_1029));
 						Table_1050 referencingTable_1050 = findTable(referencingTableName);
 						constraint_1029.setReferencingTable_1050(referencingTable_1050);
 						constraint_1029.setCompress_1029(row.getString(Constraint_1029.COMPRESS_1029));
@@ -557,8 +543,8 @@ public class SchemaImportTool implements ISchemaImportTool {
 				@Override
 				public void processRow(ResultSet row) throws SQLException {
 					
-					long dbkeyOfTable_1050 = JdbcTools.getDbkey(row, Table_1050.ROWID);
-					Table_1050 table_1050 = table_1050s.get(Long.valueOf(dbkeyOfTable_1050));
+					Rowid rowidOfTable_1050 = JdbcTools.getRowid(row, Table_1050.ROWID);
+					Table_1050 table_1050 = table_1050s.get(rowidOfTable_1050);
 					
 					Index_1041 index_1041 = new Index_1041();
 					index_1041.setArea_1041(row.getString(Index_1041.AREA_1041));

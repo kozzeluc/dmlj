@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,7 +35,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.preference.IDefaultDictionaryP
 public class Dictionary implements Comparable<Dictionary> {
 	
 	public static final String USE_DEFAULT_SCHEMA_INDICATOR = "%default%";
-	public static final int USE_DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM_INDICATOR = Integer.MIN_VALUE; 
+	public static final int USE_DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM_INDICATOR = Integer.MIN_VALUE;
 	
 	private static final String KEY_INTERNAL_ID = "internalId";
 	private static final String KEY_ID = "id";
@@ -45,7 +45,7 @@ public class Dictionary implements Comparable<Dictionary> {
 	private static final String KEY_USER = "user";
 	private static final String KEY_PASSWORD = "password";
 	private static final String KEY_SCHEMA = "schema";
-	private static final String KEY_QUERY_DBKEY_LIST_SIZE_MAXIMUM = "queryDbkeyListSizeMaximum";
+	private static final String KEY_QUERY_ROWID_LIST_SIZE_MAXIMUM = "queryDbkeyListSizeMaximum";
 	private static final String KEY_SYSDIRL = "sysdirl";	
 	
 	private static final FilenameFilter FILENAME_FILTER = new FilenameFilter() {
@@ -64,7 +64,7 @@ public class Dictionary implements Comparable<Dictionary> {
 	private String user;
 	private String password;
 	private String schema;
-	private int queryDbkeyListSizeMaximum;
+	private int queryRowidListSizeMaximum;
 	private boolean sysdirl;
 	
 	private static Dictionary fromFile(File file) throws Throwable {
@@ -96,12 +96,11 @@ public class Dictionary implements Comparable<Dictionary> {
 		} else {
 			dictionary.setSchema(USE_DEFAULT_SCHEMA_INDICATOR);
 		}
-		if (properties.containsKey(KEY_QUERY_DBKEY_LIST_SIZE_MAXIMUM)) {
-			int queryDbkeyListSizeMaximum = 
-				Integer.valueOf(properties.getProperty(KEY_QUERY_DBKEY_LIST_SIZE_MAXIMUM));
-			dictionary.setQueryDbkeyListSizeMaximum(queryDbkeyListSizeMaximum);
+		if (properties.containsKey(KEY_QUERY_ROWID_LIST_SIZE_MAXIMUM)) {
+			int queryRowidListSizeMaximum = Integer.valueOf(properties.getProperty(KEY_QUERY_ROWID_LIST_SIZE_MAXIMUM));
+			dictionary.setQueryRowidListSizeMaximum(queryRowidListSizeMaximum);
 		} else {
-			dictionary.setQueryDbkeyListSizeMaximum(USE_DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM_INDICATOR);
+			dictionary.setQueryRowidListSizeMaximum(USE_DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM_INDICATOR);
 		}
 		if (properties.containsKey(KEY_SYSDIRL)) {
 			dictionary.setSysdirl(Boolean.valueOf(properties.getProperty(KEY_SYSDIRL)).booleanValue());
@@ -197,15 +196,15 @@ public class Dictionary implements Comparable<Dictionary> {
 		return port;
 	}
 
-	public int getQueryDbkeyListSizeMaximum() {
-		return queryDbkeyListSizeMaximum;
+	public int getQueryRowidListSizeMaximum() {
+		return queryRowidListSizeMaximum;
 	}
 	
-	public int getQueryDbkeyListSizeMaximumWithDefault(IDefaultDictionaryPropertyProvider defaultPropertyProvider) {
-		if (isCustomQueryDbkeyListSizeMaximumSet()) {
-			return queryDbkeyListSizeMaximum;
+	public int getQueryRowidListSizeMaximumWithDefault(IDefaultDictionaryPropertyProvider defaultPropertyProvider) {
+		if (isCustomQueryRowidListSizeMaximumSet()) {
+			return queryRowidListSizeMaximum;
 		} else {
-			return defaultPropertyProvider.getDefaultQueryDbkeyListSizeMaximum();					
+			return defaultPropertyProvider.getDefaultQueryRowidListSizeMaximum();					
 		}
 	}
 	
@@ -225,8 +224,8 @@ public class Dictionary implements Comparable<Dictionary> {
 		return user;
 	}
 
-	private boolean isCustomQueryDbkeyListSizeMaximumSet() {
-		return queryDbkeyListSizeMaximum != USE_DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM_INDICATOR;
+	private boolean isCustomQueryRowidListSizeMaximumSet() {
+		return queryRowidListSizeMaximum != USE_DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM_INDICATOR;
 	}
 
 	private boolean isCustomSchemaSet() {
@@ -262,8 +261,8 @@ public class Dictionary implements Comparable<Dictionary> {
 		this.port = port;
 	}
 
-	public void setQueryDbkeyListSizeMaximum(int queryDbkeyListSizeMaximum) {
-		this.queryDbkeyListSizeMaximum = queryDbkeyListSizeMaximum;
+	public void setQueryRowidListSizeMaximum(int queryRowidListSizeMaximum) {
+		this.queryRowidListSizeMaximum = queryRowidListSizeMaximum;
 	}
 
 	public void setSchema(String schema) {
@@ -294,8 +293,8 @@ public class Dictionary implements Comparable<Dictionary> {
 		if (isCustomSchemaSet()) {
 			properties.put(KEY_SCHEMA, schema);
 		} 
-		if (isCustomQueryDbkeyListSizeMaximumSet()) {
-			properties.put(KEY_QUERY_DBKEY_LIST_SIZE_MAXIMUM, String.valueOf(queryDbkeyListSizeMaximum));
+		if (isCustomQueryRowidListSizeMaximumSet()) {
+			properties.put(KEY_QUERY_ROWID_LIST_SIZE_MAXIMUM, String.valueOf(queryRowidListSizeMaximum));
 		}
 		properties.put(KEY_SYSDIRL, String.valueOf(sysdirl));
 		return properties;

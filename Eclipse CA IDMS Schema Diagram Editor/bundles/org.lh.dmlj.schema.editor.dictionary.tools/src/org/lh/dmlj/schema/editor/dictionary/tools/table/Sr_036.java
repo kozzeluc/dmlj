@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,8 +17,9 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
-public class Sr_036 implements IDbkeyProvider {
+public class Sr_036 implements IRowidProvider {
 	
 	public static final String ROWID = "SR_036_ROWID";
 	public static final String SR_NAM_036 = "SR_NAM_036";
@@ -27,7 +28,7 @@ public class Sr_036 implements IDbkeyProvider {
 	private Rcdsyn_079 rcdsyn_079;	// record synonym referenced by schema
 	private Rcdsyn_079 rcdsyn_079b; // base record synonym
 
-	private long dbkey;
+	private Rowid rowid;
 	private String srNam_036;
 	private short rcdVers_036;
 	
@@ -36,8 +37,8 @@ public class Sr_036 implements IDbkeyProvider {
 	}
 
 	@Override
-	public long getDbkey() {
-		return dbkey;
+	public Rowid getRowid() {
+		return rowid;
 	}
 
 	public Rcdsyn_079 getRcdsyn_079() {
@@ -56,8 +57,8 @@ public class Sr_036 implements IDbkeyProvider {
 		return srNam_036;
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setRcdsyn_079(Rcdsyn_079 rcdsyn_079) {

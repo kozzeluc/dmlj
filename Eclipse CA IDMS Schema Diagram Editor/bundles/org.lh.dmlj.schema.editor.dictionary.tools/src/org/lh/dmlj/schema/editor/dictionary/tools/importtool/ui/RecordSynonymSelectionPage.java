@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -145,12 +145,12 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 				public void processRow(ResultSet row) throws SQLException {					
 					
 					Sr_036 sr_036 = new Sr_036();
-					sr_036.setDbkey(JdbcTools.getDbkey(row, Sr_036.ROWID));
+					sr_036.setRowid(JdbcTools.getRowid(row, Sr_036.ROWID));
 					sr_036.setSrNam_036(row.getString(Sr_036.SR_NAM_036));
 					sr_036.setRcdVers_036(row.getShort(Sr_036.RCD_VERS_036));
 									
 					Rcdsyn_079 rcdsyn_079 = new Rcdsyn_079();
-					rcdsyn_079.setDbkey(JdbcTools.getDbkey(row, Rcdsyn_079.ROWID));
+					rcdsyn_079.setRowid(JdbcTools.getRowid(row, Rcdsyn_079.ROWID));
 					rcdsyn_079.setRsynName_079(row.getString(Rcdsyn_079.RSYN_NAME_079));
 					rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
 					rcdsyn_079.setSr_036(sr_036);

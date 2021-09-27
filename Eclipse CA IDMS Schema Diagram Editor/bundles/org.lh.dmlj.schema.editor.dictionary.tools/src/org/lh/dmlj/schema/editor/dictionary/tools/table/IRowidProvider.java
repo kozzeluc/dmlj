@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,8 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
-public interface IDbkeyProvider {
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
-	long getDbkey();
+public interface IRowidProvider {
+
+	Rowid getRowid();
 	
 }

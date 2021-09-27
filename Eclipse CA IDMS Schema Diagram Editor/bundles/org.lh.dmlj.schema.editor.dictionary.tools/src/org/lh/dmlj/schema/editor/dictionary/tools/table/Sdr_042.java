@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
 public class Sdr_042 {
 	
@@ -32,7 +33,7 @@ public class Sdr_042 {
 	
 	private List<Sdes_044> Sdes_044s = new ArrayList<>();
 	
-	private long dbkey;
+	private Rowid rowid;
 	private String drNam_042;
 	private short drLvl_042;
 	private short occ_042;
@@ -43,8 +44,8 @@ public class Sdr_042 {
 		super();
 	}
 	
-	public long getDbkey() {
-		return dbkey;
+	public Rowid getRowid() {
+		return rowid;
 	}
 
 	public short getDrLvl_042() {
@@ -71,8 +72,8 @@ public class Sdr_042 {
 		return use_042;
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setDrLvl_042(short drLvl_042) {

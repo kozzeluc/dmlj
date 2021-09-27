@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -95,8 +95,8 @@ public class Plugin extends AbstractUIPlugin
 	}
 
 	@Override
-	public int getDefaultQueryDbkeyListSizeMaximum() {
-		return getPreferenceStore().getInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM);
+	public int getDefaultQueryRowidListSizeMaximum() {
+		return getPreferenceStore().getInt(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM);
 	}
 
 	@Override

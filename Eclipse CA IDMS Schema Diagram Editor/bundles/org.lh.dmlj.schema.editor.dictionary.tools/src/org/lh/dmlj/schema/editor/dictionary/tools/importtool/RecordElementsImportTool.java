@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -33,6 +33,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttr
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.RecordElementsImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
@@ -85,8 +86,8 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 		session.runQuery(baseRecordSynonymListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				long dbkeyRcdsyn_079b = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);
-				if (dbkeyRcdsyn_079b != rcdsyn_079.getDbkey()) {
+				Rowid rowidRcdsyn_079b = JdbcTools.getRowid(row, Rcdsyn_079.ROWID);
+				if (rowidRcdsyn_079b != rcdsyn_079.getRowid()) {
 					String rsynName_079 = row.getString(Rcdsyn_079.RSYN_NAME_079).trim();
 					short rsynVer_079 = row.getShort(Rcdsyn_079.RSYN_VER_079);
 					if (!rsynName_079.equals(rcdsyn_079.getRsynName_079()) || 
@@ -95,7 +96,7 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 						// only set the base RCDSYN-079 occurrence when the name or version are
 						// different from the RCDSYN-079 that is in the context
 						Rcdsyn_079 rcdsyn_079b = new Rcdsyn_079();
-						rcdsyn_079b.setDbkey(dbkeyRcdsyn_079b);
+						rcdsyn_079b.setRowid(rowidRcdsyn_079b);
 						rcdsyn_079b.setRsynName_079(rsynName_079);
 						rcdsyn_079b.setRsynVer_079(rsynVer_079);
 						rcdsyn_079b.setSr_036(rcdsyn_079.getSr_036());
@@ -123,32 +124,31 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 		});
 		
 		// get ALL elements for ALL regular records
-		final Map<Long, Long> sdr_042_dbkeys = new HashMap<>(); // for postprocessing RCDSYN-079bs
-		IQuery elementListQuery = 
-			new Query.Builder().forElementList(session, listOfRcdsyn_079sInvolved).build();
+		final Map<Rowid, Rowid> sdr_042_rowids = new HashMap<>(); // for postprocessing RCDSYN-079bs
+		IQuery elementListQuery = new Query.Builder().forElementList(session, listOfRcdsyn_079sInvolved).build();
 		session.runQuery(elementListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {				
-				long dbkeyOfRcdsyn_079 = JdbcTools.getDbkey(row, Rcdsyn_079.ROWID);
-				if (dbkeyOfRcdsyn_079 == rcdsyn_079.getDbkey()) {										
+				Rowid rowidOfRcdsyn_079 = JdbcTools.getRowid(row, Rcdsyn_079.ROWID);
+				if (rowidOfRcdsyn_079 == rcdsyn_079.getRowid()) {										
 					Namesyn_083 namesyn_083 = new Namesyn_083();	
-					namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
+					namesyn_083.setRowid(JdbcTools.getRowid(row, Namesyn_083.ROWID));
 					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
 					namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
 					namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
 					namesyn_083.setRcdsyn_079(rcdsyn_079);
 					rcdsyn_079.getNamesyn_083s().add(namesyn_083);					
 					Sdr_042 sdr_042 = new Sdr_042();					
-					sdr_042.setDbkey(JdbcTools.getDbkey(row, Sdr_042.ROWID));
+					sdr_042.setRowid(JdbcTools.getRowid(row, Sdr_042.ROWID));
 					sdr_042.setDrLvl_042(row.getShort(Sdr_042.DR_LVL_042));
 					sdr_042.setDrNam_042(row.getString(Sdr_042.DR_NAM_042));
 					sdr_042.setOcc_042(row.getShort(Sdr_042.OCC_042));
 					sdr_042.setPic_042(row.getString(Sdr_042.PIC_042));
 					sdr_042.setUse_042(row.getShort(Sdr_042.USE_042));
 					namesyn_083.setSdr_042(sdr_042);					
-				} else if (rcdsyn_079b != null && dbkeyOfRcdsyn_079 == rcdsyn_079b.getDbkey()) {					
+				} else if (rcdsyn_079b != null && rowidOfRcdsyn_079 == rcdsyn_079b.getRowid()) {					
 					Namesyn_083 namesyn_083 = new Namesyn_083();	
-					namesyn_083.setDbkey(JdbcTools.getDbkey(row, Namesyn_083.ROWID));
+					namesyn_083.setRowid(JdbcTools.getRowid(row, Namesyn_083.ROWID));
 					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
 					namesyn_083.setRdfNam_083(row.getString(Namesyn_083.RDF_NAM_083));
 					namesyn_083.setSynName_083(row.getString(Namesyn_083.SYN_NAME_083));
@@ -157,12 +157,10 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 					// we have no control over the order in which record synonyms are returned, so 
 					// defer setting the NAMESYN-083's SDR-042 reference until all rows are 
 					// processed
-					long dbkeyOfSdr_042 = JdbcTools.getDbkey(row, Sdr_042.ROWID);
-					sdr_042_dbkeys.put(Long.valueOf(namesyn_083.getDbkey()), 
-									   Long.valueOf(dbkeyOfSdr_042));
+					Rowid rowidOfSdr_042 = JdbcTools.getRowid(row, Sdr_042.ROWID);
+					sdr_042_rowids.put(namesyn_083.getRowid(), rowidOfSdr_042);
 				} else {
-					throw new RuntimeException("unexpected row; dbkey of RCDSYN-079=X'" +
-											   JdbcTools.toHexString(dbkeyOfRcdsyn_079) + "'");
+					throw new RuntimeException("unexpected row; rowid of RCDSYN-079=" + rowidOfRcdsyn_079);
 				}			
 			}				
 		});
@@ -170,9 +168,8 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 		// RCDSYN-079b postprocessing: set each NAMESYN-083's SDR-042 reference
 		if (rcdsyn_079b != null) {
 			for (Namesyn_083 namesyn_083 : rcdsyn_079b.getNamesyn_083s()) {
-				long dbkeyOfSdr_042 = 
-					sdr_042_dbkeys.get(Long.valueOf(namesyn_083.getDbkey())).longValue();
-				Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(dbkeyOfSdr_042).getSdr_042();				
+				Rowid rowidOfSdr_042 = sdr_042_rowids.get(namesyn_083.getRowid());
+				Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(rowidOfSdr_042).getSdr_042();				
 				namesyn_083.setSdr_042(sdr_042);
 			}
 		}
@@ -184,7 +181,7 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 		session.runQuery(elementCommentListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {				
-				Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(JdbcTools.getDbkey(row, Sdr_042.ROWID)).getSdr_042();					
+				Sdr_042 sdr_042 = rcdsyn_079.getNamesyn_083(JdbcTools.getRowid(row, Sdr_042.ROWID)).getSdr_042();					
 				Sdes_044 sdes_044 = new Sdes_044();
 				sdes_044.setCmtId_044(row.getInt(Sdes_044.CMT_ID_044));
 				sdes_044.setCmtInfo_044_1(row.getString(Sdes_044.CMT_INFO_044_1));

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,28 +21,26 @@ import java.util.List;
 
 import org.junit.Test;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.IRowidProvider;
 
 public class ElementSynonymCommentListQueryTemplateTest extends AbstractQueryTestCase {
 
 	private static IQueryTemplate template = new ElementSynonymCommentListQueryTemplate();
 	
 	@Test
-	public void test_10_dbkeys_grouped_by_3() {		
-		List<IDbkeyProvider> dbkeyProviders = getDbkeyProviders(10);		
+	public void test_10_rowids_grouped_by_3() {		
+		List<IRowidProvider> rowidProviders = getRowidProviders(10, true);		
 		Dictionary dictionary = getDictionary("SYSDICT", 3);
-		String sql = template.generate(new Object[] {dictionary, dbkeyProviders});		
-		assertEquals(toLines(new File("testdata/ElementSynonymCommentListQuery_10_3.txt")), 
-					 toLines(sql));		
+		String sql = template.generate(new Object[] {dictionary, rowidProviders});		
+		assertEquals(toLines(new File("testdata/ElementSynonymCommentListQuery_10_3.txt")), toLines(sql));		
 	}
 	
 	@Test
-	public void test_1_dbkey_grouped_by_3() {		
-		List<IDbkeyProvider> dbkeyProviders = getDbkeyProviders(1);		
+	public void test_1_rowid_grouped_by_3() {		
+		List<IRowidProvider> rowidProviders = getRowidProviders(1, true);		
 		Dictionary dictionary = getDictionary("SYSDICT", 3);
-		String sql = template.generate(new Object[] {dictionary, dbkeyProviders});		
-		assertEquals(toLines(new File("testdata/ElementSynonymCommentListQuery_1_3.txt")), 
-					 toLines(sql));		
+		String sql = template.generate(new Object[] {dictionary, rowidProviders});		
+		assertEquals(toLines(new File("testdata/ElementSynonymCommentListQuery_1_3.txt")), toLines(sql));		
 	}
 
 }

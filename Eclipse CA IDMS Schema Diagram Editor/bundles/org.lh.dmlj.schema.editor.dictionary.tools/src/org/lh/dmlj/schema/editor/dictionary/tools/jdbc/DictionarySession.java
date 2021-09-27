@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,10 +20,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
@@ -160,11 +162,14 @@ public class DictionarySession {
 		int rowsProcessed = 0;
 		long start = System.currentTimeMillis();
 		try {
-			logger.debug("Start execution of " + query);
-			PreparedStatement ps = connection.prepareStatement(query.getSql());
+			String sql = query.getSql();
+			logger.debug("Start execution of " + query + "\nSQL:\n" + sql);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			end1 = System.currentTimeMillis();
-			logger.debug("Start processing rows for query '" + query.getDescription() + "'");
+			if (org.lh.dmlj.schema.editor.Plugin.getDefault().isDebugEnabled()) {
+				logger.debug("Start processing rows for query '" + query.getDescription() + "'\nColumns: " + getColumnNames(rs));
+			}
 			while (rs.next()) {
 				int row = rs.getRow();
 				rowProcessor.processRow(rs);
@@ -175,8 +180,7 @@ public class DictionarySession {
 			}
 			ps.close();	
 			end2 = System.currentTimeMillis();
-			logger.debug("Processed " + rowsProcessed + " rows for query '" +
-						 query.getDescription() + "'");
+			logger.debug("Processed " + rowsProcessed + " rows for query '" + query.getDescription() + "'");
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, null));
 			runningQueryCount -= 1;
 		} catch (Throwable t) {
@@ -190,6 +194,15 @@ public class DictionarySession {
 		}	
 	}
 	
+	private static String getColumnNames(ResultSet rs) throws SQLException {
+		List<String> columnNames = new ArrayList<>();
+		ResultSetMetaData metaData = rs.getMetaData();
+		for (int i = 0; i < metaData.getColumnCount(); i++) {
+			columnNames.add(metaData.getColumnName(i));
+		}
+		return columnNames.stream().collect(Collectors.joining(","));
+	}
+
 	public static class QueryStatistics {
 		
 		private long end1;

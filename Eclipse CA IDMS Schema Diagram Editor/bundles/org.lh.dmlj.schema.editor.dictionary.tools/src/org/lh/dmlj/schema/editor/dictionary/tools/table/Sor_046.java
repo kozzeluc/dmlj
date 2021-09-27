@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
 public class Sor_046 {
 	
@@ -44,7 +45,7 @@ public class Sor_046 {
 	private Srcd_113 srcd_113;
 	private List<Smr_052> smr_052s = new ArrayList<>();
 	
-	private long dbkey;
+	private Rowid rowid;
 	private short indexDisp_046;
 	private short indexMembers_046;
 	private short nxtDbk_046;
@@ -61,13 +62,9 @@ public class Sor_046 {
 	private short sorId_046;
 	private String subarea_046;
 	private String symbolIndex_046;
-	
-	public Sor_046() {
-		super();
-	}
 
-	public long getDbkey() {
-		return dbkey;
+	public Rowid getRowid() {
+		return rowid;
 	}
 
 	public short getIndexDisp_046() {
@@ -142,8 +139,8 @@ public class Sor_046 {
 		return symbolIndex_046;
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setIndexDisp_046(short indexDisp_046) {

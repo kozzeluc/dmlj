@@ -30,6 +30,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Namedes_186;
@@ -41,7 +42,7 @@ import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;
 
 public class DictionaryElementDataCollector implements IElementDataCollector<Namesyn_083> {
 
-	private Map<Long, List<Namedes_186>> namedes_186Map;
+	private Map<Rowid, List<Namedes_186>> namedes_186Map;
 	private List<Rcdsyn_079> rcdsyn_079s;
 	private DictionarySession session;
 	
@@ -64,13 +65,13 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 		session.runQuery(elementSynonymCommentListQuery, new IRowProcessor() {			
 			@Override
 			public void processRow(ResultSet row) throws SQLException {	
-				long dbkeyOfNamesyn_083 = JdbcTools.getDbkey(row, Namesyn_083.ROWID);
+				Rowid rowidOfNamesyn_083 = JdbcTools.getRowid(row, Namesyn_083.ROWID);
 				List<Namedes_186> namedes_186s;
-				if (namedes_186Map.containsKey(Long.valueOf(dbkeyOfNamesyn_083))) {
-					namedes_186s = namedes_186Map.get(Long.valueOf(dbkeyOfNamesyn_083));
+				if (namedes_186Map.containsKey(rowidOfNamesyn_083)) {
+					namedes_186s = namedes_186Map.get(rowidOfNamesyn_083);
 				} else {
 					namedes_186s = new ArrayList<>();
-					namedes_186Map.put(Long.valueOf(dbkeyOfNamesyn_083), namedes_186s);
+					namedes_186Map.put(rowidOfNamesyn_083, namedes_186s);
 				}
 				Namedes_186 namedes_186 = new Namedes_186();
 				namedes_186.setCmtId_186(row.getInt(Namedes_186.CMT_ID_186));
@@ -90,7 +91,7 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 		if (rcdsyn_079b == null) {
 			return namesyn_083.getSynName_083();
 		} else {
-			Namesyn_083 aNamesyn_083 = rcdsyn_079b.getNamesyn_083(sdr_042.getDbkey());
+			Namesyn_083 aNamesyn_083 = rcdsyn_079b.getNamesyn_083(sdr_042.getRowid());
 			return aNamesyn_083.getSynName_083();
 		}		
 	}
@@ -121,11 +122,11 @@ public class DictionaryElementDataCollector implements IElementDataCollector<Nam
 	@Override
 	public Collection<String> getIndexElementNames(Namesyn_083 namesyn_083) {
 		buildNamedes_186MapIfNeeded();
-		if (!namedes_186Map.containsKey(Long.valueOf(namesyn_083.getDbkey()))) {
+		if (!namedes_186Map.containsKey(namesyn_083.getRowid())) {
 			return Collections.emptyList();
 		}
 		List<String> list = new ArrayList<>();
-		for (Namedes_186 namedes_186 : namedes_186Map.get(Long.valueOf(namesyn_083.getDbkey()))) {
+		for (Namedes_186 namedes_186 : namedes_186Map.get(namesyn_083.getRowid())) {
 			list.add(namedes_186.getIxName_186());
 		}
 		return list;
