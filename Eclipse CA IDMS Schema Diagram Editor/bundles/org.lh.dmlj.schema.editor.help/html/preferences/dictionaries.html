@@ -35,10 +35,13 @@ schema(s) pointing to the dictionar(y)(ies) containing your non-relational schem
              DBNAME APPLDICT                         
          ; 
 </pre>
-Note that the reference to the IDMSNTWK schema is prefixed by the <code>SYSDIRL</code> dictionary name (which might be 
-different for you).
+Notes:<ul>
+<li>The reference to the IDMSNTWK schema is prefixed by the <code>SYSDIRL</code> dictionary name (which might be different for you).</li>
+<li>You are free to specify either <code>WITH VIRTUAL KEYS</code> or <code>WITHOUT VIRTUAL KEYS</code> or neither; all dictionary queries use set names and no virtual
+foreign keys.</li>
+</ul>
 <h2>Defining a Dictionary</h2>
-Open the the <b>Import/Dictionary section</b> in the <a href="preferences_dialog">preferences dialog</a>; there you have
+Open the <b>Import/Dictionary section</b> in the <a href="preferences_dialog">preferences dialog</a>; there you have
 an overview of the dictionaries you have defined :
 <br><br>
 <img src="../../images/preferences_import_dictionary.png" alt="[preferences import dictionary]">
@@ -48,10 +51,10 @@ diagram for this schema should want to do this.  The buttons on the right of the
 edit dictionary definitions</b> as well as <b>test</b> whether the connection (to the dictionary/catalog on your 
 mainframe) works correctly.  You can also set the default name (SYSDICT) for the relational-version of the IDMSNTWK 
 schema in this section.  You shouldn't normally touch the <b>magic number 47</b> unless you experience performance 
-issues when importing diagrams directly from a dictionary :  it turns out that, in queries, the maximum number of dbkeys 
+issues when importing diagrams directly from a dictionary :  it turns out that, in queries, the maximum number of rowids 
 that can be specified in a list, before the query does no longer perform and consumes excessive I/Os and CPU on the 
 mainframe, is 47 (at least for the dictionary I’m working against).  It’s up to you to play around with this figure, but 
-you’re on your own…  Dbkey lists are a substitute for subqueries, which I’ve found to not always perform as they should. 
+you’re on your own…  Rowid lists are a substitute for subqueries, which I’ve found to not always perform as they should. 
 <br><br>
 Press the <i>Add...</i> button to create your first dictionary :
 <br><br>
