@@ -48,7 +48,7 @@ public class RowidTest {
 		assertNotNull(rowid.getPageInformation());
 		assertTrue(rowid.isInitialized());
 		assertEquals(104268552L, rowid.getDbkey());
-		assertTrue(rowid.getPageInformation().isEmpty());
+		assertFalse(rowid.getPageInformation().isPresent());
 		assertEquals("X'06370308'", rowid.toString());
 	}
 	
