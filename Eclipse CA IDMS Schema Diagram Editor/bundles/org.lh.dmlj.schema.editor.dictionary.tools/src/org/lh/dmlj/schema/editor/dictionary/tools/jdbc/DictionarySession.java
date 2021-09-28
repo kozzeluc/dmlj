@@ -167,9 +167,7 @@ public class DictionarySession {
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			end1 = System.currentTimeMillis();
-			if (org.lh.dmlj.schema.editor.Plugin.getDefault().isDebugEnabled()) {
-				logger.debug("Start processing rows for query '" + query.getDescription() + "'\nColumns: " + getColumnNames(rs));
-			}
+			logger.debug("Start processing rows for query '" + query.getDescription() + "'\nColumns: " + getColumnNames(rs));
 			while (rs.next()) {
 				int row = rs.getRow();
 				rowProcessor.processRow(rs);
@@ -197,7 +195,7 @@ public class DictionarySession {
 	private static String getColumnNames(ResultSet rs) throws SQLException {
 		List<String> columnNames = new ArrayList<>();
 		ResultSetMetaData metaData = rs.getMetaData();
-		for (int i = 0; i < metaData.getColumnCount(); i++) {
+		for (int i = 1; i <= metaData.getColumnCount(); i++) {
 			columnNames.add(metaData.getColumnName(i));
 		}
 		return columnNames.stream().collect(Collectors.joining(","));
