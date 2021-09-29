@@ -37,8 +37,10 @@ schema(s) pointing to the dictionar(y)(ies) containing your non-relational schem
 </pre>
 Notes:<ul>
 <li>The reference to the IDMSNTWK schema is prefixed by the <code>SYSDIRL</code> dictionary name (which might be different for you).</li>
-<li>You are free to specify either <code>WITH VIRTUAL KEYS</code> or <code>WITHOUT VIRTUAL KEYS</code> or neither; all dictionary queries use set names and no virtual
-foreign keys.</li>
+<li>You are free to specify either <code>WITH VIRTUAL KEYS</code> or <b><code>WITHOUT VIRTUAL KEYS</code></b> or neither but because of
+performance reasons it is advised to NOT work with virtual keys; all dictionary queries use set names and no virtual foreign keys
+and for some reason, schemas without virtual keys seem to work (much) better.  The <b>performance loss</b> (and resources consumed 
+on the mainframe) becomes bigger with the complexity of your schema and the size of your DDLDML area.</li>
 </ul>
 <h2>Defining a Dictionary</h2>
 Open the <b>Import/Dictionary section</b> in the <a href="preferences_dialog">preferences dialog</a>; there you have
