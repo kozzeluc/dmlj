@@ -162,9 +162,8 @@ public class DictionarySession {
 		int rowsProcessed = 0;
 		long start = System.currentTimeMillis();
 		try {
-			String sql = query.getSql();
-			logger.debug("Start execution of " + query + "\nSQL:\n" + sql);
-			PreparedStatement ps = connection.prepareStatement(sql);
+			logger.debug("Start execution of " + query);
+			PreparedStatement ps = connection.prepareStatement(query.getSql());
 			ResultSet rs = ps.executeQuery();
 			end1 = System.currentTimeMillis();
 			logger.debug("Start processing rows for query '" + query.getDescription() + "'\nColumns: " + getColumnNames(rs));
