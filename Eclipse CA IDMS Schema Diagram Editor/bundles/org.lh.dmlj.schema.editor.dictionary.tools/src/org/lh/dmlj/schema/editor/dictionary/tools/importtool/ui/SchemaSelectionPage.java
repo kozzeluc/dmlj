@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -36,13 +37,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttributeKeys;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ui.VirtualKeysConfirmationHandler;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.S_010;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
@@ -118,27 +119,34 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		
 		final List<TableEntry> tableEntries = new ArrayList<>();
 		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
-		Throwable throwableToPass = null;
+		Stack<DictionarySession> session = new Stack<>();
+		Stack<Throwable> throwableToPass = new Stack<>();
 		try {
-			DictionarySession session = 
-				new DictionarySession(dictionary, "Retrieve valid schema list from dictionary " + 
-								  dictionary.getId());
-			session.open();	
-			IQuery query = new Query.Builder().forValidSchemaList(session).build();
-			session.runQuery(query, new IRowProcessor() {
-				@Override
-				public void processRow(ResultSet row) throws SQLException {
-					String sNam_010 = 
-						JdbcTools.removeTrailingSpaces(row.getString(S_010.S_NAM_010));
-					int sSer_010 = row.getInt(S_010.S_SER_010);
-					String descr_010 = 
-						JdbcTools.removeTrailingSpaces(row.getString(S_010.DESCR_010));
-					tableEntries.add(new TableEntry(sNam_010, sSer_010, descr_010));				
-				}
-			});
-			session.close();
+			final DictionarySession fSession = new DictionarySession(dictionary, "Retrieve valid schema list from dictionary " + dictionary.getId());
+			session.push(fSession);
+			fSession.open();
+			VirtualKeysConfirmationHandler.handleConfirmation(fSession, 
+				() -> {
+					IQuery query = new Query.Builder().forValidSchemaList(fSession).build();
+					fSession.runQuery(query, new IRowProcessor() {
+						@Override
+						public void processRow(ResultSet row) throws SQLException {
+							String sNam_010 = 
+								JdbcTools.removeTrailingSpaces(row.getString(S_010.S_NAM_010));
+							int sSer_010 = row.getInt(S_010.S_SER_010);
+							String descr_010 = 
+								JdbcTools.removeTrailingSpaces(row.getString(S_010.DESCR_010));
+							tableEntries.add(new TableEntry(sNam_010, sSer_010, descr_010));				
+						}
+					});
+				}, 
+				() -> throwableToPass.push(new RuntimeException("IDMSNTWK catalog Schema is defined WITH VIRTUAL KEYS")));
 		} catch (Throwable t) {
-			throwableToPass = t;
+			throwableToPass.push(t);
+		} finally {
+			if (!session.isEmpty()) {
+				session.pop().close();
+			}
 		}
 		
 		table.removeAll();
@@ -150,8 +158,7 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		}	
 		table.redraw();	
 		
-		validatePage(throwableToPass);
-		
+		validatePage(throwableToPass.isEmpty() ? null: throwableToPass.pop());
 	}
 
 	private void fillTableWithCursorBusy() {
@@ -166,7 +173,7 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 				fillTable();
 				monitor.done();
 			}};
-		Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
+			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
 	}
 
 	private void validatePage(Throwable throwableToPass) {		

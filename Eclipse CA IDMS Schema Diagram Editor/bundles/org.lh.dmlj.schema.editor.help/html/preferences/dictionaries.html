@@ -49,16 +49,27 @@ an overview of the dictionaries you have defined :
 <img src="../../images/preferences_import_dictionary.png" alt="[preferences import dictionary]">
 <br><br>
 Note the <i>SYSDIRL ?</i> column; you can mark dictionaries containing the IDMSNTWK schema so that you can generate a 
-diagram for this schema should want to do this.  The buttons on the right of the table allow you to <b>add, remove or 
-edit dictionary definitions</b> as well as <b>test</b> whether the connection (to the dictionary/catalog on your 
-mainframe) works correctly.  You can also set the default name (SYSDICT) for the relational-version of the IDMSNTWK 
-schema in this section.  You shouldn't normally touch the <b>magic number 47</b> unless you experience performance 
-issues when importing diagrams directly from a dictionary :  it turns out that, in queries, the maximum number of rowids 
-that can be specified in a list, before the query does no longer perform and consumes excessive I/Os and CPU on the 
-mainframe, is 47 (at least for the dictionary I’m working against).  It’s up to you to play around with this figure, but 
-you’re on your own…  Rowid lists are a substitute for subqueries, which I’ve found to not always perform as they should. 
+diagram for this schema should want to do this.<br><br>
+The buttons on the right of the table allow you to <b>add, remove or edit dictionary definitions</b> as well as <b>test</b> 
+whether the connection (to the dictionary/catalog on your mainframe) works correctly.<br><br>
+You can also set the default name (SYSDICT) for the relational version of the IDMSNTWK schema in this section.<br><br>  
+You shouldn't normally touch the <b>magic number 47</b> unless you experience performance issues when importing diagrams directly
+from a dictionary :  it turns out that, in the schema editor's queries, the maximum number of rowids that can be specified in a 
+list, before the query does no longer perform and consumes excessive I/Os and CPU on the mainframe, is 47 (at least for the 
+dictionary I’m working against).  It’s up to you to play around with this figure, but you’re on your own… Rowid lists are a 
+substitute for subqueries, which I’ve found to not always perform as they should.<br><br>
+The option to issue a warning message, when the relational version of the IDMSNTWK schema is defined <b>WITH VIRTUAL KEYS</b>, is 
+enabled by default.  I have noticed a serious loss in performance when using a schema that is defined WITH VIRTUAL KEYS, though 
+the result of the diagram editor queries is the same as for schemas defined WITHOUT VIRTUAL KEYS.<br>
+Note: the schema editor queries ALWAYS 'navigate' via set names and thus NEVER with rowids pointing to the owners of those sets
+(the virtual foreign keys), yet this does not seem to be the cause for these performance issues: the same issues would arise when
+the queries would be modified to effectively use virtual keys for schemas definied WITH VIRTUAL KEYS. Hence the warning when 
+importing from a dictionary:<br><br>
+<img src="../../images/Warning_VIRTUAL_KEYS_schema.png" alt="[warning: schema with VIRTUAL KEYS]">
 <br><br>
-Press the <i>Add...</i> button to create your first dictionary :
+Pressing the <i>Always</i> button will uncheck the option to issue a warning message in the above preference page.
+<br><br>
+Back to the <i>defined dictionaries preference page</i>: press the <i>Add...</i> button to create your first dictionary :
 <br><br>
 <img src="../../images/preferences_add_dictionary.png" alt="[preferences add dictionary]">
 <br><br>

@@ -37,6 +37,7 @@ import org.lh.dmlj.schema.editor.log.Logger;
 public class DictionarySession {
 	
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	private static final String VIRTUAL_KEYS_SQL = "SELECT INCLVIRTKEYS FROM SYSTEM.SCHEMA WHERE NAME = ?";
 	
 	protected Connection connection;
 	private long connectionClosed = -1;
@@ -77,6 +78,15 @@ public class DictionarySession {
 		return connect(dictionary.getConnectionUrl(), dictionary.getUser(), password);		
 	}
 
+	private static String getColumnNames(ResultSet rs) throws SQLException {
+		List<String> columnNames = new ArrayList<>();
+		ResultSetMetaData metaData = rs.getMetaData();
+		for (int i = 1; i <= metaData.getColumnCount(); i++) {
+			columnNames.add(metaData.getColumnName(i));
+		}
+		return columnNames.stream().collect(Collectors.joining(","));
+	}
+
 	@SuppressWarnings("unused")
 	private DictionarySession() {
 	}
@@ -86,18 +96,6 @@ public class DictionarySession {
 		this.dictionary = dictionary;
 		this.description = description;
 		dateFormat = org.lh.dmlj.schema.editor.Plugin.getDefault().getDateFormat();
-	}
-	
-	private String format(long date) {
-		return dateFormat.format(date);
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Dictionary getDictionary() {
-		return dictionary;
 	}
 	
 	public final void close() {
@@ -124,6 +122,52 @@ public class DictionarySession {
 		}
 		logger.info(p.toString());
 	}
+
+	private String format(long date) {
+		return dateFormat.format(date);
+	}
+
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Dictionary getDictionary() {
+		return dictionary;
+	}
+	
+	public final boolean isSchemaDefinedWithVirtualKeys() {
+		if (connectionOpened == -1) {
+			throw new RuntimeException("connection not open");
+		} else if (connectionClosed != -1) {
+			throw new RuntimeException("connection closed");
+		}
+		
+		boolean result = false;
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement(VIRTUAL_KEYS_SQL);
+			ps.setString(1, dictionary.getSchema());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				result = rs.getString(1).equals("S");
+			}
+		} catch (SQLException e) {
+			logger.error("exception while checking schema for virtual keys", e);
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					logger.error("exception while closing prepared statement for virtual keys check", e);
+				}
+			}
+		}
+		return result;
+	}
 	
 	public final void open() {
 		if (connectionOpened != -1) {
@@ -135,10 +179,6 @@ public class DictionarySession {
 		} catch (Throwable t) {
 			throw new RuntimeException("Error while opening the JDBC connection", t);
 		}
-	}
-
-	public Connection getConnection() {
-		return connection;
 	}
 
 	public final void runQuery(IQuery query, IRowProcessor rowProcessor) {
@@ -191,15 +231,6 @@ public class DictionarySession {
 		}	
 	}
 	
-	private static String getColumnNames(ResultSet rs) throws SQLException {
-		List<String> columnNames = new ArrayList<>();
-		ResultSetMetaData metaData = rs.getMetaData();
-		for (int i = 1; i <= metaData.getColumnCount(); i++) {
-			columnNames.add(metaData.getColumnName(i));
-		}
-		return columnNames.stream().collect(Collectors.joining(","));
-	}
-
 	public static class QueryStatistics {
 		
 		private long end1;

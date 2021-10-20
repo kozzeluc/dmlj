@@ -23,5 +23,6 @@ public abstract class PreferenceConstants {
 	
 	public static final String DEFAULT_SCHEMA = "defaultSchema";
 	public static final String DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM = "defaultQueryDbkeyListSizeMaximum";
+	public static final String CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS = "confirmationRequiredWhenSchemaWithVirtualKeys";
 	
 }
