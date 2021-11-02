@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,17 +17,10 @@
 package org.lh.dmlj.schema.editor.wizard._import.dictguide;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -46,7 +39,12 @@ import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.service.ServicesPlugin;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
-public class DictguidesPdfSelectionPage extends WizardPage {
+public class DictguidesPdfSelectionPage extends WizardPage {	
+	private static final String CA_IDMS_DICTIONARY_STRUCTURE_REFERENCE = "CA IDMS Dictionary Structure Reference";
+	private static final String CA_IDMS_SQL_REFERENCE = "CA IDMS SQL Reference";
+	
+	static final String MANUAL_TYPE_DICTIONARY_STRUCTURE_REFERENCE_GUIDE = "Dictionary Structure Reference Guide";
+	static final String MANUAL_TYPE_SQL_REFERENCE_GUIDE = "SQL Reference Guide";
 	
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
@@ -91,13 +89,7 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		super("wizardPage");
 		this.manualType = manualType;
 		this.description = description;
-		List<String> list = new ArrayList<>();
-		for (StringTokenizer tokenizer = new StringTokenizer(manualType);
-			 tokenizer.hasMoreTokens(); ) {
-			
-			list.add(tokenizer.nextToken());
-		}
-		manualTypeTokens = list.toArray(new String[] {});
+		manualTypeTokens = manualType.split(" ");
 		setMessage("Select the .pdf file containing the " + manualType);
 		setTitle("CA IDMS/DB Dictionary Structure and SQL Reference Guides");		
 	}
@@ -116,21 +108,7 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		lblpdfFile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblpdfFile.setText(".pdf File :");
 		
-		textFile = new Text(container, SWT.BORDER);
-		textFile.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (e.keyCode == 13) {
-					validatePage();
-				}
-			}
-		});
-		textFile.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				validatePage();
-			}
-		});
+		textFile = new Text(container, SWT.BORDER | SWT.READ_ONLY);
 		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Button btnBrowse = new Button(container, SWT.NONE);
@@ -228,18 +206,26 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 	}
 
 	private boolean isTitleOK(String title) {
-		int i = 0;
-		for (String token : manualTypeTokens) {
-			i = title.indexOf(token, i);
-			if (i < 0) {
-				return false;
+		if (manualType.equals(MANUAL_TYPE_DICTIONARY_STRUCTURE_REFERENCE_GUIDE) && title.equals(CA_IDMS_DICTIONARY_STRUCTURE_REFERENCE) ||
+			manualType.equals(MANUAL_TYPE_SQL_REFERENCE_GUIDE) &&title.equals(CA_IDMS_SQL_REFERENCE)) {
+			
+			return true;
+		} else {
+			int i = 0;
+			for (String token : manualTypeTokens) {
+				i = title.indexOf(token, i);
+				if (i < 0) {
+					return false;
+				}
 			}
+			return true;
 		}
-		return true;
 	}
 	
 	private boolean isVersionOK(String title) {
-		return title.endsWith(" (r16 SP2)") ||
+		return title.equals(CA_IDMS_DICTIONARY_STRUCTURE_REFERENCE) ||
+			   title.equals(CA_IDMS_SQL_REFERENCE) ||
+			   title.endsWith(" (r16 SP2)") ||
 			   title.endsWith(" (r17)") ||
 			   title.endsWith(" (Version 18.0.00)") ||
 			   title.endsWith(" (Release 18.5.00)") ||
@@ -247,7 +233,6 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 	}
 
 	private void validatePage() {
-		
 		setErrorMessage(null);
 		lblTitle.setText("");
 		
@@ -270,9 +255,7 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 				setErrorMessage("Not a " + manualType);
 				pageComplete = false;
 			} else if (!isVersionOK(title)) {				
-				setErrorMessage("The version of the manual you selected is " +
-					            "not supported; you can try to proceed but " +
-						   	    "results may be unpredictable");
+				setErrorMessage("The version of the manual you selected is not supported; you can try to proceed but results may be unpredictable");
 			}
 			lblTitle.setText(title);
 		} catch (Throwable t) {

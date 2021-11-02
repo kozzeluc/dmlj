@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -156,12 +156,12 @@ public class DictguidesRegistry {
 			// that chapter to our temporary files folder
 			ByteArrayOutputStream out1 = new ByteArrayOutputStream();				
 			PdfContentConsumer contentConsumer = new PdfContentConsumer(out1);
-			pdfExtractorService.extractContent(new FileInputStream(dictionaryStructureFile), 
-											   contentConsumer);
+			pdfExtractorService.extractContent(new FileInputStream(dictionaryStructureFile), contentConsumer);
 			contentConsumer.finish();
 			String pdf1Extract = out1.toString();
 			out1.close();
-			dumpPdfExtract(pdf1Extract, new File(tmpFolder, "pdf1Extract.txt"));
+			File pdf1ExtractFile = new File(tmpFolder, "pdf1Extract.txt");
+			dumpPdfExtract(pdf1Extract, pdf1ExtractFile);
 			
 			// parse the SQL Reference Guide; for troubleshooting purposes we 
 			// will write the contents of that chapter to our temporary files 
@@ -181,15 +181,14 @@ public class DictguidesRegistry {
 			File tmpFolder1a = new File(tmpFolder, "phase1");
 			tmpFolder1a.mkdir();			
 			StringReader in1 = new StringReader(pdf1Extract);
-			Phase1Extractor.performTask(in1, tmpFolder1a);
+			Phase1Extractor.performTask(in1, tmpFolder1a, pdf1ExtractFile);
 			
 			// create 1 file in a separate subfolder in the temporary files 
 			// folder, for each relevant table description found in the SQL 
 			// Reference Guide; each file will hold the raw PDF extraction data			
 			File tmpFolder1b = new File(tmpFolder, "phase1catalog");
 			tmpFolder1b.mkdir();
-			Phase1ExtractorCatalog.performTask(new File(tmpFolder, "pdf2Extract.txt"), 
-											   tmpFolder1b);
+			Phase1ExtractorCatalog.performTask(new File(tmpFolder, "pdf2Extract.txt"), tmpFolder1b);
 			
 			// create 1 file in yet another separate subfolder in the temporary 
 			// files folder, again for each record description found in the 
@@ -197,8 +196,7 @@ public class DictguidesRegistry {
 			// structured extraction data
 			File tmpFolder2a = new File(tmpFolder, "phase2");
 			tmpFolder2a.mkdir();			
-			Phase2Extractor.performTask(tmpFolder1a, tmpFolder2a, 
-									    dictionaryStructureTitle);
+			Phase2Extractor.performTask(tmpFolder1a, tmpFolder2a, dictionaryStructureTitle);
 			
 			// create 1 file in yet another separate subfolder in the temporary 
 			// files folder, again for each relevant table description found in 
@@ -206,8 +204,7 @@ public class DictguidesRegistry {
 			// extraction data
 			File tmpFolder2b = new File(tmpFolder, "phase2catalog");
 			tmpFolder2b.mkdir();					
-			Phase2ExtractorCatalog.performTask(tmpFolder1b, tmpFolder2b, 
-											   sqlTitle);
+			Phase2ExtractorCatalog.performTask(tmpFolder1b, tmpFolder2b, sqlTitle);
 			
 			// perform some checks on the structured extraction data for the 
 			// Dictionary Structure Reference Guide; no exceptions will be 
@@ -229,8 +226,7 @@ public class DictguidesRegistry {
 			File zipFile = new File(folder, id + ".zip");
 			if (zipFile.exists()) {
 				if (!zipFile.delete()) {
-					throw new RuntimeException(".zip file could not be deleted: " + 
-											   zipFile.getAbsolutePath());
+					throw new RuntimeException(".zip file could not be deleted: " + zipFile.getAbsolutePath());
 				}
 			}
 			ZipOutputStream zipOut = 
@@ -312,8 +308,7 @@ public class DictguidesRegistry {
 
 	public String getDocumentTitle(File pdfFile) {
 		Assert.isTrue(pdfExtractorService != null, "logic error: PDF Extractor Service == null");
-		DocumentTitleExtractor documentTitleExtractor = 
-			new DocumentTitleExtractor(pdfExtractorService, pdfFile);
+		DocumentTitleExtractor documentTitleExtractor = new DocumentTitleExtractor(pdfExtractorService, pdfFile);
 		return documentTitleExtractor.extractTitle();
 	}
 	

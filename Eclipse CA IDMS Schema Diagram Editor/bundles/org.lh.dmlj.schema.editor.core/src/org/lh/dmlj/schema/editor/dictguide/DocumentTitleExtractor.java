@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,19 +21,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Stack;
 
-import org.lh.dmlj.schema.editor.service.api.IPdfContentConsumer;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
-public class DocumentTitleExtractor implements IPdfContentConsumer {
-
-	private static final int	 MAX_LINES_TO_HANDLE = 100;
+public class DocumentTitleExtractor {
+	private static final String TITLE_METADATA_PROPERTY = "title";
+	private static final String TITLE_UNKNOWN = "?";
+	private static final int MAX_LINES_TO_HANDLE = 100;
 	
-	private File   				 file;
-	private boolean 			 lineContainsRelease = false;
-	private int    				 linesHandled = 0;
+	private File file;
+	private boolean lineContainsRelease = false;
+	private int linesHandledForReleaseExtraction = 0;
 	private IPdfExtractorService pdfExtractorService;
-	private String 				 release;
+	private String release;
 	
 	public DocumentTitleExtractor(IPdfExtractorService pdfExtractorService, File file) {
 		super();
@@ -42,46 +43,62 @@ public class DocumentTitleExtractor implements IPdfContentConsumer {
 	}	
 	
 	public String extractTitle() {
-		
-		String title = "?";
-		
-		// try to get the title from the PDF metadata
 		Properties metadata = pdfExtractorService.extractMetadata(file);
-		if (metadata != null && metadata.containsKey("title")) {
-			title = metadata.getProperty("title");
+		if (metadata != null && metadata.containsKey(TITLE_METADATA_PROPERTY)) {
+			String title = metadata.getProperty(TITLE_METADATA_PROPERTY);
+			return addReleaseToTitle(title);
+		} else {
+			return extractTitleFromDocumentContent();
 		}
-		
-		// we want to add the release to the title as well; for that, we have to dig into the PDF 
-		// content, so let's process a max. of 100 lines...
-		try {
-			InputStream in = new FileInputStream(file);
-			pdfExtractorService.extractContent(in, this);
-			in.close();
+	}
+	
+	private String addReleaseToTitle(String title) {
+		// we want to add the release to the title as well; for that, we have to dig into the PDF content, so let's process a max. of 100 lines...
+		try (InputStream in = new FileInputStream(file)) {			
+			pdfExtractorService.extractContent(in, this::handleContentForReleaseExtraction);
 		} catch (IOException e) {
 			return title;
 		}
-		
-		// just return the title (if we found one, that is) if no release could be detected
+				
 		if (release == null) {
 			return title;
+		} else {
+			return release != null ? title + " (" + release + ")" : title;
 		}
-		
-		// return the title, combined with the release information
-		return release != null ? title + " (" + release + ")" : title;
-		
 	}
 
-	@Override
-	public boolean handleContent(String line) {
-		String p = line.trim();
-		if (p.endsWith("Reference Guide")) {
+	public boolean handleContentForReleaseExtraction(String line) {
+		String trimmedLine = line.trim();
+		if (trimmedLine.endsWith("Reference Guide")) {
 			// the next line will contain the release information...
 			lineContainsRelease = true;
 		} else if (lineContainsRelease) {
-			release = p;
+			release = trimmedLine;
 			return false;
 		}
-		return ++linesHandled < MAX_LINES_TO_HANDLE;
+		return ++linesHandledForReleaseExtraction < MAX_LINES_TO_HANDLE;
+	}
+	
+	private String extractTitleFromDocumentContent() {
+		Stack<String> title = new Stack<>();
+		try (InputStream in = new FileInputStream(file)) {
+			pdfExtractorService.extractContent(in, line -> {
+				String trimmedLine = line.trim();
+				if (!trimmedLine.isEmpty()) {
+					title.push(trimmedLine);
+					return false;
+				} else {
+					return true;
+				}
+			});
+		} catch (IOException e) {
+			return TITLE_UNKNOWN;
+		}
+		if (!title.isEmpty()) {
+			return title.pop();
+		} else {
+			return TITLE_UNKNOWN;
+		}
 	}
 
 }

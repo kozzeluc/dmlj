@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -49,6 +49,7 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 	
 	public DictguidesImportWizard() {
 		new DictguidesImportWizard(false);
+		setWindowTitle("Import");
 	}
 	
 	public DictguidesImportWizard(boolean calledFromPreferences) {
@@ -59,34 +60,25 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 	
 	@Override
 	public void addPages() {
-		
-		// create and add the dictionary structure ref. guide selection page
 		String description;
 		try {
-			description = 
-				PluginPropertiesCache.get(Plugin.getDefault(), KEY_DESCRIPTION_DICTIONARY_STRUCTURE);
+			description = PluginPropertiesCache.get(Plugin.getDefault(), KEY_DESCRIPTION_DICTIONARY_STRUCTURE);
 		} catch (MissingResourceException e) {
 			description = "";;
 		}		
-		dictionaryStructurePdfSelectionPage =
-			new DictguidesPdfSelectionPage("Dictionary Structure Reference Guide", 
-										   description);		
+		dictionaryStructurePdfSelectionPage = new DictguidesPdfSelectionPage(DictguidesPdfSelectionPage.MANUAL_TYPE_DICTIONARY_STRUCTURE_REFERENCE_GUIDE,description);		
 		addPage(dictionaryStructurePdfSelectionPage);
 		
-		// create and add the SQL reference guide selection page		
 		try {
 			description = PluginPropertiesCache.get(Plugin.getDefault(), KEY_DESCRIPTION_SQL);
 		} catch (MissingResourceException e) {
 			description = "";;
 		}
-		sqlPdfSelectionPage =
-			new DictguidesPdfSelectionPage("SQL Reference Guide", description);		
+		sqlPdfSelectionPage = new DictguidesPdfSelectionPage(DictguidesPdfSelectionPage.MANUAL_TYPE_SQL_REFERENCE_GUIDE, description);		
 		addPage(sqlPdfSelectionPage);
-		
-		// create and add the Summary page
+				
 		summaryPage = new DictguidesSummaryPage(calledFromPreferences);
 		addPage(summaryPage);
-		
 	}
 	
 	@Override
