@@ -251,6 +251,8 @@ public abstract class Phase1Extractor {
 				} else if (recordNameForFlushing != null && !line.trim().isEmpty()) {
 					if (isTitleLineThatNeedsBeSkipped(line)) {
 						linesToFlush.remove(linesToFlush.size() - 1);
+					} else if (line.startsWith("03 CMT-INFO-050 continued ")) {
+						linesToFlush.add(line.substring(26));
 					} else {
 						linesToFlush.add(line);
 					}

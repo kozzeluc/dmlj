@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -201,9 +201,6 @@ public abstract class Phase2ExtractorCatalog {
 	}
 	
 	private static boolean isFieldDescriptionBegin(String p) {
-		/*if (p.length() < 4) {
-			return false;
-		}*/
 		int i = p.indexOf(" ");
 		if (i != -1) {								
 			String q = p.substring(0, i);
@@ -261,7 +258,10 @@ public abstract class Phase2ExtractorCatalog {
 				!r.equals("OPTION indicator:") &&
 				!r.startsWith("IDMS Presspack") &&
 				!r.equals("CHECK OPTION") &&
-				!r.startsWith("CHAR3") ||
+				!r.startsWith("CHAR3") &&
+				!r.contains(" -- ") &&
+				!r.startsWith("CHAR (1)") &&
+				!r.contains(" (above) ") ||
 				r.equals("TIMESTAMP Table timestamp, used for")) {
 				
 				return true;
@@ -295,6 +295,7 @@ public abstract class Phase2ExtractorCatalog {
 			   !p.substring(j).startsWith("BINARY(") &&	
 			   !p.substring(j).startsWith("BINAR\nY(") &&	
 			   !p.substring(j).startsWith("CHAR(") &&
+			   !p.substring(j).startsWith("CHAR (") &&
 			   !p.substring(j).startsWith("INTEGER") &&
 			   !p.substring(j).startsWith("INTEG\nER") &&
 			   !p.substring(j).startsWith("REAL") &&	
@@ -578,7 +579,9 @@ public abstract class Phase2ExtractorCatalog {
 						if (q.length() > 0) {
 							q.append('\n');
 						}
-						q.append(p);
+						if (!trimmedLineIsNumber(p)) {
+							q.append(p);
+						}
 					}
 				} else {
 					if (p.startsWith("Column name Column description Data")) {
@@ -594,6 +597,16 @@ public abstract class Phase2ExtractorCatalog {
 		in.close();
 		out.flush();
 		out.close();		
+	}
+	
+	private static boolean trimmedLineIsNumber(String untrimmedLine) {
+		try {
+			Integer.parseInt(untrimmedLine.trim());
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		
 	}
 
 	public static void performTask(File inputFolder, File outputFolder,
