@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -77,7 +77,7 @@ public class ReferenceGuidesPreferencePage
 		lblNewLabel.setLayoutData(gd_lblNewLabel);
 		lblNewLabel.setText("Reference Guide combination to use in the \"Info\" tab (Properties view) :");
 		
-		list = new List(container, SWT.BORDER);
+		list = new List(container, SWT.BORDER | SWT.V_SCROLL);
 		GridData gd_list = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 3);
 		gd_list.heightHint = 75;
 		list.setLayoutData(gd_list);
