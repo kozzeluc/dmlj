@@ -26,7 +26,7 @@ import java.util.Stack;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
 public class DocumentTitleExtractor {
-	private static final String TITLE_METADATA_PROPERTY = "title";
+	private static final String TITLE_METADATA_PROPERTY = "pdf:docinfo:title";
 	private static final String TITLE_UNKNOWN = "?";
 	private static final int MAX_LINES_TO_HANDLE = 100;
 	

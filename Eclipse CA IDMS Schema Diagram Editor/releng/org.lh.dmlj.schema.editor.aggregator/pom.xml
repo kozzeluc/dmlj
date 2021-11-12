@@ -23,7 +23,7 @@
         <module>../../bundles/org.lh.dmlj.schema.editor.model</module>
         <module>../../bundles/org.lh.dmlj.schema.editor.service</module>
         <module>../../bundles/org.lh.dmlj.schema.editor.service.api</module>
-        <module>../../bundles/org.lh.dmlj.schema.editor.tika_1.4</module>
+        <module>../../bundles/org.lh.dmlj.schema.editor.tika_2.1.0</module>
         <module>../../bundles/org.lh.dmlj.schema.editor.help</module>
         <module>../../bundles/org.lh.dmlj.schema.editor.groovy</module>
         <module>../../bundles/org.lh.dmlj.schema.editor.jaxb</module>
