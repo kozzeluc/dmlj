@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -113,7 +113,7 @@ class AbstractModelBuilderSpec extends AbstractBuilderSpec {
 		assert diagramData.verticalRuler.type == RulerType.VERTICAL
 		assert diagramData.horizontalRuler
 		assert diagramData.horizontalRuler.type == RulerType.HORIZONTAL
-		assert diagramData.rulers.size == 2
+		assert diagramData.rulers.size() == 2
 		assert diagramData.rulers[0] == diagramData.verticalRuler
 		assert diagramData.rulers[1] == diagramData.horizontalRuler
 		

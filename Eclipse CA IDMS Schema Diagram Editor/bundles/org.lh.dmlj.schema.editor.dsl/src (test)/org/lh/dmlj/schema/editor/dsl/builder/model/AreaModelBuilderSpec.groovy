@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -32,7 +32,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 	
 	private void assertTemporarySchema(SchemaArea area) {
 		assertSchemaWithStandardDiagramData(area.schema, TEMP_SCHEMA_NAME, TEMP_SCHEMA_VERSION)
-		assert area.schema.areas.size == 1
+		assert area.schema.areas.size() == 1
 		assert area.schema.areas[0] == area
 		assert area.schema.records.empty
 		assert area.schema.sets.empty
@@ -89,7 +89,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		area.procedures.isEmpty()
 		area.records.isEmpty()
 		area.schema == schema
-		schema.areas.size == 1
+		schema.areas.size() == 1
 		schema.procedures.empty
 	}
 	
@@ -117,14 +117,14 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		area.name == 'AREA2'
 		area.areaSpecifications.isEmpty()
 		area.indexes.isEmpty()
-		area.procedures.size == 4
+		area.procedures.size() == 4
 		area.records.isEmpty()
 		assertTemporarySchema area
-		area.schema.procedures.size == 2
+		area.schema.procedures.size() == 2
 		area.schema.procedures.get(0).name == 'PROC2'
 		area.schema.procedures.get(1).name == 'PROC1'
 		area.schema.procedures.each { Procedure procedure ->
-			assert procedure.callSpecifications.size == 2
+			assert procedure.callSpecifications.size() == 2
 			procedure.callSpecifications.each { AreaProcedureCallSpecification callSpec -> 
 				assert callSpec.area == area 
 				assert callSpec.callTime
@@ -159,15 +159,15 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		area.name == 'AREA2'
 		area.areaSpecifications.isEmpty()
 		area.indexes.isEmpty()
-		area.procedures.size == 4
+		area.procedures.size() == 4
 		area.records.isEmpty()
 		area.schema == schema
-		schema.areas.size == 1
-		schema.procedures.size == 2
+		schema.areas.size() == 1
+		schema.procedures.size() == 2
 		schema.procedures.get(0).name == 'PROC2'
 		schema.procedures.get(1).name == 'PROC1'
 		schema.procedures.each { Procedure procedure ->
-			assert procedure.callSpecifications.size == 2
+			assert procedure.callSpecifications.size() == 2
 			procedure.callSpecifications.each { AreaProcedureCallSpecification callSpec ->
 				assert callSpec.area == area
 				assert callSpec.callTime
@@ -215,7 +215,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		area.procedures.isEmpty()
 		area.records.isEmpty()
 		area.schema == schema
-		schema.areas.size == 1
+		schema.areas.size() == 1
 		schema.procedures.empty
 	}
 
@@ -242,14 +242,14 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		area.name == 'AREA2'
 		area.areaSpecifications.isEmpty()
 		area.indexes.isEmpty()
-		area.procedures.size == 4
+		area.procedures.size() == 4
 		area.records.isEmpty()
 		assertTemporarySchema area
-		area.schema.procedures.size == 2
+		area.schema.procedures.size() == 2
 		area.schema.procedures.get(0).name == 'PROC2'
 		area.schema.procedures.get(1).name == 'PROC1'
 		area.schema.procedures.each { Procedure procedure ->
-			assert procedure.callSpecifications.size == 2
+			assert procedure.callSpecifications.size() == 2
 			procedure.callSpecifications.each { AreaProcedureCallSpecification callSpec ->
 				assert callSpec.area == area
 				assert callSpec.callTime
@@ -283,15 +283,15 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		area.name == 'AREA2'
 		area.areaSpecifications.isEmpty()
 		area.indexes.isEmpty()
-		area.procedures.size == 4
+		area.procedures.size() == 4
 		area.records.isEmpty()
 		area.schema == schema
-		schema.areas.size == 1
-		schema.procedures.size == 2
+		schema.areas.size() == 1
+		schema.procedures.size() == 2
 		schema.procedures.get(0).name == 'PROC2'
 		schema.procedures.get(1).name == 'PROC1'
 		schema.procedures.each { Procedure procedure ->
-			assert procedure.callSpecifications.size == 2
+			assert procedure.callSpecifications.size() == 2
 			procedure.callSpecifications.each { AreaProcedureCallSpecification callSpec ->
 				assert callSpec.area == area
 				assert callSpec.callTime

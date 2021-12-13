@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -369,7 +369,7 @@ class ChangeLocationModeCommandFactoryTest {
 		assert command.label == "Set 'Location mode' to 'VIA'"
 		
 		// check the individual commands
-		assert command.commands.size == 2
+		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
 		assert command.commands.getAt(0).record == record
 		assert command.commands.getAt(1) instanceof MakeRecordViaCommand
@@ -401,7 +401,7 @@ class ChangeLocationModeCommandFactoryTest {
 		assert command.label == "Set 'Location mode' to 'VSAM'"
 		
 		// check the individual commands
-		assert command.commands.size == 2
+		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
 		assert command.commands.getAt(0).record == record
 		assert command.commands.getAt(1) instanceof MakeRecordVsamCommand
@@ -436,7 +436,7 @@ class ChangeLocationModeCommandFactoryTest {
 		assert command.label == "Set 'Location mode' to 'VSAM CALC'"
 		
 		// check the individual commands
-		assert command.commands.size == 2
+		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
 		assert command.commands.getAt(0).record == record
 		assert command.commands.getAt(1) instanceof MakeRecordVsamCalcCommand
@@ -473,7 +473,7 @@ class ChangeLocationModeCommandFactoryTest {
 		assert command.label == "Set 'Location mode' to 'CALC'"
 		
 		// check the individual commands
-		assert command.commands.size == 2
+		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
 		assert command.commands.getAt(0).record == record
 		assert command.commands.getAt(1) instanceof MakeRecordCalcCommand
@@ -754,7 +754,7 @@ class ChangeLocationModeCommandFactoryTest {
 		 assert command.label == "Set 'symbolic displacement' to 'SDN1'"
 		 
 		 // check the individual commands
-		 assert command.commands.size == 2
+		 assert command.commands.size() == 2
 		 assert command.commands.getAt(0) instanceof SetObjectAttributeCommand
 		 assert command.commands.getAt(0).owner == record.getViaSpecification()
 		 assert command.commands.getAt(0).features == [ SchemaPackage.eINSTANCE.getViaSpecification_DisplacementPageCount() ]
@@ -868,7 +868,7 @@ class ChangeLocationModeCommandFactoryTest {
 		 assert command.label == "Set 'displacement page count' to '100'"
 		 
 		 // check the individual commands
-		 assert command.commands.size == 2
+		 assert command.commands.size() == 2
 		 assert command.commands.getAt(0) instanceof SetObjectAttributeCommand
 		 assert command.commands.getAt(0).owner == record.getViaSpecification()
 		 assert command.commands.getAt(0).features == [ SchemaPackage.eINSTANCE.getViaSpecification_SymbolicDisplacementName() ]
@@ -949,7 +949,7 @@ class ChangeLocationModeCommandFactoryTest {
 		assert command.label == "Set 'Location mode' to 'CALC'"
 		
 		// check the individual commands
-		assert command.commands.size == 2
+		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
 		assert command.commands.getAt(0).record == record
 		assert command.commands.getAt(1) instanceof MakeRecordCalcCommand
@@ -1053,7 +1053,7 @@ class ChangeLocationModeCommandFactoryTest {
 		assert command.label == "Set 'Location mode' to 'CALC'"
 		
 		// check the individual commands
-		assert command.commands.size == 2
+		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
 		assert command.commands.getAt(0).record == record
 		assert command.commands.getAt(1) instanceof MakeRecordCalcCommand

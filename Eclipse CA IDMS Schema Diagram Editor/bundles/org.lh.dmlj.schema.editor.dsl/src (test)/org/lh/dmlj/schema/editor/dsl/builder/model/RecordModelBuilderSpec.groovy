@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -139,8 +139,8 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 	private void assertOneSimpleElement(SchemaRecord record, String expectedName, 
 										String expectedPicture, Usage expectedUsage) {
 	
-		assert record.elements.size == 1
-		assert record.rootElements.size == 1
+		assert record.elements.size() == 1
+		assert record.rootElements.size() == 1
 		assert record.rootElements[0] == record.elements[0]
 		assert record.elements[0].level == 2
 		assert record.elements[0].name == expectedName
@@ -168,7 +168,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert record.schema.diagramData.connectors.empty
 		
 		assert record.diagramLocation
-		assert record.schema.diagramData.locations.size == 1
+		assert record.schema.diagramData.locations.size() == 1
 		assert record.schema.diagramData.locations[0] == record.diagramLocation				
 		assert record.diagramLocation.x == 0
 		assert record.diagramLocation.y == 0
@@ -240,11 +240,11 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		record
 		record.schema == schema		
-		record.schema.records.size == 1
+		record.schema.records.size() == 1
 		record.schema.records[0] == record
 		assertOtherDiagramDataAndLocation(record, StorageMode.FIXED)
 		assertRecordNamesAndVersions(record, 'RECORD1', 1)
-		assert schema.areas.size == 1
+		assert schema.areas.size() == 1
 		assertSimpleAreaSpecification(record, 'RECORD1-AREA')
 		assertSimpleDirectRecord(record, 10)
 		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
@@ -294,11 +294,11 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		record				
 		record.schema == schema		
-		record.schema.records.size == 1
+		record.schema.records.size() == 1
 		record.schema.records[0] == record
 		assertOtherDiagramDataAndLocation(record, StorageMode.FIXED)
 		assertRecordNamesAndVersions(record, 'SR0010', 1)
-		assert schema.areas.size == 1
+		assert schema.areas.size() == 1
 		assertSimpleAreaSpecification(record, 'SR0010-AREA')
 		assertSimpleDirectRecord(record, 10)
 		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
@@ -346,11 +346,11 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		record
 		record.schema == schema
-		record.schema.records.size == 1
+		record.schema.records.size() == 1
 		record.schema.records[0] == record
 		assertOtherDiagramDataAndLocation(record, StorageMode.FIXED)
 		assertRecordNamesAndVersions(record, 'SR0010', 1)
-		assert schema.areas.size == 1
+		assert schema.areas.size() == 1
 		assertSimpleAreaSpecification(record, 'SR0010-AREA')
 		assertSimpleDirectRecord(record, 10)
 		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
@@ -404,11 +404,11 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		record				
 		record.schema == schema		
-		record.schema.records.size == 1
+		record.schema.records.size() == 1
 		record.schema.records[0] == record
 		assertOtherDiagramDataAndLocation(record, StorageMode.FIXED)
 		assertRecordNamesAndVersions(record, 'EMPLOYEE', 1)
-		assert schema.areas.size == 1
+		assert schema.areas.size() == 1
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 10)
 		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
@@ -463,11 +463,11 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		record
 		record.schema == schema
-		record.schema.records.size == 1
+		record.schema.records.size() == 1
 		record.schema.records[0] == record
 		assertOtherDiagramDataAndLocation(record, StorageMode.FIXED)
 		assertRecordNamesAndVersions(record, 'EMPLOYEE', 1)
-		assert schema.areas.size == 1
+		assert schema.areas.size() == 1
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 415)
 		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
@@ -532,7 +532,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "basic diagram data"		
 		record
 		record.schema == schema
-		record.schema.records.size == 1
+		record.schema.records.size() == 1
 		record.schema.records[0] == record
 		assertOtherDiagramDataAndLocation(record, StorageMode.FIXED)
 		assert record.name == 'EMPLOYEE'
@@ -540,7 +540,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert record.baseVersion == 10
 		assert record.synonymName == 'EMPLOYEE-SYNONYM'
 		assert record.synonymVersion == 100
-		assert schema.areas.size == 1
+		assert schema.areas.size() == 1
 		assertSimpleAreaSpecification(record, 'EMPLOYEE-AREA')
 		assertSimpleDirectRecord(record, 10)
 		assertOneSimpleElement(record, 'ELEMENT-1', 'X(8)', Usage.DISPLAY)
@@ -591,12 +591,12 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "property will refer to an automatically generated (temporary) schema, which will"
 			  "contain the definition for the 2 procedures"
 		record
-		record.procedures.size == 4
-		record.schema.procedures.size == 2
+		record.procedures.size() == 4
+		record.schema.procedures.size() == 2
 		record.schema.procedures.get(0).name == 'PROC2'
 		record.schema.procedures.get(1).name == 'PROC1'
 		record.schema.procedures.each { Procedure procedure ->
-			assert procedure.callSpecifications.size == 2
+			assert procedure.callSpecifications.size() == 2
 			procedure.callSpecifications.each { RecordProcedureCallSpecification callSpec ->
 				assert callSpec.record == record
 				assert callSpec.callTime
@@ -618,7 +618,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		Schema schema = schemaBuilder.build(schemaDefinition)
 		assert schema
 		assert schema.procedures
-		assert schema.procedures.size == 1
+		assert schema.procedures.size() == 1
 		assert schema.procedures[0].name == 'PROC1'
 		def RecordModelBuilder builder = new RecordModelBuilder( [ schema : schema ] )							
 																										
@@ -636,17 +636,17 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		then: "the result will be a record that references the procedures specified"
 		record
 		record.schema == schema
-		record.schema.records.size == 1
+		record.schema.records.size() == 1
 		record.schema.records[0] == record
-		record.procedures.size == 4
-		record.schema.procedures.size == 2
+		record.procedures.size() == 4
+		record.schema.procedures.size() == 2
 		record.schema.procedures[0].name == 'PROC1'
-		record.schema.procedures[0].callSpecifications.size == 3
+		record.schema.procedures[0].callSpecifications.size() == 3
 		record.schema.procedures[0].callSpecifications[0].area == schema.areas[0]
 		record.schema.procedures[0].callSpecifications[1].record == record
 		record.schema.procedures[0].callSpecifications[2].record == record
 		record.schema.procedures.get(1).name == 'PROC2'
-		record.schema.procedures[1].callSpecifications.size == 2
+		record.schema.procedures[1].callSpecifications.size() == 2
 		record.schema.procedures[1].callSpecifications[0].record == record
 		record.schema.procedures[1].callSpecifications[1].record == record
 	}
