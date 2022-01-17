@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor Service API
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.service.api
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.4.0.qualifier
 Bundle-Vendor: Luc Hermans
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.lh.dmlj.schema.editor.service.api
