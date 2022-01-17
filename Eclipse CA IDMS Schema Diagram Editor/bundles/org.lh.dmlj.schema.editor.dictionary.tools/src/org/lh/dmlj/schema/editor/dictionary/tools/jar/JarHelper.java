@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020  Luc Hermans
+ * Copyright (C) 2022  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -70,7 +70,7 @@ public abstract class JarHelper {
 								 	 "com.ca.idms.hibernate,\n com.ca.idms.was");
 		}
 		if (!existingManifestHeaders.containsKey("Bundle-RequiredExecutionEnvironment")) {
-			extraManifestHeaders.put("6Bundle-RequiredExecutionEnvironment", "JavaSE-1.8");
+			extraManifestHeaders.put("6Bundle-RequiredExecutionEnvironment", "JavaSE-11");
 		}
 		copyJarWithExtraManifestHeaders(src, dest, extraManifestHeaders);		
 	}	
