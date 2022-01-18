@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
 public class Srcd_113 {
 	
@@ -38,7 +39,7 @@ public class Srcd_113 {
 	public static final String SYMBOL_DISPLACE_113 = "SYMBOL_DISPLACE_113";
 	public static final String VSAM_TYPE_113 = "VSAM_TYPE_113";
 	
-	private long dbkey;
+	private Rowid rowid;
 	private Rcdsyn_079 rcdsyn_079;
 	private Sam_056 sam_056;
 
@@ -61,8 +62,8 @@ public class Srcd_113 {
 		super();
 	}
 
-	public long getDbkey() {
-		return dbkey;
+	public Rowid geRowid() {
+		return rowid;
 	}
 
 	public short getDspl_113() {
@@ -129,8 +130,8 @@ public class Srcd_113 {
 		return vsamType_113;
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setDspl_113(short dspl_113) {

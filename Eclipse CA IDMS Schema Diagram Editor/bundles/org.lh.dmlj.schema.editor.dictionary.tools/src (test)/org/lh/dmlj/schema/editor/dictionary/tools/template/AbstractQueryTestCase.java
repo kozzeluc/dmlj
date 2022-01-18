@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,9 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.IDefaultDictionaryPropertyProvider;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.IRowidProvider;
 
 public abstract class AbstractQueryTestCase {
 
@@ -63,21 +64,32 @@ public abstract class AbstractQueryTestCase {
 		}
 	}
 
-	public static List<IDbkeyProvider> getDbkeyProviders(int count) {
-		List<IDbkeyProvider> dbkeyProviders = new ArrayList<>();
+	public static List<IRowidProvider> getRowidProviders(int count, boolean includePageInformationInRowids) {
+		List<IRowidProvider> rowidProviders = new ArrayList<>();
 		for (int i = 0; i < count; i++) {
-			IDbkeyProvider dbkeyProvider = mock(IDbkeyProvider.class);
-			when(dbkeyProvider.getDbkey()).thenReturn(Long.valueOf(i));
-			dbkeyProviders.add(dbkeyProvider);
+			IRowidProvider rowidProvider = mock(IRowidProvider.class);
+			when(rowidProvider.getRowid()).thenReturn(Rowid.fromHexString(toRowidHexString(i, includePageInformationInRowids)));
+			rowidProviders.add(rowidProvider);
 		}
-		return dbkeyProviders;
+		return rowidProviders;
 	}
 
-	public static Dictionary getDictionary(String schema, int queryDbkeyListSizeMaximum) {
+	private static String toRowidHexString(int dbkeyAsInt, boolean includePageInformationInRowids) {
+		StringBuilder hexString = new StringBuilder(Integer.toHexString(dbkeyAsInt));
+		while (hexString.length() < 8) {
+			hexString.insert(0, "0");
+		}
+		if (includePageInformationInRowids) {
+			hexString.append("00000008");
+		}
+		return hexString.toString();
+	}
+
+	public static Dictionary getDictionary(String schema, int queryRowidListSizeMaximum) {
 		Dictionary dictionary = mock(Dictionary.class);
 		when(dictionary.getSchemaWithDefault(any(IDefaultDictionaryPropertyProvider.class))).thenReturn(schema);
-		when(dictionary.getQueryDbkeyListSizeMaximumWithDefault(any(IDefaultDictionaryPropertyProvider.class)))
-			.thenReturn(queryDbkeyListSizeMaximum);
+		when(dictionary.getQueryRowidListSizeMaximumWithDefault(any(IDefaultDictionaryPropertyProvider.class)))
+			.thenReturn(queryRowidListSizeMaximum);
 		return dictionary;
 	}
 

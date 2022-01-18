@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,7 +19,6 @@ package org.lh.dmlj.schema.editor.dictionary.tools.jdbc;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,34 +32,31 @@ import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.IRowidProvider;
 
 public abstract class JdbcTools {
-	
-	public static long getDbkey(ResultSet resultSet, String rowIdColumnLabel) throws SQLException {
-		byte[] rid = resultSet.getBytes(rowIdColumnLabel);		
-		return ByteBuffer.wrap(new byte[] {0, 0, 0, 0, rid[0], rid[1], rid[2], rid[3]}).getLong();
+		
+	public static Rowid getRowid(ResultSet resultSet, String rowIdColumnLabel) throws SQLException {
+		return Rowid.fromHexString(resultSet.getString(rowIdColumnLabel));
 	}
 	
-	public static List<List<Long>> getSplitQueryDbkeyList(List<IDbkeyProvider> dbkeyProviders,
-										 				  Dictionary dictionary) {		
-		int queryDbkeyListSizeMaximum = 
-			dictionary.getQueryDbkeyListSizeMaximumWithDefault(Plugin.getDefault());
-		List<List<Long>> splitQueryDbkeyList = new ArrayList<>();
-		List<Long> queryDbkeyList = new ArrayList<>();
-		splitQueryDbkeyList.add(queryDbkeyList);
-		for (IDbkeyProvider dbkeyProvider : dbkeyProviders) {
-			long dbkey = dbkeyProvider.getDbkey();
-			if (queryDbkeyList.size() == queryDbkeyListSizeMaximum) {
-				queryDbkeyList = new ArrayList<>();
-				splitQueryDbkeyList.add(queryDbkeyList);
+	public static List<List<Rowid>> getSplitQueryRowidList(List<IRowidProvider> rowidProviders, Dictionary dictionary) {
+		int queryRowidyListSizeMaximum = dictionary.getQueryRowidListSizeMaximumWithDefault(Plugin.getDefault());
+		List<List<Rowid>> splitQueryRowidList = new ArrayList<>();
+		List<Rowid> queryRowidList = new ArrayList<>();
+		splitQueryRowidList.add(queryRowidList);
+		for (IRowidProvider rowidProvider : rowidProviders) {
+			Rowid rowid = rowidProvider.getRowid();
+			if (queryRowidList.size() == queryRowidyListSizeMaximum) {
+				queryRowidList = new ArrayList<>();
+				splitQueryRowidList.add(queryRowidList);
 			}
-			queryDbkeyList.add(Long.valueOf(dbkey));
+			queryRowidList.add(rowid);
 		}
-		if (splitQueryDbkeyList.size() == 1 && splitQueryDbkeyList.get(0).isEmpty()) {
+		if (splitQueryRowidList.size() == 1 && splitQueryRowidList.get(0).isEmpty()) {
 			return Collections.emptyList();
 		} else {
-			return splitQueryDbkeyList;
+			return splitQueryRowidList;
 		}
 	}
 
@@ -151,14 +147,6 @@ public abstract class JdbcTools {
 			throw new RuntimeException(e);
 		}		
 	}
-
-	public static String toHexString(long dbkey) {
-		StringBuilder p = new StringBuilder(Long.toHexString(dbkey));
-		while (p.length() < 8) {
-			p.insert(0, '0');
-		}
-		return p.toString();
-	}	
 	
 	public static class TestConnectionResult {
 		

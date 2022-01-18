@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.table;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
 public class Namesyn_083 {
 	
@@ -29,7 +30,7 @@ public class Namesyn_083 {
 	private Rcdsyn_079 rcdsyn_079;
 	private Sdr_042 sdr_042;
 	
-	private long dbkey;
+	private Rowid rowid;
 	private String dependOn_083;
 	private String synName_083;
 	private String rdfNam_083;
@@ -38,8 +39,8 @@ public class Namesyn_083 {
 		super();
 	}
 	
-	public long getDbkey() {
-		return dbkey;
+	public Rowid getRowid() {
+		return rowid;
 	}
 
 	public String getDependOn_083() {
@@ -66,8 +67,8 @@ public class Namesyn_083 {
 		return synName_083;
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setDependOn_083(String dependOn_083) {

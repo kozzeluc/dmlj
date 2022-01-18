@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -43,6 +44,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.RecordElementsImportSession;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ui.VirtualKeysConfirmationHandler;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn_079;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr_036;
@@ -134,40 +136,49 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 		
 		final List<TableEntry> tableEntries = new ArrayList<>();
 		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
-		Throwable throwableToPass = null;
+		Stack<RecordElementsImportSession> session = new Stack<>();
+		Stack<Throwable> throwableToPass = new Stack<>();
 		try {
-			RecordElementsImportSession session = 
-				new RecordElementsImportSession(dictionary, recordSynonymName);
-			session.open();	
-			IQuery query = new Query.Builder().forRecordSynonymList(session).build();
-			session.runQuery(query, new IRowProcessor() {
-				@Override
-				public void processRow(ResultSet row) throws SQLException {					
-					
-					Sr_036 sr_036 = new Sr_036();
-					sr_036.setDbkey(JdbcTools.getDbkey(row, Sr_036.ROWID));
-					sr_036.setSrNam_036(row.getString(Sr_036.SR_NAM_036));
-					sr_036.setRcdVers_036(row.getShort(Sr_036.RCD_VERS_036));
-									
-					Rcdsyn_079 rcdsyn_079 = new Rcdsyn_079();
-					rcdsyn_079.setDbkey(JdbcTools.getDbkey(row, Rcdsyn_079.ROWID));
-					rcdsyn_079.setRsynName_079(row.getString(Rcdsyn_079.RSYN_NAME_079));
-					rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
-					rcdsyn_079.setSr_036(sr_036);
-					sr_036.setRcdsyn_079(rcdsyn_079);
-					rcdsyn_079s.add(rcdsyn_079);					
-					
-					TableEntry tableEntry = new TableEntry();
-					tableEntries.add(tableEntry);	
-					tableEntry.recordSynonymVersion = rcdsyn_079.getRsynVer_079();
-					tableEntry.recordName = sr_036.getSrNam_036();
-					tableEntry.recordVersion = sr_036.getRcdVers_036(); 				
-				}
-			});
-			session.close();
+			final RecordElementsImportSession fSession = new RecordElementsImportSession(dictionary, recordSynonymName);
+			session.push(fSession);
+			fSession.open();
+			VirtualKeysConfirmationHandler.handleConfirmation(fSession, 
+				() -> {
+					IQuery query = new Query.Builder().forRecordSynonymList(fSession).build();
+					fSession.runQuery(query, new IRowProcessor() {
+						@Override
+						public void processRow(ResultSet row) throws SQLException {					
+							
+							Sr_036 sr_036 = new Sr_036();
+							sr_036.setRowid(JdbcTools.getRowid(row, Sr_036.ROWID));
+							sr_036.setSrNam_036(row.getString(Sr_036.SR_NAM_036));
+							sr_036.setRcdVers_036(row.getShort(Sr_036.RCD_VERS_036));
+											
+							Rcdsyn_079 rcdsyn_079 = new Rcdsyn_079();
+							rcdsyn_079.setRowid(JdbcTools.getRowid(row, Rcdsyn_079.ROWID));
+							rcdsyn_079.setRsynName_079(row.getString(Rcdsyn_079.RSYN_NAME_079));
+							rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
+							rcdsyn_079.setSr_036(sr_036);
+							sr_036.setRcdsyn_079(rcdsyn_079);
+							rcdsyn_079s.add(rcdsyn_079);					
+							
+							TableEntry tableEntry = new TableEntry();
+							tableEntries.add(tableEntry);	
+							tableEntry.recordSynonymVersion = rcdsyn_079.getRsynVer_079();
+							tableEntry.recordName = sr_036.getSrNam_036();
+							tableEntry.recordVersion = sr_036.getRcdVers_036(); 				
+						}
+					});
+				}, 
+				() -> throwableToPass.push(new RuntimeException("IDMSNTWK catalog Schema is defined WITH VIRTUAL KEYS")));			
 		} catch (Throwable t) {
-			throwableToPass = t;
+			throwableToPass.push(t);
+		} finally {
+			if (!session.isEmpty()) {
+				session.pop().close();
+			}
 		}
+		
 		
 		Collections.sort(tableEntries);
 		for (TableEntry tableEntry : tableEntries) {
@@ -177,7 +188,7 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 		}
 		table.redraw();
 		
-		validatePage(throwableToPass);
+		validatePage(throwableToPass.isEmpty() ? null : throwableToPass.pop());
 	}
 	
 	private void validatePage(Throwable throwableToPass) {

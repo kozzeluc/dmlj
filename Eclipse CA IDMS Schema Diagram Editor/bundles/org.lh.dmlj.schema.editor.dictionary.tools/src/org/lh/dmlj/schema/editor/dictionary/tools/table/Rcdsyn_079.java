@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,8 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
-public class Rcdsyn_079 implements IDbkeyProvider {
+public class Rcdsyn_079 implements IRowidProvider {
 	
 	public static final String ROWID = "RCDSYN_079_ROWID";
 	public static final String RSYN_NAME_079 = "RSYN_NAME_079";
@@ -30,7 +31,7 @@ public class Rcdsyn_079 implements IDbkeyProvider {
 	private Sr_036 sr_036;
 	private List<Namesyn_083> namesyn_083s = new ArrayList<>();
 	
-	private long dbkey = -1;	
+	private Rowid rowid;	
 	private String rsynName_079;
 	private short rsynVer_079;
 
@@ -39,24 +40,23 @@ public class Rcdsyn_079 implements IDbkeyProvider {
 	}
 	
 	@Override
-	public long getDbkey() {
-		return dbkey;
+	public Rowid getRowid() {
+		return rowid;
 	}
 
 	public List<Namesyn_083> getNamesyn_083s() {
 		return namesyn_083s;
 	}
 
-	public Namesyn_083 getNamesyn_083(long dbkeyOfSdr_042) {
+	public Namesyn_083 getNamesyn_083(Rowid rowidOfSdr_042) {
 		for (Namesyn_083 namesyn_083 : namesyn_083s) {
 			Sdr_042 sdr_042 = namesyn_083.getSdr_042();
-			if (sdr_042.getDbkey() == dbkeyOfSdr_042) {
+			if (sdr_042.getRowid().equals(rowidOfSdr_042)) {
 				return namesyn_083;
 			}
 		}
-		throw new RuntimeException("internal error: no NAMESYN-083 for an SDR-042 with dbkey X'" + 
-								   JdbcTools.toHexString(dbkeyOfSdr_042) + "' under the " +
-								   "RCDSYN-079 with dbkey X'" + JdbcTools.toHexString(dbkey) + "'");
+		throw new RuntimeException("internal error: no NAMESYN-083 for an SDR-042 with rowid " + rowidOfSdr_042.getHexString() + 
+								   " under the RCDSYN-079 with rowid " + rowid.getHexString());
 	}
 
 	public Sr_036 getSr_036() {
@@ -71,8 +71,8 @@ public class Rcdsyn_079 implements IDbkeyProvider {
 		return rsynVer_079;
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setRsynName_079(String rsynName_079) {

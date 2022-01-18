@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
 public class Table_1050 {
 
@@ -31,7 +32,7 @@ public class Table_1050 {
 		
 	private List<Column_1028> column_1028s = new ArrayList<>();
 	
-	private long dbkey;
+	private Rowid rowid;
 	private String area_1050;
 	private String locmode_1050;
 	private String name_1050;
@@ -45,8 +46,8 @@ public class Table_1050 {
 		return area_1050;
 	}
 
-	public long getDbkey() {
-		return dbkey;
+	public Rowid getRowid() {
+		return rowid;
 	}
 
 	public String getLocmode_1050() {
@@ -65,8 +66,8 @@ public class Table_1050 {
 		this.area_1050 = JdbcTools.removeTrailingSpaces(area_1050);
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setLocmode_1050(String locmode_1050) {

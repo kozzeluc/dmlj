@@ -25,6 +25,7 @@ import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.IndexElement;
 import org.lh.dmlj.schema.OccursSpecification;
 import org.lh.dmlj.schema.SchemaFactory;
+import org.lh.dmlj.schema.editor.common.ElementValueTransformer;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
@@ -207,10 +208,8 @@ public final class RecordElementsImportToolProxy {
 		}
 		
 		// set the element value, if any
-		String value = dataCollector.getValue(elementContext);
-		if (value != null) {
-			element.setValue(value);
-		}
+		List<String> values = dataCollector.getValues(elementContext);
+		element.setValue(ElementValueTransformer.toValueString(values));
 		
 		// deal with the element's subordinate elements, if any
 		for (Object childElementContext : tool.getSubordinateElementContexts(elementContext)) {		

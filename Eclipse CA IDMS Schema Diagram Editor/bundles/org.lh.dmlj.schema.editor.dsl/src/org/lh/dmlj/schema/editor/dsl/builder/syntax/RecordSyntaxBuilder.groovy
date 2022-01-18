@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -153,14 +153,14 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 				with_1_tab "subarea '${record.areaSpecification.symbolicSubareaName}'"
 			} else if (record.areaSpecification.offsetExpression) {
 				OffsetExpression offsetExpression = record.areaSpecification.offsetExpression
-				if (offsetExpression.offsetPageCount) {
+				if (offsetExpression.offsetPageCount != null) {
 					with_1_tab "offsetPages ${offsetExpression.offsetPageCount}"		
-				} else if (offsetExpression.offsetPercent) {		
+				} else if (offsetExpression.offsetPercent != null) {		
 					with_1_tab "offsetPercent ${offsetExpression.offsetPercent}"		
 				}
-				if (offsetExpression.pageCount) {		
+				if (offsetExpression.pageCount != null) {		
 					with_1_tab "pages ${offsetExpression.pageCount}"		
-				} else if (offsetExpression.percent) {		
+				} else if (offsetExpression.percent != null) {		
 					with_1_tab "percent ${offsetExpression.percent}"		
 				}
 			}

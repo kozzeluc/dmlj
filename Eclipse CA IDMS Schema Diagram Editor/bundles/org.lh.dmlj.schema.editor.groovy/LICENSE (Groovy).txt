@@ -210,9 +210,16 @@ See licenses/antlr2-license.txt for details.
 
 ------------------------------------------------------------------------
 
-ASM 4 License
+ANTLR 4 License
 
-ASM 4 uses a 3-clause BSD license. For details, see licenses/asm-license.txt.
+Antlr4 is released under a BSD 3-clause license.
+See licenses/antlr4-license.txt for details.
+
+------------------------------------------------------------------------
+
+ASM License
+
+ASM uses a 3-clause BSD license. For details, see licenses/asm-license.txt.
 
 ------------------------------------------------------------------------
 
@@ -239,6 +246,14 @@ JLine2 License (optional dependency used with groovysh)
 
 This product bundles the JLine2 jar, which is available under a
 BSD License.  For details, see licenses/jline2-license.txt.
+
+------------------------------------------------------------------------
+
+javax.servlet.jsp-api License (for groovy-servlet module)
+
+This product bundles the javax.servlet.jsp-api jar in binary form
+which is available under the CDDL 1.1 license:
+licenses/jsp-api-license.txt
 
 ------------------------------------------------------------------------
 
@@ -283,13 +298,15 @@ licenses/normalize-stylesheet-license.txt
 
 ------------------------------------------------------------------------
 
+javax.servlet.jsp-api License (for groovy-servlet module)
+
+This product bundles the javax.servlet-api jar in binary form
+which is available under the CDDL 1.0 license:
+licenses/servlet-api-license.txt
+
+------------------------------------------------------------------------
+
 XStream License (optional dependency when serializing AST as XML)
 
 This product bundles the XStream jar, which is available under a
 "3-clause BSD" license.  For details, see licenses/xstream-license.txt.
-
-
-------------------------------------------------------------------------
-
-This convenience zip embeds Groovy's src and doc zips.
-See also src/LICENSE and doc/LICENSE files for additional license information.

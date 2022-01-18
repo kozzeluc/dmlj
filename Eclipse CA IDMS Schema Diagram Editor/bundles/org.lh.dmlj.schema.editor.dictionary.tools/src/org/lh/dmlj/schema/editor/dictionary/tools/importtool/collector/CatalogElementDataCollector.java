@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.dictionary.tools.importtool.collector;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.lh.dmlj.schema.Usage;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
@@ -131,8 +132,8 @@ public class CatalogElementDataCollector implements IElementDataCollector<Column
 	}
 
 	@Override
-	public String getValue(Column_1028 column_1028) {
-		return null;
+	public List<String> getValues(Column_1028 column_1028) {
+		return Collections.emptyList();
 	}
 
 }

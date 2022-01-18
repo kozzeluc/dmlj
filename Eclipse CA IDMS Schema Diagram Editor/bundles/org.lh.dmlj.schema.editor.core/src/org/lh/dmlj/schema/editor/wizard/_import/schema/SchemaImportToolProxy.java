@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -53,6 +53,7 @@ import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.VsamLengthType;
 import org.lh.dmlj.schema.VsamType;
 import org.lh.dmlj.schema.editor.Plugin;
+import org.lh.dmlj.schema.editor.common.ElementValueTransformer;
 import org.lh.dmlj.schema.editor.importtool.IAreaDataCollector;
 import org.lh.dmlj.schema.editor.importtool.IDataCollectorRegistry;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
@@ -710,10 +711,8 @@ public final class SchemaImportToolProxy {
 		}
 		
 		// set the element value, if any
-		String value = dataCollector.getValue(elementContext);
-		if (value != null) {
-			element.setValue(value);
-		}
+		List<String> values = dataCollector.getValues(elementContext);
+		element.setValue(ElementValueTransformer.toValueString(values));
 		
 		// deal with the element's subordinate elements, if any
 		for (Object childElementContext :  

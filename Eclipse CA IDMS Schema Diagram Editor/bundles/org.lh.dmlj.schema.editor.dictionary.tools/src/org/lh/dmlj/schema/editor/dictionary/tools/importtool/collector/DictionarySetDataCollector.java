@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -32,6 +32,7 @@ import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.table.Sam_056;
@@ -62,7 +63,7 @@ public class DictionarySetDataCollector implements ISetDataCollector<Sor_046> {
 		 SortSequence.DESCENDING};		// 1	
 
 	private SchemaImportSession session;
-	private Map<Long, Smr_052> sortKeyElementsMap;
+	private Map<Rowid, Smr_052> sortKeyElementsMap;
 	
 	private static short getAdjustedDbkeyPosition(Srcd_113 srcd_113, short dbkeyPosition) {
 		if (dbkeyPosition == -1) {
@@ -85,10 +86,9 @@ public class DictionarySetDataCollector implements ISetDataCollector<Sor_046> {
 		if (!smr_052.getScr_054s().isEmpty()) {
 			return;
 		}
-		Smr_052 smr_052b = sortKeyElementsMap.get(Long.valueOf(smr_052.getDbkey()));
+		Smr_052 smr_052b = sortKeyElementsMap.get(smr_052.getRowid());
 		if (smr_052b == null || smr_052b.getScr_054s().isEmpty()) {
-			throw new RuntimeException("no sort elements for SMR-052 with dbkey X'" +
-									   JdbcTools.toHexString(smr_052.getDbkey()) + "'");
+			throw new RuntimeException("no sort elements for SMR-052 with rowid " + smr_052.getRowid());
 		}
 		smr_052.getScr_054s().addAll(smr_052b.getScr_054s());
 	}
@@ -102,15 +102,14 @@ public class DictionarySetDataCollector implements ISetDataCollector<Sor_046> {
 		session.runQuery(sortKeyElementListQuery, new IRowProcessor() {			
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				Long dbkeyOfSmr_052 = JdbcTools.getDbkey(row, Smr_052.ROWID);
-				if (!sortKeyElementsMap.containsKey(Long.valueOf(dbkeyOfSmr_052))) {
+				Rowid rowidOfSmr_052 = JdbcTools.getRowid(row, Smr_052.ROWID);
+				if (!sortKeyElementsMap.containsKey(rowidOfSmr_052)) {
 					Smr_052 smr_052 = new Smr_052();
-					// we only care about collecting the sort key elements, so ignore most of the
-					// SMR-052's fields
-					smr_052.setDbkey(JdbcTools.getDbkey(row, Smr_052.ROWID));
-					sortKeyElementsMap.put(Long.valueOf(dbkeyOfSmr_052), smr_052);
+					// we only care about collecting the sort key elements, so ignore most of the SMR-052's fields
+					smr_052.setRowid(JdbcTools.getRowid(row, Smr_052.ROWID));
+					sortKeyElementsMap.put(rowidOfSmr_052, smr_052);
 				}
-				Smr_052 smr_052 = sortKeyElementsMap.get(Long.valueOf(dbkeyOfSmr_052));
+				Smr_052 smr_052 = sortKeyElementsMap.get(rowidOfSmr_052);
 				Scr_054 scr_054 = new Scr_054();
 				scr_054.setIndex_054(row.getShort(Scr_054.INDEX_054));
 				scr_054.setScrNam_054(row.getString(Scr_054.SCR_NAM_054));

@@ -1,6 +1,6 @@
 <%
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,13 +28,13 @@
 Object[] args = (Object[]) argument;
 Dictionary dictionary = (Dictionary) args[0];
 @SuppressWarnings("unchecked")
-List<IDbkeyProvider> sr_036s = (List<IDbkeyProvider>) args[1];
+List<IRowidProvider> sr_036s = (List<IRowidProvider>) args[1];
 String sysdirlSchema = dictionary.getSchemaWithDefault(Plugin.getDefault());
-List<List<Long>> splitQueryDbkeyList = JdbcTools.getSplitQueryDbkeyList(sr_036s, dictionary);
-DbkeyListTemplate dbkeyListTemplate = new DbkeyListTemplate();
+List<List<Rowid>> splitQueryRowidList = JdbcTools.getSplitQueryRowidList(sr_036s, dictionary);
+RowidListTemplate rowidListTemplate = new RowidListTemplate();
 boolean first = true;
-for (List<Long> dbkeys : splitQueryDbkeyList) {
-    String dbkeyList = dbkeyListTemplate.generate(new Object[] {dbkeys});
+for (List<Rowid> rowids : splitQueryRowidList) {
+    String rowidList = rowidListTemplate.generate(new Object[] { rowids });
     if (first) {
         first = false;
     } else {
@@ -45,7 +45,7 @@ for (List<Long> dbkeys : splitQueryDbkeyList) {
        *      
 FROM "<%= sysdirlSchema %>"."SR-036" AS SR_036,
      "<%= sysdirlSchema %>"."RCDSYN-079" AS RCDSYN_079
-WHERE SR_036.ROWID IN <%= dbkeyList %> AND       
+WHERE SR_036.ROWID IN <%= rowidList %> AND       
       "SR-RCDSYN" AND
       RSYN_NAME_079 = SR_NAM_036 AND
       RSYN_VER_079 = RCD_VERS_036

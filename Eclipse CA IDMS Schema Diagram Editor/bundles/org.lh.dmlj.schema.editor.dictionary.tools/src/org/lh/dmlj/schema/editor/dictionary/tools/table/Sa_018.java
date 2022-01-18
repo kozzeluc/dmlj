@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,13 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
 public class Sa_018 {
 	
 	public static final String ROWID = "SA_018_ROWID";
 	public static final String SA_NAM_018 = "SA_NAM_018";
 	
-	private long dbkey;
+	private Rowid rowid;
 	private String saNam_018;
 	private List<Sacall_020> sacall_020s = new ArrayList<>();
 	
@@ -34,8 +35,8 @@ public class Sa_018 {
 		super();
 	}
 
-	public long getDbkey() {
-		return dbkey;
+	public Rowid getRowid() {
+		return rowid;
 	}
 
 	public List<Sacall_020> getSacall_020s() {
@@ -46,8 +47,8 @@ public class Sa_018 {
 		return saNam_018;
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setSaNam_018(String saNam_018) {

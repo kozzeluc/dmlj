@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2022  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -108,13 +108,18 @@ public class CloseSchemaDslEditorDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 250);
+		return new Point(450, 300);
 	}
 	
 	public boolean isRememberMyDecision() {
 		return rememberMyDecision;
 	}
 	
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
+
 	protected void noPressed() {
 		setReturnCode(NO);
 		close();

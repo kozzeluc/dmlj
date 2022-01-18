@@ -1,6 +1,8 @@
 package org.lh.dmlj.schema.editor.template;
 
+import java.util.*;
 import org.lh.dmlj.schema.*;
+import org.lh.dmlj.schema.editor.common.*;
 
 public class ElementTemplate
 {
@@ -32,14 +34,15 @@ public class ElementTemplate
   protected final String TEXT_16 = ")";
   protected final String TEXT_17 = "    VALUE IS ( ";
   protected final String TEXT_18 = " )";
-  protected final String TEXT_19 = "    .";
+  protected final String TEXT_19 = "               ";
+  protected final String TEXT_20 = "    .";
 
   public String generate(Object argument)
   {
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -201,19 +204,44 @@ if (element.getOccursSpecification() != null) {
 		}
 	}        
 }
-if (element.getValue() != null) {
+List<String> valueList = ElementValueTransformer.toValueList(element.getValue());
+if (valueList != null && !valueList.isEmpty()) {
+    if (valueList.size() == 1) {   
 
     stringBuffer.append(TEXT_3);
     stringBuffer.append( left );
     stringBuffer.append(TEXT_17);
-    stringBuffer.append( element.getValue() );
+    stringBuffer.append( valueList.get(0) );
     stringBuffer.append(TEXT_18);
     
-}
+    } else {
+
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append( valueList.get(0) );
+    
+        for (int i = 1; i < (valueList.size() - 1); i++) {
 
     stringBuffer.append(TEXT_3);
     stringBuffer.append( left );
     stringBuffer.append(TEXT_19);
+    stringBuffer.append( valueList.get(i) );
+    
+        }
+
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append( valueList.get(valueList.size() - 1) );
+    stringBuffer.append(TEXT_18);
+    
+    }
+}
+
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append( left );
+    stringBuffer.append(TEXT_20);
     return stringBuffer.toString();
   }
 }

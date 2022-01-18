@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -515,9 +515,16 @@ public abstract class Phase2Extractor {
 		boolean nakedWithinArea = false; 	    // release 18 manuals only
 		int descriptionLineCount = 0;
 		boolean recordLengthOK = false;
+		boolean applyingR19FieldNameSplitOverTwoLinesHack = false;
+		boolean withinAreaTagWritten = false;
 		while (p != null) {			
 			if (!fieldMode) {
-				if (!firstSkipped) {
+				if ("DDLDML".equals(p) && file.getName().startsWith("OOAKEXT-078") && !withinAreaTagWritten) {
+					out.println();
+					out.println(WITHIN_AREA_TAG);
+					out.println(p);
+					withinAreaTagWritten = true;
+				} else if (!firstSkipped) {
 					// first line example :  "4.2 ACCESS-045" (r17)
 					firstSkipped = true;
 					if (p.charAt(1) == '.' && 
@@ -563,7 +570,7 @@ public abstract class Phase2Extractor {
 					out.println(p.substring(15));
 					out.println();
 					recordLengthOK = true;
-				} else if (p.trim().equals("Record length")) {
+				} else if (p.trim().equals("Record length") || p.trim().equals("Record Length")) {
 					// release 18 only: the next line will hold the record length
 					nakedRecordLengthLine = true;
 					recordLengthOK = true;					
@@ -674,6 +681,7 @@ public abstract class Phase2Extractor {
 						out.println();
 						out.println(WITHIN_AREA_TAG);
 						out.println(p.substring(i + 14));
+						withinAreaTagWritten = true;
 					}
 				} else if (p.trim().equals("Location mode")) {	// >= release 18
 					// release 18 only: the next line(s) will hold the location
@@ -702,6 +710,7 @@ public abstract class Phase2Extractor {
 						// release 18 manuals
 						out.println(p.substring(12));
 					}
+					withinAreaTagWritten = true;
 				} else if (p.trim().equals("Within area")) {	// >= release 18
 					// release 18 only: the next line(s) will hold the within
 					// area data
@@ -714,6 +723,7 @@ public abstract class Phase2Extractor {
 						out.println();
 						out.println(WITHIN_AREA_TAG);
 						out.println(p);
+						withinAreaTagWritten = true;
 						nakedWithinArea = false;
 					}
 				} else if (p.startsWith("Field Picture Description")) {
@@ -739,8 +749,18 @@ public abstract class Phase2Extractor {
 						}
 					}
 				}
-			} else {				
-				if (!firstLineTrimmed.equals(p.trim()) && 
+			} else {
+				if (applyingR19FieldNameSplitOverTwoLinesHack) {
+					currentFieldName = currentFieldName + p;
+					currentLevelAndFieldName = currentLevelAndFieldName + p;
+					out.println(generateFieldDescriptionTag(currentFieldName));
+					if (q.length() == 0) {
+						q.append(currentLevelAndFieldName);
+					} else {
+						q.append(p);
+					}
+					applyingR19FieldNameSplitOverTwoLinesHack = false;
+				} else if (!firstLineTrimmed.equals(p.trim()) && 
 					!p.trim().endsWith(documentTitlePart) &&
 					!p.startsWith("Field Picture Description") &&
 					!p.startsWith("Chapter ") &&
@@ -770,13 +790,17 @@ public abstract class Phase2Extractor {
 																					
 							writeFieldData(out, q);						
 							q = new StringBuilder();
-							out.println();						
-							out.println(generateFieldDescriptionTag(p));							
+							out.println();
+														
+							if (applyR19FieldNameSplitOverTwoLinesHack(p)) {
+								applyingR19FieldNameSplitOverTwoLinesHack = true;
+							} else {	
+								out.println(generateFieldDescriptionTag(p));
+							}
 							currentFieldName = extractFieldName(p);
 							if (p.charAt(2) == ' ') {
 								// level number present
-								currentLevelAndFieldName = 
-									p.substring(0, 3) + currentFieldName;
+								currentLevelAndFieldName = p.substring(0, 3) + currentFieldName;
 							} else {
 								// no level number present
 								currentLevelAndFieldName = currentFieldName;							
@@ -789,10 +813,7 @@ public abstract class Phase2Extractor {
 						
 						// strip double blanks after hyphens in the field name
 						q.append(p.replaceAll("-  ", "-"));
-					} else if (p.length() > 3 && p.charAt(0) == '0' && 
-						p.charAt(2) == ' ' && p.indexOf("- ") > -1 &&
-						p.indexOf(" - ") == -1) {								
-						
+					} else if (p.length() > 3 && p.charAt(0) == '0' && p.charAt(2) == ' ' && p.contains("- ") && !p.contains(" - ") && !p.contains(" -- ")) {
 						// strip blanks after hyphens in the field name
 						q.append(p.replaceAll("- ", "-"));
 					} else {
@@ -811,21 +832,23 @@ public abstract class Phase2Extractor {
 								if (i == -1) {
 									i = p.indexOf(" continued ? ");
 								}
+								if (i == -1) {
+									i = p.indexOf(" continued ");
+								}
 								if (i != -1) {
 									q.append('\n');
 									q.append(p.substring(i + 11));
 								} else {
-									System.out.println("ignored line for " + 
-													   "field " +
-												       currentFieldName + 
-												       ": <" + p + ">");
+									System.out.println("ignored line for field " + currentFieldName + ": <" + p + ">");
 								}
 							}
 						} else {
 							if (q.length() > 0) {
 								q.append('\n');
 							}
-							q.append(p);
+							if (!applyingR19FieldNameSplitOverTwoLinesHack) {
+								q.append(p);
+							}
 						}
 					}
 				}
@@ -837,7 +860,13 @@ public abstract class Phase2Extractor {
 		out.flush();
 		out.close();		
 	}
-
+	
+	private static boolean applyR19FieldNameSplitOverTwoLinesHack(String line) {
+		return line.equals("03 CVG-OLQ-MAX-REP-") || line.equals("03 CVG-OLQ-CONTINUATION-") || 
+			   line.equals("02 CVG-PREDEF-RUNUNIT-") || line.equals("04 CVG-TCPTAB-MAXPTASK-") || 
+			   line.equals("02 STAT-MEM-AVG- CLUSTER-");
+	}
+	
 	public static void performTask(File inputFolder, File outputFolder,
 								   String documentTitle) 
 		throws IOException {

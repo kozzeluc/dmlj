@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -45,6 +45,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	private Button btnCloseSchemaDslYes;
 	private Button btnCloseSchemaDslNo;
 	private Button btnCloseSchemaDslAskMe;
+	private Button btnRunDslWarmUpJobOnStartup;
 
 	/**
 	 * @wbp.parser.constructor
@@ -87,11 +88,15 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		
 		btnCloseSchemaDslAskMe = new Button(grpCloseschemadslEditors, SWT.RADIO);
 		btnCloseSchemaDslAskMe.setText("Ask me");
+		
+		btnRunDslWarmUpJobOnStartup = new Button(container, SWT.CHECK);
+		GridData gd_btnRunDslWarmUpJobOnStartup = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnRunDslWarmUpJobOnStartup.verticalIndent = 10;
+		btnRunDslWarmUpJobOnStartup.setLayoutData(gd_btnRunDslWarmUpJobOnStartup);
+		btnRunDslWarmUpJobOnStartup.setText("Run DSL warm up job on startup");
 				
 		btnReadOnlyMode = new Button(container, SWT.CHECK);
-		GridData gd_btnReadOnly = new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1);
-		gd_btnReadOnly.verticalIndent = 10;
-		btnReadOnlyMode.setLayoutData(gd_btnReadOnly);
+		btnReadOnlyMode.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1));
 		btnReadOnlyMode.setText("Open editors in read-only mode (requires close/re-open for open editors)");
 		
 		btnLogDiagnosticMessages = new Button(container, SWT.CHECK);
@@ -136,6 +141,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnCloseSchemaDslNo.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_NO);
 		btnCloseSchemaDslAskMe.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
 		
+		boolean runDslWarmUpJobOnStartup = store.getDefaultBoolean(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP);
+		btnRunDslWarmUpJobOnStartup.setSelection(runDslWarmUpJobOnStartup);
+		
 		boolean readOnlyMode = store.getDefaultBoolean(PreferenceConstants.READ_ONLY_MODE);
 		btnReadOnlyMode.setSelection(readOnlyMode);
 		
@@ -159,6 +167,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnCloseSchemaDslYes.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_YES);
 		btnCloseSchemaDslNo.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_NO);
 		btnCloseSchemaDslAskMe.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
+		
+		boolean runDslWarmUpJobOnStartup = store.getBoolean(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP);
+		btnRunDslWarmUpJobOnStartup.setSelection(runDslWarmUpJobOnStartup);
 		
 		boolean readOnlyMode = store.getBoolean(PreferenceConstants.READ_ONLY_MODE);
 		btnReadOnlyMode.setSelection(readOnlyMode);
@@ -207,8 +218,8 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		}
 		store.setValue(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS, closeSchemaDslEditors);
 		
-		store.setValue(PreferenceConstants.READ_ONLY_MODE, Boolean.valueOf(btnReadOnlyMode.getSelection()));
-		
+		store.setValue(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP, Boolean.valueOf(btnRunDslWarmUpJobOnStartup.getSelection()));		
+		store.setValue(PreferenceConstants.READ_ONLY_MODE, Boolean.valueOf(btnReadOnlyMode.getSelection()));		
 		store.setValue(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, 
 					   Boolean.valueOf(btnLogDiagnosticMessages.getSelection()));
 		

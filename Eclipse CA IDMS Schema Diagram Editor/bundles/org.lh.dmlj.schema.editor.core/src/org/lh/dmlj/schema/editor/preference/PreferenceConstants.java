@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -53,5 +53,7 @@ public abstract class PreferenceConstants {
 	public static final String DEFAULT_FILE_EXTENSION = "defaultFileExtension";
 	
 	public static final String CLOSE_SCHEMADSL_EDITORS = "closeSchemaDslEditors";
+	
+	public static final String RUN_DSL_WARM_UP_JOB_ON_STARTUP = "runDslWarmUpJobOnStartup";
 	
 }

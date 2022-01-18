@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,7 +30,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.DEFAULT_SCHEMA, "SYSDICT");
-		store.setDefault(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM, 47);
+		store.setDefault(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM, 47);
+		store.setDefault(PreferenceConstants.CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS, true);
 	}
 
 }

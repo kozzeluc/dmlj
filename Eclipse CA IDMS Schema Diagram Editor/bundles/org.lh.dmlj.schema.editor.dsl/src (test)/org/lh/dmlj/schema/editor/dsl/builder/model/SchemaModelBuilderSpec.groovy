@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -167,7 +167,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		diagramData.verticalRuler.type == RulerType.VERTICAL
 		diagramData.horizontalRuler
 		diagramData.horizontalRuler.type == RulerType.HORIZONTAL
-		diagramData.rulers.size == 2
+		diagramData.rulers.size() == 2
 		diagramData.rulers[0] == diagramData.verticalRuler
 		diagramData.rulers[1] == diagramData.horizontalRuler
 		
@@ -183,7 +183,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		diagramData.connectionParts.empty
 		diagramData.connectors.empty
 		
-		diagramData.locations.size == 1
+		diagramData.locations.size() == 1
 		diagramData.locations[0] == diagramData.label.diagramLocation
 	}
 	
@@ -270,7 +270,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		schema
 		assertSchemaWithStandardDiagramData(schema, 'EMPSCHM', 100)
 		schema.procedures.empty
-		schema.areas.size == 1
+		schema.areas.size() == 1
 		schema.areas[0].name == 'EMP-DEMO-REGION'
 		schema.areas[0].procedures.empty
 		schema.records.empty
@@ -297,7 +297,7 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		schema
 		assertSchemaWithStandardDiagramData(schema, 'EMPSCHM', 100)
 		schema.procedures.empty
-		schema.areas.size == 1
+		schema.areas.size() == 1
 		schema.areas[0].name == 'EMP-DEMO-REGION'
 		schema.areas[0].procedures.empty
 		schema.records.empty
@@ -325,9 +325,9 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		assertSchemaWithStandardDiagramData(schema, 'EMPSCHM', 100)
 		schema.procedures.size== 1
 		schema.procedures[0].name == 'IDMSCOMP'
-		schema.areas.size == 1
+		schema.areas.size() == 1
 		schema.areas[0].name == 'EMP-DEMO-REGION'
-		schema.areas[0].procedures.size == 1
+		schema.areas[0].procedures.size() == 1
 		schema.areas[0].procedures[0].procedure == schema.procedures[0]
 		schema.areas[0].procedures[0].callTime == ProcedureCallTime.BEFORE
 		schema.areas[0].procedures[0].function == AreaProcedureCallFunction.FINISH
@@ -355,11 +355,11 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "specified"
 		schema
 		assertSchemaWithStandardDiagramData(schema, 'EMPSCHM', 100) 
-		schema.procedures.size == 1
+		schema.procedures.size() == 1
 		schema.procedures[0].name == 'IDMSCOMP'
-		schema.areas.size == 1
+		schema.areas.size() == 1
 		schema.areas[0].name == 'EMP-DEMO-REGION'
-		schema.areas[0].procedures.size == 1
+		schema.areas[0].procedures.size() == 1
 		schema.areas[0].procedures[0].procedure == schema.procedures[0]
 		schema.areas[0].procedures[0].callTime == ProcedureCallTime.BEFORE
 		schema.areas[0].procedures[0].function == AreaProcedureCallFunction.FINISH
@@ -389,13 +389,13 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.diagramData.connectionLabels.empty
 		assert schema.diagramData.connectionParts.empty
 		assert schema.diagramData.connectors.empty
-		assert schema.diagramData.locations.size == 3
+		assert schema.diagramData.locations.size() == 3
 		schema.procedures.empty
-		schema.areas.size == 3
+		schema.areas.size() == 3
 		schema.areas[0].name == 'SR0010-AREA'
 		schema.areas[1].name == 'SR0011-AREA'
 		schema.areas[2].name == 'SR0012-AREA'
-		schema.records.size == 3
+		schema.records.size() == 3
 		schema.records[0].name == 'SR0010'
 		schema.records[0].id == 10
 		schema.records[0].areaSpecification.area == schema.areas[0]
@@ -432,13 +432,13 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.diagramData.connectionLabels.empty
 		assert schema.diagramData.connectionParts.empty
 		assert schema.diagramData.connectors.empty
-		assert schema.diagramData.locations.size == 3
+		assert schema.diagramData.locations.size() == 3
 		schema.procedures.empty
-		schema.areas.size == 3
+		schema.areas.size() == 3
 		schema.areas[0].name == 'SR0010-AREA'
 		schema.areas[1].name == 'SR0011-AREA'
 		schema.areas[2].name == 'SR0012-AREA'
-		schema.records.size == 3
+		schema.records.size() == 3
 		schema.records[0].name == 'SR0010'
 		schema.records[0].id == 10
 		schema.records[0].areaSpecification.area == schema.areas[0]
@@ -474,13 +474,13 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.diagramData.connectionLabels.empty
 		assert schema.diagramData.connectionParts.empty
 		assert schema.diagramData.connectors.empty
-		assert schema.diagramData.locations.size == 3
+		assert schema.diagramData.locations.size() == 3
 		schema.procedures.empty
-		schema.areas.size == 3
+		schema.areas.size() == 3
 		schema.areas[0].name == 'RECORD1-AREA'
 		schema.areas[1].name == 'RECORD2-AREA'
 		schema.areas[2].name == 'RECORD3-AREA'
-		schema.records.size == 3
+		schema.records.size() == 3
 		schema.records[0].name == 'RECORD1'
 		schema.records[0].id == 10
 		schema.records[0].areaSpecification.area == schema.areas[0]
@@ -522,13 +522,13 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.diagramData.connectionLabels.empty
 		assert schema.diagramData.connectionParts.empty
 		assert schema.diagramData.connectors.empty
-		assert schema.diagramData.locations.size == 3
+		assert schema.diagramData.locations.size() == 3
 		schema.procedures.empty
-		schema.areas.size == 3
+		schema.areas.size() == 3
 		schema.areas[0].name == 'RECORD1-AREA'
 		schema.areas[1].name == 'RECORD2-AREA'
 		schema.areas[2].name == 'RECORD3-AREA'
-		schema.records.size == 3
+		schema.records.size() == 3
 		schema.records[0].name == 'RECORD1'
 		schema.records[0].id == 10
 		schema.records[0].areaSpecification.area == schema.areas[0]
@@ -570,13 +570,13 @@ class SchemaModelBuilderSpec extends AbstractModelBuilderSpec {
 		assert schema.diagramData.connectionLabels.empty
 		assert schema.diagramData.connectionParts.empty
 		assert schema.diagramData.connectors.empty
-		assert schema.diagramData.locations.size == 3
+		assert schema.diagramData.locations.size() == 3
 		schema.procedures.empty
-		schema.areas.size == 3
+		schema.areas.size() == 3
 		schema.areas[0].name == 'RECORD1-AREA'
 		schema.areas[1].name == 'RECORD2-AREA'
 		schema.areas[2].name == 'RECORD3-AREA'
-		schema.records.size == 3
+		schema.records.size() == 3
 		schema.records[0].name == 'RECORD1'
 		schema.records[0].id == 100
 		schema.records[0].areaSpecification.area == schema.areas[0]

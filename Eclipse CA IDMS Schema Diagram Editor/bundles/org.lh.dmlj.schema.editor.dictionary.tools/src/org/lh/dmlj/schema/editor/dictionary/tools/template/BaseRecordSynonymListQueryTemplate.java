@@ -1,7 +1,5 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
-
 import java.util.*;
 import org.lh.dmlj.schema.editor.dictionary.tools.*;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
@@ -30,7 +28,7 @@ public class BaseRecordSynonymListQueryTemplate implements IQueryTemplate {
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -50,13 +48,13 @@ public class BaseRecordSynonymListQueryTemplate implements IQueryTemplate {
 Object[] args = (Object[]) argument;
 Dictionary dictionary = (Dictionary) args[0];
 @SuppressWarnings("unchecked")
-List<IDbkeyProvider> sr_036s = (List<IDbkeyProvider>) args[1];
+List<IRowidProvider> sr_036s = (List<IRowidProvider>) args[1];
 String sysdirlSchema = dictionary.getSchemaWithDefault(Plugin.getDefault());
-List<List<Long>> splitQueryDbkeyList = JdbcTools.getSplitQueryDbkeyList(sr_036s, dictionary);
-DbkeyListTemplate dbkeyListTemplate = new DbkeyListTemplate();
+List<List<Rowid>> splitQueryRowidList = JdbcTools.getSplitQueryRowidList(sr_036s, dictionary);
+RowidListTemplate rowidListTemplate = new RowidListTemplate();
 boolean first = true;
-for (List<Long> dbkeys : splitQueryDbkeyList) {
-    String dbkeyList = dbkeyListTemplate.generate(new Object[] {dbkeys});
+for (List<Rowid> rowids : splitQueryRowidList) {
+    String rowidList = rowidListTemplate.generate(new Object[] { rowids });
     if (first) {
         first = false;
     } else {
@@ -68,7 +66,7 @@ for (List<Long> dbkeys : splitQueryDbkeyList) {
     stringBuffer.append(TEXT_2);
     stringBuffer.append( sysdirlSchema );
     stringBuffer.append(TEXT_3);
-    stringBuffer.append( dbkeyList );
+    stringBuffer.append( rowidList );
     stringBuffer.append(TEXT_4);
     
 }

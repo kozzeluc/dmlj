@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -66,8 +66,9 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 	
 	private List<Dictionary> dictionaries;
 	private File dictionaryFolder;
-	private Text textDefaultQueryDbkeyListSizeMaximum;
+	private Text textDefaultQueryRowidListSizeMaximum;
 	private Text textDefaultSchema;
+	private Button btnConfirmationRequiredWhenSchemaWithVirtualKeys;
 
 	public DictionaryPreferencePage() {
 		super();
@@ -95,14 +96,13 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		dictionary.setUser(dialog.getDictionaryUser());
 		dictionary.setPassword(dialog.getDictionaryPassword());
 		dictionary.setSchema(dialog.getDictionarySchema());
-		dictionary.setQueryDbkeyListSizeMaximum(dialog.getDictionaryQueryDbkeyListSizeMaximum());
+		dictionary.setQueryRowidListSizeMaximum(dialog.getDictionaryQueryRowidListSizeMaximum());
 		dictionary.setSysdirl(dialog.isDictionarySysdirl());
 		try {
 			dictionary.toFile(dictionaryFolder);
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
-			MessageDialog.openError(getShell(), "Error while saving dictionary data", 
-									t.getMessage());
+			MessageDialog.openError(getShell(), "Error while saving dictionary data", t.getMessage());
 		}
 		initializeTable(dictionary);
 		enableAndDisable();
@@ -221,17 +221,21 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		gd_text.verticalIndent = 10;
 		textDefaultSchema.setLayoutData(gd_text);
 		
-		Label lblDefaultMaximumDbkeyList = new Label(container, SWT.WRAP);
-		GridData gd_lblDefaultMaximumDbkeyList = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblDefaultMaximumDbkeyList.widthHint = 200;
-		lblDefaultMaximumDbkeyList.setLayoutData(gd_lblDefaultMaximumDbkeyList);
-		lblDefaultMaximumDbkeyList.setText("Default maximum dbkey list size in queries:");
+		Label lblDefaultMaximumRowidList = new Label(container, SWT.WRAP);
+		GridData gd_lblDefaultMaximumRowidList = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblDefaultMaximumRowidList.widthHint = 200;
+		lblDefaultMaximumRowidList.setLayoutData(gd_lblDefaultMaximumRowidList);
+		lblDefaultMaximumRowidList.setText("Default maximum rowid list size in queries:");
 		
-		textDefaultQueryDbkeyListSizeMaximum = new Text(container, SWT.BORDER | SWT.RIGHT);
-		GridData gd_textQueryMaxdbkeylistsize = new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1);
-		gd_textQueryMaxdbkeylistsize.widthHint = 25;
-		textDefaultQueryDbkeyListSizeMaximum.setLayoutData(gd_textQueryMaxdbkeylistsize);
+		textDefaultQueryRowidListSizeMaximum = new Text(container, SWT.BORDER | SWT.RIGHT);
+		GridData gd_textQueryMaxrowidlistsize = new GridData(SWT.LEFT, SWT.BOTTOM, true, false, 1, 1);
+		gd_textQueryMaxrowidlistsize.widthHint = 25;
+		textDefaultQueryRowidListSizeMaximum.setLayoutData(gd_textQueryMaxrowidlistsize);
 		new Label(container, SWT.NONE);
+		
+		btnConfirmationRequiredWhenSchemaWithVirtualKeys = new Button(container, SWT.CHECK);
+		btnConfirmationRequiredWhenSchemaWithVirtualKeys.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+		btnConfirmationRequiredWhenSchemaWithVirtualKeys.setText("Warn when IDMSNTWK catalog schema is defined WITH VIRTUAL KEYS");
 		
 		initializeValues();
 		
@@ -272,7 +276,7 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		dictionary.setUser(dialog.getDictionaryUser());
 		dictionary.setPassword(dialog.getDictionaryPassword());
 		dictionary.setSchema(dialog.getDictionarySchema());
-		dictionary.setQueryDbkeyListSizeMaximum(dialog.getDictionaryQueryDbkeyListSizeMaximum());
+		dictionary.setQueryRowidListSizeMaximum(dialog.getDictionaryQueryRowidListSizeMaximum());
 		dictionary.setSysdirl(dialog.isDictionarySysdirl());
 		try {
 			dictionary.toFile(dictionaryFolder);
@@ -301,9 +305,11 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		IPreferenceStore store = getPreferenceStore();
 		String defaultSchema = store.getDefaultString(PreferenceConstants.DEFAULT_SCHEMA);
 		textDefaultSchema.setText(defaultSchema);
-		int defaultQueryDbkeyListSizeMaximum = 
-			store.getDefaultInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM);
-		textDefaultQueryDbkeyListSizeMaximum.setText(String.valueOf(defaultQueryDbkeyListSizeMaximum));
+		int defaultQueryRowidListSizeMaximum = store.getDefaultInt(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM);
+		textDefaultQueryRowidListSizeMaximum.setText(String.valueOf(defaultQueryRowidListSizeMaximum));
+		boolean warnWhenIdmsntwkCatalogSchemaIsDefinedWithVirtualKeys = 
+			store.getDefaultBoolean(PreferenceConstants.CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS);
+		btnConfirmationRequiredWhenSchemaWithVirtualKeys.setSelection(warnWhenIdmsntwkCatalogSchemaIsDefinedWithVirtualKeys);
 	}
 
 	private void initializeTable(Dictionary dictionaryToSelect) {
@@ -331,9 +337,11 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		IPreferenceStore store = getPreferenceStore();
 		String defaultSchema = store.getString(PreferenceConstants.DEFAULT_SCHEMA);
 		textDefaultSchema.setText(defaultSchema);
-		int defaultQueryDbkeyListSizeMaximum = 
-			store.getInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM);
-		textDefaultQueryDbkeyListSizeMaximum.setText(String.valueOf(defaultQueryDbkeyListSizeMaximum));		
+		int defaultQueryRowidListSizeMaximum = store.getInt(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM);
+		textDefaultQueryRowidListSizeMaximum.setText(String.valueOf(defaultQueryRowidListSizeMaximum));
+		boolean warnWhenIdmsntwkCatalogSchemaIsDefinedWithVirtualKeys = 
+			store.getBoolean(PreferenceConstants.CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS);
+		btnConfirmationRequiredWhenSchemaWithVirtualKeys.setSelection(warnWhenIdmsntwkCatalogSchemaIsDefinedWithVirtualKeys);
 		
 		enableAndDisable();
 		
@@ -408,25 +416,26 @@ public class DictionaryPreferencePage extends PreferencePage implements IWorkben
 		}
 		store.setValue(PreferenceConstants.DEFAULT_SCHEMA, textDefaultSchema.getText().trim());
 		
-		// deal with the 'default query debkey list size maximum'
-		int defaultQueryDbkeyListSizeMaximum = Integer.MIN_VALUE;	
+		// deal with the 'default query rowid list size maximum'
+		int defaultQueryRowidListSizeMaximum = Integer.MIN_VALUE;	
 		try {
-			defaultQueryDbkeyListSizeMaximum = 
-				Integer.valueOf(textDefaultQueryDbkeyListSizeMaximum.getText().trim());
-			if (defaultQueryDbkeyListSizeMaximum < 1 || defaultQueryDbkeyListSizeMaximum > 1000) {
-				defaultQueryDbkeyListSizeMaximum = Integer.MIN_VALUE;
+			defaultQueryRowidListSizeMaximum = 
+				Integer.valueOf(textDefaultQueryRowidListSizeMaximum.getText().trim());
+			if (defaultQueryRowidListSizeMaximum < 1 || defaultQueryRowidListSizeMaximum > 1000) {
+				defaultQueryRowidListSizeMaximum = Integer.MIN_VALUE;
 			}
 		} catch (NumberFormatException e) {
 		}
-		if (defaultQueryDbkeyListSizeMaximum == Integer.MIN_VALUE) {
+		if (defaultQueryRowidListSizeMaximum == Integer.MIN_VALUE) {
 			// the value of the 'default query debkey list size maximum' is invalid; restore it from
 			// the preference store
-			textDefaultQueryDbkeyListSizeMaximum.setText(String.valueOf(store.getInt(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM)));
+			textDefaultQueryRowidListSizeMaximum.setText(String.valueOf(store.getInt(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM)));
 		} else {
 			// the value of the 'default query debkey list size maximum' is valid
-			store.setValue(PreferenceConstants.DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM, 
-						   defaultQueryDbkeyListSizeMaximum);
+			store.setValue(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM, 
+						   defaultQueryRowidListSizeMaximum);
 		}
+		store.setValue(PreferenceConstants.CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS, btnConfirmationRequiredWhenSchemaWithVirtualKeys.getSelection());
 		
 		return true;
 	}

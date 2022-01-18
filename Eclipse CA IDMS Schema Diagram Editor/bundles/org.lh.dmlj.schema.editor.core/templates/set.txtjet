@@ -1,6 +1,6 @@
 <%
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -131,7 +131,7 @@ if (set.getOwner() != null) {
 	    } else if (offsetExpression.getOffsetPercent() != null) {
 	    	p = offsetExpression.getOffsetPercent() + " PERCENT";
 	    } else {
-	        p = "0";
+	        p = "0 PERCENT";
 	    }
 	    String q;
 	    if (offsetExpression.getPercent() != null) {
@@ -201,12 +201,19 @@ for (MemberRole memberRole : memberRoles) {
 <%
     if (set.getOrder() == SetOrder.SORTED) {
         Key key = memberRole.getSortKey();
+        boolean sortedByDbkey = key.getElements().size() == 1 && key.getElements().get(0).isDbkey(); 
+        if (sortedByDbkey) {
+%>
+             KEY IS
+<%
+        } else {
 %>
              KEY IS (
 <%
+        }
         for (KeyElement keyElement : key.getElements()) {
             String bracket;
-            if (keyElement == key.getElements().get(key.getElements().size() - 1)) {
+            if (!sortedByDbkey && keyElement == key.getElements().get(key.getElements().size() - 1)) {
                 bracket = ")";
             } else {
                 bracket = "";
@@ -233,7 +240,7 @@ for (MemberRole memberRole : memberRoles) {
 %>
                  COMPRESSED
 <%
-        } else if (set.getMode() == SetMode.INDEXED) {
+        } else if (set.getMode() == SetMode.INDEXED && !set.getMembers().get(0).getSortKey().getElements().get(0).isDbkey()) {
 %>
                  UNCOMPRESSED
 <%

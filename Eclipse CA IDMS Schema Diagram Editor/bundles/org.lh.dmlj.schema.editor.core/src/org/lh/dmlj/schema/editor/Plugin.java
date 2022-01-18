@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -250,9 +250,16 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 			getPreferenceStore().getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
 		getPreferenceStore().addPropertyChangeListener(this);
 		
-		// avoid a delay the first time the user selects a DSL tab in the Properties view
-		// note: the delay can only be avoided AFTER the warm up job has completed
-		new DSLWarmUpJob().schedule(); 
+		// DSL warm-up: make opening the first .schemadsl file somewhat faster or avoid a delay the first time the user selects
+		// the DSL tab in the Properties view for a .schema file.
+		// Notes:
+		// - Some people think this process delays the startup of their Eclipse workbench, that's why running this job is by 
+		//   default disabled.
+		// - The delay is only avoided AFTER the warm up job has completed.
+		boolean runDslWarmUpJobOnStartup = getPreferenceStore().getBoolean(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP);
+		if (runDslWarmUpJobOnStartup) {
+			new DSLWarmUpJob().schedule();
+		}
 		
 		hookWorkbenchListener();
 	}

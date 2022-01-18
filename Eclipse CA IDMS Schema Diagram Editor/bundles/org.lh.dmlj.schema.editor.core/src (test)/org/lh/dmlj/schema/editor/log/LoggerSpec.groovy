@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -156,13 +156,13 @@ class LoggerSpec extends Specification {
 		}
 		
 		and:
-		Throwable throwable = Mock(Throwable)
+		Throwable mockThrowable = Mock(Throwable)
 		
 		and:
 		Logger logger = Logger.getLogger(plugin)
 		
 		when:
-		logger.error('error message', throwable)
+		logger.error('error message', mockThrowable)
 		
 		then:
 		1 * log.log( { status ->
@@ -171,7 +171,7 @@ class LoggerSpec extends Specification {
 			status.plugin == 'bundle.symbolic.name' &&
 			status.code == IStatus.OK &&
 			status.message == 'error message' &&
-			status.exception.is(throwable)
+			status.exception.is(mockThrowable)
 		} )
 		0 * log._
 	}

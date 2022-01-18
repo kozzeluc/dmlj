@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,6 +22,7 @@ public abstract class PreferenceConstants {
 	public static final String PERSONAL_INITIALIZATION_VECTOR = "personalInitializationVector";
 	
 	public static final String DEFAULT_SCHEMA = "defaultSchema";
-	public static final String DEFAULT_QUERY_DBKEY_LIST_SIZE_MAXIMUM = "defaultQueryDbkeyListSizeMaximum";
+	public static final String DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM = "defaultQueryDbkeyListSizeMaximum";
+	public static final String CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS = "confirmationRequiredWhenSchemaWithVirtualKeys";
 	
 }

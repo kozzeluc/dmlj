@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,10 +20,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
@@ -35,6 +37,7 @@ import org.lh.dmlj.schema.editor.log.Logger;
 public class DictionarySession {
 	
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
+	private static final String VIRTUAL_KEYS_SQL = "SELECT INCLVIRTKEYS FROM SYSTEM.SCHEMA WHERE NAME = ?";
 	
 	protected Connection connection;
 	private long connectionClosed = -1;
@@ -75,6 +78,15 @@ public class DictionarySession {
 		return connect(dictionary.getConnectionUrl(), dictionary.getUser(), password);		
 	}
 
+	private static String getColumnNames(ResultSet rs) throws SQLException {
+		List<String> columnNames = new ArrayList<>();
+		ResultSetMetaData metaData = rs.getMetaData();
+		for (int i = 1; i <= metaData.getColumnCount(); i++) {
+			columnNames.add(metaData.getColumnName(i));
+		}
+		return columnNames.stream().collect(Collectors.joining(","));
+	}
+
 	@SuppressWarnings("unused")
 	private DictionarySession() {
 	}
@@ -84,18 +96,6 @@ public class DictionarySession {
 		this.dictionary = dictionary;
 		this.description = description;
 		dateFormat = org.lh.dmlj.schema.editor.Plugin.getDefault().getDateFormat();
-	}
-	
-	private String format(long date) {
-		return dateFormat.format(date);
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Dictionary getDictionary() {
-		return dictionary;
 	}
 	
 	public final void close() {
@@ -122,6 +122,52 @@ public class DictionarySession {
 		}
 		logger.info(p.toString());
 	}
+
+	private String format(long date) {
+		return dateFormat.format(date);
+	}
+
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Dictionary getDictionary() {
+		return dictionary;
+	}
+	
+	public final boolean isSchemaDefinedWithVirtualKeys() {
+		if (connectionOpened == -1) {
+			throw new RuntimeException("connection not open");
+		} else if (connectionClosed != -1) {
+			throw new RuntimeException("connection closed");
+		}
+		
+		boolean result = false;
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement(VIRTUAL_KEYS_SQL);
+			ps.setString(1, dictionary.getSchema());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				result = rs.getString(1).equals("S");
+			}
+		} catch (SQLException e) {
+			logger.error("exception while checking schema for virtual keys", e);
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					logger.error("exception while closing prepared statement for virtual keys check", e);
+				}
+			}
+		}
+		return result;
+	}
 	
 	public final void open() {
 		if (connectionOpened != -1) {
@@ -133,10 +179,6 @@ public class DictionarySession {
 		} catch (Throwable t) {
 			throw new RuntimeException("Error while opening the JDBC connection", t);
 		}
-	}
-
-	public Connection getConnection() {
-		return connection;
 	}
 
 	public final void runQuery(IQuery query, IRowProcessor rowProcessor) {
@@ -164,7 +206,7 @@ public class DictionarySession {
 			PreparedStatement ps = connection.prepareStatement(query.getSql());
 			ResultSet rs = ps.executeQuery();
 			end1 = System.currentTimeMillis();
-			logger.debug("Start processing rows for query '" + query.getDescription() + "'");
+			logger.debug("Start processing rows for query '" + query.getDescription() + "'\nColumns: " + getColumnNames(rs));
 			while (rs.next()) {
 				int row = rs.getRow();
 				rowProcessor.processRow(rs);
@@ -175,8 +217,7 @@ public class DictionarySession {
 			}
 			ps.close();	
 			end2 = System.currentTimeMillis();
-			logger.debug("Processed " + rowsProcessed + " rows for query '" +
-						 query.getDescription() + "'");
+			logger.debug("Processed " + rowsProcessed + " rows for query '" + query.getDescription() + "'");
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, null));
 			runningQueryCount -= 1;
 		} catch (Throwable t) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
+import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.Rowid;
 
 public class Smr_052 {
 	
@@ -34,7 +35,7 @@ public class Smr_052 {
 	
 	private List<Scr_054> scr_054s = new ArrayList<>();
 	
-	private long dbkey;
+	private Rowid rowid;
 	private short dup_052;
 	private short mrCntrl_052;
 	private short nxtDbk_052;
@@ -48,8 +49,8 @@ public class Smr_052 {
 		super();
 	}
 
-	public long getDbkey() {
-		return dbkey;
+	public Rowid getRowid() {
+		return rowid;
 	}
 
 	public short getDup_052() {
@@ -88,8 +89,8 @@ public class Smr_052 {
 		return srcd_113;
 	}
 
-	public void setDbkey(long dbkey) {
-		this.dbkey = dbkey;
+	public void setRowid(Rowid rowid) {
+		this.rowid = rowid;
 	}
 
 	public void setDup_052(short dup_052) {

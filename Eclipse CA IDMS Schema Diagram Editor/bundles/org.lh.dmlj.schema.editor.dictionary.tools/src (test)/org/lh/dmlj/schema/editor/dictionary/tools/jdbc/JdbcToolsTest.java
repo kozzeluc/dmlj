@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,53 +21,50 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import org.junit.Test;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.IDbkeyProvider;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.IRowidProvider;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AbstractQueryTestCase;
 
 public class JdbcToolsTest {
 
 	@Test
-	public void testGetSplitQueryDbkeyList() {
+	public void testGetSplitQueryRowidList() {
 		
-		List<IDbkeyProvider> dbkeyProviders = AbstractQueryTestCase.getDbkeyProviders(10);		
+		List<IRowidProvider> rowidProviders = AbstractQueryTestCase.getRowidProviders(10, true);		
 		Dictionary dictionary = AbstractQueryTestCase.getDictionary("SYSDICT", 3);
 		
-		// have the list of dbkey providers split into several lists, each containing at most 3
+		// have the list of rowid providers split into several lists, each containing at most 3
 		// items (as specified in the mock dictionary above); each list will contain 3 elements, 
-		// except for the last one that will contain only the last dbkey provider
-		List<List<Long>> splitQueryDbkeyList = 
-			JdbcTools.getSplitQueryDbkeyList(dbkeyProviders, dictionary);
-		assertEquals(4, splitQueryDbkeyList.size());
+		// except for the last one that will contain only the last rowid provider
+		List<List<Rowid>> splitQueryRowidList = JdbcTools.getSplitQueryRowidList(rowidProviders, dictionary);
+		assertEquals(4, splitQueryRowidList.size());
 		
-		assertEquals(3, splitQueryDbkeyList.get(0).size());
-		assertEquals(0, splitQueryDbkeyList.get(0).get(0).longValue());
-		assertEquals(1, splitQueryDbkeyList.get(0).get(1).longValue());
-		assertEquals(2, splitQueryDbkeyList.get(0).get(2).longValue());
+		assertEquals(3, splitQueryRowidList.get(0).size());
+		assertEquals(0, splitQueryRowidList.get(0).get(0).getDbkey());
+		assertEquals(1, splitQueryRowidList.get(0).get(1).getDbkey());
+		assertEquals(2, splitQueryRowidList.get(0).get(2).getDbkey());
 		
-		assertEquals(3, splitQueryDbkeyList.get(1).size());
-		assertEquals(3, splitQueryDbkeyList.get(1).get(0).longValue());
-		assertEquals(4, splitQueryDbkeyList.get(1).get(1).longValue());
-		assertEquals(5, splitQueryDbkeyList.get(1).get(2).longValue());
+		assertEquals(3, splitQueryRowidList.get(1).size());
+		assertEquals(3, splitQueryRowidList.get(1).get(0).getDbkey());
+		assertEquals(4, splitQueryRowidList.get(1).get(1).getDbkey());
+		assertEquals(5, splitQueryRowidList.get(1).get(2).getDbkey());
 		
-		assertEquals(3, splitQueryDbkeyList.get(2).size());
-		assertEquals(6, splitQueryDbkeyList.get(2).get(0).longValue());
-		assertEquals(7, splitQueryDbkeyList.get(2).get(1).longValue());
-		assertEquals(8, splitQueryDbkeyList.get(2).get(2).longValue());
+		assertEquals(3, splitQueryRowidList.get(2).size());
+		assertEquals(6, splitQueryRowidList.get(2).get(0).getDbkey());
+		assertEquals(7, splitQueryRowidList.get(2).get(1).getDbkey());
+		assertEquals(8, splitQueryRowidList.get(2).get(2).getDbkey());
 		
-		assertEquals(1, splitQueryDbkeyList.get(3).size());
-		assertEquals(9, splitQueryDbkeyList.get(3).get(0).longValue());
+		assertEquals(1, splitQueryRowidList.get(3).size());
+		assertEquals(9, splitQueryRowidList.get(3).get(0).getDbkey());
 		
 	}
 	
 	@Test
-	public void testGetSplitQueryDbkeyList_EmptyList() {
-		List<IDbkeyProvider> dbkeyProviders = AbstractQueryTestCase.getDbkeyProviders(0);		
+	public void testGetSplitQueryRowidList_EmptyList() {
+		List<IRowidProvider> rowidProviders = AbstractQueryTestCase.getRowidProviders(0, true);		
 		Dictionary dictionary = AbstractQueryTestCase.getDictionary("SYSDICT", 3);
-		List<List<Long>> splitQueryDbkeyList = 
-			JdbcTools.getSplitQueryDbkeyList(dbkeyProviders, dictionary);
-		assertEquals(0, splitQueryDbkeyList.size());
+		List<List<Rowid>> splitQueryRowidList = JdbcTools.getSplitQueryRowidList(rowidProviders, dictionary);
+		assertEquals(0, splitQueryRowidList.size());
 	}
 
 }

@@ -1,7 +1,5 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.template;
 
-import org.lh.dmlj.schema.editor.dictionary.tools.template.IQueryTemplate;
-
 public class SortKeyElementListQueryTemplate implements IQueryTemplate {
 
   protected static String nl;

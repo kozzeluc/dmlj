@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -68,7 +68,7 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 				if (!calcKeyElementsMap.containsKey(srNam_056)) {
 					Smr_052 smr_052 = new Smr_052();
 					// we only take what we need for our SMR-052, so some fields will NOT be set
-					smr_052.setDbkey(JdbcTools.getDbkey(row, Smr_052.ROWID));
+					smr_052.setRowid(JdbcTools.getRowid(row, Smr_052.ROWID));
 					smr_052.setDup_052(row.getShort(Smr_052.DUP_052));
 					smr_052.setSetNam_052(row.getString(Smr_052.SET_NAM_052)); // CALC
 					calcKeyElementsMap.put(srNam_056, smr_052);

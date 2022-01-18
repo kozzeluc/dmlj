@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -279,24 +279,30 @@ public class ElementDataCollector
 	}
 
 	@Override
-	public String getValue(SchemaSyntaxWrapper context) {
+	public List<String> getValues(SchemaSyntaxWrapper context) {
+		List<String> values = new ArrayList<>();
+		boolean capturing = false;
 		for (String line : context.getLines()) {
-			if (line.trim().endsWith(".")) {
+			String uncommentedTrimmedLine = line.trim().substring(2).trim();
+			if (uncommentedTrimmedLine.endsWith(".")) {
 				// make sure that, in the case of group elements or elements
 				// described with 1 or more condition names, no value of those
 				// subordinate or condition name elements can be assigned to as 
 				// the a value
-				return null;
-			}
-			int i = line.indexOf("VALUE IS ( ");
-			if (i > -1) {
-				int j = line.indexOf(" )", i);
-				if (j > -1) {
-					return line.substring(i + 11, j);
-				}
+				break;
+			} else if (!capturing && uncommentedTrimmedLine.startsWith("VALUE IS ( ") && uncommentedTrimmedLine.endsWith(" )")) {
+				values.add(uncommentedTrimmedLine.substring(11, uncommentedTrimmedLine.length() - 2));
+			} else if (!capturing && uncommentedTrimmedLine.startsWith("VALUE IS ( ")) {				
+				capturing = true;
+				values.add(uncommentedTrimmedLine.substring(11));
+			} else if (capturing && uncommentedTrimmedLine.endsWith(" )")) {
+				values.add(uncommentedTrimmedLine.substring(0, uncommentedTrimmedLine.length() - 2));
+				capturing = false;
+			} else if (capturing) {
+				values.add(uncommentedTrimmedLine);
 			}
 		}
-		return null;
+		return values;
 	}
 	
 }

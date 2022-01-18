@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -299,7 +299,7 @@ class RecordModelBuilder extends AbstractModelBuilder<SchemaRecord> {
 	
 	private short generateRecordId() {
 		assert record.schema
-		if (record.schema.records.empty || record.schema.records.size == 1 && 
+		if (record.schema.records.empty || record.schema.records.size() == 1 && 
 			record in schema.records && record.id == 0) {
 			
 			return (short) 10
@@ -384,7 +384,7 @@ class RecordModelBuilder extends AbstractModelBuilder<SchemaRecord> {
 	
 	void primaryRecord(String primaryRecord) {
 		List<String> tokens = primaryRecord.split(' ')
-		assert tokens.size == 3
+		assert tokens.size() == 3
 		assert tokens[1] == 'version'
 		record.baseName = tokens[0]
 		record.baseVersion = tokens[2].toShort()
@@ -451,7 +451,7 @@ class RecordModelBuilder extends AbstractModelBuilder<SchemaRecord> {
 	
 	void shareStructure(String shareStructure) {
 		List<String> tokens = shareStructure.split(' ')
-		assert tokens.size == 3
+		assert tokens.size() == 3
 		assert tokens[1] == 'version'
 		record.synonymName = tokens[0]
 		record.synonymVersion = tokens[2].toShort()

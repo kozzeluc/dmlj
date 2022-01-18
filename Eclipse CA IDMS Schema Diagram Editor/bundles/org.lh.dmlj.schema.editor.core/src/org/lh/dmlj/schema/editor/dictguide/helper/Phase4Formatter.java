@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2021  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -33,10 +33,17 @@ public abstract class Phase4Formatter {
 		boolean inField = false;
 		boolean inList1 = false;
 		boolean inList2 = false;
+		boolean inRecordLength = false;
 		BufferedReader in = new BufferedReader(new FileReader(file));
 		String p = in.readLine();
-		while (p != null) {			
-			if (p.length() == 80 && p.startsWith("/* Field ") && 
+		while (p != null) {
+			if (p.length() == 80 && p.startsWith("/* Record length */ -----")) {
+				inRecordLength = true;
+				out.println(p);
+			} else if (inRecordLength) {
+				out.println(p);
+				inRecordLength = false;
+			} else if (p.length() == 80 && p.startsWith("/* Field ") && 
 				p.indexOf("*/ -") != -1 && p.endsWith("-")) {
 				
 				inField = true;
@@ -62,7 +69,7 @@ public abstract class Phase4Formatter {
 				}
 			} else if (!inField && p.startsWith("")) {
 				out.println(">>" + p.substring(2));
-			} else {
+			} else if (!trimmedLineIsNumber(p)) {
 				out.println(p);
 			}
 			p = in.readLine();
@@ -79,5 +86,15 @@ public abstract class Phase4Formatter {
 		for (int i = 0; i < file.length; i++) {
 			processFile(file[i], outputFolder);
 		}
-	}	
+	}
+	
+	private static boolean trimmedLineIsNumber(String untrimmedLine) {
+		try {
+			Integer.parseInt(untrimmedLine.trim());
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		
+	}
 }

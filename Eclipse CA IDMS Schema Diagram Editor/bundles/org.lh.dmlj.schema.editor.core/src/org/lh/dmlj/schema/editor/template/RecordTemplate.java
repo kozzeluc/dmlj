@@ -57,7 +57,7 @@ public class RecordTemplate
     final StringBuffer stringBuffer = new StringBuffer();
     
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2020  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -249,7 +249,7 @@ if (symbolicSubareaName != null) {
     } else if (offsetExpression.getOffsetPercent() != null) {
     	p = offsetExpression.getOffsetPercent() + " PERCENT";
     } else {
-        p = "0";
+        p = "0 PERCENT";
     }
     String q;
     if (offsetExpression.getPercent() != null) {

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor JAXB Wrapper
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.jaxb
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.4.0.qualifier
 Bundle-ClassPath: activation-1.1.1.jar,
  jaxb-api-2.3.0.jar,
  jaxb-core-2.3.0.1.jar,
@@ -48,5 +48,5 @@ Export-Package: com.sun.activation.registries,
  javax.xml.bind.attachment,
  javax.xml.bind.helpers,
  javax.xml.bind.util
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.lh.dmlj.schema.editor.jaxb
