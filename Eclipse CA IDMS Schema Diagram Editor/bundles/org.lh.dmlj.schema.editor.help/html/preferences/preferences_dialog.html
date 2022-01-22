@@ -24,6 +24,11 @@ diagram, so it is perfectly fine to have diagrams in both formats in your worksp
 time to load than .schema files, you have the choice to close all of the open .schemadsl files when stopping Eclipse.
 This is to avoid excessive Eclipse startup times because of (re)loading .schemadsl files.
 <br><br>
+The DSL Warm up job can be run on workbench startup to speed up opening .schemadsl files; all this job does is to make 
+sure that most of the Java and Groovy classes that are required by the DSL feature are loaded into the Java VM 
+<i>before</i> they are needed. It's up to you whether or not you want this to happen or not: enabling the job can make 
+your workbench startup slower, so this is not what you want if you are only using .schema files.
+<br><br>
 <img src="../../images/preferences_diagram.png" alt="[preferences import]">
 <br><br>
 It may be necessary to adjust the default font size used by the diagram editor.  For Windows you can align the <i>font 
