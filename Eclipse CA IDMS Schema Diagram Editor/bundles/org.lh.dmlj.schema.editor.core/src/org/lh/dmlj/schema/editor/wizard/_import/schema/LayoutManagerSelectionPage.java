@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2022  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -52,21 +52,18 @@ import org.lh.dmlj.schema.editor.extension.LayoutManagerExtensionElement;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class LayoutManagerSelectionPage extends WizardPage {
-
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
-	private Button 								btnBrowse;
-	private Canvas 						  		canvas;
-	private Combo 						  		combo;
-	private LayoutManagerExtensionElement 	    extensionElement;
-	private List<LayoutManagerExtensionElement> extensionElements = 
-	new ArrayList<>();
-	private Color 						  		imageBackground = 
-		Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-	private ImageCache 				 	  		imageCache = new ImageCache();
-	private Label 								lblExample;
-	private Text 					  			textDescription;	
-	private Text 								textPropertiesFileName;
+	private Button btnBrowse;
+	private Canvas canvas;
+	private Combo combo;
+	private LayoutManagerExtensionElement extensionElement;
+	private List<LayoutManagerExtensionElement> extensionElements = new ArrayList<>();
+	private Color imageBackground = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+	private ImageCache imageCache = new ImageCache();
+	private Label lblExample;
+	private Text textDescription;	
+	private Text textPropertiesFileName;
 	
 	public LayoutManagerSelectionPage() {
 		super("_layoutManagerSelectionPage", "CA IDMS/DB Schema", null);
@@ -152,7 +149,6 @@ public class LayoutManagerSelectionPage extends WizardPage {
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
 				int i = combo.getSelectionIndex();
 				
 				extensionElement = extensionElements.get(i);
@@ -167,20 +163,18 @@ public class LayoutManagerSelectionPage extends WizardPage {
 					textPropertiesFileName.setFocus();
 				}
 			
-				drawImage();
+				canvas.redraw();
 				
 				validatePage();
-					
 			}
 		});		
 		
-		// we use the following MO to draw the layout manager image for the 
-		// first time in the canvas because the image might otherwise not show 
-		// up...
+		// we use the following MO to draw the layout manager image for the first time in the canvas because the image 
+		// might otherwise not show up...
 		canvas.addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				drawImage();
+				drawImage(e.gc);
 			}
 		});
 		
@@ -191,39 +185,29 @@ public class LayoutManagerSelectionPage extends WizardPage {
 		btnBrowse.setEnabled(b);
 		
 		validatePage();
-			
 	}
 	
 	@Override
 	public void dispose() {
-		imageBackground.dispose();
 		imageCache.dispose();
 		super.dispose();
 	}
 
-	private void drawImage() {
-				
-		final GC gc = new GC(canvas);
+	private void drawImage(GC gc) {
+		if (gc == null) {
+			return;
+		}
 		// clear the canvas first
 		gc.setBackground(imageBackground);
-		gc.fillRectangle(0, 0, canvas.getBounds().width, 
-						 canvas.getBounds().height);
-		// get the image if possible and available
-		Image image = 
-			extensionElement != null ? 
-			imageCache.getImage(extensionElement.getImageDescriptor()) : 
-			null;
-		// fill the canvas with the image
-		if (image != null) {			
+		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
+		if (extensionElement != null) {			
 			// an image is available; make it show up in the canvas
-			int width = 
-				Math.min(image.getBounds().width, canvas.getBounds().width);
-			int height = 
-				Math.min(image.getBounds().height, canvas.getBounds().height);			
+			Image image = extensionElement != null ? imageCache.getImage(extensionElement.getImageDescriptor()) : null;
+			int width = Math.min(image.getBounds().width, canvas.getBounds().width);
+			int height = Math.min(image.getBounds().height, canvas.getBounds().height);			
 			gc.drawImage(image, 0, 0, width, height, 0, 0, width, height);
 		}
-		gc.dispose();		
-				
+		gc.dispose();	
 	}
 
 	public LayoutManagerExtensionElement getExtensionElement() {
@@ -246,7 +230,6 @@ public class LayoutManagerSelectionPage extends WizardPage {
 	}
 
 	public void setExtensionElements(List<LayoutManagerExtensionElement> extensionElements) {
-		
 		this.extensionElements = extensionElements;
 		
 		if (combo == null) {
@@ -263,26 +246,20 @@ public class LayoutManagerSelectionPage extends WizardPage {
 			combo.select(0);
 			extensionElement = extensionElements.get(0);
 			textDescription.setText(extensionElement.getDescription());
-			drawImage();
 		} else {
-			// we shouldn't get into this situation because our plug-in provides 
-			// some layout managers itself and at least 1 of them should be
-			// available since it is valid for all schemas
+			// we shouldn't get into this situation because our plug-in provides some layout managers itself and at 
+			// least 1 of them should be available since it is valid for all schemas
 			combo.setEnabled(false);
-			setErrorMessage("No layout managers installed or none of the " +
-							"layout managers is valid");
-			textDescription.setText("Please install at least 1 plug-in that provides a " +
-						 "schema import layout manager for the CA IDMS/DB " +
-						 "schema you want to import.");
-			drawImage();
-		}		
+			setErrorMessage("No layout managers installed or none of the layout managers is valid");
+			textDescription.setText("Please install at least 1 plug-in that provides a schema import layout manager " +
+									"for the CA IDMS/DB schema you want to import.");
+		}
+		canvas.redraw();
 		
-		validatePage();		
-		
+		validatePage();
 	}
 
 	private void validatePage() {
-		
 		setErrorMessage(null);
 		boolean pageComplete = true;
 		
@@ -311,6 +288,6 @@ public class LayoutManagerSelectionPage extends WizardPage {
 		}
 		
 		setPageComplete(pageComplete);
-		
 	}
+	
 }

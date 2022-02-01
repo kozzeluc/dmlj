@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2022  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -178,18 +178,15 @@ public class WorkbenchListener implements IWorkbenchListener {
 			}
 		}
 		
-		// close all open editors
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-    		public void run() {	
-    			for (String key : openEditors.keySet()) {    				
-    				for (SchemaEditor openEditor : openEditors.get(key)) {
-    					openEditor.getEditorSite().getPage().closeEditor(openEditor,false);
-    				}
-    			}
-    		}
-    	});
+		openEditors.values().stream()
+			.flatMap(List::stream)
+			.forEach(this::closeEditor);
 		
 		return PROCEED_WITH_WORKBENCH_SHUTDOWN;
+	}
+	
+	private void closeEditor(SchemaEditor editor) {
+		editor.getEditorSite().getPage().closeEditor(editor, false);
 	}
 
 	@Override

@@ -24,6 +24,11 @@ diagram, so it is perfectly fine to have diagrams in both formats in your worksp
 time to load than .schema files, you have the choice to close all of the open .schemadsl files when stopping Eclipse.
 This is to avoid excessive Eclipse startup times because of (re)loading .schemadsl files.
 <br><br>
+The DSL Warm up job can be run on workbench startup to speed up opening .schemadsl files; all this job does is to make 
+sure that most of the Java and Groovy classes that are required by the DSL feature are loaded into the Java VM 
+<i>before</i> they are needed. It's up to you whether or not you want this to happen or not: enabling the job can make 
+your workbench startup slower, so this is not what you want if you are only using .schema files.
+<br><br>
 <img src="../../images/preferences_diagram.png" alt="[preferences import]">
 <br><br>
 It may be necessary to adjust the default font size used by the diagram editor.  For Windows you can align the <i>font 
@@ -31,7 +36,7 @@ size percentage</i> with the one set for your operating system; for the Mac I su
 are satisfied with the result.  Don't forget to restart your Eclipse workbench when changing the percentage.
 <a id="idmsntwk"/>
 <br><br>
-<img src="../../images/preferences_IDMSNTWK.png" alt="[preferences IDMSNTWK]">
+<img src="../../images/preferences_idmsntwk.png" alt="[preferences IDMSNTWK]">
 <br><br>
 You can import <i>dictionary and catalog related IDMS manuals</i> if you need to work with the IDMSNTWK schema; you will
 then have the documentation for each dictionary record (or catalog table) available in the Properties view.  In the 
@@ -39,7 +44,7 @@ preferences dialog you select the manual pair to use (you can maintain several v
 refer to the page dedicated to the <a href="../idmsntwk.html">IDMSNTWK</a> schema for more information about 
 this topic.
 <br><br>
-<img src="../../images/preferences_import.png" alt="[preferences import]">
+<img src="../../images/Preferences_import.png" alt="[preferences import]">
 <br><br>
 <i>Database procedures</i> that you use for compression can be managed in the preferences dialog.  In doing so, the 
 <i>storage modes</i> for record types can be determined automatically when importing diagrams.
