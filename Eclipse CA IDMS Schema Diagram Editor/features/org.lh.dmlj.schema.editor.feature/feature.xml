@@ -84,7 +84,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.lh.dmlj.schema.editor.tika_2.1.0"
+         id="org.lh.dmlj.schema.editor.tika"
          download-size="0"
          install-size="0"
          version="0.0.0"
