@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS/DB Schema Diagram Editor Help
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.help;singleton:=true
-Bundle-Version: 3.4.1.qualifier
+Bundle-Version: 3.4.2.qualifier
 Bundle-Vendor: Luc Hermans
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.lh.dmlj.schema.editor.help
