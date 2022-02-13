@@ -7,6 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="tika-app-2.2.1.jar"/>
+	<classpathentry kind="lib" path="tika-app-2.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

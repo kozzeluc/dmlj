@@ -31,12 +31,7 @@ import org.lh.dmlj.schema.editor.service.api.IPdfContentConsumer;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
 public class PdfExtractorService implements IPdfExtractorService {
-	
-	public static final Tika tika = new Tika();	
-	
-	public PdfExtractorService() {
-		super();		
-	}
+	public static final Tika tika = new Tika();
 	
 	@Override
 	public void extractContent(InputStream in, IPdfContentConsumer contentConsumer) {		
@@ -49,9 +44,7 @@ public class PdfExtractorService implements IPdfExtractorService {
 			// The IPdfContentConsumer has to be aware of this; it is only of relevence for the
 			// 'Dictionary Structure Reference Guides' because it is the very last chapter in each 
 			// of these books that interests us...
-			for (String line = bufferedReader.readLine(); line != null && proceed;
-				 line = bufferedReader.readLine()) {			
-				
+			for (String line = bufferedReader.readLine(); line != null && proceed; line = bufferedReader.readLine()) {				
 				proceed = contentConsumer.handleContent(line);
 			}
 			bufferedReader.close();
@@ -64,12 +57,10 @@ public class PdfExtractorService implements IPdfExtractorService {
 
 	@Override
 	public Properties extractMetadata(File file) {
-		
 		Metadata metadata = new Metadata();
 		try {
 			InputStream inputStream = new FileInputStream(file);
-			// it's important to close the following Reader afterwards to avoid out-of-memory 
-			// exeptions			
+			// it's important to close the following Reader afterwards to avoid out-of-memory exeptions			
 			Reader reader = tika.parse(inputStream, metadata);		
 			inputStream.close();
 			reader.close(); // we don't do anything with but closing it is vital !
@@ -83,7 +74,6 @@ public class PdfExtractorService implements IPdfExtractorService {
 		}
 		
 		return properties;
-		
 	}
 	
 	@Override
@@ -93,7 +83,7 @@ public class PdfExtractorService implements IPdfExtractorService {
 	
 	@Override
 	public String getLicensedProductVersion() {
-		return "2.2.1";
+		return "2.3.0";
 	}
 
 	@Override
@@ -105,8 +95,7 @@ public class PdfExtractorService implements IPdfExtractorService {
 	public String getLicenseText() {
 		StringBuilder p = new StringBuilder();
 		try {
-			InputStream inStream = 
-				PdfExtractorService.class.getClassLoader().getResourceAsStream("license/LICENSE");
+			InputStream inStream = PdfExtractorService.class.getClassLoader().getResourceAsStream("license/LICENSE");
 			BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
 			for (String line = in.readLine(); line != null; line = in.readLine()) {
 				if (p.length() > 0) {
