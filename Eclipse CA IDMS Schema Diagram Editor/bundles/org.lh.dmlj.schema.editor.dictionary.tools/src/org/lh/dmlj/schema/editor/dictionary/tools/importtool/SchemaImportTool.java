@@ -210,7 +210,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 					Sr_036 sr_036 = sr_036s.get(rowidSr_036);
 					Rowid rowidRcdsyn_079b = JdbcTools.getRowid(row, Rcdsyn_079.ROWID);
 					Rcdsyn_079 currentRcdsyn_079b = sr_036.getRcdsyn_079();
-					if (rowidRcdsyn_079b != currentRcdsyn_079b.getRowid()) {
+					if (!rowidRcdsyn_079b.equals(currentRcdsyn_079b.getRowid())) {
 						String rsynName_079 = row.getString(Rcdsyn_079.RSYN_NAME_079).trim();
 						short rsynVer_079 = row.getShort(Rcdsyn_079.RSYN_VER_079);
 						if (!rsynName_079.equals(currentRcdsyn_079b.getRsynName_079()) || 

@@ -74,6 +74,7 @@
             <dataEntryPage
                   class="org.lh.dmlj.schema.editor.dictionary.tools.importtool.ui.RecordSynonymSelectionPage"
                   id="org.lh.dmlj.schema.editor.dictionary.tools.import.elements.dataEntryPage2"
+                  message="Select a record synonym"
                   name="recordSynonymSelectionPage">
             </dataEntryPage>
          </importTool>
