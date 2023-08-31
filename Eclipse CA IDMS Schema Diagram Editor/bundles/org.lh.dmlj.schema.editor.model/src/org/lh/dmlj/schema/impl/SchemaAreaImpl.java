@@ -45,6 +45,7 @@ import org.lh.dmlj.schema.SystemOwner;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getAreaSpecifications <em>Area Specifications</em>}</li>
@@ -54,7 +55,6 @@ import org.lh.dmlj.schema.SystemOwner;
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getRecords <em>Records</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaAreaImpl#getSchema <em>Schema</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -138,6 +138,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -147,6 +148,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -159,6 +161,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Schema getSchema() {
 		if (eContainerFeatureID() != SchemaPackage.SCHEMA_AREA__SCHEMA) return null;
 		return (Schema)eInternalContainer();
@@ -179,6 +182,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSchema(Schema newSchema) {
 		if (newSchema != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.SCHEMA_AREA__SCHEMA && newSchema != null)) {
 			if (EcoreUtil.isAncestor(this, newSchema))
@@ -220,6 +224,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<AreaProcedureCallSpecification> getProcedures() {
 		if (procedures == null) {
 			procedures = new EObjectContainmentWithInverseEList<AreaProcedureCallSpecification>(AreaProcedureCallSpecification.class, this, SchemaPackage.SCHEMA_AREA__PROCEDURES, SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA);
@@ -232,6 +237,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<AreaSpecification> getAreaSpecifications() {
 		if (areaSpecifications == null) {
 			areaSpecifications = new EObjectContainmentWithInverseEList<AreaSpecification>(AreaSpecification.class, this, SchemaPackage.SCHEMA_AREA__AREA_SPECIFICATIONS, SchemaPackage.AREA_SPECIFICATION__AREA);
@@ -453,7 +459,7 @@ public class SchemaAreaImpl extends EObjectImpl implements SchemaArea {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");
 		result.append(name);
 		result.append(')');

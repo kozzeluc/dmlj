@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getBaseVersion <em>Base Version</em>}</li>
@@ -58,7 +59,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#isVsamCalc <em>Vsam Calc</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.SchemaRecord#getVsamType <em>Vsam Type</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getSchemaRecord()
  * @model

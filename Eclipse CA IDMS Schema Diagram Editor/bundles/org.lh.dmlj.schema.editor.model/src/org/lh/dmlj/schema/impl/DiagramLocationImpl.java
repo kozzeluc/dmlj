@@ -32,12 +32,12 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLocationImpl#getEyecatcher <em>Eyecatcher</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLocationImpl#getX <em>X</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLocationImpl#getY <em>Y</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -126,6 +126,7 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getX() {
 		return x;
 	}
@@ -135,6 +136,7 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setX(int newX) {
 		int oldX = x;
 		x = newX;
@@ -147,6 +149,7 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getY() {
 		return y;
 	}
@@ -156,6 +159,7 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setY(int newY) {
 		int oldY = y;
 		y = newY;
@@ -168,6 +172,7 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getEyecatcher() {
 		return eyecatcher;
 	}
@@ -177,6 +182,7 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setEyecatcher(String newEyecatcher) {
 		String oldEyecatcher = eyecatcher;
 		eyecatcher = newEyecatcher;
@@ -271,7 +277,7 @@ public class DiagramLocationImpl extends EObjectImpl implements DiagramLocation 
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (eyecatcher: ");
 		result.append(eyecatcher);
 		result.append(", x: ");

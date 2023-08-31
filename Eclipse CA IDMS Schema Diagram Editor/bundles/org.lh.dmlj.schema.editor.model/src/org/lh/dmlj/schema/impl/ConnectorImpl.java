@@ -34,11 +34,11 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getConnectionPart <em>Connection Part</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectorImpl#getLabel <em>Label</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -97,6 +97,7 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConnectionPart getConnectionPart() {
 		if (connectionPart != null && connectionPart.eIsProxy()) {
 			InternalEObject oldConnectionPart = (InternalEObject)connectionPart;
@@ -138,6 +139,7 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setConnectionPart(ConnectionPart newConnectionPart) {
 		if (newConnectionPart != connectionPart) {
 			NotificationChain msgs = null;
@@ -157,6 +159,7 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLabel() {
 		return label;
 	}
@@ -166,6 +169,7 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabel(String newLabel) {
 		String oldLabel = label;
 		label = newLabel;
@@ -281,7 +285,7 @@ public class ConnectorImpl extends DiagramNodeImpl implements Connector {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (label: ");
 		result.append(label);
 		result.append(')');

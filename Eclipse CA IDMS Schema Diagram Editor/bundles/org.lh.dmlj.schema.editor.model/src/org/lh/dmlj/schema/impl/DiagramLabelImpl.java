@@ -37,12 +37,12 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLabelImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLabelImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramLabelImpl#getDiagramData <em>Diagram Data</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -110,6 +110,7 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -119,6 +120,7 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
@@ -131,6 +133,7 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DiagramData getDiagramData() {
 		if (eContainerFeatureID() != SchemaPackage.DIAGRAM_LABEL__DIAGRAM_DATA) return null;
 		return (DiagramData)eInternalContainer();
@@ -151,6 +154,7 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDiagramData(DiagramData newDiagramData) {
 		if (newDiagramData != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.DIAGRAM_LABEL__DIAGRAM_DATA && newDiagramData != null)) {
 			if (EcoreUtil.isAncestor(this, newDiagramData))
@@ -324,7 +328,7 @@ public class DiagramLabelImpl extends ResizableDiagramNodeImpl implements Diagra
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (description: ");
 		result.append(description);
 		result.append(')');

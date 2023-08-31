@@ -34,10 +34,10 @@ import org.lh.dmlj.schema.VsamIndex;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.VsamIndexImpl#getSet <em>Set</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -66,6 +66,7 @@ public class VsamIndexImpl extends DiagramNodeImpl implements VsamIndex {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.VSAM_INDEX__SET) return null;
 		return (Set)eInternalContainer();
@@ -86,6 +87,7 @@ public class VsamIndexImpl extends DiagramNodeImpl implements VsamIndex {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSet(Set newSet) {
 		if (newSet != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.VSAM_INDEX__SET && newSet != null)) {
 			if (EcoreUtil.isAncestor(this, newSet))

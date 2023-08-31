@@ -25,11 +25,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.ProcedureCallSpecification#getCallTime <em>Call Time</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ProcedureCallSpecification#getProcedure <em>Procedure</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getProcedureCallSpecification()
  * @model abstract="true"

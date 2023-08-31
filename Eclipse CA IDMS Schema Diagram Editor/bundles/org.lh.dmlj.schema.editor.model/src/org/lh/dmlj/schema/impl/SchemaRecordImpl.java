@@ -55,6 +55,7 @@ import org.lh.dmlj.schema.VsamType;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getBaseName <em>Base Name</em>}</li>
@@ -89,7 +90,6 @@ import org.lh.dmlj.schema.VsamType;
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#isVsamCalc <em>Vsam Calc</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaRecordImpl#getVsamType <em>Vsam Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -487,6 +487,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getBaseName() {
 		return baseName;
 	}
@@ -496,6 +497,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBaseName(String newBaseName) {
 		String oldBaseName = baseName;
 		baseName = newBaseName;
@@ -508,6 +510,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getBaseVersion() {
 		return baseVersion;
 	}
@@ -517,6 +520,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBaseVersion(short newBaseVersion) {
 		short oldBaseVersion = baseVersion;
 		baseVersion = newBaseVersion;
@@ -538,6 +542,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -547,6 +552,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -559,6 +565,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getId() {
 		return id;
 	}
@@ -568,6 +575,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setId(short newId) {
 		short oldId = id;
 		id = newId;
@@ -645,6 +653,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public StorageMode getStorageMode() {
 		return storageMode;
 	}
@@ -654,6 +663,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setStorageMode(StorageMode newStorageMode) {
 		StorageMode oldStorageMode = storageMode;
 		storageMode = newStorageMode == null ? STORAGE_MODE_EDEFAULT : newStorageMode;
@@ -666,6 +676,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LocationMode getLocationMode() {
 		return locationMode;
 	}
@@ -675,6 +686,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLocationMode(LocationMode newLocationMode) {
 		LocationMode oldLocationMode = locationMode;
 		locationMode = newLocationMode == null ? LOCATION_MODE_EDEFAULT : newLocationMode;
@@ -687,6 +699,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getMinimumRootLength() {
 		return minimumRootLength;
 	}
@@ -696,6 +709,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinimumRootLength(Short newMinimumRootLength) {
 		Short oldMinimumRootLength = minimumRootLength;
 		minimumRootLength = newMinimumRootLength;
@@ -708,6 +722,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getMinimumFragmentLength() {
 		return minimumFragmentLength;
 	}
@@ -717,6 +732,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMinimumFragmentLength(Short newMinimumFragmentLength) {
 		Short oldMinimumFragmentLength = minimumFragmentLength;
 		minimumFragmentLength = newMinimumFragmentLength;
@@ -785,6 +801,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Key getCalcKey() {
 		if (calcKey != null && calcKey.eIsProxy()) {
 			InternalEObject oldCalcKey = (InternalEObject)calcKey;
@@ -811,6 +828,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCalcKey(Key newCalcKey) {
 		Key oldCalcKey = calcKey;
 		calcKey = newCalcKey;
@@ -823,6 +841,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Schema getSchema() {
 		if (eContainerFeatureID() != SchemaPackage.SCHEMA_RECORD__SCHEMA) return null;
 		return (Schema)eInternalContainer();
@@ -843,6 +862,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSchema(Schema newSchema) {
 		if (newSchema != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.SCHEMA_RECORD__SCHEMA && newSchema != null)) {
 			if (EcoreUtil.isAncestor(this, newSchema))
@@ -864,6 +884,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSynonymName() {
 		return synonymName;
 	}
@@ -873,6 +894,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSynonymName(String newSynonymName) {
 		String oldSynonymName = synonymName;
 		synonymName = newSynonymName;
@@ -885,6 +907,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getSynonymVersion() {
 		return synonymVersion;
 	}
@@ -894,6 +917,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSynonymVersion(short newSynonymVersion) {
 		short oldSynonymVersion = synonymVersion;
 		synonymVersion = newSynonymVersion;
@@ -915,6 +939,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ViaSpecification getViaSpecification() {
 		return viaSpecification;
 	}
@@ -939,6 +964,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setViaSpecification(ViaSpecification newViaSpecification) {
 		if (newViaSpecification != viaSpecification) {
 			NotificationChain msgs = null;
@@ -976,6 +1002,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VsamType getVsamType() {
 		return vsamType;
 	}
@@ -1000,6 +1027,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVsamType(VsamType newVsamType) {
 		if (newVsamType != vsamType) {
 			NotificationChain msgs = null;
@@ -1019,6 +1047,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<OwnerRole> getOwnerRoles() {
 		if (ownerRoles == null) {
 			ownerRoles = new EObjectWithInverseResolvingEList<OwnerRole>(OwnerRole.class, this, SchemaPackage.SCHEMA_RECORD__OWNER_ROLES, SchemaPackage.OWNER_ROLE__RECORD);
@@ -1031,6 +1060,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<MemberRole> getMemberRoles() {
 		if (memberRoles == null) {
 			memberRoles = new EObjectWithInverseResolvingEList<MemberRole>(MemberRole.class, this, SchemaPackage.SCHEMA_RECORD__MEMBER_ROLES, SchemaPackage.MEMBER_ROLE__RECORD);
@@ -1043,6 +1073,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Element> getRootElements() {
 		if (rootElements == null) {
 			rootElements = new EObjectResolvingEList<Element>(Element.class, this, SchemaPackage.SCHEMA_RECORD__ROOT_ELEMENTS);
@@ -1055,6 +1086,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<RecordProcedureCallSpecification> getProcedures() {
 		if (procedures == null) {
 			procedures = new EObjectContainmentWithInverseEList<RecordProcedureCallSpecification>(RecordProcedureCallSpecification.class, this, SchemaPackage.SCHEMA_RECORD__PROCEDURES, SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD);
@@ -1067,6 +1099,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Key> getKeys() {
 		if (keys == null) {
 			keys = new EObjectContainmentWithInverseEList<Key>(Key.class, this, SchemaPackage.SCHEMA_RECORD__KEYS, SchemaPackage.KEY__RECORD);
@@ -1079,6 +1112,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AreaSpecification getAreaSpecification() {
 		if (areaSpecification != null && areaSpecification.eIsProxy()) {
 			InternalEObject oldAreaSpecification = (InternalEObject)areaSpecification;
@@ -1120,6 +1154,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAreaSpecification(AreaSpecification newAreaSpecification) {
 		if (newAreaSpecification != areaSpecification) {
 			NotificationChain msgs = null;
@@ -1139,6 +1174,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Element> getElements() {
 		if (elements == null) {
 			elements = new EObjectContainmentWithInverseEList<Element>(Element.class, this, SchemaPackage.SCHEMA_RECORD__ELEMENTS, SchemaPackage.ELEMENT__RECORD);
@@ -1634,7 +1670,7 @@ public class SchemaRecordImpl extends DiagramNodeImpl implements SchemaRecord {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (baseName: ");
 		result.append(baseName);
 		result.append(", baseVersion: ");

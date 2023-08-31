@@ -43,6 +43,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getConnector <em>Connector</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getBendpointLocations <em>Bendpoint Locations</em>}</li>
@@ -50,7 +51,6 @@ import org.lh.dmlj.schema.SchemaPackage;
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getSourceEndpointLocation <em>Source Endpoint Location</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectionPartImpl#getTargetEndpointLocation <em>Target Endpoint Location</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -129,6 +129,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Connector getConnector() {
 		if (connector != null && connector.eIsProxy()) {
 			InternalEObject oldConnector = (InternalEObject)connector;
@@ -170,6 +171,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setConnector(Connector newConnector) {
 		if (newConnector != connector) {
 			NotificationChain msgs = null;
@@ -189,6 +191,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<DiagramLocation> getBendpointLocations() {
 		if (bendpointLocations == null) {
 			bendpointLocations = new EObjectResolvingEList<DiagramLocation>(DiagramLocation.class, this, SchemaPackage.CONNECTION_PART__BENDPOINT_LOCATIONS);
@@ -201,6 +204,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberRole getMemberRole() {
 		if (memberRole != null && memberRole.eIsProxy()) {
 			InternalEObject oldMemberRole = (InternalEObject)memberRole;
@@ -242,6 +246,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMemberRole(MemberRole newMemberRole) {
 		if (newMemberRole != memberRole) {
 			NotificationChain msgs = null;
@@ -261,6 +266,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DiagramLocation getSourceEndpointLocation() {
 		if (sourceEndpointLocation != null && sourceEndpointLocation.eIsProxy()) {
 			InternalEObject oldSourceEndpointLocation = (InternalEObject)sourceEndpointLocation;
@@ -287,6 +293,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSourceEndpointLocation(DiagramLocation newSourceEndpointLocation) {
 		DiagramLocation oldSourceEndpointLocation = sourceEndpointLocation;
 		sourceEndpointLocation = newSourceEndpointLocation;
@@ -299,6 +306,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DiagramLocation getTargetEndpointLocation() {
 		if (targetEndpointLocation != null && targetEndpointLocation.eIsProxy()) {
 			InternalEObject oldTargetEndpointLocation = (InternalEObject)targetEndpointLocation;
@@ -325,6 +333,7 @@ public class ConnectionPartImpl extends EObjectImpl implements ConnectionPart {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setTargetEndpointLocation(DiagramLocation newTargetEndpointLocation) {
 		DiagramLocation oldTargetEndpointLocation = targetEndpointLocation;
 		targetEndpointLocation = newTargetEndpointLocation;

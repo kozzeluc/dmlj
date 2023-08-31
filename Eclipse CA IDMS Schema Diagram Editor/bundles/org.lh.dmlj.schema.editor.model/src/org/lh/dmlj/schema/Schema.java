@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Schema#getAreas <em>Areas</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getComments <em>Comments</em>}</li>
@@ -38,7 +39,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.Schema#getSets <em>Sets</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Schema#getVersion <em>Version</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getSchema()
  * @model

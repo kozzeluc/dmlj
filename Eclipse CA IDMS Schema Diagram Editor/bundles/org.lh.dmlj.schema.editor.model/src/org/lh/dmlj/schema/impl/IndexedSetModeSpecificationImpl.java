@@ -35,13 +35,13 @@ import org.lh.dmlj.schema.Set;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl#getDisplacementPageCount <em>Displacement Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl#getKeyCount <em>Key Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexedSetModeSpecificationImpl#getSymbolicIndexName <em>Symbolic Index Name</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -125,6 +125,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSymbolicIndexName() {
 		return symbolicIndexName;
 	}
@@ -134,6 +135,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSymbolicIndexName(String newSymbolicIndexName) {
 		String oldSymbolicIndexName = symbolicIndexName;
 		symbolicIndexName = newSymbolicIndexName;
@@ -190,6 +192,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getKeyCount() {
 		return keyCount;
 	}
@@ -199,6 +202,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKeyCount(Short newKeyCount) {
 		Short oldKeyCount = keyCount;
 		keyCount = newKeyCount;
@@ -211,6 +215,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET) return null;
 		return (Set)eInternalContainer();
@@ -231,6 +236,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSet(Set newSet) {
 		if (newSet != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.INDEXED_SET_MODE_SPECIFICATION__SET && newSet != null)) {
 			if (EcoreUtil.isAncestor(this, newSet))
@@ -252,6 +258,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getDisplacementPageCount() {
 		return displacementPageCount;
 	}
@@ -261,6 +268,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplacementPageCount(Short newDisplacementPageCount) {
 		Short oldDisplacementPageCount = displacementPageCount;
 		displacementPageCount = newDisplacementPageCount;
@@ -365,7 +373,7 @@ public class IndexedSetModeSpecificationImpl extends EObjectImpl implements Inde
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (displacementPageCount: ");
 		result.append(displacementPageCount);
 		result.append(", keyCount: ");

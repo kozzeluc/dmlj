@@ -36,11 +36,11 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.GuideImpl#getPosition <em>Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.GuideImpl#getRuler <em>Ruler</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -89,6 +89,7 @@ public class GuideImpl extends EObjectImpl implements Guide {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getPosition() {
 		return position;
 	}
@@ -98,6 +99,7 @@ public class GuideImpl extends EObjectImpl implements Guide {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPosition(int newPosition) {
 		int oldPosition = position;
 		position = newPosition;
@@ -110,6 +112,7 @@ public class GuideImpl extends EObjectImpl implements Guide {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Ruler getRuler() {
 		if (eContainerFeatureID() != SchemaPackage.GUIDE__RULER) return null;
 		return (Ruler)eInternalContainer();
@@ -130,6 +133,7 @@ public class GuideImpl extends EObjectImpl implements Guide {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRuler(Ruler newRuler) {
 		if (newRuler != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.GUIDE__RULER && newRuler != null)) {
 			if (EcoreUtil.isAncestor(this, newRuler))
@@ -267,7 +271,7 @@ public class GuideImpl extends EObjectImpl implements Guide {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (position: ");
 		result.append(position);
 		result.append(')');

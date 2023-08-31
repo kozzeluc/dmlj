@@ -24,13 +24,13 @@ package org.lh.dmlj.schema;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.OwnerRole#getNextDbkeyPosition <em>Next Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OwnerRole#getPriorDbkeyPosition <em>Prior Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OwnerRole#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OwnerRole#getSet <em>Set</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getOwnerRole()
  * @model

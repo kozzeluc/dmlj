@@ -35,11 +35,11 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectionLabelImpl#getAlignment <em>Alignment</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ConnectionLabelImpl#getMemberRole <em>Member Role</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -98,6 +98,7 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public LabelAlignment getAlignment() {
 		return alignment;
 	}
@@ -107,6 +108,7 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAlignment(LabelAlignment newAlignment) {
 		LabelAlignment oldAlignment = alignment;
 		alignment = newAlignment == null ? ALIGNMENT_EDEFAULT : newAlignment;
@@ -119,6 +121,7 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberRole getMemberRole() {
 		if (memberRole != null && memberRole.eIsProxy()) {
 			InternalEObject oldMemberRole = (InternalEObject)memberRole;
@@ -160,6 +163,7 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMemberRole(MemberRole newMemberRole) {
 		if (newMemberRole != memberRole) {
 			NotificationChain msgs = null;
@@ -282,7 +286,7 @@ public class ConnectionLabelImpl extends DiagramNodeImpl implements ConnectionLa
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (alignment: ");
 		result.append(alignment);
 		result.append(')');

@@ -27,12 +27,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Ruler#getGuides <em>Guides</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Ruler#getType <em>Type</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Ruler#getDiagramData <em>Diagram Data</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getRuler()
  * @model

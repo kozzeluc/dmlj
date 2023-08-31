@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Key#isCalcKey <em>Calc Key</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#isCompressed <em>Compressed</em>}</li>
@@ -37,7 +38,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.Key#isNaturalSequence <em>Natural Sequence</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Key#getRecord <em>Record</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getKey()
  * @model

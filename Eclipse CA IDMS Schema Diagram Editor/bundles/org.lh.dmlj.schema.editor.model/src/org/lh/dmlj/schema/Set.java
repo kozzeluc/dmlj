@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Set#isChained <em>Chained</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#isIndexed <em>Indexed</em>}</li>
@@ -42,7 +43,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.lh.dmlj.schema.Set#isVsam <em>Vsam</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Set#getVsamIndex <em>Vsam Index</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getSet()
  * @model

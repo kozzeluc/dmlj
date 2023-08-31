@@ -37,13 +37,13 @@ import org.lh.dmlj.schema.SortSequence;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#isDbkey <em>Dbkey</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#getElement <em>Element</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#getKey <em>Key</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyElementImpl#getSortSequence <em>Sort Sequence</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -108,6 +108,7 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Element getElement() {
 		if (element != null && element.eIsProxy()) {
 			InternalEObject oldElement = (InternalEObject)element;
@@ -149,6 +150,7 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setElement(Element newElement) {
 		if (newElement != element) {
 			NotificationChain msgs = null;
@@ -168,6 +170,7 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SortSequence getSortSequence() {
 		return sortSequence;
 	}
@@ -177,6 +180,7 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSortSequence(SortSequence newSortSequence) {
 		SortSequence oldSortSequence = sortSequence;
 		sortSequence = newSortSequence == null ? SORT_SEQUENCE_EDEFAULT : newSortSequence;
@@ -189,6 +193,7 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Key getKey() {
 		if (eContainerFeatureID() != SchemaPackage.KEY_ELEMENT__KEY) return null;
 		return (Key)eInternalContainer();
@@ -209,6 +214,7 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setKey(Key newKey) {
 		if (newKey != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.KEY_ELEMENT__KEY && newKey != null)) {
 			if (EcoreUtil.isAncestor(this, newKey))
@@ -376,7 +382,7 @@ public class KeyElementImpl extends EObjectImpl implements KeyElement {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (sortSequence: ");
 		result.append(sortSequence);
 		result.append(')');

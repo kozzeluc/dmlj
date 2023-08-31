@@ -25,12 +25,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.DiagramLocation#getEyecatcher <em>Eyecatcher</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramLocation#getX <em>X</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramLocation#getY <em>Y</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getDiagramLocation()
  * @model

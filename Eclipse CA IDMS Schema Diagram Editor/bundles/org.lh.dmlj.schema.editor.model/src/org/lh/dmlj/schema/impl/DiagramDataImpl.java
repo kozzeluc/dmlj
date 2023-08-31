@@ -50,6 +50,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getConnectionLabels <em>Connection Labels</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getConnectionParts <em>Connection Parts</em>}</li>
@@ -67,7 +68,6 @@ import org.lh.dmlj.schema.SchemaPackage;
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getVerticalRuler <em>Vertical Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramDataImpl#getZoomLevel <em>Zoom Level</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -296,6 +296,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ConnectionLabel> getConnectionLabels() {
 		if (connectionLabels == null) {
 			connectionLabels = new EObjectContainmentEList<ConnectionLabel>(ConnectionLabel.class, this, SchemaPackage.DIAGRAM_DATA__CONNECTION_LABELS);
@@ -308,6 +309,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ConnectionPart> getConnectionParts() {
 		if (connectionParts == null) {
 			connectionParts = new EObjectContainmentEList<ConnectionPart>(ConnectionPart.class, this, SchemaPackage.DIAGRAM_DATA__CONNECTION_PARTS);
@@ -320,6 +322,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Connector> getConnectors() {
 		if (connectors == null) {
 			connectors = new EObjectContainmentEList<Connector>(Connector.class, this, SchemaPackage.DIAGRAM_DATA__CONNECTORS);
@@ -332,6 +335,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Ruler getHorizontalRuler() {
 		if (horizontalRuler != null && horizontalRuler.eIsProxy()) {
 			InternalEObject oldHorizontalRuler = (InternalEObject)horizontalRuler;
@@ -358,6 +362,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHorizontalRuler(Ruler newHorizontalRuler) {
 		Ruler oldHorizontalRuler = horizontalRuler;
 		horizontalRuler = newHorizontalRuler;
@@ -370,6 +375,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DiagramLabel getLabel() {
 		return label;
 	}
@@ -394,6 +400,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLabel(DiagramLabel newLabel) {
 		if (newLabel != label) {
 			NotificationChain msgs = null;
@@ -413,6 +420,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<DiagramLocation> getLocations() {
 		if (locations == null) {
 			locations = new EObjectContainmentEList<DiagramLocation>(DiagramLocation.class, this, SchemaPackage.DIAGRAM_DATA__LOCATIONS);
@@ -425,6 +433,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public double getZoomLevel() {
 		return zoomLevel;
 	}
@@ -434,6 +443,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setZoomLevel(double newZoomLevel) {
 		double oldZoomLevel = zoomLevel;
 		zoomLevel = newZoomLevel;
@@ -446,6 +456,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Ruler> getRulers() {
 		if (rulers == null) {
 			rulers = new EObjectContainmentWithInverseEList<Ruler>(Ruler.class, this, SchemaPackage.DIAGRAM_DATA__RULERS, SchemaPackage.RULER__DIAGRAM_DATA);
@@ -458,6 +469,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Schema getSchema() {
 		if (eContainerFeatureID() != SchemaPackage.DIAGRAM_DATA__SCHEMA) return null;
 		return (Schema)eInternalContainer();
@@ -478,6 +490,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSchema(Schema newSchema) {
 		if (newSchema != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.DIAGRAM_DATA__SCHEMA && newSchema != null)) {
 			if (EcoreUtil.isAncestor(this, newSchema))
@@ -522,6 +535,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isShowGrid() {
 		return showGrid;
 	}
@@ -531,6 +545,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setShowGrid(boolean newShowGrid) {
 		boolean oldShowGrid = showGrid;
 		showGrid = newShowGrid;
@@ -543,6 +558,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isShowRulers() {
 		return showRulers;
 	}
@@ -552,6 +568,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setShowRulers(boolean newShowRulers) {
 		boolean oldShowRulers = showRulers;
 		showRulers = newShowRulers;
@@ -564,6 +581,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSnapToGeometry() {
 		return snapToGeometry;
 	}
@@ -573,6 +591,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSnapToGeometry(boolean newSnapToGeometry) {
 		boolean oldSnapToGeometry = snapToGeometry;
 		snapToGeometry = newSnapToGeometry;
@@ -585,6 +604,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSnapToGrid() {
 		return snapToGrid;
 	}
@@ -594,6 +614,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSnapToGrid(boolean newSnapToGrid) {
 		boolean oldSnapToGrid = snapToGrid;
 		snapToGrid = newSnapToGrid;
@@ -606,6 +627,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSnapToGuides() {
 		return snapToGuides;
 	}
@@ -615,6 +637,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSnapToGuides(boolean newSnapToGuides) {
 		boolean oldSnapToGuides = snapToGuides;
 		snapToGuides = newSnapToGuides;
@@ -627,6 +650,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Ruler getVerticalRuler() {
 		if (verticalRuler != null && verticalRuler.eIsProxy()) {
 			InternalEObject oldVerticalRuler = (InternalEObject)verticalRuler;
@@ -653,6 +677,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVerticalRuler(Ruler newVerticalRuler) {
 		Ruler oldVerticalRuler = verticalRuler;
 		verticalRuler = newVerticalRuler;
@@ -915,7 +940,7 @@ public class DiagramDataImpl extends EObjectImpl implements DiagramData {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (showGrid: ");
 		result.append(showGrid);
 		result.append(", showRulers: ");

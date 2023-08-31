@@ -35,10 +35,10 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.DiagramNodeImpl#getDiagramLocation <em>Diagram Location</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -76,6 +76,7 @@ public abstract class DiagramNodeImpl extends EObjectImpl implements DiagramNode
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DiagramLocation getDiagramLocation() {
 		if (diagramLocation != null && diagramLocation.eIsProxy()) {
 			InternalEObject oldDiagramLocation = (InternalEObject)diagramLocation;
@@ -102,6 +103,7 @@ public abstract class DiagramNodeImpl extends EObjectImpl implements DiagramNode
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDiagramLocation(DiagramLocation newDiagramLocation) {
 		DiagramLocation oldDiagramLocation = diagramLocation;
 		diagramLocation = newDiagramLocation;

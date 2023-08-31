@@ -25,11 +25,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Guide#getPosition <em>Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Guide#getRuler <em>Ruler</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getGuide()
  * @model

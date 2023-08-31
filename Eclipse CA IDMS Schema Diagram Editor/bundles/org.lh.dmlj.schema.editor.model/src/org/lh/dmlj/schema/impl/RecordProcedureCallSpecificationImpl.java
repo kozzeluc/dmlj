@@ -35,11 +35,11 @@ import org.lh.dmlj.schema.SchemaRecord;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.RecordProcedureCallSpecificationImpl#getVerb <em>Verb</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -87,6 +87,7 @@ public class RecordProcedureCallSpecificationImpl extends ProcedureCallSpecifica
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaRecord getRecord() {
 		if (eContainerFeatureID() != SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD) return null;
 		return (SchemaRecord)eInternalContainer();
@@ -107,6 +108,7 @@ public class RecordProcedureCallSpecificationImpl extends ProcedureCallSpecifica
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRecord(SchemaRecord newRecord) {
 		if (newRecord != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.RECORD_PROCEDURE_CALL_SPECIFICATION__RECORD && newRecord != null)) {
 			if (EcoreUtil.isAncestor(this, newRecord))
@@ -128,6 +130,7 @@ public class RecordProcedureCallSpecificationImpl extends ProcedureCallSpecifica
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RecordProcedureCallVerb getVerb() {
 		return verb;
 	}
@@ -137,6 +140,7 @@ public class RecordProcedureCallSpecificationImpl extends ProcedureCallSpecifica
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVerb(RecordProcedureCallVerb newVerb) {
 		RecordProcedureCallVerb oldVerb = verb;
 		verb = newVerb == null ? VERB_EDEFAULT : newVerb;
@@ -265,7 +269,7 @@ public class RecordProcedureCallSpecificationImpl extends ProcedureCallSpecifica
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (verb: ");
 		result.append(verb);
 		result.append(')');

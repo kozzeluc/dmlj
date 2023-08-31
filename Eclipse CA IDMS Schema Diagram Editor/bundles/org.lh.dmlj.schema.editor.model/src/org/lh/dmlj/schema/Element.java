@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Element#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getChildren <em>Children</em>}</li>
@@ -46,7 +47,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.Element#getUsage <em>Usage</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Element#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getElement()
  * @model

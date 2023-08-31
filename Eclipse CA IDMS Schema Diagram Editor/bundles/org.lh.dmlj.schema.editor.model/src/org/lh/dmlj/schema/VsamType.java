@@ -25,12 +25,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.VsamType#getLengthType <em>Length Type</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.VsamType#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.VsamType#isSpanned <em>Spanned</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getVsamType()
  * @model
