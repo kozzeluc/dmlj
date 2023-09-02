@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2023  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,14 +38,12 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 
 public class EditProcedureCallsDialog extends Dialog {
+	private static final String AREA_EXAMPLES = "call 'IDMSCOMP BEFORE READY EXCLUSIVE UPDATE'\ncall 'IDMSDCOM AFTER FINISH'\ncall 'IDMSCOMP ON_ERROR_DURING ROLLBACK'";
+	private static final String RECORD_EXAMPLES = "call 'IDMSCOMP BEFORE STORE'\ncall 'IDMSCOMP AFTER GET'\ncall 'IDMSCOMP ON_ERROR_DURING DISCONNECT'";
 	
 	private IDslFacetModifier dslFacetModifier;
 	private Text textDsl;
-	private Button btnValidate;
 	private Text textMessage;
-	private Text textExample;
-	private Label lblExample;
-	private Label lblProcedureDefinitionDsl;
 
 	public EditProcedureCallsDialog(Shell parentShell, IDslFacetModifier dslFacetModifier) {
 		super(parentShell);
@@ -61,21 +59,19 @@ public class EditProcedureCallsDialog extends Dialog {
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-				true);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.CANCEL_LABEL, false);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite area = (Composite) super.createDialogArea(parent);
-		GridLayout gl_area = new GridLayout(2, false);
-		gl_area.marginWidth = 11;
-		gl_area.marginHeight = 13;
-		area.setLayout(gl_area);
+		GridLayout glArea = new GridLayout(2, false);
+		glArea.marginWidth = 11;
+		glArea.marginHeight = 13;
+		area.setLayout(glArea);
 		
-		lblProcedureDefinitionDsl = new Label(area, SWT.NONE);
+		Label lblProcedureDefinitionDsl = new Label(area, SWT.NONE);
 		lblProcedureDefinitionDsl.setText("Procedure Definition DSL:");
 		new Label(area, SWT.NONE);
 		
@@ -93,7 +89,7 @@ public class EditProcedureCallsDialog extends Dialog {
 		textDsl.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
 		textDsl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
-		btnValidate = new Button(area, SWT.NONE);
+		Button btnValidate = new Button(area, SWT.NONE);
 		btnValidate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -122,21 +118,25 @@ public class EditProcedureCallsDialog extends Dialog {
 		});
 		textMessage.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		textMessage.setBackground(area.getBackground());
-		GridData gd_textMessage = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_textMessage.heightHint = 50;
-		textMessage.setLayoutData(gd_textMessage);
+		GridData gdTextMessage = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gdTextMessage.heightHint = 50;
+		textMessage.setLayoutData(gdTextMessage);
 		textMessage.setText("<message>");
 		new Label(area, SWT.NONE);
 		
-		lblExample = new Label(area, SWT.NONE);
-		GridData gd_lblExample = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblExample.verticalIndent = 5;
-		lblExample.setLayoutData(gd_lblExample);
+		Label lblExample = new Label(area, SWT.NONE);
+		GridData gdLblExample = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblExample.verticalIndent = 5;
+		lblExample.setLayoutData(gdLblExample);
 		lblExample.setText("Example:");
 		new Label(area, SWT.NONE);
 		
-		textExample = new Text(area, SWT.NO_FOCUS | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
-		textExample.setText("call 'IDMSCOMP BEFORE STORE'\ncall 'IDMSCOMP BEFORE MODIFY'\ncall 'IDMSDCOM AFTER GET'");
+		Text textExample = new Text(area, SWT.NO_FOCUS | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		if ("area".equals(dslFacetModifier.getModelType())) {
+			textExample.setText(AREA_EXAMPLES);
+		} else {
+			textExample.setText(RECORD_EXAMPLES);
+		}
 		textExample.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		textExample.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
 		textExample.setBackground(area.getBackground());
