@@ -171,7 +171,7 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
         	targetRecord = (SchemaRecord) modelObject;
         }
         
-        commandStack = editor.getAdapter(CommandStack.class);
+        commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
 	    Assert.isNotNull(commandStack, "no command stack available");
 	}	
 
