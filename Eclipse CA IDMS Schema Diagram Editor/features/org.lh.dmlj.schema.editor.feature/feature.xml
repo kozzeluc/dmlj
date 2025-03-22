@@ -2,7 +2,7 @@
 <feature
       id="org.lh.dmlj.schema.editor"
       label="CA IDMS/DB Schema Diagram Editor"
-      version="3.4.3.qualifier"
+      version="3.4.4.qualifier"
       provider-name="Luc Hermans"
       plugin="org.lh.dmlj.schema.editor.core">
 
@@ -24,70 +24,42 @@
 
    <plugin
          id="org.lh.dmlj.schema.editor.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.model"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.service"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.service.api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.dictionary.tools"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.help"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.groovy"
-         download-size="0"
-         install-size="0"
          version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.dsl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.jaxb"
-         download-size="0"
-         install-size="0"
          version="0.0.0"/>
 
    <plugin
          id="org.lh.dmlj.schema.editor.tika"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>
