@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,9 +20,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventObject;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -56,7 +63,6 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
-import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
@@ -144,17 +150,51 @@ import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
 public class SchemaEditor 
 	extends GraphicalEditorWithFlyoutPalette 
 	implements CommandStackEventListener, ITabbedPropertySheetPageContributor {
-	
+
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	private static final String FILE_EXTENSION_SCHEMA = "schema";
 	private static final String FILE_EXTENSION_SCHEMADSL = "schemadsl";	
 	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";
+	private static final String ADD_ZOOM_LISTENER = "addZoomListener";
+	private static final String ZOOM_CHANGED = "zoomChanged";
 	
-	private static final EAttribute ATTRIBUTE_SHOW_GRID = 
-		SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
-	private static final EAttribute ATTRIBUTE_SHOW_RULERS = 
-		SchemaPackage.eINSTANCE.getDiagramData_ShowRulers();
+	private static final EAttribute ATTRIBUTE_SHOW_GRID = SchemaPackage.eINSTANCE.getDiagramData_ShowGrid();
+	private static final EAttribute ATTRIBUTE_SHOW_RULERS = SchemaPackage.eINSTANCE.getDiagramData_ShowRulers();
+	
+	private static List<String> zoomListenerClassCandidateNames = List.of("org.eclipse.draw2d.zoom.ZoomListener", "org.eclipse.gef.editparts.ZoomListener");
+	private static Method addZoomListenerMethod;
+		
+	private static final Function<String, Optional<Class<?>>> toZoomListenerClass = name -> {
+		try {
+			return Optional.of(Class.forName(name));
+		} catch (ClassNotFoundException e) {
+			return Optional.empty();
+		}
+	};
+	private static final Function<Class<?>, Optional<Method>> toAddZoomListenerMethod = c -> 
+		Arrays.stream(ZoomManager.class.getMethods())
+				.filter(m -> ADD_ZOOM_LISTENER.equals(m.getName()))
+				.filter(m -> m.getParameterCount() == 1)
+				.filter(m -> m.getParameterTypes()[0] == c)
+				.findFirst();
+	
+	static {
+		addZoomListenerMethod = zoomListenerClassCandidateNames.stream()
+			.map(toZoomListenerClass)
+			.flatMap(Optional::stream)
+			.map(toAddZoomListenerMethod)
+			.flatMap(Optional::stream)
+			.findFirst()
+			.orElse(null);
+		if (addZoomListenerMethod == null) {
+			Plugin.getDefault().getLog().error("No ZoomListener class found for " + ZoomManager.class.getName() + 
+					" or no addZoomListener method found for neither " + zoomListenerClassCandidateNames + "; zooming will NOT function properly");
+		} else {
+			Plugin.getDefault().getLog().info("ZoomListener class: " + addZoomListenerMethod.getParameterTypes()[0].getName());
+		}
+		
+	}
 	
 	// This class listens to changes to the file system in the workspace, and
 	// makes changes accordingly.
@@ -425,25 +465,10 @@ public class SchemaEditor
 				getCommandStack().execute(command);				
 			}
 			
-			// make sure we are informed of zoom changes (the graphical editor automatically adjusts
-			// the graphics)
-			manager.addZoomListener(new ZoomListener() {
-				@Override
-				public void zoomChanged(double zoom) {
-					if (zoom != schema.getDiagramData().getZoomLevel()) {
-						ModelChangeType modelChangeType;
-						if (zoom < schema.getDiagramData().getZoomLevel()) {
-							modelChangeType = ModelChangeType.ZOOM_OUT;
-						} else {
-							modelChangeType = ModelChangeType.ZOOM_IN;
-						}
-						ModelChangeContext context = new ModelChangeContext(modelChangeType);
-						SetZoomLevelCommand command = new SetZoomLevelCommand(schema, zoom);
-						command.setContext(context);
-						getCommandStack().execute(command);
-					}
-				}
-			});			
+			// make sure we are informed of zoom changes (the graphical editor automatically adjusts the graphics)
+			if (addZoomListenerMethod != null) {
+				addZoomListener(manager);
+			}
 		}		
 		// Scroll-wheel Zoom
 		/*getGraphicalViewer().setProperty(MouseWheelHandler.KeyGenerator.getKey(SWT.MOD1),
@@ -501,6 +526,39 @@ public class SchemaEditor
 		};
 		modelChangeDispatcher.addModelChangeListener(modelChangeListener);
 		
+	}
+	
+	private void addZoomListener(ZoomManager manager) {
+		try {
+			var invocationHandler = new InvocationHandler() {
+				@Override
+				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+					if (ZOOM_CHANGED.equals(method.getName()) && args.length == 1 && args[0].getClass() == Double.class) {
+						handleZoom((double) args[0]);
+					}
+					return null;
+				}
+			};
+			var zoomListener = Proxy.newProxyInstance(manager.getClass().getClassLoader(), new Class[] { addZoomListenerMethod.getParameterTypes()[0] }, invocationHandler);
+			addZoomListenerMethod.invoke(manager, zoomListener);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			Plugin.getDefault().getLog().error("An Exception was thrown while adding the ZoomListener", e);
+		}
+	}
+
+	private void handleZoom(double zoom) {
+		if (zoom != schema.getDiagramData().getZoomLevel()) {
+			ModelChangeType modelChangeType;
+			if (zoom < schema.getDiagramData().getZoomLevel()) {
+				modelChangeType = ModelChangeType.ZOOM_OUT;
+			} else {
+				modelChangeType = ModelChangeType.ZOOM_IN;
+			}
+			ModelChangeContext context = new ModelChangeContext(modelChangeType);
+			SetZoomLevelCommand command = new SetZoomLevelCommand(schema, zoom);
+			command.setContext(context);
+			getCommandStack().execute(command);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

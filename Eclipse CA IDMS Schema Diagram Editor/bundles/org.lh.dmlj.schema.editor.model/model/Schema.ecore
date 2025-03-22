@@ -17,6 +17,7 @@
     <eLiterals name="FINISH" value="11"/>
     <eLiterals name="COMMIT" value="12"/>
     <eLiterals name="ROLLBACK" value="13"/>
+    <eLiterals name="READY" value="14" literal="READY"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AreaProcedureCallSpecification" eSuperTypes="#//ProcedureCallSpecification">
     <eStructuralFeatures xsi:type="ecore:EReference" name="area" lowerBound="1" eType="#//SchemaArea"

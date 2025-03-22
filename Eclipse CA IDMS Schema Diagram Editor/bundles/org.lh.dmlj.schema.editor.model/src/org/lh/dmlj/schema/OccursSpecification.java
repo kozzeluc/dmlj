@@ -26,13 +26,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.OccursSpecification#getCount <em>Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OccursSpecification#getDependingOn <em>Depending On</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OccursSpecification#getElement <em>Element</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.OccursSpecification#getIndexElements <em>Index Elements</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getOccursSpecification()
  * @model

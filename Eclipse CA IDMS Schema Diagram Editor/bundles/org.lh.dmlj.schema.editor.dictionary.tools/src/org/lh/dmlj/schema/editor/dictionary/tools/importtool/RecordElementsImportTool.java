@@ -87,7 +87,7 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
 				Rowid rowidRcdsyn_079b = JdbcTools.getRowid(row, Rcdsyn_079.ROWID);
-				if (rowidRcdsyn_079b != rcdsyn_079.getRowid()) {
+				if (!rowidRcdsyn_079b.equals(rcdsyn_079.getRowid())) {
 					String rsynName_079 = row.getString(Rcdsyn_079.RSYN_NAME_079).trim();
 					short rsynVer_079 = row.getShort(Rcdsyn_079.RSYN_VER_079);
 					if (!rsynName_079.equals(rcdsyn_079.getRsynName_079()) || 
@@ -130,7 +130,7 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {				
 				Rowid rowidOfRcdsyn_079 = JdbcTools.getRowid(row, Rcdsyn_079.ROWID);
-				if (rowidOfRcdsyn_079 == rcdsyn_079.getRowid()) {										
+				if (rowidOfRcdsyn_079.equals(rcdsyn_079.getRowid())) {										
 					Namesyn_083 namesyn_083 = new Namesyn_083();	
 					namesyn_083.setRowid(JdbcTools.getRowid(row, Namesyn_083.ROWID));
 					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));
@@ -146,7 +146,7 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 					sdr_042.setPic_042(row.getString(Sdr_042.PIC_042));
 					sdr_042.setUse_042(row.getShort(Sdr_042.USE_042));
 					namesyn_083.setSdr_042(sdr_042);					
-				} else if (rcdsyn_079b != null && rowidOfRcdsyn_079 == rcdsyn_079b.getRowid()) {					
+				} else if (rcdsyn_079b != null && rowidOfRcdsyn_079.equals(rcdsyn_079b.getRowid())) {					
 					Namesyn_083 namesyn_083 = new Namesyn_083();	
 					namesyn_083.setRowid(JdbcTools.getRowid(row, Namesyn_083.ROWID));
 					namesyn_083.setDependOn_083(row.getString(Namesyn_083.DEPEND_ON_083));

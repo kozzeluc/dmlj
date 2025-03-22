@@ -38,6 +38,7 @@ import org.lh.dmlj.schema.SystemOwner;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.AreaSpecificationImpl#getSymbolicSubareaName <em>Symbolic Subarea Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.AreaSpecificationImpl#getArea <em>Area</em>}</li>
@@ -45,7 +46,6 @@ import org.lh.dmlj.schema.SystemOwner;
  *   <li>{@link org.lh.dmlj.schema.impl.AreaSpecificationImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.AreaSpecificationImpl#getSystemOwner <em>System Owner</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -120,6 +120,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSymbolicSubareaName() {
 		return symbolicSubareaName;
 	}
@@ -129,6 +130,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSymbolicSubareaName(String newSymbolicSubareaName) {
 		String oldSymbolicSubareaName = symbolicSubareaName;
 		symbolicSubareaName = newSymbolicSubareaName;
@@ -141,6 +143,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaArea getArea() {
 		if (eContainerFeatureID() != SchemaPackage.AREA_SPECIFICATION__AREA) return null;
 		return (SchemaArea)eInternalContainer();
@@ -161,6 +164,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setArea(SchemaArea newArea) {
 		if (newArea != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.AREA_SPECIFICATION__AREA && newArea != null)) {
 			if (EcoreUtil.isAncestor(this, newArea))
@@ -182,6 +186,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OffsetExpression getOffsetExpression() {
 		return offsetExpression;
 	}
@@ -206,6 +211,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOffsetExpression(OffsetExpression newOffsetExpression) {
 		if (newOffsetExpression != offsetExpression) {
 			NotificationChain msgs = null;
@@ -225,6 +231,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaRecord getRecord() {
 		if (record != null && record.eIsProxy()) {
 			InternalEObject oldRecord = (InternalEObject)record;
@@ -266,6 +273,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRecord(SchemaRecord newRecord) {
 		if (newRecord != record) {
 			NotificationChain msgs = null;
@@ -285,6 +293,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SystemOwner getSystemOwner() {
 		if (systemOwner != null && systemOwner.eIsProxy()) {
 			InternalEObject oldSystemOwner = (InternalEObject)systemOwner;
@@ -326,6 +335,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSystemOwner(SystemOwner newSystemOwner) {
 		if (newSystemOwner != systemOwner) {
 			NotificationChain msgs = null;
@@ -511,7 +521,7 @@ public class AreaSpecificationImpl extends EObjectImpl implements AreaSpecificat
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (symbolicSubareaName: ");
 		result.append(symbolicSubareaName);
 		result.append(')');

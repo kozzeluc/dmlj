@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectionLabels <em>Connection Labels</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getConnectionParts <em>Connection Parts</em>}</li>
@@ -44,7 +45,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getVerticalRuler <em>Vertical Ruler</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramData#getZoomLevel <em>Zoom Level</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getDiagramData()
  * @model

@@ -36,13 +36,13 @@ import org.lh.dmlj.schema.ViaSpecification;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getDisplacementPageCount <em>Displacement Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getSet <em>Set</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ViaSpecificationImpl#getSymbolicDisplacementName <em>Symbolic Displacement Name</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -117,6 +117,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getSymbolicDisplacementName() {
 		return symbolicDisplacementName;
 	}
@@ -126,6 +127,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSymbolicDisplacementName(String newSymbolicDisplacementName) {
 		String oldSymbolicDisplacementName = symbolicDisplacementName;
 		symbolicDisplacementName = newSymbolicDisplacementName;
@@ -138,6 +140,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Set getSet() {
 		if (set != null && set.eIsProxy()) {
 			InternalEObject oldSet = (InternalEObject)set;
@@ -179,6 +182,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSet(Set newSet) {
 		if (newSet != set) {
 			NotificationChain msgs = null;
@@ -198,6 +202,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaRecord getRecord() {
 		if (eContainerFeatureID() != SchemaPackage.VIA_SPECIFICATION__RECORD) return null;
 		return (SchemaRecord)eInternalContainer();
@@ -218,6 +223,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRecord(SchemaRecord newRecord) {
 		if (newRecord != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.VIA_SPECIFICATION__RECORD && newRecord != null)) {
 			if (EcoreUtil.isAncestor(this, newRecord))
@@ -382,7 +388,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (displacementPageCount: ");
 		result.append(displacementPageCount);
 		result.append(", symbolicDisplacementName: ");
@@ -396,6 +402,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getDisplacementPageCount() {
 		return displacementPageCount;
 	}
@@ -405,6 +412,7 @@ public class ViaSpecificationImpl extends EObjectImpl implements ViaSpecificatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDisplacementPageCount(Short newDisplacementPageCount) {
 		Short oldDisplacementPageCount = displacementPageCount;
 		displacementPageCount = newDisplacementPageCount;

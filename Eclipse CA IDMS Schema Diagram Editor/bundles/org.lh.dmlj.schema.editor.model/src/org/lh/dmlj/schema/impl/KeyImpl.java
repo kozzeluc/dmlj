@@ -46,6 +46,7 @@ import org.lh.dmlj.schema.SchemaRecord;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isCalcKey <em>Calc Key</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isCompressed <em>Compressed</em>}</li>
@@ -57,7 +58,6 @@ import org.lh.dmlj.schema.SchemaRecord;
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#isNaturalSequence <em>Natural Sequence</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.KeyImpl#getRecord <em>Record</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -218,6 +218,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DuplicatesOption getDuplicatesOption() {
 		return duplicatesOption;
 	}
@@ -227,6 +228,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDuplicatesOption(DuplicatesOption newDuplicatesOption) {
 		DuplicatesOption oldDuplicatesOption = duplicatesOption;
 		duplicatesOption = newDuplicatesOption == null ? DUPLICATES_OPTION_EDEFAULT : newDuplicatesOption;
@@ -239,6 +241,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isCompressed() {
 		return compressed;
 	}
@@ -248,6 +251,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCompressed(boolean newCompressed) {
 		boolean oldCompressed = compressed;
 		compressed = newCompressed;
@@ -260,6 +264,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isNaturalSequence() {
 		return naturalSequence;
 	}
@@ -269,6 +274,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNaturalSequence(boolean newNaturalSequence) {
 		boolean oldNaturalSequence = naturalSequence;
 		naturalSequence = newNaturalSequence;
@@ -281,6 +287,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<KeyElement> getElements() {
 		if (elements == null) {
 			elements = new EObjectContainmentWithInverseEList<KeyElement>(KeyElement.class, this, SchemaPackage.KEY__ELEMENTS, SchemaPackage.KEY_ELEMENT__KEY);
@@ -318,6 +325,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public MemberRole getMemberRole() {
 		if (memberRole != null && memberRole.eIsProxy()) {
 			InternalEObject oldMemberRole = (InternalEObject)memberRole;
@@ -359,6 +367,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMemberRole(MemberRole newMemberRole) {
 		if (newMemberRole != memberRole) {
 			NotificationChain msgs = null;
@@ -378,6 +387,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaRecord getRecord() {
 		if (eContainerFeatureID() != SchemaPackage.KEY__RECORD) return null;
 		return (SchemaRecord)eInternalContainer();
@@ -398,6 +408,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRecord(SchemaRecord newRecord) {
 		if (newRecord != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.KEY__RECORD && newRecord != null)) {
 			if (EcoreUtil.isAncestor(this, newRecord))
@@ -601,7 +612,7 @@ public class KeyImpl extends EObjectImpl implements Key {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (compressed: ");
 		result.append(compressed);
 		result.append(", duplicatesOption: ");

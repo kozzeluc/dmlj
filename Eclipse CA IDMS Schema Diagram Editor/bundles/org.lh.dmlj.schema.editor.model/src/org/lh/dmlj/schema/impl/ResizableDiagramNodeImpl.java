@@ -31,11 +31,11 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ResizableDiagramNodeImpl#getHeight <em>Height</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ResizableDiagramNodeImpl#getWidth <em>Width</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -104,6 +104,7 @@ public abstract class ResizableDiagramNodeImpl extends DiagramNodeImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getHeight() {
 		return height;
 	}
@@ -113,6 +114,7 @@ public abstract class ResizableDiagramNodeImpl extends DiagramNodeImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setHeight(short newHeight) {
 		short oldHeight = height;
 		height = newHeight;
@@ -125,6 +127,7 @@ public abstract class ResizableDiagramNodeImpl extends DiagramNodeImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getWidth() {
 		return width;
 	}
@@ -134,6 +137,7 @@ public abstract class ResizableDiagramNodeImpl extends DiagramNodeImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setWidth(short newWidth) {
 		short oldWidth = width;
 		width = newWidth;
@@ -218,7 +222,7 @@ public abstract class ResizableDiagramNodeImpl extends DiagramNodeImpl implement
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (height: ");
 		result.append(height);
 		result.append(", width: ");

@@ -24,11 +24,11 @@ package org.lh.dmlj.schema;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.ResizableDiagramNode#getHeight <em>Height</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ResizableDiagramNode#getWidth <em>Width</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getResizableDiagramNode()
  * @model abstract="true"

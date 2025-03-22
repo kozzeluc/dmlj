@@ -5,13 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lh.dmlj.schema.editor</groupId>
     <artifactId>org.lh.dmlj.schema.editor.parent</artifactId>
-    <version>3.4.3-SNAPSHOT</version>
+    <version>3.4.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <tycho-version>2.1.0</tycho-version>
         <groovy-eclipse-compiler-version>3.6.0-03</groovy-eclipse-compiler-version>
         <groovy-eclipse-batch-version>3.0.7-02</groovy-eclipse-batch-version>
-        <eclipse>http://download.eclipse.org/releases/2018-12</eclipse>
+        <eclipse>http://download.eclipse.org/releases/2020-06</eclipse>
+		<toolchain-version>3.1.0</toolchain-version>
     </properties>
     <build>
         <plugins>
@@ -63,7 +64,26 @@
         				<optionalDependencies>ignore</optionalDependencies>
       				</dependency-resolution>
     			</configuration>
-  			</plugin>            
+  			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>${toolchain-version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>11</version>
+                        </jdk>
+                    </toolchains>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <repositories>

@@ -37,13 +37,13 @@ import org.lh.dmlj.schema.Set;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.OwnerRoleImpl#getNextDbkeyPosition <em>Next Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OwnerRoleImpl#getPriorDbkeyPosition <em>Prior Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OwnerRoleImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OwnerRoleImpl#getSet <em>Set</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -122,6 +122,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getNextDbkeyPosition() {
 		return nextDbkeyPosition;
 	}
@@ -131,6 +132,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNextDbkeyPosition(short newNextDbkeyPosition) {
 		short oldNextDbkeyPosition = nextDbkeyPosition;
 		nextDbkeyPosition = newNextDbkeyPosition;
@@ -143,6 +145,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getPriorDbkeyPosition() {
 		return priorDbkeyPosition;
 	}
@@ -152,6 +155,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPriorDbkeyPosition(Short newPriorDbkeyPosition) {
 		Short oldPriorDbkeyPosition = priorDbkeyPosition;
 		priorDbkeyPosition = newPriorDbkeyPosition;
@@ -164,6 +168,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaRecord getRecord() {
 		if (record != null && record.eIsProxy()) {
 			InternalEObject oldRecord = (InternalEObject)record;
@@ -205,6 +210,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRecord(SchemaRecord newRecord) {
 		if (newRecord != record) {
 			NotificationChain msgs = null;
@@ -224,6 +230,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.OWNER_ROLE__SET) return null;
 		return (Set)eInternalContainer();
@@ -244,6 +251,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSet(Set newSet) {
 		if (newSet != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.OWNER_ROLE__SET && newSet != null)) {
 			if (EcoreUtil.isAncestor(this, newSet))
@@ -408,7 +416,7 @@ public class OwnerRoleImpl extends RoleImpl implements OwnerRole {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (nextDbkeyPosition: ");
 		result.append(nextDbkeyPosition);
 		result.append(", priorDbkeyPosition: ");

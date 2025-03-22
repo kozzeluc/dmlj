@@ -448,7 +448,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link SchemaPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -462,7 +462,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		if (isInited) return (SchemaPackage)EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI);
 
 		// Obtain or create and register package
-		SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new SchemaPackageImpl());
+		Object registeredSchemaPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		SchemaPackageImpl theSchemaPackage = registeredSchemaPackage instanceof SchemaPackageImpl ? (SchemaPackageImpl)registeredSchemaPackage : new SchemaPackageImpl();
 
 		isInited = true;
 
@@ -475,7 +476,6 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		// Mark meta-data to indicate it can't be changed
 		theSchemaPackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(SchemaPackage.eNS_URI, theSchemaPackage);
 		return theSchemaPackage;
@@ -486,6 +486,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSchema() {
 		return schemaEClass;
 	}
@@ -495,6 +496,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchema_Name() {
 		return (EAttribute)schemaEClass.getEStructuralFeatures().get(5);
 	}
@@ -504,6 +506,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchema_Version() {
 		return (EAttribute)schemaEClass.getEStructuralFeatures().get(9);
 	}
@@ -513,6 +516,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchema_Description() {
 		return (EAttribute)schemaEClass.getEStructuralFeatures().get(2);
 	}
@@ -522,6 +526,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchema_MemoDate() {
 		return (EAttribute)schemaEClass.getEStructuralFeatures().get(4);
 	}
@@ -531,6 +536,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchema_Areas() {
 		return (EReference)schemaEClass.getEStructuralFeatures().get(0);
 	}
@@ -540,6 +546,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchema_Comments() {
 		return (EAttribute)schemaEClass.getEStructuralFeatures().get(1);
 	}
@@ -549,6 +556,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchema_Records() {
 		return (EReference)schemaEClass.getEStructuralFeatures().get(7);
 	}
@@ -558,6 +566,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchema_Sets() {
 		return (EReference)schemaEClass.getEStructuralFeatures().get(8);
 	}
@@ -567,6 +576,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchema_DiagramData() {
 		return (EReference)schemaEClass.getEStructuralFeatures().get(3);
 	}
@@ -576,6 +586,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchema_Procedures() {
 		return (EReference)schemaEClass.getEStructuralFeatures().get(6);
 	}
@@ -585,6 +596,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSchemaArea() {
 		return schemaAreaEClass;
 	}
@@ -594,6 +606,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaArea_Name() {
 		return (EAttribute)schemaAreaEClass.getEStructuralFeatures().get(2);
 	}
@@ -603,6 +616,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaArea_Schema() {
 		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(5);
 	}
@@ -612,6 +626,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaArea_Indexes() {
 		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(1);
 	}
@@ -621,6 +636,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaArea_Procedures() {
 		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(3);
 	}
@@ -630,6 +646,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaArea_AreaSpecifications() {
 		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(0);
 	}
@@ -639,6 +656,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaArea_Records() {
 		return (EReference)schemaAreaEClass.getEStructuralFeatures().get(4);
 	}
@@ -648,6 +666,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSchemaRecord() {
 		return schemaRecordEClass;
 	}
@@ -657,6 +676,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_BaseName() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(0);
 	}
@@ -666,6 +686,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_BaseVersion() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(1);
 	}
@@ -675,6 +696,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_Calc() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(2);
 	}
@@ -684,6 +706,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_Name() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(11);
 	}
@@ -693,6 +716,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_Id() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(7);
 	}
@@ -702,6 +726,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_ControlLength() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(3);
 	}
@@ -711,6 +736,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_DataLength() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(4);
 	}
@@ -720,6 +746,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_Direct() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(5);
 	}
@@ -729,6 +756,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_StorageMode() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(13);
 	}
@@ -738,6 +766,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_LocationMode() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(8);
 	}
@@ -747,6 +776,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_MinimumRootLength() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(10);
 	}
@@ -756,6 +786,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_MinimumFragmentLength() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(9);
 	}
@@ -765,6 +796,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_PrefixLength() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(12);
 	}
@@ -774,6 +806,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_Fragmented() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(6);
 	}
@@ -783,6 +816,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_CalcKey() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(15);
 	}
@@ -792,6 +826,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_Schema() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(23);
 	}
@@ -801,6 +836,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_SynonymName() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(24);
 	}
@@ -810,6 +846,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_SynonymVersion() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(25);
 	}
@@ -819,6 +856,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_Via() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(26);
 	}
@@ -828,6 +866,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_ViaSpecification() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(27);
 	}
@@ -837,6 +876,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_Vsam() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(28);
 	}
@@ -846,6 +886,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSchemaRecord_VsamCalc() {
 		return (EAttribute)schemaRecordEClass.getEStructuralFeatures().get(29);
 	}
@@ -855,6 +896,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_VsamType() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(30);
 	}
@@ -864,6 +906,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_OwnerRoles() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(19);
 	}
@@ -873,6 +916,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_MemberRoles() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(18);
 	}
@@ -882,6 +926,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_RootElements() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(22);
 	}
@@ -891,6 +936,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_Procedures() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(20);
 	}
@@ -900,6 +946,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_Keys() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(17);
 	}
@@ -909,6 +956,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_AreaSpecification() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(14);
 	}
@@ -918,6 +966,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_Elements() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(16);
 	}
@@ -927,6 +976,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSchemaRecord_Roles() {
 		return (EReference)schemaRecordEClass.getEStructuralFeatures().get(21);
 	}
@@ -936,6 +986,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSet() {
 		return setEClass;
 	}
@@ -945,6 +996,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSet_Chained() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(0);
 	}
@@ -954,6 +1006,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSet_Indexed() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(1);
 	}
@@ -963,6 +1016,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSet_Name() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(6);
 	}
@@ -972,6 +1026,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSet_Mode() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(4);
 	}
@@ -981,6 +1036,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSet_MultipleMember() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(5);
 	}
@@ -990,6 +1046,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSet_Order() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(7);
 	}
@@ -999,6 +1056,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSet_Schema() {
 		return (EReference)setEClass.getEStructuralFeatures().get(9);
 	}
@@ -1008,6 +1066,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSet_Sorted() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(10);
 	}
@@ -1017,6 +1076,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSet_Owner() {
 		return (EReference)setEClass.getEStructuralFeatures().get(8);
 	}
@@ -1026,6 +1086,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSet_SystemOwner() {
 		return (EReference)setEClass.getEStructuralFeatures().get(11);
 	}
@@ -1035,6 +1096,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSet_Members() {
 		return (EReference)setEClass.getEStructuralFeatures().get(3);
 	}
@@ -1044,6 +1106,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSet_ViaMembers() {
 		return (EReference)setEClass.getEStructuralFeatures().get(12);
 	}
@@ -1053,6 +1116,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getSet_Vsam() {
 		return (EAttribute)setEClass.getEStructuralFeatures().get(13);
 	}
@@ -1062,6 +1126,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSet_VsamIndex() {
 		return (EReference)setEClass.getEStructuralFeatures().get(14);
 	}
@@ -1071,6 +1136,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRole() {
 		return roleEClass;
 	}
@@ -1080,6 +1146,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRuler() {
 		return rulerEClass;
 	}
@@ -1089,6 +1156,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRuler_Guides() {
 		return (EReference)rulerEClass.getEStructuralFeatures().get(0);
 	}
@@ -1098,6 +1166,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getRuler_Type() {
 		return (EAttribute)rulerEClass.getEStructuralFeatures().get(1);
 	}
@@ -1107,6 +1176,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRuler_DiagramData() {
 		return (EReference)rulerEClass.getEStructuralFeatures().get(2);
 	}
@@ -1116,6 +1186,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSet_IndexedSetModeSpecification() {
 		return (EReference)setEClass.getEStructuralFeatures().get(2);
 	}
@@ -1125,6 +1196,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getElement() {
 		return elementEClass;
 	}
@@ -1134,6 +1206,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_BaseName() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(0);
 	}
@@ -1143,6 +1216,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Name() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(5);
 	}
@@ -1152,6 +1226,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Level() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(4);
 	}
@@ -1161,6 +1236,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Usage() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(15);
 	}
@@ -1170,6 +1246,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Value() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(16);
 	}
@@ -1179,6 +1256,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getGuide() {
 		return guideEClass;
 	}
@@ -1188,6 +1266,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getGuide_Position() {
 		return (EAttribute)guideEClass.getEStructuralFeatures().get(0);
 	}
@@ -1197,6 +1276,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getGuide_Ruler() {
 		return (EReference)guideEClass.getEStructuralFeatures().get(1);
 	}
@@ -1206,6 +1286,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Offset() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(8);
 	}
@@ -1215,6 +1296,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Length() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(3);
 	}
@@ -1224,6 +1306,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Picture() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(10);
 	}
@@ -1233,6 +1316,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_Nullable() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(6);
 	}
@@ -1242,6 +1326,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getElement_Record() {
 		return (EReference)elementEClass.getEStructuralFeatures().get(11);
 	}
@@ -1251,6 +1336,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getElement_KeyElements() {
 		return (EReference)elementEClass.getEStructuralFeatures().get(2);
 	}
@@ -1260,6 +1346,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getElement_Children() {
 		return (EReference)elementEClass.getEStructuralFeatures().get(1);
 	}
@@ -1269,6 +1356,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getElement_Redefines() {
 		return (EReference)elementEClass.getEStructuralFeatures().get(12);
 	}
@@ -1278,6 +1366,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_SyntaxLength() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(13);
 	}
@@ -1287,6 +1376,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getElement_SyntaxPosition() {
 		return (EAttribute)elementEClass.getEStructuralFeatures().get(14);
 	}
@@ -1296,6 +1386,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getElement_OccursSpecification() {
 		return (EReference)elementEClass.getEStructuralFeatures().get(7);
 	}
@@ -1305,6 +1396,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getElement_Parent() {
 		return (EReference)elementEClass.getEStructuralFeatures().get(9);
 	}
@@ -1314,6 +1406,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getKeyElement() {
 		return keyElementEClass;
 	}
@@ -1323,6 +1416,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getKeyElement_Element() {
 		return (EReference)keyElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -1332,6 +1426,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKeyElement_SortSequence() {
 		return (EAttribute)keyElementEClass.getEStructuralFeatures().get(3);
 	}
@@ -1341,6 +1436,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getKeyElement_Key() {
 		return (EReference)keyElementEClass.getEStructuralFeatures().get(2);
 	}
@@ -1350,6 +1446,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKeyElement_Dbkey() {
 		return (EAttribute)keyElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -1359,6 +1456,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getMemberRole() {
 		return memberRoleEClass;
 	}
@@ -1368,6 +1466,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMemberRole_IndexDbkeyPosition() {
 		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(0);
 	}
@@ -1377,6 +1476,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMemberRole_MembershipOption() {
 		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(1);
 	}
@@ -1386,6 +1486,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMemberRole_NextDbkeyPosition() {
 		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(2);
 	}
@@ -1395,6 +1496,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMemberRole_PriorDbkeyPosition() {
 		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(3);
 	}
@@ -1404,6 +1506,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getMemberRole_OwnerDbkeyPosition() {
 		return (EAttribute)memberRoleEClass.getEStructuralFeatures().get(4);
 	}
@@ -1413,6 +1516,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMemberRole_Record() {
 		return (EReference)memberRoleEClass.getEStructuralFeatures().get(5);
 	}
@@ -1422,6 +1526,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMemberRole_Set() {
 		return (EReference)memberRoleEClass.getEStructuralFeatures().get(6);
 	}
@@ -1431,6 +1536,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMemberRole_SortKey() {
 		return (EReference)memberRoleEClass.getEStructuralFeatures().get(7);
 	}
@@ -1440,6 +1546,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMemberRole_ConnectionParts() {
 		return (EReference)memberRoleEClass.getEStructuralFeatures().get(8);
 	}
@@ -1449,6 +1556,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getMemberRole_ConnectionLabel() {
 		return (EReference)memberRoleEClass.getEStructuralFeatures().get(9);
 	}
@@ -1458,6 +1566,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getSystemOwner() {
 		return systemOwnerEClass;
 	}
@@ -1467,6 +1576,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSystemOwner_AreaSpecification() {
 		return (EReference)systemOwnerEClass.getEStructuralFeatures().get(0);
 	}
@@ -1476,6 +1586,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getSystemOwner_Set() {
 		return (EReference)systemOwnerEClass.getEStructuralFeatures().get(1);
 	}
@@ -1485,6 +1596,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getViaSpecification() {
 		return viaSpecificationEClass;
 	}
@@ -1494,6 +1606,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getViaSpecification_SymbolicDisplacementName() {
 		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(3);
 	}
@@ -1503,6 +1616,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVsamIndex() {
 		return vsamIndexEClass;
 	}
@@ -1512,6 +1626,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVsamIndex_Set() {
 		return (EReference)vsamIndexEClass.getEStructuralFeatures().get(0);
 	}
@@ -1521,6 +1636,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getVsamType() {
 		return vsamTypeEClass;
 	}
@@ -1530,6 +1646,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVsamType_LengthType() {
 		return (EAttribute)vsamTypeEClass.getEStructuralFeatures().get(0);
 	}
@@ -1539,6 +1656,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getVsamType_Record() {
 		return (EReference)vsamTypeEClass.getEStructuralFeatures().get(1);
 	}
@@ -1548,6 +1666,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getVsamType_Spanned() {
 		return (EAttribute)vsamTypeEClass.getEStructuralFeatures().get(2);
 	}
@@ -1557,6 +1676,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getViaSpecification_Set() {
 		return (EReference)viaSpecificationEClass.getEStructuralFeatures().get(2);
 	}
@@ -1566,6 +1686,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDiagramNode() {
 		return diagramNodeEClass;
 	}
@@ -1575,6 +1696,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramNode_DiagramLocation() {
 		return (EReference)diagramNodeEClass.getEStructuralFeatures().get(0);
 	}
@@ -1584,6 +1706,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDiagramLocation() {
 		return diagramLocationEClass;
 	}
@@ -1593,6 +1716,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramLocation_X() {
 		return (EAttribute)diagramLocationEClass.getEStructuralFeatures().get(1);
 	}
@@ -1602,6 +1726,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramLocation_Y() {
 		return (EAttribute)diagramLocationEClass.getEStructuralFeatures().get(2);
 	}
@@ -1611,6 +1736,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramLocation_Eyecatcher() {
 		return (EAttribute)diagramLocationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1620,6 +1746,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDiagramData() {
 		return diagramDataEClass;
 	}
@@ -1629,6 +1756,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_ConnectionLabels() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(0);
 	}
@@ -1638,6 +1766,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_ConnectionParts() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(1);
 	}
@@ -1647,6 +1776,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_Connectors() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(2);
 	}
@@ -1656,6 +1786,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_HorizontalRuler() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(3);
 	}
@@ -1665,6 +1796,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_Label() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(4);
 	}
@@ -1674,6 +1806,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_Locations() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(5);
 	}
@@ -1683,6 +1816,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramData_ZoomLevel() {
 		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(14);
 	}
@@ -1692,6 +1826,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getDiagramLabel() {
 		return diagramLabelEClass;
 	}
@@ -1701,6 +1836,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramLabel_Description() {
 		return (EAttribute)diagramLabelEClass.getEStructuralFeatures().get(0);
 	}
@@ -1710,6 +1846,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramLabel_DiagramData() {
 		return (EReference)diagramLabelEClass.getEStructuralFeatures().get(1);
 	}
@@ -1719,6 +1856,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_Rulers() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(6);
 	}
@@ -1728,6 +1866,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_Schema() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(7);
 	}
@@ -1737,6 +1876,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramData_ShowGrid() {
 		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(8);
 	}
@@ -1746,6 +1886,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramData_ShowRulers() {
 		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(9);
 	}
@@ -1755,6 +1896,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramData_SnapToGeometry() {
 		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(10);
 	}
@@ -1764,6 +1906,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramData_SnapToGrid() {
 		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(11);
 	}
@@ -1773,6 +1916,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getDiagramData_SnapToGuides() {
 		return (EAttribute)diagramDataEClass.getEStructuralFeatures().get(12);
 	}
@@ -1782,6 +1926,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getDiagramData_VerticalRuler() {
 		return (EReference)diagramDataEClass.getEStructuralFeatures().get(13);
 	}
@@ -1791,6 +1936,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getViaSpecification_Record() {
 		return (EReference)viaSpecificationEClass.getEStructuralFeatures().get(1);
 	}
@@ -1800,6 +1946,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getViaSpecification_DisplacementPageCount() {
 		return (EAttribute)viaSpecificationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1809,6 +1956,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getKey() {
 		return keyEClass;
 	}
@@ -1818,6 +1966,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKey_CalcKey() {
 		return (EAttribute)keyEClass.getEStructuralFeatures().get(0);
 	}
@@ -1827,6 +1976,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKey_Length() {
 		return (EAttribute)keyEClass.getEStructuralFeatures().get(5);
 	}
@@ -1836,6 +1986,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKey_DuplicatesOption() {
 		return (EAttribute)keyEClass.getEStructuralFeatures().get(2);
 	}
@@ -1845,6 +1996,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKey_Compressed() {
 		return (EAttribute)keyEClass.getEStructuralFeatures().get(1);
 	}
@@ -1854,6 +2006,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKey_NaturalSequence() {
 		return (EAttribute)keyEClass.getEStructuralFeatures().get(7);
 	}
@@ -1863,6 +2016,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getKey_Elements() {
 		return (EReference)keyEClass.getEStructuralFeatures().get(3);
 	}
@@ -1872,6 +2026,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getKey_ElementSummary() {
 		return (EAttribute)keyEClass.getEStructuralFeatures().get(4);
 	}
@@ -1881,6 +2036,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getKey_MemberRole() {
 		return (EReference)keyEClass.getEStructuralFeatures().get(6);
 	}
@@ -1890,6 +2046,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getKey_Record() {
 		return (EReference)keyEClass.getEStructuralFeatures().get(8);
 	}
@@ -1899,6 +2056,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAreaSpecification() {
 		return areaSpecificationEClass;
 	}
@@ -1908,6 +2066,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAreaSpecification_SymbolicSubareaName() {
 		return (EAttribute)areaSpecificationEClass.getEStructuralFeatures().get(0);
 	}
@@ -1917,6 +2076,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAreaSpecification_Area() {
 		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(1);
 	}
@@ -1926,6 +2086,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAreaSpecification_OffsetExpression() {
 		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(2);
 	}
@@ -1935,6 +2096,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAreaSpecification_Record() {
 		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(3);
 	}
@@ -1944,6 +2106,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAreaSpecification_SystemOwner() {
 		return (EReference)areaSpecificationEClass.getEStructuralFeatures().get(4);
 	}
@@ -1953,6 +2116,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConnectionPart() {
 		return connectionPartEClass;
 	}
@@ -1962,6 +2126,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectionPart_Connector() {
 		return (EReference)connectionPartEClass.getEStructuralFeatures().get(0);
 	}
@@ -1971,6 +2136,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectionPart_BendpointLocations() {
 		return (EReference)connectionPartEClass.getEStructuralFeatures().get(1);
 	}
@@ -1980,6 +2146,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectionPart_MemberRole() {
 		return (EReference)connectionPartEClass.getEStructuralFeatures().get(2);
 	}
@@ -1989,6 +2156,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectionPart_SourceEndpointLocation() {
 		return (EReference)connectionPartEClass.getEStructuralFeatures().get(3);
 	}
@@ -1998,6 +2166,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectionPart_TargetEndpointLocation() {
 		return (EReference)connectionPartEClass.getEStructuralFeatures().get(4);
 	}
@@ -2007,6 +2176,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConnectionLabel() {
 		return connectionLabelEClass;
 	}
@@ -2016,6 +2186,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnectionLabel_Alignment() {
 		return (EAttribute)connectionLabelEClass.getEStructuralFeatures().get(0);
 	}
@@ -2025,6 +2196,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnectionLabel_MemberRole() {
 		return (EReference)connectionLabelEClass.getEStructuralFeatures().get(1);
 	}
@@ -2034,6 +2206,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getConnector() {
 		return connectorEClass;
 	}
@@ -2043,6 +2216,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getConnector_ConnectionPart() {
 		return (EReference)connectorEClass.getEStructuralFeatures().get(0);
 	}
@@ -2052,6 +2226,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getConnector_Label() {
 		return (EAttribute)connectorEClass.getEStructuralFeatures().get(1);
 	}
@@ -2061,6 +2236,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOffsetExpression() {
 		return offsetExpressionEClass;
 	}
@@ -2070,6 +2246,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOffsetExpression_AreaSpecification() {
 		return (EReference)offsetExpressionEClass.getEStructuralFeatures().get(0);
 	}
@@ -2079,6 +2256,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOffsetExpression_OffsetPageCount() {
 		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(1);
 	}
@@ -2088,6 +2266,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOffsetExpression_OffsetPercent() {
 		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(2);
 	}
@@ -2097,6 +2276,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOffsetExpression_PageCount() {
 		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(3);
 	}
@@ -2106,6 +2286,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOffsetExpression_Percent() {
 		return (EAttribute)offsetExpressionEClass.getEStructuralFeatures().get(4);
 	}
@@ -2115,6 +2296,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOwnerRole() {
 		return ownerRoleEClass;
 	}
@@ -2124,6 +2306,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOwnerRole_NextDbkeyPosition() {
 		return (EAttribute)ownerRoleEClass.getEStructuralFeatures().get(0);
 	}
@@ -2133,6 +2316,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOwnerRole_PriorDbkeyPosition() {
 		return (EAttribute)ownerRoleEClass.getEStructuralFeatures().get(1);
 	}
@@ -2142,6 +2326,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOwnerRole_Record() {
 		return (EReference)ownerRoleEClass.getEStructuralFeatures().get(2);
 	}
@@ -2151,6 +2336,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOwnerRole_Set() {
 		return (EReference)ownerRoleEClass.getEStructuralFeatures().get(3);
 	}
@@ -2160,6 +2346,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIndexedSetModeSpecification() {
 		return indexedSetModeSpecificationEClass;
 	}
@@ -2169,6 +2356,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIndexedSetModeSpecification_SymbolicIndexName() {
 		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(3);
 	}
@@ -2178,6 +2366,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getIndexElement() {
 		return indexElementEClass;
 	}
@@ -2187,6 +2376,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIndexElement_BaseName() {
 		return (EAttribute)indexElementEClass.getEStructuralFeatures().get(0);
 	}
@@ -2196,6 +2386,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIndexElement_Name() {
 		return (EAttribute)indexElementEClass.getEStructuralFeatures().get(1);
 	}
@@ -2205,6 +2396,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIndexElement_OccursSpecification() {
 		return (EReference)indexElementEClass.getEStructuralFeatures().get(2);
 	}
@@ -2214,6 +2406,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getINodeTextProvider() {
 		return iNodeTextProviderEClass;
 	}
@@ -2223,6 +2416,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getINodeTextProvider_NodeText() {
 		return (EAttribute)iNodeTextProviderEClass.getEStructuralFeatures().get(0);
 	}
@@ -2232,6 +2426,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIndexedSetModeSpecification_KeyCount() {
 		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(1);
 	}
@@ -2241,6 +2436,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getIndexedSetModeSpecification_Set() {
 		return (EReference)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(2);
 	}
@@ -2250,6 +2446,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getIndexedSetModeSpecification_DisplacementPageCount() {
 		return (EAttribute)indexedSetModeSpecificationEClass.getEStructuralFeatures().get(0);
 	}
@@ -2259,6 +2456,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getAreaProcedureCallSpecification() {
 		return areaProcedureCallSpecificationEClass;
 	}
@@ -2268,6 +2466,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getAreaProcedureCallSpecification_Area() {
 		return (EReference)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
 	}
@@ -2277,6 +2476,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getAreaProcedureCallSpecification_Function() {
 		return (EAttribute)areaProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
 	}
@@ -2286,6 +2486,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getRecordProcedureCallSpecification() {
 		return recordProcedureCallSpecificationEClass;
 	}
@@ -2295,6 +2496,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getRecordProcedureCallSpecification_Record() {
 		return (EReference)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(0);
 	}
@@ -2304,6 +2506,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getRecordProcedureCallSpecification_Verb() {
 		return (EAttribute)recordProcedureCallSpecificationEClass.getEStructuralFeatures().get(1);
 	}
@@ -2313,6 +2516,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getResizableDiagramNode() {
 		return resizableDiagramNodeEClass;
 	}
@@ -2322,6 +2526,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResizableDiagramNode_Height() {
 		return (EAttribute)resizableDiagramNodeEClass.getEStructuralFeatures().get(0);
 	}
@@ -2331,6 +2536,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getResizableDiagramNode_Width() {
 		return (EAttribute)resizableDiagramNodeEClass.getEStructuralFeatures().get(1);
 	}
@@ -2340,6 +2546,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProcedure() {
 		return procedureEClass;
 	}
@@ -2349,6 +2556,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProcedure_Name() {
 		return (EAttribute)procedureEClass.getEStructuralFeatures().get(0);
 	}
@@ -2358,6 +2566,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProcedure_Schema() {
 		return (EReference)procedureEClass.getEStructuralFeatures().get(1);
 	}
@@ -2367,6 +2576,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getProcedureCallSpecification() {
 		return procedureCallSpecificationEClass;
 	}
@@ -2376,6 +2586,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getProcedureCallSpecification_CallTime() {
 		return (EAttribute)procedureCallSpecificationEClass.getEStructuralFeatures().get(0);
 	}
@@ -2385,6 +2596,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getProcedureCallSpecification_Procedure() {
 		return (EReference)procedureCallSpecificationEClass.getEStructuralFeatures().get(1);
 	}
@@ -2394,6 +2606,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EClass getOccursSpecification() {
 		return occursSpecificationEClass;
 	}
@@ -2403,6 +2616,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EAttribute getOccursSpecification_Count() {
 		return (EAttribute)occursSpecificationEClass.getEStructuralFeatures().get(0);
 	}
@@ -2412,6 +2626,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOccursSpecification_DependingOn() {
 		return (EReference)occursSpecificationEClass.getEStructuralFeatures().get(1);
 	}
@@ -2421,6 +2636,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOccursSpecification_Element() {
 		return (EReference)occursSpecificationEClass.getEStructuralFeatures().get(2);
 	}
@@ -2430,6 +2646,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EReference getOccursSpecification_IndexElements() {
 		return (EReference)occursSpecificationEClass.getEStructuralFeatures().get(3);
 	}
@@ -2439,6 +2656,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getSetOrder() {
 		return setOrderEEnum;
 	}
@@ -2448,6 +2666,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getDuplicatesOption() {
 		return duplicatesOptionEEnum;
 	}
@@ -2457,6 +2676,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getLabelAlignment() {
 		return labelAlignmentEEnum;
 	}
@@ -2466,6 +2686,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getLocationMode() {
 		return locationModeEEnum;
 	}
@@ -2475,6 +2696,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getSetMode() {
 		return setModeEEnum;
 	}
@@ -2484,6 +2706,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getStorageMode() {
 		return storageModeEEnum;
 	}
@@ -2493,6 +2716,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getSetMembershipOption() {
 		return setMembershipOptionEEnum;
 	}
@@ -2502,6 +2726,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getSortSequence() {
 		return sortSequenceEEnum;
 	}
@@ -2511,6 +2736,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getProcedureCallTime() {
 		return procedureCallTimeEEnum;
 	}
@@ -2520,6 +2746,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getAreaProcedureCallFunction() {
 		return areaProcedureCallFunctionEEnum;
 	}
@@ -2529,6 +2756,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getRecordProcedureCallVerb() {
 		return recordProcedureCallVerbEEnum;
 	}
@@ -2538,6 +2766,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getRulerType() {
 		return rulerTypeEEnum;
 	}
@@ -2547,6 +2776,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getUsage() {
 		return usageEEnum;
 	}
@@ -2556,6 +2786,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EEnum getVsamLengthType() {
 		return vsamLengthTypeEEnum;
 	}
@@ -2565,6 +2796,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaFactory getSchemaFactory() {
 		return (SchemaFactory)getEFactoryInstance();
 	}
@@ -3226,6 +3458,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.FINISH);
 		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.COMMIT);
 		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.ROLLBACK);
+		addEEnumLiteral(areaProcedureCallFunctionEEnum, AreaProcedureCallFunction.READY);
 
 		initEEnum(duplicatesOptionEEnum, DuplicatesOption.class, "DuplicatesOption");
 		addEEnumLiteral(duplicatesOptionEEnum, DuplicatesOption.FIRST);

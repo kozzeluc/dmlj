@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2023  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -45,7 +45,7 @@ public class DictionaryAreaDataCollector implements IAreaDataCollector<Sa_018> {
 			String func = sacall_020.getDbpFunc_020();   	// READY/FINISH/COMMIT/ROLLBACK				
 			String mode = sacall_020.getDbpMode_020();   	// UPDATE/RETRIEVAL
 			String access = sacall_020.getDbpAccess_020(); 	// EXCLUSIVE/PROTECTED/SHARED
-			StringBuilder trigger = new StringBuilder(func.toLowerCase());
+			StringBuilder trigger = new StringBuilder(func.toUpperCase());
 			if (func.equalsIgnoreCase("READY")) {
 				if (!access.equals("")) {
 					trigger.append("_");

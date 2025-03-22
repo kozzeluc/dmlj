@@ -35,6 +35,7 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl#getAreaSpecification <em>Area Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl#getOffsetPageCount <em>Offset Page Count</em>}</li>
@@ -42,7 +43,6 @@ import org.lh.dmlj.schema.SchemaPackage;
  *   <li>{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl#getPageCount <em>Page Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OffsetExpressionImpl#getPercent <em>Percent</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -144,6 +144,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AreaSpecification getAreaSpecification() {
 		if (eContainerFeatureID() != SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION) return null;
 		return (AreaSpecification)eInternalContainer();
@@ -164,6 +165,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAreaSpecification(AreaSpecification newAreaSpecification) {
 		if (newAreaSpecification != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.OFFSET_EXPRESSION__AREA_SPECIFICATION && newAreaSpecification != null)) {
 			if (EcoreUtil.isAncestor(this, newAreaSpecification))
@@ -185,6 +187,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Integer getOffsetPageCount() {
 		return offsetPageCount;
 	}
@@ -194,6 +197,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOffsetPageCount(Integer newOffsetPageCount) {
 		Integer oldOffsetPageCount = offsetPageCount;
 		offsetPageCount = newOffsetPageCount;
@@ -206,6 +210,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getOffsetPercent() {
 		return offsetPercent;
 	}
@@ -215,6 +220,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOffsetPercent(Short newOffsetPercent) {
 		Short oldOffsetPercent = offsetPercent;
 		offsetPercent = newOffsetPercent;
@@ -227,6 +233,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Integer getPageCount() {
 		return pageCount;
 	}
@@ -236,6 +243,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPageCount(Integer newPageCount) {
 		Integer oldPageCount = pageCount;
 		pageCount = newPageCount;
@@ -248,6 +256,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getPercent() {
 		return percent;
 	}
@@ -257,6 +266,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPercent(Short newPercent) {
 		Short oldPercent = percent;
 		percent = newPercent;
@@ -415,7 +425,7 @@ public class OffsetExpressionImpl extends EObjectImpl implements OffsetExpressio
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (offsetPageCount: ");
 		result.append(offsetPageCount);
 		result.append(", offsetPercent: ");

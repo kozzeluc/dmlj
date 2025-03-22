@@ -158,6 +158,8 @@ public enum SetMembershipOption implements Enumerator {
 	 * Returns the '<em><b>Set Membership Option</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param literal the literal.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static SetMembershipOption get(String literal) {
@@ -174,6 +176,8 @@ public enum SetMembershipOption implements Enumerator {
 	 * Returns the '<em><b>Set Membership Option</b></em>' literal with the specified name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param name the name.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static SetMembershipOption getByName(String name) {
@@ -190,6 +194,8 @@ public enum SetMembershipOption implements Enumerator {
 	 * Returns the '<em><b>Set Membership Option</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param value the integer value.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static SetMembershipOption get(int value) {
@@ -240,6 +246,7 @@ public enum SetMembershipOption implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -249,6 +256,7 @@ public enum SetMembershipOption implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -258,6 +266,7 @@ public enum SetMembershipOption implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

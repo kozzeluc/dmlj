@@ -37,12 +37,12 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexElementImpl#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexElementImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.IndexElementImpl#getOccursSpecification <em>Occurs Specification</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -111,6 +111,7 @@ public class IndexElementImpl extends EObjectImpl implements IndexElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getBaseName() {
 		return baseName;
 	}
@@ -120,6 +121,7 @@ public class IndexElementImpl extends EObjectImpl implements IndexElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBaseName(String newBaseName) {
 		String oldBaseName = baseName;
 		baseName = newBaseName;
@@ -132,6 +134,7 @@ public class IndexElementImpl extends EObjectImpl implements IndexElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -141,6 +144,7 @@ public class IndexElementImpl extends EObjectImpl implements IndexElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -153,6 +157,7 @@ public class IndexElementImpl extends EObjectImpl implements IndexElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OccursSpecification getOccursSpecification() {
 		if (eContainerFeatureID() != SchemaPackage.INDEX_ELEMENT__OCCURS_SPECIFICATION) return null;
 		return (OccursSpecification)eInternalContainer();
@@ -173,6 +178,7 @@ public class IndexElementImpl extends EObjectImpl implements IndexElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOccursSpecification(OccursSpecification newOccursSpecification) {
 		if (newOccursSpecification != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.INDEX_ELEMENT__OCCURS_SPECIFICATION && newOccursSpecification != null)) {
 			if (EcoreUtil.isAncestor(this, newOccursSpecification))
@@ -320,7 +326,7 @@ public class IndexElementImpl extends EObjectImpl implements IndexElement {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (baseName: ");
 		result.append(baseName);
 		result.append(", name: ");

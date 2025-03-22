@@ -24,11 +24,11 @@ package org.lh.dmlj.schema;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.Connector#getConnectionPart <em>Connection Part</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.Connector#getLabel <em>Label</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getConnector()
  * @model

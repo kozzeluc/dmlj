@@ -35,11 +35,11 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ProcedureCallSpecificationImpl#getCallTime <em>Call Time</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ProcedureCallSpecificationImpl#getProcedure <em>Procedure</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -96,6 +96,7 @@ public abstract class ProcedureCallSpecificationImpl extends EObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ProcedureCallTime getCallTime() {
 		return callTime;
 	}
@@ -105,6 +106,7 @@ public abstract class ProcedureCallSpecificationImpl extends EObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCallTime(ProcedureCallTime newCallTime) {
 		ProcedureCallTime oldCallTime = callTime;
 		callTime = newCallTime == null ? CALL_TIME_EDEFAULT : newCallTime;
@@ -117,6 +119,7 @@ public abstract class ProcedureCallSpecificationImpl extends EObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Procedure getProcedure() {
 		if (procedure != null && procedure.eIsProxy()) {
 			InternalEObject oldProcedure = (InternalEObject)procedure;
@@ -143,6 +146,7 @@ public abstract class ProcedureCallSpecificationImpl extends EObjectImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setProcedure(Procedure newProcedure) {
 		Procedure oldProcedure = procedure;
 		procedure = newProcedure;
@@ -228,7 +232,7 @@ public abstract class ProcedureCallSpecificationImpl extends EObjectImpl impleme
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (callTime: ");
 		result.append(callTime);
 		result.append(')');

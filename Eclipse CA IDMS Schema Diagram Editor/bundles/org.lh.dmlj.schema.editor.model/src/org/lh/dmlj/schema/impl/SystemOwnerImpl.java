@@ -35,11 +35,11 @@ import org.lh.dmlj.schema.SystemOwner;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.SystemOwnerImpl#getAreaSpecification <em>Area Specification</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SystemOwnerImpl#getSet <em>Set</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -78,6 +78,7 @@ public class SystemOwnerImpl extends DiagramNodeImpl implements SystemOwner {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AreaSpecification getAreaSpecification() {
 		if (areaSpecification != null && areaSpecification.eIsProxy()) {
 			InternalEObject oldAreaSpecification = (InternalEObject)areaSpecification;
@@ -119,6 +120,7 @@ public class SystemOwnerImpl extends DiagramNodeImpl implements SystemOwner {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setAreaSpecification(AreaSpecification newAreaSpecification) {
 		if (newAreaSpecification != areaSpecification) {
 			NotificationChain msgs = null;
@@ -138,6 +140,7 @@ public class SystemOwnerImpl extends DiagramNodeImpl implements SystemOwner {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.SYSTEM_OWNER__SET) return null;
 		return (Set)eInternalContainer();
@@ -158,6 +161,7 @@ public class SystemOwnerImpl extends DiagramNodeImpl implements SystemOwner {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSet(Set newSet) {
 		if (newSet != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.SYSTEM_OWNER__SET && newSet != null)) {
 			if (EcoreUtil.isAncestor(this, newSet))

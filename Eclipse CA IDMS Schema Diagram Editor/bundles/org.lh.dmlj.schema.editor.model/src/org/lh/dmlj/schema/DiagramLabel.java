@@ -24,11 +24,11 @@ package org.lh.dmlj.schema;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.DiagramLabel#getDescription <em>Description</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.DiagramLabel#getDiagramData <em>Diagram Data</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getDiagramLabel()
  * @model

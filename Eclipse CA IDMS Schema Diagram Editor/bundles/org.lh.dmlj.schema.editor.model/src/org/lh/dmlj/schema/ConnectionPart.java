@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.ConnectionPart#getConnector <em>Connector</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ConnectionPart#getBendpointLocations <em>Bendpoint Locations</em>}</li>
@@ -34,7 +35,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.lh.dmlj.schema.ConnectionPart#getSourceEndpointLocation <em>Source Endpoint Location</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.ConnectionPart#getTargetEndpointLocation <em>Target Endpoint Location</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.lh.dmlj.schema.SchemaPackage#getConnectionPart()
  * @model

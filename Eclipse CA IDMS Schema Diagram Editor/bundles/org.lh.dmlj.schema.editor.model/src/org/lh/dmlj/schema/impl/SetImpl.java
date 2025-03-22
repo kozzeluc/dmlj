@@ -49,6 +49,7 @@ import org.lh.dmlj.schema.VsamIndex;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#isChained <em>Chained</em>}</li>
@@ -67,7 +68,6 @@ import org.lh.dmlj.schema.VsamIndex;
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#isVsam <em>Vsam</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SetImpl#getVsamIndex <em>Vsam Index</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -288,6 +288,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -297,6 +298,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -309,6 +311,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SetMode getMode() {
 		return mode;
 	}
@@ -318,6 +321,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMode(SetMode newMode) {
 		SetMode oldMode = mode;
 		mode = newMode == null ? MODE_EDEFAULT : newMode;
@@ -339,6 +343,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SetOrder getOrder() {
 		return order;
 	}
@@ -348,6 +353,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOrder(SetOrder newOrder) {
 		SetOrder oldOrder = order;
 		order = newOrder == null ? ORDER_EDEFAULT : newOrder;
@@ -360,6 +366,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Schema getSchema() {
 		if (eContainerFeatureID() != SchemaPackage.SET__SCHEMA) return null;
 		return (Schema)eInternalContainer();
@@ -380,6 +387,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSchema(Schema newSchema) {
 		if (newSchema != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.SET__SCHEMA && newSchema != null)) {
 			if (EcoreUtil.isAncestor(this, newSchema))
@@ -410,6 +418,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OwnerRole getOwner() {
 		return owner;
 	}
@@ -434,6 +443,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOwner(OwnerRole newOwner) {
 		if (newOwner != owner) {
 			NotificationChain msgs = null;
@@ -453,6 +463,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SystemOwner getSystemOwner() {
 		return systemOwner;
 	}
@@ -477,6 +488,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSystemOwner(SystemOwner newSystemOwner) {
 		if (newSystemOwner != systemOwner) {
 			NotificationChain msgs = null;
@@ -496,6 +508,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<MemberRole> getMembers() {
 		if (members == null) {
 			members = new EObjectContainmentWithInverseEList<MemberRole>(MemberRole.class, this, SchemaPackage.SET__MEMBERS, SchemaPackage.MEMBER_ROLE__SET);
@@ -508,6 +521,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ViaSpecification> getViaMembers() {
 		if (viaMembers == null) {
 			viaMembers = new EObjectWithInverseResolvingEList<ViaSpecification>(ViaSpecification.class, this, SchemaPackage.SET__VIA_MEMBERS, SchemaPackage.VIA_SPECIFICATION__SET);
@@ -529,6 +543,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VsamIndex getVsamIndex() {
 		return vsamIndex;
 	}
@@ -553,6 +568,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVsamIndex(VsamIndex newVsamIndex) {
 		if (newVsamIndex != vsamIndex) {
 			NotificationChain msgs = null;
@@ -828,7 +844,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (mode: ");
 		result.append(mode);
 		result.append(", name: ");
@@ -844,6 +860,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public IndexedSetModeSpecification getIndexedSetModeSpecification() {
 		return indexedSetModeSpecification;
 	}
@@ -868,6 +885,7 @@ public class SetImpl extends EObjectImpl implements Set {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIndexedSetModeSpecification(IndexedSetModeSpecification newIndexedSetModeSpecification) {
 		if (newIndexedSetModeSpecification != indexedSetModeSpecification) {
 			NotificationChain msgs = null;

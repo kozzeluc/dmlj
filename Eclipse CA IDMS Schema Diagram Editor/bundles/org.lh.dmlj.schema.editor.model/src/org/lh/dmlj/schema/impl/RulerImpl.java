@@ -45,12 +45,12 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.RulerImpl#getGuides <em>Guides</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.RulerImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.RulerImpl#getDiagramData <em>Diagram Data</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -109,6 +109,7 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Guide> getGuides() {
 		if (guides == null) {
 			guides = new EObjectContainmentWithInverseEList<Guide>(Guide.class, this, SchemaPackage.RULER__GUIDES, SchemaPackage.GUIDE__RULER);
@@ -121,6 +122,7 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public RulerType getType() {
 		return type;
 	}
@@ -130,6 +132,7 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setType(RulerType newType) {
 		RulerType oldType = type;
 		type = newType == null ? TYPE_EDEFAULT : newType;
@@ -142,6 +145,7 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DiagramData getDiagramData() {
 		if (eContainerFeatureID() != SchemaPackage.RULER__DIAGRAM_DATA) return null;
 		return (DiagramData)eInternalContainer();
@@ -162,6 +166,7 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDiagramData(DiagramData newDiagramData) {
 		if (newDiagramData != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.RULER__DIAGRAM_DATA && newDiagramData != null)) {
 			if (EcoreUtil.isAncestor(this, newDiagramData))
@@ -316,7 +321,7 @@ public class RulerImpl extends EObjectImpl implements Ruler {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (type: ");
 		result.append(type);
 		result.append(')');

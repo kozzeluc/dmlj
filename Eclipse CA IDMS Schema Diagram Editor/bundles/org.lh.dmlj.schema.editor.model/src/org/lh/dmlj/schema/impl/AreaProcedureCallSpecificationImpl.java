@@ -35,11 +35,11 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.AreaProcedureCallSpecificationImpl#getArea <em>Area</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.AreaProcedureCallSpecificationImpl#getFunction <em>Function</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -86,6 +86,7 @@ public class AreaProcedureCallSpecificationImpl extends ProcedureCallSpecificati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaArea getArea() {
 		if (eContainerFeatureID() != SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA) return null;
 		return (SchemaArea)eInternalContainer();
@@ -106,6 +107,7 @@ public class AreaProcedureCallSpecificationImpl extends ProcedureCallSpecificati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setArea(SchemaArea newArea) {
 		if (newArea != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.AREA_PROCEDURE_CALL_SPECIFICATION__AREA && newArea != null)) {
 			if (EcoreUtil.isAncestor(this, newArea))
@@ -171,6 +173,7 @@ public class AreaProcedureCallSpecificationImpl extends ProcedureCallSpecificati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public AreaProcedureCallFunction getFunction() {
 		return function;
 	}
@@ -180,6 +183,7 @@ public class AreaProcedureCallSpecificationImpl extends ProcedureCallSpecificati
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setFunction(AreaProcedureCallFunction newFunction) {
 		AreaProcedureCallFunction oldFunction = function;
 		function = newFunction == null ? FUNCTION_EDEFAULT : newFunction;
@@ -264,7 +268,7 @@ public class AreaProcedureCallSpecificationImpl extends ProcedureCallSpecificati
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (function: ");
 		result.append(function);
 		result.append(')');

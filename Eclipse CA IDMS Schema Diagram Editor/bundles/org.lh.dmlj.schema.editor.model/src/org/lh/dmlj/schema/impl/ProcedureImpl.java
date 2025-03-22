@@ -40,11 +40,11 @@ import org.lh.dmlj.schema.SchemaRecord;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ProcedureImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ProcedureImpl#getSchema <em>Schema</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -92,6 +92,7 @@ public class ProcedureImpl extends EObjectImpl implements Procedure {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -101,6 +102,7 @@ public class ProcedureImpl extends EObjectImpl implements Procedure {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -113,6 +115,7 @@ public class ProcedureImpl extends EObjectImpl implements Procedure {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Schema getSchema() {
 		if (eContainerFeatureID() != SchemaPackage.PROCEDURE__SCHEMA) return null;
 		return (Schema)eInternalContainer();
@@ -133,6 +136,7 @@ public class ProcedureImpl extends EObjectImpl implements Procedure {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSchema(Schema newSchema) {
 		if (newSchema != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.PROCEDURE__SCHEMA && newSchema != null)) {
 			if (EcoreUtil.isAncestor(this, newSchema))
@@ -298,7 +302,7 @@ public class ProcedureImpl extends EObjectImpl implements Procedure {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");
 		result.append(name);
 		result.append(')');

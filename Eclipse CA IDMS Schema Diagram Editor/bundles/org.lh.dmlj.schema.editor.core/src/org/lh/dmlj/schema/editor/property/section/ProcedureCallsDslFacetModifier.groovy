@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2023  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -80,7 +80,11 @@ class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
 	@Override
 	public Command getCommand() {
 		assert hasChanges(), 'command cannot be created: no changes'
-		commandFactory.createCommand(model, modifiedFacetDefinition.split('\n').collect( { it.substring(6, it.size() - 1) } )) 		
+		if (modifiedFacetDefinition.trim()) {
+			commandFactory.createCommand(model, modifiedFacetDefinition.split('\n').collect( { it.substring(6, it.size() - 1) } ))
+		} else {
+			commandFactory.createCommand(model, [])
+		} 		
 	}
 
 	@Override

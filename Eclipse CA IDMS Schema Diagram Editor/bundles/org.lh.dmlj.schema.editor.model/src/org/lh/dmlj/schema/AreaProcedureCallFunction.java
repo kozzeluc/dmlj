@@ -178,7 +178,15 @@ public enum AreaProcedureCallFunction implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	ROLLBACK(13, "ROLLBACK", "ROLLBACK");
+	ROLLBACK(13, "ROLLBACK", "ROLLBACK"), /**
+	 * The '<em><b>READY</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #READY_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	READY(14, "READY", "READY");
 
 	/**
 	 * The '<em><b>EVERY DML FUNCTION</b></em>' literal value.
@@ -406,6 +414,17 @@ public enum AreaProcedureCallFunction implements Enumerator {
 	public static final int ROLLBACK_VALUE = 13;
 
 	/**
+	 * The '<em><b>READY</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #READY
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int READY_VALUE = 14;
+
+	/**
 	 * An array of all the '<em><b>Area Procedure Call Function</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -428,6 +447,7 @@ public enum AreaProcedureCallFunction implements Enumerator {
 			FINISH,
 			COMMIT,
 			ROLLBACK,
+			READY,
 		};
 
 	/**
@@ -442,6 +462,8 @@ public enum AreaProcedureCallFunction implements Enumerator {
 	 * Returns the '<em><b>Area Procedure Call Function</b></em>' literal with the specified literal value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param literal the literal.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static AreaProcedureCallFunction get(String literal) {
@@ -458,6 +480,8 @@ public enum AreaProcedureCallFunction implements Enumerator {
 	 * Returns the '<em><b>Area Procedure Call Function</b></em>' literal with the specified name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param name the name.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static AreaProcedureCallFunction getByName(String name) {
@@ -474,6 +498,8 @@ public enum AreaProcedureCallFunction implements Enumerator {
 	 * Returns the '<em><b>Area Procedure Call Function</b></em>' literal with the specified integer value.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @param value the integer value.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static AreaProcedureCallFunction get(int value) {
@@ -493,6 +519,7 @@ public enum AreaProcedureCallFunction implements Enumerator {
 			case FINISH_VALUE: return FINISH;
 			case COMMIT_VALUE: return COMMIT;
 			case ROLLBACK_VALUE: return ROLLBACK;
+			case READY_VALUE: return READY;
 		}
 		return null;
 	}
@@ -535,6 +562,7 @@ public enum AreaProcedureCallFunction implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public int getValue() {
 	  return value;
 	}
@@ -544,6 +572,7 @@ public enum AreaProcedureCallFunction implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 	  return name;
 	}
@@ -553,6 +582,7 @@ public enum AreaProcedureCallFunction implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getLiteral() {
 	  return literal;
 	}

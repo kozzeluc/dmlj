@@ -43,6 +43,7 @@ import org.lh.dmlj.schema.Usage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getBaseName <em>Base Name</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getChildren <em>Children</em>}</li>
@@ -62,7 +63,6 @@ import org.lh.dmlj.schema.Usage;
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getUsage <em>Usage</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.ElementImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -335,6 +335,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getBaseName() {
 		return baseName;
 	}
@@ -344,6 +345,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setBaseName(String newBaseName) {
 		String oldBaseName = baseName;
 		baseName = newBaseName;
@@ -356,6 +358,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -365,6 +368,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -377,6 +381,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getLevel() {
 		return level;
 	}
@@ -386,6 +391,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLevel(short newLevel) {
 		short oldLevel = level;
 		level = newLevel;
@@ -398,6 +404,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Usage getUsage() {
 		return usage;
 	}
@@ -407,6 +414,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setUsage(Usage newUsage) {
 		Usage oldUsage = usage;
 		usage = newUsage == null ? USAGE_EDEFAULT : newUsage;
@@ -419,6 +427,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getValue() {
 		return value;
 	}
@@ -428,6 +437,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;
@@ -550,6 +560,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getPicture() {
 		return picture;
 	}
@@ -559,6 +570,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPicture(String newPicture) {
 		String oldPicture = picture;
 		picture = newPicture;
@@ -571,6 +583,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isNullable() {
 		return nullable;
 	}
@@ -580,6 +593,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNullable(boolean newNullable) {
 		boolean oldNullable = nullable;
 		nullable = newNullable;
@@ -592,6 +606,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaRecord getRecord() {
 		if (eContainerFeatureID() != SchemaPackage.ELEMENT__RECORD) return null;
 		return (SchemaRecord)eInternalContainer();
@@ -612,6 +627,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRecord(SchemaRecord newRecord) {
 		if (newRecord != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.ELEMENT__RECORD && newRecord != null)) {
 			if (EcoreUtil.isAncestor(this, newRecord))
@@ -633,6 +649,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<KeyElement> getKeyElements() {
 		if (keyElements == null) {
 			keyElements = new EObjectWithInverseResolvingEList<KeyElement>(KeyElement.class, this, SchemaPackage.ELEMENT__KEY_ELEMENTS, SchemaPackage.KEY_ELEMENT__ELEMENT);
@@ -645,6 +662,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Element> getChildren() {
 		if (children == null) {
 			children = new EObjectWithInverseResolvingEList<Element>(Element.class, this, SchemaPackage.ELEMENT__CHILDREN, SchemaPackage.ELEMENT__PARENT);
@@ -657,6 +675,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Element getRedefines() {
 		if (redefines != null && redefines.eIsProxy()) {
 			InternalEObject oldRedefines = (InternalEObject)redefines;
@@ -683,6 +702,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRedefines(Element newRedefines) {
 		Element oldRedefines = redefines;
 		redefines = newRedefines;
@@ -747,6 +767,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public OccursSpecification getOccursSpecification() {
 		return occursSpecification;
 	}
@@ -771,6 +792,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOccursSpecification(OccursSpecification newOccursSpecification) {
 		if (newOccursSpecification != occursSpecification) {
 			NotificationChain msgs = null;
@@ -1058,7 +1080,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (baseName: ");
 		result.append(baseName);
 		result.append(", level: ");
@@ -1082,6 +1104,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Element getParent() {
 		if (parent != null && parent.eIsProxy()) {
 			InternalEObject oldParent = (InternalEObject)parent;
@@ -1123,6 +1146,7 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setParent(Element newParent) {
 		if (newParent != parent) {
 			NotificationChain msgs = null;

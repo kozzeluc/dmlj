@@ -41,6 +41,7 @@ import org.lh.dmlj.schema.SetMembershipOption;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getIndexDbkeyPosition <em>Index Dbkey Position</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getMembershipOption <em>Membership Option</em>}</li>
@@ -53,7 +54,6 @@ import org.lh.dmlj.schema.SetMembershipOption;
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getConnectionParts <em>Connection Parts</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.MemberRoleImpl#getConnectionLabel <em>Connection Label</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -222,6 +222,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getIndexDbkeyPosition() {
 		return indexDbkeyPosition;
 	}
@@ -231,6 +232,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setIndexDbkeyPosition(Short newIndexDbkeyPosition) {
 		Short oldIndexDbkeyPosition = indexDbkeyPosition;
 		indexDbkeyPosition = newIndexDbkeyPosition;
@@ -243,6 +245,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SetMembershipOption getMembershipOption() {
 		return membershipOption;
 	}
@@ -252,6 +255,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMembershipOption(SetMembershipOption newMembershipOption) {
 		SetMembershipOption oldMembershipOption = membershipOption;
 		membershipOption = newMembershipOption == null ? MEMBERSHIP_OPTION_EDEFAULT : newMembershipOption;
@@ -264,6 +268,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getNextDbkeyPosition() {
 		return nextDbkeyPosition;
 	}
@@ -273,6 +278,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setNextDbkeyPosition(Short newNextDbkeyPosition) {
 		Short oldNextDbkeyPosition = nextDbkeyPosition;
 		nextDbkeyPosition = newNextDbkeyPosition;
@@ -285,6 +291,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getPriorDbkeyPosition() {
 		return priorDbkeyPosition;
 	}
@@ -294,6 +301,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setPriorDbkeyPosition(Short newPriorDbkeyPosition) {
 		Short oldPriorDbkeyPosition = priorDbkeyPosition;
 		priorDbkeyPosition = newPriorDbkeyPosition;
@@ -306,6 +314,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Short getOwnerDbkeyPosition() {
 		return ownerDbkeyPosition;
 	}
@@ -315,6 +324,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setOwnerDbkeyPosition(Short newOwnerDbkeyPosition) {
 		Short oldOwnerDbkeyPosition = ownerDbkeyPosition;
 		ownerDbkeyPosition = newOwnerDbkeyPosition;
@@ -327,6 +337,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaRecord getRecord() {
 		if (record != null && record.eIsProxy()) {
 			InternalEObject oldRecord = (InternalEObject)record;
@@ -368,6 +379,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRecord(SchemaRecord newRecord) {
 		if (newRecord != record) {
 			NotificationChain msgs = null;
@@ -387,6 +399,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Set getSet() {
 		if (eContainerFeatureID() != SchemaPackage.MEMBER_ROLE__SET) return null;
 		return (Set)eInternalContainer();
@@ -407,6 +420,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSet(Set newSet) {
 		if (newSet != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.MEMBER_ROLE__SET && newSet != null)) {
 			if (EcoreUtil.isAncestor(this, newSet))
@@ -428,6 +442,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Key getSortKey() {
 		if (sortKey != null && sortKey.eIsProxy()) {
 			InternalEObject oldSortKey = (InternalEObject)sortKey;
@@ -469,6 +484,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSortKey(Key newSortKey) {
 		if (newSortKey != sortKey) {
 			NotificationChain msgs = null;
@@ -488,6 +504,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<ConnectionPart> getConnectionParts() {
 		if (connectionParts == null) {
 			connectionParts = new EObjectWithInverseResolvingEList<ConnectionPart>(ConnectionPart.class, this, SchemaPackage.MEMBER_ROLE__CONNECTION_PARTS, SchemaPackage.CONNECTION_PART__MEMBER_ROLE);
@@ -500,6 +517,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ConnectionLabel getConnectionLabel() {
 		if (connectionLabel != null && connectionLabel.eIsProxy()) {
 			InternalEObject oldConnectionLabel = (InternalEObject)connectionLabel;
@@ -541,6 +559,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setConnectionLabel(ConnectionLabel newConnectionLabel) {
 		if (newConnectionLabel != connectionLabel) {
 			NotificationChain msgs = null;
@@ -784,7 +803,7 @@ public class MemberRoleImpl extends RoleImpl implements MemberRole {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (indexDbkeyPosition: ");
 		result.append(indexDbkeyPosition);
 		result.append(", membershipOption: ");

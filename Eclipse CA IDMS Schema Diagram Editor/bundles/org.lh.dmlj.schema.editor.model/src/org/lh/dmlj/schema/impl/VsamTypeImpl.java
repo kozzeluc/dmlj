@@ -38,12 +38,12 @@ import org.lh.dmlj.schema.VsamType;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.VsamTypeImpl#getLengthType <em>Length Type</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.VsamTypeImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.VsamTypeImpl#isSpanned <em>Spanned</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -112,6 +112,7 @@ public class VsamTypeImpl extends EObjectImpl implements VsamType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public VsamLengthType getLengthType() {
 		return lengthType;
 	}
@@ -121,6 +122,7 @@ public class VsamTypeImpl extends EObjectImpl implements VsamType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setLengthType(VsamLengthType newLengthType) {
 		VsamLengthType oldLengthType = lengthType;
 		lengthType = newLengthType == null ? LENGTH_TYPE_EDEFAULT : newLengthType;
@@ -133,6 +135,7 @@ public class VsamTypeImpl extends EObjectImpl implements VsamType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public SchemaRecord getRecord() {
 		if (eContainerFeatureID() != SchemaPackage.VSAM_TYPE__RECORD) return null;
 		return (SchemaRecord)eInternalContainer();
@@ -153,6 +156,7 @@ public class VsamTypeImpl extends EObjectImpl implements VsamType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setRecord(SchemaRecord newRecord) {
 		if (newRecord != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.VSAM_TYPE__RECORD && newRecord != null)) {
 			if (EcoreUtil.isAncestor(this, newRecord))
@@ -174,6 +178,7 @@ public class VsamTypeImpl extends EObjectImpl implements VsamType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean isSpanned() {
 		return spanned;
 	}
@@ -183,6 +188,7 @@ public class VsamTypeImpl extends EObjectImpl implements VsamType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setSpanned(boolean newSpanned) {
 		boolean oldSpanned = spanned;
 		spanned = newSpanned;
@@ -321,7 +327,7 @@ public class VsamTypeImpl extends EObjectImpl implements VsamType {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (lengthType: ");
 		result.append(lengthType);
 		result.append(", spanned: ");

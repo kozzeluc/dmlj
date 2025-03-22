@@ -40,13 +40,13 @@ import org.lh.dmlj.schema.SchemaPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl#getCount <em>Count</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl#getDependingOn <em>Depending On</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl#getElement <em>Element</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.OccursSpecificationImpl#getIndexElements <em>Index Elements</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -113,6 +113,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getCount() {
 		return count;
 	}
@@ -122,6 +123,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setCount(short newCount) {
 		short oldCount = count;
 		count = newCount;
@@ -134,6 +136,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Element getDependingOn() {
 		if (dependingOn != null && dependingOn.eIsProxy()) {
 			InternalEObject oldDependingOn = (InternalEObject)dependingOn;
@@ -160,6 +163,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDependingOn(Element newDependingOn) {
 		Element oldDependingOn = dependingOn;
 		dependingOn = newDependingOn;
@@ -172,6 +176,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Element getElement() {
 		if (eContainerFeatureID() != SchemaPackage.OCCURS_SPECIFICATION__ELEMENT) return null;
 		return (Element)eInternalContainer();
@@ -192,6 +197,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setElement(Element newElement) {
 		if (newElement != eInternalContainer() || (eContainerFeatureID() != SchemaPackage.OCCURS_SPECIFICATION__ELEMENT && newElement != null)) {
 			if (EcoreUtil.isAncestor(this, newElement))
@@ -213,6 +219,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<IndexElement> getIndexElements() {
 		if (indexElements == null) {
 			indexElements = new EObjectContainmentWithInverseEList<IndexElement>(IndexElement.class, this, SchemaPackage.OCCURS_SPECIFICATION__INDEX_ELEMENTS, SchemaPackage.INDEX_ELEMENT__OCCURS_SPECIFICATION);
@@ -369,7 +376,7 @@ public class OccursSpecificationImpl extends EObjectImpl implements OccursSpecif
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (count: ");
 		result.append(count);
 		result.append(')');

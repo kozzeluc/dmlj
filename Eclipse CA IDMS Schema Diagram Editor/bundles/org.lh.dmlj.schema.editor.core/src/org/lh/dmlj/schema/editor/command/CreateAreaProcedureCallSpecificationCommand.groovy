@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2023  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -84,8 +84,6 @@ class CreateAreaProcedureCallSpecificationCommand extends ModelChangeBasicComman
 	}
 	
 	private void removeCallSpecFromProcedureAndArea() {
-		assert callSpec.procedure.callSpecifications && callSpec.is(callSpec.procedure.callSpecifications[-1]), 
-			   'callSpec not the last for procedure'
 		assert area.procedures && callSpec.is(area.procedures[-1]), 'callSpec not the last for area'
 		callSpec.procedure = null
 		callSpec.area = null

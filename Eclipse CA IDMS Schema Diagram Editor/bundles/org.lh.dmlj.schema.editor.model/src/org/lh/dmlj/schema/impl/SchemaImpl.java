@@ -42,6 +42,7 @@ import org.lh.dmlj.schema.Set;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getNodeText <em>Node Text</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getAreas <em>Areas</em>}</li>
@@ -55,7 +56,6 @@ import org.lh.dmlj.schema.Set;
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getSets <em>Sets</em>}</li>
  *   <li>{@link org.lh.dmlj.schema.impl.SchemaImpl#getVersion <em>Version</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -228,6 +228,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -237,6 +238,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
@@ -249,6 +251,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public short getVersion() {
 		return version;
 	}
@@ -258,6 +261,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setVersion(short newVersion) {
 		short oldVersion = version;
 		version = newVersion;
@@ -270,6 +274,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -279,6 +284,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDescription(String newDescription) {
 		String oldDescription = description;
 		description = newDescription;
@@ -291,6 +297,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getMemoDate() {
 		return memoDate;
 	}
@@ -300,6 +307,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setMemoDate(String newMemoDate) {
 		String oldMemoDate = memoDate;
 		memoDate = newMemoDate;
@@ -312,6 +320,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SchemaArea> getAreas() {
 		if (areas == null) {
 			areas = new EObjectContainmentWithInverseEList<SchemaArea>(SchemaArea.class, this, SchemaPackage.SCHEMA__AREAS, SchemaPackage.SCHEMA_AREA__SCHEMA);
@@ -324,6 +333,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<String> getComments() {
 		if (comments == null) {
 			comments = new EDataTypeUniqueEList<String>(String.class, this, SchemaPackage.SCHEMA__COMMENTS);
@@ -336,6 +346,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<SchemaRecord> getRecords() {
 		if (records == null) {
 			records = new EObjectContainmentWithInverseEList<SchemaRecord>(SchemaRecord.class, this, SchemaPackage.SCHEMA__RECORDS, SchemaPackage.SCHEMA_RECORD__SCHEMA);
@@ -348,6 +359,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Set> getSets() {
 		if (sets == null) {
 			sets = new EObjectContainmentWithInverseEList<Set>(Set.class, this, SchemaPackage.SCHEMA__SETS, SchemaPackage.SET__SCHEMA);
@@ -360,6 +372,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public DiagramData getDiagramData() {
 		return diagramData;
 	}
@@ -384,6 +397,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setDiagramData(DiagramData newDiagramData) {
 		if (newDiagramData != diagramData) {
 			NotificationChain msgs = null;
@@ -403,6 +417,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EList<Procedure> getProcedures() {
 		if (procedures == null) {
 			procedures = new EObjectContainmentWithInverseEList<Procedure>(Procedure.class, this, SchemaPackage.SCHEMA__PROCEDURES, SchemaPackage.PROCEDURE__SCHEMA);
@@ -693,7 +708,7 @@ public class SchemaImpl extends EObjectImpl implements Schema {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (comments: ");
 		result.append(comments);
 		result.append(", description: ");
