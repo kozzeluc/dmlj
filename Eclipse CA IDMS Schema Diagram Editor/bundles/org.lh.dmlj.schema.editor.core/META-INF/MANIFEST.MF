@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.ui,
  org.lh.dmlj.schema.editor.model,
  org.eclipse.e4.ui.css.swt.theme
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ClassPath: .
 Bundle-Vendor: Luc Hermans
 Export-Package: org.lh.dmlj.schema.editor,

@@ -8,10 +8,10 @@
     <version>3.4.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
-        <tycho-version>2.1.0</tycho-version>
-        <groovy-eclipse-compiler-version>3.6.0-03</groovy-eclipse-compiler-version>
-        <groovy-eclipse-batch-version>3.0.7-02</groovy-eclipse-batch-version>
-        <eclipse>http://download.eclipse.org/releases/2020-06</eclipse>
+        <tycho-version>4.0.8</tycho-version>
+        <groovy-eclipse-compiler-version>3.9.0</groovy-eclipse-compiler-version>
+        <groovy-eclipse-batch-version>4.0.26-01</groovy-eclipse-batch-version>
+        <eclipse>http://download.eclipse.org/releases/2022-03</eclipse>
 		<toolchain-version>3.1.0</toolchain-version>
     </properties>
     <build>
@@ -79,13 +79,19 @@
                 <configuration>
                     <toolchains>
                         <jdk>
-                            <version>11</version>
+                            <version>17</version>
                         </jdk>
                     </toolchains>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <pluginRepositories>
+      <pluginRepository>
+        <id>groovy-plugins-release</id>
+        <url>https://groovy.jfrog.io/artifactory/plugins-release</url>
+      </pluginRepository>
+    </pluginRepositories>
     <repositories>
         <repository>
             <id>eclipse</id>
