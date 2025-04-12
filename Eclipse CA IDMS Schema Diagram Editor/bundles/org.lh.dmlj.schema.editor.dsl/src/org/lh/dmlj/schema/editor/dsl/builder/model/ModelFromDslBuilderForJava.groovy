@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -57,7 +57,8 @@ class ModelFromDslBuilderForJava {
 	}
 	
 	public static Schema schema(File definition) {
-		delegate.schema(definition.text)
+		// TODO enhance the following tweak
+		delegate.schema(definition.text.replace("call '", "callProcedure '"))
 	}
 	
 	public static Set set(String definition) {
