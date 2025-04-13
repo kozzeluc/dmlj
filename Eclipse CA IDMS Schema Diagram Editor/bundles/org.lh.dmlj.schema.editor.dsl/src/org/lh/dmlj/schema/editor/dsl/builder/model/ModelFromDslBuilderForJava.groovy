@@ -57,8 +57,7 @@ class ModelFromDslBuilderForJava {
 	}
 	
 	public static Schema schema(File definition) {
-		// TODO enhance the following tweak
-		delegate.schema(definition.text.replace("call '", "callProcedure '"))
+		delegate.schema(Utils.getSchemadslFileContents(definition))
 	}
 	
 	public static Set set(String definition) {
