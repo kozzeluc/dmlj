@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CA IDMS/DB Schema Diagram Editor DSL (Tests)
+Bundle-SymbolicName: org.lh.dmlj.schema.editor.dsl.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Luc Hermans
+Automatic-Module-Name: org.lh.dmlj.schema.editor.dsl.test
+Bundle-RequiredExecutionEnvironment: JavaSE-17
