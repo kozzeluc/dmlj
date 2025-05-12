@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.ui,
  org.lh.dmlj.schema.editor.core,
  org.lh.dmlj.schema.editor.model,
  org.lh.dmlj.schema.editor.jaxb
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Import-Package: ca.idms.jdbc;resolution:=optional
 Bundle-Vendor: Luc Hermans

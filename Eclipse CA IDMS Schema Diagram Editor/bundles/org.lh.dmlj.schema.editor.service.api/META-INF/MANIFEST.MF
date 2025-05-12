@@ -4,7 +4,7 @@ Bundle-Name: CA IDMS/DB Schema Diagram Editor Service API
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.service.api
 Bundle-Version: 3.4.0.qualifier
 Bundle-Vendor: Luc Hermans
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.lh.dmlj.schema.editor.service.api
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.lh.dmlj.schema.editor.service.api

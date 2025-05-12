@@ -4,6 +4,6 @@ Bundle-Name: CA IDMS/DB Schema Diagram Editor Help
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.help;singleton:=true
 Bundle-Version: 3.4.2.qualifier
 Bundle-Vendor: Luc Hermans
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.lh.dmlj.schema.editor.help
 Require-Bundle: org.eclipse.ui.intro
