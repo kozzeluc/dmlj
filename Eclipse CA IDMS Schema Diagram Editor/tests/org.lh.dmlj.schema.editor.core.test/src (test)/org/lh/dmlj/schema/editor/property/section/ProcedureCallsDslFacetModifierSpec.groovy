@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -91,13 +91,13 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		facet == expectedValue
 		
 		where:
-		type 	 | model 											 		|| expectedValue
-		'area' 	 | area('')		   								 			|| ''
-		'area'	 | area("\ncall 'IDMSCOMP BEFORE READY EXCLUSIVE'") 		|| "call 'IDMSCOMP BEFORE READY EXCLUSIVE'"
-		'area' 	 | area("\ncall 'ABC AFTER'\ncall 'DEF BEFORE'") 	 		|| "call 'ABC AFTER'\ncall 'DEF BEFORE'"
-		'record' | record('')		   								 		|| ''
-		'record' | record("\ncall 'IDMSCOMP BEFORE STORE'\nrecordId 440" )	|| "call 'IDMSCOMP BEFORE STORE'"
-		'record' | record("\ncall 'ABC AFTER'\ncall 'DEF BEFORE'")  		|| "call 'ABC AFTER'\ncall 'DEF BEFORE'"
+		type 	 | model 											 					|| expectedValue
+		'area' 	 | area('')		   								 						|| ''
+		'area'	 | area("\ncallProcedure 'IDMSCOMP BEFORE READY EXCLUSIVE'") 			|| "callProcedure 'IDMSCOMP BEFORE READY EXCLUSIVE'"
+		'area' 	 | area("\ncallProcedure 'ABC AFTER'\ncallProcedure 'DEF BEFORE'") 	 	|| "callProcedure 'ABC AFTER'\ncallProcedure 'DEF BEFORE'"
+		'record' | record('')		   								 					|| ''
+		'record' | record("\ncallProcedure 'IDMSCOMP BEFORE STORE'\nrecordId 440" )		|| "callProcedure 'IDMSCOMP BEFORE STORE'"
+		'record' | record("\ncallProcedure 'ABC AFTER'\ncallProcedure 'DEF BEFORE'")  	|| "callProcedure 'ABC AFTER'\ncallProcedure 'DEF BEFORE'"
 	}
 	
 	@Unroll("Empty/blank line: #modifiedSyntax")
@@ -114,14 +114,14 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		dslFacetModifier.modifiedFacetDefinition == expectedValue
 		
 		where:
-		modifiedSyntax 						   		|| expectedValue
-		"" 									   		|| ""
-		" " 								   		|| ""
-		"\n" 								   		|| ""
-		" \n " 								   		|| ""
-		"call 'XYZ BEFORE'\n" 				   		|| "call 'XYZ BEFORE'"
-		" call 'XYZ BEFORE'\n\ncall 'ABC AFTER'"	|| "call 'XYZ BEFORE'\ncall 'ABC AFTER'"
-		"call 'XYZ BEFORE'\n \n call 'ABC AFTER' "	|| "call 'XYZ BEFORE'\ncall 'ABC AFTER'"
+		modifiedSyntax 						   							|| expectedValue
+		"" 									   							|| ""
+		" " 								   							|| ""
+		"\n" 								   							|| ""
+		" \n " 								   							|| ""
+		"callProcedure 'XYZ BEFORE'\n" 				   					|| "callProcedure 'XYZ BEFORE'"
+		" callProcedure 'XYZ BEFORE'\n\ncallProcedure 'ABC AFTER'"		|| "callProcedure 'XYZ BEFORE'\ncallProcedure 'ABC AFTER'"
+		"callProcedure 'XYZ BEFORE'\n \n callProcedure 'ABC AFTER' "	|| "callProcedure 'XYZ BEFORE'\ncallProcedure 'ABC AFTER'"
 	}
 	
 	@Unroll("valid area facet syntax: #modifiedSyntax")
@@ -141,7 +141,7 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		quote << [ "'" ] * FUNCTION_COUNT * 2 + [ '"' ] * FUNCTION_COUNT * 2
 		callTime << [ BEFORE ] * FUNCTION_COUNT + [ AFTER ] * FUNCTION_COUNT + [ BEFORE ] * FUNCTION_COUNT + [ AFTER ] * FUNCTION_COUNT
 		function << FUNCTIONS * 2 * 2
-		modifiedSyntax = "call ${quote}XYZ $callTime$function$quote"
+		modifiedSyntax = "callProcedure ${quote}XYZ $callTime$function$quote"
 	}
 	
 	@Unroll("valid record facet syntax: #modifiedSyntax")
@@ -161,7 +161,7 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		quote << [ "'" ] * VERB_COUNT * 2 + [ '"' ] * VERB_COUNT * 2  
 		callTime << [ BEFORE ] * VERB_COUNT + [ AFTER ] * VERB_COUNT + [ BEFORE ] * VERB_COUNT + [ AFTER ] * VERB_COUNT
 		verb << VERBS * 2 * 2
-		modifiedSyntax = "call ${quote}XYZ $callTime$verb$quote"
+		modifiedSyntax = "callProcedure ${quote}XYZ $callTime$verb$quote"
 	}
 	
 	def "Procedure names are translated to uppercase"() {
@@ -171,10 +171,10 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		def dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(model)
 		
 		when: "passing a lowercase procedure name"
-		dslFacetModifier.setModifiedFacetDefinition("call 'xyz BEFORE'")
+		dslFacetModifier.setModifiedFacetDefinition("callProcedure 'xyz BEFORE'")
 		
 		then: "the procedure name is translated to uppercase"
-		dslFacetModifier.modifiedFacetDefinition == "call 'XYZ BEFORE'"
+		dslFacetModifier.modifiedFacetDefinition == "callProcedure 'XYZ BEFORE'"
 	}
 	
 	@Unroll("invalid line: #invalidLine")
@@ -189,14 +189,14 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		
 		then: "an exception is thrown"
 		DSLFacetValidationException e = thrown(DSLFacetValidationException)
-		e.message == "line 1 does not start with \"call '\" (or 'call \"') or end with a single quote:\n$invalidLine"
+		e.message == "line 1 does not start with \"callProcedure '\" (or 'callProcedure \"') or end with a single quote:\n$invalidLine"
 		!e.cause
 		
 		where:
-		invalidLine || _
-		'x' 		|| _
-		"call 'x" 	|| _
-		'call "x' 	|| _
+		invalidLine 		|| _
+		'x' 				|| _
+		"callProcedure 'x" 	|| _
+		'callProcedure "x' 	|| _
 	}
 	
 	def "Each relevant line in the modified procedure call syntax is compiled by the Groovy compiler"() {
@@ -206,7 +206,7 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		def dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(model)
 		
 		when: "passing an invalid line"
-		dslFacetModifier.setModifiedFacetDefinition("call '''")
+		dslFacetModifier.setModifiedFacetDefinition("callProcedure '''")
 		
 		then: "an exception is thrown"
 		DSLFacetValidationException e = thrown(DSLFacetValidationException)
@@ -218,7 +218,7 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 	def "hasChanges() tells whether modified DSL has been set and is different from the original"() {
 		
 		given: "a model and a ProcedureCallsDslFacetModifier for that model"
-		def model = record("name 'TESTRECORD'\ncall 'XYZ BEFORE'")
+		def model = record("name 'TESTRECORD'\ncallProcedure 'XYZ BEFORE'")
 		def dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(model)
 		
 		when: "passing valid modified facet syntax"
@@ -228,18 +228,18 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		dslFacetModifier.hasChanges() == expectedValue
 		
 		where:
-		modifiedSyntax 							|| expectedValue
-		'' 										|| true
-		"call 'XYZ BEFORE'" 					|| false
-		"call 'xyz BEFORE'" 					|| false
-		"call 'XYZ AFTER'"  					|| true
-		"call 'XYZ BEFORE'\ncall 'ABC BEFORE'" 	|| true
+		modifiedSyntax 												|| expectedValue
+		'' 															|| true
+		"callProcedure 'XYZ BEFORE'" 								|| false
+		"callProcedure 'xyz BEFORE'" 								|| false
+		"callProcedure 'XYZ AFTER'"  								|| true
+		"callProcedure 'XYZ BEFORE'\ncallProcedure 'ABC BEFORE'" 	|| true
 	}
 	
 	def "hasChanges() returns false if no modified DSL facet has been set"() {
 		
 		given: "a model and a ProcedureCallsDslFacetModifier for that model"
-		def model = record("name 'TESTRECORD'\ncall 'XYZ BEFORE'")
+		def model = record("name 'TESTRECORD'\ncallProcedure 'XYZ BEFORE'")
 		def dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(model)
 		
 		when: "modified facet syntax is NOT set"
@@ -252,7 +252,7 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 	def "hasChanges() returns false if only invalid modified DSL facet was set"() {
 		
 		given: "a model and a ProcedureCallsDslFacetModifier for that model"
-		def model = record("name 'TESTRECORD'\ncall 'XYZ BEFORE'")
+		def model = record("name 'TESTRECORD'\ncallProcedure 'XYZ BEFORE'")
 		def dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(model)
 		
 		when: "invalid facet syntax is set"
@@ -268,11 +268,11 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 	def "hasChanges() returns true if valid modified DSL was set before"() {
 		
 		given: "a model and a ProcedureCallsDslFacetModifier for that model"
-		def model = record("name 'TESTRECORD'\ncall 'XYZ BEFORE'")
+		def model = record("name 'TESTRECORD'\ncallProcedure 'XYZ BEFORE'")
 		def dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(model)
 		
 		when: "valid facet syntax is first set"
-		dslFacetModifier.setModifiedFacetDefinition("call 'ABC BEFORE'")
+		dslFacetModifier.setModifiedFacetDefinition("callProcedure 'ABC BEFORE'")
 		
 		and: " invalid facet syntax is then set"
 		dslFacetModifier.setModifiedFacetDefinition("invalid syntax")
@@ -287,11 +287,11 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 	def "hasChanges() returns false if the same valid DSL was last set successfully"() {
 		
 		given: "a model and a ProcedureCallsDslFacetModifier for that model"
-		def model = record("name 'TESTRECORD'\ncall 'XYZ BEFORE'")
+		def model = record("name 'TESTRECORD'\ncallProcedure 'XYZ BEFORE'")
 		def dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(model)
 		
 		when: "the same valid facet syntax is set"
-		dslFacetModifier.setModifiedFacetDefinition("call 'XYZ BEFORE'")
+		dslFacetModifier.setModifiedFacetDefinition("callProcedure 'XYZ BEFORE'")
 		
 		then: "hasChanges() returns false"
 		!dslFacetModifier.hasChanges()
@@ -302,7 +302,7 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		given: "a ProcedureCallsDslFacetModifier with modified facet syntax set"
 		def model = area("name 'TESTAREA'")
 		def dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(model)
-		dslFacetModifier.setModifiedFacetDefinition("call 'XYZ BEFORE'")
+		dslFacetModifier.setModifiedFacetDefinition("callProcedure 'XYZ BEFORE'")
 		
 		and: "a mock command factory that returns a mock command"
 		Command command = Mock(Command)
@@ -313,7 +313,7 @@ class ProcedureCallsDslFacetModifierSpec extends Specification {
 		Command returnedCommand = dslFacetModifier.getCommand()
 		
 		then: "(only) the right command factory's createCommand is invoked with the right arguments"
-		      "(note that the 'call' keyword, as well as the quotes are stripped)"
+		      "(note that the 'callProcedure' keyword, as well as the quotes are stripped)"
 		1 * commandFactory.createCommand(model, [ 'XYZ BEFORE' ]) >> command
 		0 * commandFactory._
 		

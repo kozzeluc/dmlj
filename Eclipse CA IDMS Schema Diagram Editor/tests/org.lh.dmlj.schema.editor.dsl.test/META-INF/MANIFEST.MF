@@ -4,5 +4,6 @@ Bundle-Name: CA IDMS/DB Schema Diagram Editor DSL (Tests)
 Bundle-SymbolicName: org.lh.dmlj.schema.editor.dsl.test
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Luc Hermans
+Fragment-Host: org.lh.dmlj.schema.editor.core
 Automatic-Module-Name: org.lh.dmlj.schema.editor.dsl.test
 Bundle-RequiredExecutionEnvironment: JavaSE-17

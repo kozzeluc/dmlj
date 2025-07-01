@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,7 +36,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 	def "Change the only area procedure call function"() {
 	
 		given: "an area with 1 procedure call specification and a procedure call command factory"
-		SchemaArea area = area("name 'TESTAREA'\ncall 'IDMSCOMP BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\ncallProcedure 'IDMSCOMP BEFORE'")
 		ProcedureCallCommandFactory factory = new ProcedureCallCommandFactory()
 		
 		expect: "the procedure call exists"
@@ -99,7 +99,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 	def "Remove the only area procedure call specification and an obsolete procedure"() {
 		
 		given: "an area with 1 procedure call and a procedure call command factory"
-		SchemaArea area = area("name 'TESTAREA'\n call 'TESTPROC BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\n callProcedure 'TESTPROC BEFORE'")
 		ProcedureCallCommandFactory factory = new ProcedureCallCommandFactory()
 		
 		expect: "the procedure call exists"
@@ -132,7 +132,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 	def "Replace an area procedure call specification, remove an obsolete procedure and create a new one"() {
 		
 		given: "an area with 1 procedure call and a procedure call command factory"
-		SchemaArea area = area("name 'TESTAREA'\ncall 'IDMSCOMP BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\ncallProcedure 'IDMSCOMP BEFORE'")
 		ProcedureCallCommandFactory factory = new ProcedureCallCommandFactory()
 		
 		expect: "the procedure call exists"
@@ -178,12 +178,12 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 			   "the same procedure, and a procedure call command factory"
 		SchemaArea area1 = new AreaModelBuilder().build { 
 			name 'TESTAREA1'
-			call 'IDMSCOMP BEFORE' 
+			callProcedure 'IDMSCOMP BEFORE' 
 		}
 		SchemaArea area2 = new AreaModelBuilder( schema : area1.schema ).build {
 			name 'TESTAREA2'
-			call 'IDMSCOMP BEFORE'
-			call 'IDMSDCOM BEFORE'
+			callProcedure 'IDMSCOMP BEFORE'
+			callProcedure 'IDMSDCOM BEFORE'
 		}
 		ProcedureCallCommandFactory factory = new ProcedureCallCommandFactory()
 		
@@ -232,23 +232,23 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		
 		given: "an area with several procedure call specifications"
 		SchemaArea area = area("""name 'TESTAREA'
-			call 'KEEPREF1 BEFORE'
-			call 'KEEPREF1 AFTER'
-			call 'KEEPNOR1 BEFORE'
-			call 'KEEPNOR1 AFTER'
-			call 'OBSOLET1 BEFORE'
-			call 'OBSOLET1 AFTER'
-			call 'KEEPREF2 BEFORE'
-			call 'OBSOLET2 AFTER'
-			call 'KEEPNOR2 BEFORE'
+			callProcedure 'KEEPREF1 BEFORE'
+			callProcedure 'KEEPREF1 AFTER'
+			callProcedure 'KEEPNOR1 BEFORE'
+			callProcedure 'KEEPNOR1 AFTER'
+			callProcedure 'OBSOLET1 BEFORE'
+			callProcedure 'OBSOLET1 AFTER'
+			callProcedure 'KEEPREF2 BEFORE'
+			callProcedure 'OBSOLET2 AFTER'
+			callProcedure 'KEEPNOR2 BEFORE'
 		""")
 		
 		and: "another area to reference procedures that are to be kept but will no longer referenced"
 		     "by the area"
 		SchemaArea anotherArea = new AreaModelBuilder( schema : area.schema ).build {
 			name 'ANOTHER'
-			call 'KEEPNOR1 BEFORE'
-			call 'KEEPNOR2 BEFORE'
+			callProcedure 'KEEPNOR1 BEFORE'
+			callProcedure 'KEEPNOR2 BEFORE'
 		}
 		
 		and: "a new set of procedure call specifications"
@@ -336,7 +336,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 	def "Change the only record procedure call verb"() {
 		
 		given: "a record with 1 procedure call specification and a procedure call command factory"
-		SchemaRecord record = record("name 'TESTRECORD'\ncall 'IDMSCOMP BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\ncallProcedure 'IDMSCOMP BEFORE'")
 		ProcedureCallCommandFactory factory = new ProcedureCallCommandFactory()
 		
 		expect: "the procedure call exists"
@@ -399,7 +399,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 	def "Remove the only record procedure call specification and an obsolete procedure"() {
 		
 		given: "a record with 1 procedure call and a procedure call command factory"
-		SchemaRecord record = record("name 'TESTRECORD'\n call 'TESTPROC BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\n callProcedure 'TESTPROC BEFORE'")
 		ProcedureCallCommandFactory factory = new ProcedureCallCommandFactory()
 		
 		expect: "the procedure call exists"
@@ -432,7 +432,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 	def "Replace a record procedure call specification, remove an obsolete procedure and create a new one"() {
 		
 		given: "a record with 1 procedure call and a procedure call command factory"
-		SchemaRecord record = record("name 'TESTRECORD'\ncall 'IDMSCOMP BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\ncallProcedure 'IDMSCOMP BEFORE'")
 		ProcedureCallCommandFactory factory = new ProcedureCallCommandFactory()
 		
 		expect: "the procedure call exists"
@@ -478,12 +478,12 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 			   "the same procedure, and a procedure call command factory"
 		SchemaRecord record1 = new RecordModelBuilder().build {
 			name 'TESTRECORD1'
-			call 'IDMSCOMP BEFORE'
+			callProcedure 'IDMSCOMP BEFORE'
 		}
 		SchemaRecord record2 = new RecordModelBuilder( schema : record1.schema ).build {
 			name 'TESTRECORD2'
-			call 'IDMSCOMP BEFORE'
-			call 'IDMSDCOM BEFORE'
+			callProcedure 'IDMSCOMP BEFORE'
+			callProcedure 'IDMSDCOM BEFORE'
 		}
 		ProcedureCallCommandFactory factory = new ProcedureCallCommandFactory()
 		
@@ -532,23 +532,23 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		
 		given: "a record with several procedure call specifications"
 		SchemaRecord record = record("""name 'TESTRECORD'
-			call 'KEEPREF1 BEFORE'
-			call 'KEEPREF1 AFTER'
-			call 'KEEPNOR1 BEFORE'
-			call 'KEEPNOR1 AFTER'
-			call 'OBSOLET1 BEFORE'
-			call 'OBSOLET1 AFTER'
-			call 'KEEPREF2 BEFORE'
-			call 'OBSOLET2 AFTER'
-			call 'KEEPNOR2 BEFORE'
+			callProcedure 'KEEPREF1 BEFORE'
+			callProcedure 'KEEPREF1 AFTER'
+			callProcedure 'KEEPNOR1 BEFORE'
+			callProcedure 'KEEPNOR1 AFTER'
+			callProcedure 'OBSOLET1 BEFORE'
+			callProcedure 'OBSOLET1 AFTER'
+			callProcedure 'KEEPREF2 BEFORE'
+			callProcedure 'OBSOLET2 AFTER'
+			callProcedure 'KEEPNOR2 BEFORE'
 		""")
 		
 		and: "an area to reference procedures that are to be kept but will no longer referenced"
 			 "by the record"
 		SchemaArea anArea = new AreaModelBuilder( schema : record.schema ).build {
 			name 'ANOTHER'
-			call 'KEEPNOR1 BEFORE'
-			call 'KEEPNOR2 BEFORE'
+			callProcedure 'KEEPNOR1 BEFORE'
+			callProcedure 'KEEPNOR2 BEFORE'
 		}
 		
 		and: "a new set of procedure call specifications"

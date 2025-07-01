@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -580,10 +580,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the record with a closure containing 4 procedure calls,"
 			  "referring to 2 distinct procedures"
 		def definition = {
-			call 'PROC2 BEFORE STORE'
-			call 'PROC1 AFTER GET'
-			call 'PROC1 BEFORE FIND'
-			call 'PROC2 AFTER ERASE'
+			callProcedure 'PROC2 BEFORE STORE'
+			callProcedure 'PROC1 AFTER GET'
+			callProcedure 'PROC1 BEFORE FIND'
+			callProcedure 'PROC2 AFTER ERASE'
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -611,7 +611,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		def schemaDefinition = {
 			name 'EMPSCHM'
 			area 'EMP-DEMO-REGION' {
-				call 'PROC1 BEFORE FINISH'
+				callProcedure 'PROC1 BEFORE FINISH'
 			}
 		}
 		def schemaBuilder = new SchemaModelBuilder()
@@ -626,10 +626,10 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "distinct procedures, of which 1 is already defined in the schema"						
 		def definition = {																				
 			area 'EMP-DEMO-REGION'
-			call 'PROC2 BEFORE STORE'
-			call 'PROC1 AFTER GET'
-			call 'PROC1 BEFORE FIND'
-			call 'PROC2 AFTER ERASE'
+			callProcedure 'PROC2 BEFORE STORE'
+			callProcedure 'PROC1 AFTER GET'
+			callProcedure 'PROC1 BEFORE FIND'
+			callProcedure 'PROC2 AFTER ERASE'
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -659,7 +659,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the record with a closure containing a procedure call"
 		def definition = {
-			call 'PROC1 ' + closureCallTime + ' STORE'
+			callProcedure 'PROC1 ' + closureCallTime + ' STORE'
 		}
 		SchemaRecord record = builder.build(definition)
 		
@@ -681,7 +681,7 @@ class RecordModelBuilderSpec extends AbstractModelBuilderSpec {
 		
 		when: "building the record with a closure containing a procedure call"
 		def definition = {
-			call "PROC1 BEFORE$closureVerb"
+			callProcedure "PROC1 BEFORE$closureVerb"
 		}
 		SchemaRecord record = builder.build(definition)
 		

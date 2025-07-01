@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -37,8 +37,8 @@ class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
 	static relevant = { !it.trim().empty }
 	static trim = { it.trim() }
 	static procedureToUppercase = { String line ->  
-		def i = line.indexOf(' ', 6)
-		"${line.substring(0, 6)}${line.substring(6, i).toUpperCase()}${line.substring(i)}"
+		def i = line.indexOf(' ', 15)
+		"${line.substring(0, 15)}${line.substring(15, i).toUpperCase()}${line.substring(i)}"
 	} 
 	
 	def model	
@@ -53,7 +53,7 @@ class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
 		String fullDsl = buildSyntax(model)
 		StringBuilder facetDsl = new StringBuilder()
 		for (String line : fullDsl.split("\n")) {
-			if (line.trim().startsWith("call '")) {
+			if (line.trim().startsWith("callProcedure '")) {
 				if (facetDsl.length() > 0) {
 					facetDsl.append('\n')
 				}
@@ -81,7 +81,7 @@ class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
 	public Command getCommand() {
 		assert hasChanges(), 'command cannot be created: no changes'
 		if (modifiedFacetDefinition.trim()) {
-			commandFactory.createCommand(model, modifiedFacetDefinition.split('\n').collect( { it.substring(6, it.size() - 1) } ))
+			commandFactory.createCommand(model, modifiedFacetDefinition.split('\n').collect( { it.substring(15, it.size() - 1) } ))
 		} else {
 			commandFactory.createCommand(model, [])
 		} 		
@@ -123,10 +123,10 @@ class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
 		for (int i = 0; i < lines.length; i++) {
 			String trimmedLine = lines[i].trim()
 			boolean valid = trimmedLine.isEmpty() ||
-				  			trimmedLine.startsWith("call '") && trimmedLine.endsWith("'") ||
-							trimmedLine.startsWith('call "') && trimmedLine.endsWith('"')
+				  			trimmedLine.startsWith("callProcedure '") && trimmedLine.endsWith("'") ||
+							trimmedLine.startsWith('callProcedure "') && trimmedLine.endsWith('"')
 			if (!valid) {				
-			  	String message = "line ${i + 1} does not start with \"call '\" (or 'call \"') or end with a single quote:\n${lines[i]}"
+			  	String message = "line ${i + 1} does not start with \"callProcedure '\" (or 'callProcedure \"') or end with a single quote:\n${lines[i]}"
 				throw new DSLFacetValidationException(message, null, modifiedFacetDefinition)
 			}
 		}

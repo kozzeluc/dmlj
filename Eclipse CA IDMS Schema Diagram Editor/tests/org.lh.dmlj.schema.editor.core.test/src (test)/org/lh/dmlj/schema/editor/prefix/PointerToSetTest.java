@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,7 +23,6 @@ import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_NEXT;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_PRIOR;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_OWNER;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_INDEX;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -35,7 +34,6 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 
 	@Test
 	public void testOwnerNext() {
-		
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("R1", "S1");		
 		
 		PointerToSet<OwnerRole> pointer = 
@@ -48,14 +46,10 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		pointer.unset();
 		verify(role, times(1)).setNextDbkeyPosition((short) 0);
-		
-		verify(role, times(2)).setNextDbkeyPosition(any(Short.class));
-		
 	}
 	
 	@Test
 	public void testOwnerPrior() {
-		
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 3);
@@ -65,18 +59,14 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals(newPositionInPrefix.shortValue(), pointer.getPositionInPrefixToSet());
 		
 		pointer.set();
-		verify(role, times(1)).setPriorDbkeyPosition(newPositionInPrefix);		
+		verify(role, times(1)).setPriorDbkeyPosition(newPositionInPrefix);
 		
 		pointer.unset();
 		verify(role, times(1)).setPriorDbkeyPosition(null);
-		
-		verify(role, times(2)).setPriorDbkeyPosition(any(Short.class));
-		
 	}
 	
 	@Test
 	public void testMemberNext() {
-		
 		MemberRole role = mockMemberRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 13);
@@ -90,14 +80,10 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		pointer.unset();
 		verify(role, times(1)).setNextDbkeyPosition(null);
-		
-		verify(role, times(2)).setNextDbkeyPosition(any(Short.class));
-		
 	}
 	
 	@Test
 	public void testMemberPrior() {
-		
 		MemberRole role = mockMemberRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 13);
@@ -111,14 +97,10 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		pointer.unset();
 		verify(role, times(1)).setPriorDbkeyPosition(null);
-		
-		verify(role, times(2)).setPriorDbkeyPosition(any(Short.class));
-		
 	}	
 	
 	@Test
 	public void testMemberOwner() {
-		
 		MemberRole role = mockMemberRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 17);
@@ -132,14 +114,10 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		pointer.unset();
 		verify(role, times(1)).setOwnerDbkeyPosition(null);
-		
-		verify(role, times(2)).setOwnerDbkeyPosition(any(Short.class));
-		
 	}
 	
 	@Test
 	public void testMemberIndex() {
-		
 		MemberRole role = mockMemberRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 17);
@@ -153,9 +131,6 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		pointer.unset();
 		verify(role, times(1)).setIndexDbkeyPosition(null);
-		
-		verify(role, times(2)).setIndexDbkeyPosition(any(Short.class));
-		
 	}
 
 }

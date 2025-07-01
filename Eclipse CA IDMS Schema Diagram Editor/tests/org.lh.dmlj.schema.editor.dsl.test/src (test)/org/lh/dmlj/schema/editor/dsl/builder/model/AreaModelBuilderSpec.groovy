@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -102,10 +102,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "referring to 2 distinct procedures"
 		def definition = {
 			name 'AREA2'
-			call 'PROC2 BEFORE EVERY DML FUNCTION'
-			call 'PROC1 AFTER READY EXCLUSIVE'
-			call 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
-			call 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
+			callProcedure 'PROC2 BEFORE EVERY DML FUNCTION'
+			callProcedure 'PROC1 AFTER READY EXCLUSIVE'
+			callProcedure 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
+			callProcedure 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
 		}
 		SchemaArea area = builder.build(definition)
 		
@@ -145,10 +145,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 			  "referring to 2 distinct procedures"
 		def definition = {
 			name 'AREA2'
-			call 'PROC2 BEFORE EVERY DML FUNCTION'
-			call 'PROC1 AFTER READY EXCLUSIVE'
-			call 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
-			call 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
+			callProcedure 'PROC2 BEFORE EVERY DML FUNCTION'
+			callProcedure 'PROC1 AFTER READY EXCLUSIVE'
+			callProcedure 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
+			callProcedure 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
 		}
 		SchemaArea area = builder.build(definition)
 		
@@ -227,10 +227,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with the area name and a closure containing 4 procedure calls,"
 			  " referring to 2 distinct procedures"
 		def definition = {
-			call 'PROC2 BEFORE EVERY DML FUNCTION'
-			call 'PROC1 AFTER READY EXCLUSIVE'
-			call 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
-			call 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
+			callProcedure 'PROC2 BEFORE EVERY DML FUNCTION'
+			callProcedure 'PROC1 AFTER READY EXCLUSIVE'
+			callProcedure 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
+			callProcedure 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
 		}
 		SchemaArea area = builder.build('AREA2', definition)
 		
@@ -269,10 +269,10 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with the area name and a closure containing 4 procedure calls,"
 			  "referring to 2 distinct procedures"
 		def definition = {
-			call 'PROC2 BEFORE EVERY DML FUNCTION'
-			call 'PROC1 AFTER READY EXCLUSIVE'
-			call 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
-			call 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
+			callProcedure 'PROC2 BEFORE EVERY DML FUNCTION'
+			callProcedure 'PROC1 AFTER READY EXCLUSIVE'
+			callProcedure 'PROC1 BEFORE READY EXCLUSIVE UPDATE'
+			callProcedure 'PROC2 AFTER READY EXCLUSIVE RETRIEVAL'
 		}
 		SchemaArea area = builder.build('AREA2', definition)
 		
@@ -309,7 +309,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with a closure containing a procedure call"
 		def definition = {
 			name 'AREA1'
-			call 'PROC1 ' + closureCallTime
+			callProcedure 'PROC1 ' + closureCallTime
 		}
 		SchemaArea area = builder.build(definition)
 		
@@ -332,7 +332,7 @@ public class AreaModelBuilderSpec extends AbstractModelBuilderSpec {
 		when: "building the area with a closure containing a procedure call"
 		def definition = {
 			name 'AREA1'
-			call "PROC1 BEFORE$closureFunction"
+			callProcedure "PROC1 BEFORE$closureFunction"
 		}
 		SchemaArea area = builder.build(definition)
 		

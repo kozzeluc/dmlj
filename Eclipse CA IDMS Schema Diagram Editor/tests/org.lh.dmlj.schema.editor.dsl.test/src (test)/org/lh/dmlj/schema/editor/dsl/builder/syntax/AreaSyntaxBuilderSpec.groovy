@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -66,8 +66,8 @@ name 'EMP-DEMO-REGION'
 """
 name 'DDLDML'
 
-call 'IDMSCOMP$syntaxPart'
-call 'IDMSDCOM$syntaxPart'
+callProcedure 'IDMSCOMP$syntaxPart'
+callProcedure 'IDMSDCOM$syntaxPart'
 """)
 		
 		where: "the procedure call is specified as follows"
@@ -118,8 +118,8 @@ call 'IDMSDCOM$syntaxPart'
 		      "property and indent the syntax with 1 'tab' (being actually spaces)"
 		syntax == expected(
 """
-    call 'IDMSCOMP BEFORE'
-    call 'IDMSDCOM BEFORE'
+    callProcedure 'IDMSCOMP BEFORE'
+    callProcedure 'IDMSDCOM BEFORE'
 """)
 	}
 	

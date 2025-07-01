@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -44,7 +44,7 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 	def "Executing the command adds the procedure call spec to both procedure and area"() {
 	
 		given: "a command to add a 2nd procedure call to an area"
-		SchemaArea area = area("name 'TESTAREA'\ncall 'TESTPROC BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\ncallProcedure 'TESTPROC BEFORE'")
 		Procedure procedure = area.schema.getProcedure('TESTPROC')
 		CreateAreaProcedureCallSpecificationCommand command = 
 			new CreateAreaProcedureCallSpecificationCommand(area, callStatement)
@@ -83,7 +83,7 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 	def "Undoing the command removes the procedure call spec from both procedure and area"() {
 
 		given: "a command to add a 2nd procedure call to an area"
-		SchemaArea area = area("name 'TESTAREA'\ncall 'TESTPROC BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\ncallProcedure 'TESTPROC BEFORE'")
 		CreateAreaProcedureCallSpecificationCommand command =
 			new CreateAreaProcedureCallSpecificationCommand(area, 'TESTPROC AFTER')
 
@@ -111,7 +111,7 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 	def "Redoing the command adds the procedure call spec to both procedure and area again"() {
 		
 		given: "a command to add a 2nd procedure call to an area"
-		SchemaArea area = area("name 'TESTAREA'\ncall 'TESTPROC BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\ncallProcedure 'TESTPROC BEFORE'")
 		CreateAreaProcedureCallSpecificationCommand command =
 			new CreateAreaProcedureCallSpecificationCommand(area, 'TESTPROC AFTER')
 
@@ -165,7 +165,7 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 	def "The procedure specified must exist when redoing the command"() {
 		
 		given: "a command to add a procedure call to an area"
-		SchemaArea area = area("name 'TESTAREA'\ncall 'TESTPROC BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\ncallProcedure 'TESTPROC BEFORE'")
 		CreateAreaProcedureCallSpecificationCommand command =
 			new CreateAreaProcedureCallSpecificationCommand(area, 'TESTPROC BEFORE')
 			
@@ -188,7 +188,7 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 	def "The procedure call spec created by the command must be the last one for the procedure when undoing the command"() {
 		
 		given: "a command to add a procedure call to an area"
-		SchemaArea area = area("name 'TESTAREA'\ncall 'TESTPROC BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\ncallProcedure 'TESTPROC BEFORE'")
 		Procedure procedure = area.schema.procedures[-1]
 		CreateAreaProcedureCallSpecificationCommand command =
 			new CreateAreaProcedureCallSpecificationCommand(area, 'TESTPROC BEFORE')
@@ -208,13 +208,13 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 		
 		then: "an AssertionError is thrown"
 		def e = thrown(AssertionError)
-		e.message.startsWith 'callSpec not the last for procedure'
+		e.message.startsWith 'callSpec not the last for area'
 	}
 	
 	def "The procedure call spec created by the command must be the last one for the area when undoing the command"() {
 		
 		given: "a command to add a procedure call to an area"
-		SchemaArea area = area("name 'TESTAREA'\ncall 'TESTPROC BEFORE'")
+		SchemaArea area = area("name 'TESTAREA'\ncallProcedure 'TESTPROC BEFORE'")
 		CreateAreaProcedureCallSpecificationCommand command =
 			new CreateAreaProcedureCallSpecificationCommand(area, 'TESTPROC BEFORE')
 			

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -82,7 +82,7 @@ public class CreateProcedureCommandSpec extends Specification {
 	def "Create a second procedure"() {
 		
 		given: "a schema with exactly 1 procedure and a CreateProcedureCommand for that schema"
-		def schema = schema("name 'TESTSCHM'\nrecord { call 'TESTPROC BEFORE' }")
+		def schema = schema("name 'TESTSCHM'\nrecord { callProcedure 'TESTPROC BEFORE' }")
 		CreateProcedureCommand command = new CreateProcedureCommand(schema, 'TESTPRO2')
 		
 		expect: "that only 1 procedure is defined in the schema"
@@ -101,7 +101,7 @@ public class CreateProcedureCommandSpec extends Specification {
 	def "Undo the creation of a second procedure"() {
 		
 		given: "a schema with exactly 1 procedure and a CreateProcedureCommand for that schema"
-		def schema = schema("name 'TESTSCHM'\nrecord { call 'TESTPROC BEFORE' }")
+		def schema = schema("name 'TESTSCHM'\nrecord { callProcedure 'TESTPROC BEFORE' }")
 		CreateProcedureCommand command = new CreateProcedureCommand(schema, 'TESTPRO2')
 		
 		and: "the command has been executed"
@@ -118,7 +118,7 @@ public class CreateProcedureCommandSpec extends Specification {
 	def "Redo the creation of a second procedure"() {
 		
 		given: "a schema with exactly 1 procedure and a CreateProcedureCommand for that schema"
-		def schema = schema("name 'TESTSCHM'\nrecord { call 'TESTPROC BEFORE' }")
+		def schema = schema("name 'TESTSCHM'\nrecord { callProcedure 'TESTPROC BEFORE' }")
 		CreateProcedureCommand command = new CreateProcedureCommand(schema, 'TESTPRO2')
 		
 		and: "the command is executed and then undone"
@@ -140,7 +140,7 @@ public class CreateProcedureCommandSpec extends Specification {
 		
 		given: "a schema with exactly 1 procedure and a CreateProcedureCommand for a procedure with"
 			   "the same name"
-		def schema = schema("name 'TESTSCHM'\nrecord { call 'TESTPROC BEFORE' }")
+		def schema = schema("name 'TESTSCHM'\nrecord { callProcedure 'TESTPROC BEFORE' }")
 		CreateProcedureCommand command = new CreateProcedureCommand(schema, 'TESTPROC')
 		
 		expect: "that only 1 procedure is defined in the schema"

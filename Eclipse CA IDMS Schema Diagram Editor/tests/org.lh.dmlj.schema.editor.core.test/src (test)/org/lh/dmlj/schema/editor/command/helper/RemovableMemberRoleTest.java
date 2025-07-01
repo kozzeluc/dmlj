@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,8 +19,8 @@ package org.lh.dmlj.schema.editor.command.helper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyShort;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -93,7 +93,7 @@ public class RemovableMemberRoleTest {
 		@SuppressWarnings("unchecked")
 		EList<OwnerRole> recordOwnerRoles = mock(EList.class);
 		when(recordOwnerRoles.iterator()).thenReturn(recordOwnerRoleList.iterator());		
-		when(recordOwnerRoles.indexOf(anyObject())).thenThrow(new RuntimeException("not to be called"));
+		when(recordOwnerRoles.indexOf(any())).thenThrow(new RuntimeException("not to be called"));
 		when(record.getOwnerRoles()).thenReturn(recordOwnerRoles);
 		
 		List<MemberRole> recordMemberRoleList = new ArrayList<>();
@@ -277,7 +277,7 @@ public class RemovableMemberRoleTest {
 		@SuppressWarnings("unchecked")
 		EList<OwnerRole> recordOwnerRoles = mock(EList.class);
 		when(recordOwnerRoles.iterator()).thenReturn(recordOwnerRoleList.iterator());		
-		when(recordOwnerRoles.indexOf(anyObject())).thenThrow(new RuntimeException("not to be called"));
+		when(recordOwnerRoles.indexOf(any())).thenThrow(new RuntimeException("not to be called"));
 		when(record.getOwnerRoles()).thenReturn(recordOwnerRoles);
 		
 		List<MemberRole> recordMemberRoleList = new ArrayList<>();
@@ -333,34 +333,34 @@ public class RemovableMemberRoleTest {
 		verify(recordOwnerRoles, times(1)).iterator();			
 		verify(recordMemberRoles, times(1)).iterator();
 		
-		verify(firstRoleToKeep, never()).setNextDbkeyPosition(any(Short.class));
-		verify(firstRoleToKeep, never()).setPriorDbkeyPosition(any(Short.class));
-		verify(firstRoleToKeep, never()).setOwnerDbkeyPosition(any(Short.class));
-		verify(firstRoleToKeep, never()).setIndexDbkeyPosition(any(Short.class));
+		verify(firstRoleToKeep, never()).setNextDbkeyPosition(anyShort());
+		verify(firstRoleToKeep, never()).setPriorDbkeyPosition(anyShort());
+		verify(firstRoleToKeep, never()).setOwnerDbkeyPosition(anyShort());
+		verify(firstRoleToKeep, never()).setIndexDbkeyPosition(anyShort());
 		
-		verify(secondRoleToKeep, never()).setNextDbkeyPosition(any(Short.class));
-		verify(secondRoleToKeep, never()).setPriorDbkeyPosition(any(Short.class));		
+		verify(secondRoleToKeep, never()).setNextDbkeyPosition(anyShort());
+		verify(secondRoleToKeep, never()).setPriorDbkeyPosition(anyShort());		
 		
 		verify(roleToRemove, times(1)).setNextDbkeyPosition(null);
-		verify(roleToRemove, times(1)).setNextDbkeyPosition(any(Short.class));
+		verify(roleToRemove, never()).setNextDbkeyPosition(anyShort());
 		verify(roleToRemove, times(1)).setPriorDbkeyPosition(null);
-		verify(roleToRemove, times(1)).setPriorDbkeyPosition(any(Short.class));		
+		verify(roleToRemove, never()).setPriorDbkeyPosition(anyShort());		
 		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(null);
-		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(any(Short.class));
-		verify(roleToRemove, never()).setIndexDbkeyPosition(any(Short.class));
+		verify(roleToRemove, never()).setOwnerDbkeyPosition(anyShort());
+		verify(roleToRemove, never()).setIndexDbkeyPosition(anyShort());
 		
 		verify(thirdRoleToKeep, times(1)).setNextDbkeyPosition(Short.valueOf((short) 6));
-		verify(thirdRoleToKeep, times(1)).setNextDbkeyPosition(any(Short.class));
+		verify(thirdRoleToKeep, times(1)).setNextDbkeyPosition(anyShort());
 		verify(thirdRoleToKeep, times(1)).setPriorDbkeyPosition(Short.valueOf((short) 7));
-		verify(thirdRoleToKeep, times(1)).setPriorDbkeyPosition(any(Short.class));
+		verify(thirdRoleToKeep, times(1)).setPriorDbkeyPosition(anyShort());
 		
 		verify(fourthRoleToKeep, times(1)).setNextDbkeyPosition(Short.valueOf((short) 8));
-		verify(fourthRoleToKeep, times(1)).setNextDbkeyPosition(any(Short.class));
+		verify(fourthRoleToKeep, times(1)).setNextDbkeyPosition(anyShort());
 		verify(fourthRoleToKeep, times(1)).setPriorDbkeyPosition(Short.valueOf((short) 9));
-		verify(fourthRoleToKeep, times(1)).setPriorDbkeyPosition(any(Short.class));		
+		verify(fourthRoleToKeep, times(1)).setPriorDbkeyPosition(anyShort());		
 		verify(fourthRoleToKeep, times(1)).setOwnerDbkeyPosition(Short.valueOf((short) 10));
-		verify(fourthRoleToKeep, times(1)).setOwnerDbkeyPosition(any(Short.class));
-		verify(fourthRoleToKeep, never()).setIndexDbkeyPosition(any(Short.class));		
+		verify(fourthRoleToKeep, times(1)).setOwnerDbkeyPosition(anyShort());
+		verify(fourthRoleToKeep, never()).setIndexDbkeyPosition(anyShort());		
 		
 		verify(recordOwnerRoles, never()).remove(any(OwnerRole.class));
 		verify(recordMemberRoles, times(1)).remove(roleToRemove);
@@ -411,42 +411,42 @@ public class RemovableMemberRoleTest {
 		verify(recordOwnerRoles, times(1)).iterator();			
 		verify(recordMemberRoles, times(1)).iterator();
 		
-		verify(firstRoleToKeep, never()).setNextDbkeyPosition(any(Short.class));
-		verify(firstRoleToKeep, never()).setPriorDbkeyPosition(any(Short.class));
-		verify(firstRoleToKeep, never()).setOwnerDbkeyPosition(any(Short.class));
-		verify(firstRoleToKeep, never()).setIndexDbkeyPosition(any(Short.class));
+		verify(firstRoleToKeep, never()).setNextDbkeyPosition(anyShort());
+		verify(firstRoleToKeep, never()).setPriorDbkeyPosition(anyShort());
+		verify(firstRoleToKeep, never()).setOwnerDbkeyPosition(anyShort());
+		verify(firstRoleToKeep, never()).setIndexDbkeyPosition(anyShort());
 		
-		verify(secondRoleToKeep, never()).setNextDbkeyPosition(any(Short.class));
-		verify(secondRoleToKeep, never()).setPriorDbkeyPosition(any(Short.class));		
+		verify(secondRoleToKeep, never()).setNextDbkeyPosition(anyShort());
+		verify(secondRoleToKeep, never()).setPriorDbkeyPosition(anyShort());		
 		
 		verify(roleToRemove, times(1)).setNextDbkeyPosition(null);
 		verify(roleToRemove, times(1)).setNextDbkeyPosition(Short.valueOf((short) 6));
-		verify(roleToRemove, times(2)).setNextDbkeyPosition(any(Short.class));
+		verify(roleToRemove, times(1)).setNextDbkeyPosition(anyShort());
 		verify(roleToRemove, times(1)).setPriorDbkeyPosition(null);
 		verify(roleToRemove, times(1)).setPriorDbkeyPosition(Short.valueOf((short) 7));
-		verify(roleToRemove, times(2)).setPriorDbkeyPosition(any(Short.class));		
+		verify(roleToRemove, times(1)).setPriorDbkeyPosition(anyShort());		
 		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(null);
 		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(Short.valueOf((short) 8));
-		verify(roleToRemove, times(2)).setOwnerDbkeyPosition(any(Short.class));
-		verify(roleToRemove, never()).setIndexDbkeyPosition(any(Short.class));
+		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(anyShort());
+		verify(roleToRemove, never()).setIndexDbkeyPosition(anyShort());
 		
 		verify(thirdRoleToKeep, times(1)).setNextDbkeyPosition(Short.valueOf((short) 6));
 		verify(thirdRoleToKeep, times(1)).setNextDbkeyPosition(Short.valueOf((short) 9));
-		verify(thirdRoleToKeep, times(2)).setNextDbkeyPosition(any(Short.class));
+		verify(thirdRoleToKeep, times(2)).setNextDbkeyPosition(anyShort());
 		verify(thirdRoleToKeep, times(1)).setPriorDbkeyPosition(Short.valueOf((short) 7));
 		verify(thirdRoleToKeep, times(1)).setPriorDbkeyPosition(Short.valueOf((short) 10));
-		verify(thirdRoleToKeep, times(2)).setPriorDbkeyPosition(any(Short.class));
+		verify(thirdRoleToKeep, times(2)).setPriorDbkeyPosition(anyShort());
 		
 		verify(fourthRoleToKeep, times(1)).setNextDbkeyPosition(Short.valueOf((short) 8));
 		verify(fourthRoleToKeep, times(1)).setNextDbkeyPosition(Short.valueOf((short) 11));
-		verify(fourthRoleToKeep, times(2)).setNextDbkeyPosition(any(Short.class));
+		verify(fourthRoleToKeep, times(2)).setNextDbkeyPosition(anyShort());
 		verify(fourthRoleToKeep, times(1)).setPriorDbkeyPosition(Short.valueOf((short) 9));
 		verify(fourthRoleToKeep, times(1)).setPriorDbkeyPosition(Short.valueOf((short) 12));
-		verify(fourthRoleToKeep, times(2)).setPriorDbkeyPosition(any(Short.class));		
+		verify(fourthRoleToKeep, times(2)).setPriorDbkeyPosition(anyShort());		
 		verify(fourthRoleToKeep, times(1)).setOwnerDbkeyPosition(Short.valueOf((short) 10));
 		verify(fourthRoleToKeep, times(1)).setOwnerDbkeyPosition(Short.valueOf((short) 13));
-		verify(fourthRoleToKeep, times(2)).setOwnerDbkeyPosition(any(Short.class));
-		verify(fourthRoleToKeep, never()).setIndexDbkeyPosition(any(Short.class));
+		verify(fourthRoleToKeep, times(2)).setOwnerDbkeyPosition(anyShort());
+		verify(fourthRoleToKeep, never()).setIndexDbkeyPosition(anyShort());
 		
 		verify(recordMemberRoles, times(1)).add(1, roleToRemove);
 		verify(recordMemberRoles, times(1)).add(any(int.class), any(MemberRole.class));
@@ -517,7 +517,7 @@ public class RemovableMemberRoleTest {
 		@SuppressWarnings("unchecked")
 		EList<OwnerRole> recordOwnerRoles = mock(EList.class);
 		when(recordOwnerRoles.iterator()).thenReturn(recordOwnerRoleList.iterator());		
-		when(recordOwnerRoles.indexOf(anyObject())).thenThrow(new RuntimeException("not to be called"));
+		when(recordOwnerRoles.indexOf(any())).thenThrow(new RuntimeException("not to be called"));
 		when(record.getOwnerRoles()).thenReturn(recordOwnerRoles);
 		
 		List<MemberRole> recordMemberRoleList = new ArrayList<>();
@@ -609,12 +609,12 @@ public class RemovableMemberRoleTest {
 		verify(keyElements, times(2)).iterator(); // the iterator will be consumed, install a new one:
 		when(keyElements.iterator()).thenReturn(keyElementList.iterator());
 				
-		verify(roleToRemove, never()).setNextDbkeyPosition(any(Short.class));		
-		verify(roleToRemove, never()).setPriorDbkeyPosition(any(Short.class));		
+		verify(roleToRemove, never()).setNextDbkeyPosition(anyShort());		
+		verify(roleToRemove, never()).setPriorDbkeyPosition(anyShort());		
 		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(null);
-		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(any(Short.class));
+		verify(roleToRemove, never()).setOwnerDbkeyPosition(anyShort());
 		verify(roleToRemove, times(1)).setIndexDbkeyPosition(null);
-		verify(roleToRemove, times(1)).setIndexDbkeyPosition(any(Short.class));
+		verify(roleToRemove, never()).setIndexDbkeyPosition(anyShort());
 		
 		verify(recordOwnerRoles, never()).remove(any(OwnerRole.class));
 		verify(recordMemberRoles, times(1)).remove(roleToRemove);
@@ -636,13 +636,13 @@ public class RemovableMemberRoleTest {
 		verify(diagramDataLocations, times(3)).remove(any(DiagramLocation.class));
 		
 		verify(firstKeyElement, times(1)).setElement(null);
-		verify(firstKeyElement, times(1)).setElement(any(Element.class));
+		verify(firstKeyElement, never()).setElement(any(Element.class));
 		
 		verify(secondKeyElement, times(1)).setElement(null);
-		verify(secondKeyElement, times(1)).setElement(any(Element.class));
+		verify(secondKeyElement, never()).setElement(any(Element.class));
 		
 		verify(roleToRemove, times(1)).setSortKey(null);
-		verify(roleToRemove, times(1)).setSortKey(any(Key.class));
+		verify(roleToRemove, never()).setSortKey(any(Key.class));
 		
 		verify(recordSortKeys, times(1)).remove(sortKey);
 		verify(recordSortKeys, times(1)).remove(any(Key.class));
@@ -668,14 +668,14 @@ public class RemovableMemberRoleTest {
 		verify(keyElements, times(3)).iterator(); // the iterator will be consumed, install a new one:
 		when(keyElements.iterator()).thenReturn(keyElementList.iterator());	
 		
-		verify(roleToRemove, never()).setNextDbkeyPosition(any(Short.class));		
-		verify(roleToRemove, never()).setPriorDbkeyPosition(any(Short.class));		
+		verify(roleToRemove, never()).setNextDbkeyPosition(anyShort());		
+		verify(roleToRemove, never()).setPriorDbkeyPosition(anyShort());		
 		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(null);
 		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(Short.valueOf((short) 1));
-		verify(roleToRemove, times(2)).setOwnerDbkeyPosition(any(Short.class));
+		verify(roleToRemove, times(1)).setOwnerDbkeyPosition(anyShort());
 		verify(roleToRemove, times(1)).setIndexDbkeyPosition(null);
 		verify(roleToRemove, times(1)).setIndexDbkeyPosition(Short.valueOf((short) 2));
-		verify(roleToRemove, times(2)).setIndexDbkeyPosition(any(Short.class));		
+		verify(roleToRemove, times(1)).setIndexDbkeyPosition(anyShort());		
 		
 		verify(recordMemberRoles, times(1)).add(0, roleToRemove);
 		verify(recordMemberRoles, times(1)).add(any(int.class), any(MemberRole.class));
@@ -703,7 +703,7 @@ public class RemovableMemberRoleTest {
 		
 		verify(roleToRemove, times(1)).setSortKey(null);
 		verify(roleToRemove, times(1)).setSortKey(sortKey);	
-		verify(roleToRemove, times(2)).setSortKey(any(Key.class));
+		verify(roleToRemove, times(1)).setSortKey(any(Key.class));
 		
 		verify(recordSortKeys, times(1)).add(5, sortKey);
 		verify(recordSortKeys, times(1)).add(any(int.class), any(Key.class));
@@ -789,7 +789,7 @@ public class RemovableMemberRoleTest {
 		@SuppressWarnings("unchecked")
 		EList<OwnerRole> recordOwnerRoles = mock(EList.class);
 		when(recordOwnerRoles.iterator()).thenReturn(recordOwnerRoleList.iterator());		
-		when(recordOwnerRoles.indexOf(anyObject())).thenThrow(new RuntimeException("not to be called"));
+		when(recordOwnerRoles.indexOf(any())).thenThrow(new RuntimeException("not to be called"));
 		when(record.getOwnerRoles()).thenReturn(recordOwnerRoles);
 		
 		List<MemberRole> recordMemberRoleList = new ArrayList<>();

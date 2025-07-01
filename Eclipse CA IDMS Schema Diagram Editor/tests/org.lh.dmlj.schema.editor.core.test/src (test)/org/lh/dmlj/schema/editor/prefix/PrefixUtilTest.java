@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,7 +29,8 @@ import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_OWNER;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_PRIOR;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.OWNER_NEXT;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.OWNER_PRIOR;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyShort;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -347,15 +348,14 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 	
 	@Test
 	public void testSetPositionInPrefix_OwnerPrior() {
-		
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
 		PrefixUtil.setPositionInPrefix(role, OWNER_PRIOR, newPositionInPrefix);		
 		
-		verify(role, never()).setNextDbkeyPosition(any(Short.class));
+		verify(role, never()).setNextDbkeyPosition(anyShort());
 		verify(role, times(1)).setPriorDbkeyPosition(newPositionInPrefix);
-		verify(role, times(1)).setPriorDbkeyPosition(any(Short.class));		
+		verify(role, times(1)).setPriorDbkeyPosition(anyShort());		
 		
 		
 		role = mockOwnerRoleWithNoPointersSet("A", "B");		
@@ -363,25 +363,23 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		PrefixUtil.setPositionInPrefix(role, OWNER_PRIOR, null);		
 		
-		verify(role, never()).setNextDbkeyPosition(any(Short.class));
+		verify(role, never()).setNextDbkeyPosition(anyShort());
 		verify(role, times(1)).setPriorDbkeyPosition(null);
-		verify(role, times(1)).setPriorDbkeyPosition(any(Short.class));			
-		
+		verify(role, never()).setPriorDbkeyPosition(anyShort());
 	}
 	
 	@Test
 	public void testSetPositionInPrefix_MemberNext() {
-		
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
 		PrefixUtil.setPositionInPrefix(role, MEMBER_NEXT, newPositionInPrefix);		
 		
 		verify(role, times(1)).setNextDbkeyPosition(newPositionInPrefix);
-		verify(role, times(1)).setNextDbkeyPosition(any(Short.class));
-		verify(role, never()).setPriorDbkeyPosition(any(Short.class));
-		verify(role, never()).setOwnerDbkeyPosition(any(Short.class));
-		verify(role, never()).setIndexDbkeyPosition(any(Short.class));
+		verify(role, times(1)).setNextDbkeyPosition(anyShort());
+		verify(role, never()).setPriorDbkeyPosition(anyShort());
+		verify(role, never()).setOwnerDbkeyPosition(anyShort());
+		verify(role, never()).setIndexDbkeyPosition(anyShort());
 		
 		
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
@@ -390,26 +388,24 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		PrefixUtil.setPositionInPrefix(role, MEMBER_NEXT, null);		
 		
 		verify(role, times(1)).setNextDbkeyPosition(null);
-		verify(role, times(1)).setNextDbkeyPosition(any(Short.class));
-		verify(role, never()).setPriorDbkeyPosition(any(Short.class));
-		verify(role, never()).setOwnerDbkeyPosition(any(Short.class));
-		verify(role, never()).setIndexDbkeyPosition(any(Short.class));	
-		
+		verify(role, never()).setNextDbkeyPosition(anyShort());
+		verify(role, never()).setPriorDbkeyPosition(anyShort());
+		verify(role, never()).setOwnerDbkeyPosition(anyShort());
+		verify(role, never()).setIndexDbkeyPosition(anyShort());
 	}
 	
 	@Test
 	public void testSetPositionInPrefix_MemberPrior() {
-		
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
 		PrefixUtil.setPositionInPrefix(role, MEMBER_PRIOR, newPositionInPrefix);		
 		
-		verify(role, never()).setNextDbkeyPosition(any(Short.class));
+		verify(role, never()).setNextDbkeyPosition(anyShort());
 		verify(role, times(1)).setPriorDbkeyPosition(newPositionInPrefix);
-		verify(role, times(1)).setPriorDbkeyPosition(any(Short.class));
-		verify(role, never()).setOwnerDbkeyPosition(any(Short.class));
-		verify(role, never()).setIndexDbkeyPosition(any(Short.class));
+		verify(role, times(1)).setPriorDbkeyPosition(anyShort());
+		verify(role, never()).setOwnerDbkeyPosition(anyShort());
+		verify(role, never()).setIndexDbkeyPosition(anyShort());
 		
 		
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
@@ -417,27 +413,25 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		PrefixUtil.setPositionInPrefix(role, MEMBER_PRIOR, null);		
 		
-		verify(role, never()).setNextDbkeyPosition(any(Short.class));
+		verify(role, never()).setNextDbkeyPosition(anyShort());
 		verify(role, times(1)).setPriorDbkeyPosition(null);
-		verify(role, times(1)).setPriorDbkeyPosition(any(Short.class));
-		verify(role, never()).setOwnerDbkeyPosition(any(Short.class));
-		verify(role, never()).setIndexDbkeyPosition(any(Short.class));	
-		
+		verify(role, never()).setPriorDbkeyPosition(anyShort());
+		verify(role, never()).setOwnerDbkeyPosition(anyShort());
+		verify(role, never()).setIndexDbkeyPosition(anyShort());
 	}
 	
 	@Test
 	public void testSetPositionInPrefix_MemberOwner() {
-		
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
 		PrefixUtil.setPositionInPrefix(role, MEMBER_OWNER, newPositionInPrefix);		
 		
-		verify(role, never()).setNextDbkeyPosition(any(Short.class));
-		verify(role, never()).setPriorDbkeyPosition(any(Short.class));
+		verify(role, never()).setNextDbkeyPosition(anyShort());
+		verify(role, never()).setPriorDbkeyPosition(anyShort());
 		verify(role, times(1)).setOwnerDbkeyPosition(newPositionInPrefix);
-		verify(role, times(1)).setOwnerDbkeyPosition(any(Short.class));
-		verify(role, never()).setIndexDbkeyPosition(any(Short.class));
+		verify(role, times(1)).setOwnerDbkeyPosition(anyShort());
+		verify(role, never()).setIndexDbkeyPosition(anyShort());
 		
 		
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
@@ -445,27 +439,25 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		PrefixUtil.setPositionInPrefix(role, MEMBER_OWNER, null);		
 		
-		verify(role, never()).setNextDbkeyPosition(any(Short.class));
-		verify(role, never()).setPriorDbkeyPosition(any(Short.class));
+		verify(role, never()).setNextDbkeyPosition(anyShort());
+		verify(role, never()).setPriorDbkeyPosition(anyShort());
 		verify(role, times(1)).setOwnerDbkeyPosition(null);
-		verify(role, times(1)).setOwnerDbkeyPosition(any(Short.class));
-		verify(role, never()).setIndexDbkeyPosition(any(Short.class));	
-		
+		verify(role, never()).setOwnerDbkeyPosition(anyShort());
+		verify(role, never()).setIndexDbkeyPosition(anyShort());
 	}
 	
 	@Test
 	public void testSetPositionInPrefix_MemberIndex() {
-		
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		
 		Short newPositionInPrefix = Short.valueOf((short) 7);
 		PrefixUtil.setPositionInPrefix(role, MEMBER_INDEX, newPositionInPrefix);		
 		
-		verify(role, never()).setNextDbkeyPosition(any(Short.class));
-		verify(role, never()).setPriorDbkeyPosition(any(Short.class));		
-		verify(role, never()).setOwnerDbkeyPosition(any(Short.class));
+		verify(role, never()).setNextDbkeyPosition(anyShort());
+		verify(role, never()).setPriorDbkeyPosition(anyShort());		
+		verify(role, never()).setOwnerDbkeyPosition(anyShort());
 		verify(role, times(1)).setIndexDbkeyPosition(newPositionInPrefix);
-		verify(role, times(1)).setIndexDbkeyPosition(any(Short.class));
+		verify(role, times(1)).setIndexDbkeyPosition(anyShort());
 		
 		
 		role = mockMemberRoleWithNoPointersSet("A", "B");		
@@ -473,12 +465,11 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		PrefixUtil.setPositionInPrefix(role, MEMBER_INDEX, null);		
 		
-		verify(role, never()).setNextDbkeyPosition(any(Short.class));
-		verify(role, never()).setPriorDbkeyPosition(any(Short.class));
-		verify(role, never()).setOwnerDbkeyPosition(any(Short.class));
+		verify(role, never()).setNextDbkeyPosition(anyShort());
+		verify(role, never()).setPriorDbkeyPosition(anyShort());
+		verify(role, never()).setOwnerDbkeyPosition(anyShort());
 		verify(role, times(1)).setIndexDbkeyPosition(null);
-		verify(role, times(1)).setIndexDbkeyPosition(any(Short.class));	
-		
+		verify(role, never()).setIndexDbkeyPosition(anyShort());
 	}
 	
 	@Test

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -43,7 +43,7 @@ public class CreateRecordProcedureCallSpecificationCommandSpec extends Specifica
 	def "Executing the command adds the procedure call spec to both procedure and record"() {
 	
 		given: "a command to add a 2nd procedure call to a record"
-		SchemaRecord record = record("name 'TESTRECORD'\ncall 'TESTPROC BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\ncallProcedure 'TESTPROC BEFORE'")
 		Procedure procedure = record.schema.getProcedure('TESTPROC')
 		CreateRecordProcedureCallSpecificationCommand command = 
 			new CreateRecordProcedureCallSpecificationCommand(record, callStatement)
@@ -82,7 +82,7 @@ public class CreateRecordProcedureCallSpecificationCommandSpec extends Specifica
 	def "Undoing the command removes the procedure call spec from both procedure and record"() {
 
 		given: "a command to add a 2nd procedure call to a record"
-		SchemaRecord record = record("name 'TESTRECORD'\ncall 'TESTPROC BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\ncallProcedure 'TESTPROC BEFORE'")
 		CreateRecordProcedureCallSpecificationCommand command =
 			new CreateRecordProcedureCallSpecificationCommand(record, 'TESTPROC AFTER')
 
@@ -110,7 +110,7 @@ public class CreateRecordProcedureCallSpecificationCommandSpec extends Specifica
 	def "Redoing the command adds the procedure call spec to both procedure and record again"() {
 		
 		given: "a command to add a 2nd procedure call to a record"
-		SchemaRecord record = record("name 'TESTRECORD'\ncall 'TESTPROC BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\ncallProcedure 'TESTPROC BEFORE'")
 		CreateRecordProcedureCallSpecificationCommand command =
 			new CreateRecordProcedureCallSpecificationCommand(record, 'TESTPROC AFTER')
 
@@ -164,7 +164,7 @@ public class CreateRecordProcedureCallSpecificationCommandSpec extends Specifica
 	def "The procedure specified must exist when redoing the command"() {
 		
 		given: "a command to add a procedure call to a record"
-		SchemaRecord record = record("name 'TESTRECORD'\ncall 'TESTPROC BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\ncallProcedure 'TESTPROC BEFORE'")
 		CreateRecordProcedureCallSpecificationCommand command =
 			new CreateRecordProcedureCallSpecificationCommand(record, 'TESTPROC BEFORE')
 			
@@ -187,7 +187,7 @@ public class CreateRecordProcedureCallSpecificationCommandSpec extends Specifica
 	def "The procedure call spec created by the command must be the last one for the procedure when undoing the command"() {
 		
 		given: "a command to add a procedure call to a record"
-		SchemaRecord record = record("name 'TESTRECORD'\ncall 'TESTPROC BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\ncallProcedure 'TESTPROC BEFORE'")
 		Procedure procedure = record.schema.procedures[-1]
 		CreateRecordProcedureCallSpecificationCommand command =
 			new CreateRecordProcedureCallSpecificationCommand(record, 'TESTPROC BEFORE')
@@ -207,13 +207,13 @@ public class CreateRecordProcedureCallSpecificationCommandSpec extends Specifica
 		
 		then: "an AssertionError is thrown"
 		def e = thrown(AssertionError)
-		e.message.startsWith 'callSpec not the last for procedure'
+		e.message.startsWith 'callSpec not the last for record'
 	}
 	
 	def "The procedure call spec created by the command must be the last one for the record when undoing the command"() {
 		
 		given: "a command to add a procedure call to a record"
-		SchemaRecord record = record("name 'TESTRECORD'\ncall 'TESTPROC BEFORE'")
+		SchemaRecord record = record("name 'TESTRECORD'\ncallProcedure 'TESTPROC BEFORE'")
 		CreateRecordProcedureCallSpecificationCommand command =
 			new CreateRecordProcedureCallSpecificationCommand(record, 'TESTPROC BEFORE')
 			

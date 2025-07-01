@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,8 +16,15 @@
  */
 package org.lh.dmlj.schema.editor.command.infrastructure;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -65,6 +72,7 @@ public class ModelChangeDispatcherTest {
 		CommandStackEvent event = mock(CommandStackEvent.class);
 		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
 		when(event.getCommand()).thenReturn(compoundCommand);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		dispatcher = new ModelChangeDispatcher();
 		dispatcher.addModelChangeListener(listener);
 		dispatcher.dispatch(event);		
@@ -114,7 +122,8 @@ public class ModelChangeDispatcherTest {
 		dispatcher.dispatch(event);
 		
 		// simulate a POST_EXECUTE command stack notification				
-		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);
+		when(event.isPreChangeEvent()).thenReturn(false);
 		dispatcher.dispatch(event);
 		verify(listener, times(4)).beforeModelChange(any(ModelChangeContext.class));
 
@@ -139,6 +148,7 @@ public class ModelChangeDispatcherTest {
 		dispatcher.addModelChangeListener(listener);
 		when(event.getCommand()).thenReturn(compoundCommand);
 		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		dispatcher.dispatch(event);
 		verify(listener, times(5)).beforeModelChange(any(ModelChangeContext.class));
 		
@@ -146,7 +156,8 @@ public class ModelChangeDispatcherTest {
 		// command annotated with @ModelChange(category=MOVE_ITEM) and a command annotated with
 		// @ModelChange(category=SET_ATTRIBUTES)...
 		when(event.getCommand()).thenReturn(compoundCommand);
-		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);		
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);
+		when(event.isPreChangeEvent()).thenReturn(false);
 		dispatcher.dispatch(event);
 		
 		// the following listener method should have been called once again; mind that the context 
@@ -165,11 +176,13 @@ public class ModelChangeDispatcherTest {
 		dispatcher = new ModelChangeDispatcher();
 		dispatcher.addModelChangeListener(listener);
 		when(event.getDetail()).thenReturn(CommandStack.PRE_UNDO);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		dispatcher.dispatch(event);
 		verify(listener, times(6)).beforeModelChange(any(ModelChangeContext.class));
 		
 		// simulate a POST_UNDO command stack notification using the same compound command		
-		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);		
+		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);
+		when(event.isPreChangeEvent()).thenReturn(false);
 		dispatcher.dispatch(event);
 		
 		// the following listener method should have been called once again; mind that the context 
@@ -188,11 +201,13 @@ public class ModelChangeDispatcherTest {
 		dispatcher = new ModelChangeDispatcher();
 		dispatcher.addModelChangeListener(listener);
 		when(event.getDetail()).thenReturn(CommandStack.PRE_REDO);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		dispatcher.dispatch(event);
 		verify(listener, times(7)).beforeModelChange(any(ModelChangeContext.class));
 		
 		// simulate a POST_REDO command stack notification using the same compound command		
-		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);				
+		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);
+		when(event.isPreChangeEvent()).thenReturn(false);
 		dispatcher.dispatch(event);
 
 		// the following listener method should have been called once again; mind that the context 
@@ -351,7 +366,8 @@ public class ModelChangeDispatcherTest {
 		// before model change (EXECUTE)...
 		expectedCommandExecutionMode[0] = CommandExecutionMode.EXECUTE;
 		CommandStackEvent event = mock(CommandStackEvent.class);
-		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
@@ -365,7 +381,8 @@ public class ModelChangeDispatcherTest {
 		listener2MethodCallsOK[0] = false;
 		expectedCommandExecutionMode[0] = CommandExecutionMode.EXECUTE;
 		event = mock(CommandStackEvent.class);
-		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);	
+		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);
+		when(event.isPreChangeEvent()).thenReturn(false);
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
@@ -380,7 +397,8 @@ public class ModelChangeDispatcherTest {
 		listener2MethodCallsOK[1] = false;	
 		expectedCommandExecutionMode[0] = CommandExecutionMode.UNDO;
 		event = mock(CommandStackEvent.class);
-		when(event.getDetail()).thenReturn(CommandStack.PRE_UNDO);	
+		when(event.getDetail()).thenReturn(CommandStack.PRE_UNDO);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
@@ -394,7 +412,8 @@ public class ModelChangeDispatcherTest {
 		listener2MethodCallsOK[0] = false;	
 		expectedCommandExecutionMode[0] = CommandExecutionMode.UNDO;
 		event = mock(CommandStackEvent.class);
-		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);	
+		when(event.getDetail()).thenReturn(CommandStack.POST_UNDO);
+		when(event.isPreChangeEvent()).thenReturn(false);
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
@@ -409,7 +428,8 @@ public class ModelChangeDispatcherTest {
 		listener2MethodCallsOK[1] = false;		
 		expectedCommandExecutionMode[0] = CommandExecutionMode.REDO;
 		event = mock(CommandStackEvent.class);
-		when(event.getDetail()).thenReturn(CommandStack.PRE_REDO);	
+		when(event.getDetail()).thenReturn(CommandStack.PRE_REDO);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
@@ -423,7 +443,8 @@ public class ModelChangeDispatcherTest {
 		listener2MethodCallsOK[0] = false;		
 		expectedCommandExecutionMode[0] = CommandExecutionMode.REDO;
 		event = mock(CommandStackEvent.class);
-		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);	
+		when(event.getDetail()).thenReturn(CommandStack.POST_REDO);
+		when(event.isPreChangeEvent()).thenReturn(false);
 		when(event.getCommand()).thenReturn(command);
 		dispatcher.dispatch(event);
 		
@@ -460,7 +481,8 @@ public class ModelChangeDispatcherTest {
 		when(event.getCommand()).thenReturn(command);
 		
 		// dispatch the pre model change event
-		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		dispatcher.dispatch(event);
 		
 		assertTrue(methodsInvoked[0]);
@@ -472,6 +494,7 @@ public class ModelChangeDispatcherTest {
 		
 		// dispatch the after model change event
 		when(event.getDetail()).thenReturn(CommandStack.POST_EXECUTE);
+		when(event.isPreChangeEvent()).thenReturn(false);
 		dispatcher.dispatch(event);
 		
 		assertFalse(methodsInvoked[0]);
@@ -517,7 +540,8 @@ public class ModelChangeDispatcherTest {
 		when(event.getCommand()).thenReturn(command);
 		
 		// dispatch the pre model change event
-		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);	
+		when(event.getDetail()).thenReturn(CommandStack.PRE_EXECUTE);
+		when(event.isPreChangeEvent()).thenReturn(true);
 		dispatcher.dispatch(event);
 		
 		assertTrue(methodsInvoked[0]);

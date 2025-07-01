@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,7 +23,7 @@ import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_NEXT;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_PRIOR;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_OWNER;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_INDEX;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
