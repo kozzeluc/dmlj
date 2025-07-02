@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -225,7 +225,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 		if (eventCommand instanceof CompoundCommand) {
 			// the event command is a compound command
 			CompoundCommand compoundCommand = (CompoundCommand) eventCommand;
-			List<Command> compoundCommandCommands = compoundCommand.getCommands();			
+			List<Command> compoundCommandCommands = (List<Command>) compoundCommand.getCommands();			
 			if (compoundCommandCommands.size() == 1 &&
 				compoundCommandCommands.get(0) instanceof ModelChangeCompoundCommand) {
 				
@@ -235,7 +235,7 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 					(ModelChangeCompoundCommand) compoundCommandCommands.get(0);
 				Assert.isTrue(wrappedCompoundCommand instanceof IModelChangeCommand, 
 							  "not an IModelChangeCommand: " + wrappedCompoundCommand);
-				compoundCommandCommands = wrappedCompoundCommand.getCommands();
+				compoundCommandCommands = (List<Command>) wrappedCompoundCommand.getCommands();
 				context = wrappedCompoundCommand.getContext();
 			} else if (compoundCommandCommands.size() == 1 &&
 					   compoundCommandCommands.get(0) instanceof ModelChangeBasicCommand) {
@@ -248,13 +248,13 @@ public class ModelChangeDispatcher implements IModelChangeProvider {
 				compoundCommandCommands.add(wrappedBasicCommand);
 				context = wrappedBasicCommand.getContext();
 			} else if (compoundCommandCommands.size() > 1 &&
-					   isMoveGroupOfDiagramNodesCompoundCommand(compoundCommand.getCommands())) {
+					   isMoveGroupOfDiagramNodesCompoundCommand((List<Command>) compoundCommand.getCommands())) {
 				
 				// 2 or more diagram nodes are being moved; we need to create the (global) model 
 				// change context ourselves
 				context = new ModelChangeContext(ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES);
 				List<MoveDiagramNodeCommand> moveDiagramNodeCommands = 
-					convertToMoveDiagramNodeCommands(compoundCommand.getCommands());
+					convertToMoveDiagramNodeCommands((List<Command>) compoundCommand.getCommands());
 				createModelChangeContextHierarchy(context, moveDiagramNodeCommands);
 			} else {
 				Assert.isTrue(eventCommand instanceof IModelChangeCommand, 

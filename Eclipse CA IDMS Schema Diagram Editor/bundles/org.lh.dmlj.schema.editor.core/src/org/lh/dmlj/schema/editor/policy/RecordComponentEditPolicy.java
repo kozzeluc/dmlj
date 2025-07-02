@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -32,7 +32,7 @@ public class RecordComponentEditPolicy extends ComponentEditPolicy {
 		
 		// make sure we are talking about a record and go get it from the delete request
  		@SuppressWarnings("unchecked")
-		List<EditPart> editParts = deleteRequest.getEditParts(); 
+		List<EditPart> editParts = (List<EditPart>) deleteRequest.getEditParts(); 
 		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof SchemaRecord)) {						
 			return null;
 		}

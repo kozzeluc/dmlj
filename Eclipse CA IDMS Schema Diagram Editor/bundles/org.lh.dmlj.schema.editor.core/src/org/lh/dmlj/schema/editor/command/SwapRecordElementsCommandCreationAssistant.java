@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.command;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -153,7 +154,7 @@ public abstract class SwapRecordElementsCommandCreationAssistant {
 					// we need to avoid nested compound commands because the model change dispatcher
 					// will not handle them correctly
 					ModelChangeCompoundCommand cc = (ModelChangeCompoundCommand) command;
-					commands.addAll(cc.getCommands());
+					commands.addAll((Collection<? extends ModelChangeBasicCommand>) cc.getCommands());
 				} else {
 					commands.add((ModelChangeBasicCommand) command);
 				}
