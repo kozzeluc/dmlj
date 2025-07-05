@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<html>
+<html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<title>Dictionaries</title>
@@ -11,10 +11,10 @@
 <h2>Introduction</h2>
 In the Eclipse <a href="preferences_dialog">preferences dialog</a> you can define 1 or more <i>dictionaries</i> that are 
 used to import schema diagrams directly from IDMS application dictionaries on your mainframe(s) using SQL Web Connect 
-(or the SQL Option) and IDMS Server.  Make sure you have installed the IDMS JDBC driver and set up the mainframe part
+(or the SQL Option) and IDMS Server. Make sure you have installed the IDMS JDBC driver and set up the mainframe part
 (i.e. an application dictionary with a catalog component and IDMS Server exposing this outside of your mainframe) before
-defining dictionaries in Eclipse.  If you see the following message, first go ahead with the <a href="JDBC_driver.html">
-installation of the JDBC driver</a> into your Eclipse workbench :
+defining dictionaries in Eclipse. If you see the following message, first go ahead with the <a href="JDBC_driver.html">
+installation of the JDBC driver</a> into your Eclipse workbench:
 <br><br>
 <img src="../../images/preferences_JDBC_driver_not_installed_message.png" alt="[JDBC driver not installed message]">
 <br><br>
@@ -22,12 +22,12 @@ installation of the JDBC driver</a> into your Eclipse workbench :
 dictionary for the diagram editor in the preferences dialog is useless.
 <br><br>
 In your mainframe application dictionary/catalog, you need a <b>relational schema for IDMSNTWK</b>; the diagram editor 
-will execute queries referring to this schema to retrieve the data it needs to generate diagrams.  Note that you can 
+will execute queries referring to this schema to retrieve the data it needs to generate diagrams. Note that you can 
 define <i>several</i> such (relational) schemas in the same catalog, each targeting a different dictionary (different 
-dictionaries share the same structure, which is described in the IDMSNTWK schema).  In a freshly defined application 
+dictionaries share the same structure, which is described in the IDMSNTWK schema). In a freshly defined application 
 catalog there is a schema called <b>SYSDICT</b>; you can use this schema if the non-relational schemas for which you 
-want to generate diagrams are in the same dictionary.  If this is <i>not</i> the case, create (an)other relational 
-schema(s) pointing to the dictionar(y)(ies) containing your non-relational schemas (via the <code>DBNAME</code> keyword) :
+want to generate diagrams are in the same dictionary. If this is <i>not</i> the case, create (an)other relational 
+schema(s) pointing to the dictionar(y)(ies) containing your non-relational schemas (via the <code>DBNAME</code> keyword):
 <br>
 <pre>
      CREATE SCHEMA SYSDICT_APPLDICT                  
@@ -39,12 +39,12 @@ Notes:<ul>
 <li>The reference to the IDMSNTWK schema is prefixed by the <code>SYSDIRL</code> dictionary name (which might be different for you).</li>
 <li>You are free to specify either <code>WITH VIRTUAL KEYS</code> or <b><code>WITHOUT VIRTUAL KEYS</code></b> or neither but because of
 performance reasons it is advised to NOT work with virtual keys; all dictionary queries use set names and no virtual foreign keys
-and for some reason, schemas without virtual keys seem to work (much) better.  The <b>performance loss</b> (and resources consumed 
+and for some reason, schemas without virtual keys seem to work (much) better. The <b>performance loss</b> (and resources consumed 
 on the mainframe) becomes bigger with the complexity of your schema and the size of your DDLDML area.</li>
 </ul>
 <h2>Defining a Dictionary</h2>
 Open the <b>Import/Dictionary section</b> in the <a href="preferences_dialog">preferences dialog</a>; there you have
-an overview of the dictionaries you have defined :
+an overview of the dictionaries you have defined:
 <br><br>
 <img src="../../images/preferences_import_dictionary.png" alt="[preferences import dictionary]">
 <br><br>
@@ -54,14 +54,14 @@ The buttons on the right of the table allow you to <b>add, remove or edit dictio
 whether the connection (to the dictionary/catalog on your mainframe) works correctly.<br><br>
 You can also set the default name (SYSDICT) for the relational version of the IDMSNTWK schema in this section.<br><br>  
 You shouldn't normally touch the <b>magic number 47</b> unless you experience performance issues when importing diagrams directly
-from a dictionary :  it turns out that, in the schema editor's queries, the maximum number of rowids that can be specified in a 
+from a dictionary: it turns out that, in the schema editor's queries, the maximum number of rowids that can be specified in a 
 list, before the query does no longer perform and consumes excessive I/Os and CPU on the mainframe, is 47 (at least for the 
-dictionary I’m working against).  It’s up to you to play around with this figure, but you’re on your own… Rowid lists are a 
-substitute for subqueries, which I’ve found to not always perform as they should.<br><br>
+dictionary I'm working against). It's up to you to play around with this figure, but you're on your own... Rowid lists are a 
+substitute for subqueries, which I've found to not always perform as they should.<br><br>
 The option to issue a warning message, when the relational version of the IDMSNTWK schema is defined <b>WITH VIRTUAL KEYS</b>, is 
-enabled by default.  I have noticed a serious loss in performance when using a schema that is defined WITH VIRTUAL KEYS, though 
+enabled by default. I have noticed a serious loss in performance when using a schema that is defined WITH VIRTUAL KEYS, though 
 the result of the diagram editor queries is the same as for schemas defined WITHOUT VIRTUAL KEYS.<br>
-Note: the schema editor queries ALWAYS 'navigate' via set names and thus NEVER with rowids pointing to the owners of those sets
+Note: the schema editor queries ALWAYS <i>navigate</i> via set names and thus NEVER with rowids pointing to the owners of those sets
 (the virtual foreign keys), yet this does not seem to be the cause for these performance issues: the same issues would arise when
 the queries would be modified to effectively use virtual keys for schemas definied WITH VIRTUAL KEYS. Hence the warning when 
 importing from a dictionary:<br><br>
@@ -69,32 +69,32 @@ importing from a dictionary:<br><br>
 <br><br>
 Pressing the <i>Always</i> button will uncheck the option to issue a warning message in the above preference page.
 <br><br>
-Back to the <i>defined dictionaries preference page</i>: press the <i>Add...</i> button to create your first dictionary :
+Back to the <i>defined dictionaries preference page</i>: press the <i>Add...</i> button to create your first dictionary:
 <br><br>
 <img src="../../images/preferences_add_dictionary.png" alt="[preferences add dictionary]">
 <br><br>
-Most of the fields should be self-explaining by now.  Each dictionary needs an <b>identifier (id)</b>, so give your 
-dictionary a meaningful name.  The <i>dictname</i> field maps to the <b>DBNAME</b> in your DBTABLE that includes the 
+Most of the fields should be self-explaining by now. Each dictionary needs an <b>identifier (id)</b>, so give your 
+dictionary a meaningful name. The <i>dictname</i> field maps to the <b>DBNAME</b> in your DBTABLE that includes the 
 dictionary and catalog segments making up your dictionary/catalog (where the schema you specify in the <i>Schema</i>
 section is defined).
 <br><br>
 You are not obliged to enter your <b>password</b> but beware that if you don't, the diagram editor will ask you for it 
-whenever needed :  
+whenever needed: 
 <br><br>
 <img src="../../images/enter_dictionary_password_dialog.png" alt="[enter dictionary password dialog]">
 <br><br>
 If you do store your password, don't forget to change it in Eclipse when you have changed your 
-mainframe password (you'll need to do this in <i>every</i> dictionary).  There is something to say for both approaches.
+mainframe password (you'll need to do this in <i>every</i> dictionary). There is something to say for both approaches.
 The password is stored in an encrypted format that can only be decrypted by the diagram editor on <i>your</i> machine.
 If you ever get tired of entering your password, either modify the dictionary definition or check the option to store 
 your password in the 'Password required' dialog above.
 <br><br>
-Press the <i>Test Connection</i> button to check whether the connection to your mainframe dictionary/catalog works.  You
-will get an error message dialog if the connection failed :
+Press the <i>Test Connection</i> button to check whether the connection to your mainframe dictionary/catalog works. You
+will get an error message dialog if the connection failed:
 <br><br>
 <img src="../../images/dictionary_connection_not_successful.png" alt="[dictionary connection not successful]">
 <br><br>
-In the case the connection was successful you will be informed as well :
+In the case the connection was successful you will be informed as well:
 <br><br>
 <img src="../../images/dictionary_connection_ok.png" alt="[dictionary connection ok]">
 <br><br>
