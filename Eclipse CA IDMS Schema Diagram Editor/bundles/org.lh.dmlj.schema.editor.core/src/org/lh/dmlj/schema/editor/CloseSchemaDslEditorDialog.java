@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2022  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class CloseSchemaDslEditorDialog extends Dialog {
-
 	public static final int YES = 11;
 	public static final int NO = 10;
 	
@@ -44,27 +43,9 @@ public class CloseSchemaDslEditorDialog extends Dialog {
 	}
 	
 	@Override
-	protected void buttonPressed(int buttonId) {
-		if (IDialogConstants.YES_ID == buttonId) {
-			yesPressed();
-		} else if (IDialogConstants.NO_ID == buttonId) {
-			noPressed();
-		} else if (IDialogConstants.CANCEL_ID == buttonId) {
-			cancelPressed();
-		}
-	}
-	
-	@Override
 	protected void configureShell(Shell shell) {		
 		super.configureShell(shell);
 		shell.setText("Close all .schemadsl files ?");
-	}
-
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.YES_ID, IDialogConstants.YES_LABEL, true);
-		createButton(parent, IDialogConstants.NO_ID, IDialogConstants.NO_LABEL, false);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	@Override
@@ -73,22 +54,22 @@ public class CloseSchemaDslEditorDialog extends Dialog {
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 2;
 		
-		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 3));
-		lblNewLabel_1.setImage(Display.getCurrent().getSystemImage(SWT.ICON_QUESTION));
+		Label lblNewLabel1 = new Label(container, SWT.NONE);
+		lblNewLabel1.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 3));
+		lblNewLabel1.setImage(Display.getCurrent().getSystemImage(SWT.ICON_QUESTION));
 		
 		Label lblOneOrMore = new Label(container, SWT.WRAP);
-		GridData gd_lblOneOrMore = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblOneOrMore.horizontalIndent = 5;
-		gd_lblOneOrMore.widthHint = 375;
-		lblOneOrMore.setLayoutData(gd_lblOneOrMore);
+		GridData gdLblOneOrMore = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblOneOrMore.horizontalIndent = 5;
+		gdLblOneOrMore.widthHint = 375;
+		lblOneOrMore.setLayoutData(gdLblOneOrMore);
 		lblOneOrMore.setText("One or more .schemadsl resources are opened and will be opened again when the workbench restarts.  Depending on the size of the diagram(s), this may take some time and the workbench will take longer to start.");
 		
 		Label lblNewLabel = new Label(container, SWT.WRAP);
-		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblNewLabel.horizontalIndent = 5;
-		gd_lblNewLabel.widthHint = 375;
-		lblNewLabel.setLayoutData(gd_lblNewLabel);
+		GridData gdLblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblNewLabel.horizontalIndent = 5;
+		gdLblNewLabel.widthHint = 375;
+		lblNewLabel.setLayoutData(gdLblNewLabel);
 		lblNewLabel.setText("Do you want to close these editors before exiting the workbench to prevent this from happening ?  (You will be able to save your work after pressing any of the buttons below).");
 		
 		btnRememberMyDecision = new Button(container, SWT.CHECK);
@@ -98,12 +79,30 @@ public class CloseSchemaDslEditorDialog extends Dialog {
 				rememberMyDecision = btnRememberMyDecision.getSelection();
 			}
 		});
-		GridData gd_btnRememberMyDecision = new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 1, 1);
-		gd_btnRememberMyDecision.horizontalIndent = 5;
-		btnRememberMyDecision.setLayoutData(gd_btnRememberMyDecision);
+		GridData gdBtnRememberMyDecision = new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 1, 1);
+		gdBtnRememberMyDecision.horizontalIndent = 5;
+		btnRememberMyDecision.setLayoutData(gdBtnRememberMyDecision);
 		btnRememberMyDecision.setText("Remember my decision");
 
 		return container;
+	}
+	
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.YES_ID, IDialogConstants.YES_LABEL, true);
+		createButton(parent, IDialogConstants.NO_ID, IDialogConstants.NO_LABEL, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+	}
+	
+	@Override
+	protected void buttonPressed(int buttonId) {
+		if (IDialogConstants.YES_ID == buttonId) {
+			yesPressed();
+		} else if (IDialogConstants.NO_ID == buttonId) {
+			noPressed();
+		} else if (IDialogConstants.CANCEL_ID == buttonId) {
+			cancelPressed();
+		}
 	}
 
 	@Override

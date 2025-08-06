@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,12 +21,10 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLabel;
-import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaFactory;
 
 public class CreateDiagramLabelCommand extends ModelChangeBasicCommand {
-		
 	private DiagramData diagramData;
 	private DiagramLabel diagramLabel;
 	private Point location;
@@ -41,18 +39,14 @@ public class CreateDiagramLabelCommand extends ModelChangeBasicCommand {
 	
 	@Override
 	public void execute() {
-		
-		// create the diagram label and it's diagram location, but don't them to the schema's 
-		// diagram data yet...
+		// create the diagram label and it's diagram location, but don't them to the schema's diagram data yet...
 		diagramLabel = SchemaFactory.eINSTANCE.createDiagramLabel();
-		if (diagramData.getSchema().getDescription() != null && 
-			!diagramData.getSchema().getDescription().trim().equals("")) {
-			
+		if (diagramData.getSchema().getDescription() != null && !diagramData.getSchema().getDescription().isBlank()) {	
 			diagramLabel.setDescription(diagramData.getSchema().getDescription());
 		}
 		diagramLabel.setWidth((short) size.width);
 		diagramLabel.setHeight((short) size.height);
-		DiagramLocation diagramLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+		var diagramLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
 		diagramLabel.setDiagramLocation(diagramLocation);
 		diagramLocation.setX(location.x);
 		diagramLocation.setY(location.y);
@@ -60,13 +54,11 @@ public class CreateDiagramLabelCommand extends ModelChangeBasicCommand {
 		
 		// all further processing is reusable when redoing the command
 		redo();
-		
 	}	
 	
 	@Override
 	public void redo() {
-		// all we need to do here is to add the diagram label and its location to the schema's 
-		// diagram data
+		// all we need to do here is to add the diagram label and its location to the schema's diagram data
 		Assert.isTrue(diagramData.getLabel() == null);				
 		diagramData.getLocations().add(diagramLabel.getDiagramLocation());					
 		diagramLabel.setDiagramData(diagramData);		

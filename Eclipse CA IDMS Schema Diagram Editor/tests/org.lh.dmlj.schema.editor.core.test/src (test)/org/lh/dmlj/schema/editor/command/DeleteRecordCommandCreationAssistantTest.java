@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -190,7 +190,7 @@ public class DeleteRecordCommandCreationAssistantTest {
 		DeleteRecordCommand deleteRecordCommand = 
 			(DeleteRecordCommand) DeleteRecordCommandCreationAssistant.getCommand(record);
 		assertNotNull(deleteRecordCommand);
-		assertSame(record, deleteRecordCommand.record);
+		assertSame(record, deleteRecordCommand.schemaRecord);
 		
 		// no procedures to be deleted, but the record's area is obsolete: a compound command to
 		// delete both the record and its area
@@ -201,7 +201,7 @@ public class DeleteRecordCommandCreationAssistantTest {
 		assertTrue(compoundCommand.getCommands().get(0) instanceof DeleteRecordCommand);
 		assertTrue(compoundCommand.getCommands().get(1) instanceof DeleteAreaCommand);
 		deleteRecordCommand = (DeleteRecordCommand) compoundCommand.getCommands().get(0);
-		assertSame(record, deleteRecordCommand.record);
+		assertSame(record, deleteRecordCommand.schemaRecord);
 		DeleteAreaCommand deleteAreaCommand = 
 			(DeleteAreaCommand) compoundCommand.getCommands().get(1);
 		assertSame(area, deleteAreaCommand.area);
@@ -226,7 +226,7 @@ public class DeleteRecordCommandCreationAssistantTest {
 		assertSame(recordProcedure.getCallSpecifications().get(0), 
 				   removeRecordProcedureCallSpecificationCommand.callSpec);
 		deleteRecordCommand = (DeleteRecordCommand) compoundCommand.getCommands().get(1);
-		assertSame(record, deleteRecordCommand.record);
+		assertSame(record, deleteRecordCommand.schemaRecord);
 		RemoveAreaProcedureCallSpecificationCommand removeAreaProcedureCallSpecificationCommand =
 				(RemoveAreaProcedureCallSpecificationCommand) compoundCommand.getCommands().get(2);
 		assertSame(areaProcedure.getCallSpecifications().get(0), 

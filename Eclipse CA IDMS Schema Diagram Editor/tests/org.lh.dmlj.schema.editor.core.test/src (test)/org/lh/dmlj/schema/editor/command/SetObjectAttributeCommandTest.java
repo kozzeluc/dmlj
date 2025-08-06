@@ -19,6 +19,8 @@ package org.lh.dmlj.schema.editor.command;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+import java.util.function.Supplier;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
@@ -64,9 +66,9 @@ public class SetObjectAttributeCommandTest {
 		// (String) when the owner EObject instance (see the other constructor) is NOT yet known at 
 		// command construction time
 		final Schema schema = SchemaFactory.eINSTANCE.createSchema();
-		ISupplier<EObject> eObjectSupplier = new ISupplier<EObject>() {			
+		Supplier<EObject> eObjectSupplier = new Supplier<EObject>() {			
 			@Override
-			public EObject supply() {
+			public EObject get() {
 				return schema;
 			}
 		};

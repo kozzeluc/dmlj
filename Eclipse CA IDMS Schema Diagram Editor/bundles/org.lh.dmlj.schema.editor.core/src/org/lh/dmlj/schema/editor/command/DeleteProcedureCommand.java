@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,8 @@ import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.Schema;
 
 public class DeleteProcedureCommand extends ModelChangeBasicCommand {
-
-	protected Procedure procedure;
+	protected final Procedure procedure;
+	
 	private Schema schema;
 	private int insertionIndex;
 	
@@ -50,15 +50,13 @@ public class DeleteProcedureCommand extends ModelChangeBasicCommand {
 
 	private void removeProcedureFromSchema() {
 		Assert.isTrue(procedure.getCallSpecifications().isEmpty(), 
-					  "Cannot remove procedure because it is still referenced by at least 1 " +
-					  "area and/or record: " + procedure.getName());
+					  "Cannot remove procedure because it is still referenced by at least 1 area and/or record: " + procedure.getName());
 		schema.getProcedures().remove(procedure);
 	}
 
 	private void restoreProcedureInSchema() {
 		Assert.isTrue(schema.getProcedure(procedure.getName()) == null, 
-					  "Cannot add procedure because a procedure with that name is already " +
-					  "referenced by the schema: " + procedure.getName());
+					  "Cannot add procedure because a procedure with that name is already referenced by the schema: " + procedure.getName());
 		schema.getProcedures().add(insertionIndex, procedure);		
 	}
 

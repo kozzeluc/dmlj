@@ -227,36 +227,30 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		// install the snap feedback policy...
 		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy());	  
 	}
-	
+		
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public Object getAdapter(Class adapter) {
 	    if (adapter == SnapToHelper.class) {
 	        // make sure we can snap figures to the grid, guides and geometry
-	        List<Object> snapStrategies = new ArrayList<>();
-	        if (getModel().getDiagramData().isShowRulers() &&
-	        	getModel().getDiagramData().isSnapToGuides()) {
-	            
-	        	snapStrategies.add(new SnapToGuides(this));
+	        var snapStrategies = new ArrayList<SnapToHelper>();
+	        if (getModel().getDiagramData().isShowRulers() && getModel().getDiagramData().isSnapToGuides()) {
+	        		snapStrategies.add(new SnapToGuides(this));
 	        }
 	        if (getModel().getDiagramData().isSnapToGeometry()) {
 	            snapStrategies.add(new SnapToGeometry(this));
 	        }	        
-	        if (getModel().getDiagramData().isShowGrid() &&
-	        	getModel().getDiagramData().isSnapToGrid()) {
-	        	
+	        if (getModel().getDiagramData().isShowGrid() && getModel().getDiagramData().isSnapToGrid()) {
 	            snapStrategies.add(new SnapToGrid(this));
 	        }
 	        if (snapStrategies.isEmpty()) {
 	            return null;
+	        } else if (snapStrategies.size() == 1) {
+	            return adapter.cast(snapStrategies.get(0));
+	        } else {
+		        var ss = new SnapToHelper[snapStrategies.size()];
+		        ss = snapStrategies.toArray(ss);
+		        return adapter.cast(new CompoundSnapToHelper(ss));
 	        }
-	        if (snapStrategies.size() == 1) {
-	            return snapStrategies.get(0);
-	        }
-	  			
-	        SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
-	        ss = snapStrategies.toArray(ss);			
-	  			
-	        return new CompoundSnapToHelper(ss);
 	    }
 	    return super.getAdapter(adapter);
 	}

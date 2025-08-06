@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,25 +16,20 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import java.util.ArrayList;
-
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
-import org.lh.dmlj.schema.DiagramData;
-import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.MemberRole;
 
 public class DeleteConnectorsCommand extends ModelChangeBasicCommand {
-
-	protected MemberRole memberRole;
-	private ConnectionPart connectionPart2;
-			
+	protected final MemberRole memberRole;
+	
 	private Connector connector1;	
-	private int		  connector1Index;
-	private int		  connector1LocationIndex;
-	private int 	  connectionPart2Index;
-	private int		  connector2Index;
-	private int		  connector2LocationIndex;
+	private int connector1Index;
+	private int	connector1LocationIndex;
+	private ConnectionPart connectionPart2;
+	private int 	connectionPart2Index;
+	private int	connector2Index;
+	private int	connector2LocationIndex;
 
 	public DeleteConnectorsCommand(MemberRole memberRole) {
 		super("Remove connectors from connection");
@@ -43,42 +38,31 @@ public class DeleteConnectorsCommand extends ModelChangeBasicCommand {
 	
 	@Override
 	public void execute() {
+		var diagramData = memberRole.getSet().getSchema().getDiagramData();
 		
-		DiagramData diagramData = memberRole.getSet().getSchema().getDiagramData();
-		
-		// remember the first connection part's connector, together with its indexes in the 
-		// connector and locations container (the schema's diagram data) 
+		// remember the first connection part's connector, together with its indexes in the connector and
+		// locations container (the schema's diagram data) 
 		connector1 = memberRole.getConnectionParts().get(0).getConnector();		
 		connector1Index = diagramData.getConnectors().indexOf(connector1);
-		connector1LocationIndex = 
-			diagramData.getLocations().indexOf(connector1.getDiagramLocation());
+		connector1LocationIndex = diagramData.getLocations().indexOf(connector1.getDiagramLocation());
 		
-		// remember the second connection part and all of its indexes in the connector and locations 
-		// container
+		// remember the second connection part and all of its indexes in the connector and locations container
 		connectionPart2 = memberRole.getConnectionParts().get(1);
 		connectionPart2Index = diagramData.getConnectionParts().indexOf(connectionPart2);		
 		connector2Index = diagramData.getConnectors().indexOf(connectionPart2.getConnector());
-		connector2LocationIndex = 
-			diagramData.getLocations().indexOf(connectionPart2.getConnector().getDiagramLocation());
+		connector2LocationIndex = diagramData.getLocations().indexOf(connectionPart2.getConnector().getDiagramLocation());
 		
 		// go finish the job
 		redo();
-		
 	}
 	
 	@Override
 	public void redo() {
+		var connectionPart1 = memberRole.getConnectionParts().get(0);
+		var diagramData = memberRole.getSet().getSchema().getDiagramData();
 		
-		ConnectionPart connectionPart1 = memberRole.getConnectionParts().get(0);
-		DiagramData diagramData = memberRole.getSet().getSchema().getDiagramData();
-
 		// first connection part and connector
-		for (DiagramLocation bendpoint : 
-			 new ArrayList<DiagramLocation>(connectionPart2.getBendpointLocations())) {
-			
-			// copy all the bendpoints from the second to the first connection part
-			connectionPart1.getBendpointLocations().add(bendpoint);
-		}
+		connectionPart1.getBendpointLocations().addAll(connectionPart2.getBendpointLocations());
 		connectionPart1.setTargetEndpointLocation(connectionPart2.getTargetEndpointLocation());
 		connectionPart1.setConnector(null);
 		diagramData.getConnectors().remove(connector1);
@@ -89,20 +73,15 @@ public class DeleteConnectorsCommand extends ModelChangeBasicCommand {
 		diagramData.getConnectionParts().remove(connectionPart2);		
 		diagramData.getLocations().remove(connectionPart2.getConnector().getDiagramLocation());		
 		diagramData.getConnectors().remove(connectionPart2.getConnector());
-		
 	}
 
 	@Override
 	public void undo() {
-		
-		ConnectionPart connectionPart1 = memberRole.getConnectionParts().get(0);
-		DiagramData diagramData = memberRole.getSet().getSchema().getDiagramData();
+		var connectionPart1 = memberRole.getConnectionParts().get(0);
+		var diagramData = memberRole.getSet().getSchema().getDiagramData();
 		
 		// first connection part and connector
-		for (DiagramLocation bendpoint : connectionPart2.getBendpointLocations()) {
-			// remove all the bendpoints from the second connection part
-			connectionPart1.getBendpointLocations().remove(bendpoint);			
-		}
+		connectionPart1.getBendpointLocations().removeAll(connectionPart2.getBendpointLocations());
 		connectionPart1.setConnector(connector1);
 		diagramData.getConnectors().add(connector1Index, connector1);
 		diagramData.getLocations().add(connector1LocationIndex, connector1.getDiagramLocation());						
@@ -112,10 +91,8 @@ public class DeleteConnectorsCommand extends ModelChangeBasicCommand {
 		memberRole.getConnectionParts().add(connectionPart2);
 		diagramData.getConnectionParts().add(connectionPart2Index, connectionPart2);
 		connectionPart2.setConnector(connectionPart2.getConnector());
-		diagramData.getLocations().add(connector2LocationIndex, 
-									   connectionPart2.getConnector().getDiagramLocation());
-		diagramData.getConnectors().add(connector2Index, connectionPart2.getConnector()); 
-		
+		diagramData.getLocations().add(connector2LocationIndex, connectionPart2.getConnector().getDiagramLocation());
+		diagramData.getConnectors().add(connector2Index, connectionPart2.getConnector());		
 	}
 	
 }

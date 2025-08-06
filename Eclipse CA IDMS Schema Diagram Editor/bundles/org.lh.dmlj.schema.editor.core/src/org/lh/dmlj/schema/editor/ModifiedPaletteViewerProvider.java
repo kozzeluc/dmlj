@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,15 +25,13 @@ import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * This class allows us to synchronize the selected tool on the palettes for all editors opened for 
- * the same input (cloned or split editors.  This is important because there can be only 1 active
- * palette for an edit domain (the same edit domain is shared between cloned/split editors).  By
- * synchronizing the active palette tool, the user has the <i>impression</i> that the palette he
- * uses is creating the entities he wants, but in reality this can be another one (i.e. the one
- * belonging to another cloned/split editor).
+ * This class allows us to synchronize the selected tool on the palettes for all editors opened for the same input
+ * (cloned or split editors). This is important because there can be only 1 active palette for an edit domain (the
+ * same edit domain is shared between cloned/split editors). By synchronizing the active palette tool, the user
+ * has the <i>impression</i> that the palette he or she uses is creating the entities he or she wants, but in
+ * reality this can be another one (i.e. the one belonging to another cloned/split editor).
  */
 public class ModifiedPaletteViewerProvider extends PaletteViewerProvider implements PaletteListener {
-
 	private boolean dontFireEvent;
 	private SchemaEditor editor;
 	private PaletteViewer paletteViewer;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.command;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 import org.eclipse.core.runtime.Assert;
 import org.lh.dmlj.schema.Set;
@@ -26,21 +27,15 @@ import org.lh.dmlj.schema.SetOrder;
  * A command that will change a sort key.
  */
 public class ChangeSortKeysCommand extends AbstractSortKeyManipulationCommand {
-
-	protected Set set;	
-	
-	protected ISupplier<Set> setSupplier;
+	protected Supplier<Set> setSupplier;
 	
 	public ChangeSortKeysCommand(Set set, ISortKeyDescription[] sortKeyDescriptions) {
 		super(set, sortKeyDescriptions);
 		Assert.isTrue(set.getOrder() == SetOrder.SORTED, "not a sorted set");
 		Assert.isNotNull(sortKeyDescriptions, "sortKeyDescriptions is null");
-		this.set = set;
 	}
 	
-	public ChangeSortKeysCommand(ISupplier<Set> setSupplier, 
-								 ISortKeyDescription[] sortKeyDescriptions) {
-		
+	public ChangeSortKeysCommand(Supplier<Set> setSupplier, ISortKeyDescription[] sortKeyDescriptions) {
 		super(null, sortKeyDescriptions);
 		Assert.isNotNull(sortKeyDescriptions, "sortKeyDescriptions is null");
 		this.setSupplier = setSupplier;
@@ -48,14 +43,12 @@ public class ChangeSortKeysCommand extends AbstractSortKeyManipulationCommand {
 	
 	@Override
 	public void execute() {
-		
 		if (setSupplier != null) {
-			super.set = setSupplier.supply();
-			set = super.set;
+			set = setSupplier.get();			
 			Assert.isTrue(set.getOrder() == SetOrder.SORTED, "not a sorted set");
 			Assert.isTrue(set.getMembers().size() == sortKeyDescriptions.length, 
-				  	  	  "the number of sort key descriptions does NOT match the number of set " +
-				  	  	  "members: " + set.getName() + " " + Arrays.asList(sortKeyDescriptions));
+					"the number of sort key descriptions does NOT match the number of set members: " +
+				  	set.getName() + " " + Arrays.asList(sortKeyDescriptions));
 		}
 		
 		// remember the current sort keys		
@@ -69,29 +62,24 @@ public class ChangeSortKeysCommand extends AbstractSortKeyManipulationCommand {
 		
 		// install the new sort keys
 		restoreSortKeys(1);
-		
 	}
 	
 	@Override
-	public void redo() {
-		
+	public void redo() {	
 		// remove the current sort keys
 		removeSortKeys();			
 		
 		// install the new sort keys
 		restoreSortKeys(1);
-		
 	}
 	
 	@Override
 	public void undo() {
-		
 		// remove the current sort keys
 		removeSortKeys();			
 		
 		// install the old sort keys
-		restoreSortKeys(0);		
-		
+		restoreSortKeys(0);
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -124,7 +124,7 @@ class ChangeLocationModeCommandFactoryTest {
 			// we expect the factory to produce a MakeRecordDirectCommand for our record 
 			MakeRecordDirectCommand command = factory.getCommand(record, locationModeDirectProvider)
 			assert command
-			assert command.record == record
+			assert command.schemaRecord == record
 			
 			// check the model change context
 			ModelChangeContext context = command.context
@@ -153,7 +153,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a MakeRecordCalcCommand for our record
 		MakeRecordCalcCommand command = factory.getCommand(record, locationModeCalcProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.calcKeyElements == calcKeyElements
 		assert command.duplicatesOption == DuplicatesOption.NOT_ALLOWED
 		
@@ -180,7 +180,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a MakeRecordViaCommand for our record
 		MakeRecordViaCommand command = factory.getCommand(record, locationModeViaProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.viaSetName == locationModeViaProvider.getViaSetName()
 		assert command.symbolicDisplacementName == locationModeViaProvider.getSymbolicDisplacementName()
 		assert command.displacementPageCount == locationModeViaProvider.getDisplacementPageCount()
@@ -205,7 +205,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a MakeRecordVsamCommand for our record
 		MakeRecordVsamCommand command = factory.getCommand(record, locationModeVsamProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		
 		// check the model change context
 		ModelChangeContext context = command.context
@@ -233,7 +233,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a MakeRecordVsamCalcCommand for our record
 		MakeRecordVsamCalcCommand command = factory.getCommand(record, locationModeVsamCalcProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.calcKeyElements == calcKeyElements
 		assert command.duplicatesOption == DuplicatesOption.UNORDERED
 		
@@ -303,7 +303,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a ChangeCalcKeyCommand for our record 
 		ChangeCalcKeyCommand command = factory.getCommand(record, locationModeCalcProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.newCalcKeyElements == newCalcKeyElements
 		assert command.newDuplicatesOption == DuplicatesOption.LAST
 		
@@ -339,7 +339,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a ChangeCalcKeyCommand for our record
 		ChangeCalcKeyCommand command = factory.getCommand(record, locationModeCalcProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.newCalcKeyElements == newCalcKeyElements
 		assert command.newDuplicatesOption == DuplicatesOption.FIRST
 		
@@ -371,9 +371,9 @@ class ChangeLocationModeCommandFactoryTest {
 		// check the individual commands
 		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
-		assert command.commands.getAt(0).record == record
+		assert command.commands.getAt(0).schemaRecord == record
 		assert command.commands.getAt(1) instanceof MakeRecordViaCommand
-		assert command.commands.getAt(1).record == record
+		assert command.commands.getAt(1).schemaRecord == record
 		assert command.commands.getAt(1).viaSetName == locationModeViaProvider.getViaSetName()
 		assert command.commands.getAt(1).symbolicDisplacementName == locationModeViaProvider.getSymbolicDisplacementName()
 		assert command.commands.getAt(1).displacementPageCount == locationModeViaProvider.getDisplacementPageCount()
@@ -403,9 +403,9 @@ class ChangeLocationModeCommandFactoryTest {
 		// check the individual commands
 		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
-		assert command.commands.getAt(0).record == record
+		assert command.commands.getAt(0).schemaRecord == record
 		assert command.commands.getAt(1) instanceof MakeRecordVsamCommand
-		assert command.commands.getAt(1).record == record
+		assert command.commands.getAt(1).schemaRecord == record
 		
 		// check the model change context
 		ModelChangeContext context = command.context
@@ -438,9 +438,9 @@ class ChangeLocationModeCommandFactoryTest {
 		// check the individual commands
 		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
-		assert command.commands.getAt(0).record == record
+		assert command.commands.getAt(0).schemaRecord == record
 		assert command.commands.getAt(1) instanceof MakeRecordVsamCalcCommand
-		assert command.commands.getAt(1).record == record
+		assert command.commands.getAt(1).schemaRecord == record
 		assert command.commands.getAt(1).calcKeyElements == calcKeyElements
 		assert command.commands.getAt(1).duplicatesOption == DuplicatesOption.UNORDERED
 		
@@ -475,9 +475,9 @@ class ChangeLocationModeCommandFactoryTest {
 		// check the individual commands
 		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
-		assert command.commands.getAt(0).record == record
+		assert command.commands.getAt(0).schemaRecord == record
 		assert command.commands.getAt(1) instanceof MakeRecordCalcCommand
-		assert command.commands.getAt(1).record == record
+		assert command.commands.getAt(1).schemaRecord == record
 		assert command.commands.getAt(1).calcKeyElements == calcKeyElements
 		assert command.commands.getAt(1).duplicatesOption == DuplicatesOption.NOT_ALLOWED
 		
@@ -512,7 +512,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a ChangeViaSpecificationCommand for our record
 		ChangeViaSpecificationCommand command = factory.getCommand(record, locationModeViaProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.newViaSetName == locationModeViaProvider.getViaSetName()
 		assert command.newSymbolicDisplacementName == locationModeViaProvider.getSymbolicDisplacementName()
 		assert command.newDisplacementPageCount == locationModeViaProvider.getDisplacementPageCount()
@@ -547,7 +547,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a ChangeViaSpecificationCommand for our record
 		ChangeViaSpecificationCommand command = factory.getCommand(record, locationModeViaProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.newViaSetName == locationModeViaProvider.getViaSetName()
 		assert command.newSymbolicDisplacementName == locationModeViaProvider.getSymbolicDisplacementName()
 		assert command.newDisplacementPageCount == locationModeViaProvider.getDisplacementPageCount()
@@ -951,9 +951,9 @@ class ChangeLocationModeCommandFactoryTest {
 		// check the individual commands
 		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
-		assert command.commands.getAt(0).record == record
+		assert command.commands.getAt(0).schemaRecord == record
 		assert command.commands.getAt(1) instanceof MakeRecordCalcCommand
-		assert command.commands.getAt(1).record == record
+		assert command.commands.getAt(1).schemaRecord == record
 		assert command.commands.getAt(1).calcKeyElements == calcKeyElements
 		assert command.commands.getAt(1).duplicatesOption == DuplicatesOption.NOT_ALLOWED
 		
@@ -1004,7 +1004,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a MakeRecordVsamCalcCommand for our record
 		MakeRecordVsamCalcCommand command = factory.getCommand(record, locationModeVsamCalcProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.calcKeyElements == calcKeyElements
 		assert command.duplicatesOption == DuplicatesOption.NOT_ALLOWED
 		
@@ -1055,9 +1055,9 @@ class ChangeLocationModeCommandFactoryTest {
 		// check the individual commands
 		assert command.commands.size() == 2
 		assert command.commands.getAt(0) instanceof MakeRecordDirectCommand
-		assert command.commands.getAt(0).record == record
+		assert command.commands.getAt(0).schemaRecord == record
 		assert command.commands.getAt(1) instanceof MakeRecordCalcCommand
-		assert command.commands.getAt(1).record == record
+		assert command.commands.getAt(1).schemaRecord == record
 		assert command.commands.getAt(1).calcKeyElements == calcKeyElements
 		assert command.commands.getAt(1).duplicatesOption == DuplicatesOption.NOT_ALLOWED
 		
@@ -1101,7 +1101,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a MakeRecordVsamCommand
 		MakeRecordVsamCommand command = factory.getCommand(record, locationModeVsamProvider)
 		assert command	
-		assert command.record == record
+		assert command.schemaRecord == record
 		
 		// check the model change context
 		ModelChangeContext context = command.context
@@ -1169,7 +1169,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a ChangeCalcKeyCommand for our record
 		ChangeCalcKeyCommand command = factory.getCommand(record, locationModeCalcProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.newCalcKeyElements == newCalcKeyElements
 		assert command.newDuplicatesOption == DuplicatesOption.NOT_ALLOWED
 		
@@ -1205,7 +1205,7 @@ class ChangeLocationModeCommandFactoryTest {
 		// we expect the factory to produce a ChangeCalcKeyCommand for our record
 		ChangeCalcKeyCommand command = factory.getCommand(record, locationModeCalcProvider)
 		assert command
-		assert command.record == record
+		assert command.schemaRecord == record
 		assert command.newCalcKeyElements == newCalcKeyElements
 		assert command.newDuplicatesOption == DuplicatesOption.NOT_ALLOWED
 		

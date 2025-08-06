@@ -24,6 +24,7 @@ import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.eclipse.gef.commands.Command;
 import org.junit.Test;
@@ -111,9 +112,9 @@ public class MakeRecordCalcCommandTest {
 		SchemaRecord record = schema.getRecord("LOGREC-143");
 		final List<Element> calcKeyElements = new ArrayList<>();
 		calcKeyElements.add(record.getElements().get(0));
-		ISupplier<List<Element>> calcKeyElementSupplier = new ISupplier<List<Element>>() {			
+		Supplier<List<Element>> calcKeyElementSupplier = new Supplier<List<Element>>() {			
 			@Override
-			public List<Element> supply() {
+			public List<Element> get() {
 				return calcKeyElements;
 			}
 		};

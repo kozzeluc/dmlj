@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.command
 
 import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.schema
 
+import org.eclipse.core.runtime.AssertionFailedException
 import spock.lang.Specification
 
 class ChangeSchemaCommentsCommandSpec extends Specification {
@@ -103,10 +104,10 @@ class ChangeSchemaCommentsCommandSpec extends Specification {
 		command.execute()
 		
 		then: "an assertion error occurs"
-		AssertionError e = thrown(AssertionError)
+		AssertionFailedException e = thrown(AssertionFailedException)
 		
 		and: "the assertion error's message indicates what's wrong"
-		e.message.startsWith 'schema is null'
+		e.message.contains 'schema is null'
 	}
 	
 	def "The command's 'newValue' construction argument must not be null"() {
@@ -121,10 +122,10 @@ class ChangeSchemaCommentsCommandSpec extends Specification {
 		command.execute()
 		
 		then: "an assertion error occurs"
-		AssertionError e = thrown(AssertionError)
+		AssertionFailedException e = thrown(AssertionFailedException)
 		
 		and: "the assertion error's message indicates what's wrong"
-		e.message.startsWith 'newValue is null'
+		e.message.contains 'newValue is null'
 	}
 	
 }

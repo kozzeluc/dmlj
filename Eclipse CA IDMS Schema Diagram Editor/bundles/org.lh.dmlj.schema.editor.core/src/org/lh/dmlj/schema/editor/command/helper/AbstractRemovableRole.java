@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,8 +19,7 @@ package org.lh.dmlj.schema.editor.command.helper;
 import org.lh.dmlj.schema.Role;
 
 public abstract class AbstractRemovableRole<T extends Role> {
-
-	protected T  	role;
+	protected T role;
 	private boolean removed = false;
 	
 	protected AbstractRemovableRole(T role) {

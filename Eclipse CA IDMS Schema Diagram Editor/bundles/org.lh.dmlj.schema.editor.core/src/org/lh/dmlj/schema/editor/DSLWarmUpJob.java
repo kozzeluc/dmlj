@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -32,7 +32,7 @@ import org.lh.dmlj.schema.editor.dsl.builder.syntax.SetSyntaxBuilder;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class DSLWarmUpJob extends Job {
-	
+	private static final String NAME_DUMMY = "name 'DUMMY'";
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	public DSLWarmUpJob() {
@@ -41,19 +41,18 @@ public class DSLWarmUpJob extends Job {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		
 		logger.info("DSL warm up started");
 		
-		Schema schema = ModelFromDslBuilderForJava.schema("name 'DUMMY'");
+		Schema schema = ModelFromDslBuilderForJava.schema(NAME_DUMMY);
 		new SchemaSyntaxBuilder().build(schema);
 		
-		SchemaArea area = ModelFromDslBuilderForJava.area("name 'DUMMY'");
+		SchemaArea area = ModelFromDslBuilderForJava.area(NAME_DUMMY);
 	  	new AreaSyntaxBuilder().build(area);
 		
-	  	SchemaRecord record = ModelFromDslBuilderForJava.record("name 'DUMMY'");
-	  	new RecordSyntaxBuilder().build(record);
+	  	SchemaRecord schemaRecord = ModelFromDslBuilderForJava.record(NAME_DUMMY);
+	  	new RecordSyntaxBuilder().build(schemaRecord);
 	  	
-	  	Set set = ModelFromDslBuilderForJava.set("name 'DUMMY'");
+	  	Set set = ModelFromDslBuilderForJava.set(NAME_DUMMY);
 	  	new SetSyntaxBuilder().build(set);
 	  	
 	  	logger.info("DSL warm up complete");

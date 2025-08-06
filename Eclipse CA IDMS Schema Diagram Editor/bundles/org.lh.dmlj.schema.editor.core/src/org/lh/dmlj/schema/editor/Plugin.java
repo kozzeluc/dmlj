@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,9 +19,11 @@ package org.lh.dmlj.schema.editor;
 import static org.lh.dmlj.schema.editor.common.Tools.getRootMessage;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +41,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.progress.IProgressService;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
 import org.lh.dmlj.schema.editor.log.LogProvidingPlugin;
 import org.lh.dmlj.schema.editor.log.Logger;
@@ -48,37 +49,34 @@ import org.lh.dmlj.schema.editor.service.ServicesPlugin;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 import org.osgi.framework.BundleContext;
 
-/**
- * The activator class controls the plug-in life cycle
- */
 public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener, LogProvidingPlugin {
-	
-	// The plug-in ID
-	public static final String 		PLUGIN_ID = 
-		"org.lh.dmlj.schema.editor.core"; //$NON-NLS-1$
-	
-	// The shared instance
-	private static Plugin 			plugin;
-			
+	public static final String PLUGIN_ID = "org.lh.dmlj.schema.editor.core";
+	private static final String ARIAL = "Arial";
 	private final Logger logger = Logger.getLogger(this);
 	
-	private Font 					figureFont;
-	private Font 					figureFontBold;
-	private Font 					figureFontItalic;
-	private Font 					figureFontSmall;
-	private Map<String, Image> 	 	images = new HashMap<String, Image>();
-	private boolean 				logDebugMessages;
-	private File 					tmpFolder;
+	private static Plugin plugin;
 	
-	private IWorkbenchListener workbenchListener = new WorkbenchListener();	
+	private final IWorkbenchListener workbenchListener = new WorkbenchListener();
+	
+	private Font figureFont;
+	private Font figureFontBold;
+	private Font figureFontItalic;
+	private Font figureFontSmall;
+	private Map<String, Image> images = new HashMap<>();
+	private boolean logDebugMessages;
+	private File tmpFolder;
 
 	private static void deleteDirectoryContents(File directory) {
-		for (String fileName : directory.list()) {
-			File file = new File(directory, fileName);
+		for (var fileName : directory.list()) {
+			var file = new File(directory, fileName);
 			if (file.isDirectory()) {
 				deleteDirectoryContents(file);
 			}
-			file.delete();			
+			try {
+				Files.delete(file.toPath());
+			} catch (IOException e) {
+				getDefault().logger.warning(String.format("could not delete file/folder %s", file.getAbsolutePath()));
+			}
 		}		
 	}	
 	
@@ -86,36 +84,35 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 		return plugin;
 	}
 
-	public Plugin() {
-	}
-
 	public File createTmpFile(String fileExtension) {		
-		File file = 
-			new File(tmpFolder, String.valueOf(new Date().getTime()) + "." + 
-						fileExtension);
+		var file = new File(tmpFolder, generateFileName(fileExtension));
 		while (file.exists()) {
-			file = 
-				new File(tmpFolder, String.valueOf(new Date().getTime()) + "." + 
-						 fileExtension);
+			file = new File(tmpFolder, generateFileName(fileExtension));
 		}
 		return file;
 	}
 	
+	private String generateFileName(String fileExtension) {
+		return String.format("%s.%s", new Date().getTime(), fileExtension);
+	}
+	
 	public File createTmpFolder() {		
-		File folder = 
-			new File(tmpFolder, String.valueOf(new Date().getTime()));
+		var folder = new File(tmpFolder, generateFolderName());
 		while (folder.exists()) {
-			folder = new File(tmpFolder, String.valueOf(new Date().getTime()));
+			folder = new File(tmpFolder, generateFolderName());
 		}
 		if (!folder.mkdir()) {
-			throw new RuntimeException("cannot create temporary files folder");
+			throw new IllegalStateException("cannot create temporary files folder");
 		}
 		return folder;
-	}	
+	}
+	
+	private String generateFolderName() {
+		return String.format("%s", new Date().getTime());
+	}
 
 	public DateFormat getDateFormat() {
-		String pattern = 
-			getPreferenceStore().getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		var pattern = getPreferenceStore().getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
 		return new SimpleDateFormat(pattern);
 	}
 	
@@ -144,14 +141,13 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 			return images.get(path);
 		}
 		Image image = null;
-		URL baseURL = getBundle().getEntry("/");
+		var baseURL = getBundle().getEntry("/");
 		try {
-			URL url = new URL(baseURL, path);
+			var url = new URL(baseURL, path);
 			image = ImageDescriptor.createFromURL(url).createImage();
-		} catch (MalformedURLException e) {			
-		}
-		if (image != null) {
 			images.put(path, image);
+		} catch (MalformedURLException e) {
+			logger.error("cannot load image", e);
 		}
 		return image;
 	}
@@ -167,12 +163,11 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 	
 	@SuppressWarnings("restriction")
 	public boolean isDarkThemeActive() {
-		// TODO find a better way to find out which theme is active and whether it is a dark theme
 		try {
 			org.eclipse.e4.ui.css.swt.theme.IThemeEngine engine = 
 				(org.eclipse.e4.ui.css.swt.theme.IThemeEngine) Display.getDefault().getData("org.eclipse.e4.ui.css.swt.theme");
 			return engine.getActiveTheme().getLabel().toLowerCase().contains("dark");
-		} catch (Throwable t) {
+		} catch (Exception e) {
 			return false;
 		}
 	}
@@ -183,12 +178,12 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 	}
 	
 	public void runWithOperationInProgressIndicator(IRunnableWithProgress runnableWithProgress) {
-		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+		var progressService = PlatformUI.getWorkbench().getProgressService();
 		try {
 			progressService.runInUI(progressService, runnableWithProgress, null);
 		} catch (InvocationTargetException | InterruptedException e) {
 			logger.error(getRootMessage(e), e);
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -205,8 +200,7 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 		plugin = this;
 		
 		// create the fonts for the diagram editor
-		int operatingSystemTextSize = 
-			getPreferenceStore().getInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
+		var operatingSystemTextSize = getPreferenceStore().getInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
 		int normalHeight;
 		int smallHeight;
 		if (operatingSystemTextSize == 100) {
@@ -222,39 +216,39 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 			normalHeight = 3; // Note: 3 is too small and 4 too big...
 			smallHeight = 3;
 		}
-		figureFont = new Font(Display.getCurrent(), "Arial", normalHeight, SWT.NORMAL);
-		figureFontBold = new Font(Display.getCurrent(), "Arial", normalHeight, SWT.BOLD);
-		figureFontItalic = new Font(Display.getCurrent(), "Arial", normalHeight, SWT.ITALIC);
-		figureFontSmall = new Font(Display.getCurrent(), "Arial", smallHeight, SWT.NORMAL);
+		figureFont = new Font(Display.getCurrent(), ARIAL, normalHeight, SWT.NORMAL);
+		figureFontBold = new Font(Display.getCurrent(), ARIAL, normalHeight, SWT.BOLD);
+		figureFontItalic = new Font(Display.getCurrent(), ARIAL, normalHeight, SWT.ITALIC);
+		figureFontSmall = new Font(Display.getCurrent(), ARIAL, smallHeight, SWT.NORMAL);
 		
 		// initialize the dictguide registry; this registry contains all imported dictionary guides
-		DictguidesRegistry.init(getStateLocation().toFile(),				 
-								ServicesPlugin.getDefault()
-											  .getService(IPdfExtractorService.class));
+		DictguidesRegistry.init(getStateLocation().toFile(),	ServicesPlugin.getDefault().getService(IPdfExtractorService.class));
 		
-		// Locate the temporary files folder in the workspace.  We should 
-		// probably put our temporary files somewhere else, since the folder 
-		// returned by the call to the plug-in's getStateLocation() method 
-		// "is recommended for plug-in preference settings and other 
-		// configuration parameters".  That location is perfectly usable though.
+		// Locate the temporary files folder in the workspace.  We should probably put our temporary files
+		// somewhere else, since the folder returned by the call to the plug-in's getStateLocation() method "is
+		// recommended for plug-in preference settings and other configuration parameters". That location is
+		// perfectly usable though.
 		tmpFolder = new File(getStateLocation().toFile(), "tmp");
 		if (tmpFolder.exists()) {
 			deleteDirectoryContents(tmpFolder);
-			tmpFolder.delete();	
+			try {
+				Files.delete(tmpFolder.toPath());
+			} catch (IOException e) {
+				getDefault().logger
+						.warning(String.format("could not delete folder %s", tmpFolder.getAbsolutePath()));
+			}
 		}	
 		if (!tmpFolder.exists()) {
 			tmpFolder.mkdir();
 		}
 		
-		logDebugMessages = 
-			getPreferenceStore().getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
+		logDebugMessages = getPreferenceStore().getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
 		getPreferenceStore().addPropertyChangeListener(this);
 		
-		// DSL warm-up: make opening the first .schemadsl file somewhat faster or avoid a delay the first time the user selects
-		// the DSL tab in the Properties view for a .schema file.
+		// DSL warm-up: make opening the first .schemadsl file somewhat faster or avoid a delay the first time the
+		// user selects the DSL tab in the Properties view for a .schema file.
 		// Notes:
-		// - Some people think this process delays the startup of their Eclipse workbench, that's why running this job is by 
-		//   default disabled.
+		// - Some people think this process delays the startup of their Eclipse workbench, that's why running this job is disabled by default.
 		// - The delay is only avoided AFTER the warm up job has completed.
 		boolean runDslWarmUpJobOnStartup = getPreferenceStore().getBoolean(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP);
 		if (runDslWarmUpJobOnStartup) {
@@ -265,20 +259,23 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 	}
 
 	@Override
-	public void stop(BundleContext context) throws Exception {		
-		
+	public void stop(BundleContext context) throws Exception {
 		unhookWorkbenchListener();
 		
 		getPreferenceStore().removePropertyChangeListener(this);
 		
 		// dispose images
-		for (Image image : images.values()) {
+		for (var image : images.values()) {
 			image.dispose();
 		}
 		
 		// cleanup our temporary file folder...
 		deleteDirectoryContents(tmpFolder);
-		tmpFolder.delete();		
+		try {
+			Files.delete(tmpFolder.toPath());
+		} catch (IOException e) {
+			getDefault().logger.warning(String.format("could not delete folder %s", tmpFolder.getAbsolutePath()));
+		}		
 		
 		// cleanup any fonts we created
 		figureFont.dispose();

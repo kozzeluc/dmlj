@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,11 +20,9 @@ import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 
 public class ModelChangeBasicCommand extends Command implements IModelChangeCommand {
-
 	private ModelChangeContext context;
 	
 	public ModelChangeBasicCommand() {
-		super();
 	}
 	
 	public ModelChangeBasicCommand(String label) {

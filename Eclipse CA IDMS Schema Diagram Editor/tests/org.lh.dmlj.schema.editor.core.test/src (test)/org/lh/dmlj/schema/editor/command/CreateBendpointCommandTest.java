@@ -22,6 +22,8 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
+import java.util.function.Supplier;
+
 import org.eclipse.gef.commands.Command;
 import org.junit.Test;
 import org.lh.dmlj.schema.ConnectionPart;
@@ -338,9 +340,9 @@ public class CreateBendpointCommandTest {
 		Set set = schema.getSet("DEPT-EMPLOYEE");
 		final ConnectionPart connectionPart = set.getMembers().get(0).getConnectionParts().get(0);
 		assertNotNull(connectionPart);
-		ISupplier<ConnectionPart> connectionPartSupplier = new ISupplier<ConnectionPart>() {
+		Supplier<ConnectionPart> connectionPartSupplier = new Supplier<ConnectionPart>() {
 			@Override
-			public ConnectionPart supply() {
+			public ConnectionPart get() {
 				return connectionPart;
 			}		
 		};

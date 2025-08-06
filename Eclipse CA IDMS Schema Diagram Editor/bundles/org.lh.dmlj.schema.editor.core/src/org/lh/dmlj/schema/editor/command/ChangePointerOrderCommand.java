@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.command;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
@@ -24,37 +25,36 @@ import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerReordering;
 
 public class ChangePointerOrderCommand extends ModelChangeBasicCommand {
-
-	protected SchemaRecord record;
+	protected final SchemaRecord schemaRecord;
 	
 	private List<Pointer<?>> newPointerOrder;
 	private PrefixForPointerReordering prefix;
 	
-	protected ISupplier<List<Pointer<?>>> pointerSupplier;
+	protected Supplier<List<Pointer<?>>> pointerSupplier;
 	
-	public ChangePointerOrderCommand(SchemaRecord record, List<Pointer<?>> newPointerOrder) {
+	public ChangePointerOrderCommand(SchemaRecord schemaRecord, List<Pointer<?>> newPointerOrder) {
 		super("Reorder pointers");
-		this.record = record;
+		this.schemaRecord = schemaRecord;
 		this.newPointerOrder = newPointerOrder;
 	}
 	
-	public ChangePointerOrderCommand(SchemaRecord record, ISupplier<List<Pointer<?>>> pointerSupplier) {		
+	public ChangePointerOrderCommand(SchemaRecord schemaRecord, Supplier<List<Pointer<?>>> pointerSupplier) {		
 		super("Reorder pointers");
-		this.record = record;
+		this.schemaRecord = schemaRecord;
 		this.pointerSupplier = pointerSupplier;
 	}
 	
 	@Override
 	public void execute() {
 		if (pointerSupplier != null) {
-			newPointerOrder = pointerSupplier.supply();
+			newPointerOrder = pointerSupplier.get();
 		}
 		createPrefix();
 		reorderPointers();
 	}
 	
 	private void createPrefix() {
-		prefix = PrefixFactory.newPrefixForPointerReordering(record, newPointerOrder);		
+		prefix = PrefixFactory.newPrefixForPointerReordering(schemaRecord, newPointerOrder);		
 	}
 
 	private void reorderPointers() {

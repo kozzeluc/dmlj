@@ -23,6 +23,7 @@ import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.eclipse.gef.commands.Command;
 import org.junit.Assert;
@@ -177,14 +178,14 @@ public class ChangePointerOrderCommandTest {
 		assertEquals("MANAGES", newPointerOrder.get(15).getSetName());
 		assertSame(PointerType.OWNER_PRIOR, newPointerOrder.get(15).getType());
 		
-		ISupplier<List<Pointer<?>>> pointerSupplier = new ISupplier<List<Pointer<?>>>() {
+		Supplier<List<Pointer<?>>> pointerSupplier = new Supplier<List<Pointer<?>>>() {
 			@Override
-			public List<Pointer<?>> supply() {
+			public List<Pointer<?>> get() {
 				return newPointerOrder;
 			}			
 		};
 		ChangePointerOrderCommand command = new ChangePointerOrderCommand(record, pointerSupplier);
-		assertSame(record, command.record);
+		assertSame(record, command.schemaRecord);
 		assertSame(pointerSupplier, command.pointerSupplier);
 		
 		

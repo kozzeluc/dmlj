@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,6 +26,7 @@ import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
@@ -135,7 +136,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the swap record elements command
 		SwapRecordElementsCommand swapRecordElementsCommand = (SwapRecordElementsCommand) command;
-		assertSame(record, swapRecordElementsCommand.record);
+		assertSame(record, swapRecordElementsCommand.schemaRecord);
 		assertEquals(1, swapRecordElementsCommand.newRootElements.size());
 		assertSame(newRootElements.get(0), swapRecordElementsCommand.newRootElements.get(0));
 		
@@ -191,7 +192,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// execute(), undo() and redo() the command
 		ObjectGraph objectGraph = TestTools.asObjectGraph(schema);
@@ -242,10 +243,10 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record CALC command
 		MakeRecordCalcCommand makeRecordCalcCommand = (MakeRecordCalcCommand) commands.get(2);
-		assertSame(record, makeRecordCalcCommand.record);
-		ISupplier<List<Element>> calcKeyElementSupplier = makeRecordCalcCommand.calcKeyElementSupplier;
-		assertEquals(1, calcKeyElementSupplier.supply().size());
-		assertSame(newRootElements.get(0), calcKeyElementSupplier.supply().get(0));
+		assertSame(record, makeRecordCalcCommand.schemaRecord);
+		Supplier<List<Element>> calcKeyElementSupplier = makeRecordCalcCommand.calcKeyElementSupplier;
+		assertEquals(1, calcKeyElementSupplier.get().size());
+		assertSame(newRootElements.get(0), calcKeyElementSupplier.get().get(0));
 		assertSame(DuplicatesOption.NOT_ALLOWED, makeRecordCalcCommand.duplicatesOption);
 		
 		// execute(), undo() and redo() the command
@@ -309,7 +310,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the remove member from set command
 		RemoveMemberFromSetCommand removeMemberFromSetCommand =	
@@ -379,7 +380,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the remove member from set command
 		RemoveMemberFromSetCommand removeMemberFromSetCommand = 
@@ -394,17 +395,17 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the set membership option command
 		SetObjectAttributeCommand setMembershipOptionCommand = 
 			(SetObjectAttributeCommand) commands.get(4);
-		ISupplier<EObject> memberRoleSupplier = setMembershipOptionCommand.eObjectSupplier;
-		assertSame(memberRole, memberRoleSupplier.supply());
+		Supplier<EObject> memberRoleSupplier = setMembershipOptionCommand.eObjectSupplier;
+		assertSame(memberRole, memberRoleSupplier.get());
 		assertSame(membershipOption, setMembershipOptionCommand.newValue);
 		
 		// check the move (source) endpoint command - the command's connection part supplier will 
 		// supply the original connection part because we didn't actually remove the record as a 
 		// member record from the set and added it again (i.e. we didn't execute the commands)
 		MoveEndpointCommand moveSourceEndpointCommand = (MoveEndpointCommand) commands.get(5);
-		ISupplier<ConnectionPart> connectionPartSupplier = 
+		Supplier<ConnectionPart> connectionPartSupplier = 
 			moveSourceEndpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(0).getSourceEndpointLocation().getX(),
 					 moveSourceEndpointCommand.newX);
 		assertEquals(memberRole.getConnectionParts().get(0).getSourceEndpointLocation().getY(),
@@ -416,7 +417,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// member record from the set and added it again (i.e. we didn't execute the commands)
 		MoveEndpointCommand moveTargetEndpointCommand = (MoveEndpointCommand) commands.get(6);
 		connectionPartSupplier = moveTargetEndpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(0).getTargetEndpointLocation().getX(),
 					 moveTargetEndpointCommand.newX);
 		assertEquals(memberRole.getConnectionParts().get(0).getTargetEndpointLocation().getY(),
@@ -427,8 +428,8 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// set because we didn't actually remove the record as a member record from the set and 
 		// added it again (i.e. we didn't execute the commands)
 		ChangeSortKeysCommand changeSortKeysCommand = (ChangeSortKeysCommand) commands.get(7);
-		ISupplier<Set> setSupplier = changeSortKeysCommand.setSupplier;
-		assertSame(set, setSupplier.supply());
+		Supplier<Set> setSupplier = changeSortKeysCommand.setSupplier;
+		assertSame(set, setSupplier.get());
 		ISortKeyDescription[] sortKeyDescriptions2 = changeSortKeysCommand.sortKeyDescriptions;
 		assertEquals(3, sortKeyDescriptions2.length);
 		
@@ -458,7 +459,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record VIA command
 		MakeRecordViaCommand makeRecordViaCommand = (MakeRecordViaCommand) commands.get(8);
-		assertSame(record, makeRecordViaCommand.record);
+		assertSame(record, makeRecordViaCommand.schemaRecord);
 		assertEquals("COVERAGE-CLAIMS", makeRecordViaCommand.viaSetName);
 		assertEquals(record.getViaSpecification().getDisplacementPageCount(),
 					 makeRecordViaCommand.displacementPageCount);
@@ -468,9 +469,9 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the change pointer order command
 		ChangePointerOrderCommand changePointerOrderCommand = 
 			(ChangePointerOrderCommand) commands.get(9);
-		assertSame(record, changePointerOrderCommand.record);
+		assertSame(record, changePointerOrderCommand.schemaRecord);
 		List<PointerDescription> asisDescriptions = PrefixUtil.getPointerDescriptions(record);
-		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.supply();
+		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.get();
 		assertEquals(asisDescriptions.size(), newOrder.size());
 		for (int i = 0; i < asisDescriptions.size(); i++) {
 			assertEquals(asisDescriptions.get(i).getSetName(), newOrder.get(i).getSetName());
@@ -482,9 +483,9 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// there)
 		MoveDiagramNodeCommand moveConnectionLabelCommand = (MoveDiagramNodeCommand) commands.get(10);
 		@SuppressWarnings("unchecked")
-		ISupplier<ConnectionLabel> connectionLabelSupplier = 
-			(ISupplier<ConnectionLabel>) moveConnectionLabelCommand.diagramNodeSupplier;
-		assertSame(memberRole.getConnectionLabel(), connectionLabelSupplier.supply());
+		Supplier<ConnectionLabel> connectionLabelSupplier = 
+			(Supplier<ConnectionLabel>) moveConnectionLabelCommand.diagramNodeSupplier;
+		assertSame(memberRole.getConnectionLabel(), connectionLabelSupplier.get());
 		assertEquals(memberRole.getConnectionLabel().getDiagramLocation().getX(),
 					 moveConnectionLabelCommand.x);
 		assertEquals(memberRole.getConnectionLabel().getDiagramLocation().getY(),
@@ -575,7 +576,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(3);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the remove member from set command
 		RemoveMemberFromSetCommand removeMemberFromSetCommand = 
@@ -666,7 +667,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(3);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the remove member from set command
 		RemoveMemberFromSetCommand removeMemberFromSetCommand = 
@@ -681,17 +682,17 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the set membership option command
 		SetObjectAttributeCommand setMembershipOptionCommand = 
 			(SetObjectAttributeCommand) commands.get(7);
-		ISupplier<EObject> eObjectSupplier = setMembershipOptionCommand.eObjectSupplier;
-		assertSame(memberRole, eObjectSupplier.supply());
+		Supplier<EObject> eObjectSupplier = setMembershipOptionCommand.eObjectSupplier;
+		assertSame(memberRole, eObjectSupplier.get());
 		assertSame(membershipOption, setMembershipOptionCommand.newValue);
 		
 		// check the move (source) endpoint command - the command's connection part supplier will 
 		// supply the original connection part because we didn't actually remove the record as a 
 		// member record from the set and added it again (i.e. we didn't execute the commands)
 		MoveEndpointCommand moveSourceEndpointCommand = (MoveEndpointCommand) commands.get(8);
-		ISupplier<ConnectionPart> connectionPartSupplier = 
+		Supplier<ConnectionPart> connectionPartSupplier = 
 			moveSourceEndpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(0).getSourceEndpointLocation().getX(),
 					 moveSourceEndpointCommand.newX);
 		assertEquals(memberRole.getConnectionParts().get(0).getSourceEndpointLocation().getY(),
@@ -705,7 +706,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// the SECOND existing connection part's endpoint
 		MoveEndpointCommand moveTargetEndpointCommand = (MoveEndpointCommand) commands.get(9);
 		connectionPartSupplier = moveTargetEndpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(1).getTargetEndpointLocation().getX(),
 					 moveTargetEndpointCommand.newX);
 		assertEquals(memberRole.getConnectionParts().get(1).getTargetEndpointLocation().getY(),
@@ -715,7 +716,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the first create bendpoint command
 		CreateBendpointCommand firstCreateBendpointCommand = (CreateBendpointCommand) commands.get(10);
 		connectionPartSupplier = firstCreateBendpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(0, firstCreateBendpointCommand.connectionPartIndex);
 		assertEquals(memberRole.getConnectionParts().get(0).getBendpointLocations().get(0).getX(), 
 				    firstCreateBendpointCommand.x);
@@ -725,7 +726,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the second create bendpoint command
 		CreateBendpointCommand secondCreateBendpointCommand = (CreateBendpointCommand) commands.get(11);
 		connectionPartSupplier = secondCreateBendpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(1, secondCreateBendpointCommand.connectionPartIndex);
 		assertEquals(memberRole.getConnectionParts().get(1).getBendpointLocations().get(0).getX(), 
 				     secondCreateBendpointCommand.x);
@@ -734,19 +735,19 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the create connector command
 		CreateConnectorCommand createConnectorCommand = (CreateConnectorCommand) commands.get(12);
-		ISupplier<MemberRole> memberRoleSupplier = createConnectorCommand.memberRoleSupplier;
-		assertSame(memberRole, memberRoleSupplier.supply());
+		Supplier<MemberRole> memberRoleSupplier = createConnectorCommand.memberRoleSupplier;
+		assertSame(memberRole, memberRoleSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(0).getConnector().getDiagramLocation().getX(), 
-					 createConnectorCommand.location.x);
+					 createConnectorCommand.absoluteUnscaledLocation.x);
 		assertEquals(memberRole.getConnectionParts().get(0).getConnector().getDiagramLocation().getY(), 
-				  	 createConnectorCommand.location.y);
+				  	 createConnectorCommand.absoluteUnscaledLocation.y);
 		
 		// check the change sort keys command - the command's set supplier will supply the original 
 		// set because we didn't actually remove the record as a member record from the set and 
 		// added it again (i.e. we didn't execute the commands)
 		ChangeSortKeysCommand changeSortKeysCommand = (ChangeSortKeysCommand) commands.get(13);
-		ISupplier<Set> setSupplier = changeSortKeysCommand.setSupplier;
-		assertSame(set, setSupplier.supply());
+		Supplier<Set> setSupplier = changeSortKeysCommand.setSupplier;
+		assertSame(set, setSupplier.get());
 		ISortKeyDescription[] sortKeyDescriptions2 = changeSortKeysCommand.sortKeyDescriptions;
 		assertEquals(3, sortKeyDescriptions2.length);
 		assertEquals(1, sortKeyDescriptions2[0].getElementNames().length);
@@ -774,7 +775,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record VIA command
 		MakeRecordViaCommand makeRecordViaCommand = (MakeRecordViaCommand) commands.get(14);
-		assertSame(record, makeRecordViaCommand.record);
+		assertSame(record, makeRecordViaCommand.schemaRecord);
 		assertEquals("COVERAGE-CLAIMS", makeRecordViaCommand.viaSetName);
 		assertEquals(record.getViaSpecification().getDisplacementPageCount(),
 					 makeRecordViaCommand.displacementPageCount);
@@ -784,9 +785,9 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the change pointer order command
 		ChangePointerOrderCommand changePointerOrderCommand = 
 			(ChangePointerOrderCommand) commands.get(15);
-		assertSame(record, changePointerOrderCommand.record);
+		assertSame(record, changePointerOrderCommand.schemaRecord);
 		List<PointerDescription> asisDescriptions = PrefixUtil.getPointerDescriptions(record);
-		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.supply();
+		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.get();
 		assertEquals(asisDescriptions.size(), newOrder.size());
 		for (int i = 0; i < asisDescriptions.size(); i++) {
 			assertEquals(asisDescriptions.get(i).getSetName(), newOrder.get(i).getSetName());
@@ -798,9 +799,9 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// there)
 		MoveDiagramNodeCommand moveConnectionLabelCommand = (MoveDiagramNodeCommand) commands.get(16);
 		@SuppressWarnings("unchecked")
-		ISupplier<ConnectionLabel> connectionLabelSupplier = 
-			(ISupplier<ConnectionLabel>) moveConnectionLabelCommand.diagramNodeSupplier;
-		assertSame(memberRole.getConnectionLabel(), connectionLabelSupplier.supply());
+		Supplier<ConnectionLabel> connectionLabelSupplier = 
+			(Supplier<ConnectionLabel>) moveConnectionLabelCommand.diagramNodeSupplier;
+		assertSame(memberRole.getConnectionLabel(), connectionLabelSupplier.get());
 		assertEquals(memberRole.getConnectionLabel().getDiagramLocation().getX(),
 					 moveConnectionLabelCommand.x);
 		assertEquals(memberRole.getConnectionLabel().getDiagramLocation().getY(),
@@ -871,7 +872,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the change set order to LAST command(set DEPT-EMPLOYEE)
 		ChangeSetOrderCommand changeSetOrderCommand1 = (ChangeSetOrderCommand) commands.get(1);
@@ -890,8 +891,8 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the change set order to SORTED command (set DEPT-EMPLOYEE)		
 		ChangeSetOrderCommand changeSetOrderCommand5 = (ChangeSetOrderCommand) commands.get(5);	
-		ISupplier<Set> setSupplier = changeSetOrderCommand5.setSupplier;
-		assertSame(schema.getSet("DEPT-EMPLOYEE"), setSupplier.supply());
+		Supplier<Set> setSupplier = changeSetOrderCommand5.setSupplier;
+		assertSame(schema.getSet("DEPT-EMPLOYEE"), setSupplier.get());
 		assertSame(SetOrder.SORTED, changeSetOrderCommand5.newOrder);
 		ISortKeyDescription[] sortKeyDescriptions = changeSetOrderCommand5.sortKeyDescriptions;
 		assertEquals(1, sortKeyDescriptions.length);
@@ -904,7 +905,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the change set order to SORTED command (set EMP-NAME-NDX)				
 		ChangeSetOrderCommand changeSetOrderCommand6 = (ChangeSetOrderCommand) commands.get(6);
 		 setSupplier = changeSetOrderCommand6.setSupplier;
-		assertSame(schema.getSet("EMP-NAME-NDX"), setSupplier.supply());
+		assertSame(schema.getSet("EMP-NAME-NDX"), setSupplier.get());
 		assertSame(SetOrder.SORTED, changeSetOrderCommand6.newOrder);
 		sortKeyDescriptions = changeSetOrderCommand6.sortKeyDescriptions;
 		assertEquals(1, sortKeyDescriptions.length);
@@ -917,7 +918,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the change set order to SORTED command (set OFFICE-EMPLOYEE)		
 		ChangeSetOrderCommand changeSetOrderCommand7 = (ChangeSetOrderCommand) commands.get(7);
 		 setSupplier = changeSetOrderCommand7.setSupplier;
-		assertSame(schema.getSet("OFFICE-EMPLOYEE"), setSupplier.supply());
+		assertSame(schema.getSet("OFFICE-EMPLOYEE"), setSupplier.get());
 		assertSame(SetOrder.SORTED, changeSetOrderCommand7.newOrder);
 		sortKeyDescriptions = changeSetOrderCommand7.sortKeyDescriptions;
 		assertEquals(1, sortKeyDescriptions.length);
@@ -994,7 +995,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the change set order to LAST command(set DEPT-EMPLOYEE)
 		ChangeSetOrderCommand changeSetOrderCommand1 = (ChangeSetOrderCommand) commands.get(1);
@@ -1013,10 +1014,10 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record CALC command
 		MakeRecordCalcCommand makeRecordCalcCommand = (MakeRecordCalcCommand) commands.get(5);
-		assertSame(record, makeRecordCalcCommand.record);
-		ISupplier<List<Element>> calcKeyElementSupplier = makeRecordCalcCommand.calcKeyElementSupplier;
-		assertEquals(1, calcKeyElementSupplier.supply().size());
-		assertSame(newRootElements.get(0), calcKeyElementSupplier.supply().get(0));
+		assertSame(record, makeRecordCalcCommand.schemaRecord);
+		Supplier<List<Element>> calcKeyElementSupplier = makeRecordCalcCommand.calcKeyElementSupplier;
+		assertEquals(1, calcKeyElementSupplier.get().size());
+		assertSame(newRootElements.get(0), calcKeyElementSupplier.get().get(0));
 		assertSame(DuplicatesOption.NOT_ALLOWED, makeRecordCalcCommand.duplicatesOption);
 		
 		// execute(), undo() and redo() the command
@@ -1072,7 +1073,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 	
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the delete bendpoint command
 		DeleteBendpointCommand deleteBendpointCommand = (DeleteBendpointCommand) commands.get(1);
@@ -1132,7 +1133,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the delete bendpoint command
 		DeleteBendpointCommand deleteBendpointCommand = (DeleteBendpointCommand) commands.get(1);
@@ -1145,10 +1146,10 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record CALC command
 		MakeRecordCalcCommand makeRecordCalcCommand = (MakeRecordCalcCommand) commands.get(4);
-		assertSame(record, makeRecordCalcCommand.record);
-		ISupplier<List<Element>> calcKeyElementSupplier = makeRecordCalcCommand.calcKeyElementSupplier;
-		assertEquals(1, calcKeyElementSupplier.supply().size());
-		assertSame(newRootElements.get(0), calcKeyElementSupplier.supply().get(0));
+		assertSame(record, makeRecordCalcCommand.schemaRecord);
+		Supplier<List<Element>> calcKeyElementSupplier = makeRecordCalcCommand.calcKeyElementSupplier;
+		assertEquals(1, calcKeyElementSupplier.get().size());
+		assertSame(newRootElements.get(0), calcKeyElementSupplier.get().get(0));
 		assertSame(DuplicatesOption.FIRST, makeRecordCalcCommand.duplicatesOption);
 		
 		// execute(), undo() and redo() the command
@@ -1210,7 +1211,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the delete bendpoint command
 		DeleteBendpointCommand deleteBendpointCommand = (DeleteBendpointCommand) commands.get(1);
@@ -1229,16 +1230,16 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the set membership option command
 		SetObjectAttributeCommand setMembershipOptionCommand = 
 			(SetObjectAttributeCommand) commands.get(5);
-		ISupplier<EObject> memberRoleSupplier = setMembershipOptionCommand.eObjectSupplier;
+		Supplier<EObject> memberRoleSupplier = setMembershipOptionCommand.eObjectSupplier;
 		MemberRole memberRole = (MemberRole) record.getRole("NEW-SET-1");
-		assertSame(memberRole, memberRoleSupplier.supply());
+		assertSame(memberRole, memberRoleSupplier.get());
 		assertSame(memberRole.getMembershipOption(), setMembershipOptionCommand.newValue);
 		
 		// check the first move endpoint command
 		MoveEndpointCommand moveSourceEndpointCommand = (MoveEndpointCommand) commands.get(6);
-		ISupplier<ConnectionPart> connectionPartSupplier = 
+		Supplier<ConnectionPart> connectionPartSupplier = 
 			moveSourceEndpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(0).getSourceEndpointLocation().getX(),
 					 moveSourceEndpointCommand.newX);
 		assertEquals(memberRole.getConnectionParts().get(0).getSourceEndpointLocation().getY(),
@@ -1248,7 +1249,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the second move endpoint command
 		MoveEndpointCommand moveTargetEndpointCommand = (MoveEndpointCommand) commands.get(7);
 		connectionPartSupplier = moveTargetEndpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(0).getTargetEndpointLocation().getX(),
 					 moveTargetEndpointCommand.newX);
 		assertEquals(memberRole.getConnectionParts().get(0).getTargetEndpointLocation().getY(),
@@ -1258,7 +1259,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the create bendpoint command
 		CreateBendpointCommand createBendpointCommand = (CreateBendpointCommand) commands.get(8);
 		connectionPartSupplier = createBendpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(0, createBendpointCommand.connectionPartIndex);
 		assertEquals(memberRole.getConnectionParts().get(0).getBendpointLocations().get(0).getX(), 
 				    createBendpointCommand.x);
@@ -1267,8 +1268,8 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the change sort keys command
 		ChangeSortKeysCommand changeSortKeysCommand = (ChangeSortKeysCommand) commands.get(9);
-		ISupplier<Set> setSupplier = changeSortKeysCommand.setSupplier;
-		assertSame(schema.getSet("NEW-SET-1"), setSupplier.supply());
+		Supplier<Set> setSupplier = changeSortKeysCommand.setSupplier;
+		assertSame(schema.getSet("NEW-SET-1"), setSupplier.get());
 		ISortKeyDescription[] sortKeyDescriptions2 = changeSortKeysCommand.sortKeyDescriptions;
 		assertEquals(2, sortKeyDescriptions2.length);
 		
@@ -1291,9 +1292,9 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the change pointer order command
 		ChangePointerOrderCommand changePointerOrderCommand = 
 			(ChangePointerOrderCommand) commands.get(10);
-		assertSame(record, changePointerOrderCommand.record);
+		assertSame(record, changePointerOrderCommand.schemaRecord);
 		List<PointerDescription> asisDescriptions = PrefixUtil.getPointerDescriptions(record);
-		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.supply();
+		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.get();
 		assertEquals(asisDescriptions.size(), newOrder.size());
 		for (int i = 0; i < asisDescriptions.size(); i++) {
 			assertEquals(asisDescriptions.get(i).getSetName(), newOrder.get(i).getSetName());
@@ -1305,9 +1306,9 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// there)
 		MoveDiagramNodeCommand moveConnectionLabelCommand = (MoveDiagramNodeCommand) commands.get(11);
 		@SuppressWarnings("unchecked")
-		ISupplier<ConnectionLabel> connectionLabelSupplier = 
-			(ISupplier<ConnectionLabel>) moveConnectionLabelCommand.diagramNodeSupplier;
-		assertSame(memberRole.getConnectionLabel(), connectionLabelSupplier.supply());
+		Supplier<ConnectionLabel> connectionLabelSupplier = 
+			(Supplier<ConnectionLabel>) moveConnectionLabelCommand.diagramNodeSupplier;
+		assertSame(memberRole.getConnectionLabel(), connectionLabelSupplier.get());
 		assertEquals(memberRole.getConnectionLabel().getDiagramLocation().getX(),
 					 moveConnectionLabelCommand.x);
 		assertEquals(memberRole.getConnectionLabel().getDiagramLocation().getY(),
@@ -1380,7 +1381,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record DIRECT command
 		MakeRecordDirectCommand makeRecordDirectCommand = (MakeRecordDirectCommand) commands.get(0);
-		assertSame(record, makeRecordDirectCommand.record);
+		assertSame(record, makeRecordDirectCommand.schemaRecord);
 		
 		// check the delete bendpoint command
 		DeleteBendpointCommand deleteBendpointCommand = (DeleteBendpointCommand) commands.get(1);
@@ -1399,16 +1400,16 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the set membership option command
 		SetObjectAttributeCommand setMembershipOptionCommand = 
 			(SetObjectAttributeCommand) commands.get(5);
-		ISupplier<EObject> memberRoleSupplier = setMembershipOptionCommand.eObjectSupplier;
+		Supplier<EObject> memberRoleSupplier = setMembershipOptionCommand.eObjectSupplier;
 		MemberRole memberRole = (MemberRole) record.getRole("NEW-SET-1");
-		assertSame(memberRole, memberRoleSupplier.supply());
+		assertSame(memberRole, memberRoleSupplier.get());
 		assertSame(memberRole.getMembershipOption(), setMembershipOptionCommand.newValue);
 		
 		// check the first move endpoint command
 		MoveEndpointCommand moveSourceEndpointCommand = (MoveEndpointCommand) commands.get(6);
-		ISupplier<ConnectionPart> connectionPartSupplier = 
+		Supplier<ConnectionPart> connectionPartSupplier = 
 			moveSourceEndpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(0).getSourceEndpointLocation().getX(),
 					 moveSourceEndpointCommand.newX);
 		assertEquals(memberRole.getConnectionParts().get(0).getSourceEndpointLocation().getY(),
@@ -1418,7 +1419,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the second move endpoint command
 		MoveEndpointCommand moveTargetEndpointCommand = (MoveEndpointCommand) commands.get(7);
 		connectionPartSupplier = moveTargetEndpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(memberRole.getConnectionParts().get(0).getTargetEndpointLocation().getX(),
 					 moveTargetEndpointCommand.newX);
 		assertEquals(memberRole.getConnectionParts().get(0).getTargetEndpointLocation().getY(),
@@ -1428,7 +1429,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// check the create bendpoint command
 		CreateBendpointCommand createBendpointCommand = (CreateBendpointCommand) commands.get(8);
 		connectionPartSupplier = createBendpointCommand.connectionPartSupplier;
-		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.supply());
+		assertSame(memberRole.getConnectionParts().get(0), connectionPartSupplier.get());
 		assertEquals(0, createBendpointCommand.connectionPartIndex);
 		assertEquals(memberRole.getConnectionParts().get(0).getBendpointLocations().get(0).getX(), 
 				    createBendpointCommand.x);
@@ -1437,8 +1438,8 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the change sort keys command
 		ChangeSortKeysCommand changeSortKeysCommand = (ChangeSortKeysCommand) commands.get(9);
-		ISupplier<Set> setSupplier = changeSortKeysCommand.setSupplier;
-		assertSame(schema.getSet("NEW-SET-1"), setSupplier.supply());
+		Supplier<Set> setSupplier = changeSortKeysCommand.setSupplier;
+		assertSame(schema.getSet("NEW-SET-1"), setSupplier.get());
 		ISortKeyDescription[] sortKeyDescriptions2 = changeSortKeysCommand.sortKeyDescriptions;
 		assertEquals(2, sortKeyDescriptions2.length);
 		
@@ -1460,18 +1461,18 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		// check the make record CALC command
 		MakeRecordCalcCommand makeRecordCalcCommand = (MakeRecordCalcCommand) commands.get(10);
-		assertSame(record, makeRecordCalcCommand.record);
-		ISupplier<List<Element>> calcKeyElementSupplier = makeRecordCalcCommand.calcKeyElementSupplier;
-		assertEquals(1, calcKeyElementSupplier.supply().size());
-		assertSame(secondElement, calcKeyElementSupplier.supply().get(0));
+		assertSame(record, makeRecordCalcCommand.schemaRecord);
+		Supplier<List<Element>> calcKeyElementSupplier = makeRecordCalcCommand.calcKeyElementSupplier;
+		assertEquals(1, calcKeyElementSupplier.get().size());
+		assertSame(secondElement, calcKeyElementSupplier.get().get(0));
 		assertSame(DuplicatesOption.FIRST, makeRecordCalcCommand.duplicatesOption);
 		
 		// check the change pointer order command
 		ChangePointerOrderCommand changePointerOrderCommand = 
 			(ChangePointerOrderCommand) commands.get(11);
-		assertSame(record, changePointerOrderCommand.record);
+		assertSame(record, changePointerOrderCommand.schemaRecord);
 		List<PointerDescription> asisDescriptions = PrefixUtil.getPointerDescriptions(record);
-		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.supply();
+		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.get();
 		assertEquals(asisDescriptions.size(), newOrder.size());
 		for (int i = 0; i < asisDescriptions.size(); i++) {
 			assertEquals(asisDescriptions.get(i).getSetName(), newOrder.get(i).getSetName());
@@ -1483,9 +1484,9 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		// there)
 		MoveDiagramNodeCommand moveConnectionLabelCommand = (MoveDiagramNodeCommand) commands.get(12);
 		@SuppressWarnings("unchecked")
-		ISupplier<ConnectionLabel> connectionLabelSupplier = 
-			(ISupplier<ConnectionLabel>) moveConnectionLabelCommand.diagramNodeSupplier;
-		assertSame(memberRole.getConnectionLabel(), connectionLabelSupplier.supply());
+		Supplier<ConnectionLabel> connectionLabelSupplier = 
+			(Supplier<ConnectionLabel>) moveConnectionLabelCommand.diagramNodeSupplier;
+		assertSame(memberRole.getConnectionLabel(), connectionLabelSupplier.get());
 		assertEquals(memberRole.getConnectionLabel().getDiagramLocation().getX(),
 					 moveConnectionLabelCommand.x);
 		assertEquals(memberRole.getConnectionLabel().getDiagramLocation().getY(),

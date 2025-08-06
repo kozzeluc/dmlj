@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.schema
 
+import org.eclipse.core.runtime.AssertionFailedException
 import org.lh.dmlj.schema.Procedure
 import org.lh.dmlj.schema.SchemaFactory
 
@@ -151,8 +152,8 @@ public class CreateProcedureCommandSpec extends Specification {
 		command.execute()
 		
 		then: "an assertion error is thrown"
-		def e = thrown(AssertionError)
-		e.message == 'duplicate procedure: TESTPROC (schema=TESTSCHM). Expression: schema.getProcedure(procedureName)'
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'duplicate procedure: TESTPROC (schema=TESTSCHM)'
 	}
 	
 	def "Procedure uniqueness is enforced when redoing the command"() {
@@ -179,8 +180,8 @@ public class CreateProcedureCommandSpec extends Specification {
 		command.redo()		
 		
 		then: "an assertion error is thrown"
-		def e = thrown(AssertionError)
-		e.message == 'duplicate procedure: TESTPROC (schema=TESTSCHM). Expression: schema.getProcedure(procedureName)'
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'duplicate procedure: TESTPROC (schema=TESTSCHM)'
 	}
 	
 	def "The procedure created by the command must be the last one in the list when undoing the command"() {
@@ -202,8 +203,8 @@ public class CreateProcedureCommandSpec extends Specification {
 		command.undo()
 		
 		then: "an assertion error is thrown"
-		def e = thrown(AssertionError)
-		e.message.startsWith('not the last procedure in schema: TESTPROC (TESTSCHM).')
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'not the last procedure in schema: TESTPROC (schema=TESTSCHM)'
 	}
 	
 }

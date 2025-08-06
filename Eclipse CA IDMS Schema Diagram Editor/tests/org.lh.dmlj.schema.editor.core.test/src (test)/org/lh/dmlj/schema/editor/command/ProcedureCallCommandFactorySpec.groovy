@@ -357,7 +357,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		
 		and: "the second command creates the new procedure call specification"
 		CreateRecordProcedureCallSpecificationCommand command2 = cc.commands[1]
-		command2.record == record
+		command2.schemaRecord == record
 		command2.callStatementArgument == 'IDMSCOMP AFTER'
 		
 		and: "the compound command's context is set up correctly"
@@ -387,7 +387,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		
 		and: "the second command creates the new procedure call specification"
 		CreateRecordProcedureCallSpecificationCommand command2 = cc.commands[1]
-		command2.record == record
+		command2.schemaRecord == record
 		command2.callStatementArgument == 'TESTPROC BEFORE'
 		
 		and: "the compound command's context is set up correctly"
@@ -463,7 +463,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		
 		and: "the fourth command creates the new procedure call specification"
 		CreateRecordProcedureCallSpecificationCommand command4 = cc.commands[3]
-		command4.record == record
+		command4.schemaRecord == record
 		command4.callStatementArgument == 'IDMSDCOM AFTER'
 		
 		and: "the compound command's context is set up correctly"
@@ -505,7 +505,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		
 		and: "the second command creates the new procedure call specification"
 		CreateRecordProcedureCallSpecificationCommand command2 = cc.commands[1]
-		command2.record == record1
+		command2.schemaRecord == record1
 		command2.callStatementArgument == 'IDMSDCOM BEFORE'
 			
 		and: "the compound command's context is set up correctly"
@@ -616,15 +616,15 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		cc.commands[15] instanceof CreateRecordProcedureCallSpecificationCommand
 		cc.commands[16] instanceof CreateRecordProcedureCallSpecificationCommand
 		cc.commands[17] instanceof CreateRecordProcedureCallSpecificationCommand
-		cc.commands[13].record == record
+		cc.commands[13].schemaRecord == record
 		cc.commands[13].callStatementArgument == 'KEEPREF1 BEFORE'
-		cc.commands[14].record == record
+		cc.commands[14].schemaRecord == record
 		cc.commands[14].callStatementArgument == 'KEEPREF2 AFTER'
-		cc.commands[15].record == record
+		cc.commands[15].schemaRecord == record
 		cc.commands[15].callStatementArgument == 'NEW1 BEFORE'
-		cc.commands[16].record == record
+		cc.commands[16].schemaRecord == record
 		cc.commands[16].callStatementArgument == 'NEW1 AFTER'
-		cc.commands[17].record == record
+		cc.commands[17].schemaRecord == record
 		cc.commands[17].callStatementArgument == 'NEW2 BEFORE'
 		
 		and: "the compound command's context is set up correctly"

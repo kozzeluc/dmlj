@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -239,8 +239,7 @@ public class SchemaEditorRulerProvider
 	private boolean isReadOnlyMode() {
 		return modelChangeProvider == null;
 	}
-	
-	@SuppressWarnings("unchecked")
+		
 	private void notifyGuideMoved(Guide guide) {
 		if (guide == null) {
 			return;
@@ -253,8 +252,7 @@ public class SchemaEditorRulerProvider
 			rulerChangeListener.notifyGuideMoved(guide);
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
+		
 	private void notifyGuideReparented(Guide guide) {
 		if (guide == null) {
 			return;

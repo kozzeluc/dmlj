@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -82,7 +82,7 @@ public class DeleteSetOrIndexCommandCreationAssistantTest {
 		} else if (command instanceof MakeRecordDirectCommand) {
 			assertSame(LocationMode.VIA, memberRole.getRecord().getLocationMode());
 			MakeRecordDirectCommand cCommand = (MakeRecordDirectCommand) command;
-			assertSame(memberRole.getRecord(), cCommand.record);
+			assertSame(memberRole.getRecord(), cCommand.schemaRecord);
 		} else if (command instanceof RemoveMemberFromSetCommand) {
 			RemoveMemberFromSetCommand cCommand = (RemoveMemberFromSetCommand) command;
 			assertSame(memberRole, cCommand.memberRole);

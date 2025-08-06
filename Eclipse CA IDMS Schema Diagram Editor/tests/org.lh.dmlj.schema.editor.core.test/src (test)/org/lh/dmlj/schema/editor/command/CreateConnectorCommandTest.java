@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
@@ -1176,9 +1177,9 @@ public class CreateConnectorCommandTest {
 		Schema schema = TestTools.getSchema("testdata/BendpointsAndConnectors.schema");
 		Set set = schema.getSet("DEPT-EMPLOYEE");
 		final MemberRole memberRole = set.getMembers().get(0);
-		ISupplier<MemberRole> memberRoleSupplier = new ISupplier<MemberRole>() {			
+		Supplier<MemberRole> memberRoleSupplier = new Supplier<MemberRole>() {			
 			@Override
-			public MemberRole supply() {
+			public MemberRole get() {
 				return memberRole;
 			}
 		};

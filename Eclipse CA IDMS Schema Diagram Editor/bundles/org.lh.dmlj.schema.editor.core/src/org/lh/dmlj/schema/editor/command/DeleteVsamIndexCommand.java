@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,13 +23,10 @@ import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
 
 public class DeleteVsamIndexCommand extends ModelChangeBasicCommand {	
+	private final VsamIndex vsamIndex;
 	
 	private Schema schema;
-	
-	private VsamIndex vsamIndex;
-	
 	private RemovableMemberRole memberRoleToRemove;	
-	
 	private int setInSchemaIndex;
 	
 	public DeleteVsamIndexCommand(VsamIndex vsamIndex) {
@@ -58,27 +55,25 @@ public class DeleteVsamIndexCommand extends ModelChangeBasicCommand {
 	}
 	
 	private void rememberMembershipData() {		
-		memberRoleToRemove = 
-			new RemovableMemberRole(vsamIndex.getMemberRole(), 
-									Arrays.asList(vsamIndex.getDiagramLocation()));				
+		memberRoleToRemove = new RemovableMemberRole(vsamIndex.getMemberRole(), Arrays.asList(vsamIndex.getDiagramLocation()));				
 	}
-			
-	private void deleteVsamIndex() {						
-		removeMembershipData();
-		removeSet();					
-	}
-
-	private void removeMembershipData() {
-		memberRoleToRemove.remove();
-	}	
-	
-	private void removeSet() {
-		schema.getSets().remove(vsamIndex.getSet());
-	}	
 	
 	@Override
 	public void redo() {
 		deleteVsamIndex();
+	}
+	
+	private void deleteVsamIndex() {						
+		removeMembershipData();
+		removeSet();					
+	}
+	
+	private void removeMembershipData() {
+		memberRoleToRemove.remove();
+	}
+	
+	private void removeSet() {
+		schema.getSets().remove(vsamIndex.getSet());
 	}
 
 	@Override

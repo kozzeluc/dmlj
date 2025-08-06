@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,10 +19,8 @@ package org.lh.dmlj.schema.editor.command;
 import org.lh.dmlj.schema.Guide;
 
 public class MoveGuideCommand extends ModelChangeBasicCommand {
-
-	private Guide guide; 
-	
-	private int positionDelta;
+	private final Guide guide;
+	private final int positionDelta;
 	
 	public MoveGuideCommand(Guide guide, int positionDelta) {
 		super("Move Guide");
@@ -38,6 +36,6 @@ public class MoveGuideCommand extends ModelChangeBasicCommand {
 	@Override
 	public void undo() {		
 		guide.setPosition(guide.getPosition() - positionDelta);		
-	}	
+	}
 	
 }

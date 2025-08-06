@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,89 +17,63 @@
 package org.lh.dmlj.schema.editor.command;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.stream.Stream;
 
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.AreaProcedureCallSpecification;
 import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.ProcedureCallSpecification;
 import org.lh.dmlj.schema.RecordProcedureCallSpecification;
-import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
-public abstract  class DeleteRecordCommandCreationAssistant {
+public class DeleteRecordCommandCreationAssistant {
 
-	protected static boolean canDeleteRecord(SchemaRecord record) {
+	static boolean canDeleteRecord(SchemaRecord schemaRecord) {
 		// for now, only allow a record to be deleted when it does NOT participate in any set or index
-		return record.getOwnerRoles().isEmpty() && record.getMemberRoles().isEmpty();
+		return schemaRecord.getOwnerRoles().isEmpty() && schemaRecord.getMemberRoles().isEmpty();
 	}
 	
-	public static IModelChangeCommand getCommand(SchemaRecord record) {
-		
-		if (!canDeleteRecord(record)) {
+	public static IModelChangeCommand getCommand(SchemaRecord schemaRecord) {
+		if (!canDeleteRecord(schemaRecord)) {
 			return null;
 		}
 		
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_RECORD);
-		context.putContextData(record);
+		var context = new ModelChangeContext(ModelChangeType.DELETE_RECORD);
+		context.putContextData(schemaRecord);
 		
-		List<IModelChangeCommand> commands = new ArrayList<>();
+		var commands = new ArrayList<IModelChangeCommand>();
 		
-		for (RecordProcedureCallSpecification callSpec : record.getProcedures()) {
-			IModelChangeCommand removeCallSpecCommand =
-				new RemoveRecordProcedureCallSpecificationCommand(callSpec);
-			commands.add(removeCallSpecCommand);
-		}
-		
-		DeleteRecordCommand deleteRecordCommand = new DeleteRecordCommand(record);
+		schemaRecord.getProcedures().stream()
+				.map(RemoveRecordProcedureCallSpecificationCommand::new)
+				.forEach(commands::add);
+				
+		var deleteRecordCommand = new DeleteRecordCommand(schemaRecord);
 		commands.add(deleteRecordCommand);
 		
-		SchemaArea area = record.getAreaSpecification().getArea(); 
-		boolean areaIsObsolete = area.getRecords().size() == 1;
+		var area = schemaRecord.getAreaSpecification().getArea(); 
+		var areaIsObsolete = area.getRecords().size() == 1;
 		if (areaIsObsolete) {
-			
-			for (AreaProcedureCallSpecification callSpec : area.getProcedures()) {
-				IModelChangeCommand removeCallSpecCommand =
-					new RemoveAreaProcedureCallSpecificationCommand(callSpec);
-				commands.add(removeCallSpecCommand);
-			}
-			
-			IModelChangeCommand deleteAreaCommand = new DeleteAreaCommand(area);
-			commands.add(deleteAreaCommand);
+			area.getProcedures().stream()
+					.map(RemoveAreaProcedureCallSpecificationCommand::new)
+					.forEach(commands::add);
+			commands.add(new DeleteAreaCommand(area));
 		}
-		
-		Set<Procedure> procedures = new HashSet<>();
-		for (ProcedureCallSpecification callSpec : record.getProcedures()) {
-			procedures.add(callSpec.getProcedure());
-		}		
-		for (ProcedureCallSpecification callSpec : area.getProcedures()) {
-			procedures.add(callSpec.getProcedure());
-		}	
-		List<Procedure> procedureList = new ArrayList<>(procedures);
-		Collections.sort(procedureList, new Comparator<Procedure>() {
-			@Override
-			public int compare(Procedure procedure1, Procedure procedure2) {
-				return procedure1.getName().compareTo(procedure2.getName());
-			}});
-		for (Procedure procedure : procedureList) {
-			// please note that the order in which obsolete procedures are removed is random
-			if (isProcedureObsolete(procedure, record, areaIsObsolete)) {
-				IModelChangeCommand deleteProcedureCommand = new DeleteProcedureCommand(procedure);
-				commands.add(deleteProcedureCommand);
-			}
-		}
+				
+		// the order in which obsolete procedures are removed is random
+		Stream.concat(schemaRecord.getProcedures().stream(), area.getProcedures().stream())
+				.map(ProcedureCallSpecification::getProcedure)
+				.filter(procedure -> isProcedureObsolete(procedure, schemaRecord, areaIsObsolete))
+				.sorted(Comparator.comparing(Procedure::getName))
+				.map(DeleteProcedureCommand::new)
+				.forEach(commands::add);
 		
 		if (commands.size() > 1) {
-			ModelChangeCompoundCommand compoundCommand = 
-				new ModelChangeCompoundCommand(deleteRecordCommand.getLabel());
+			var compoundCommand = new ModelChangeCompoundCommand(deleteRecordCommand.getLabel());
 			compoundCommand.setContext(context);
-			for (IModelChangeCommand command : commands) {
+			for (var command : commands) {
 				compoundCommand.add((Command) command);
 			}
 			return compoundCommand;
@@ -109,26 +83,24 @@ public abstract  class DeleteRecordCommandCreationAssistant {
 		}
 	}
 
-	protected static boolean isProcedureObsolete(Procedure procedure, SchemaRecord obsoleteRecord, 
-											     boolean areaIsObsoleteAsWell) {
-		
-		SchemaArea obsoleteRecordArea = obsoleteRecord.getAreaSpecification().getArea();
-		for (ProcedureCallSpecification callSpec : procedure.getCallSpecifications()) {
-			if (callSpec instanceof AreaProcedureCallSpecification) {
-				AreaProcedureCallSpecification areaCallSpec = 
-					(AreaProcedureCallSpecification) callSpec;
+	protected static boolean isProcedureObsolete(Procedure procedure, SchemaRecord obsoleteRecord, boolean areaIsObsoleteAsWell) {
+		var obsoleteRecordArea = obsoleteRecord.getAreaSpecification().getArea();
+		for (var callSpec : procedure.getCallSpecifications()) {
+			if (callSpec instanceof AreaProcedureCallSpecification areaCallSpec) {
 				if (areaCallSpec.getArea() != obsoleteRecordArea || !areaIsObsoleteAsWell) {
 					return false;
 				}
 			} else {
-				RecordProcedureCallSpecification recordCallSpec = 
-					(RecordProcedureCallSpecification) callSpec;
+				var recordCallSpec = (RecordProcedureCallSpecification) callSpec;
 				if (recordCallSpec.getRecord() != obsoleteRecord) {
 					return false;
 				}
 			}
 		}
 		return true;
+	}
+	
+	private DeleteRecordCommandCreationAssistant() {
 	}
 	
 }

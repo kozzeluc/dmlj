@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,13 +23,11 @@ import org.lh.dmlj.schema.Schema;
 
 
 public class SetZoomLevelCommand extends ModelChangeBasicCommand {
-		
-	private DiagramData diagramData; 
+	private final DiagramData diagramData;
+	private final double newZoomLevel;
+	private final boolean canUndo;
 	
 	private double oldZoomLevel;
-	private double newZoomLevel;	
-	
-	private boolean canUndo = true;	
 	
 	public SetZoomLevelCommand(Schema schema, double zoomLevel) {
 		this(schema, zoomLevel, true);
@@ -56,7 +54,7 @@ public class SetZoomLevelCommand extends ModelChangeBasicCommand {
 	@Override
 	public void redo() {
 		if (!canUndo) {
-			throw new RuntimeException("cannot redo (canUndo == false)");
+			throw new IllegalStateException("cannot redo (canUndo == false)");
 		}		
 		diagramData.setZoomLevel(newZoomLevel);
 	}
@@ -64,7 +62,7 @@ public class SetZoomLevelCommand extends ModelChangeBasicCommand {
 	@Override
 	public void undo() {
 		if (!canUndo) {
-			throw new RuntimeException("cannot undo");
+			throw new IllegalStateException("cannot undo");
 		}
 		diagramData.setZoomLevel(oldZoomLevel);
 	}

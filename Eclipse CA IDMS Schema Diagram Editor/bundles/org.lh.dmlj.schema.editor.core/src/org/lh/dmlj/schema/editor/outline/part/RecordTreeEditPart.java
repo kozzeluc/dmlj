@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -425,8 +425,7 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 	private boolean isOwnerOf(Set set) {
 		return set.getOwner().getRecord() == getModel();
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	protected void registerModel() {
 		// different edit parts exist for the same record; make sure that selecting a record in the

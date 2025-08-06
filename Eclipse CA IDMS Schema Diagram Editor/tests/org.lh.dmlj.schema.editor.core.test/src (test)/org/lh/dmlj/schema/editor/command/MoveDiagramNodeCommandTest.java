@@ -18,6 +18,8 @@ package org.lh.dmlj.schema.editor.command;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.function.Supplier;
+
 import org.junit.Test;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramLocation;
@@ -69,9 +71,9 @@ public class MoveDiagramNodeCommandTest {
 		diagramLabel.setDiagramLocation(diagramLocation);
 		
 		// create the diagram node supplier
-		ISupplier<DiagramLabel> diagramLabelSupplier = new ISupplier<DiagramLabel>() {
+		Supplier<DiagramLabel> diagramLabelSupplier = new Supplier<DiagramLabel>() {
 			@Override
-			public DiagramLabel supply() {
+			public DiagramLabel get() {
 				return diagramLabel;
 			}		
 		};

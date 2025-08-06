@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,32 +16,28 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import java.util.function.Supplier;
+
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 
 public class CreateBendpointCommand extends AbstractBendpointCommand {
-	
 	private DiagramLocation bendpoint;
-	protected ISupplier<ConnectionPart> connectionPartSupplier;	
+	protected Supplier<ConnectionPart> connectionPartSupplier;	
 	
 	public CreateBendpointCommand(ConnectionPart connectionPart, int index, int x, int y) {
 		super(connectionPart, index, x, y);
-		this.connectionPart = connectionPart;
 	}
 	
-	public CreateBendpointCommand(ISupplier<ConnectionPart> connectionPartSupplier, int index, 
-								  int x, int y) {
-		
-		super(null, index, x, y); // we'll set the connectionPart and super.connectionPart when 
-								  // execute() is invoked
+	public CreateBendpointCommand(Supplier<ConnectionPart> connectionPartSupplier, int index, int x, int y) {		
+		super(null, index, x, y);
 		this.connectionPartSupplier = connectionPartSupplier;
 	}	
 	
 	@Override
 	public void execute() {
 		if (connectionPartSupplier != null) {
-			super.connectionPart = connectionPartSupplier.supply();
-			connectionPart = super.connectionPart;
+			connectionPart = connectionPartSupplier.get();
 		}
 		bendpoint = insertBendpoint(connectionPartIndex, x, y);		
 	}

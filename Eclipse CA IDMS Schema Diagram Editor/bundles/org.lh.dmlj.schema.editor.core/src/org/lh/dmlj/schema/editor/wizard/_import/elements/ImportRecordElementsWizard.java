@@ -20,8 +20,6 @@ import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.ELEMEN
 import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.ELEMENT_IMPORT_TOOLS;
 import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.EXTENSION_POINT_IMPORT_RECORD_ELEMENTS_ID;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -46,13 +44,10 @@ import org.lh.dmlj.schema.editor.dsl.builder.model.RecordModelBuilder;
 import org.lh.dmlj.schema.editor.extension.DataEntryPageExtensionElement;
 import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
 import org.lh.dmlj.schema.editor.extension.RecordElementsImportToolExtensionElement;
-import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryPageController;
 import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool;
 import org.lh.dmlj.schema.editor.wizard._import.ImportWizardPage;
-import org.lh.dmlj.schema.editor.wizard._import.schema.Context;
-import org.lh.dmlj.schema.editor.wizard._import.schema.Controller;
 import org.lh.dmlj.schema.editor.wizard._import.schema.DataEntryContext;
 
 public class ImportRecordElementsWizard extends Wizard implements IImportWizard {
@@ -118,7 +113,6 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	}
 	
 	private void createAndInjectController(final ImportWizardPage wizardPage) {
-		// create a controller and inject it in the data entry page's @Controller annotated field
 		IDataEntryPageController controller = 
 			new IDataEntryPageController() {
 				@Override
@@ -130,30 +124,25 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 					wizardPage.setPageComplete(pageComplete);
 				}						
 			};
-		inject(AbstractDataEntryPage.class, wizardPage.getDataEntryPage(), Controller.class, 
-			   controller);		
+		wizardPage.getDataEntryPage().setController(controller);
 	}
 
 	private ImportWizardPage createImportWizardPage(DataEntryPageExtensionElement configElement) {
-
 		// create the data entry page
-		AbstractDataEntryPage dataEntryPage = 
-		configElement.createDataEntryPage();		
+		var dataEntryPage = configElement.createDataEntryPage();		
 		
 		// wrap the data entry page in a wizard page
-		ImportWizardPage importWizardPage = 
+		var importWizardPage = 
 			new ImportWizardPage(dataEntryPage, configElement.getName(), 
 								 "Elements for Record " + record.getName(), configElement.getMessage());
 		
-		// inject the context in the data entry page's @Context annotated field 
-		injectContext(dataEntryPage);		
+		dataEntryPage.setContext(context);
 		
 		// create a controller and inject it in the data entry page's @Controller annotated field
 		createAndInjectController(importWizardPage);
 		
 		// return the import wizard page
 		return importWizardPage;
-		
 	}
 
 	private void disposeImportTool() {
@@ -243,26 +232,6 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 														 ELEMENT_IMPORT_TOOL, 
 														 RecordElementsImportToolExtensionElement.class);
 		initOK = true;
-	}
-	
-	private <T extends Annotation> void inject(Class<?> annotatedClass, Object target,
-			   								   Class<T> annotationClass, Object value) {
-
-		for (Field field : annotatedClass.getDeclaredFields()) {
-			if (field.getAnnotation(annotationClass) != null) {
-				field.setAccessible(true);
-				try {
-					field.set(target, value);					
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
-			}						
-		}		
-	}
-
-	private void injectContext(AbstractDataEntryPage dataEntryPage) {
-		// inject the context in the data entry page's @Context annotated field
-		inject(AbstractDataEntryPage.class, dataEntryPage, Context.class, context);		
 	}
 
 	@Override

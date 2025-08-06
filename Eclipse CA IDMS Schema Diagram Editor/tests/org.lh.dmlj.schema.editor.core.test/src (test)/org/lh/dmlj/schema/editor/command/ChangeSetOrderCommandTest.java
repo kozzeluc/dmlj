@@ -16,10 +16,17 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.lh.dmlj.schema.editor.testtool.TestTools.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.function.Supplier;
 
 import org.eclipse.gef.commands.Command;
 import org.junit.Before;
@@ -485,9 +492,9 @@ public class ChangeSetOrderCommandTest {
 		when(sortKeyDescription.getDuplicatesOption()).thenReturn(DuplicatesOption.NOT_ALLOWED);
 		when(sortKeyDescription.isNaturalSequence()).thenReturn(true);
 		when(sortKeyDescription.isCompressed()).thenReturn(false);
-		ISupplier<Set> setSupplier = new ISupplier<Set>() {
+		Supplier<Set> setSupplier = new Supplier<Set>() {
 			@Override
-			public Set supply() {
+			public Set get() {
 				return set;
 			}
 		};

@@ -20,6 +20,7 @@ import static org.lh.dmlj.schema.ProcedureCallTime.AFTER
 import static org.lh.dmlj.schema.ProcedureCallTime.BEFORE
 import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.area
 
+import org.eclipse.core.runtime.AssertionFailedException
 import org.lh.dmlj.schema.AreaProcedureCallFunction
 import org.lh.dmlj.schema.AreaProcedureCallSpecification
 import org.lh.dmlj.schema.Procedure
@@ -157,9 +158,9 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 		when: "executing the command"
 		command.execute()
 		
-		then: "an AssertionError is thrown"
-		def e = thrown(AssertionError)
-		e.message.startsWith 'procedure not found: TESTPROC'
+		then: "an AssertionFailedException is thrown"
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'procedure not found: TESTPROC'
 	}
 	
 	def "The procedure specified must exist when redoing the command"() {
@@ -180,9 +181,9 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 		when: "redoing the command"
 		command.redo()
 		
-		then: "an AssertionError is thrown"
-		def e = thrown(AssertionError)
-		e.message.startsWith 'procedure not found: TESTPROC'
+		then: "an AssertionFailedException is thrown"
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'procedure not found: TESTPROC'
 	}
 	
 	def "The procedure call spec created by the command must be the last one for the procedure when undoing the command"() {
@@ -206,9 +207,9 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 		when: "undoing the command"
 		command.undo()
 		
-		then: "an AssertionError is thrown"
-		def e = thrown(AssertionError)
-		e.message.startsWith 'callSpec not the last for area'
+		then: "an AssertionFailedException is thrown"
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'callSpec not the last for area'
 	}
 	
 	def "The procedure call spec created by the command must be the last one for the area when undoing the command"() {
@@ -231,9 +232,9 @@ public class CreateAreaProcedureCallSpecificationCommandSpec extends Specificati
 		when: "undoing the command"
 		command.undo()
 		
-		then: "an AssertionError is thrown"
-		def e = thrown(AssertionError)
-		e.message.startsWith 'callSpec not the last for area'
+		then: "an AssertionFailedException is thrown"
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'callSpec not the last for area'
 	}
 	
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Luc Hermans
+ * Copyright (C) 2025 Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,7 +19,6 @@ package org.lh.dmlj.schema.editor.importtool.elements;
 import java.util.Collection;
 import java.util.Properties;
 
-import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollectorRegistry;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
 public interface IRecordElementsImportTool {

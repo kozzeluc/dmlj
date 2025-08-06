@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,28 +22,22 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.VsamType;
 
 /**
- * A command that will change the record's location mode to VSAM.  This command can only be used 
- * for any VSAM CALC record or a DIRECT record that does NOT participate in any set and will 
- * definitely run into trouble when executed for any other kind of record.
+ * A command that will change the record's location mode to VSAM.  This command can only be used for any VSAM
+ * CALC record or a DIRECT record that does NOT participate in any set and will definitely run into trouble when
+ * executed for any other kind of record.
  */
 public class MakeRecordVsamCommand extends AbstractChangeLocationModeCommand {
-	
-	private SchemaRecord record;
 	private VsamType vsamType;
 	
-	public MakeRecordVsamCommand(SchemaRecord record) {
-		super("Set 'Location mode' to 'VSAM'", record);
-		this.record = record;
+	public MakeRecordVsamCommand(SchemaRecord schemaRecord) {
+		super("Set 'Location mode' to 'VSAM'", schemaRecord);
 	}
 	
 	@Override
 	public void execute() {
-		
-		Assert.isTrue(record.isDirect() || record.isVsamCalc(), 
-					  "record should be DIRECT or VSAM CALC");
-		Assert.isTrue(record.isVsamCalc() || 
-					  record.getOwnerRoles().isEmpty() && record.getMemberRoles().isEmpty(), 
-					  "cannot make record VSAM because it participates in 1 or more non-VSAM sets");
+		Assert.isTrue(schemaRecord.isDirect() || schemaRecord.isVsamCalc(), "record should be DIRECT or VSAM CALC");
+		Assert.isTrue(schemaRecord.isVsamCalc() || schemaRecord.getOwnerRoles().isEmpty() && schemaRecord.getMemberRoles().isEmpty(), 
+				"cannot make record VSAM because it participates in 1 or more non-VSAM sets");
 		
 		stash(0);
 		redo();
@@ -51,8 +45,7 @@ public class MakeRecordVsamCommand extends AbstractChangeLocationModeCommand {
 	
 	@Override
 	public void redo() {
-		
-		record.setLocationMode(LocationMode.VSAM);
+		schemaRecord.setLocationMode(LocationMode.VSAM);
 		
 		if (getStashedLocationMode(0) == LocationMode.VSAM_CALC) {
 			removeCalcKey();
@@ -61,18 +54,16 @@ public class MakeRecordVsamCommand extends AbstractChangeLocationModeCommand {
 		if (getStashedLocationMode(0) == LocationMode.DIRECT) {
 			if (vsamType == null) {
 				createVsamType();
-				vsamType = record.getVsamType();
+				vsamType = schemaRecord.getVsamType();
 			} else {
-				// reuse the VsamType instance we created earlier but removed from the record when
-				// undoing this command
-				record.setVsamType(vsamType);
+				// reuse the VsamType instance we created earlier but removed from the record when undoing this command
+				schemaRecord.setVsamType(vsamType);
 			}
 		}
 	}
 
 	@Override
 	public void undo() {
-		
 		if (getStashedLocationMode(0) == LocationMode.DIRECT) {
 			removeVsamType();
 		}
@@ -81,6 +72,6 @@ public class MakeRecordVsamCommand extends AbstractChangeLocationModeCommand {
 			restoreCalcKey(0);
 		} 
 		
-		record.setLocationMode(getStashedLocationMode(0));
+		schemaRecord.setLocationMode(getStashedLocationMode(0));
 	}
 }

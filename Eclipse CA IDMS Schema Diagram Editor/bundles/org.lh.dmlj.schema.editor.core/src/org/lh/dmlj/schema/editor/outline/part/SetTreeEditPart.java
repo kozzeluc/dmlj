@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -243,8 +243,7 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 	private boolean isMemberofModelSet(SchemaRecord record) {
 		return getMemberRole(record) != null;
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	protected void registerModel() {
 		// different edit parts exist for the same set; make sure that selecting a set in the
