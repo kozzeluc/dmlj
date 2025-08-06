@@ -19,6 +19,7 @@ package org.lh.dmlj.schema.editor.command;
 import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.area
 import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.record
 
+import org.eclipse.core.runtime.AssertionFailedException
 import org.lh.dmlj.schema.AreaProcedureCallSpecification
 import org.lh.dmlj.schema.Procedure
 import org.lh.dmlj.schema.RecordProcedureCallSpecification
@@ -223,9 +224,9 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		when: "creating the command for changing the procedure call function"
 		factory.createCommand(area, [ ] )
 		
-		then: "an AssertionError is thrown"
-		def e = thrown(AssertionError)
-		e.message.startsWith 'nothing to do'
+		then: "an AssertionFailedException is thrown"
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'nothing to do'
 	}
 	
 	def "Full mix for an area"() {
@@ -523,9 +524,9 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		when: "creating the command for changing the procedure call function"
 		factory.createCommand(record, [ ] )
 		
-		then: "an AssertionError is thrown"
-		def e = thrown(AssertionError)
-		e.message.startsWith 'nothing to do'
+		then: "an AssertionFailedException is thrown"
+		def e = thrown(AssertionFailedException)
+		e.message.contains 'nothing to do'
 	}
 	
 	def "Full mix for a record"() {
