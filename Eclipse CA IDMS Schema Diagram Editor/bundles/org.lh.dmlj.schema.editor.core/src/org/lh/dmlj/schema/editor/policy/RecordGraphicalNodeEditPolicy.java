@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -44,7 +44,7 @@ import org.lh.dmlj.schema.editor.command.AddMemberToSetCommand;
 import org.lh.dmlj.schema.editor.command.CreateSetCommand;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.MoveEndpointCommand;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.common.Tools;
@@ -116,8 +116,8 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 				command.setMemberRecord(record);
 				// create the model change context and pass it to the command
 				ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_MEMBER_TO_SET);
-				context.getContextData().put(IContextDataKeys.SET_NAME, set.getName());
-				context.getContextData().put(IContextDataKeys.RECORD_NAME, record.getName());
+				context.getContextData().put(ContextDataKeys.SET_NAME, set.getName());
+				context.getContextData().put(ContextDataKeys.RECORD_NAME, record.getName());
 				command.setContext(context);
 				return command;
 			}
@@ -214,7 +214,7 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 														    request.getLocation(), 
 														    zoomLevel);
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_ENDPOINT);
-			context.putContextData(connectionPart);
+			context.putContextData(connectionPart, ModelChangeContext.connectionPartContextDataAssembler);
 			IModelChangeCommand command = 
 				new MoveEndpointCommand(connectionPart, location.x, location.y, true);
 			command.setContext(context);
@@ -252,7 +252,7 @@ public class RecordGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 															request.getLocation(), 
 															zoomLevel);
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_ENDPOINT);
-			context.putContextData(connectionPart);
+			context.putContextData(connectionPart, ModelChangeContext.connectionPartContextDataAssembler);
 			IModelChangeCommand command = 
 				new MoveEndpointCommand(connectionPart, location.x, location.y, false);
 			command.setContext(context);

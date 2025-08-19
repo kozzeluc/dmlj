@@ -49,7 +49,7 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 		if (connectionLabel.getMemberRole().getSet().isMultipleMember()) {
 			ModelChangeContext context = 
 				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
-			context.putContextData(connectionLabel.getMemberRole());
+			context.putContextData(connectionLabel.getMemberRole(), ModelChangeContext.memberRoleContextDataAssembler);
 			command.setContext(context);
 		} else {
 			ModelChangeType modelChangeType;
@@ -61,7 +61,7 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 			}
 			ModelChangeContext context = new ModelChangeContext(modelChangeType);
-			context.putContextData(connectionLabel.getMemberRole().getSet());
+			context.putContextData(connectionLabel.getMemberRole().getSet(), ModelChangeContext.setContextDataAssembler);
 			command.setContext(context);
 		}
 		return (Command) command;

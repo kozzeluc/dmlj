@@ -35,7 +35,7 @@ import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.SchemaEditor;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeListener;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
@@ -74,8 +74,8 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 	
 	protected final void collectObjectsForMemberRole(ModelChangeContext context, Scope scope) {
 		
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
-		String memberRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
+		String memberRecordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		
 		Map<String, List<EObject>> map = createModelChildrenActionMap(context);
 		List<EObject> toCreateOrRemove = map.get(TO_CREATE_OR_REMOVE);
@@ -112,7 +112,7 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 	}
 	
 	protected final void collectObjectsForRecord(ModelChangeContext context) {
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		SchemaRecord record = context.getSchema().getRecord(recordName);
 		
 		Map<String, List<EObject>> map = createModelChildrenActionMap(context);
@@ -150,7 +150,7 @@ public abstract class AbstractGraphicalContainerEditPart<T extends EObject>
 	}
 	
 	protected final void collectObjectsForSet(ModelChangeContext context) {				
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 		Set set = context.getSchema().getSet(setName);		
 		collectObjectsForSet(context, set);
 	}

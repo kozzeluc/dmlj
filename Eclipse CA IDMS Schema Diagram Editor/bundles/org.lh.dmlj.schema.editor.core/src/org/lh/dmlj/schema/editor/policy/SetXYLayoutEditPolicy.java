@@ -60,7 +60,7 @@ public class SetXYLayoutEditPolicy extends XYLayoutEditPolicy {
         figure.translateToRelative(p);
 		
         ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_CONNECTORS);
-        context.putContextData(connectionPart.getMemberRole());
+        context.putContextData(connectionPart.getMemberRole(), ModelChangeContext.memberRoleContextDataAssembler);
         ModelChangeBasicCommand command = 
 			new CreateConnectorCommand(connectionPart.getMemberRole(), p);
 		command.setContext(context);

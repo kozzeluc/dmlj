@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -75,7 +75,7 @@ public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
 		if (areaSpecification.getRecord() != null) {
 			context.putContextData(areaSpecification.getRecord());
 		} else {
-			context.putContextData(areaSpecification.getSystemOwner().getSet());
+			context.putContextData(areaSpecification.getSystemOwner().getSet(), ModelChangeContext.setContextDataAssembler);
 		}
 		
 		// see what area the record or system owner has to be located in; if it

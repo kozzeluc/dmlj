@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,14 +16,16 @@
  */
 package org.lh.dmlj.schema.editor.command.infrastructure;
 
-public interface IContextDataKeys {
+public final class ContextDataKeys {
+	public static final String AREA_NAME = "areaName";
+	public static final String CONNECTION_PART_INDEX = "connectionPartIndex";
+	public static final String GUIDE_INDEX = "guideIndex";
+	public static final String PROPERTY_NAME = "featureName";
+	public static final String RECORD_NAME = "recordName";
+	public static final String RULER_INDEX = "rulerIndex";
+	public static final String SET_NAME = "setName";
 	
-	String AREA_NAME = "areaName";
-	String CONNECTION_PART_INDEX = "connectionPartIndex";
-	String GUIDE_INDEX = "guideIndex";
-	String PROPERTY_NAME = "featureName";
-	String RECORD_NAME = "recordName";
-	String RULER_INDEX = "rulerIndex";
-	String SET_NAME = "setName";
+	private ContextDataKeys() {
+	}
 	
 }

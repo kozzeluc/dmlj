@@ -23,7 +23,6 @@ public abstract class AbstractRemovableRole<T extends Role> {
 	private boolean removed = false;
 	
 	protected AbstractRemovableRole(T role) {
-		super();
 		this.role = role;
 	}
 	

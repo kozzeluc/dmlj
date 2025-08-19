@@ -36,7 +36,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -173,15 +173,15 @@ public class SetDescriptionEditPart
 			// but that's better than missing an area rename)
 			SchemaArea modelArea = 
 				getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea();
-			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
-				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			if (context.getContextData().containsKey(ContextDataKeys.RECORD_NAME)) {
+				String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 				SchemaRecord record = 
 					getModel().getMemberRole().getSet().getSchema().getRecord(recordName);
 				if (record.getAreaSpecification().getArea() == modelArea) {
 					context.setListenerData(Boolean.TRUE);
 				}
-			} else if (context.getContextData().containsKey(IContextDataKeys.SET_NAME)) {
-				String anotherSetName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			} else if (context.getContextData().containsKey(ContextDataKeys.SET_NAME)) {
+				String anotherSetName = context.getContextData().get(ContextDataKeys.SET_NAME);
 				Set anotherSet = 
 					getModel().getMemberRole().getSet().getSchema().getSet(anotherSetName);
 				if (anotherSet.getSystemOwner().getAreaSpecification().getArea() == modelArea) {

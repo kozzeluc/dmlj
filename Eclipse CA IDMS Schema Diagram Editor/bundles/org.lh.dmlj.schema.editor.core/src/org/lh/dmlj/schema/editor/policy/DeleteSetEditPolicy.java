@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -48,7 +48,7 @@ public class DeleteSetEditPolicy extends ComponentEditPolicy {
 			modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 		}
 		ModelChangeContext context = new ModelChangeContext(modelChangeType);
-		context.putContextData(set);
+		context.putContextData(set, ModelChangeContext.setContextDataAssembler);
 		IModelChangeCommand command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 		command.setContext(context); 
 		return (Command) command;

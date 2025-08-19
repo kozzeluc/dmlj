@@ -39,7 +39,7 @@ import org.lh.dmlj.schema.editor.anchor.RecordSourceAnchor;
 import org.lh.dmlj.schema.editor.anchor.RecordTargetAnchor;
 import org.lh.dmlj.schema.editor.anchor.ReconnectEndpointAnchor;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -156,14 +156,14 @@ public class RecordEditPart
 			// new area name replaces the old one EVERYWHERE (we might unnecessarily do a refresh,  
 			// but that's better than missing an area rename)
 			SchemaArea modelArea = getModel().getAreaSpecification().getArea();
-			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
-				String anotherRecordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			if (context.getContextData().containsKey(ContextDataKeys.RECORD_NAME)) {
+				String anotherRecordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 				SchemaRecord anotherRecord = getModel().getSchema().getRecord(anotherRecordName);
 				if (anotherRecord.getAreaSpecification().getArea() == modelArea) {
 					context.setListenerData(Boolean.TRUE);
 				}
-			} else if (context.getContextData().containsKey(IContextDataKeys.SET_NAME)) {
-				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			} else if (context.getContextData().containsKey(ContextDataKeys.SET_NAME)) {
+				String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 				Set set = getModel().getSchema().getSet(setName);
 				if (set.getSystemOwner().getAreaSpecification().getArea() == modelArea) {
 					context.setListenerData(Boolean.TRUE);

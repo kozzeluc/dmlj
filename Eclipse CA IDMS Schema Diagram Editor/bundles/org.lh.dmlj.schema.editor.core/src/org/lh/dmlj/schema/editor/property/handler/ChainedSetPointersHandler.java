@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -148,9 +148,9 @@ public class ChainedSetPointersHandler
 		// now is a good time to create the model change context
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_OR_REMOVE_SET_POINTERS);
 		if (dialog.isOwnerPointerManipulationForAllMembers()) {
-			context.putContextData(memberRole.getSet());
+			context.putContextData(memberRole.getSet(), ModelChangeContext.setContextDataAssembler);
 		} else {
-			context.putContextData(memberRole);
+			context.putContextData(memberRole, ModelChangeContext.memberRoleContextDataAssembler);
 		}
 		
 		// create a compound command if needed; there should always be at least 1 command to add to 

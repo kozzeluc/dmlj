@@ -105,7 +105,7 @@ public class IndexedSetPointersHandler
 		
 		// now is a good time to create the model change context
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_OR_REMOVE_SET_POINTERS);
-		context.putContextData(memberRole);
+		context.putContextData(memberRole, ModelChangeContext.memberRoleContextDataAssembler);
 		
 		// create a compound command if needed; there should always be at least 
 		// 1 command to add to it

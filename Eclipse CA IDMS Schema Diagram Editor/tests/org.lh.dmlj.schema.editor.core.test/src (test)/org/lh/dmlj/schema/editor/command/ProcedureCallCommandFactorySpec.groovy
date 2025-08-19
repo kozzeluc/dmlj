@@ -25,7 +25,7 @@ import org.lh.dmlj.schema.Procedure
 import org.lh.dmlj.schema.RecordProcedureCallSpecification
 import org.lh.dmlj.schema.SchemaArea
 import org.lh.dmlj.schema.SchemaRecord
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType
 import org.lh.dmlj.schema.editor.dsl.builder.model.AreaModelBuilder
 import org.lh.dmlj.schema.editor.dsl.builder.model.RecordModelBuilder
@@ -64,7 +64,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_AREA_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.AREA_NAME] == 'TESTAREA'
+		cc.context.contextData[ContextDataKeys.AREA_NAME] == 'TESTAREA'
 	}
 
 	def "Create first area procedure call specification and a new procedure"() {
@@ -94,7 +94,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_AREA_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.AREA_NAME] == 'TESTAREA'
+		cc.context.contextData[ContextDataKeys.AREA_NAME] == 'TESTAREA'
 	}
 	
 	def "Remove the only area procedure call specification and an obsolete procedure"() {
@@ -127,7 +127,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_AREA_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.AREA_NAME] == 'TESTAREA'
+		cc.context.contextData[ContextDataKeys.AREA_NAME] == 'TESTAREA'
 	}
 	
 	def "Replace an area procedure call specification, remove an obsolete procedure and create a new one"() {
@@ -170,7 +170,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_AREA_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.AREA_NAME] == 'TESTAREA'
+		cc.context.contextData[ContextDataKeys.AREA_NAME] == 'TESTAREA'
 	}
 	
 	def "Remove an area procedure call specification while retaining the procedure"() {
@@ -212,7 +212,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_AREA_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.AREA_NAME] == 'TESTAREA1'
+		cc.context.contextData[ContextDataKeys.AREA_NAME] == 'TESTAREA1'
 	}
 	
 	def "An assertion error is thrown when no area procedure calls exist and none are added"() {
@@ -331,7 +331,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_AREA_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.AREA_NAME] == 'TESTAREA'
+		cc.context.contextData[ContextDataKeys.AREA_NAME] == 'TESTAREA'
 	}
 	
 	def "Change the only record procedure call verb"() {
@@ -364,7 +364,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_RECORD_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.RECORD_NAME] == 'TESTRECORD'
+		cc.context.contextData[ContextDataKeys.RECORD_NAME] == 'TESTRECORD'
 	}
 	
 	def "Create first record procedure call specification and a new procedure"() {
@@ -394,7 +394,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_RECORD_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.RECORD_NAME] == 'TESTRECORD'
+		cc.context.contextData[ContextDataKeys.RECORD_NAME] == 'TESTRECORD'
 	}
 	
 	def "Remove the only record procedure call specification and an obsolete procedure"() {
@@ -427,7 +427,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_RECORD_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.RECORD_NAME] == 'TESTRECORD'
+		cc.context.contextData[ContextDataKeys.RECORD_NAME] == 'TESTRECORD'
 	}
 	
 	def "Replace a record procedure call specification, remove an obsolete procedure and create a new one"() {
@@ -470,7 +470,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_RECORD_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.RECORD_NAME] == 'TESTRECORD'
+		cc.context.contextData[ContextDataKeys.RECORD_NAME] == 'TESTRECORD'
 	}
 	
 	def "Remove a record procedure call specification while retaining the procedure"() {
@@ -512,7 +512,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_RECORD_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.RECORD_NAME] == 'TESTRECORD1'
+		cc.context.contextData[ContextDataKeys.RECORD_NAME] == 'TESTRECORD1'
 	}
 	
 	def "An assertion error is thrown when no record procedure calls exist and none are added"() {
@@ -631,7 +631,7 @@ public class ProcedureCallCommandFactorySpec extends Specification {
 		and: "the compound command's context is set up correctly"
 		cc.context
 		cc.context.modelChangeType == ModelChangeType.CHANGE_RECORD_PROCEDURE_CALL_SPECIFICATION
-		cc.context.contextData[IContextDataKeys.RECORD_NAME] == 'TESTRECORD'
+		cc.context.contextData[ContextDataKeys.RECORD_NAME] == 'TESTRECORD'
 	}
 	
 }

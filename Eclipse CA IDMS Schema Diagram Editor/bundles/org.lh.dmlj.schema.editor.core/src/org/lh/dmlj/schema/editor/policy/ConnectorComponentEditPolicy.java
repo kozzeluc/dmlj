@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -46,7 +46,7 @@ public class ConnectorComponentEditPolicy extends ComponentEditPolicy {
 		Connector connector = ((ConnectorEditPart)editParts.get(0)).getModel();
 		MemberRole memberRole = connector.getConnectionPart().getMemberRole();
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_CONNECTORS);
-		context.putContextData(memberRole);
+		context.putContextData(memberRole, ModelChangeContext.memberRoleContextDataAssembler);
 		ModelChangeBasicCommand command = new DeleteConnectorsCommand(memberRole);	
 		command.setContext(context);
 		return command;

@@ -45,7 +45,7 @@ public class IndexComponentEditPolicy extends ComponentEditPolicy {
 		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
 		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_SYSTEM_OWNED_SET);
-		context.putContextData(systemOwner.getSet());
+		context.putContextData(systemOwner.getSet(), ModelChangeContext.setContextDataAssembler);
 		IModelChangeCommand command = 
 			DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		command.setContext(context);

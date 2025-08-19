@@ -93,7 +93,7 @@ public class ProcedureCallCommandFactory {
 	public Command createCommand(SchemaArea area, List<String> callStatementArguments) {
 		var cc = new ModelChangeCompoundCommand("Set procedure call specifications for area " + area.getName());
 		cc.setContext(new ModelChangeContext(ModelChangeType.CHANGE_AREA_PROCEDURE_CALL_SPECIFICATION));
-		cc.getContext().putContextData(area);
+		cc.getContext().putContextData(area, ModelChangeContext.areaContextDataAssembler);
 		
 		area.getProcedures().stream()
 				.map(RemoveAreaProcedureCallSpecificationCommand::new)

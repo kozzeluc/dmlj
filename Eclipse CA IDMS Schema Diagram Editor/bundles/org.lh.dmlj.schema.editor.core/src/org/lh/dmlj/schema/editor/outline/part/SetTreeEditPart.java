@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -81,7 +81,7 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 	}
 	
 	private boolean appliesToMemberOfModelSet(ModelChangeContext context) {
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 		return getModel().getName().equals(setName);
 	}
 	
@@ -89,7 +89,7 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 		if (Boolean.TRUE.equals(context.getListenerData())) {
 			return true;
 		} else {
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			return getModel().getName().equals(setName);
 		}
 	}	
@@ -109,7 +109,7 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 	}
 	
 	private void createAndAddRecordAsChild(ModelChangeContext context) {
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		SchemaRecord record = getModel().getSchema().getRecord(recordName);
 		createAndAddChild(record);
 	}
@@ -138,7 +138,7 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 	}
 	
 	private void findAndRemoveRecordAsChild(ModelChangeContext context) {
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		SchemaRecord record = getModel().getSchema().getRecord(recordName);
 		findAndRemoveChild(record, false);
 	}

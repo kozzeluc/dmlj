@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -63,7 +63,7 @@ public class SetOrderHandler implements IHyperlinkHandler<EAttribute, Command> {
 			// sorted because a description for each member record's sort key has to be assembled
 			// (fortunately, the set order dialog can do this for us)
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.CHANGE_SET_ORDER);
-			context.putContextData(set);
+			context.putContextData(set, ModelChangeContext.setContextDataAssembler);
 			if (dialog.getSetOrder() == SetOrder.SORTED) {
 				command = new ChangeSetOrderCommand(set, dialog.getSortKeyDescriptions());
 			} else {
@@ -75,7 +75,7 @@ public class SetOrderHandler implements IHyperlinkHandler<EAttribute, Command> {
 			// to be modified
 			Assert.isTrue(set.getOrder() == SetOrder.SORTED, "expected a sorted set");
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.CHANGE_SORTKEYS);
-			context.putContextData(set);
+			context.putContextData(set, ModelChangeContext.setContextDataAssembler);
 			command = new ChangeSortKeysCommand(set, dialog.getSortKeyDescriptions());
 			command.setContext(context);
 		}

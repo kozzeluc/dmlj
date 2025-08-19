@@ -29,7 +29,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -64,10 +64,10 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 			findAndRemoveChild(record, false);
 		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
 			// area specification change
-			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
+			if (context.getContextData().containsKey(ContextDataKeys.RECORD_NAME)) {
 				// the context applies to a record; if the record is moved away from or towards the
 				// model area, take the appropriate action
-				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 				SchemaRecord record = getModel().getSchema().getRecord(recordName);
 				SchemaArea area = record.getAreaSpecification().getArea();
 				if (area == getModel() && context.getListenerData() != record) {					
@@ -89,7 +89,7 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 				}
 			} else {
 				// the context applies to a system owned indexed set
-				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 				Set set = getModel().getSchema().getSet(setName);
 				SchemaArea area = set.getSystemOwner().getAreaSpecification().getArea();
 				if (area == getModel() && context.getListenerData() != set.getSystemOwner()) {					
@@ -123,7 +123,7 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 					
 			// a delete record operation was undone; create a child edit part for the record if it  
 			// is stored in the model area
-			String recordName = context.getContextData().get((IContextDataKeys.RECORD_NAME));
+			String recordName = context.getContextData().get((ContextDataKeys.RECORD_NAME));
 			SchemaRecord record = getModel().getSchema().getRecord(recordName);			
 			SchemaArea area = record.getAreaSpecification().getArea();
 			if (area == getModel()) {					
@@ -143,7 +143,7 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 			
 			// a delete system owned indexed set operation was undone; make sure we create a child 
 			// edit part for the system owner again if it is stored in the model area
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			Set set = getModel().getSchema().getSet(setName);
 			SchemaArea area = set.getSystemOwner().getAreaSpecification().getArea();
 			if (area == getModel()) {					
@@ -166,7 +166,7 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 		if (Boolean.TRUE.equals(context.getListenerData())) {
 			return true;
 		} else {
-			String areaName = context.getContextData().get(IContextDataKeys.AREA_NAME);
+			String areaName = context.getContextData().get(ContextDataKeys.AREA_NAME);
 			return getModel().getName().equals(areaName);
 		}
 	}
@@ -188,16 +188,16 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 			// area specification change; if a record or system owner moves to another area, we need
 			// to know, so if the item involved is stored in the model area, put it in the context's
 			// listener data
-			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
+			if (context.getContextData().containsKey(ContextDataKeys.RECORD_NAME)) {
 				// the context applies to a record
-				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 				SchemaRecord record = getModel().getSchema().getRecord(recordName);
 				if (record.getAreaSpecification().getArea() == getModel()) {
 					context.setListenerData(record);
 				}
 			} else {
 				// the context applies to a system owned indexed set
-				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 				Set set = getModel().getSchema().getSet(setName);
 				if (set.getSystemOwner().getAreaSpecification().getArea() == getModel()) {
 					context.setListenerData(set.getSystemOwner());
@@ -208,7 +208,7 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 						
 				// a record is being deleted (execute/redo); store the record in the context's  
 				// listener data if it is stored in the model area
-				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+				String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 				SchemaRecord record = getModel().getSchema().getRecord(recordName);			
 				SchemaArea area = record.getAreaSpecification().getArea();
 				if (area == getModel()) {					
@@ -222,7 +222,7 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 			// belonging to the removed system owner - put the system owner in the context's
 			// listener data so that we can find and remove the child edit part in the after model
 			// change callback
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			Set set = getModel().getSchema().getSet(setName);
 			if (set.getSystemOwner().getAreaSpecification().getArea() == getModel()) {
 				context.setListenerData(set.getSystemOwner());

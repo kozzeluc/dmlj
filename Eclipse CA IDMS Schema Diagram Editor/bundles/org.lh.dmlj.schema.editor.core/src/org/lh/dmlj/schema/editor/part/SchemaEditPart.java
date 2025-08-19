@@ -37,7 +37,7 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.policy.SchemaXYLayoutEditPolicy;
@@ -312,7 +312,7 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		// at least 1 element of the sort key can be retained; make sure to remove the edit parts
 		// for model objects that have become obsolete after the model change and create new edit
 		// parts for their replacements
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		SchemaRecord memberRecord = getModel().getRecord(recordName);		
 		@SuppressWarnings("unchecked")
 		List<SwapRecordElementsObsoleteObjectCollection> listenerData = 
@@ -356,7 +356,7 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
 		// member sets in which it participates as a member; it is only added as a member again if
 		// at least 1 element of the sort key can be retained
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		SchemaRecord memberRecord = getModel().getRecord(recordName);		
 		@SuppressWarnings("unchecked")
 		List<Set> listenerData = (List<Set>) context.getListenerData();
@@ -388,7 +388,7 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		// that will have become obsolete after the model change
 		List<SwapRecordElementsObsoleteObjectCollection> listenerData = new ArrayList<>();
 		context.setListenerData(listenerData);
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		SchemaRecord record = getModel().getRecord(recordName);
 		for (MemberRole memberRole : record.getMemberRoles()) {
 			Set set = memberRole.getSet();
@@ -417,7 +417,7 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		// undone
 		List<Set> listenerData = new ArrayList<>();
 		context.setListenerData(listenerData);
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		SchemaRecord record = getModel().getRecord(recordName);
 		for (MemberRole memberRole : record.getMemberRoles()) {
 			Set set = memberRole.getSet();

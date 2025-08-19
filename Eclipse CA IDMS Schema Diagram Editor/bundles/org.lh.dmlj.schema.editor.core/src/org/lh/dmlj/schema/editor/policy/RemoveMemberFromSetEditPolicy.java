@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -50,7 +50,7 @@ public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 			}
 			ModelChangeContext context = new ModelChangeContext(modelChangeType);
-			context.putContextData(memberRole.getSet());
+			context.putContextData(memberRole.getSet(), ModelChangeContext.setContextDataAssembler);
 			IModelChangeCommand command = 
 				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 			command.setContext(context);
@@ -59,7 +59,7 @@ public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 			// create a command to remove the member record type from the set
 			ModelChangeContext context = 
 				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
-			context.putContextData(memberRole);
+			context.putContextData(memberRole, ModelChangeContext.memberRoleContextDataAssembler);
 			IModelChangeCommand command = 
 				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 			command.setContext(context);

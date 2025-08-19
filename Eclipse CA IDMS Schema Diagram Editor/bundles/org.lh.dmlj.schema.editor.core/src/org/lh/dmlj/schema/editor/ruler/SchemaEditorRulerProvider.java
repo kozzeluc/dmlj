@@ -160,7 +160,7 @@ public class SchemaEditorRulerProvider
 			return null;
 		}
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_GUIDE);
-		context.putContextData(ruler);
+		context.putContextData(ruler, ModelChangeContext.rulerContextDataAssembler);
 		IModelChangeCommand command = new CreateGuideCommand(ruler, position);
 		command.setContext(context);
 		return (Command) command;
@@ -175,7 +175,7 @@ public class SchemaEditorRulerProvider
 			return null;
 		}
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_GUIDE);
-		context.putContextData((Guide) guide);
+		context.putContextData((Guide) guide, ModelChangeContext.guideContextDataAssembler);
 		IModelChangeCommand command = new DeleteGuideCommand(ruler, (Guide) guide);
 		command.setContext(context);
 		return (Command) command;		
@@ -210,7 +210,7 @@ public class SchemaEditorRulerProvider
 		}
 		if (guide instanceof Guide) {
 			ModelChangeContext context = new ModelChangeContext(ModelChangeType.MOVE_GUIDE);
-			context.putContextData((Guide) guide);
+			context.putContextData((Guide) guide, ModelChangeContext.guideContextDataAssembler);
 			IModelChangeCommand command = new MoveGuideCommand((Guide) guide, positionDelta);
 			command.setContext(context);
 			return (Command) command;

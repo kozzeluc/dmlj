@@ -33,7 +33,7 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -186,7 +186,7 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 		if (Boolean.TRUE.equals(context.getListenerData())) {
 			return true;
 		} else {
-			String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 			return getModel().getName().equals(recordName);
 		}
 	}
@@ -273,19 +273,19 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 	}
 	
 	private void createAndAddSetAsChild(ModelChangeContext context) {
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 		Set set = getModel().getSchema().getSet(setName);
 		createAndAddChild(set);
 	}
 	
 	private void createAndAddSystemOwnerAsChild(ModelChangeContext context) {
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 		Set set = getModel().getSchema().getSet(setName);
 		createAndAddChild(set.getSystemOwner(), set);
 	}
 	
 	private void createAndAddVsamIndexAsChild(ModelChangeContext context) {
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 		Set set = getModel().getSchema().getSet(setName);
 		createAndAddChild(set.getVsamIndex(), set);
 	}
@@ -322,12 +322,12 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 	}
 	
 	private SchemaRecord findRecord(ModelChangeContext context) {
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		return getModel().getSchema().getRecord(recordName);
 	}
 	
 	private Set findSet(ModelChangeContext context) {
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 		return getModel().getSchema().getSet(setName);
 	}
 	

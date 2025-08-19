@@ -30,7 +30,7 @@ import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -154,12 +154,12 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			// get the 'new' area via the item contained in the context data; if it was effectively 
 			// newly created, create an edit part and add it as a child
 			SchemaArea newArea;
-			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
-				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			if (context.getContextData().containsKey(ContextDataKeys.RECORD_NAME)) {
+				String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 				SchemaRecord record = getModel().getRecord(recordName);
 				newArea = record.getAreaSpecification().getArea();
 			} else {
-				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 				newArea = 
 					getModel().getSet(setName).getSystemOwner().getAreaSpecification().getArea();
 			}
@@ -195,7 +195,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			
 			// a delete record operation is being undone; get the record using the context data and 
 			// create and add a child edit part for it
-			String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 			SchemaRecord record = getModel().getRecord(recordName);			
 			createAndAddChild(record);
 			
@@ -224,7 +224,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			// a delete system owned indexed set operation was undone; avoid just refreshing the 
 			// children since this may be costly; first, create the appropriate edit part for the 
 			// set and add it as a child
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			Set set = getModel().getSet(setName);
 			createAndAddChild(set.getSystemOwner(), set);
 			
@@ -248,7 +248,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			// a delete user owned set operation was undone; avoid just refreshing the 
 			// children since this may be costly; create the appropriate edit part for the set and 
 			// add it as a child
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			Set set = getModel().getSet(setName);
 			createAndAddChild(set);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX &&
@@ -264,7 +264,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			
 			// a delete VSAM index operation was undone; avoid just refreshing the children since 
 			// this may be costly; create the appropriate edit part for the set and add it as a child
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			Set set = getModel().getSet(setName);
 			createAndAddChild(set.getVsamIndex(), set);			
 		}
@@ -313,12 +313,12 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			// whenever an area specification is changed, an area might be added or removed; put the
 			// 'old' area in the context's listener data
 			SchemaArea area;
-			if (context.getContextData().containsKey(IContextDataKeys.RECORD_NAME)) {
-				String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			if (context.getContextData().containsKey(ContextDataKeys.RECORD_NAME)) {
+				String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 				SchemaRecord record = getModel().getRecord(recordName);
 				area = record.getAreaSpecification().getArea();
 			} else {
-				String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+				String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 				area = getModel().getSet(setName).getSystemOwner().getAreaSpecification().getArea();
 			}
 			context.setListenerData(area);
@@ -335,7 +335,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			
 			// a record is being deleted; put it in the context's listener data so that we can refer
 			// to it when processing the after model change event
-			String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
+			String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 			SchemaRecord record = getModel().getRecord(recordName);
 			context.setListenerData(record);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET &&
@@ -343,7 +343,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 		
 			// a system owned indexed set is being deleted; put the system owner in the context's 
 			// listener data so that we can refer to it when processing the after model change event
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			Set set = getModel().getSet(setName);
 			context.setListenerData(set.getSystemOwner());			
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET &&
@@ -351,7 +351,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			
 			// a user owned set is being deleted; put it in the context's listener data so that we 
 			// can refer to it when processing the after model change event
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			Set set = getModel().getSet(setName);
 			context.setListenerData(set);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX &&
@@ -359,7 +359,7 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 		
 			// a VSAM index is being deleted; put the VSAM index in the context's listener data so 
 			// that we can refer to it when processing the after model change event
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			Set set = getModel().getSet(setName);
 			context.setListenerData(set.getVsamIndex());			
 		}

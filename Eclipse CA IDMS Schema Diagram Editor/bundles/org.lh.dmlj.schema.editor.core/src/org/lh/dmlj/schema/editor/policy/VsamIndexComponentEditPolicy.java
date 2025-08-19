@@ -45,7 +45,7 @@ public class VsamIndexComponentEditPolicy extends ComponentEditPolicy {
 		VsamIndex vsamIndex = (VsamIndex) editParts.get(0).getModel();
 		MemberRole memberRole = vsamIndex.getMemberRole();
 		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_VSAM_INDEX);
-		context.putContextData(vsamIndex.getSet());
+		context.putContextData(vsamIndex.getSet(), ModelChangeContext.setContextDataAssembler);
 		IModelChangeCommand command = 
 			DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		command.setContext(context);

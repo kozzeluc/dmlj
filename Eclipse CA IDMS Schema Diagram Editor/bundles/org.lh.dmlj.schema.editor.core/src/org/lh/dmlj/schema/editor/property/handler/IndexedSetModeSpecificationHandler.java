@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -52,7 +52,7 @@ public class IndexedSetModeSpecificationHandler implements IHyperlinkHandler<EAt
 		Set set = indexedSetModeSpecificationProvider.getIndexedSetModeSpecification().getSet();
 		ModelChangeContext context = 
 			new ModelChangeContext(ModelChangeType.CHANGE_INDEXED_SET_MODE_SPECIFICATION);
-		context.putContextData(set);		
+		context.putContextData(set, ModelChangeContext.setContextDataAssembler);		
 				
 		IModelChangeCommand command = 
 			new ChangeIndexedSetModeSpecificationCommand(set, dialog.getSymbolicIndexName(),
