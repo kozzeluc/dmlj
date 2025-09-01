@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019 Luc Hermans
+ * Copyright (C) 2025 Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -125,7 +125,7 @@ public class RecordInfoSection extends AbstractPropertiesSection {
         try {
         	String recordName = ((SchemaRecord) modelObject).getName();
         	Optional<RecordInfoValueObject> data = 
-        		Optional.ofNullable(DictguidesRegistry.INSTANCE.getRecordInfoValueObject(recordName));
+        		Optional.ofNullable(DictguidesRegistry.getInstance().getRecordInfoValueObject(recordName));
         	if (data.isPresent()) {
         		html = Optional.of(template.generate(data.get()));
         	} else {

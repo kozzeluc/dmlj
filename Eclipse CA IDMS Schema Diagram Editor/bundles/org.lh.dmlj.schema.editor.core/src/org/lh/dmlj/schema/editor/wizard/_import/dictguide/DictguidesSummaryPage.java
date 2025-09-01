@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -152,11 +152,11 @@ public class DictguidesSummaryPage extends WizardPage {
 		
 		boolean pageComplete = true;
 		
-		if (!DictguidesRegistry.INSTANCE.isValid(txtId.getText().trim())) {
+		if (!DictguidesRegistry.getInstance().isValid(txtId.getText().trim())) {
 			setErrorMessage("Id can contain only letters, digits, spaces, " +
 						    "hyphens, underscores and periods");
 			pageComplete = false;
-		} else if (DictguidesRegistry.INSTANCE.entryExists(txtId.getText().trim())) {
+		} else if (DictguidesRegistry.getInstance().entryExists(txtId.getText().trim())) {
 			setErrorMessage("Id is already in use");
 			pageComplete = false;
 		}

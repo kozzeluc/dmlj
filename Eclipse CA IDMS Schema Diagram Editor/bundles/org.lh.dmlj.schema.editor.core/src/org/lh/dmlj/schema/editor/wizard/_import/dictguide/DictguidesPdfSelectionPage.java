@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -70,7 +70,7 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		// .pdf file can sometimes take a few seconds
 		Runnable runnable = new Runnable() {
 			public void run() {		
-				title[0] = DictguidesRegistry.INSTANCE.getDocumentTitle(file);							
+				title[0] = DictguidesRegistry.getInstance().getDocumentTitle(file);							
 			}
 		};
 		

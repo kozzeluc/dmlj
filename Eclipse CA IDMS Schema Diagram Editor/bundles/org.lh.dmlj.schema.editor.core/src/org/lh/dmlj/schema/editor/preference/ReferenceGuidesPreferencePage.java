@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -116,7 +116,7 @@ public class ReferenceGuidesPreferencePage
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DictguidesRegistry.INSTANCE.deleteEntry(list.getSelection()[0]);
+				DictguidesRegistry.getInstance().deleteEntry(list.getSelection()[0]);
 				list.removeAll();
 				initialize();
 			}
@@ -179,17 +179,17 @@ public class ReferenceGuidesPreferencePage
 	private void initialize() {
 		
 		list.add("[none]"); // id will never exist because of "<" and ">"
-		for (String id : DictguidesRegistry.INSTANCE.getAllIds()) {
+		for (String id : DictguidesRegistry.getInstance().getAllIds()) {
 			list.add(id);
 		}
-		String activeId = DictguidesRegistry.INSTANCE.getActiveId();
+		String activeId = DictguidesRegistry.getInstance().getActiveId();
 		if (activeId != null) {
 			list.select(list.indexOf(activeId));
 			String title = 
-				DictguidesRegistry.INSTANCE
+				DictguidesRegistry.getInstance()
 								  .getDictionaryStructureTitle(activeId);
 			lblDictionaryStructureguide.setText(title);
-			title = DictguidesRegistry.INSTANCE.getSqlTitle(activeId);
+			title = DictguidesRegistry.getInstance().getSqlTitle(activeId);
 			lblSqlGuide.setText(title);
 		} else {
 			list.select(0);
@@ -224,10 +224,10 @@ public class ReferenceGuidesPreferencePage
 			lblSqlGuide.setText("");
 		} else {
 			String id = list.getSelection()[0];
-			String title = DictguidesRegistry.INSTANCE
+			String title = DictguidesRegistry.getInstance()
 											 .getDictionaryStructureTitle(id);
 			lblDictionaryStructureguide.setText(title);
-			title = DictguidesRegistry.INSTANCE.getSqlTitle(id);
+			title = DictguidesRegistry.getInstance().getSqlTitle(id);
 			lblSqlGuide.setText(title);
 		}
 		btnDelete.setEnabled(list.getSelectionIndex() > 0);
@@ -236,9 +236,9 @@ public class ReferenceGuidesPreferencePage
 	private void storeValues() {
 		boolean changed;
 		if (list.getSelectionIndex() == 0) {
-			changed = DictguidesRegistry.INSTANCE.setActiveId(null);
+			changed = DictguidesRegistry.getInstance().setActiveId(null);
 		} else {
-			changed = DictguidesRegistry.INSTANCE
+			changed = DictguidesRegistry.getInstance()
 										.setActiveId(list.getSelection()[0]);
 		}
 		if (changed) {

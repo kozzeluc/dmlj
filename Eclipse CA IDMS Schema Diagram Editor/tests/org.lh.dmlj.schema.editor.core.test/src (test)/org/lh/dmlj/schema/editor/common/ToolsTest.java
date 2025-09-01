@@ -16,12 +16,12 @@
  */
 package org.lh.dmlj.schema.editor.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.area;
 import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.record;
 import static org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava.set;
@@ -33,8 +33,9 @@ import static org.mockito.Mockito.when;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
@@ -43,14 +44,23 @@ import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OccursSpecification;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
+import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.SetOrder;
 import org.lh.dmlj.schema.SortSequence;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
+import org.lh.dmlj.schema.impl.SchemaFactoryImpl;
 
+@DisplayName("Tools Tests")
 public class ToolsTest {
+	private static final String LEVEL_1_S_MESSAGE = "Level 1's message";
+	private static final String LEVEL_2_S_MESSAGE = "Level 2's message";
+	private static final String LEVEL_3_S_MESSAGE = "Level 3's message";
+
+	private static final SchemaFactory schemaFactory = SchemaFactoryImpl.init();
 	
 	private Schema schema;
 	
@@ -95,7 +105,7 @@ public class ToolsTest {
 		return memberRole;
 	}
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		// we'll use IDMSNTWK throughout (some) of these tests
 		schema = TestTools.getIdmsntwkSchema();
@@ -113,19 +123,18 @@ public class ToolsTest {
 	
 	@Test
 	public void getDefaultSortKeyElementTest() {
-		
-		SchemaRecord record = mock(SchemaRecord.class);
+		SchemaRecord schemaRecord = mock(SchemaRecord.class);
 		
 		// no elements in record (list == null, which shouldn't happen in the real world)
-		assertNull(Tools.getDefaultSortKeyElement(record));
-		verify(record, times(1)).getElements();
+		assertNull(Tools.getDefaultSortKeyElement(schemaRecord));
+		verify(schemaRecord, times(1)).getElements();
 		
 		EList<Element> elements = new BasicEList<>();
-		when(record.getElements()).thenReturn(elements);
+		when(schemaRecord.getElements()).thenReturn(elements);
 		
 		// no elements in record (empty list)
-		assertNull(Tools.getDefaultSortKeyElement(record));	
-		verify(record, times(3)).getElements();
+		assertNull(Tools.getDefaultSortKeyElement(schemaRecord));	
+		verify(schemaRecord, times(3)).getElements();
 		
 		Element filler = mock(Element.class);
 		when(filler.getName()).thenReturn("FILLER");
@@ -133,7 +142,7 @@ public class ToolsTest {
 		elements.add(filler);
 		
 		// the only element available is a FILLER
-		assertNull(Tools.getDefaultSortKeyElement(record));	
+		assertNull(Tools.getDefaultSortKeyElement(schemaRecord));	
 		verify(filler, times(1)).getName();
 		verify(filler, never()).getLength();
 		
@@ -143,7 +152,7 @@ public class ToolsTest {
 		elements.add(length257Element);	
 		
 		// the only non-FILLER element's length is bigger than 256
-		assertNull(Tools.getDefaultSortKeyElement(record));	
+		assertNull(Tools.getDefaultSortKeyElement(schemaRecord));	
 		verify(length257Element, times(1)).getName();
 		verify(length257Element, times(1)).getLength();	
 		
@@ -154,7 +163,7 @@ public class ToolsTest {
 		elements.add(redefinesElement);
 		
 		// elements that redefine another element are discarded
-		assertNull(Tools.getDefaultSortKeyElement(record));	
+		assertNull(Tools.getDefaultSortKeyElement(schemaRecord));	
 		verify(redefinesElement, times(1)).getName();
 		verify(redefinesElement, times(1)).getLength();	
 		verify(redefinesElement, times(1)).getRedefines();
@@ -167,7 +176,7 @@ public class ToolsTest {
 		elements.add(occursElement);
 		
 		// elements described with an OCCURS clause are discarded
-		assertNull(Tools.getDefaultSortKeyElement(record));	
+		assertNull(Tools.getDefaultSortKeyElement(schemaRecord));	
 		verify(occursElement, times(1)).getName();
 		verify(occursElement, times(1)).getLength();	
 		verify(occursElement, times(1)).getOccursSpecification();	
@@ -178,7 +187,7 @@ public class ToolsTest {
 		elements.add(expectedKeyElement);
 		
 		// default key element available
-		Element actualKeyElement = Tools.getDefaultSortKeyElement(record);
+		Element actualKeyElement = Tools.getDefaultSortKeyElement(schemaRecord);
 		assertSame(expectedKeyElement, actualKeyElement);
 		verify(expectedKeyElement, times(1)).getName();
 		verify(expectedKeyElement, times(1)).getLength();	
@@ -190,84 +199,75 @@ public class ToolsTest {
 	@Test
 	public void testIsInvolvedInOccurs() {
 		
-		SchemaRecord record = schema.getRecord("SDES-044");
-		assertNotNull(record);	
+		SchemaRecord schemaRecord = schema.getRecord("SDES-044");
+		assertNotNull(schemaRecord);	
 		
-		Element element = record.getElement("VALS-044");
+		Element element = schemaRecord.getElement("VALS-044");
 		assertNotNull(element);
-		assertEquals("element has no OCCURS clause", false, Tools.isInvolvedInOccurs(element));
+		assertEquals(false, Tools.isInvolvedInOccurs(element), "element has no OCCURS clause");
 		
-		element = record.getElement("VAL-TEXT-044");
+		element = schemaRecord.getElement("VAL-TEXT-044");
 		assertNotNull(element);
-		assertEquals("element's direct parent has no OCCURS clause", false, 
-					 Tools.isInvolvedInOccurs(element));
+		assertEquals(false, Tools.isInvolvedInOccurs(element), "element's direct parent has no OCCURS clause");
 		
-		element = record.getElement("VAL1-044");
+		element = schemaRecord.getElement("VAL1-044");
 		assertNotNull(element);
-		assertEquals("element's indirect parent has no OCCURS clause", false, 
-					 Tools.isInvolvedInOccurs(element));
+		assertEquals(false, Tools.isInvolvedInOccurs(element), "element's indirect parent has no OCCURS clause");
 		
-		record = schema.getRecord("SAM-056");
-		assertNotNull(record);
+		schemaRecord = schema.getRecord("SAM-056");
+		assertNotNull(schemaRecord);
 		
-		element = record.getElement("KEYS-056");
+		element = schemaRecord.getElement("KEYS-056");
 		assertNotNull(element);
-		assertEquals("element has a OCCURS clause", true, Tools.isInvolvedInOccurs(element));		
+		assertEquals(true, Tools.isInvolvedInOccurs(element), "element has a OCCURS clause");		
 		
-		element = record.getElement("KEY-FLD-056");
+		element = schemaRecord.getElement("KEY-FLD-056");
 		assertNotNull(element);
-		assertEquals("element's direct parent has an OCCURS clause", true, 
-					 Tools.isInvolvedInOccurs(element));
+		assertEquals(true, Tools.isInvolvedInOccurs(element), "element's direct parent has an OCCURS clause");
 		
-		record = schema.getRecord("LOADCTL-158");
-		assertNotNull(record);
+		schemaRecord = schema.getRecord("LOADCTL-158");
+		assertNotNull(schemaRecord);
 		
-		element = record.getElement("LOADCTL-ACONLEN-158");
+		element = schemaRecord.getElement("LOADCTL-ACONLEN-158");
 		assertNotNull(element);
-		assertEquals("element's indirect parent has an OCCURS clause", true, 
-					 Tools.isInvolvedInOccurs(element));
+		assertEquals(true, Tools.isInvolvedInOccurs(element), "element's indirect parent has an OCCURS clause");
 		
 	}
 
 	@Test
 	public void testIsInvolvedInRedefines() {
 		
-		SchemaRecord record = schema.getRecord("SDES-044");
-		assertNotNull(record);
+		SchemaRecord schemaRecord = schema.getRecord("SDES-044");
+		assertNotNull(schemaRecord);
 		
-		Element element = record.getElement("CMT-044");
+		Element element = schemaRecord.getElement("CMT-044");
 		assertNotNull(element);
-		assertEquals("element has no REDEFINES clause", false, 
-					 Tools.isInvolvedInRedefines(element));	
+		assertEquals(false, Tools.isInvolvedInRedefines(element), "element has no REDEFINES clause");	
 		
-		element = record.getElement("CMT-INFO-044");
+		element = schemaRecord.getElement("CMT-INFO-044");
 		assertNotNull(element);
-		assertEquals("element's direct parent has no REDEFINES clause", false, 
-					 Tools.isInvolvedInRedefines(element));	
+		assertEquals(false, Tools.isInvolvedInRedefines(element), "element's direct parent has no REDEFINES clause");	
 		
-		element = record.getElement("VALS-044");
+		element = schemaRecord.getElement("VALS-044");
 		assertNotNull(element);
-		assertEquals("element has a REDEFINES clause", true, Tools.isInvolvedInRedefines(element));
+		assertEquals(true, Tools.isInvolvedInRedefines(element), "element has a REDEFINES clause");
 		
-		element = record.getElement("VAL-TEXT-044");
+		element = schemaRecord.getElement("VAL-TEXT-044");
 		assertNotNull(element);
-		assertEquals("element's direct parent has a REDEFINES clause", true, 
-					 Tools.isInvolvedInRedefines(element));
+		assertEquals(true, Tools.isInvolvedInRedefines(element), "element's direct parent has a REDEFINES clause");
 		
-		element = record.getElement("VAL2-044");
+		element = schemaRecord.getElement("VAL2-044");
 		assertNotNull(element);
-		assertEquals("element's indirect parent has a REDEFINES clause", true, 
-					 Tools.isInvolvedInRedefines(element));
+		assertEquals(true, Tools.isInvolvedInRedefines(element), "element's indirect parent has a REDEFINES clause");
 		
-		element = record.getElement("ISEQ-044");
+		element = schemaRecord.getElement("ISEQ-044");
 		assertNotNull(element);
-		assertEquals("element's indirect parent has a REDEFINES clause", true, 
-					 Tools.isInvolvedInRedefines(element));
+		assertEquals(true, Tools.isInvolvedInRedefines(element), "element's indirect parent has a REDEFINES clause");
 		
 	}
 	
 	@Test
-	public void testGetSortkeys_One_Element_Ascending() {
+	public void testGetSortkeysOneElementAscending() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.NOT_ALLOWED, SortSequence.ASCENDING);
 		String sortKeysAsString = Tools.getSortKeys(memberRole);
@@ -275,7 +275,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Two_Elements_Ascending() {
+	public void testGetSortkeysTwoElementsAscending() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.FIRST, 
 							   SortSequence.ASCENDING, SortSequence.ASCENDING);
@@ -284,7 +284,7 @@ public class ToolsTest {
 	}	
 	
 	@Test
-	public void testGetSortkeys_Three_Elements_Ascending() {
+	public void testGetSortkeysThreeElementsAscending() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.FIRST, 
 							   SortSequence.ASCENDING, SortSequence.ASCENDING, SortSequence.ASCENDING);
@@ -293,7 +293,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_One_Element_Descending() {
+	public void testGetSortkeysOneElementDescending() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.NOT_ALLOWED, SortSequence.DESCENDING);
 		String sortKeysAsString = Tools.getSortKeys(memberRole);
@@ -301,7 +301,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Two_Elements_Descending() {
+	public void testGetSortkeysTwoElementsDescending() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.FIRST, 
 							   SortSequence.DESCENDING, SortSequence.DESCENDING);
@@ -310,7 +310,7 @@ public class ToolsTest {
 	}	
 	
 	@Test
-	public void testGetSortkeys_Three_Elements_Descending() {
+	public void testGetSortkeysThreeElementsDescending() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.FIRST, 
 							   SortSequence.DESCENDING, SortSequence.DESCENDING, 
@@ -320,7 +320,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Three_Elements_Mixed_1() {
+	public void testGetSortkeysThreeElementsMixed1() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.FIRST, 
 							   SortSequence.ASCENDING, SortSequence.DESCENDING, 
@@ -330,7 +330,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Three_Elements_Mixed_2() {
+	public void testGetSortkeysThreeElementsMixed2() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.BY_DBKEY, 
 							   SortSequence.DESCENDING, SortSequence.ASCENDING, 
@@ -340,7 +340,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Four_Elements_Mixed_1() {
+	public void testGetSortkeysFourElementsMixed1() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.FIRST, 
 							   SortSequence.ASCENDING, SortSequence.DESCENDING, 
@@ -351,7 +351,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Four_Elements_Mixed_2() {
+	public void testGetSortkeysFourElementsMixed2() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.LAST, 
 							   SortSequence.DESCENDING, SortSequence.ASCENDING, 
@@ -362,7 +362,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Four_Elements_Mixed_3() {
+	public void testGetSortkeysFourElementsMixed3() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.LAST, 
 							   SortSequence.DESCENDING, SortSequence.ASCENDING, 
@@ -373,7 +373,7 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Four_Elements_Mixed_4() {
+	public void testGetSortkeysFourElementsMixed4() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.LAST, 
 							   SortSequence.ASCENDING, SortSequence.DESCENDING, 
@@ -384,19 +384,18 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testGetSortkeys_Four_Elements_Mixed_5() {
+	public void testGetSortkeysFourElementsMixed5() {
 		MemberRole memberRole = 
 			generateMemberRole(DuplicatesOption.LAST, 
 							   SortSequence.ASCENDING, SortSequence.DESCENDING,
 							   SortSequence.DESCENDING, SortSequence.DESCENDING,
 							   SortSequence.ASCENDING, SortSequence.DESCENDING);
 		String sortKeysAsString = Tools.getSortKeys(memberRole);
-		assertEquals("ASC (ELEMENT-1),\nDESC (ELEMENT-2,\n\tELEMENT-3,\n\tELEMENT-4),\n" +
-					 "ASC (ELEMENT-5),\nDESC (ELEMENT-6) DL", sortKeysAsString);		
+		assertEquals("ASC (ELEMENT-1),\nDESC (ELEMENT-2,\n\tELEMENT-3,\n\tELEMENT-4),\nASC (ELEMENT-5),\nDESC (ELEMENT-6) DL", sortKeysAsString);		
 	}
 	
 	@Test
-	public void testGetSortkeys_Dbkey() {
+	public void testGetSortkeysDbkey() {
 		Set set = mock(Set.class);
 		when(set.getOrder()).thenReturn(SetOrder.SORTED);
 		KeyElement keyElement = mock(KeyElement.class);
@@ -416,102 +415,102 @@ public class ToolsTest {
 	}
 	
 	@Test
-	public void testCanHoldNonVsamRecords_emptyArea() {		
+	public void testCanHoldNonVsamRecordsemptyArea() {		
 		assertTrue(Tools.canHoldNonVsamRecords(emptyArea));
 	}
 	
 	@Test
-	public void testCanHoldNonVsamRecords_areaWithNonVsamRecord() {	
+	public void testCanHoldNonVsamRecordsAreaWithNonVsamRecord() {	
 		assertTrue(Tools.canHoldNonVsamRecords(areaWithNonVsamRecord));	
 	}
 	
 	@Test
-	public void testCanHoldNonVsamRecords_areaWithSystemOwner() {	
+	public void testCanHoldNonVsamRecordsAreaWithSystemOwner() {	
 		assertTrue(Tools.canHoldNonVsamRecords(areaWithSystemOwner));
 	}
 	
 	@Test
-	public void testCanHoldNonVsamRecords_areaWithVsamRecord() {		
+	public void testCanHoldNonVsamRecordsAreaWithVsamRecord() {		
 		assertFalse(Tools.canHoldNonVsamRecords(areaWithVsamRecord));
 	}
 	
 	@Test
-	public void testCanHoldSystemOwners_emptyArea() {
+	public void testCanHoldSystemOwnersEmptyArea() {
 		assertTrue(Tools.canHoldSystemOwners(emptyArea));
 	}	
 	
 	@Test
-	public void testCanHoldSystemOwners_areaWithNonVsamRecord() {	
+	public void testCanHoldSystemOwnersAreaWithNonVsamRecord() {	
 		assertTrue(Tools.canHoldSystemOwners(areaWithNonVsamRecord));
 	}
 	
 	@Test
-	public void testCanHoldSystemOwners_areaWithSystemOwner() {	
+	public void testCanHoldSystemOwnersAreaWithSystemOwner() {	
 		assertTrue(Tools.canHoldSystemOwners(areaWithSystemOwner));
 	}
 	
 	@Test
-	public void testCanHoldSystemOwners_areaWithVsamRecord() {	
+	public void testCanHoldSystemOwnersAreaWithVsamRecord() {	
 		assertFalse(Tools.canHoldSystemOwners(areaWithVsamRecord));
 	}
 	
 	@Test
-	public void testCanHoldVsamRecords_emptyArea() {		
+	public void testCanHoldVsamRecordsEmptyArea() {		
 		assertTrue(Tools.canHoldVsamRecords(emptyArea));
 	}
 	
 	@Test
-	public void testCanHoldVsamRecords_areaWithNonVsamRecord() {
+	public void testCanHoldVsamRecordsAreaWithNonVsamRecord() {
 		assertFalse(Tools.canHoldVsamRecords(areaWithNonVsamRecord));
 	}
 	
 	@Test
-	public void testCanHoldVsamRecords_areaWithSystemOwner() {
+	public void testCanHoldVsamRecordsAreaWithSystemOwner() {
 		assertFalse(Tools.canHoldVsamRecords(areaWithSystemOwner));	
 	}
 	
 	@Test
-	public void testCanHoldVsamRecords_areaWithVsamRecord() {
+	public void testCanHoldVsamRecordsAreaWithVsamRecord() {
 		assertTrue(Tools.canHoldVsamRecords(areaWithVsamRecord));
 	}
 	
 	@Test
-	public void testAreaMixesWithRecord_NonVsamRecord_emptyArea() {
+	public void testAreaMixesWithRecordNonVsamRecordEmptyArea() {
 		assertTrue(Tools.areaMixesWithRecord(emptyArea, nonVsamRecord));
 	}
 	
 	@Test
-	public void testAreaMixesWithRecord_NonVsamRecord_areaWithNonVsamRecord() {
+	public void testAreaMixesWithRecordNonVsamRecordAreaWithNonVsamRecord() {
 		assertTrue(Tools.areaMixesWithRecord(areaWithNonVsamRecord, nonVsamRecord));
 	}
 	
 	@Test
-	public void testAreaMixesWithRecord_NonVsamRecord_areaWithSystemOwner() {
+	public void testAreaMixesWithRecordNonVsamRecordAreaWithSystemOwner() {
 		assertTrue(Tools.areaMixesWithRecord(areaWithSystemOwner, nonVsamRecord));
 	}
 	
 	@Test
-	public void testAreaMixesWithRecord_NonVsamRecord_areaWithVsamRecord() {
+	public void testAreaMixesWithRecordNonVsamRecordAreaWithVsamRecord() {
 		assertFalse(Tools.areaMixesWithRecord(areaWithVsamRecord, nonVsamRecord));
 	}
 	
 	@Test
-	public void testAreaMixesWithRecord_VsamRecord_emptyArea() {
+	public void testAreaMixesWithRecordVsamRecordEmptyArea() {
 		assertTrue(Tools.areaMixesWithRecord(emptyArea, vsamRecord));
 	}
 	
 	@Test
-	public void testAreaMixesWithRecord_VsamRecord_areaWithNonVsamRecord() {
+	public void testAreaMixesWithRecordVsamRecordAreaWithNonVsamRecord() {
 		assertFalse(Tools.areaMixesWithRecord(areaWithNonVsamRecord, vsamRecord));
 	}
 	
 	@Test
-	public void testAreaMixesWithRecord_VsamRecord_areaWithSystemOwner() {
+	public void testAreaMixesWithRecordVsamRecordAreaWithSystemOwner() {
 		assertFalse(Tools.areaMixesWithRecord(areaWithSystemOwner, vsamRecord));
 	}
 	
 	@Test
-	public void testAreaMixesWithRecord_VsamRecord_areaWithVsamRecord() {
+	public void testAreaMixesWithRecordVsamRecordAreaWithVsamRecord() {
 		assertTrue(Tools.areaMixesWithRecord(areaWithVsamRecord, vsamRecord));
 	}
 	
@@ -519,42 +518,42 @@ public class ToolsTest {
 	public void testGetRootMessageWithTopLevelMessage() {
 		
 		Throwable level3 = mock(Throwable.class);
-		when(level3.getMessage()).thenReturn("Level 3's message");
+		when(level3.getMessage()).thenReturn(LEVEL_3_S_MESSAGE);
 		when(level3.getCause()).thenReturn(null);
 		
 		Throwable level2 = mock(Throwable.class);
-		when(level2.getMessage()).thenReturn("Level 2's message");
+		when(level2.getMessage()).thenReturn(LEVEL_2_S_MESSAGE);
 		when(level2.getCause()).thenReturn(level3);
 		
 		Throwable level1 = mock(Throwable.class);
-		when(level1.getMessage()).thenReturn("Level 1's message");
+		when(level1.getMessage()).thenReturn(LEVEL_1_S_MESSAGE);
 		when(level1.getCause()).thenReturn(level2);
 		
-		assertEquals("Level 3's message", Tools.getRootMessage(level1));
+		assertEquals(LEVEL_3_S_MESSAGE, Tools.getRootMessage(level1));
 	}
 	
 	@Test
 	public void testGetRootMessageWithoutTopLevelMessage() {
 		
 		Throwable level3 = mock(Throwable.class);
-		when(level3.getMessage()).thenReturn("Level 3's message");
+		when(level3.getMessage()).thenReturn(LEVEL_3_S_MESSAGE);
 		when(level3.getCause()).thenReturn(null);
 		
 		Throwable level2 = mock(Throwable.class);
-		when(level2.getMessage()).thenReturn("Level 2's message");
+		when(level2.getMessage()).thenReturn(LEVEL_2_S_MESSAGE);
 		when(level2.getCause()).thenReturn(level3);
 		
 		Throwable level1 = mock(Throwable.class);
 		when(level1.getMessage()).thenReturn(null);
 		when(level1.getCause()).thenReturn(level2);
 		
-		assertEquals("Level 3's message", Tools.getRootMessage(level1));
+		assertEquals(LEVEL_3_S_MESSAGE, Tools.getRootMessage(level1));
 		
 		when(level1.getMessage()).thenReturn("");
-		assertEquals("Level 3's message", Tools.getRootMessage(level1));
+		assertEquals(LEVEL_3_S_MESSAGE, Tools.getRootMessage(level1));
 		
 		when(level1.getMessage()).thenReturn(" ");
-		assertEquals("Level 3's message", Tools.getRootMessage(level1));
+		assertEquals(LEVEL_3_S_MESSAGE, Tools.getRootMessage(level1));
 	}
 	
 	@Test
@@ -565,20 +564,20 @@ public class ToolsTest {
 		when(level3.getCause()).thenReturn(null);
 		
 		Throwable level2 = mock(Throwable.class);
-		when(level2.getMessage()).thenReturn("Level 2's message");
+		when(level2.getMessage()).thenReturn(LEVEL_2_S_MESSAGE);
 		when(level2.getCause()).thenReturn(level3);
 		
 		Throwable level1 = mock(Throwable.class);
-		when(level1.getMessage()).thenReturn("Level 1's message");
+		when(level1.getMessage()).thenReturn(LEVEL_1_S_MESSAGE);
 		when(level1.getCause()).thenReturn(level2);
 		
-		assertEquals("Level 2's message", Tools.getRootMessage(level1));
+		assertEquals(LEVEL_2_S_MESSAGE, Tools.getRootMessage(level1));
 		
 		when(level3.getMessage()).thenReturn("");
-		assertEquals("Level 2's message", Tools.getRootMessage(level1));
+		assertEquals(LEVEL_2_S_MESSAGE, Tools.getRootMessage(level1));
 		
 		when(level3.getMessage()).thenReturn(" ");
-		assertEquals("Level 2's message", Tools.getRootMessage(level1));
+		assertEquals(LEVEL_2_S_MESSAGE, Tools.getRootMessage(level1));
 	}
 	
 	@Test
@@ -597,6 +596,238 @@ public class ToolsTest {
 		when(level1.getCause()).thenReturn(level2);
 		
 		assertEquals("An error occurred", Tools.getRootMessage(level1));
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition1() {
+		var ownerRole = schemaFactory.createOwnerRole();
+		ownerRole.setNextDbkeyPosition((short) 1);
+		
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setNextDbkeyPosition((short) 2);
+		
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		schemaRecord.getOwnerRoles().add(ownerRole);
+		schemaRecord.getMemberRoles().add(memberRole);
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(3, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition2() {
+		var ownerRole = schemaFactory.createOwnerRole();
+		ownerRole.setNextDbkeyPosition((short) 2);
+		
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setNextDbkeyPosition((short) 1);
+		
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		schemaRecord.getOwnerRoles().add(ownerRole);
+		schemaRecord.getMemberRoles().add(memberRole);
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(3, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition3() {
+		var ownerRole = schemaFactory.createOwnerRole();
+		ownerRole.setNextDbkeyPosition((short) 1);
+		ownerRole.setPriorDbkeyPosition((short) 2);
+		
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setNextDbkeyPosition((short) 3);
+		memberRole.setPriorDbkeyPosition((short) 4);
+		memberRole.setOwnerDbkeyPosition((short) 5);
+		
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		schemaRecord.getOwnerRoles().add(ownerRole);
+		schemaRecord.getMemberRoles().add(memberRole);
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(6, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition4() {
+		var ownerRole = schemaFactory.createOwnerRole();
+		ownerRole.setNextDbkeyPosition((short) 2);
+		ownerRole.setPriorDbkeyPosition((short) 1);
+		
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setNextDbkeyPosition((short) 4);
+		memberRole.setPriorDbkeyPosition((short) 5);
+		memberRole.setOwnerDbkeyPosition((short) 3);
+		
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		schemaRecord.getOwnerRoles().add(ownerRole);
+		schemaRecord.getMemberRoles().add(memberRole);
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(6, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition5() {
+		var ownerRole = schemaFactory.createOwnerRole();
+		ownerRole.setNextDbkeyPosition((short) 4);
+		ownerRole.setPriorDbkeyPosition((short) 5);
+		
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setNextDbkeyPosition((short) 1);
+		memberRole.setPriorDbkeyPosition((short) 2);
+		memberRole.setOwnerDbkeyPosition((short) 3);
+		
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		schemaRecord.getOwnerRoles().add(ownerRole);
+		schemaRecord.getMemberRoles().add(memberRole);
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(6, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition6() {
+		var ownerRole = schemaFactory.createOwnerRole();
+		ownerRole.setNextDbkeyPosition((short) 1);
+		
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setIndexDbkeyPosition((short) 2);
+		
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		schemaRecord.getOwnerRoles().add(ownerRole);
+		schemaRecord.getMemberRoles().add(memberRole);
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(3, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition7() {
+		var ownerRole = schemaFactory.createOwnerRole();
+		ownerRole.setNextDbkeyPosition((short) 2);
+		
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setIndexDbkeyPosition((short) 1);
+		
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		schemaRecord.getOwnerRoles().add(ownerRole);
+		schemaRecord.getMemberRoles().add(memberRole);
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(3, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition8() {
+		var ownerRole1 = schemaFactory.createOwnerRole();
+		ownerRole1.setNextDbkeyPosition((short) 1);
+		var ownerRole2 = schemaFactory.createOwnerRole();
+		ownerRole1.setNextDbkeyPosition((short) 2);
+				
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		schemaRecord.getOwnerRoles().add(ownerRole1);
+		schemaRecord.getOwnerRoles().add(ownerRole2);
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(3, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void testGetFirstAvailablePointerPosition9() {
+		var schemaRecord = schemaFactory.createSchemaRecord();
+		
+		var firstAvailablePointerPosition = Tools.getFirstAvailablePointerPosition(schemaRecord);
+		
+		assertEquals(1, firstAvailablePointerPosition);
+	}
+	
+	@Test
+	public void getPointersForChainedSetWithAllPointers() {
+		var set = schemaFactory.createSet();
+		set.setMode(SetMode.CHAINED);
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setSet(set);
+		memberRole.setNextDbkeyPosition((short) 1);
+		memberRole.setPriorDbkeyPosition((short) 2);
+		memberRole.setOwnerDbkeyPosition((short) 3);
+		
+		assertEquals("NPO", Tools.getPointers(memberRole));
+	}
+	
+	@Test
+	public void getPointersForChainedSetWithOnlyNextPointer() {
+		var set = schemaFactory.createSet();
+		set.setMode(SetMode.CHAINED);
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setSet(set);
+		memberRole.setNextDbkeyPosition((short) 1);
+		
+		assertEquals("N", Tools.getPointers(memberRole));
+	}
+	
+	@Test
+	public void getPointersForIndexedSetIndexPointerOmitted() {
+		var set = schemaFactory.createSet();
+		set.setMode(SetMode.INDEXED);
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setSet(set);		
+		
+		assertEquals("-", Tools.getPointers(memberRole));
+	}
+	
+	@Test
+	public void getPointersForIndexedSetWithAllPointers() {
+		var set = schemaFactory.createSet();
+		set.setMode(SetMode.INDEXED);
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setSet(set);
+		memberRole.setIndexDbkeyPosition((short) 1);
+		memberRole.setOwnerDbkeyPosition((short) 2);
+		
+		assertEquals("IO", Tools.getPointers(memberRole));
+	}
+	
+	@Test
+	public void getPointersForIndexedSetWithOnlyIndexPointer() {
+		var set = schemaFactory.createSet();
+		set.setMode(SetMode.INDEXED);
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setSet(set);
+		memberRole.setIndexDbkeyPosition((short) 1);
+		
+		assertEquals("I", Tools.getPointers(memberRole));
+	}
+	
+	@Test
+	public void getPointersForIndexedSetWithOnlyOwnerPointer() {
+		// note: this is not a realistic situation
+		var set = schemaFactory.createSet();
+		set.setMode(SetMode.INDEXED);
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setSet(set);
+		memberRole.setOwnerDbkeyPosition((short) 1);
+		
+		assertEquals("O", Tools.getPointers(memberRole));
+	}
+	
+	@Test
+	public void getPointersForVsamIndex() {
+		var set = schemaFactory.createSet();
+		set.setMode(SetMode.VSAM_INDEX);
+		var memberRole = schemaFactory.createMemberRole();
+		memberRole.setSet(set);
+		
+		assertEquals("", Tools.getPointers(memberRole));
 	}
 
 }
