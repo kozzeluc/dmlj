@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -93,8 +93,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 	}
 
 	@Override
-	public Collection<?> getAreaContexts() {
-		
+	public ContextCollection getAreaContexts() {
 		final List<Sa_018> list = new ArrayList<>();
 		
 		final Map<Rowid, Sa_018> sa_018s = new HashMap<>();
@@ -126,12 +125,11 @@ public class SchemaImportTool implements ISchemaImportTool {
 				sa_018.getSacall_020s().add(sacall_020);
 			}			
 		});				
-		return list;
+		return new ContextCollection(list);
 	}
 
 	@Override
-	public Collection<?> getRecordContexts() {
-		
+	public ContextCollection getRecordContexts() {
 		final List<Object> list = new ArrayList<>();
 		final Map<Rowid, Sr_036> sr_036s = new HashMap<>();
 		final Map<Rowid, Rcdsyn_079> rcdsyn_079s = new HashMap<>();
@@ -389,13 +387,12 @@ public class SchemaImportTool implements ISchemaImportTool {
 			
 		}		
 		
-		return list;
+		return new ContextCollection(list);
 		
 	}
 
 	@Override
-	public Collection<?> getRootElementContexts(Object recordContext) {		
-		
+	public ContextCollection getRootElementContexts(Object recordContext) {		
 		if (recordContext instanceof Srcd_113) {
 			
 			Srcd_113 srcd_113 = (Srcd_113) recordContext;
@@ -412,12 +409,12 @@ public class SchemaImportTool implements ISchemaImportTool {
 				}
 			}			
 			
-			return list;			
+			return new ContextCollection(list);			
 			
 		} else if (recordContext instanceof Table_1050) {				
 			// catalog derived record			
 			Table_1050 table_1050 = (Table_1050) recordContext;
-			return table_1050.getColumn_1028s();			
+			return new ContextCollection(table_1050.getColumn_1028s());			
 		} else {
 			throw new IllegalArgumentException("unknown record context type: " +
 											   recordContext.getClass().getName());
@@ -425,8 +422,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 	}	
 
 	@Override
-	public Collection<?> getSetContexts() {
-		
+	public ContextCollection getSetContexts() {
 		final List<Object> list = new ArrayList<>();
 		
 		// regular sets
@@ -561,7 +557,7 @@ public class SchemaImportTool implements ISchemaImportTool {
 			});			
 		}		
 		
-		return list;
+		return new ContextCollection(list);
 	}	
 
 	@SuppressWarnings("unchecked")

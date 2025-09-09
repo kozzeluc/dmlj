@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,16 +24,14 @@ import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class DataEntryPageExtensionElement extends AbstractExtensionElement {
-
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	private AbstractDataEntryPage dataEntryPage;
 
 	public DataEntryPageExtensionElement(IConfigurationElement configElement) {
 		super(configElement);
-		Assert.isTrue(configElement.getName()
-								   .equals(ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE), 
-					  "wrong IConfigurationElement: " + configElement.getName());		
+		Assert.isTrue(configElement.getName().equals(ExtensionPointConstants.ELEMENT_DATA_ENTRY_PAGE),
+				"wrong IConfigurationElement: " + configElement.getName());		
 	}
 	
 	public AbstractDataEntryPage createDataEntryPage() {
@@ -41,27 +39,23 @@ public class DataEntryPageExtensionElement extends AbstractExtensionElement {
 			return dataEntryPage;
 		}
 		try {
-			String propertyName = ExtensionPointConstants.ATTRIBUTE_CLASS;
-			Object executableExtension =
-				configElement.createExecutableExtension(propertyName);
+			var propertyName = ExtensionPointConstants.ATTRIBUTE_CLASS;
+			var executableExtension = configElement.createExecutableExtension(propertyName);
 			dataEntryPage = (AbstractDataEntryPage) executableExtension;			
 			return dataEntryPage;
 		} catch (CoreException e) {
-			String message = e.getMessage();
+			var message = e.getMessage();
 			logger.error(message, e);
-			throw new RuntimeException(message);
+			throw new IllegalStateException(message);
 		}
 	}
 
 	public String getImplementingClass() {
-		return Util.getAttribute(configElement, 
-				  				 ExtensionPointConstants.ATTRIBUTE_CLASS, null);
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_CLASS, null);
 	}	
 
 	public String getMessage() {
-		return Util.getAttribute(configElement, 
-								 ExtensionPointConstants.ATTRIBUTE_MESSAGE, 
-								 "[no message available]");
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_MESSAGE, "[no message available]");
 	}
 	
 }

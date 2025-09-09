@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,13 +21,8 @@ import java.util.List;
 import java.util.Properties;
 
 public class SchemaSyntaxWrapper {
-
 	private List<String> list = new ArrayList<>();
-	private Properties   properties = new Properties();
-	
-	public SchemaSyntaxWrapper() {
-		super();
-	}
+	private Properties properties = new Properties();
 	
 	public List<String> getLines() {
 		return list;

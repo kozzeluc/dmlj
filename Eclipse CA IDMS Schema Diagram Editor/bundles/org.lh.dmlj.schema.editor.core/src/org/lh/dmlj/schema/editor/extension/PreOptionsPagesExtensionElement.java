@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,7 +24,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 public class PreOptionsPagesExtensionElement extends AbstractExtensionElement {
-	
 	private List<DataEntryPageExtensionElement> dataEntryPageExtensionElements;	
 
 	public PreOptionsPagesExtensionElement(IConfigurationElement configElement) {
@@ -34,10 +33,7 @@ public class PreOptionsPagesExtensionElement extends AbstractExtensionElement {
 	public List<DataEntryPageExtensionElement> getDataEntryPageExtensionElements() {		
 		if (dataEntryPageExtensionElements == null) {
 			dataEntryPageExtensionElements = new ArrayList<>();
-			List<DataEntryPageExtensionElement> pages =
-				ExtensionElementFactory.getExtensionElements(configElement, 
-															 ELEMENT_DATA_ENTRY_PAGE, 
-															 DataEntryPageExtensionElement.class);		
+			var pages = ExtensionElementFactory.getExtensionElements(configElement, ELEMENT_DATA_ENTRY_PAGE, DataEntryPageExtensionElement.class);
 			dataEntryPageExtensionElements.addAll(pages);
 		}
 		return dataEntryPageExtensionElements;

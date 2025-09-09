@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -40,62 +40,47 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 public class PromptForDigitCountDialog extends Dialog {
-	
-	private Button 									  btnNoSuffix;
-	private Button 									  btnUse3or4Digits;
-	private Button 									  btnUse4Digits;
-	private SchemaSyntaxWrapper 					  context;
+	private Button btnNoSuffix;
+	private Button btnUse3or4Digits;
+	private Button btnUse4Digits;
+	private SchemaSyntaxWrapper context;
 	private IRecordDataCollector<SchemaSyntaxWrapper> dataCollector;
-	private Table 									  elementTable;
-	private String									  knownControlElementName;
-	private Label 								      lblUse3or4Digits;
-	private Label 									  lblUse4Digits;
-	private short 									  recordId;
-	private short 									  selectedDigitCount;
-	private List<String> 							  syntaxElementNames;
-	private Text 									  textSyntax;
+	private Table elementTable;
+	private String knownControlElementName;
+	private Label lblUse3or4Digits;
+	private Label lblUse4Digits;
+	private short recordId;
+	private short selectedDigitCount;
+	private List<String> syntaxElementNames;
+	private Text textSyntax;
+	
 	private static String formatRecordId(short recordId, int length) {
-		StringBuilder p = new StringBuilder(String.valueOf(recordId));
+		var p = new StringBuilder(String.valueOf(recordId));
 		while (p.length() < length) {
 			p.insert(0, '0');
 		}
 		return p.toString();
 	}
 	
-	private static String getBaseName(String syntaxName, String suffix, 
-							   		  boolean containsBaseNamesFlag) {
-				
-		if (suffix == null || suffix.trim().equals("") || 
-			containsBaseNamesFlag) {
-			
+	private static String getBaseName(String syntaxName, String suffix, boolean containsBaseNamesFlag) {
+		if (suffix == null || suffix.trim().equals("") || containsBaseNamesFlag) {
 			return syntaxName;
 		} else {
 			return syntaxName.substring(0, syntaxName.lastIndexOf(suffix));
 		}
 	}
 	
-	private static String getName(String syntaxName, String suffix,
-								  boolean containsBaseNamesFlag) {				
-
-		StringBuilder p = new StringBuilder();		
+	private static String getName(String syntaxName, String suffix, boolean containsBaseNamesFlag) {
+		var p = new StringBuilder();		
 		p.append(syntaxName);
-		if (suffix != null && !suffix.trim().equals("") && 
-			containsBaseNamesFlag) {
-			
+		if (suffix != null && !suffix.trim().equals("") && containsBaseNamesFlag) {
 			p.append(suffix);
 		}
 		return p.toString();
-
 	}		
 
-	/**
-	 * Create the dialog.
-	 * @param parentShell
-	 */
-	public PromptForDigitCountDialog(Shell parentShell, 
-									 SchemaSyntaxWrapper context,
-									 IRecordDataCollector<SchemaSyntaxWrapper> dataCollector,
-									 String	knownControlElementName) {
+	public PromptForDigitCountDialog(Shell parentShell, SchemaSyntaxWrapper context,
+			IRecordDataCollector<SchemaSyntaxWrapper> dataCollector, String	knownControlElementName) {
 		
 		super(parentShell);
 		this.context = context;
@@ -105,43 +90,31 @@ public class PromptForDigitCountDialog extends Dialog {
 	}
 
 	@Override
-	protected void configureShell(Shell shell) {		
+	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		String recordName = dataCollector.getName(context);
-		shell.setText("Specify record-id suffix for record " + recordName);	
+		var recordName = dataCollector.getName(context);
+		shell.setText("Specify record-id suffix for record " + recordName);
 	}
 	
-	private boolean containsBaseNamesFlag(String suffix) {	
-		if (suffix != null && !suffix.trim().equals("")) {
-			for (String elementName : syntaxElementNames) {
-				if (!elementName.endsWith(suffix)) {
-					return true;					
-				}
-			}
+	private boolean containsBaseNamesFlag(String suffix) {
+		if (suffix != null && !suffix.trim().isEmpty()) {
+			return syntaxElementNames.stream()
+					.anyMatch(elementName -> !elementName.endsWith(suffix));
+		} else {
+			return false;
 		}
-		return false;	
 	}
 
-	/**
-	 * Create contents of the button bar.
-	 * @param parent
-	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-				     true);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL,
-			     	 false);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
-
-	/**
-	 * Create contents of the dialog.
-	 * @param parent
-	 */
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
-		GridLayout gridLayout = (GridLayout) container.getLayout();
+		var container = (Composite) super.createDialogArea(parent);
+		var gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 3;
 		
 		textSyntax = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -153,18 +126,18 @@ public class PromptForDigitCountDialog extends Dialog {
 		elementTable.setHeaderVisible(true);
 		elementTable.setLinesVisible(true);
 		
-		TableColumn tblclmnNewColumn = new TableColumn(elementTable, SWT.NONE);
-		tblclmnNewColumn.setWidth(140);
-		tblclmnNewColumn.setText("Element Name");
+		var tblclmnElementName = new TableColumn(elementTable, SWT.NONE);
+		tblclmnElementName.setWidth(140);
+		tblclmnElementName.setText("Element Name");
 		
-		TableColumn tblclmnNewColumn_1 = new TableColumn(elementTable, SWT.NONE);
-		tblclmnNewColumn_1.setWidth(140);
-		tblclmnNewColumn_1.setText("Element Base Name");
+		var tblclmnElementBaseName = new TableColumn(elementTable, SWT.NONE);
+		tblclmnElementBaseName.setWidth(140);
+		tblclmnElementBaseName.setText("Element Base Name");
 		
-		Label lblPleaseIndicateWhat = new Label(container, SWT.NONE);
-		GridData gd_lblPleaseIndicateWhat = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblPleaseIndicateWhat.verticalIndent = 10;
-		lblPleaseIndicateWhat.setLayoutData(gd_lblPleaseIndicateWhat);
+		var lblPleaseIndicateWhat = new Label(container, SWT.NONE);
+		var gdLblPleaseIndicateWhat = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblPleaseIndicateWhat.verticalIndent = 10;
+		lblPleaseIndicateWhat.setLayoutData(gdLblPleaseIndicateWhat);
 		lblPleaseIndicateWhat.setText("Please indicate what suffix the import tool should use for this record:");		
 		
 		btnNoSuffix = new Button(container, SWT.RADIO);
@@ -174,9 +147,9 @@ public class PromptForDigitCountDialog extends Dialog {
 				setSelectedDigitCount();
 			}
 		});
-		GridData gd_btnNoSuffix = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_btnNoSuffix.verticalIndent = 10;
-		btnNoSuffix.setLayoutData(gd_btnNoSuffix);
+		var gdBtnNoSuffix = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gdBtnNoSuffix.verticalIndent = 10;
+		btnNoSuffix.setLayoutData(gdBtnNoSuffix);
 		btnNoSuffix.setText("no suffix");
 		new Label(container, SWT.NONE);
 		
@@ -214,10 +187,7 @@ public class PromptForDigitCountDialog extends Dialog {
 		
 		return container;
 	}
-
-	/**
-	 * Return the initial size of the dialog.
-	 */
+	
 	@Override
 	protected Point getInitialSize() {
 		return new Point(750, 500);
@@ -228,42 +198,12 @@ public class PromptForDigitCountDialog extends Dialog {
 	}
 
 	private void initialize() {
-		
-		StringBuilder p = new StringBuilder();
-		for (String line : context.getLines()) {
-			if (p.length() > 0) {
-				p.append("\n");
-			}
-			p.append(line);
-		}
-		textSyntax.setText(p.toString());
-		
-		// create the initial element table items
-		syntaxElementNames = new ArrayList<String>();
-		boolean inElementSyntax = false;
-		for (String line : context.getLines()) {
-			if (line.trim().equals(".")) {
-				inElementSyntax = true;
-			} else if (inElementSyntax) {
-				String q = line.substring(2).trim();
-				if (q.startsWith("0") && q.charAt(2) == ' ') {
-					// skip level 88 elements
-					String elementName = q.substring(3);
-					if (!elementName.equals("FILLER")) {
-						// skip FILLER elements
-						syntaxElementNames.add(elementName);
-						TableItem tableItem = 
-							new TableItem(elementTable, SWT.NONE);
-						tableItem.setText(0, "");
-						tableItem.setText(1, "");
-					}
-				}
-			}
-		}	
+		textSyntax.setText(composeSyntax());
+		createInitialElementTableItems();	
 		
 		recordId = dataCollector.getRecordId(context);
-		String suffix3 = "-" + formatRecordId(recordId, 3);
-		String suffix4 = "-" + formatRecordId(recordId, 4);
+		var suffix3 = "-" + formatRecordId(recordId, 3);
+		var suffix4 = "-" + formatRecordId(recordId, 4);
 		
 		btnNoSuffix.setSelection(true);
 		
@@ -271,12 +211,10 @@ public class PromptForDigitCountDialog extends Dialog {
 		lblUse4Digits.setText("\"" + suffix4 + "\"");		
 		
 		if (knownControlElementName != null) {
-		
-			boolean found = false;
-			boolean containsBaseNamesFlag = containsBaseNamesFlag(suffix3);
-			for (String syntaxElementName : syntaxElementNames) {
-				String name = 
-					getName(syntaxElementName, suffix3, containsBaseNamesFlag);
+			var found = false;
+			var containsBaseNamesFlag = containsBaseNamesFlag(suffix3);
+			for (var syntaxElementName : syntaxElementNames) {
+				var name = getName(syntaxElementName, suffix3, containsBaseNamesFlag);
 				if (knownControlElementName.equals(name)) {
 					found = true;
 					break;
@@ -287,9 +225,8 @@ public class PromptForDigitCountDialog extends Dialog {
 	
 			found = false;
 			containsBaseNamesFlag = containsBaseNamesFlag(suffix4);
-			for (String syntaxElementName : syntaxElementNames) {
-				String name = 
-					getName(syntaxElementName, suffix4, containsBaseNamesFlag);
+			for (var syntaxElementName : syntaxElementNames) {
+				var name = getName(syntaxElementName, suffix4, containsBaseNamesFlag);
 				if (knownControlElementName.equals(name)) {
 					found = true;
 					break;
@@ -297,7 +234,6 @@ public class PromptForDigitCountDialog extends Dialog {
 			}
 			btnUse4Digits.setEnabled(found);
 			lblUse4Digits.setEnabled(found);
-		
 		}
 		
 		if (recordId > 999) {
@@ -306,7 +242,40 @@ public class PromptForDigitCountDialog extends Dialog {
 		}
 		
 		setSelectedDigitCount();
-		
+	}
+	
+	private String composeSyntax() {
+		var syntax = new StringBuilder();
+		for (var line : context.getLines()) {
+			if (!syntax.isEmpty()) {
+				syntax.append("\n");
+			}
+			syntax.append(line);
+		}
+		return syntax.toString();
+	}
+	
+	private void createInitialElementTableItems() {
+		syntaxElementNames = new ArrayList<>();
+		var inElementSyntax = false;
+		for (var line : context.getLines()) {
+			if (line.trim().equals(".")) {
+				inElementSyntax = true;
+			} else if (inElementSyntax) {
+				var q = line.substring(2).trim();
+				if (q.startsWith("0") && q.charAt(2) == ' ') {
+					// skip level 88 elements
+					var elementName = q.substring(3);
+					if (!elementName.equals("FILLER")) {
+						// skip FILLER elements
+						syntaxElementNames.add(elementName);
+						var tableItem = new TableItem(elementTable, SWT.NONE);
+						tableItem.setText(0, "");
+						tableItem.setText(1, "");
+					}
+				}
+			}
+		}
 	}
 	
 	private void setSelectedDigitCount() {		
@@ -319,14 +288,12 @@ public class PromptForDigitCountDialog extends Dialog {
 			selectedDigitCount = 4;
 			suffix = "-" + formatRecordId(recordId, 4);
 		}
-		boolean containsBaseNamesFlag = containsBaseNamesFlag(suffix);
-		for (int i = 0; i < syntaxElementNames.size(); i++ ) {
-			TableItem tableItem = elementTable.getItem(i);
-			String syntaxName = syntaxElementNames.get(i);
-			tableItem.setText(0, getName(syntaxName, suffix, 
-										 containsBaseNamesFlag));
-			tableItem.setText(1, getBaseName(syntaxName, suffix, 
-											 containsBaseNamesFlag));
+		var containsBaseNamesFlag = containsBaseNamesFlag(suffix);
+		for (var i = 0; i < syntaxElementNames.size(); i++ ) {
+			var tableItem = elementTable.getItem(i);
+			var syntaxName = syntaxElementNames.get(i);
+			tableItem.setText(0, getName(syntaxName, suffix, containsBaseNamesFlag));
+			tableItem.setText(1, getBaseName(syntaxName, suffix, containsBaseNamesFlag));
 		}		
 	}	
 

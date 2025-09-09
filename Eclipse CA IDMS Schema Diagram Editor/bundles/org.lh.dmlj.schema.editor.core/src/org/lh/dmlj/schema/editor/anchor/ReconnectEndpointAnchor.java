@@ -76,7 +76,7 @@ public class ReconnectEndpointAnchor implements ConnectionAnchor {
 		
 		// unscale the calculated offsets...
 		var result = new PrecisionPoint(offsetX, offsetY);
-		RecordFigure.unscale(result, figure, zoomLevel);
+		RecordFigure.unscale(result, zoomLevel);
 		return result;
 	}	
 	

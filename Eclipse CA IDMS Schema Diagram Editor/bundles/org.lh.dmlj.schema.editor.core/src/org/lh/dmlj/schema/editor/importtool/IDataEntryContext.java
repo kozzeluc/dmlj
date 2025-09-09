@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,9 +19,6 @@ package org.lh.dmlj.schema.editor.importtool;
 import java.util.List;
 
 public interface IDataEntryContext {
-	
-	// TODO move the standard context attribute names to an abstract class or interface (same package)
-	
 	// standard schema import tool context attribute names
 	public static final String SCHEMA_NAME = "schemaName";
 	public static final String SCHEMA_VERSION = "schemaVersion";	

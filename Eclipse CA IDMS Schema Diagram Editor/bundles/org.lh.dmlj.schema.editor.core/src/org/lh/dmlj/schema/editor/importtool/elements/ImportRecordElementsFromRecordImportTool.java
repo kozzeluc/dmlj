@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,7 +18,6 @@ package org.lh.dmlj.schema.editor.importtool.elements;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 
 import org.lh.dmlj.schema.Element;
@@ -27,47 +26,41 @@ import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.importtool.elements.diagram.RecordElementsDataCollector;
 
 public class ImportRecordElementsFromRecordImportTool implements IRecordElementsImportTool {
-
-	private SchemaRecord record;
-	
-	public ImportRecordElementsFromRecordImportTool() {
-		super();
-	}
+	private SchemaRecord schemaRecord;
 
 	@Override
 	public void dispose() {
+		// nothing to do here
 	}
 
 	@Override
-	public Collection<?> getRootElementContexts() {
-		List<Element> rootElements = new ArrayList<>();
-		rootElements.addAll(record.getRootElements());
-		return rootElements;
+	public RootElementContexts getRootElementContexts() {
+		var rootElements = new ArrayList<Element>();
+		rootElements.addAll(schemaRecord.getRootElements());
+		return new RootElementContexts(rootElements);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Collection<T> getSubordinateElementContexts(T elementContext) {
-		if (elementContext instanceof Element) {
-			Element element = (Element) elementContext;
-			List<Element> subordinateElements = new ArrayList<>();
+		if (elementContext instanceof Element element) {
+			var subordinateElements = new ArrayList<Element>();
 			subordinateElements.addAll(element.getChildren());
-			return (Collection<T>) subordinateElements;			
+			return (Collection<T>) subordinateElements;
 		} else {
-			throw new IllegalArgumentException("unknown element context type: " +
-											   elementContext.getClass().getName());
+			throw new IllegalArgumentException("unknown element context type: " + elementContext.getClass().getName());
 		}
 	}
 
 	@Override
 	public void init(Properties parameters, IRecordElementsDataCollectorRegistry dataCollectorRegistry) {
-		RecordElementsDataCollector dataCollector = new RecordElementsDataCollector();
+		var dataCollector = new RecordElementsDataCollector();
 		dataCollectorRegistry.registerDataCollector(Element.class, dataCollector);
 	}
 
 	@Override
 	public void setContext(IDataEntryContext dataEntryContext) {
-		record = dataEntryContext.getAttribute(IDataEntryContext.RECORD);
+		schemaRecord = dataEntryContext.getAttribute(IDataEntryContext.RECORD);
 	}
 
 }

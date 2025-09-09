@@ -230,7 +230,7 @@ public final class RecordElementsImportToolProxy {
 		
 		tool.setContext(dataEntryContext);
 		
-		Collection<?> elementContexts = tool.getRootElementContexts();
+		Collection<?> elementContexts = tool.getRootElementContexts().elements();
 		for (Object elementContext : elementContexts) {					
 			handleElement(null, elementContext);									
 		}

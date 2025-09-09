@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,18 +19,15 @@ package org.lh.dmlj.schema.editor.importtool;
 import java.util.List;
 import java.util.Properties;
 
-import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
-public abstract class AbstractRecordLayoutManager {	
+public abstract class AbstractRecordLayoutManager {
+	private static final int SUGGESTED_LEFT_MARGIN = 50;
+	private static final int SUGGESTED_TOP_MARGIN = 100;
 	
-	private static final int suggestedLeftMargin = 50;
-	private static final int suggestedTopMargin = 100;
-	
-	public AbstractRecordLayoutManager() {
-		super();
+	protected AbstractRecordLayoutManager() {
 	}
 
 	public final int getRecordFigureHeight() {
@@ -46,29 +43,26 @@ public abstract class AbstractRecordLayoutManager {
 	}
 
 	public final int getSuggestedLeftMargin() {
-		return suggestedLeftMargin;
+		return SUGGESTED_LEFT_MARGIN;
 	}
 
 	public final int getSuggestedTopMargin() {
-		return suggestedTopMargin;
+		return SUGGESTED_TOP_MARGIN;
 	}
 
 	public final int getSuggestedVerticalIncrement() {
 		return 2 * RecordFigure.UNSCALED_HEIGHT;
 	}
 
-	public abstract void layout(List<SchemaRecord> records, 
-								Properties configuredParameters,
-								Properties userParameters);
+	public abstract void layout(List<SchemaRecord> records, Properties configuredParameters, Properties userParameters);
 	
-	protected void setDiagramData(SchemaRecord record, int x, int y) {		
-		DiagramLocation location =
-			SchemaFactory.eINSTANCE.createDiagramLocation();
-		record.getSchema().getDiagramData().getLocations().add(location);
-		record.setDiagramLocation(location);		
+	protected void setDiagramData(SchemaRecord schemaRecord, int x, int y) {
+		var location = SchemaFactory.eINSTANCE.createDiagramLocation();
+		schemaRecord.getSchema().getDiagramData().getLocations().add(location);
+		schemaRecord.setDiagramLocation(location);		
 		location.setX(x);
 		location.setY(y);
-		location.setEyecatcher("record " + record.getName());		
+		location.setEyecatcher("record " + schemaRecord.getName());		
 	}
 	
 }

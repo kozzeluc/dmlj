@@ -30,7 +30,7 @@ public class ModifiedSelectionSynchronizer extends SelectionSynchronizer {
 	
 	@Override
 	protected EditPart convert(EditPartViewer viewer, EditPart part) {
-		if (outlinePage != null && outlinePage.canConvertEditPart(viewer, part)) {
+		if (outlinePage != null) {
 			// make sure the most relevant edit part is selected in the outline page
 			return outlinePage.convert(viewer, part);
 		} else {

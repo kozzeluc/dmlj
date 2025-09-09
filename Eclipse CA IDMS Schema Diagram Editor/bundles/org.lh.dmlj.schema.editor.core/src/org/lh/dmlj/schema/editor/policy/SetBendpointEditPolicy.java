@@ -101,7 +101,7 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 				new PrecisionPoint(firstPoint.x - ownerBounds.x,
 							   	   firstPoint.y - ownerBounds.y);
 			RecordFigure.unscale(ownerEndpoint, 
-								 (RecordFigure)ownerEditPart.getFigure(), zoomLevel);
+								 zoomLevel);
 		}
 		
 		// get the member endpoint location as an (unscaled) offset pair 
@@ -136,7 +136,7 @@ public class SetBendpointEditPolicy extends BendpointEditPolicy {
 			new PrecisionPoint(lastPoint.x - memberBounds.x,
 							   lastPoint.y - memberBounds.y);
 		RecordFigure.unscale(memberEndpoint, 
-				 			 (RecordFigure)memberEditPart.getFigure(), zoomLevel);
+				 			 zoomLevel);
 		
         // create the lock endpoints command; note that the endpoints 
 		// may already be locked, but the command takes care of that...

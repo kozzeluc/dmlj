@@ -795,7 +795,7 @@ public final class SchemaImportToolProxy {
 		}		
 		
 		// add the (validated) elements to the record
-		Collection<?> elementContexts = tool.getRootElementContexts(recordContext);
+		Collection<?> elementContexts = tool.getRootElementContexts(recordContext).elements();
 		logger.debug("importing " + elementContexts.size() + " root elements for " + recordName + "...");
 		for (Object elementContext : elementContexts) {					
 			handleElement(record, null, elementContext);									
@@ -1315,23 +1315,20 @@ public final class SchemaImportToolProxy {
 		
 		// import areas
 		progressMonitor.subTask("(Areas)");
-		for (Object areaContext : tool.getAreaContexts()) {			
-			handleArea(areaContext);
-		}
+		tool.getAreaContexts().elements().stream()
+				.forEach(this::handleArea);
 		progressMonitor.worked(10);
 		
 		// import records and elements
 		progressMonitor.subTask("(Records)");
-		for (Object recordContext : tool.getRecordContexts()) {			
-			handleRecord(recordContext);
-		}
+		tool.getRecordContexts().elements().stream()
+				.forEach(this::handleRecord);
 		progressMonitor.worked(30);
 		
 		// import sets
 		progressMonitor.subTask("(Sets)");
-		for (Object setContext : tool.getSetContexts()) {
-			handleSet(setContext);
-		}	
+		tool.getSetContexts().elements().stream()
+				.forEach(this::handleSet);
 		progressMonitor.worked(30);
 		
 		// add the DDLCATLOD entities when we're importing IDMSNTWK version 1 if

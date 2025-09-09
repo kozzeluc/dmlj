@@ -62,10 +62,9 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 	}
 
 	@Override
-	public Collection<?> getRootElementContexts() {
-		
+	public RootElementContexts getRootElementContexts() {		
 		if (!toplevelElements.isEmpty()) {
-			return new ArrayList<>(toplevelElements);
+			return new RootElementContexts(toplevelElements);
 		}
 		
 		rcdsyn_079.getSr_036().setRcdsyn_079b(null);		
@@ -201,7 +200,7 @@ public class RecordElementsImportTool implements IRecordElementsImportTool {
 			}
 		}
 		
-		return toplevelElements;
+		return new RootElementContexts(toplevelElements);
 	}
 
 	@SuppressWarnings("unchecked")

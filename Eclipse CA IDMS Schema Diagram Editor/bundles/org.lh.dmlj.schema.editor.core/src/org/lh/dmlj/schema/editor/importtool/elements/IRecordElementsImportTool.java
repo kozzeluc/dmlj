@@ -24,12 +24,12 @@ import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 public interface IRecordElementsImportTool {
 	
 	/**
-	 * Disposes the import tool; this method is invoked only once and no methods will be invoked
-	 * on the import tool after this method was invoked. 
+	 * Disposes the import tool; this method is invoked only once and no methods will be invoked on the import
+	 * tool after this method was invoked.
 	 */
 	void dispose();
 
-	Collection<?> getRootElementContexts();
+	RootElementContexts getRootElementContexts();
 	
 	<T> Collection<T> getSubordinateElementContexts(T elementContext);
 	
@@ -44,5 +44,8 @@ public interface IRecordElementsImportTool {
 	 * @param dataEntryContext the data entry context
 	 */
 	void setContext(IDataEntryContext dataEntryContext);
+	
+	public static record RootElementContexts(Collection<?> elements) {
+	}
 	
 }

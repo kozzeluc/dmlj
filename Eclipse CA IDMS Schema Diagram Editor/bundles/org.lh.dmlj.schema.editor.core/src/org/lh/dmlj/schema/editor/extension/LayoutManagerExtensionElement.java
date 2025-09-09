@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,43 +31,35 @@ import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class LayoutManagerExtensionElement extends AbstractExtensionElement {
-	
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 
-	private ImageDescriptor          	   imageDescriptor;
-	private AbstractRecordLayoutManager    layoutManager;
-	private Properties				 	   parameters;
+	private ImageDescriptor imageDescriptor;
+	private AbstractRecordLayoutManager layoutManager;
+	private Properties parameters;
 	private List<ValidForExtensionElement> validForExtensionElements;
 	
 	public LayoutManagerExtensionElement(IConfigurationElement configElement) {
-		
 		super(configElement);
-		Assert.isTrue(configElement.getName()
-								   .equals(ExtensionPointConstants.ELEMENT_LAYOUT_MANAGER), 
-					  "wrong IConfigurationElement: " + configElement.getName());
+		Assert.isTrue(configElement.getName().equals(ExtensionPointConstants.ELEMENT_LAYOUT_MANAGER),
+				"wrong IConfigurationElement: " + configElement.getName());
 	}	
 
 	public Properties getConfiguredParameters() {
 		if (parameters == null) {		
-			parameters = 
-				Util.getResourceAsProperties(configElement, 
-											 ExtensionPointConstants.ATTRIBUTE_PARAMETERS);
+			parameters = Util.getResourceAsProperties(configElement, ExtensionPointConstants.ATTRIBUTE_PARAMETERS);
 		}
 		return parameters;
 	}
 
 	public ImageDescriptor getImageDescriptor() {
 		if (imageDescriptor == null) {
-			imageDescriptor = 
-				Util.getImageDescriptor(configElement, 
-									    ExtensionPointConstants.ATTRIBUTE_IMAGE);
+			imageDescriptor = Util.getImageDescriptor(configElement, ExtensionPointConstants.ATTRIBUTE_IMAGE);
 		}
 		return imageDescriptor;
 	}	
 	
 	public String getImplementingClass() {
-		return Util.getAttribute(configElement, 
-				  				 ExtensionPointConstants.ATTRIBUTE_CLASS, null);
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_CLASS, null);
 	}
 
 	public AbstractRecordLayoutManager getLayoutManager() {
@@ -75,53 +67,41 @@ public class LayoutManagerExtensionElement extends AbstractExtensionElement {
 			return layoutManager;
 		}
 		try {
-			String propertyName = ExtensionPointConstants.ATTRIBUTE_CLASS;
-			Object executableExtension =
-				configElement.createExecutableExtension(propertyName);
+			var propertyName = ExtensionPointConstants.ATTRIBUTE_CLASS;
+			var executableExtension = configElement.createExecutableExtension(propertyName);
 			layoutManager = (AbstractRecordLayoutManager) executableExtension;
 			return layoutManager;
 		} catch (CoreException e) {
-			String message = e.getMessage();
+			var message = e.getMessage();
 			logger.error(message, e);
-			throw new RuntimeException(message);
+			throw new IllegalStateException(message);
 		}
 	}
 
 	public List<ValidForExtensionElement> getValidForExtensionElements() {
-		// get the schemas to which the layout manager applies;
-		// if nothing is configured, then the layout manager is
-		// valid for ALL schemas
+		// get the schemas to which the layout manager applies; if nothing is configured, then the layout manager
+		// is valid for ALL schemas
 		if (validForExtensionElements == null) {
-			// create the list...
 			validForExtensionElements = new ArrayList<>();
-			// ...and collect the valid for elements:			
-			List<ValidForExtensionElement> validFors =
-				ExtensionElementFactory.getExtensionElements(configElement, 
-															 ELEMENT_VALID_FOR, 
-															 ValidForExtensionElement.class);
+			var validFors = ExtensionElementFactory.getExtensionElements(configElement, ELEMENT_VALID_FOR,
+					ValidForExtensionElement.class);
 			validForExtensionElements.addAll(validFors);			
 		}
 		return validForExtensionElements;
 	}
 
 	public boolean isPromptForPropertiesFile() {
-		String promptForPropertiesFile = 
-			Util.getAttribute(configElement, 
-		  			 		  ExtensionPointConstants.ATTRIBUTE_PROMPT_FOR_PROPERTIES_FILE, 
-		  			 		  "false");
+		var promptForPropertiesFile = Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_PROMPT_FOR_PROPERTIES_FILE, "false");
 		return Boolean.valueOf(promptForPropertiesFile);	
 	}
 	
 	public boolean isValidFor(String schemaName, short schemaVersion) {
 		if (getValidForExtensionElements().isEmpty()) {
 			return true;
+		} else {
+			return validForExtensionElements.stream()
+					.anyMatch(validFor -> validFor.isValidFor(schemaName, schemaVersion));
 		}
-		for (ValidForExtensionElement validFor : validForExtensionElements) {
-			if (validFor.isValidFor(schemaName, schemaVersion)) {
-				return true;
-			}
-		}
-		return false;
 	}	
 	
 }
