@@ -16,14 +16,14 @@
  */
 package org.lh.dmlj.schema.editor.outline.part;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
+import static java.util.Comparator.comparing;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.ecore.EObject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.eclipse.gef.EditPolicy;
-import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Schema;
@@ -42,143 +42,122 @@ import org.lh.dmlj.schema.editor.policy.RemoveMemberFromSetEditPolicy;
 
 public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord> {
 
-	public RecordTreeEditPart(SchemaRecord record, IModelChangeProvider modelChangeProvider) {
-		super(record, modelChangeProvider);
+	public RecordTreeEditPart(SchemaRecord schemaRecord, IModelChangeProvider modelChangeProvider) {
+		super(schemaRecord, modelChangeProvider);
 	}
 	
 	@Override
-	public void afterModelChange(ModelChangeContext context) {		
-		boolean atTopLevel = getParentModelObject() instanceof Schema;		
-		if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET && atTopLevel && 
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
-			
-			// a member record type was added to (what is now definitely) a multiple-member set
-			// (execute/redo)
-			SchemaRecord newMemberRecord = findRecord(context);
-			if (newMemberRecord == getModel()) {
-				Set set = findSet(context);
-				createAndAddChild(set);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET && 
-				   atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				   context.getListenerData() instanceof Set) {
-		
-			// an add member to set operation was undone
-			Set set = (Set) context.getListenerData();
-			findAndRemoveChild(set, false);
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
-					
-			// a system owned indexed set was added (execute/redo)
-			Set set = getLastSet();
-			if (isMemberOf(set)) {
-				createAndAddChild(set.getSystemOwner(), set);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET && 
-				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				   context.getListenerData() instanceof SystemOwner) {
-					
-			// an add system owned indexed set to the model record operation was undone
-			SystemOwner systemOwner = (SystemOwner) context.getListenerData();
+	public void afterModelChange(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) && appliesToModelRecord(context)) {
+			// the record name has changed (execute/undo/redo)... the order of the parent edit part might become
+			// disrupted, so we have to inform that edit part of this fact
+			nodeTextChanged();
+		} else if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+			afterUndoModelChange(context);
+		} else if (getParentModelObject() instanceof Schema) {
+			afterExecuteOrRedoModelChangeForParentModelObjectOfTypeSchema(context);
+		}
+	}
+	
+	private void afterExecuteOrRedoModelChangeForParentModelObjectOfTypeSchema(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET) {
+			addMemberToSet(context);
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET) {
+			afterModelChangeOfTypeAddSystemOwnedSet();
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
+			afterModelChangeOfTypeAddUserOwnedSet();
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
+			afterModelChangeOfTypeAddVsamIndex();
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET && context.getListenerData() instanceof SystemOwner systemOwner) {				
 			findAndRemoveChild(systemOwner, false);
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET && 
-				  atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
-			
-			// a user owned set was added (execute/redo)
-			Set set = getLastSet();
-			if (isOwnerOf(set) || isMemberOf(set)) {				
-				createAndAddChild(set);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET && 
-				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				   context.getListenerData() instanceof Set) {
-					
-			// an add user owned set operation was undone
-			Set set = (Set) context.getListenerData();
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET && context.getListenerData() instanceof Set set) {
 			findAndRemoveChild(set, false);
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
-					
-			// a VSAM index was added (execute/redo)
-			Set set = getLastSet();
-			if (isMemberOf(set)) {
-				createAndAddChild(set.getVsamIndex(), set);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && 
-				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				   context.getListenerData() instanceof VsamIndex) {
-					
-			// an add VSAM index to the model record operation was undone
-			VsamIndex vsamIndex = (VsamIndex) context.getListenerData();
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && context.getListenerData() instanceof VsamIndex vsamIndex) {
 			findAndRemoveChild(vsamIndex, false);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-				   context.getListenerData() instanceof SystemOwner) {
-			
-			// a system owned indexed set was deleted (execute/redo)
-			SystemOwner systemOwner = (SystemOwner) context.getListenerData();
+		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET && context.getListenerData() instanceof Set set) {
+			findAndRemoveChild(set, false);
+		}
+	}
+	
+	private void afterModelChangeOfTypeAddSystemOwnedSet() {
+		var set = getLastSet();
+		if (isMemberOf(set)) {
+			createAndAddChild(set.getSystemOwner(), set);
+		}
+	}
+	
+	private void afterModelChangeOfTypeAddUserOwnedSet() {
+		var set = getLastSet();
+		if (isOwnerOf(set) || isMemberOf(set)) {				
+			createAndAddChild(set);
+		}
+	}
+	
+	private void afterModelChangeOfTypeAddVsamIndex() {
+		var set = getLastSet();
+		if (isMemberOf(set)) {
+			createAndAddChild(set.getVsamIndex(), set);
+		}		
+	}
+	
+	private void afterUndoModelChange(ModelChangeContext context) {
+		if (getParentModelObject() instanceof Schema) {
+			afterUndoModelChangeForParentModelObjectOfTypeSchema(context);
+		} else {
+			afterUndoModelChangeForParentModelObjectOfTypeOtherThanSchema(context);
+		}
+	}
+	
+	private void afterUndoModelChangeForParentModelObjectOfTypeSchema(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET && context.getListenerData() instanceof Set set) {
+			findAndRemoveChild(set, false);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET) {
+			afterUndoModelChangeOfTypeDeleteSystemOwnedSet(context);
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
+			afterUndoModelChangeOfTypeDeleteUserOwnedSet(context);			
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+			afterUndoModelChangeOfTypeDeleteVsamIndex(context);
+		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
+			addMemberToSet(context);
+		}
+	}
+	
+	private void afterUndoModelChangeOfTypeDeleteSystemOwnedSet(ModelChangeContext context) {
+		var set = findSet(context);
+		if (isMemberOf(set)) {
+			createAndAddSystemOwnerAsChild(context);
+		}
+	}
+	
+	private void afterUndoModelChangeOfTypeDeleteUserOwnedSet(ModelChangeContext context) {
+		var set = findSet(context);
+		if (isOwnerOf(set) || isMemberOf(set)) {
+			createAndAddSetAsChild(context);
+		}		
+	}
+	
+	private void afterUndoModelChangeOfTypeDeleteVsamIndex(ModelChangeContext context) {
+		var set = findSet(context);
+		if (isMemberOf(set)) {
+			createAndAddVsamIndexAsChild(context);
+		}
+	}
+	
+	private void addMemberToSet(ModelChangeContext context) {
+		var newMemberRecord = findRecord(context);
+		if (newMemberRecord == getModel()) {
+			var set = findSet(context);
+			createAndAddChild(set);
+		}
+	}
+	
+	private void afterUndoModelChangeForParentModelObjectOfTypeOtherThanSchema(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET && context.getListenerData() instanceof SystemOwner systemOwner) {
 			findAndRemoveChild(systemOwner, false);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET && 
-				   atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
-		
-			// a delete system owned indexed set operation was undone
-			Set set = findSet(context);
-			if (isMemberOf(set)) {
-				createAndAddSystemOwnerAsChild(context);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-				   context.getListenerData() instanceof Set) {
-			
-			// a user owned set was deleted (execute/redo)
-			Set set = (Set) context.getListenerData();
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET && context.getListenerData() instanceof Set set) {
 			findAndRemoveChild(set, false);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET && 
-				   atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
-		
-			// a delete user owned set operation was undone
-			Set set = findSet(context);
-			if (isOwnerOf(set) || isMemberOf(set)) {
-				createAndAddSetAsChild(context);
-			}			 
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-				   context.getListenerData() instanceof VsamIndex) {
-			
-			// a VSAM index was deleted (execute/redo)
-			VsamIndex vsamIndex = (VsamIndex) context.getListenerData();
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && context.getListenerData() instanceof VsamIndex vsamIndex) {
 			findAndRemoveChild(vsamIndex, false);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
-				   atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
-		
-			// a delete VSAM index operation was undone
-			Set set = findSet(context);
-			if (isMemberOf(set)) {
-				createAndAddVsamIndexAsChild(context);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-				   context.getListenerData() instanceof Set) {
-		
-			// a member was removed from the model set
-			Set set = (Set) context.getListenerData();
-			findAndRemoveChild(set, false);
-		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET && 
-				   atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
-		
-			// a remove member from set operation was undone
-			SchemaRecord newMemberRecord = findRecord(context);
-			if (newMemberRecord == getModel()) {
-				Set set = findSet(context);
-				createAndAddChild(set);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
-				   appliesToModelRecord(context)) {
-			
-			// the record name has changed (execute/undo/redo)... the order of the parent edit part 
-			// might become disrupted, so we have to inform that edit part of this fact
-			nodeTextChanged();						
 		}
 	}
 	
@@ -186,107 +165,93 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 		if (Boolean.TRUE.equals(context.getListenerData())) {
 			return true;
 		} else {
-			String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+			var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 			return getModel().getName().equals(recordName);
 		}
 	}
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		boolean atTopLevel = getParentModelObject() instanceof Schema;		
-		if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET && 
-			atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
-	
-			// an add member to set operation is being undone
-			SchemaRecord newMemberRecord = findRecord(context);
-			if (newMemberRecord == getModel()) {			
-				Set set = findSet(context);			
-				context.setListenerData(set);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET && atTopLevel &&
-			context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
+		    context.getCommandExecutionMode() != CommandExecutionMode.UNDO && context.appliesTo(getModel())) {
 			
-			// an add system owned indexed set operation is being undone
-			Set set = getLastSet();
-			if (isMemberOf(set)) {
-				context.setListenerData(set.getSystemOwner());
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET && 
-				   atTopLevel && context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
-					
-			// an add user owned set operation is being undone
-			Set set = getLastSet();
-			if (isOwnerOf(set) || isMemberOf(set)) {				
-				context.setListenerData(set);
-			}		
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX && atTopLevel &&
-				context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
-				
-				// an add VSAM index operation is being undone
-				Set set = getLastSet();
-				if (isMemberOf(set)) {
-					context.setListenerData(set.getVsamIndex());
-				}
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
-		
-			// a system owned indexed set is being deleted
-			Set set = findSet(context);
-			if (isMemberOf(set)) {
-				context.setListenerData(set.getSystemOwner());
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
-		
-			// a user owned set is being deleted
-			Set set = findSet(context);
-			if (isOwnerOf(set) || isMemberOf(set)) {
-				context.setListenerData(set);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {			
-		
-			// a VSAM index is being deleted
-			Set set = findSet(context);
-			if (isMemberOf(set)) {
-				context.setListenerData(set.getVsamIndex());
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET && 
-				   atTopLevel && context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
-			
-			// a member is being removed from a set
-			SchemaRecord newMemberRecord = findRecord(context);
-			if (newMemberRecord == getModel()) {			
-				Set set = findSet(context);			
-				context.setListenerData(set);
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
-			context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaRecord_Name()) &&
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-			context.appliesTo(getModel())) {
-					
-			// the model record's name is changing (execute/redo); put Boolean.TRUE in the context's 
-			// listener's data so that we can respond to this when processing the after model change 
-			// event
+			// the model record's name is changing (execute/redo); put Boolean.TRUE in the context's listener's
+			// data so that we can respond to this when processing the after model change event
 			context.setListenerData(Boolean.TRUE);
+		} else if (getParentModelObject() instanceof Schema) {
+			if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
+				beforeUndoModelChangeForParentModelObjectOfTypeSchema(context);
+			} else if (getParentModelObject() instanceof Schema) {
+				beforeExecuteOrRedoModelChangeForParentModelObjectOfTypeSchema(context);
+			}
 		}
 	}
 	
+	private void beforeExecuteOrRedoModelChangeForParentModelObjectOfTypeSchema(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET) {
+			var set = findSet(context);
+			if (isMemberOf(set)) {
+				context.setListenerData(set.getSystemOwner());
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
+			var set = findSet(context);
+			if (isOwnerOf(set) || isMemberOf(set)) {
+				context.setListenerData(set);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+			var set = findSet(context);
+			if (isMemberOf(set)) {
+				context.setListenerData(set.getVsamIndex());
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
+			var newMemberRecord = findRecord(context);
+			if (newMemberRecord == getModel()) {			
+				var set = findSet(context);			
+				context.setListenerData(set);
+			}
+		}
+	}
+
+	private void beforeUndoModelChangeForParentModelObjectOfTypeSchema(ModelChangeContext context) {
+		if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET) {
+			var newMemberRecord = findRecord(context);
+			if (newMemberRecord == getModel()) {			
+				var set = findSet(context);			
+				context.setListenerData(set);
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET) {
+			var set = getLastSet();
+			if (isMemberOf(set)) {
+				context.setListenerData(set.getSystemOwner());
+			}
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
+			var set = getLastSet();
+			if (isOwnerOf(set) || isMemberOf(set)) {				
+				context.setListenerData(set);
+			}		
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
+			var set = getLastSet();
+			if (isMemberOf(set)) {
+				context.setListenerData(set.getVsamIndex());
+			}
+		}		
+	}
+
 	private void createAndAddSetAsChild(ModelChangeContext context) {
-		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
-		Set set = getModel().getSchema().getSet(setName);
+		var setName = context.getContextData().get(ContextDataKeys.SET_NAME);
+		var set = getModel().getSchema().getSet(setName);
 		createAndAddChild(set);
 	}
 	
 	private void createAndAddSystemOwnerAsChild(ModelChangeContext context) {
-		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
-		Set set = getModel().getSchema().getSet(setName);
+		var setName = context.getContextData().get(ContextDataKeys.SET_NAME);
+		var set = getModel().getSchema().getSet(setName);
 		createAndAddChild(set.getSystemOwner(), set);
 	}
 	
 	private void createAndAddVsamIndexAsChild(ModelChangeContext context) {
-		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
-		Set set = getModel().getSchema().getSet(setName);
+		var setName = context.getContextData().get(ContextDataKeys.SET_NAME);
+		var set = getModel().getSchema().getSet(setName);
 		createAndAddChild(set.getVsamIndex(), set);
 	}
 	
@@ -295,60 +260,50 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 		if (isReadOnlyMode()) {
 			return;
 		}
-		EObject parentModelObject = getParentModelObject();
-		if (parentModelObject instanceof Set) {
-			Set set = (Set) parentModelObject;
+		var parentModelObject = getParentModelObject();
+		if (parentModelObject instanceof Set set) {
 			if (set.isVsam() || set.getOwner().getRecord() != getModel()) {
-				// the model record is a member of the parent edit part's model set; the next 
-				// edit policy allows for the removal of the record as a set member, without the
-				// ability to remove the set when the record is the last remaining member in the set 
-				MemberRole memberRole = null;
-				for (MemberRole aMemberRole : getModel().getMemberRoles()) {
-					if (aMemberRole.getSet() == set) {
-						memberRole = aMemberRole;
-						break;
-					}
-				}
-				Assert.isNotNull(memberRole, "internal error: no member role set (" + 
-								 getModel().getName() + ")");
-				installEditPolicy(EditPolicy.COMPONENT_ROLE, 
-								  new RemoveMemberFromSetEditPolicy(memberRole, false));
+				// the model record is a member of the parent edit part's model set; the next edit policy allows
+				// for the removal of the record as a set member, without the ability to remove the set when the
+				// record is the last remaining member in the set
+				var memberRole = getModel().getMemberRoles().stream()
+						.filter(aMemberRole -> aMemberRole.getSet() == set)
+						.findFirst()
+						.orElseThrow(() -> new IllegalStateException(String.format("internal error: no member role set (%s)", getModel().getName())));
+				installEditPolicy(EditPolicy.COMPONENT_ROLE, new RemoveMemberFromSetEditPolicy(memberRole, false));
 			}
 			// a record cannot be deleted when pressing the delete key under a set's owner record
 		} else {
-			// the next edit policy allows for the deletion of a record 
+			// the next edit policy allows for the deletion of a record
 			installEditPolicy(EditPolicy.COMPONENT_ROLE, new RecordComponentEditPolicy());
 		}
 	}
 	
 	private SchemaRecord findRecord(ModelChangeContext context) {
-		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+		var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
 		return getModel().getSchema().getRecord(recordName);
 	}
 	
 	private Set findSet(ModelChangeContext context) {
-		String setName = context.getContextData().get(ContextDataKeys.SET_NAME);
+		var setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 		return getModel().getSchema().getSet(setName);
 	}
 	
 	@Override
 	protected Class<?>[] getChildNodeTextProviderOrder() {
-		return new Class<?>[] {Set.class};
+		return new Class<?>[] { Set.class };
 	}
 	
 	@Override
 	protected String getImagePath() {
-		EObject parentModelObject = getParentModelObject();
-		if (parentModelObject instanceof Set) {
-			Set set = (Set) parentModelObject;
+		var parentModelObject = getParentModelObject();
+		if (parentModelObject instanceof Set set) {
 			if (set.getOwner() != null && set.getOwner().getRecord() == getModel()) {
 				return "icons/owner_record.gif";
 			} else {
 				return "icons/member_record.gif";
 			}
-		} else if (parentModelObject instanceof SystemOwner ||
-				   parentModelObject instanceof VsamIndex) {
-			
+		} else if (parentModelObject instanceof SystemOwner || parentModelObject instanceof VsamIndex) {
 			return "icons/member_record.gif";
 		} else {
 			return "icons/record.gif";
@@ -361,26 +316,17 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 
 	@Override
 	protected List<?> getModelChildren() {
+		var children = new ArrayList<Object>();
 		
-		List<Object> children = new ArrayList<>();
-		
-		EObject parentModelObject = getParentModelObject();
+		var parentModelObject = getParentModelObject();
 		if (parentModelObject instanceof Schema) {
-			
-			// only when the record is at the top level, add the sets in which the record 
-			// participates, in alphabetical order
+			// only when the record is at the top level, add the sets in which the record participates, in alphabetical order
 			
 			// gather the list of sets and sort it
-			List<Set> sets = new ArrayList<>();
-			for (OwnerRole ownerRole : getModel().getOwnerRoles()) {
-				sets.add(ownerRole.getSet());
-			}
-			for (MemberRole memberRole : getModel().getMemberRoles()) {
-				sets.add(memberRole.getSet());
-			}			
-			Collections.sort(sets);
-			
-			for (Set set : sets) {
+			var sets = Stream.concat(getModel().getOwnerRoles().stream().map(OwnerRole::getSet), getModel().getMemberRoles().stream().map(MemberRole::getSet))
+					.sorted(comparing(Set::getName, CASE_INSENSITIVE_ORDER))
+					.toList();
+			for (var set : sets) {
 				if (set.getSystemOwner() != null) {
 					// the record is the member of a system owned indexed set; add the system owner
 					children.add(set.getSystemOwner());
@@ -393,33 +339,26 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 						// add the VSAM index
 						children.add(set.getVsamIndex());
 					} else {
-						// add the set (why are we traversing the list of members her ?)
-						for (MemberRole memberRole : set.getMembers()) {
-							if (memberRole.getRecord() == getModel()) {
-								children.add(memberRole.getSet());
-							}
-						}
+						// add the set
+						set.getMembers().stream()
+								.filter(memberRole -> memberRole.getRecord() == getModel())
+								.map(MemberRole::getSet)
+								.forEach(children::add);
 					}
 				}
 			}
 		}
-		
 		return children;
-		
 	}
 
 	@Override
-	protected INodeTextProvider<SchemaRecord> getNodeTextProvider() {
-		return getModel();
+	protected WrappedNodeTextProvider getNodeTextProvider() {
+		return new WrappedNodeTextProvider(getModel());
 	}
 	
 	private boolean isMemberOf(Set set) {
-		for (MemberRole memberRole : set.getMembers()) {
-			if (memberRole.getRecord() == getModel()) {
-				return true;
-			}
-		}
-		return false;
+		return set.getMembers().stream()
+				.anyMatch(memberRole -> memberRole.getRecord() == getModel());
 	}	
 	
 	private boolean isOwnerOf(Set set) {
@@ -428,22 +367,19 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 	
 	@Override
 	protected void registerModel() {
-		// different edit parts exist for the same record; make sure that selecting a record in the
-		// SchemaEditor yields the outline view's top level record to become the current selection
-		EObject parentModelObject = getParentModelObject();
+		// different edit parts exist for the same record; make sure that selecting a record in the SchemaEditor
+		// yields the outline view's top level record to become the current selection
+		var parentModelObject = getParentModelObject();
 		if (parentModelObject instanceof Schema) {
-			// the model object is the key in the edit part registry; this is what we want so that
-			// selecting a record in the SchemaEditor selects the top level record edit part in the
-			// outline view
-			super.registerModel(); 
+			// the model object is the key in the edit part registry; this is what we want so that selecting a
+			// record in the SchemaEditor selects the top level record edit part in the outline view
+			super.registerModel();
 		} else {
-			// assure that record edit parts that are not at the top level will never be found
-			// by their model object; create an artificial key to make this happen
-			EditPartRegistryKey<SchemaRecord> key = new EditPartRegistryKey<>(getModel());
+			// assure that record edit parts that are not at the top level will never be found by their model
+			// object; create an artificial key to make this happen
+			var key = new EditPartRegistryKey<>(getModel());
 			getViewer().getEditPartRegistry().put(key, this);
-		}		
-		
-		
+		}
 	}
 
 }
