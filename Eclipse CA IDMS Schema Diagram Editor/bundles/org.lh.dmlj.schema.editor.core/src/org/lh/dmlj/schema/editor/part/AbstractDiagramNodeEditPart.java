@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,9 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.part;
 
+import java.util.Arrays;
+
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.ConnectionEditPart;
@@ -48,22 +49,14 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	 * Checks whether the feature of interest is set in a grouped model change.
 	 * @param setFeatures the features set in the model change
 	 * @param featureOfInterest the feature of interest
-	 * @return true if the feature of interest is contained in the list of set features, false if 
-	 * 		   not
+	 * @return true if the feature of interest is contained in the list of set features, false if not
 	 */
-	protected static final boolean isFeatureSet(EStructuralFeature[] setFeatures, 
-								   		  		EStructuralFeature featureOfInterest) {
-		
-		for (EStructuralFeature feature : setFeatures) {
-			if (feature == featureOfInterest) {
-				return true;
-			}
-		}
-		return false;
+	protected static final boolean isFeatureSet(EStructuralFeature[] setFeatures, EStructuralFeature featureOfInterest) {
+		return Arrays.stream(setFeatures)
+				.anyMatch(feature -> feature == featureOfInterest);
 	}	
 	
 	protected AbstractDiagramNodeEditPart(T diagramNode, IModelChangeProvider modelChangeProvider) {		
-		super();
 		setModel(diagramNode);
 		this.modelChangeProvider = modelChangeProvider;
 		if (!isReadOnlyMode()) {
@@ -128,12 +121,12 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	}
 	
 	protected void refreshConnections() {
+		// no standard functionality to fallback to
 	}
 
 	@Override
 	public void removeNotify() {
-		// note: this method is NOT invoked when the editor is closed (i.e. when the viewer is 
-		//disposed)
+		// note: this method is NOT invoked when the editor is closed (i.e. when the viewer is disposed)
 		if (!isReadOnlyMode()) {
 			modelChangeProvider.removeModelChangeListener(this);
 		}
@@ -143,13 +136,9 @@ public abstract class AbstractDiagramNodeEditPart<T extends DiagramNode>
 	@Override
 	protected final void refreshVisuals() {
 		setFigureData();
-		Dimension size = getFigure().getPreferredSize();
-		Rectangle bounds = new Rectangle(getModel().getDiagramLocation().getX(), 
-										 getModel().getDiagramLocation().getY(), 
-						  				 size.width, size.height);
-		((GraphicalEditPart) getParent()).setLayoutConstraint(this,
-															  getFigure(), 
-															  bounds);
+		var size = getFigure().getPreferredSize();
+		var bounds = new Rectangle(getModel().getDiagramLocation().getX(), getModel().getDiagramLocation().getY(), size.width, size.height);
+		((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), bounds);
 	}	
 
 	protected abstract void setFigureData();

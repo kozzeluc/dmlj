@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,15 +31,13 @@ import org.lh.dmlj.schema.editor.command.AddMemberToSetCommand;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 
 /**
- * An edit policy that enables adding a member record type to an existing set, making it a multiple-
- * member set, if not already.
+ * An edit policy that enables adding a member record type to an existing set, making it a multiple-member set,
+ * if not already.
  */
 public class SetDescriptionGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
-
 	private Set	set;
 	
-	public SetDescriptionGraphicalNodeEditPolicy(ConnectionLabel connectionLabel) {			
-		super();		
+	public SetDescriptionGraphicalNodeEditPolicy(ConnectionLabel connectionLabel) {
 		set = connectionLabel.getMemberRole().getSet();		
 	}
 	
@@ -51,23 +49,21 @@ public class SetDescriptionGraphicalNodeEditPolicy extends GraphicalNodeEditPoli
 
 	@Override
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
-		// we're only interested in adding member record types to existing sets, thus creating 
-		// and maintaining multiple-member sets; it is clear that the owner record will (eventually) 
-		// become the connection's source edit part
+		// we're only interested in adding member record types to existing sets, thus creating and maintaining
+		// multiple-member sets; it is clear that the owner record will (eventually) become the connection's
+		// source edit part
 		if (request.getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
 			return null;
 		}
-		// if the set is indexed, don't allow adding anymore member record types since this kind of
-		// sets is by definition single-member
+		// if the set is indexed, don't allow adding anymore member record types since this kind of sets is by
+		// definition single-member
 		if (set.getMode() == SetMode.INDEXED) {
 			return null;
 		}
 		// called when the user wants to add a member record type to an existing chained set 
-		if (!(request.getStartCommand() instanceof AddMemberToSetCommand) ||
-			((AddMemberToSetCommand) request.getStartCommand()).getSet() != set) {
-			
-			// avoid creating a new command over and over again for the same set; we only know to
-			// which set the user wants to add an additional member record type (but not which)
+		if (!(request.getStartCommand() instanceof AddMemberToSetCommand addMemberToSetCommand) || addMemberToSetCommand.getSet() != set) {
+			// avoid creating a new command over and over again for the same set; we only know to which set the
+			// user wants to add an additional member record type (but not which)
 			request.setStartCommand(new AddMemberToSetCommand(set));
 		}
 		return request.getStartCommand();
@@ -85,15 +81,15 @@ public class SetDescriptionGraphicalNodeEditPolicy extends GraphicalNodeEditPoli
 	
 	@Override
 	protected Connection createDummyConnection(Request request) {
-		if (!(request instanceof CreateConnectionRequest) ||
-			((CreateConnectionRequest) request).getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
+		if (!(request instanceof CreateConnectionRequest createConnectionRequest) ||
+			createConnectionRequest.getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
 			
 			return super.createDummyConnection(request);
 		}
-		// we're adding a member record type to an existing set; make sure the line that is shown
-		// while looking for that member record type is fitted with an arrow at its target end
-		PolylineConnection connection = new PolylineConnection();
-		PolylineDecoration decoration = new PolylineDecoration();
+		// we're adding a member record type to an existing set; make sure the line that is shown while looking
+		// for that member record type is fitted with an arrow at its target end
+		var connection = new PolylineConnection();
+		var decoration = new PolylineDecoration();
 		decoration.setTemplate(PolylineDecoration.TRIANGLE_TIP);
 		connection.setTargetDecoration(decoration);
 		return connection;

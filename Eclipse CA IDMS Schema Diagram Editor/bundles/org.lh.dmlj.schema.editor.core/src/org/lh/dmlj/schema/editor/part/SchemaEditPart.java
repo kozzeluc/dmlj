@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -50,21 +50,19 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {	
-		if (context.getCommandExecutionMode() == CommandExecutionMode.EXECUTE ||
-			context.getCommandExecutionMode() == CommandExecutionMode.REDO) {			
-			
-			afterModelChange_ExecuteOrRedo(context);
+		if (context.getCommandExecutionMode() == CommandExecutionMode.EXECUTE || context.getCommandExecutionMode() == CommandExecutionMode.REDO) {
+			afterExecuteOrRedoModelChange(context);
 		} else {
-			afterModelChange_Undo(context);
+			afterUndoModelChange(context);
 		}
 	}
 	
-	private void afterModelChange_ExecuteOrRedo(ModelChangeContext context) {	
+	private void afterExecuteOrRedoModelChange(ModelChangeContext context) {	
 		if (context.getModelChangeType() == ModelChangeType.ADD_CONNECTORS) {
 			collectObjectsForMemberRole(context, Scope.CONNECTORS_ONLY);	
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
-		} if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
 			createAndAddChild(getModel().getDiagramData().getLabel());
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET) {
 			collectObjectsForMemberRole(context, Scope.ALL);
@@ -72,63 +70,42 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			createAndAddChild(getModel().getRecords().get(getModel().getRecords().size() - 1));
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET) {
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET ||
+				   context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET ||
+				   context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
+			
 			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
-			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
-			createAndAddChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
-			collectObjectsForSet(context, getModel().getSets().get(getModel().getSets().size() - 1));
-			createAndAddChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS ||
+				   context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET ||
+				   context.getModelChangeType() == ModelChangeType.DELETE_RECORD ||
+				   context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET ||
+				   context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET ||
+				   context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+			
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL) {
 			findAndRemoveChild((DiagramLabel) context.getListenerData());
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_RECORD) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context); 
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS) {
 			handleSwapRecordElements(context);
 		}
 	}	
 	
-	private void afterModelChange_Undo(ModelChangeContext context) {	
-		if (context.getModelChangeType() == ModelChangeType.ADD_CONNECTORS) {
+	private void afterUndoModelChange(ModelChangeContext context) {	
+		if (context.getModelChangeType() == ModelChangeType.ADD_CONNECTORS ||
+			context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET ||
+			context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET ||
+			context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET ||
+			context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
+			
 			findAndRemoveChildren(context);
 			findAndRefreshChildren(context);
-		} if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
+		} else if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
 			findAndRemoveChild((DiagramLabel) context.getListenerData());
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			findAndRemoveChild((SchemaRecord) context.getListenerData());
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_SYSTEM_OWNED_SET) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_USER_OWNED_SET) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_VSAM_INDEX) {
-			findAndRemoveChildren(context);
-			findAndRefreshChildren(context);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			collectObjectsForMemberRole(context, Scope.CONNECTORS_ONLY);
 			createAndAddChildren(context);		
@@ -139,15 +116,10 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			collectObjectsForRecord(context);
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET) {
-			collectObjectsForSet(context);
-			createAndAddChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET) {
-			collectObjectsForSet(context);
-			createAndAddChildren(context);
-			findAndRefreshChildren(context);
-		} else if (context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+		} else if (context.getModelChangeType() == ModelChangeType.DELETE_SYSTEM_OWNED_SET ||
+				   context.getModelChangeType() == ModelChangeType.DELETE_USER_OWNED_SET ||
+				   context.getModelChangeType() == ModelChangeType.DELETE_VSAM_INDEX) {
+			
 			collectObjectsForSet(context);
 			createAndAddChildren(context);
 			findAndRefreshChildren(context);
@@ -162,16 +134,14 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		if (context.getCommandExecutionMode() == CommandExecutionMode.EXECUTE ||
-			context.getCommandExecutionMode() == CommandExecutionMode.REDO) {
-			
-			beforeModelChange_ExecuteOrRedo(context);
+		if (context.getCommandExecutionMode() == CommandExecutionMode.EXECUTE || context.getCommandExecutionMode() == CommandExecutionMode.REDO) {
+			beforeExecuteOrRedoModelChange(context);
 		} else if (context.getCommandExecutionMode() == CommandExecutionMode.UNDO) {
-			beforeModelChange_Undo(context);
+			beforeUndoModelChange(context);
 		}
 	}
 	
-	private void beforeModelChange_ExecuteOrRedo(ModelChangeContext context) {	
+	private void beforeExecuteOrRedoModelChange(ModelChangeContext context) {	
 		if (context.getModelChangeType() == ModelChangeType.DELETE_CONNECTORS) {
 			collectObjectsForMemberRole(context, Scope.CONNECTORS_ONLY);
 		} else if (context.getModelChangeType() == ModelChangeType.DELETE_DIAGRAM_LABEL) {
@@ -191,7 +161,7 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		}		
 	}		
 		
-	private void beforeModelChange_Undo(ModelChangeContext context) {	
+	private void beforeUndoModelChange(ModelChangeContext context) {
 		if (context.getModelChangeType() == ModelChangeType.ADD_CONNECTORS) {
 			collectObjectsForMemberRole(context, Scope.CONNECTORS_ONLY);
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_DIAGRAM_LABEL) {
@@ -214,21 +184,19 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 	}	
 
 	@Override
-	protected void createEditPolicies() {		
-		
-		// install the edit policy for selecting, creating, moving and resizing diagram nodes...
-		// (we always need this edit policy to give visual feedback that the edit part is selected) 
+	protected void createEditPolicies() {
+		// install the edit policy for selecting, creating, moving and resizing diagram nodes... (we always need
+		// this edit policy to give visual feedback that the edit part is selected) 
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new SchemaXYLayoutEditPolicy(getModel(), isReadOnlyMode()));
 		
-		if (isReadOnlyMode()) {
-			return;
+		if (!isReadOnlyMode()) {
+			// install the snap feedback policy...
+			installEditPolicy("Snap Feedback", new SnapFeedbackPolicy());
 		}
-		
-		// install the snap feedback policy...
-		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy());	  
 	}
-		
+	
 	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object getAdapter(Class adapter) {
 	    if (adapter == SnapToHelper.class) {
 	        // make sure we can snap figures to the grid, guides and geometry
@@ -251,13 +219,14 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		        ss = snapStrategies.toArray(ss);
 		        return adapter.cast(new CompoundSnapToHelper(ss));
 	        }
+	    } else {
+	    		return super.getAdapter(adapter);
 	    }
-	    return super.getAdapter(adapter);
 	}
 	
 	@Override
 	protected List<?> getModelChildren() {
-		List<Object> allObjects = new ArrayList<>();
+		var allObjects = new ArrayList<Object>();
 		
 		// diagram label (optional)
 		if (getModel().getDiagramData().getLabel() != null) {
@@ -268,71 +237,56 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 		allObjects.addAll(getModel().getRecords());
 		
 		// set connection labels
-		for (Set set : getModel().getSets()) {
-			for (MemberRole memberRole : set.getMembers()) {
-				allObjects.add(memberRole.getConnectionLabel());
-			}
-		}
+		getModel().getSets().stream()
+				.flatMap(set -> set.getMembers().stream())
+				.map(MemberRole::getConnectionLabel)
+				.forEach(allObjects::add);
 		
 		// set connectors
-		for (Set set : getModel().getSets()) {
-			for (MemberRole memberRole : set.getMembers()) {
-				if (memberRole.getConnectionParts().size() > 1) {
-					for (ConnectionPart connectionPart :
-						  memberRole.getConnectionParts()) {
-						
-						allObjects.add(connectionPart.getConnector());
-					}
-				}
-			}
-		}
+		getModel().getSets().stream()
+				.flatMap(set -> set.getMembers().stream())
+				.filter(memberRole -> memberRole.getConnectionParts().size() > 1)
+				.flatMap(memberRole -> memberRole.getConnectionParts().stream())
+				.map(ConnectionPart::getConnector)
+				.forEach(allObjects::add);
 		
 		// indexes
-		for (Set set : getModel().getSets()) {
-			if (set.getMode() == SetMode.INDEXED && 
-				set.getSystemOwner() != null) {
-				
-				allObjects.add(set.getSystemOwner());
-			}
-		}
+		getModel().getSets().stream()
+				.filter(set -> set.getMode() == SetMode.INDEXED)
+				.filter(set -> set.getSystemOwner() != null)
+				.map(Set::getSystemOwner)
+				.forEach(allObjects::add);
 		
 		// VSAM indexes
-		for (Set set : getModel().getSets()) {
-			if (set.getMode() == SetMode.VSAM_INDEX) {
-				allObjects.add(set.getVsamIndex());
-			}
-		}
+		getModel().getSets().stream()
+				.filter(set -> set.getMode() == SetMode.VSAM_INDEX)
+				.map(Set::getVsamIndex)
+				.forEach(allObjects::add);
 		
 		return allObjects;
 	}
 
 	private void handleSwapRecordElements(ModelChangeContext context) {
-		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
-		// member sets in which it participates as a member; it is only added as a member again if
-		// at least 1 element of the sort key can be retained; make sure to remove the edit parts
-		// for model objects that have become obsolete after the model change and create new edit
-		// parts for their replacements
-		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
-		SchemaRecord memberRecord = getModel().getRecord(recordName);		
+		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-member sets in
+		// which it participates as a member; it is only added as a member again if at least 1 element of the
+		// sort key can be retained; make sure to remove the edit parts for model objects that have become
+		// obsolete after the model change and create new edit parts for their replacements
+		var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+		var memberRecord = getModel().getRecord(recordName);		
 		@SuppressWarnings("unchecked")
-		List<SwapRecordElementsObsoleteObjectCollection> listenerData = 
-			(List<SwapRecordElementsObsoleteObjectCollection>) context.getListenerData();
-		for (SwapRecordElementsObsoleteObjectCollection obsoleteObjectCollection : listenerData) {
-			
+		var listenerData = (List<SwapRecordElementsObsoleteObjectCollection>) context.getListenerData();
+		for (var obsoleteObjectCollection : listenerData) {
 			// remove the obsolete connection label and connector edit parts, if any
 			findAndRemoveChild(obsoleteObjectCollection.connectionLabel);
-			for (Connector connector : obsoleteObjectCollection.connectors) {
+			for (var connector : obsoleteObjectCollection.connectors) {
 				findAndRemoveChild(connector);
 			}
 			
-			// add a new connection label edit part and, if applicable, new connector edit parts, if 
-			// and only if the record is still a member of the given multiple-member set - the edit
-			// part for the connection part will be created automatically by refreshing both owner
-			// and member record edit parts
-			MemberRole memberRole = 
-				(MemberRole) memberRecord.getRole(obsoleteObjectCollection.setName);
+			// add a new connection label edit part and, if applicable, new connector edit parts, if and only if
+			// the record is still a member of the given multiple-member set - the edit part for the connection
+			// part will be created automatically by refreshing both owner and member record edit parts
+			var memberRole = (MemberRole) memberRecord.getRole(obsoleteObjectCollection.setName);
 			if (memberRole != null) {
-				
 				// create a new connection label edit part
 				createAndAddChild(memberRole.getConnectionLabel());
 				
@@ -344,8 +298,8 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 			}
 				
 			// refresh the owner record edit part			
-			Set set = getModel().getSet(obsoleteObjectCollection.setName);
-			SchemaRecord ownerRecord = set.getOwner().getRecord();
+			var set = getModel().getSet(obsoleteObjectCollection.setName);
+			var ownerRecord = set.getOwner().getRecord();
 			findAndRefreshChild(ownerRecord);
 		}		
 		// refresh the member record edit part
@@ -353,17 +307,16 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 	}
 	
 	private void handleSwapRecordElementsUndo(ModelChangeContext context) {
-		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
-		// member sets in which it participates as a member; it is only added as a member again if
-		// at least 1 element of the sort key can be retained
-		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
-		SchemaRecord memberRecord = getModel().getRecord(recordName);		
+		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-member sets in
+		// which it participates as a member; it is only added as a member again if at least 1 element of the
+		// sort key can be retained
+		var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+		var memberRecord = getModel().getRecord(recordName);		
 		@SuppressWarnings("unchecked")
-		List<Set> listenerData = (List<Set>) context.getListenerData();
-		for (MemberRole memberRole : memberRecord.getMemberRoles()) {
-			Set set = memberRole.getSet();
+		var listenerData = (List<Set>) context.getListenerData();
+		for (var memberRole : memberRecord.getMemberRoles()) {
+			var set = memberRole.getSet();
 			if (!listenerData.contains(set)) {
-				
 				// create the set label edit part and add it as a child
 				createAndAddChild(memberRole.getConnectionLabel());
 				
@@ -382,61 +335,53 @@ public class SchemaEditPart extends AbstractGraphicalContainerEditPart<Schema> {
 	}
 	
 	private void prepareForSwapRecordElements(ModelChangeContext context) {
-		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
-		// member sets in which it participates as a member; it is only added as a member again if
-		// at least 1 element of the sort key can be retained; build a list with the model objects
-		// that will have become obsolete after the model change
-		List<SwapRecordElementsObsoleteObjectCollection> listenerData = new ArrayList<>();
+		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-member sets in
+		// which it participates as a member; it is only added as a member again if at least 1 element of the
+		// sort key can be retained; build a list with the model objects that will have become obsolete after the
+		// model change
+		var listenerData = new ArrayList<SwapRecordElementsObsoleteObjectCollection>();
 		context.setListenerData(listenerData);
-		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
-		SchemaRecord record = getModel().getRecord(recordName);
-		for (MemberRole memberRole : record.getMemberRoles()) {
-			Set set = memberRole.getSet();
+		var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+		var schemaRecord = getModel().getRecord(recordName);
+		for (var memberRole : schemaRecord.getMemberRoles()) {
+			var set = memberRole.getSet();
 			if (set.isMultipleMember() && set.isSorted()) {
-				// THE thing to watch for in case a record's elements are swapped, are the SORTED 
-				// multiple-member sets of which the record is a member, there will ALWAYS be 
-				// something to do so let's just prepare by collecting all model objects that will
-				// be removed and possibly replaced after the model change
-				SwapRecordElementsObsoleteObjectCollection obsoleteObjectCollection = 
-					new SwapRecordElementsObsoleteObjectCollection(set.getName(), 
-																   memberRole.getConnectionLabel());
+				// THE thing to watch for in case a record's elements are swapped, are the SORTED multiple-member
+				// sets of which the record is a member, there will ALWAYS be something to do so let's just
+				// prepare by collecting all model objects that will be removed and possibly replaced after the
+				// model change
+				var obsoleteObjectCollection = new SwapRecordElementsObsoleteObjectCollection(set.getName(), memberRole.getConnectionLabel());
 				listenerData.add(obsoleteObjectCollection);
-				if (memberRole.getConnectionParts().size() > 1) {				
-					obsoleteObjectCollection.connectors.add(memberRole.getConnectionParts().get(0).getConnector());	
-					obsoleteObjectCollection.connectors.add(memberRole.getConnectionParts().get(1).getConnector());	
+				if (memberRole.getConnectionParts().size() > 1) {
+					obsoleteObjectCollection.connectors.add(memberRole.getConnectionParts().get(0).getConnector());
+					obsoleteObjectCollection.connectors.add(memberRole.getConnectionParts().get(1).getConnector());
 				}
 			}
 		}
 	}
 	
 	private void prepareForSwapRecordElementsUndo(ModelChangeContext context) {
-		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-
-		// member sets in which it participates as a member; it is only added as a member again if
-		// at least 1 element of the sort key can be retained; build a list with the sets in which 
-		// the record participates as a member immediately before the swap elements operation is 
-		// undone
-		List<Set> listenerData = new ArrayList<>();
+		// when swapping record elements, the record is ALWAYS removed from all SORTED multiple-member sets in
+		// which it participates as a member; it is only added as a member again if at least 1 element of the
+		// sort key can be retained; build a list with the sets in which the record participates as a member
+		// immediately before the swap elements operation is undone
+		var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+		var schemaRecord = getModel().getRecord(recordName);
+		var listenerData = schemaRecord.getMemberRoles().stream()
+				.map(MemberRole::getSet)
+				.toList();
 		context.setListenerData(listenerData);
-		String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
-		SchemaRecord record = getModel().getRecord(recordName);
-		for (MemberRole memberRole : record.getMemberRoles()) {
-			Set set = memberRole.getSet();
-			listenerData.add(set);
-		}
 	}
 	
 	/**
 	 * A helper class to assist in swap record elements operations.
 	 */
 	public static class SwapRecordElementsObsoleteObjectCollection {
-		
 		private String setName;
 		private ConnectionLabel connectionLabel;
 		private List<Connector> connectors = new ArrayList<>();
 		
-		public SwapRecordElementsObsoleteObjectCollection(String setName, 
-														  ConnectionLabel connectionLabel) {
-			super();
+		public SwapRecordElementsObsoleteObjectCollection(String setName, ConnectionLabel connectionLabel) {
 			this.setName = setName;
 			this.connectionLabel = connectionLabel;
 		}

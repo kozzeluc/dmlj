@@ -22,32 +22,25 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
-import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class IndexComponentEditPolicy extends ComponentEditPolicy {
-
-	public IndexComponentEditPolicy() {
-		super();
-	}
 	
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
 		@SuppressWarnings("unchecked")
-		List<EditPart> editParts = (List<EditPart>) deleteRequest.getEditParts(); 
+		var editParts = (List<EditPart>) deleteRequest.getEditParts(); 
 		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof SystemOwner)) {						
 			return null;
 		}
-		SystemOwner systemOwner = (SystemOwner) editParts.get(0).getModel();
-		MemberRole memberRole = systemOwner.getSet().getMembers().get(0);
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_SYSTEM_OWNED_SET);
+		var systemOwner = (SystemOwner) editParts.get(0).getModel();
+		var memberRole = systemOwner.getSet().getMembers().get(0);
+		var context = new ModelChangeContext(ModelChangeType.DELETE_SYSTEM_OWNED_SET);
 		context.putContextData(systemOwner.getSet(), ModelChangeContext.setContextDataAssembler);
-		IModelChangeCommand command = 
-			DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+		var command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 		command.setContext(context);
 		return (Command) command;
 	}

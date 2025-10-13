@@ -29,17 +29,16 @@ public class RecordComponentEditPolicy extends ComponentEditPolicy {
 
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
-		
 		// make sure we are talking about a record and go get it from the delete request
  		@SuppressWarnings("unchecked")
-		List<EditPart> editParts = (List<EditPart>) deleteRequest.getEditParts(); 
+		var editParts = (List<EditPart>) deleteRequest.getEditParts(); 
 		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof SchemaRecord)) {						
 			return null;
 		}
-		SchemaRecord record = (SchemaRecord) editParts.get(0).getModel();
+		var schemaRecord = (SchemaRecord) editParts.get(0).getModel();
 		
 		// have the command created and return it to the caller
-		return (Command) DeleteRecordCommandCreationAssistant.getCommand(record);	
+		return (Command) DeleteRecordCommandCreationAssistant.getCommand(schemaRecord);	
 	}
 
 }

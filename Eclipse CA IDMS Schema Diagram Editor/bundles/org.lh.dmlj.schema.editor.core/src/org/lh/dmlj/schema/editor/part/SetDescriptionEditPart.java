@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -27,14 +27,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.swt.graphics.Color;
 import org.lh.dmlj.schema.ConnectionLabel;
-import org.lh.dmlj.schema.ConnectionPart;
-import org.lh.dmlj.schema.Connector;
-import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -47,143 +40,117 @@ import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.SetDescriptionComponentEditPolicy;
 import org.lh.dmlj.schema.editor.policy.SetDescriptionGraphicalNodeEditPolicy;
 
-public class SetDescriptionEditPart 
-    extends AbstractNonResizableDiagramNodeEditPart<ConnectionLabel>  {
-	
+public class SetDescriptionEditPart extends AbstractNonResizableDiagramNodeEditPart<ConnectionLabel>  {
 	private Color foregroundColorToRestore;
-
-	private SetDescriptionEditPart() {
-		super(null, null); // disabled constructor
-	}
 	
-	public SetDescriptionEditPart(ConnectionLabel connectionLabel, 
-								  IModelChangeProvider modelChangeProvider) {
+	public SetDescriptionEditPart(ConnectionLabel connectionLabel, IModelChangeProvider modelChangeProvider) {
 		super(connectionLabel, modelChangeProvider);		
 	}
 	
 	@Override
-	public void afterModelChange(ModelChangeContext context) {		
-		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-			context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-			context.appliesTo(getModel().getMemberRole().getSet())) {
-			
-			// the set name change was undone; note that the context data will ALWAYS contain the
-			// ORIGINAL set name (i.e. the one that was changed during the execute/redo); that's why 
-			// we compare the set name in the context data to the actual value to determine if we 
-			// need to refresh the visuals
-			refreshVisuals();			
-		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
-				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
-				   context.appliesTo(getModel().getMemberRole().getSet())) {
-			
-			// the system owner's area specification has changed
-			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SET_ORDER &&
-				   context.appliesTo(getModel().getMemberRole().getSet())) {
-			
-			// the set order has changed
-			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_SORTKEYS &&
-				   context.appliesTo(getModel().getMemberRole().getSet())) {
-			
-			// the sort key has changed
-			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_OR_REMOVE_SET_POINTERS &&
-				   (context.appliesTo(getModel().getMemberRole()) ||
-				    context.appliesTo(getModel().getMemberRole().getSet()))) {			
-			
-			// pointers were added or removed (note that the context can apply to either the member
-			// role OR set)
-			refreshVisuals();			
-		} else if ((context.getModelChangeType() == ModelChangeType.MOVE_SET_OR_INDEX_LABEL ||
-				    context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
-				   context.appliesTo(getModel().getMemberRole())) {
-	
-			// the connection label was moved
-			refreshVisuals();			
-			refreshConnections();			
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getMemberRole_MembershipOption()) &&
-				   context.appliesTo(getModel().getMemberRole())) {
-			
-			// the membership option has changed
-			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
-				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
-				   context.appliesTo(getModel().getMemberRole()
-						   					   .getSet()
-						   					   .getSystemOwner()
-						   					   .getAreaSpecification()
-						   					   .getArea())) {
-					
-			// the system owner's containing area name change was undone
-			refreshVisuals();
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY) {
-			// the set name or the system owner's containing area name has changed (execute/redo)
-			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
-			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
-				refreshVisuals();
-			}		
-		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION) {
-			// the containing area name was possibly renamed
-			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
-			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
-				refreshVisuals();
-			}
-		} else if (context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS &&				   
-				   context.appliesTo(getModel().getMemberRole().getRecord())) {
-			
-			// the structure of the member record has changed and this could have an impact on the
-			// set order
+	public void afterModelChange(ModelChangeContext context) {
+		if (needToRefreshVisuals(context)) {
 			refreshVisuals();
 		}
+		if (isConnectionLabelMoved(context)) {
+			refreshConnections(); // note: this doesn't do anything for the moment
+		}
+	}
+	
+	private boolean needToRefreshVisuals(ModelChangeContext context) {
+		return isUndoOfSetNameChange(context) || isSystemOwnerAreaSpecificationChanged(context) || isSetOrderChanged(context) ||
+			   isSortKeyChanged(context) || arePointersAddedOrRemoved(context) || isConnectionLabelMoved(context) ||
+			   isMembershipOptionChanged(context) || isSetNameOrSystemOwnerAreaNameChange(context) || isSetNameOrSystemOwnerAreaNameChange(context) ||
+			   isUndoOfSstemOwnerAreaNameChange(context) || isAreaNameRenamed(context) || isMemberRecordStructureChanged(context);
+	}
+	
+	private boolean isUndoOfSetNameChange(ModelChangeContext context) {
+		// when a set name change is undone, the context data will ALWAYS contain the ORIGINAL set name (i.e. the
+		// one that was changed during the execute/redo); that's why we compare the set name in the context data
+		// to the actual value to determine if we need to refresh the visuals
+		return context.getCommandExecutionMode() == CommandExecutionMode.UNDO && context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
+			   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) && context.appliesTo(getModel().getMemberRole().getSet());
+	}
+	
+	private boolean isSystemOwnerAreaSpecificationChanged(ModelChangeContext context) {
+		return context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION && getModel().getMemberRole().getSet().getSystemOwner() != null &&
+			   context.appliesTo(getModel().getMemberRole().getSet());
+	}
+	
+	private boolean isSetOrderChanged(ModelChangeContext context) {
+		return context.getModelChangeType() == ModelChangeType.CHANGE_SET_ORDER && context.appliesTo(getModel().getMemberRole().getSet());
+	}
+	
+	private boolean isSortKeyChanged(ModelChangeContext context) {
+		return context.getModelChangeType() == ModelChangeType.CHANGE_SORTKEYS && context.appliesTo(getModel().getMemberRole().getSet());
+	}
+	
+	private boolean arePointersAddedOrRemoved(ModelChangeContext context) {
+		// note that when pointers were added or removed, that the context can apply to either the member role OR the set
+		return context.getModelChangeType() == ModelChangeType.ADD_OR_REMOVE_SET_POINTERS &&
+			   (context.appliesTo(getModel().getMemberRole()) || context.appliesTo(getModel().getMemberRole().getSet()));
+	}
+	
+	private boolean isConnectionLabelMoved(ModelChangeContext context) {
+		return (context.getModelChangeType() == ModelChangeType.MOVE_SET_OR_INDEX_LABEL || context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
+				context.appliesTo(getModel().getMemberRole());
+	}
+	
+	private boolean isMembershipOptionChanged(ModelChangeContext context) {
+		return context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getMemberRole_MembershipOption()) &&
+			   context.appliesTo(getModel().getMemberRole());
+	}
+	
+	private boolean isSetNameOrSystemOwnerAreaNameChange(ModelChangeContext context) {
+		return context.getModelChangeType() == ModelChangeType.SET_PROPERTY && Boolean.TRUE.equals(context.getListenerData());
+	}
+	
+	private boolean isUndoOfSstemOwnerAreaNameChange(ModelChangeContext context) {
+		return context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
+			   getModel().getMemberRole().getSet().getSystemOwner() != null &&
+			   context.appliesTo(getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea());		
+	}
+	
+	private boolean isAreaNameRenamed(ModelChangeContext context) {
+		return context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION && Boolean.TRUE.equals(context.getListenerData());
+	}
+	
+	private boolean isMemberRecordStructureChanged(ModelChangeContext context) {
+		return context.getModelChangeType() == ModelChangeType.SWAP_RECORD_ELEMENTS && context.appliesTo(getModel().getMemberRole().getRecord());
 	}
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		SystemOwner systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
-		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-			context.appliesTo(getModel().getMemberRole().getSet())) {
+		var systemOwner = getModel().getMemberRole().getSet().getSystemOwner();
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO && context.appliesTo(getModel().getMemberRole().getSet())) {
 			
-			// the set name is changing (execute/redo); put a boolean in the listener data, which we 
-			// will pick up again when processing the after model change event
+			// the set name is changing (execute/redo); put a boolean in the listener data, which we will pick up
+			// again when processing the after model change event
 			context.setListenerData(Boolean.TRUE);
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&			 
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) &&
-				   systemOwner != null &&
-				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-				   context.appliesTo(systemOwner.getAreaSpecification().getArea())) {
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSchemaArea_Name()) && systemOwner != null &&
+				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO && context.appliesTo(systemOwner.getAreaSpecification().getArea())) {
 				
-			// the system owner's containing area name is changing (execute/redo); put a boolean in 
-			// the listener data, which we will pick up again when processing the after model change 
-			// event
+			// the system owner's containing area name is changing (execute/redo); put a boolean in the listener
+			// data, which we will pick up again when processing the after model change event
 			context.setListenerData(Boolean.TRUE);			
-		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION &&
-				   getModel().getMemberRole().getSet().getSystemOwner() != null &&
+		} else if (context.getModelChangeType() == ModelChangeType.CHANGE_AREA_SPECIFICATION && getModel().getMemberRole().getSet().getSystemOwner() != null &&
 				   !context.appliesTo(getModel().getMemberRole().getSet())) {
 			
-			// it is possible that, together with changing an area specification, the area is 
-			// being renamed as well; the record or system owned indexed set whose area 
-			// specification is changed will be refreshed already, but we need to make sure that the 
-			// new area name replaces the old one EVERYWHERE (we might unnecessarily do a refresh,  
-			// but that's better than missing an area rename)
-			SchemaArea modelArea = 
-				getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea();
+			// it is possible that, together with changing an area specification, the area is being renamed as
+			// well; the record or system owned indexed set whose area specification is changed will be refreshed
+			// already, but we need to make sure that the new area name replaces the old one EVERYWHERE (we might
+			// unnecessarily do a refresh, but that's better than missing an area rename)
+			var modelArea = getModel().getMemberRole().getSet().getSystemOwner().getAreaSpecification().getArea();
 			if (context.getContextData().containsKey(ContextDataKeys.RECORD_NAME)) {
-				String recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
-				SchemaRecord record = 
-					getModel().getMemberRole().getSet().getSchema().getRecord(recordName);
-				if (record.getAreaSpecification().getArea() == modelArea) {
+				var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+				var schemaRecord = getModel().getMemberRole().getSet().getSchema().getRecord(recordName);
+				if (schemaRecord.getAreaSpecification().getArea() == modelArea) {
 					context.setListenerData(Boolean.TRUE);
 				}
 			} else if (context.getContextData().containsKey(ContextDataKeys.SET_NAME)) {
-				String anotherSetName = context.getContextData().get(ContextDataKeys.SET_NAME);
-				Set anotherSet = 
-					getModel().getMemberRole().getSet().getSchema().getSet(anotherSetName);
+				var anotherSetName = context.getContextData().get(ContextDataKeys.SET_NAME);
+				var anotherSet = getModel().getMemberRole().getSet().getSchema().getSet(anotherSetName);
 				if (anotherSet.getSystemOwner().getAreaSpecification().getArea() == modelArea) {
 					context.setListenerData(Boolean.TRUE);
 				}
@@ -193,23 +160,18 @@ public class SetDescriptionEditPart
 	
 	@Override
 	protected void createEditPolicies() {
-		
 		if (isReadOnlyMode()) {
 			return;
 		}
 		
-		// make sure we can delete a set by pressing the delete key on the line represented by this
-		// edit part:
+		// make sure we can delete a set by pressing the delete key on the line represented by this edit part:
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new SetDescriptionComponentEditPolicy());
 		
-		// make sure we can add member record types to existing sets - the palette tool to 
-		// accomplish this can be used in conjunction with either this edit part, the connection
-		// part (set) edit part(s) or the connector edit parts (if present); ALL logic to handle 
-		// this is handled with this type of edit part, so the other edit parts should set this edit
-		// part as the target for those create connection requests
-		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, 
-				  		  new SetDescriptionGraphicalNodeEditPolicy(getModel()));		
-		
+		// make sure we can add member record types to existing sets - the palette tool to accomplish this can be
+		// used in conjunction with either this edit part, the connection part (set) edit part(s) or the connector
+		// edit parts (if present); ALL logic to handle this is handled with this type of edit part, so the other
+		// edit parts should set this edit part as the target for those create connection requests
+		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new SetDescriptionGraphicalNodeEditPolicy(getModel()));
 	}
 
 	@Override
@@ -220,27 +182,18 @@ public class SetDescriptionEditPart
 	@Override
 	public void eraseSourceFeedback(Request request) {
 		if (request instanceof ChangeBoundsRequest) {
-			// Change the line color of the connection parts and connectors to 
-			// which this label belongs back to black.
-			for (ConnectionPart connectionPart : 
-				 getModel().getMemberRole().getConnectionParts()) {
-				
-				SetEditPart setEditPart = 
-					(SetEditPart) getViewer().getEditPartRegistry()
-											 .get(connectionPart);
-				PolylineConnection connection = 
-					(PolylineConnection) setEditPart.getFigure();
+			// Change the line color of the connection parts and connectors to which this label belongs back to black.
+			for (var connectionPart : getModel().getMemberRole().getConnectionParts()) {
+				var setEditPart = (SetEditPart) getViewer().getEditPartRegistry().get(connectionPart);
+				var connection = (PolylineConnection) setEditPart.getFigure();
 				connection.setLineWidth(1);
 				connection.setForegroundColor(foregroundColorToRestore);
 				
-				Connector connector = connectionPart.getConnector();
+				var connector = connectionPart.getConnector();
 				if (connector != null) {
-					ConnectorEditPart connectorEditPart = 
-						(ConnectorEditPart) getViewer().getEditPartRegistry()
-													   .get(connector);
-					((ConnectorFigure)connectorEditPart.getFigure()).setLineWidth(1);
-					connectorEditPart.getFigure()
-								     .setForegroundColor(foregroundColorToRestore);
+					var connectorEditPart = (ConnectorEditPart) getViewer().getEditPartRegistry().get(connector);
+					((ConnectorFigure) connectorEditPart.getFigure()).setLineWidth(1);
+					connectorEditPart.getFigure().setForegroundColor(foregroundColorToRestore);
 				}
 			}
 		}
@@ -249,36 +202,26 @@ public class SetDescriptionEditPart
 	
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
-		// only manipulate the source connection anchor when adding a member record type to an
-		// existing set...
-		if (!(request instanceof CreateConnectionRequest) ||
-			((CreateConnectionRequest) request).getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
-						
+		// only manipulate the source connection anchor when adding a member record type to an existing set...
+		if (!(request instanceof CreateConnectionRequest createConnectionRequest) || createConnectionRequest.getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
 			return super.getSourceConnectionAnchor(request);
 		}		
 		// ...we want the line that is drawn, to start at the owner of the set:
-		SchemaRecord ownerRecord = getModel().getMemberRole().getSet().getOwner().getRecord();
-		RecordEditPart ownerRecordEditPart = 
-			(RecordEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
+		var ownerRecord = getModel().getMemberRole().getSet().getOwner().getRecord();
+		var ownerRecordEditPart = (RecordEditPart) getViewer().getEditPartRegistry().get(ownerRecord);
 		Assert.isNotNull(ownerRecordEditPart, "no edit part for record " + ownerRecord.getName());
 		return ownerRecordEditPart.getSourceConnectionAnchor(request);
 	}
 	
 	@Override
-	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
-		return super.getTargetConnectionAnchor(request);
-	}
-	
-	@Override
 	protected void setFigureData() {
+		var memberRole = getModel().getMemberRole();
 		
-		MemberRole memberRole = getModel().getMemberRole();
+		var figure = (SetDescriptionFigure) getFigure();
 		
-		SetDescriptionFigure figure = (SetDescriptionFigure) getFigure();
-		
-		// we need to manipulate the set name in the case of some dictionary sets (DDLCATLOD area, 
-		// which has the same structure as DDLDCLOD)...
-		String adjustedSetName = Tools.removeTrailingUnderscore(memberRole.getSet().getName());
+		// we need to manipulate the set name in the case of some dictionary sets (DDLCATLOD area, which has the
+		// same structure as DDLDCLOD)...
+		var adjustedSetName = Tools.removeTrailingUnderscore(memberRole.getSet().getName());
 		figure.setName(adjustedSetName);
 		
 		figure.setPointers(Tools.getPointers(memberRole));
@@ -288,37 +231,27 @@ public class SetDescriptionEditPart
 		figure.setSortKeys(Tools.getSortKeys(memberRole));		
 		
 		figure.setSystemOwnerArea(Tools.getSystemOwnerArea(memberRole));
-		
 	}
 
 	@Override
 	public void showSourceFeedback(Request request) {		
 		if (request instanceof ChangeBoundsRequest) {
-			// Change the line color of the connection parts and connectors to 
-			// which this label belongs to red so that the user can see to which 
-			// connection parts the label belongs.
-			for (ConnectionPart connectionPart : 
-				 getModel().getMemberRole().getConnectionParts()) {
-				
-				SetEditPart setEditPart = 
-					(SetEditPart) getViewer().getEditPartRegistry()
-											 .get(connectionPart);
-				PolylineConnection connection = 
-					(PolylineConnection) setEditPart.getFigure();
+			// Change the line color of the connection parts and connectors to which this label belongs to red so
+			// that the user can see to which connection parts the label belongs.
+			for (var connectionPart : getModel().getMemberRole().getConnectionParts()) {
+				var setEditPart = (SetEditPart) getViewer().getEditPartRegistry().get(connectionPart);
+				var connection = (PolylineConnection) setEditPart.getFigure();
 				connection.setLineWidth(2);
 				if (foregroundColorToRestore == null) {
 					foregroundColorToRestore = connection.getForegroundColor();
 				}
 				connection.setForegroundColor(ColorConstants.red);
 				
-				Connector connector = connectionPart.getConnector();
+				var connector = connectionPart.getConnector();
 				if (connector != null) {
-					ConnectorEditPart connectorEditPart = 
-						(ConnectorEditPart) getViewer().getEditPartRegistry()
-													   .get(connector);
-					((ConnectorFigure)connectorEditPart.getFigure()).setLineWidth(2);
-					connectorEditPart.getFigure()
-								     .setForegroundColor(ColorConstants.red);
+					var connectorEditPart = (ConnectorEditPart) getViewer().getEditPartRegistry().get(connector);
+					((ConnectorFigure) connectorEditPart.getFigure()).setLineWidth(2);
+					connectorEditPart.getFigure().setForegroundColor(ColorConstants.red);
 				}
 			}
 		}

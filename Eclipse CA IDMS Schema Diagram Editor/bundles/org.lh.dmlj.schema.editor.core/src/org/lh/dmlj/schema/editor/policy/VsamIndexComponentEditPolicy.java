@@ -22,34 +22,27 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
-import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class VsamIndexComponentEditPolicy extends ComponentEditPolicy {
-
-	public VsamIndexComponentEditPolicy() {
-		super();
-	}
 	
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
 		@SuppressWarnings("unchecked")
-		List<EditPart> editParts = (List<EditPart>) deleteRequest.getEditParts(); 
-		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof VsamIndex)) {						
+		var editParts = (List<EditPart>) deleteRequest.getEditParts(); 
+		if (editParts.size() == 1 && editParts.get(0).getModel() instanceof VsamIndex vsamIndex) {			
+			var memberRole = vsamIndex.getMemberRole();
+			var context = new ModelChangeContext(ModelChangeType.DELETE_VSAM_INDEX);
+			context.putContextData(vsamIndex.getSet(), ModelChangeContext.setContextDataAssembler);
+			var command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+			command.setContext(context);
+			return (Command) command;
+		} else {
 			return null;
 		}
-		VsamIndex vsamIndex = (VsamIndex) editParts.get(0).getModel();
-		MemberRole memberRole = vsamIndex.getMemberRole();
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.DELETE_VSAM_INDEX);
-		context.putContextData(vsamIndex.getSet(), ModelChangeContext.setContextDataAssembler);
-		IModelChangeCommand command = 
-			DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
-		command.setContext(context);
-		return (Command) command;
 	}
 	
 }

@@ -455,6 +455,7 @@ public class SchemaEditor
 	}
 	
 	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object getAdapter(Class type) {
 		if (type == ZoomManager.class) {
 			var key = ZoomManager.class.toString();

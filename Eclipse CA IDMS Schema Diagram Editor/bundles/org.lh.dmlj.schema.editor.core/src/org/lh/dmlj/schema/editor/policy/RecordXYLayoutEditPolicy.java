@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -32,29 +32,26 @@ import org.lh.dmlj.schema.editor.common.Tools;
  * An edit policy that enables creating system owned indexed sets and VSAM indexes.
  */
 public class RecordXYLayoutEditPolicy extends XYLayoutEditPolicy {
-
-	private SchemaRecord record;	
+	private SchemaRecord schemaRecord;	
 	
-	public RecordXYLayoutEditPolicy(SchemaRecord record) {
-		super();
-		this.record = record;		
+	public RecordXYLayoutEditPolicy(SchemaRecord schemaRecord) {
+		this.schemaRecord = schemaRecord;		
 	}
 	
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {				
 		if (request.getNewObjectType() == SystemOwner.class) {
-			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_SYSTEM_OWNED_SET);
-			CreateIndexCommand command = new CreateIndexCommand(record);	
+			var context = new ModelChangeContext(ModelChangeType.ADD_SYSTEM_OWNED_SET);
+			var command = new CreateIndexCommand(schemaRecord);	
 			command.setContext(context);
 			return command;
-		} else if (request.getNewObjectType() == VsamIndex.class &&
-				   (record.isVsam() || record.isVsamCalc()) &&
-				   Tools.getDefaultSortKeyElement(record) != null) {
+		} else if (request.getNewObjectType() == VsamIndex.class && (schemaRecord.isVsam() || schemaRecord.isVsamCalc()) &&
+				   Tools.getDefaultSortKeyElement(schemaRecord) != null) {
 			
-			// VSAM indexes are always SORTED so make we need to be sure we have a relevant element 
-			// that we can use as the sort key
-			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_VSAM_INDEX);
-			CreateVsamIndexCommand command = new CreateVsamIndexCommand(record);	
+			// VSAM indexes are always SORTED so make we need to be sure we have a relevant element that we can
+			// use as the sort key
+			var context = new ModelChangeContext(ModelChangeType.ADD_VSAM_INDEX);
+			var command = new CreateVsamIndexCommand(schemaRecord);	
 			command.setContext(context);
 			return command;
 		} else {

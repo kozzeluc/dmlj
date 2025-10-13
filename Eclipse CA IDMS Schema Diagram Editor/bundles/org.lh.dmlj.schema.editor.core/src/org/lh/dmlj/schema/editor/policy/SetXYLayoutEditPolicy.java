@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,7 +24,6 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.editor.command.CreateConnectorCommand;
-import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
@@ -32,37 +31,28 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
  * An edit policy that enables creating connectors.
  */
 public class SetXYLayoutEditPolicy extends XYLayoutEditPolicy {
-
-	private ConnectionPart 	   connectionPart;
+	private ConnectionPart connectionPart;
 	private PolylineConnection figure;
 	
-	public SetXYLayoutEditPolicy(ConnectionPart connectionPart,
-								 PolylineConnection figure) {
-		super();
+	public SetXYLayoutEditPolicy(ConnectionPart connectionPart, PolylineConnection figure) {
 		this.connectionPart = connectionPart;
 		this.figure = figure;
 	}
 	
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
-		
-		// make sure the connector tool is used and that the current
-		// set line consists of only 1 part
-		if (request.getNewObjectType() != Connector.class ||
-			connectionPart.getMemberRole().getConnectionParts().size() > 1) {
-			
+		// make sure the connector tool is used and that the current set line consists of only 1 part
+		if (request.getNewObjectType() != Connector.class || connectionPart.getMemberRole().getConnectionParts().size() > 1) {
 			return null;
 		}	
 		
 		// calculate the unscaled connector location...
-        PrecisionPoint p = new PrecisionPoint(request.getLocation().x,
-        									  request.getLocation().y); 				
+        var p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
         figure.translateToRelative(p);
 		
-        ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_CONNECTORS);
+        var context = new ModelChangeContext(ModelChangeType.ADD_CONNECTORS);
         context.putContextData(connectionPart.getMemberRole(), ModelChangeContext.memberRoleContextDataAssembler);
-        ModelChangeBasicCommand command = 
-			new CreateConnectorCommand(connectionPart.getMemberRole(), p);
+        var command = new CreateConnectorCommand(connectionPart.getMemberRole(), p);
 		command.setContext(context);
 		return command;
 	}

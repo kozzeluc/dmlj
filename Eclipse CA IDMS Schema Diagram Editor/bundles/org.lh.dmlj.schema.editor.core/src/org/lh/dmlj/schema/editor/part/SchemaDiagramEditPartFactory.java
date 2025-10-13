@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,30 +30,29 @@ import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class SchemaDiagramEditPartFactory implements EditPartFactory {
-	
 	private IModelChangeProvider modelChangeProvider; // null means we're in read-only mode	
 	private SchemaEditor schemaEditor;
 	
-	public static EditPart createEditPart(Object model, IModelChangeProvider modelChangeProvider, 
-										  SchemaEditor schemaEditor) {
-		if (model instanceof Schema) {
-			return new SchemaEditPart((Schema) model, schemaEditor);
-		} else if (model instanceof SchemaRecord) {
-			return new RecordEditPart((SchemaRecord) model, modelChangeProvider);
-		} else if (model instanceof SystemOwner) {
-			return new IndexEditPart((SystemOwner) model, modelChangeProvider);
-		} else if (model instanceof ConnectionPart) {
-			return new SetEditPart((ConnectionPart) model, modelChangeProvider);
-		} else if (model instanceof ConnectionLabel) {
-			return new SetDescriptionEditPart((ConnectionLabel) model, modelChangeProvider);
-		} else if (model instanceof Connector) {
-			return new ConnectorEditPart((Connector) model, modelChangeProvider);
-		} else if (model instanceof DiagramLabel) {
-			return new DiagramLabelEditPart((DiagramLabel) model, schemaEditor);
-		} else if (model instanceof VsamIndex) {
-			return new VsamIndexEditPart((VsamIndex) model, modelChangeProvider);
+	public static EditPart createEditPart(Object model, IModelChangeProvider modelChangeProvider, SchemaEditor schemaEditor) {
+		if (model instanceof Schema schema) {
+			return new SchemaEditPart(schema, schemaEditor);
+		} else if (model instanceof SchemaRecord schemaRecord) {
+			return new RecordEditPart(schemaRecord, modelChangeProvider);
+		} else if (model instanceof SystemOwner systemOwner) {
+			return new IndexEditPart(systemOwner, modelChangeProvider);
+		} else if (model instanceof ConnectionPart connectionPart) {
+			return new SetEditPart(connectionPart, modelChangeProvider);
+		} else if (model instanceof ConnectionLabel connectionLabel) {
+			return new SetDescriptionEditPart(connectionLabel, modelChangeProvider);
+		} else if (model instanceof Connector connector) {
+			return new ConnectorEditPart(connector, modelChangeProvider);
+		} else if (model instanceof DiagramLabel diagramLabel) {
+			return new DiagramLabelEditPart(diagramLabel, schemaEditor);
+		} else if (model instanceof VsamIndex vsamIndex) {
+			return new VsamIndexEditPart(vsamIndex, modelChangeProvider);
+		} else {
+			throw new IllegalStateException("No EditPart for " + model.getClass());
 		}
-		throw new IllegalStateException("No EditPart for " + model.getClass());		
 	}
 	
 	private static IModelChangeProvider getModelChangeProvider(SchemaEditor schemaEditor) {
@@ -61,7 +60,6 @@ public class SchemaDiagramEditPartFactory implements EditPartFactory {
 	}
 
 	public SchemaDiagramEditPartFactory(SchemaEditor schemaEditor) {
-		super();
 		this.schemaEditor = schemaEditor;
 		if (!schemaEditor.isReadOnlyMode()) {
 			modelChangeProvider = getModelChangeProvider(schemaEditor);

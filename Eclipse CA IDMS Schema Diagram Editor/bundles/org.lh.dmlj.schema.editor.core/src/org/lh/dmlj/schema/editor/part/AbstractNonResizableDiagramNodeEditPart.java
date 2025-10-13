@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,12 +28,9 @@ import org.lh.dmlj.schema.editor.policy.ModifiedNonResizableEditPolicy;
  *
  * @param <T> the model type
  */
-public abstract class AbstractNonResizableDiagramNodeEditPart<T extends DiagramNode> 
-	extends AbstractDiagramNodeEditPart<T> {
+public abstract class AbstractNonResizableDiagramNodeEditPart<T extends DiagramNode> extends AbstractDiagramNodeEditPart<T> {
 	
-	protected AbstractNonResizableDiagramNodeEditPart(T diagramNode,
-													  IModelChangeProvider modelChangeProvider) {
-		
+	protected AbstractNonResizableDiagramNodeEditPart(T diagramNode, IModelChangeProvider modelChangeProvider) {
 		super(diagramNode, modelChangeProvider);
 	}
 	

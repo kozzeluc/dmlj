@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,21 +16,17 @@
  */
 package org.lh.dmlj.schema.editor.part;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.lh.dmlj.schema.ConnectionPart;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.anchor.IndexSourceAnchor;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
@@ -42,10 +38,6 @@ import org.lh.dmlj.schema.editor.figure.IndexFigure;
 import org.lh.dmlj.schema.editor.policy.IndexComponentEditPolicy;
 
 public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<SystemOwner> {
-
-	private IndexEditPart() {
-		super(null, null); // disabled constructor
-	}
 	
 	public IndexEditPart(SystemOwner systemOwner, IModelChangeProvider modelChangeProvider) {
 		super(systemOwner, modelChangeProvider);
@@ -53,19 +45,14 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if ((context.getModelChangeType() == ModelChangeType.MOVE_INDEX ||
-			 context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
+		if ((context.getModelChangeType() == ModelChangeType.MOVE_INDEX || context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
 			context.appliesTo(getModel().getSet())) {
-			
-			// the index was moved
+						
 			refreshVisuals();			
 			refreshConnections();
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-				   (context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-				    Boolean.TRUE.equals(context.getListenerData())) ||
-				    context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				    context.appliesTo(getModel().getSet())) {
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+				   (context.getCommandExecutionMode() != CommandExecutionMode.UNDO && Boolean.TRUE.equals(context.getListenerData())) ||
+				    context.getCommandExecutionMode() == CommandExecutionMode.UNDO && context.appliesTo(getModel().getSet())) {
 			
 			// the set name has changed (execute/undo/redo)
 			refreshVisuals();						
@@ -74,14 +61,12 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
-			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-			context.appliesTo(getModel().getSet())) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO && context.appliesTo(getModel().getSet())) {
 					
-			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's 
-			// listener's data so that we can respond to this when processing the after model change 
-			// event (so we can update the figure's tooltip)
+			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's listener's data
+			// so that we can respond to this when processing the after model change event (so we can update the
+			// figure's tooltip)
 			context.setListenerData(Boolean.TRUE);
 		}
 	}
@@ -96,19 +81,19 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	
 	@Override
 	protected IFigure createFigure() {
-		Figure figure = new IndexFigure();
+		var figure = new IndexFigure();
 		
 		// add a tooltip containing the set's name...
         String adjustedSetName;
-        Set set = getModel().getSet();
+        var set = getModel().getSet();
         if (set.getName().endsWith("_")) {
-            StringBuilder p = new StringBuilder(set.getName());
+            var p = new StringBuilder(set.getName());
             p.setLength(p.length() - 1);
             adjustedSetName = p.toString();
         } else {
             adjustedSetName = set.getName();
         }
-        Label tooltip = new Label(adjustedSetName);
+        var tooltip = new Label(adjustedSetName);
         figure.setToolTip(tooltip);
 		
 		return figure;
@@ -116,11 +101,8 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 
 	@Override
 	protected List<ConnectionPart> getModelSourceConnections() {
-		List<ConnectionPart> connectionParts = new ArrayList<>();
-		MemberRole memberRole = getModel().getSet().getMembers().get(0);
-		ConnectionPart connectionPart = memberRole.getConnectionParts().get(0);					
-		connectionParts.add(connectionPart);
-		return connectionParts;
+		var connectionPart = getModel().getSet().getMembers().get(0).getConnectionParts().get(0);					
+		return List.of(connectionPart);
 	}
 
 	@Override
@@ -135,22 +117,18 @@ public class IndexEditPart extends AbstractNonResizableDiagramNodeEditPart<Syste
 	
 	@Override
 	protected void refreshConnections() {
-		MemberRole memberRole = getModel().getSet().getMembers().get(0);
-		for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
-			GraphicalEditPart editPart = 
-				(GraphicalEditPart) getViewer().getEditPartRegistry()
-										  	   .get(connectionPart);
-			editPart.refresh();		
-		}
+		getModel().getSet().getMembers().get(0).getConnectionParts().stream()
+				.map(getViewer().getEditPartRegistry()::get)
+				.map(EditPart.class::cast)
+				.forEach(EditPart::refresh);
 	}
 
 	@Override
 	protected void setFigureData() {
-		IndexFigure figure = (IndexFigure) getFigure();
-		
-		// we need to manipulate the set name in the case of some dictionary sets (DDLCATLOD area, 
-		// which has the same structure as DDLDCLOD)...
-		String adjustedSetName = Tools.removeTrailingUnderscore(getModel().getSet().getName());
+		// we need to manipulate the set name in the case of some dictionary sets (DDLCATLOD area, which has the
+		// same structure as DDLDCLOD)...
+		var adjustedSetName = Tools.removeTrailingUnderscore(getModel().getSet().getName());
+		var figure = (IndexFigure) getFigure();
 		figure.setName(adjustedSetName);
 	}
 	

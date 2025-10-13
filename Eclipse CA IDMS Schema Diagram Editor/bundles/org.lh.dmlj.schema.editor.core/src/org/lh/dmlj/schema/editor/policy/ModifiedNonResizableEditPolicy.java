@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,13 +24,10 @@ import org.eclipse.gef.Handle;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 
 public class ModifiedNonResizableEditPolicy extends NonResizableEditPolicy {
-
-	public ModifiedNonResizableEditPolicy() {
-		super();
-	}
 	
+	@Override
 	protected List<Handle> createSelectionHandles() {
-		List<Handle> list = new ArrayList<>();
+		var list = new ArrayList<Handle>();
 		createMoveHandle(list);
 		createDragHandle(list, PositionConstants.NORTH_WEST);
 		createDragHandle(list, PositionConstants.NORTH);
