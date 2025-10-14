@@ -18,7 +18,6 @@ package org.lh.dmlj.schema.editor.preference;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,7 +30,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -41,84 +39,58 @@ import org.lh.dmlj.schema.editor.service.ServicesPlugin;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 import org.lh.dmlj.schema.editor.wizard._import.dictguide.DictguidesImportWizard;
 
-public class ReferenceGuidesPreferencePage 
-	extends PreferencePage implements IWorkbenchPreferencePage {
-
-	private Button btnDelete;
-	private List   list;
-	private Label  lblDictionaryStructureguide;
-	private Label  lblSqlGuide;	
-	private Text txtNotePressing;
+public class ReferenceGuidesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	private static final String SEGOE_UI = "Segoe UI";
 	
-	/**
-	 * @wbp.parser.constructor
-	 */
+	private Button btnDelete;
+	private List list;
+	private Label lblDictionaryStructureguide;
+	private Label lblSqlGuide;	
+	
 	public ReferenceGuidesPreferencePage() {
-		super();
 		setDescription("Reference Guide settings:");
 	}	
 
 	@Override
 	public void init(IWorkbench workbench) {
-		// init is called before createContents(Composite parent), so the 
-		// controls are not yet created
+		// init is called before createContents(Composite parent), so the controls are not yet created
 	}
 
 	@Override
 	protected Control createContents(Composite parent) {
-				
-		Composite container = new Composite(parent, SWT.NONE);		
-		GridLayout layout = new GridLayout(3, false);
+		var container = new Composite(parent, SWT.NONE);		
+		var layout = new GridLayout(3, false);
 		container.setLayout(layout);
 		
-		Text lblNewLabel = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
-		GridData gd_lblNewLabel = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
-		gd_lblNewLabel.widthHint = 150;
-		lblNewLabel.setLayoutData(gd_lblNewLabel);
+		var lblNewLabel = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		var gdLblNewLabel = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
+		gdLblNewLabel.widthHint = 150;
+		lblNewLabel.setLayoutData(gdLblNewLabel);
 		lblNewLabel.setText("Reference Guide combination to use in the \"Info\" tab (Properties view) :");
 		
 		list = new List(container, SWT.BORDER | SWT.V_SCROLL);
-		GridData gd_list = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 3);
-		gd_list.heightHint = 75;
-		list.setLayoutData(gd_list);
+		var gdList = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 3);
+		gdList.heightHint = 75;
+		list.setLayoutData(gdList);
 		new Label(container, SWT.NONE);
 		
-		Button btnImport = new Button(container, SWT.NONE);
+		var btnImport = new Button(container, SWT.NONE);
 		btnImport.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				Shell shell = Display.getCurrent().getActiveShell();
-				IWizard importWizard = new DictguidesImportWizard(true);
-				final WizardDialog wizardDialog = 						
-					new WizardDialog(shell, importWizard);
-				wizardDialog.create();
-				// we should move the wizard title to plugin.properties...
-				wizardDialog.setTitle("CA IDMS/DB Dictionary Structure and " +
-									  "SQL Reference Guides");
-				Display.getCurrent().syncExec(new Runnable() {
-					public void run() {
-						wizardDialog.open();
-					}
-				});	
-				
-				list.removeAll();
-				initialize();
-				
+				importDictguide();
 			}
 		});
-		GridData gd_btnImport = new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1);
-		gd_btnImport.verticalIndent = 5;
-		btnImport.setLayoutData(gd_btnImport);
+		var gdBtnImport = new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1);
+		gdBtnImport.verticalIndent = 5;
+		btnImport.setLayoutData(gdBtnImport);
 		btnImport.setText("Import...");
 		
 		btnDelete = new Button(container, SWT.NONE);
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DictguidesRegistry.getInstance().deleteEntry(list.getSelection()[0]);
-				list.removeAll();
-				initialize();
+				deleteDictguide();
 			}
 		});
 		btnDelete.setEnabled(false);
@@ -126,17 +98,17 @@ public class ReferenceGuidesPreferencePage
 		btnDelete.setText("Delete");
 		new Label(container, SWT.NONE);
 		lblDictionaryStructureguide = new Label(container, SWT.NONE);
-		lblDictionaryStructureguide.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		GridData gd_lblDictionaryStructureguide = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-		gd_lblDictionaryStructureguide.horizontalIndent = 10;
-		gd_lblDictionaryStructureguide.verticalIndent = 5;
-		lblDictionaryStructureguide.setLayoutData(gd_lblDictionaryStructureguide);
+		lblDictionaryStructureguide.setFont(SWTResourceManager.getFont(SEGOE_UI, 9, SWT.BOLD));
+		var gdLblDictionaryStructureguide = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gdLblDictionaryStructureguide.horizontalIndent = 10;
+		gdLblDictionaryStructureguide.verticalIndent = 5;
+		lblDictionaryStructureguide.setLayoutData(gdLblDictionaryStructureguide);
 		new Label(container, SWT.NONE);
 		lblSqlGuide = new Label(container, SWT.NONE);
-		GridData gd_lblSqlGuide = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-		gd_lblSqlGuide.horizontalIndent = 10;
-		lblSqlGuide.setLayoutData(gd_lblSqlGuide);
-		lblSqlGuide.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		var gdLblSqlGuide = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gdLblSqlGuide.horizontalIndent = 10;
+		lblSqlGuide.setLayoutData(gdLblSqlGuide);
+		lblSqlGuide.setFont(SWTResourceManager.getFont(SEGOE_UI, 9, SWT.BOLD));
 		
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -145,60 +117,69 @@ public class ReferenceGuidesPreferencePage
 			}
 		});		
 		
-		IPdfExtractorService pdfExtractorService = 
-				ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
+		var pdfExtractorService = ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
 		btnImport.setEnabled(pdfExtractorService != null);
 		
-		txtNotePressing = new Text(container, SWT.READ_ONLY | SWT.WRAP);
+		var txtNotePressing = new Text(container, SWT.READ_ONLY | SWT.WRAP);
 		txtNotePressing.setText("Note: Pressing the \"Restore Defaults\" button below has NO impact on the above settings.");
-		GridData gd_txtNotePressing = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
-		gd_txtNotePressing.widthHint = 100;
-		gd_txtNotePressing.verticalIndent = 20;
-		txtNotePressing.setLayoutData(gd_txtNotePressing);
+		var gdTxtNotePressing = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
+		gdTxtNotePressing.widthHint = 100;
+		gdTxtNotePressing.verticalIndent = 20;
+		txtNotePressing.setLayoutData(gdTxtNotePressing);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		
 		if (pdfExtractorService == null) {
-			Label lblMsg = new Label(container, SWT.NONE);
-			lblMsg.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+			var lblMsg = new Label(container, SWT.NONE);
+			lblMsg.setFont(SWTResourceManager.getFont(SEGOE_UI, 9, SWT.BOLD));
 			lblMsg.setForeground(ColorConstants.red);
-			GridData gd_lblMsg = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-			gd_lblMsg.horizontalIndent = 10;
-			gd_lblMsg.verticalIndent = 15;
-			lblMsg.setLayoutData(gd_lblMsg);			
+			var gdLblMsg = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+			gdLblMsg.horizontalIndent = 10;
+			gdLblMsg.verticalIndent = 15;
+			lblMsg.setLayoutData(gdLblMsg);			
 			lblMsg.setText("PDF Extractor Service is NOT available");
 			new Label(container, SWT.NONE);
 		}
 		
 		initialize();
-		
 		return container;
+	}
+	
+	private void importDictguide() {
+		var importWizard = new DictguidesImportWizard(true);
+		var wizardDialog = new WizardDialog(getShell(), importWizard);
+		wizardDialog.create();
+		// we should move the wizard title to plugin.properties...
+		wizardDialog.setTitle("CA IDMS/DB Dictionary Structure and SQL Reference Guides");
+		Display.getCurrent().syncExec(wizardDialog::open);					
+		list.removeAll();
+		initialize();		
+	}
+	
+	private void deleteDictguide() {
+		DictguidesRegistry.getInstance().deleteEntry(list.getSelection()[0]);
+		list.removeAll();
+		initialize();		
 	}
 
 	private void initialize() {
-		
 		list.add("[none]"); // id will never exist because of "<" and ">"
-		for (String id : DictguidesRegistry.getInstance().getAllIds()) {
+		for (var id : DictguidesRegistry.getInstance().getAllIds()) {
 			list.add(id);
 		}
-		String activeId = DictguidesRegistry.getInstance().getActiveId();
+		var activeId = DictguidesRegistry.getInstance().getActiveId();
 		if (activeId != null) {
 			list.select(list.indexOf(activeId));
-			String title = 
-				DictguidesRegistry.getInstance()
-								  .getDictionaryStructureTitle(activeId);
+			var title = DictguidesRegistry.getInstance().getDictionaryStructureTitle(activeId);
 			lblDictionaryStructureguide.setText(title);
 			title = DictguidesRegistry.getInstance().getSqlTitle(activeId);
 			lblSqlGuide.setText(title);
 		} else {
 			list.select(0);
 		}
-		
 		setDocumentTitles();
-		
 		list.setFocus();
-		
 	}
 
 	@Override
@@ -223,9 +204,8 @@ public class ReferenceGuidesPreferencePage
 			lblDictionaryStructureguide.setText("");
 			lblSqlGuide.setText("");
 		} else {
-			String id = list.getSelection()[0];
-			String title = DictguidesRegistry.getInstance()
-											 .getDictionaryStructureTitle(id);
+			var id = list.getSelection()[0];
+			var title = DictguidesRegistry.getInstance().getDictionaryStructureTitle(id);
 			lblDictionaryStructureguide.setText(title);
 			title = DictguidesRegistry.getInstance().getSqlTitle(id);
 			lblSqlGuide.setText(title);
@@ -234,15 +214,10 @@ public class ReferenceGuidesPreferencePage
 	}
 	
 	private void storeValues() {
-		boolean changed;
 		if (list.getSelectionIndex() == 0) {
-			changed = DictguidesRegistry.getInstance().setActiveId(null);
+			DictguidesRegistry.getInstance().setActiveId(null);
 		} else {
-			changed = DictguidesRegistry.getInstance()
-										.setActiveId(list.getSelection()[0]);
-		}
-		if (changed) {
-			// todo: make sure the Properties view gets refreshed
+			DictguidesRegistry.getInstance().setActiveId(list.getSelection()[0]);
 		}
 	}
 

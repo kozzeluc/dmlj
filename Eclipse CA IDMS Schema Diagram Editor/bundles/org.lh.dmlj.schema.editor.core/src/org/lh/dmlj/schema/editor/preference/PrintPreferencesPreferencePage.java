@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,22 +31,20 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.lh.dmlj.schema.editor.Plugin;
 
-public class PrintPreferencesPreferencePage 
-	extends PreferencePage implements IPropertyChangeListener, IWorkbenchPreferencePage {
-
+public class PrintPreferencesPreferencePage extends PreferencePage implements IPropertyChangeListener, IWorkbenchPreferencePage {
 	private Composite container;
-	private Label     lblMargins;
-	private Spinner   spinnerBottomMargin;
-	private Spinner   spinnerLeftMargin;
-	private Spinner   spinnerRightMargin;
-	private Spinner   spinnerTopMargin;
+	private Label lblMargins;
+	private Spinner spinnerBottomMargin;
+	private Spinner spinnerLeftMargin;
+	private Spinner spinnerRightMargin;
+	private Spinner spinnerTopMargin;
 	
 	static int toMargin(int pels, Unit unit) {
 		if (unit == Unit.PIXELS) {
 			// The result is in pixels
 			return pels;
 		}
-		double tenthsOfAnInch = ((double) pels) / 7.2;		
+		var tenthsOfAnInch = pels / 7.2d;
 		if (unit == Unit.INCHES) {
 			// The result is in tenths of an inch
 			return (int) Math.round(tenthsOfAnInch);
@@ -63,76 +61,71 @@ public class PrintPreferencesPreferencePage
 		}
 		if (unit == Unit.INCHES) {
 			// the margin is in tenths of an inch
-			return (int) Math.round(((double) margin) * 7.2d);
+			return (int) Math.round(margin * 7.2d);
 		} else {
 			// the margin is in millimeters
-			double tenthsOfAnInch = ((double) margin / 2.54d);
+			var tenthsOfAnInch = margin / 2.54d;
 			return (int) Math.round(tenthsOfAnInch * 7.2d);
 		}
 	}
-
-	/**
-	 * @wbp.parser.constructor
-	 */
+	
 	public PrintPreferencesPreferencePage() {
-		super();
 		setDescription("Print settings:");
 	}	
 
 	@Override
 	protected Control createContents(Composite parent) {
-		
 		container = new Composite(parent, SWT.NONE);		
-		GridLayout layout = new GridLayout(3, false);
+		var layout = new GridLayout(3, false);
 		container.setLayout(layout);
 		
 		lblMargins = new Label(container, SWT.NONE);
 		lblMargins.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		lblMargins.setText("Margins (centimeters) -");
 		
-		Label lblTop = new Label(container, SWT.NONE);
+		var lblTop = new Label(container, SWT.NONE);
 		lblTop.setText("Top:");
 		
 		spinnerTopMargin = new Spinner(container, SWT.BORDER);
 		spinnerTopMargin.setMaximum(50);
 		spinnerTopMargin.setDigits(1);
-		GridData gd_spinnerTopMargin = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_spinnerTopMargin.widthHint = 30;
-		spinnerTopMargin.setLayoutData(gd_spinnerTopMargin);
+		var gdSpinnerTopMargin = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdSpinnerTopMargin.widthHint = 30;
+		spinnerTopMargin.setLayoutData(gdSpinnerTopMargin);
 		new Label(container, SWT.NONE);
 		
-		Label lblBottom = new Label(container, SWT.NONE);
+		var lblBottom = new Label(container, SWT.NONE);
 		lblBottom.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblBottom.setText("Bottom:");
 		
 		spinnerBottomMargin = new Spinner(container, SWT.BORDER);
 		spinnerBottomMargin.setMaximum(50);
 		spinnerBottomMargin.setDigits(1);
-		GridData gd_spinnerBottomMargin = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_spinnerBottomMargin.widthHint = 30;
-		spinnerBottomMargin.setLayoutData(gd_spinnerBottomMargin);
+		var gdSpinnerBottomMargin = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdSpinnerBottomMargin.widthHint = 30;
+		spinnerBottomMargin.setLayoutData(gdSpinnerBottomMargin);
 		new Label(container, SWT.NONE);
 		
-		Label lblLeft = new Label(container, SWT.NONE);
+		var lblLeft = new Label(container, SWT.NONE);
 		lblLeft.setText("Left:");
 		
 		spinnerLeftMargin = new Spinner(container, SWT.BORDER);
 		spinnerLeftMargin.setMaximum(50);
 		spinnerLeftMargin.setDigits(1);
-		GridData gd_spinnerLeftMargin = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_spinnerLeftMargin.widthHint = 30;
-		spinnerLeftMargin.setLayoutData(gd_spinnerLeftMargin);
+		var gdSpinnerLeftMargin = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdSpinnerLeftMargin.widthHint = 30;
+		spinnerLeftMargin.setLayoutData(gdSpinnerLeftMargin);
 		new Label(container, SWT.NONE);
 		
-		Label lblRight = new Label(container, SWT.NONE);
+		var lblRight = new Label(container, SWT.NONE);
 		lblRight.setText("Right:");
 		
 		spinnerRightMargin = new Spinner(container, SWT.BORDER);
 		spinnerRightMargin.setMaximum(50);
 		spinnerRightMargin.setDigits(1);
-		GridData gd_spinnerRightMargin = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_spinnerRightMargin.widthHint = 30;
-		spinnerRightMargin.setLayoutData(gd_spinnerRightMargin);
+		var gdSpinnerRightMargin = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdSpinnerRightMargin.widthHint = 30;
+		spinnerRightMargin.setLayoutData(gdSpinnerRightMargin);
 		
 		initializeValues();
 		
@@ -143,50 +136,42 @@ public class PrintPreferencesPreferencePage
 	public void dispose() {
 		getPreferenceStore().removePropertyChangeListener(this);
 		super.dispose();
-	}	
-	
-	private void doChecks() {
-		// nothing to check
 	}
 	
 	@Override
 	protected IPreferenceStore doGetPreferenceStore() {		
-		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		var store = Plugin.getDefault().getPreferenceStore();
 		store.addPropertyChangeListener(this);
 		return store;
 	}
 
 	@Override
 	public void init(IWorkbench workbench) {
+		// nothing to do here
 	}
 	
 	private void initializeDefaults() {
-		
-		IPreferenceStore store = getPreferenceStore();
+		var store = getPreferenceStore();
 				
-		Unit unit = Unit.valueOf(store.getDefaultString(PreferenceConstants.UNITS));
+		var unit = Unit.valueOf(store.getDefaultString(PreferenceConstants.UNITS));
 		// we do not need to change lblMargins since the unit is set at another preference page
 		
 		// margins are stored in pels (logical pixels; 72 pels == 1 inch)...
-		int topMargin = store.getDefaultInt(PreferenceConstants.TOP_MARGIN);
-		int bottomMargin = store.getDefaultInt(PreferenceConstants.BOTTOM_MARGIN);
-		int leftMargin = store.getDefaultInt(PreferenceConstants.LEFT_MARGIN);
-		int rightMargin = store.getDefaultInt(PreferenceConstants.RIGHT_MARGIN);
+		var topMargin = store.getDefaultInt(PreferenceConstants.TOP_MARGIN);
+		var bottomMargin = store.getDefaultInt(PreferenceConstants.BOTTOM_MARGIN);
+		var leftMargin = store.getDefaultInt(PreferenceConstants.LEFT_MARGIN);
+		var rightMargin = store.getDefaultInt(PreferenceConstants.RIGHT_MARGIN);
 		
 		spinnerTopMargin.setSelection(toMargin(topMargin, unit));
 		spinnerBottomMargin.setSelection(toMargin(bottomMargin, unit));
 		spinnerLeftMargin.setSelection(toMargin(leftMargin, unit));				
-		spinnerRightMargin.setSelection(toMargin(rightMargin, unit));
-		
-		doChecks();
-		
+		spinnerRightMargin.setSelection(toMargin(rightMargin, unit));	
 	}	
 	
-	private void initializeValues() {		
+	private void initializeValues() {
+		var store = getPreferenceStore();
 		
-		IPreferenceStore store = getPreferenceStore();
-		
-		Unit unit = Unit.valueOf(store.getString(PreferenceConstants.UNITS));
+		var unit = Unit.valueOf(store.getString(PreferenceConstants.UNITS));
 		String p;
 		if (unit == Unit.CENTIMETERS) {
 			p = "centimeters";
@@ -198,13 +183,12 @@ public class PrintPreferencesPreferencePage
 		lblMargins.setText("Margins (" + p + ") -");
 		
 		// margins are stored in pels (logical pixels; 72 pels == 1 inch)...
-		int topMargin = store.getInt(PreferenceConstants.TOP_MARGIN);
-		int bottomMargin = store.getInt(PreferenceConstants.BOTTOM_MARGIN);
-		int leftMargin = store.getInt(PreferenceConstants.LEFT_MARGIN);
-		int rightMargin = store.getInt(PreferenceConstants.RIGHT_MARGIN);
+		var topMargin = store.getInt(PreferenceConstants.TOP_MARGIN);
+		var bottomMargin = store.getInt(PreferenceConstants.BOTTOM_MARGIN);
+		var leftMargin = store.getInt(PreferenceConstants.LEFT_MARGIN);
+		var rightMargin = store.getInt(PreferenceConstants.RIGHT_MARGIN);
 		
 		if (unit == Unit.PIXELS) {
-			
 			spinnerTopMargin.setDigits(0);
 			spinnerBottomMargin.setDigits(0);
 			spinnerLeftMargin.setDigits(0);
@@ -214,9 +198,7 @@ public class PrintPreferencesPreferencePage
 			spinnerBottomMargin.setMaximum(72);
 			spinnerLeftMargin.setMaximum(72);
 			spinnerRightMargin.setMaximum(72);
-			
 		} else if (unit == Unit.INCHES) {
-			
 			spinnerTopMargin.setDigits(1);
 			spinnerBottomMargin.setDigits(1);
 			spinnerLeftMargin.setDigits(1);
@@ -226,9 +208,7 @@ public class PrintPreferencesPreferencePage
 			spinnerBottomMargin.setMaximum(10);
 			spinnerLeftMargin.setMaximum(10);
 			spinnerRightMargin.setMaximum(10);
-			
 		} else {
-			
 			spinnerTopMargin.setDigits(1);
 			spinnerBottomMargin.setDigits(1);
 			spinnerLeftMargin.setDigits(1);
@@ -238,16 +218,12 @@ public class PrintPreferencesPreferencePage
 			spinnerBottomMargin.setMaximum(25);
 			spinnerLeftMargin.setMaximum(25);
 			spinnerRightMargin.setMaximum(25);
-			
 		}
 		
 		spinnerTopMargin.setSelection(toMargin(topMargin, unit));
 		spinnerBottomMargin.setSelection(toMargin(bottomMargin, unit));
 		spinnerLeftMargin.setSelection(toMargin(leftMargin, unit));				
-		spinnerRightMargin.setSelection(toMargin(rightMargin, unit));		
-		
-		doChecks();
-		
+		spinnerRightMargin.setSelection(toMargin(rightMargin, unit));
 	}
 	
 	@Override
@@ -276,7 +252,6 @@ public class PrintPreferencesPreferencePage
 	}
 	
 	private boolean storeValues() {
-		
 		setErrorMessage(null);
 		
 		Unit unit;
@@ -288,17 +263,11 @@ public class PrintPreferencesPreferencePage
 			unit = Unit.PIXELS;
 		}
 		
-		IPreferenceStore store = getPreferenceStore();
-		
-		store.setValue(PreferenceConstants.TOP_MARGIN, 
-					   toPels(spinnerTopMargin.getSelection(), unit));
-		store.setValue(PreferenceConstants.BOTTOM_MARGIN, 
-					   toPels(spinnerBottomMargin.getSelection(), unit));
-		store.setValue(PreferenceConstants.LEFT_MARGIN, 
-					   toPels(spinnerLeftMargin.getSelection(), unit));
-		store.setValue(PreferenceConstants.RIGHT_MARGIN, 
-					   toPels(spinnerRightMargin.getSelection(), unit));				
-		
+		var store = getPreferenceStore();
+		store.setValue(PreferenceConstants.TOP_MARGIN, toPels(spinnerTopMargin.getSelection(), unit));
+		store.setValue(PreferenceConstants.BOTTOM_MARGIN, toPels(spinnerBottomMargin.getSelection(), unit));
+		store.setValue(PreferenceConstants.LEFT_MARGIN, toPels(spinnerLeftMargin.getSelection(), unit));
+		store.setValue(PreferenceConstants.RIGHT_MARGIN, toPels(spinnerRightMargin.getSelection(), unit));
 		return true;
 	}
 
