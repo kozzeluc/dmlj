@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -215,7 +215,7 @@ public class RemoveMemberFromSetCommandTest {
 		tmpCommand.execute(); // the new set will be called "NEW-SET-1"
 		
 		Prefix prefix = PrefixFactory.newPrefixForInquiry(recordNonHospClaim);
-		List<Pointer<?>> pointers = prefix.getPointers();
+		List<Pointer> pointers = prefix.getPointers();
 		assertEquals(5, pointers.size());
 		assertEquals("COVERAGE-CLAIMS", pointers.get(0).getSetName());
 		assertSame(PointerType.MEMBER_NEXT, pointers.get(0).getType());

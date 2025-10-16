@@ -27,18 +27,18 @@ import org.lh.dmlj.schema.editor.prefix.PrefixForPointerReordering;
 public class ChangePointerOrderCommand extends ModelChangeBasicCommand {
 	protected final SchemaRecord schemaRecord;
 	
-	private List<Pointer<?>> newPointerOrder;
+	private List<Pointer> newPointerOrder;
 	private PrefixForPointerReordering prefix;
 	
-	protected Supplier<List<Pointer<?>>> pointerSupplier;
+	protected Supplier<List<Pointer>> pointerSupplier;
 	
-	public ChangePointerOrderCommand(SchemaRecord schemaRecord, List<Pointer<?>> newPointerOrder) {
+	public ChangePointerOrderCommand(SchemaRecord schemaRecord, List<Pointer> newPointerOrder) {
 		super("Reorder pointers");
 		this.schemaRecord = schemaRecord;
 		this.newPointerOrder = newPointerOrder;
 	}
 	
-	public ChangePointerOrderCommand(SchemaRecord schemaRecord, Supplier<List<Pointer<?>>> pointerSupplier) {		
+	public ChangePointerOrderCommand(SchemaRecord schemaRecord, Supplier<List<Pointer>> pointerSupplier) {		
 		super("Reorder pointers");
 		this.schemaRecord = schemaRecord;
 		this.pointerSupplier = pointerSupplier;

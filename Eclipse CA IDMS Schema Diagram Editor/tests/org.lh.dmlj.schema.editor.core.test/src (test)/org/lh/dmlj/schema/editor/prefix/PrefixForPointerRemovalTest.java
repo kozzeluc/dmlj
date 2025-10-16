@@ -1,3 +1,19 @@
+/**
+ * Copyright (C) 2025  Luc Hermans
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program.  If
+ * not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contact information: kozzeluc@gmail.com.
+ */
 package org.lh.dmlj.schema.editor.prefix;
 
 import static org.mockito.Mockito.mock;
@@ -18,15 +34,15 @@ public class PrefixForPointerRemovalTest extends AbstractPointerOrPrefixRelatedT
 
 		SchemaRecord record = mock(SchemaRecord.class);
 		
-		List<Pointer<?>> pointers = new ArrayList<>();
+		List<Pointer> pointers = new ArrayList<>();
 				
-		Pointer<?> pointer1 = mock(Pointer.class);
+		Pointer pointer1 = mock(Pointer.class);
 		pointers.add(pointer1);
 				
-		PointerToUnset<?> pointer2 = mock(PointerToUnset.class);
+		PointerToUnset pointer2 = mock(PointerToUnset.class);
 		pointers.add(pointer2);
 		
-		PointerToMove<?> pointer3 = mock(PointerToMove.class);
+		PointerToMove pointer3 = mock(PointerToMove.class);
 		pointers.add(pointer3);
 		
 		PrefixForPointerRemoval prefix = new PrefixForPointerRemoval(record, pointers);

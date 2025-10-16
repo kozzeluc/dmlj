@@ -122,12 +122,12 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		Schema schema = TestTools.getEmpschmSchema();
 		SchemaRecord record = schema.getRecord("HOSPITAL-CLAIM");
-		List<Pointer<?>> pointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
+		List<Pointer> pointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
 		
 		// existing pointer
 		PointerDescription pointerDescription = 
 			new PointerDescription("COVERAGE-CLAIMS", PointerType.MEMBER_NEXT);
-		Pointer<?> pointer = PrefixUtil.getPointer(pointers, pointerDescription);
+		Pointer pointer = PrefixUtil.getPointer(pointers, pointerDescription);
 		assertNotNull(pointer);
 		assertEquals("COVERAGE-CLAIMS", pointer.getSetName());
 		assertSame(PointerType.MEMBER_NEXT, pointer.getType());
@@ -475,17 +475,17 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 	@Test
 	public void testPointerSorting() {
 		
-		List<Pointer<?>> unsortedList = new ArrayList<>();
+		List<Pointer> unsortedList = new ArrayList<>();
 		
-		Pointer<?> pointer1 = mock(Pointer.class);
+		Pointer pointer1 = mock(Pointer.class);
 		when(pointer1.getCurrentPositionInPrefix()).thenReturn((short) 2);
 		unsortedList.add(pointer1);
 		
-		Pointer<?> pointer2 = mock(Pointer.class);
+		Pointer pointer2 = mock(Pointer.class);
 		when(pointer2.getCurrentPositionInPrefix()).thenReturn((short) 1);
 		unsortedList.add(pointer2);
 		
-		List<Pointer<?>> sortedList = PrefixUtil.asSortedList(unsortedList);
+		List<Pointer> sortedList = PrefixUtil.asSortedList(unsortedList);
 		assertNotNull(sortedList);
 		assertEquals(2, sortedList.size());
 		assertSame(pointer2, sortedList.get(0));
@@ -498,7 +498,7 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		Schema schema = TestTools.getEmpschmSchema();
 		SchemaRecord recordEmployee = schema.getRecord("EMPLOYEE");		
-		List<Pointer<?>> pointers = PrefixUtil.getPointersForRecord(recordEmployee);
+		List<Pointer> pointers = PrefixUtil.getPointersForRecord(recordEmployee);
 		assertNotNull(pointers);
 		assertEquals(16, pointers.size());
 		
@@ -571,14 +571,14 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 	@Test
 	public void testIsPointerListConsistent() {
 		
-		List<Pointer<?>> unsortedList = new ArrayList<>();		
-		Pointer<?> pointer1 = mock(Pointer.class);
+		List<Pointer> unsortedList = new ArrayList<>();		
+		Pointer pointer1 = mock(Pointer.class);
 		when(pointer1.getCurrentPositionInPrefix()).thenReturn((short) 2);
 		unsortedList.add(pointer1);		
-		Pointer<?> pointer2 = mock(Pointer.class);
+		Pointer pointer2 = mock(Pointer.class);
 		when(pointer2.getCurrentPositionInPrefix()).thenReturn((short) 1);
 		unsortedList.add(pointer2);		
-		List<Pointer<?>> sortedList = PrefixUtil.asSortedList(unsortedList);
+		List<Pointer> sortedList = PrefixUtil.asSortedList(unsortedList);
 				
 		assertTrue(PrefixUtil.isPointerListConsistent(sortedList));
 		assertFalse(PrefixUtil.isPointerListConsistent(unsortedList));
@@ -689,7 +689,7 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		Schema schema = TestTools.getEmpschmSchema();
 		SchemaRecord record = schema.getRecord("HOSPITAL-CLAIM");
 		
-		List<Pointer<?>> pointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
+		List<Pointer> pointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
 		assertEquals(2, pointers.size());
 		assertEquals("COVERAGE-CLAIMS", pointers.get(0).getSetName());
 		assertSame(PointerType.MEMBER_NEXT, pointers.get(0).getType());
@@ -700,12 +700,12 @@ public class PrefixUtilTest extends AbstractPointerOrPrefixRelatedTestCase {
 		desiredOrder.add(new PointerDescription("COVERAGE-CLAIMS", PointerType.MEMBER_PRIOR));
 		desiredOrder.add(new PointerDescription("COVERAGE-CLAIMS", PointerType.MEMBER_NEXT));
 		
-		PrefixUtil.reorder(pointers, desiredOrder);
+		var reorderedPointers = PrefixUtil.reorder(pointers, desiredOrder);
 		
-		assertEquals(2, pointers.size());
-		assertEquals("COVERAGE-CLAIMS", pointers.get(0).getSetName());
-		assertSame(PointerType.MEMBER_PRIOR, pointers.get(0).getType());
-		assertEquals("COVERAGE-CLAIMS", pointers.get(1).getSetName());
-		assertSame(PointerType.MEMBER_NEXT, pointers.get(1).getType());
+		assertEquals(2, reorderedPointers.size());
+		assertEquals("COVERAGE-CLAIMS", reorderedPointers.get(0).getSetName());
+		assertSame(PointerType.MEMBER_PRIOR, reorderedPointers.get(0).getType());
+		assertEquals("COVERAGE-CLAIMS", reorderedPointers.get(1).getSetName());
+		assertSame(PointerType.MEMBER_NEXT, reorderedPointers.get(1).getType());
 	}
 }

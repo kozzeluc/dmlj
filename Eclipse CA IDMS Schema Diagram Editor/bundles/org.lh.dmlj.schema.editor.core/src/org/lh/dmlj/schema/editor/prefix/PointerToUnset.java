@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,14 +19,13 @@ package org.lh.dmlj.schema.editor.prefix;
 import org.lh.dmlj.schema.Role;
 
 /**
- * Represents a pointer in a record's prefix whose position in the prefix is to be unset (i.e. set
- * to zero or null, depending on the pointer type).
+ * Represents a pointer in a record's prefix whose position in the prefix is to be unset (i.e. set to zero or
+ * null, depending on the pointer type).
  */
-class PointerToUnset<T extends Role> extends Pointer<T> {
-
-	private Short oldPositionInPrefix;	
+class PointerToUnset extends Pointer {
+	private final Short oldPositionInPrefix;	
 	
-	PointerToUnset(T role, PointerType type) {
+	PointerToUnset(Role role, PointerType type) {
 		super(role, type);
 		oldPositionInPrefix = PrefixUtil.getPositionInPrefix(role, type);
 	}

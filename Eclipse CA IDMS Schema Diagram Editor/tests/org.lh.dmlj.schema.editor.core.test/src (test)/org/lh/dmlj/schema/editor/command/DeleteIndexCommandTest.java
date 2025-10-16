@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -55,7 +55,7 @@ import org.lh.dmlj.schema.editor.testtool.Xmi;
 public class DeleteIndexCommandTest {
 
 	private void assertPointerNotInPrefix(Prefix prefix, Role role, PointerType type) {
-		for (Pointer<?> pointer : prefix.getPointers()) {
+		for (Pointer pointer : prefix.getPointers()) {
 			if (pointer.getRole() == role && pointer.getType() == type) {
 				fail("pointer not expected in prefix: " + type + " " + role);
 			}

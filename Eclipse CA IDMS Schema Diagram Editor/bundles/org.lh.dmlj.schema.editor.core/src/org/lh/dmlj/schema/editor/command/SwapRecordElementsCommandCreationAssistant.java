@@ -351,10 +351,9 @@ public class SwapRecordElementsCommandCreationAssistant {
 		}
 		
 		var desiredOrder = PrefixUtil.getPointerDescriptions(schemaRecord);		
-		Supplier<List<Pointer<?>>> pointerSupplier = () -> {
+		Supplier<List<Pointer>> pointerSupplier = () -> {
 			var pointers = PrefixFactory.newPrefixForInquiry(schemaRecord).getPointers();
-			PrefixUtil.reorder(pointers, desiredOrder);
-			return pointers;
+			return PrefixUtil.reorder(pointers, desiredOrder);
 		};
 		
 		commands.add(new ChangePointerOrderCommand(schemaRecord, pointerSupplier));

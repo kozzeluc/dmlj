@@ -36,7 +36,7 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 	public void testOwnerNext() {
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("R1", "S1");		
 		
-		PointerToSet<OwnerRole> pointer = 
+		PointerToSet pointer = 
 			PointerFactory.newPointerToSet(role, OWNER_NEXT, (short) 5);
 		
 		assertEquals((short) 5, pointer.getPositionInPrefixToSet());
@@ -53,7 +53,7 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 3);
-		PointerToSet<OwnerRole> pointer = 
+		PointerToSet pointer = 
 			PointerFactory.newPointerToSet(role, OWNER_PRIOR, newPositionInPrefix.shortValue());
 		
 		assertEquals(newPositionInPrefix.shortValue(), pointer.getPositionInPrefixToSet());
@@ -70,7 +70,7 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 13);
-		PointerToSet<MemberRole> pointer = 
+		PointerToSet pointer = 
 			PointerFactory.newPointerToSet(role, MEMBER_NEXT, newPositionInPrefix.shortValue());
 		
 		assertEquals(newPositionInPrefix.shortValue(), pointer.getPositionInPrefixToSet());
@@ -87,7 +87,7 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 13);
-		PointerToSet<MemberRole> pointer = 
+		PointerToSet pointer = 
 			PointerFactory.newPointerToSet(role, MEMBER_PRIOR, newPositionInPrefix.shortValue());
 		
 		assertEquals(newPositionInPrefix.shortValue(), pointer.getPositionInPrefixToSet());
@@ -104,7 +104,7 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 17);
-		PointerToSet<MemberRole> pointer = 
+		PointerToSet pointer = 
 			PointerFactory.newPointerToSet(role, MEMBER_OWNER, newPositionInPrefix.shortValue());
 		
 		assertEquals(newPositionInPrefix.shortValue(), pointer.getPositionInPrefixToSet());
@@ -121,7 +121,7 @@ public class PointerToSetTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("R1", "S1");		
 		
 		Short newPositionInPrefix = Short.valueOf((short) 17);
-		PointerToSet<MemberRole> pointer = 
+		PointerToSet pointer = 
 			PointerFactory.newPointerToSet(role, MEMBER_INDEX, newPositionInPrefix.shortValue());
 		
 		assertEquals(newPositionInPrefix.shortValue(), pointer.getPositionInPrefixToSet());

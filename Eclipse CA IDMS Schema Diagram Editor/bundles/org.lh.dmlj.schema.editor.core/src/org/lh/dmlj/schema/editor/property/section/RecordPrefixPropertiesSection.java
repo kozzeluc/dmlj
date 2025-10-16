@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -44,11 +44,11 @@ import org.lh.dmlj.schema.editor.property.ui.PointerOrderDialog;
                       
 public class RecordPrefixPropertiesSection 
 	extends AbstractPropertiesSection 
-	implements IHyperlinkHandlerProvider<Pointer<?>, Object> {	
+	implements IHyperlinkHandlerProvider<Pointer, Object> {	
 
 	private CommandStack commandStack;
 	private Prefix prefix;
-	private HyperlinkOnlyPropertyEditor<Pointer<?>> hyperlinkOnlyPropertyEditor;
+	private HyperlinkOnlyPropertyEditor<Pointer> hyperlinkOnlyPropertyEditor;
 	private Table table;
 	protected SchemaRecord target;
 
@@ -113,7 +113,7 @@ public class RecordPrefixPropertiesSection
 	}
 
 	@Override
-	public Pointer<?> getContext(int row) {
+	public Pointer getContext(int row) {
 		return prefix.getPointers().get(row);
 	}
 
@@ -125,7 +125,7 @@ public class RecordPrefixPropertiesSection
 		
 		// (re-)populate the table
 		prefix = PrefixFactory.newPrefixForInquiry(target);
-		for (Pointer<?> pointer : prefix.getPointers()) {												
+		for (Pointer pointer : prefix.getPointers()) {												
 			TableItem item = new TableItem(table, SWT.NONE);			
 			item.setText(0, String.valueOf(pointer.getCurrentPositionInPrefix()));			
 			item.setText(1, Tools.removeTrailingUnderscore(pointer.getSetName()));						
@@ -159,7 +159,7 @@ public class RecordPrefixPropertiesSection
 	}
 
 	@Override
-	public IHyperlinkHandler<Pointer<?>, Object> getHyperlinkHandler(int column) {
+	public IHyperlinkHandler<Pointer, Object> getHyperlinkHandler(int column) {
 		if (isReadOnlyMode()) {
 			return null;
 		}
@@ -167,9 +167,9 @@ public class RecordPrefixPropertiesSection
 			// we don't expect this to happen since we've only made 1 column hyperlink enabled
 			return null; 
 		}
-		return new IHyperlinkHandler<Pointer<?>, Object>() {
+		return new IHyperlinkHandler<Pointer, Object>() {
 			@Override
-			public Object hyperlinkActivated(Pointer<?> context) {
+			public Object hyperlinkActivated(Pointer context) {
 				showPointerOrderDialog();
 				return null;
 			}

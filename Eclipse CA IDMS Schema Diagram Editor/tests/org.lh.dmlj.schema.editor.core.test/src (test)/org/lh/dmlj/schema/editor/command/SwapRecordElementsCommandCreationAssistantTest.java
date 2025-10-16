@@ -471,7 +471,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 			(ChangePointerOrderCommand) commands.get(9);
 		assertSame(record, changePointerOrderCommand.schemaRecord);
 		List<PointerDescription> asisDescriptions = PrefixUtil.getPointerDescriptions(record);
-		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.get();
+		List<Pointer> newOrder = changePointerOrderCommand.pointerSupplier.get();
 		assertEquals(asisDescriptions.size(), newOrder.size());
 		for (int i = 0; i < asisDescriptions.size(); i++) {
 			assertEquals(asisDescriptions.get(i).getSetName(), newOrder.get(i).getSetName());
@@ -787,7 +787,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 			(ChangePointerOrderCommand) commands.get(15);
 		assertSame(record, changePointerOrderCommand.schemaRecord);
 		List<PointerDescription> asisDescriptions = PrefixUtil.getPointerDescriptions(record);
-		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.get();
+		List<Pointer> newOrder = changePointerOrderCommand.pointerSupplier.get();
 		assertEquals(asisDescriptions.size(), newOrder.size());
 		for (int i = 0; i < asisDescriptions.size(); i++) {
 			assertEquals(asisDescriptions.get(i).getSetName(), newOrder.get(i).getSetName());
@@ -1294,7 +1294,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 			(ChangePointerOrderCommand) commands.get(10);
 		assertSame(record, changePointerOrderCommand.schemaRecord);
 		List<PointerDescription> asisDescriptions = PrefixUtil.getPointerDescriptions(record);
-		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.get();
+		List<Pointer> newOrder = changePointerOrderCommand.pointerSupplier.get();
 		assertEquals(asisDescriptions.size(), newOrder.size());
 		for (int i = 0; i < asisDescriptions.size(); i++) {
 			assertEquals(asisDescriptions.get(i).getSetName(), newOrder.get(i).getSetName());
@@ -1472,7 +1472,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 			(ChangePointerOrderCommand) commands.get(11);
 		assertSame(record, changePointerOrderCommand.schemaRecord);
 		List<PointerDescription> asisDescriptions = PrefixUtil.getPointerDescriptions(record);
-		List<Pointer<?>> newOrder = changePointerOrderCommand.pointerSupplier.get();
+		List<Pointer> newOrder = changePointerOrderCommand.pointerSupplier.get();
 		assertEquals(asisDescriptions.size(), newOrder.size());
 		for (int i = 0; i < asisDescriptions.size(); i++) {
 			assertEquals(asisDescriptions.get(i).getSetName(), newOrder.get(i).getSetName());
@@ -1537,7 +1537,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		SchemaRecord record = schema.getRecord("DENTAL-CLAIM");
 		List<Element> newRootElements = getSingleElementList();		
 		
-		List<Pointer<?>> originalPointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
+		List<Pointer> originalPointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
 		assertEquals(5, originalPointers.size());
 		assertEquals("NEW-SET-1", originalPointers.get(0).getSetName());
 		assertEquals(PointerType.MEMBER_NEXT, originalPointers.get(0).getType());
@@ -1555,7 +1555,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		command.execute();
 		
-		List<Pointer<?>> newPointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
+		List<Pointer> newPointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
 		assertEquals(2, newPointers.size());
 		assertEquals("COVERAGE-CLAIMS", newPointers.get(0).getSetName());
 		assertEquals(PointerType.MEMBER_NEXT, newPointers.get(0).getType());
@@ -1575,7 +1575,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		SchemaRecord record = schema.getRecord("DENTAL-CLAIM");
 		List<Element> newRootElements = getSingleElementList("PATIENT-NAME-0405");		
 		
-		List<Pointer<?>> originalPointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
+		List<Pointer> originalPointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
 		assertEquals(5, originalPointers.size());
 		assertEquals("NEW-SET-1", originalPointers.get(0).getSetName());
 		assertEquals(PointerType.MEMBER_NEXT, originalPointers.get(0).getType());
@@ -1593,7 +1593,7 @@ public class SwapRecordElementsCommandCreationAssistantTest {
 		
 		command.execute();
 		
-		List<Pointer<?>> newPointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
+		List<Pointer> newPointers = PrefixFactory.newPrefixForInquiry(record).getPointers();
 		assertEquals(5, newPointers.size());
 		assertEquals("NEW-SET-1", newPointers.get(0).getSetName());
 		assertEquals(PointerType.MEMBER_NEXT, newPointers.get(0).getType());

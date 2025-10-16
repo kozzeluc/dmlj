@@ -42,7 +42,7 @@ public class PointerToMoveTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getNextDbkeyPosition()).thenReturn(oldPositionInPrefix);		
 		
 		short newPositionInPrefix = (short) 5;
-		PointerToMove<OwnerRole> pointer = 
+		PointerToMove pointer = 
 			PointerFactory.newPointerToMove(role, OWNER_NEXT, newPositionInPrefix);
 		
 		assertEquals(oldPositionInPrefix, pointer.getOldPositionInPrefix().shortValue());
@@ -66,7 +66,7 @@ public class PointerToMoveTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getPriorDbkeyPosition()).thenReturn(oldPositionInPrefix);		
 		
 		short newPositionInPrefix = (short) 7;
-		PointerToMove<OwnerRole> pointer = 
+		PointerToMove pointer = 
 			PointerFactory.newPointerToMove(role, OWNER_PRIOR, newPositionInPrefix);
 		
 		assertSame(oldPositionInPrefix, pointer.getOldPositionInPrefix());
@@ -90,7 +90,7 @@ public class PointerToMoveTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getNextDbkeyPosition()).thenReturn(oldPositionInPrefix);		
 		
 		short newPositionInPrefix = (short) 2;
-		PointerToMove<MemberRole> pointer = 
+		PointerToMove pointer = 
 			PointerFactory.newPointerToMove(role, MEMBER_NEXT, newPositionInPrefix);
 		
 		assertSame(oldPositionInPrefix, pointer.getOldPositionInPrefix());
@@ -114,7 +114,7 @@ public class PointerToMoveTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getPriorDbkeyPosition()).thenReturn(oldPositionInPrefix);		
 		
 		short newPositionInPrefix = (short) 1;
-		PointerToMove<MemberRole> pointer = 
+		PointerToMove pointer = 
 			PointerFactory.newPointerToMove(role, MEMBER_PRIOR, newPositionInPrefix);
 		
 		assertSame(oldPositionInPrefix, pointer.getOldPositionInPrefix());
@@ -138,7 +138,7 @@ public class PointerToMoveTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getOwnerDbkeyPosition()).thenReturn(oldPositionInPrefix);		
 		
 		short newPositionInPrefix = (short) 4;
-		PointerToMove<MemberRole> pointer = 
+		PointerToMove pointer = 
 			PointerFactory.newPointerToMove(role, MEMBER_OWNER, newPositionInPrefix);
 		
 		assertSame(oldPositionInPrefix, pointer.getOldPositionInPrefix());
@@ -162,7 +162,7 @@ public class PointerToMoveTest extends AbstractPointerOrPrefixRelatedTestCase {
 		when(role.getIndexDbkeyPosition()).thenReturn(oldPositionInPrefix);		
 		
 		short newPositionInPrefix = (short) 6;
-		PointerToMove<MemberRole> pointer = 
+		PointerToMove pointer = 
 			PointerFactory.newPointerToMove(role, MEMBER_INDEX, newPositionInPrefix);
 		
 		assertSame(oldPositionInPrefix, pointer.getOldPositionInPrefix());

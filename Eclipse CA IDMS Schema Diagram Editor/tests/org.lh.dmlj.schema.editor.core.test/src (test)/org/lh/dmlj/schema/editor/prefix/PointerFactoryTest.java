@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -133,7 +133,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	@Test
 	public void testNewPointerForOwnerRole() {
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
-		Pointer<OwnerRole> pointer = PointerFactory.newPointer(role, OWNER_NEXT);
+		Pointer pointer = PointerFactory.newPointer(role, OWNER_NEXT);
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
 		assertSame(OWNER_NEXT, pointer.getType());
@@ -142,7 +142,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	@Test
 	public void testNewPointerForMemberRole() {
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_NEXT);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_NEXT);
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
 		assertSame(MEMBER_NEXT, pointer.getType());
@@ -203,7 +203,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	@Test
 	public void testNewPointerToSetForOwnerRole() {
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
-		PointerToSet<OwnerRole> pointer = 
+		PointerToSet pointer = 
 			PointerFactory.newPointerToSet(role, OWNER_NEXT, (short) 13);
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
@@ -215,7 +215,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	@Test
 	public void testNewPointerToSetForMemberRole() {
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
-		PointerToSet<MemberRole> pointer = 
+		PointerToSet pointer = 
 			PointerFactory.newPointerToSet(role, MEMBER_NEXT, Short.valueOf((short) 17));
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
@@ -298,7 +298,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
 		Short positionInPrefix = Short.valueOf((short) 21);
 		when(role.getPriorDbkeyPosition()).thenReturn(positionInPrefix);
-		PointerToUnset<OwnerRole> pointer = PointerFactory.newPointerToUnset(role, OWNER_PRIOR);
+		PointerToUnset pointer = PointerFactory.newPointerToUnset(role, OWNER_PRIOR);
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
 		assertSame(OWNER_PRIOR, pointer.getType());
@@ -310,7 +310,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		Short positionInPrefix = Short.valueOf((short) 19);
 		when(role.getPriorDbkeyPosition()).thenReturn(positionInPrefix);
-		PointerToUnset<MemberRole> pointer = PointerFactory.newPointerToUnset(role, MEMBER_PRIOR);
+		PointerToUnset pointer = PointerFactory.newPointerToUnset(role, MEMBER_PRIOR);
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
 		assertSame(MEMBER_PRIOR, pointer.getType());
@@ -367,7 +367,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	public void testNewPointerToMoveForOwnerRole() {
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("A", "B");
 		when(role.getNextDbkeyPosition()).thenReturn((short) 7);
-		PointerToMove<OwnerRole> pointer = 
+		PointerToMove pointer = 
 			PointerFactory.newPointerToMove(role, OWNER_NEXT, (short) 13);
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());
@@ -380,7 +380,7 @@ public class PointerFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	public void testNewPointerToMoveForMemberRole() {
 		MemberRole role = mockMemberRoleWithNoPointersSet("A", "B");
 		when(role.getNextDbkeyPosition()).thenReturn(Short.valueOf((short) 7));
-		PointerToMove<MemberRole> pointer = 
+		PointerToMove pointer = 
 			PointerFactory.newPointerToMove(role, MEMBER_NEXT, (short) 17);
 		assertNotNull(pointer);
 		assertSame(role, pointer.getRole());

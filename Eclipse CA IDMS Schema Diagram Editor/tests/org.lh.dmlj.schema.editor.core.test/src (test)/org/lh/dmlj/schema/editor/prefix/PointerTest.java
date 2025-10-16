@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -46,7 +46,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("REC1", "SET1");
 		when(role.getNextDbkeyPosition()).thenReturn((short) 13);
 		
-		Pointer<OwnerRole> pointer = PointerFactory.newPointer(role, OWNER_NEXT);
+		Pointer pointer = PointerFactory.newPointer(role, OWNER_NEXT);
 		assertSame(role, pointer.role);
 		assertSame(OWNER_NEXT, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -81,7 +81,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("REC1", "SET1");		
 		
-		Pointer<OwnerRole> pointer = PointerFactory.newPointer(role, OWNER_NEXT);
+		Pointer pointer = PointerFactory.newPointer(role, OWNER_NEXT);
 		assertSame(role, pointer.role);
 		assertSame(OWNER_NEXT, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -117,7 +117,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		Short positionInPrefix = Short.valueOf((short) 17);
 		when(role.getPriorDbkeyPosition()).thenReturn(positionInPrefix);
 		
-		Pointer<OwnerRole> pointer = PointerFactory.newPointer(role, OWNER_PRIOR);
+		Pointer pointer = PointerFactory.newPointer(role, OWNER_PRIOR);
 		assertSame(role, pointer.role);
 		assertSame(OWNER_PRIOR, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -150,7 +150,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		OwnerRole role = mockOwnerRoleWithNoPointersSet("REC1", "SET1");		
 		
-		Pointer<OwnerRole> pointer = PointerFactory.newPointer(role, OWNER_PRIOR);
+		Pointer pointer = PointerFactory.newPointer(role, OWNER_PRIOR);
 		assertSame(role, pointer.role);
 		assertSame(OWNER_PRIOR, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -185,7 +185,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		Short positionInPrefix = Short.valueOf((short) 11);
 		when(role.getNextDbkeyPosition()).thenReturn(positionInPrefix);
 		
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_NEXT);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_NEXT);
 		assertSame(role, pointer.role);
 		assertSame(MEMBER_NEXT, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -220,7 +220,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		MemberRole role = mockMemberRoleWithNoPointersSet("REC1", "SET1");		
 		
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_NEXT);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_NEXT);
 		assertSame(role, pointer.role);
 		assertSame(MEMBER_NEXT, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -257,7 +257,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		Short positionInPrefix = Short.valueOf((short) 7);
 		when(role.getPriorDbkeyPosition()).thenReturn(positionInPrefix);
 		
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_PRIOR);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_PRIOR);
 		assertSame(role, pointer.role);
 		assertSame(MEMBER_PRIOR, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -292,7 +292,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		MemberRole role = mockMemberRoleWithNoPointersSet("REC1", "SET1");		
 		
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_PRIOR);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_PRIOR);
 		assertSame(role, pointer.role);
 		assertSame(MEMBER_PRIOR, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -329,7 +329,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		Short positionInPrefix = Short.valueOf((short) 3);
 		when(role.getOwnerDbkeyPosition()).thenReturn(positionInPrefix);
 		
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_OWNER);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_OWNER);
 		assertSame(role, pointer.role);
 		assertSame(MEMBER_OWNER, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -364,7 +364,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		MemberRole role = mockMemberRoleWithNoPointersSet("REC1", "SET1");		
 		
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_OWNER);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_OWNER);
 		assertSame(role, pointer.role);
 		assertSame(MEMBER_OWNER, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -401,7 +401,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		Short positionInPrefix = Short.valueOf((short) 5);
 		when(role.getIndexDbkeyPosition()).thenReturn(positionInPrefix);
 		
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_INDEX);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_INDEX);
 		assertSame(role, pointer.role);
 		assertSame(MEMBER_INDEX, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());
@@ -436,7 +436,7 @@ public class PointerTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		MemberRole role = mockMemberRoleWithNoPointersSet("REC1", "SET1");		
 		
-		Pointer<MemberRole> pointer = PointerFactory.newPointer(role, MEMBER_INDEX);
+		Pointer pointer = PointerFactory.newPointer(role, MEMBER_INDEX);
 		assertSame(role, pointer.role);
 		assertSame(MEMBER_INDEX, pointer.getType());
 		assertEquals("REC1", pointer.getRecordName());

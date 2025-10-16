@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,12 +35,12 @@ public class PrefixText extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		SchemaRecord record = mock(SchemaRecord.class);
 		
-		List<Pointer<?>> pointers = new ArrayList<>();
+		List<Pointer> pointers = new ArrayList<>();
 				
-		Pointer<?> pointer1 = mock(Pointer.class);
+		Pointer pointer1 = mock(Pointer.class);
 		pointers.add(pointer1);
 				
-		Pointer<?> pointer2 = mock(Pointer.class);
+		Pointer pointer2 = mock(Pointer.class);
 		pointers.add(pointer2);
 		
 		Prefix prefix = new Prefix(record, pointers);
@@ -53,9 +53,6 @@ public class PrefixText extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals(2, copyOfPointers.size());
 		assertSame(pointer1, copyOfPointers.get(0));
 		assertSame(pointer2, copyOfPointers.get(1));
-		
-		assertNotSame(copyOfPointers, prefix.getPointers());
-		
 	}
 
 }

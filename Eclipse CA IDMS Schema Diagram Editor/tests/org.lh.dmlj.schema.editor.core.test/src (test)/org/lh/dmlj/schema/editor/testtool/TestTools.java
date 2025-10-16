@@ -368,16 +368,16 @@ public abstract class TestTools {
 		Assert.assertEquals(untouchedPrefix.getPointers().size() - pointersToCheck.length, 
 							touchedPrefix.getPointers().size());
 
-		List<Pointer<?>> expectedPointers = new ArrayList<>();
-		for (Pointer<?> pointer : untouchedPrefix.getPointers()) {
+		List<Pointer> expectedPointers = new ArrayList<>();
+		for (Pointer pointer : untouchedPrefix.getPointers()) {
 			if (!pointer.getSetName().equals(setName)) {
 				expectedPointers.add(pointer);
 			}
 		}
 		
-		assertEquals(expectedPointers, touchedPrefix.getPointers(), new Asserter<Pointer<?>>() {
+		assertEquals(expectedPointers, touchedPrefix.getPointers(), new Asserter<Pointer>() {
 			@Override
-			public void doAssert(int itemIndex, Pointer<?> expected, Pointer<?> actual) {
+			public void doAssert(int itemIndex, Pointer expected, Pointer actual) {
 				Assert.assertSame(String.valueOf(itemIndex), expected.getType(), actual.getType());
 				Assert.assertEquals(String.valueOf(itemIndex), expected.getSetName(), 
 									actual.getSetName());

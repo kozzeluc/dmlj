@@ -51,8 +51,8 @@ public class PointerOrderDialog extends Dialog {
 	private Button btnGroupPlus;
 	private Button btnMoveDown;
 	private Button btnMoveUp;
-	private List<Pointer<?>> desiredPointerList = new ArrayList<>();
-	private List<Pointer<?>> idealPointerList = new ArrayList<>();
+	private List<Pointer> desiredPointerList = new ArrayList<>();
+	private List<Pointer> idealPointerList = new ArrayList<>();
 	private Prefix originalPrefix;
 	private Table table;
 	private Button btnReset;
@@ -67,7 +67,7 @@ public class PointerOrderDialog extends Dialog {
 		return true;
 	}
 	
-	private static String getRole(Pointer<?> pointer) {
+	private static String getRole(Pointer pointer) {
 		if (pointer.isOwnerDefined()) {
 			return "owner";
 		} else {
@@ -75,7 +75,7 @@ public class PointerOrderDialog extends Dialog {
 		}
 	}
 
-	private static String getType(Pointer<?> pointer) {
+	private static String getType(Pointer pointer) {
 		String pointerTypeAsString = pointer.getType().toString();
 		return pointerTypeAsString.substring(pointerTypeAsString.indexOf("_") + 1);
 	}
@@ -247,9 +247,9 @@ public class PointerOrderDialog extends Dialog {
 
 	private void createIdealPointerList() {
 		idealPointerList.addAll(originalPrefix.getPointers());				
-		Collections.sort(idealPointerList, new Comparator<Pointer<?>>() {
+		Collections.sort(idealPointerList, new Comparator<Pointer>() {
 			@Override
-			public int compare(Pointer<?> p1, Pointer<?> p2) {
+			public int compare(Pointer p1, Pointer p2) {
 				if (!p1.getSetName().equals(p2.getSetName())) {
 					return p1.getSetName().compareTo(p2.getSetName());
 				} else {
@@ -277,7 +277,7 @@ public class PointerOrderDialog extends Dialog {
 		
 	}
 	
-	public List<Pointer<?>> getDesiredPointerList() {
+	public List<Pointer> getDesiredPointerList() {
 		return new ArrayList<>(desiredPointerList);
 	}
 
@@ -289,12 +289,12 @@ public class PointerOrderDialog extends Dialog {
 		return new Point(450, 400);
 	}
 	
-	private List<Pointer<?>> getPointerListGroupedBySet() {
-		List<Pointer<?>> pointerListGroupedBySet = new ArrayList<>(desiredPointerList);
+	private List<Pointer> getPointerListGroupedBySet() {
+		List<Pointer> pointerListGroupedBySet = new ArrayList<>(desiredPointerList);
 		final List<String> setNamesInOrderOfAppearance = getSetNamesInOrderOfAppearance();
-		Collections.sort(pointerListGroupedBySet, new Comparator<Pointer<?>>() {
+		Collections.sort(pointerListGroupedBySet, new Comparator<Pointer>() {
 			@Override
-			public int compare(Pointer<?> p1, Pointer<?> p2) {
+			public int compare(Pointer p1, Pointer p2) {
 				if (p1.getSetName() != p2.getSetName()) {
 					return setNamesInOrderOfAppearance.indexOf(p1.getSetName()) - 
 						   setNamesInOrderOfAppearance.indexOf(p2.getSetName());
@@ -306,13 +306,13 @@ public class PointerOrderDialog extends Dialog {
 		return pointerListGroupedBySet;
 	}
 	
-	private List<Pointer<?>> getPointerListGroupedBySetWithPointersSorted() {
-		List<Pointer<?>> pointerListGroupedBySetWithPointersSorted = 
+	private List<Pointer> getPointerListGroupedBySetWithPointersSorted() {
+		List<Pointer> pointerListGroupedBySetWithPointersSorted = 
 			new ArrayList<>(desiredPointerList);			
 		final List<String> setNamesInOrderOfAppearance = getSetNamesInOrderOfAppearance();
-		Collections.sort(pointerListGroupedBySetWithPointersSorted, new Comparator<Pointer<?>>() {
+		Collections.sort(pointerListGroupedBySetWithPointersSorted, new Comparator<Pointer>() {
 			@Override
-			public int compare(Pointer<?> p1, Pointer<?> p2) {
+			public int compare(Pointer p1, Pointer p2) {
 				if (p1.getSetName() != p2.getSetName()) {
 					return setNamesInOrderOfAppearance.indexOf(p1.getSetName()) - 
 							setNamesInOrderOfAppearance.indexOf(p2.getSetName());
@@ -324,7 +324,7 @@ public class PointerOrderDialog extends Dialog {
 		return pointerListGroupedBySetWithPointersSorted;
 	}
 	
-	private String getPosition(Pointer<?> pointer) {
+	private String getPosition(Pointer pointer) {
 		StringBuilder pos = new StringBuilder();
 		int currentPos = desiredPointerList.indexOf(pointer) + 1;
 		pos.append(String.valueOf(currentPos));
@@ -338,13 +338,13 @@ public class PointerOrderDialog extends Dialog {
 	
 	private List<String> getSetNamesInOrderOfAppearance() {
 		Set<String> setNames = new LinkedHashSet<>();
-		for (Pointer<?> pointer : desiredPointerList) {
+		for (Pointer pointer : desiredPointerList) {
 			setNames.add(pointer.getSetName());
 		}
 		return new ArrayList<>(setNames);
 	}
 	
-	private void group(List<Pointer<?>> groupedByList) {
+	private void group(List<Pointer> groupedByList) {
 		desiredPointerList.clear();
 		desiredPointerList.addAll(groupedByList);
 		table.deselectAll();
@@ -378,7 +378,7 @@ public class PointerOrderDialog extends Dialog {
 
 	private void refreshTable() {
 		table.removeAll();
-		for (Pointer<?> pointer : desiredPointerList) {
+		for (Pointer pointer : desiredPointerList) {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(0, getPosition(pointer));			
 			item.setText(1, Tools.removeTrailingUnderscore(pointer.getSetName()));						

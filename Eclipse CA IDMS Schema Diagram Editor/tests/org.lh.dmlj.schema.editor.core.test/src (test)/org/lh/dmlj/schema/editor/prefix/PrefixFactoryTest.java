@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -32,6 +32,7 @@ import static org.lh.dmlj.schema.editor.prefix.PointerType.OWNER_PRIOR;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -39,7 +40,6 @@ import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
-import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.testtool.TestTools;
@@ -76,7 +76,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		assertSame(recordEmployee, prefix.getRecord());
 		
-		List<Pointer<?>> pointers = prefix.getPointers();
+		List<Pointer> pointers = prefix.getPointers();
 		assertNotNull(pointers);
 		assertEquals(16, pointers.size());
 		
@@ -221,7 +221,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		assertSame(recordEmployee, prefix.getRecord());		
 		
-		List<Pointer<?>> pointers = prefix.getPointers();
+		List<Pointer> pointers = prefix.getPointers();
 		assertEquals(19, pointers.size());
 		
 		assertEquals("EMPLOYEE", pointers.get(0).getRecordName());
@@ -340,7 +340,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("NEW-SET-1", pointers.get(16).getSetName());
 		assertSame(MEMBER_NEXT, pointers.get(16).getType());
 		assertTrue(pointers.get(16) instanceof PointerToSet);
-		PointerToSet<?> pointer = (PointerToSet<?>) pointers.get(16); 
+		PointerToSet pointer = (PointerToSet) pointers.get(16); 
 		assertNull(pointer.getCurrentPositionInPrefix());
 		assertEquals((short) 17, pointer.getPositionInPrefixToSet());
 		assertSame(newMemberRole, pointer.getRole());
@@ -349,7 +349,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("NEW-SET-1", pointers.get(17).getSetName());
 		assertSame(MEMBER_PRIOR, pointers.get(17).getType());
 		assertTrue(pointers.get(17) instanceof PointerToSet);
-		pointer = (PointerToSet<?>) pointers.get(17); 
+		pointer = (PointerToSet) pointers.get(17); 
 		assertNull(pointer.getCurrentPositionInPrefix());
 		assertEquals((short) 18, pointer.getPositionInPrefixToSet());
 		assertSame(newMemberRole, pointer.getRole());
@@ -358,7 +358,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("NEW-SET-1", pointers.get(18).getSetName());
 		assertSame(MEMBER_OWNER, pointers.get(18).getType());
 		assertTrue(pointers.get(18) instanceof PointerToSet);
-		pointer = (PointerToSet<?>) pointers.get(18); 
+		pointer = (PointerToSet) pointers.get(18); 
 		assertNull(pointer.getCurrentPositionInPrefix());
 		assertEquals((short) 19, pointer.getPositionInPrefixToSet());
 		assertSame(newMemberRole, pointer.getRole());
@@ -391,7 +391,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		assertSame(recordEmployee, prefix.getRecord());		
 		
-		List<Pointer<?>> pointers = prefix.getPointers();
+		List<Pointer> pointers = prefix.getPointers();
 		assertEquals(16, pointers.size());
 		
 		assertEquals("EMPLOYEE", pointers.get(0).getRecordName());
@@ -450,7 +450,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("EMP-EMPOSITION", pointers.get(8).getSetName());
 		assertSame(OWNER_NEXT, pointers.get(8).getType());
 		assertTrue(pointers.get(8) instanceof PointerToMove);
-		PointerToMove<?> pointer = (PointerToMove<?>) pointers.get(8);
+		PointerToMove pointer = (PointerToMove) pointers.get(8);
 		assertEquals((short) 9, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 7, pointer.getNewPositionInPrefix());
 		
@@ -458,7 +458,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("EMP-EMPOSITION", pointers.get(9).getSetName());
 		assertSame(OWNER_PRIOR, pointers.get(9).getType());
 		assertTrue(pointers.get(9) instanceof PointerToMove);
-		pointer = (PointerToMove<?>) pointers.get(9);
+		pointer = (PointerToMove) pointers.get(9);
 		assertEquals((short) 10, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 8, pointer.getNewPositionInPrefix());
 
@@ -466,7 +466,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("EMP-EXPERTISE", pointers.get(10).getSetName());
 		assertSame(OWNER_NEXT, pointers.get(10).getType());
 		assertTrue(pointers.get(10) instanceof PointerToMove);
-		pointer = (PointerToMove<?>) pointers.get(10);
+		pointer = (PointerToMove) pointers.get(10);
 		assertEquals((short) 11, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 9, pointer.getNewPositionInPrefix());
 		
@@ -474,7 +474,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("EMP-EXPERTISE", pointers.get(11).getSetName());
 		assertSame(OWNER_PRIOR, pointers.get(11).getType());
 		assertTrue(pointers.get(11) instanceof PointerToMove);
-		pointer = (PointerToMove<?>) pointers.get(11);
+		pointer = (PointerToMove) pointers.get(11);
 		assertEquals((short) 12, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 10, pointer.getNewPositionInPrefix());
 		
@@ -482,7 +482,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("MANAGES", pointers.get(12).getSetName());
 		assertSame(OWNER_NEXT, pointers.get(12).getType());
 		assertTrue(pointers.get(12) instanceof PointerToMove);
-		pointer = (PointerToMove<?>) pointers.get(12);
+		pointer = (PointerToMove) pointers.get(12);
 		assertEquals((short) 13, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 11, pointer.getNewPositionInPrefix());
 		
@@ -490,7 +490,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("MANAGES", pointers.get(13).getSetName());
 		assertSame(OWNER_PRIOR, pointers.get(13).getType());
 		assertTrue(pointers.get(13) instanceof PointerToMove);
-		pointer = (PointerToMove<?>) pointers.get(13);
+		pointer = (PointerToMove) pointers.get(13);
 		assertEquals((short) 14, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 12, pointer.getNewPositionInPrefix());
 		
@@ -498,7 +498,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("REPORTS-TO", pointers.get(14).getSetName());
 		assertSame(OWNER_NEXT, pointers.get(14).getType());
 		assertTrue(pointers.get(14) instanceof PointerToMove);
-		pointer = (PointerToMove<?>) pointers.get(14);
+		pointer = (PointerToMove) pointers.get(14);
 		assertEquals((short) 15, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 13, pointer.getNewPositionInPrefix());
 		
@@ -506,7 +506,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("REPORTS-TO", pointers.get(15).getSetName());
 		assertSame(OWNER_PRIOR, pointers.get(15).getType());
 		assertTrue(pointers.get(15) instanceof PointerToMove);		
-		pointer = (PointerToMove<?>) pointers.get(15);
+		pointer = (PointerToMove) pointers.get(15);
 		assertEquals((short) 16, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 14, pointer.getNewPositionInPrefix());
 		
@@ -530,10 +530,10 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		SchemaRecord recordEmployee = schema.getRecord("EMPLOYEE");			
 		
 		// swap the first and last pointer in the EMPLOYEE record type's prefix
-		List<Pointer<?>> newPointerOrder = PrefixUtil.getPointersForRecord(recordEmployee);
+		List<Pointer> newPointerOrder = new ArrayList<>(PrefixUtil.getPointersForRecord(recordEmployee));
 		assertEquals(16, newPointerOrder.size());
-		Pointer<?> firstPointer = newPointerOrder.get(0);
-		Pointer<?> lastPointer = newPointerOrder.get(15);
+		Pointer firstPointer = newPointerOrder.get(0);
+		Pointer lastPointer = newPointerOrder.get(15);
 		newPointerOrder.set(0, lastPointer);
 		newPointerOrder.set(15, firstPointer);		
 		
@@ -543,14 +543,14 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		
 		assertSame(recordEmployee, prefix.getRecord());		
 		
-		List<Pointer<?>> pointers = prefix.getPointers();
+		List<Pointer> pointers = prefix.getPointers();
 		assertEquals(16, pointers.size());
 		
 		assertEquals("EMPLOYEE", pointers.get(0).getRecordName());
 		assertEquals("DEPT-EMPLOYEE", pointers.get(0).getSetName());
 		assertSame(MEMBER_NEXT, pointers.get(0).getType());
 		assertTrue(pointers.get(0) instanceof PointerToMove);
-		PointerToMove<?> pointer = (PointerToMove<?>) pointers.get(0);
+		PointerToMove pointer = (PointerToMove) pointers.get(0);
 		assertEquals((short) 1, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 16, pointer.getNewPositionInPrefix());
 		
@@ -656,7 +656,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		assertEquals("REPORTS-TO", pointers.get(15).getSetName());
 		assertSame(OWNER_PRIOR, pointers.get(15).getType());
 		assertTrue(pointers.get(15) instanceof PointerToMove);
-		pointer = (PointerToMove<?>) pointers.get(15);
+		pointer = (PointerToMove) pointers.get(15);
 		assertEquals((short) 16, pointer.getOldPositionInPrefix().shortValue());
 		assertEquals((short) 1, pointer.getNewPositionInPrefix());
 		
@@ -666,7 +666,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	public void testPrefixForPointerReordering_Inconsistent() {	
 		SchemaRecord record = mockRecordWithInconsistentPointerList("TESTRECORD");
 		try {
-			PrefixFactory.newPrefixForPointerReordering(record, new BasicEList<Pointer<?>>());
+			PrefixFactory.newPrefixForPointerReordering(record, new BasicEList<Pointer>());
 			fail("should throw an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 			assertEquals("record prefix invalid: " + record.toString(), e.getMessage());
@@ -678,7 +678,7 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		Schema schema = TestTools.getEmpschmSchema();
 		SchemaRecord record = schema.getRecord("EMPLOYEE");	
 		try {
-			PrefixFactory.newPrefixForPointerReordering(record, new BasicEList<Pointer<?>>());
+			PrefixFactory.newPrefixForPointerReordering(record, new BasicEList<Pointer>());
 			fail("should throw an IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 			assertEquals("newPointerOrder.size() mismatch: 0 (expected: 16)", e.getMessage());
@@ -689,9 +689,9 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	public void testPrefixForPointerReordering_NewPointerOrderContentMismatch_Role() {	
 		Schema schema = TestTools.getEmpschmSchema();
 		SchemaRecord record = schema.getRecord("EMPLOYEE");	
-		EList<Pointer<?>> newPointerOrder = new BasicEList<Pointer<?>>();
+		EList<Pointer> newPointerOrder = new BasicEList<Pointer>();
 		for (int i = 0; i < 16; i++) {
-			Pointer<?> pointer = mock(Pointer.class);
+			Pointer pointer = mock(Pointer.class);
 			when(pointer.getCurrentPositionInPrefix()).thenReturn(Short.valueOf((short) (i + 1)));
 			newPointerOrder.add(pointer);
 		}
@@ -707,11 +707,11 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	public void testPrefixForPointerReordering_NewPointerOrderContentMismatch_Type() {	
 		Schema schema = TestTools.getEmpschmSchema();
 		SchemaRecord record = schema.getRecord("EMPLOYEE");
-		List<Pointer<?>> pointers = PrefixUtil.getPointersForRecord(record);
-		EList<Pointer<?>> newPointerOrder = new BasicEList<Pointer<?>>();
+		List<Pointer> pointers = PrefixUtil.getPointersForRecord(record);
+		EList<Pointer> newPointerOrder = new BasicEList<Pointer>();
 		for (int i = 0; i < 16; i++) {
 			@SuppressWarnings("unchecked")
-			Pointer<Role> pointer = mock(Pointer.class);
+			Pointer pointer = mock(Pointer.class);
 			when(pointer.getCurrentPositionInPrefix()).thenReturn(pointers.get(i).getCurrentPositionInPrefix());
 			when(pointer.getRole()).thenReturn(pointers.get(i).getRole());
 			if (i == 5) {
@@ -733,11 +733,11 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 	public void testPrefixForPointerReordering_NewPointerOrderContentMismatch_CurrentPositionInPRefix() {	
 		Schema schema = TestTools.getEmpschmSchema();
 		SchemaRecord record = schema.getRecord("EMPLOYEE");
-		List<Pointer<?>> pointers = PrefixUtil.getPointersForRecord(record);
-		EList<Pointer<?>> newPointerOrder = new BasicEList<Pointer<?>>();
+		List<Pointer> pointers = PrefixUtil.getPointersForRecord(record);
+		EList<Pointer> newPointerOrder = new BasicEList<Pointer>();
 		for (int i = 0; i < 16; i++) {
 			@SuppressWarnings("unchecked")
-			Pointer<Role> pointer = mock(Pointer.class);
+			Pointer pointer = mock(Pointer.class);
 			if (i == 15) {
 				when(pointer.getCurrentPositionInPrefix()).thenReturn((short) 8180);					
 			} else {

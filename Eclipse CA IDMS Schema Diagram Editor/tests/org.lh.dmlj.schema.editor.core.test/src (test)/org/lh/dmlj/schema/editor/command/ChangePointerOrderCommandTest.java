@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -69,8 +69,8 @@ public class ChangePointerOrderCommandTest {
 		
 		SchemaRecord record = TestTools.getRecord(schema, "EMPLOYEE");
 		Prefix originalPrefix = PrefixFactory.newPrefixForInquiry(record);
-		List<Pointer<?>> originalPointers = originalPrefix.getPointers();
-		List<Pointer<?>> newPointerOrder = new ArrayList<>(originalPointers);
+		List<Pointer> originalPointers = originalPrefix.getPointers();
+		List<Pointer> newPointerOrder = new ArrayList<>(originalPointers);
 		Assert.assertEquals(1, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getNextDbkeyPosition().intValue());
 		Assert.assertEquals(2, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getPriorDbkeyPosition().intValue());
 		Assert.assertEquals(3, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getOwnerDbkeyPosition().intValue());
@@ -143,8 +143,8 @@ public class ChangePointerOrderCommandTest {
 		
 		SchemaRecord record = TestTools.getRecord(schema, "EMPLOYEE");
 		Prefix originalPrefix = PrefixFactory.newPrefixForInquiry(record);
-		List<Pointer<?>> originalPointers = originalPrefix.getPointers();
-		final List<Pointer<?>> newPointerOrder = new ArrayList<>(originalPointers);
+		List<Pointer> originalPointers = originalPrefix.getPointers();
+		final List<Pointer> newPointerOrder = new ArrayList<>(originalPointers);
 		Assert.assertEquals(1, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getNextDbkeyPosition().intValue());
 		Assert.assertEquals(2, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getPriorDbkeyPosition().intValue());
 		Assert.assertEquals(3, ((MemberRole) record.getRole("DEPT-EMPLOYEE")).getOwnerDbkeyPosition().intValue());
@@ -178,9 +178,9 @@ public class ChangePointerOrderCommandTest {
 		assertEquals("MANAGES", newPointerOrder.get(15).getSetName());
 		assertSame(PointerType.OWNER_PRIOR, newPointerOrder.get(15).getType());
 		
-		Supplier<List<Pointer<?>>> pointerSupplier = new Supplier<List<Pointer<?>>>() {
+		Supplier<List<Pointer>> pointerSupplier = new Supplier<List<Pointer>>() {
 			@Override
-			public List<Pointer<?>> get() {
+			public List<Pointer> get() {
 				return newPointerOrder;
 			}			
 		};

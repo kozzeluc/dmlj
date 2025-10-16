@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,26 +22,22 @@ import org.lh.dmlj.schema.SchemaRecord;
 
 public class PrefixForPointerAppendage extends Prefix {	
 	
-	PrefixForPointerAppendage(SchemaRecord record, List<Pointer<?>> pointers) {
-		super(record, pointers);
+	PrefixForPointerAppendage(SchemaRecord schemaRecord, List<Pointer> pointers) {
+		super(schemaRecord, pointers);
 	}
 	
 	public void appendPointers() {
-		for (Pointer<?> pointer : pointers) {
-			if (pointer instanceof PointerToSet<?>) {
-				PointerToSet<?> pointerToSet = (PointerToSet<?>) pointer;
-				pointerToSet.set();
-			}
-		}
+		pointers.stream()
+				.filter(PointerToSet.class::isInstance)
+				.map(PointerToSet.class::cast)
+				.forEach(PointerToSet::set);
 	}
 	
 	public void reset() {
-		for (Pointer<?> pointer : pointers) {
-			if (pointer instanceof PointerToSet<?>) {
-				PointerToSet<?> pointerToSet = (PointerToSet<?>) pointer;
-				pointerToSet.unset();
-			}
-		}
+		pointers.stream()
+				.filter(PointerToSet.class::isInstance)
+				.map(PointerToSet.class::cast)
+				.forEach(PointerToSet::unset);
 	}
 	
 }
