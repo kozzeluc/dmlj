@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,16 +24,8 @@ public class VsamCalcRecordFilter implements IFilter {
 
 	@Override
 	public boolean select(Object object) {
-		if (!(object instanceof EditPart)) {
-			return false;
-		}
-        Object modelObject = ((EditPart) object).getModel();        
-        if (modelObject instanceof SchemaRecord) {
-        	SchemaRecord record = (SchemaRecord) modelObject;
-        	return record.isVsamCalc();
-        } else {
-        	return false;
-        }        
+		return object instanceof EditPart editPart && editPart.getModel() instanceof SchemaRecord schemaRecord &&
+				schemaRecord.isVsamCalc();
 	}
 
 }

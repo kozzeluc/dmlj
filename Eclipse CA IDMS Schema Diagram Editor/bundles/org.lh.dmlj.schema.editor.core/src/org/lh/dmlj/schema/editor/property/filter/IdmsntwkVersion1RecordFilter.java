@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,24 +18,18 @@ package org.lh.dmlj.schema.editor.property.filter;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
-import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 
 public class IdmsntwkVersion1RecordFilter implements IFilter {
 
 	@Override
 	public boolean select(Object object) {
-		if (!(object instanceof EditPart)) {
+		if (object instanceof EditPart editPart && editPart.getModel() instanceof SchemaRecord schemaRecord) {
+	        	var schema = schemaRecord.getSchema();
+	        	return schema.getName().equals("IDMSNTWK") && schema.getVersion() == 1;
+		} else {
 			return false;
 		}
-        Object modelObject = ((EditPart) object).getModel();        
-        if (modelObject instanceof SchemaRecord) {
-        	SchemaRecord record = (SchemaRecord) modelObject;
-        	Schema schema = record.getSchema();
-        	return schema.getName().equals("IDMSNTWK") && 
-        		   schema.getVersion() == 1;
-        }
-        return false;        
 	}
 
 }

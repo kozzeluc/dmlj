@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,6 @@ import org.eclipse.jface.viewers.IFilter;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
-import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.VsamIndex;
 
@@ -30,28 +28,20 @@ public class IndexedSetFilter implements IFilter {
 
 	@Override
 	public boolean select(Object object) {
-		if (!(object instanceof EditPart)) {
+		if (object instanceof EditPart editPart) {
+	        var modelObject = editPart.getModel();
+	        if (modelObject instanceof ConnectionPart connectionPart) {
+	        		return connectionPart.getMemberRole().getSet().isIndexed();
+	        } else if (modelObject instanceof ConnectionLabel connectionLabel) {
+	        		return connectionLabel.getMemberRole().getSet().isIndexed();
+	        } else if (modelObject instanceof Connector connector) {
+	        		return connector.getConnectionPart().getMemberRole().getSet().isIndexed();
+	        } else {
+	        		return modelObject instanceof SystemOwner || modelObject instanceof VsamIndex;
+	        }
+		} else {
 			return false;
 		}
-        Object modelObject = ((EditPart) object).getModel();
-        Set set;
-        if (modelObject instanceof ConnectionPart) {
-        	MemberRole memberRole = ((ConnectionPart)modelObject).getMemberRole();
-        	set = memberRole.getSet();
-        } else if (modelObject instanceof ConnectionLabel) {
-        	MemberRole memberRole = ((ConnectionLabel)modelObject).getMemberRole();
-        	set = memberRole.getSet();
-        } else if (modelObject instanceof Connector) {
-        	MemberRole memberRole = ((Connector)modelObject).getConnectionPart().getMemberRole();
-        	set = memberRole.getSet();
-        } else if (modelObject instanceof SystemOwner) {
-        	return true;
-        } else if (modelObject instanceof VsamIndex) {
-        	return false;
-        } else {
-        	return false;
-        }
-        return set.isIndexed();
 	}
-
+	
 }
