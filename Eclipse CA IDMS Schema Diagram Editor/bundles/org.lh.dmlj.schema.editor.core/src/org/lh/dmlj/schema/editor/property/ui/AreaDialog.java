@@ -724,4 +724,19 @@ public class AreaDialog extends Dialog {
 		
 	}
 	
+	public EnteredData getEnteredData() {
+		return new EnteredData(getAction(), getAreaName(), getSymbolicSubareaName(), getOffsetPageCount(),
+				getOffsetPercent(), getPageCount(), getPercent());
+	}
+	
+	public record EnteredData(
+			Action action,
+			String areaName,
+			String symbolicSubareaName,
+			Integer offsetPageCount,
+			Short offsetPercent,
+			Integer pageCount,
+			Short percent) {
+	}
+	
 }

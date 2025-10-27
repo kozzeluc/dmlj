@@ -19,15 +19,13 @@ package org.lh.dmlj.schema.editor.property.handler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.Objects;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.lh.dmlj.schema.AreaSpecification;
-import org.lh.dmlj.schema.OffsetExpression;
-import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
 import org.lh.dmlj.schema.editor.command.ChangeAreaSpecificationCommand;
@@ -41,266 +39,175 @@ import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.IAreaSpecificationProvider;
 import org.lh.dmlj.schema.editor.property.ui.AreaDialog;
 
-public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {	
-	
-	private IAreaSpecificationProvider areaSpecificationProvider;
+public class AreaHandler implements IHyperlinkHandler<EAttribute, Command> {
+	private final IAreaSpecificationProvider areaSpecificationProvider;
 	
 	public AreaHandler(IAreaSpecificationProvider areaSpecificationProvider) {
-		super();
 		this.areaSpecificationProvider = areaSpecificationProvider;
 	}	
 
 	@Override
-	public Command hyperlinkActivated(EAttribute attribute) {		
-		
-		// create and open the dialog for maintaining a record's or system owner
-		// area specification; if the user presses the cancel button, get out 
-		// and return a null Command
-		AreaDialog dialog = 
-			new AreaDialog(Display.getCurrent().getActiveShell(),
-						   areaSpecificationProvider.getAreaSpecification());
+	public Command hyperlinkActivated(EAttribute attribute) {	
+		// create and open the dialog for maintaining a record's or system owner area specification; if the user
+		// presses the cancel button, get out and return a null Command, otherwise get the entered data
+		var dialog = new AreaDialog(Display.getCurrent().getActiveShell(), areaSpecificationProvider.getAreaSpecification());
 		if (dialog.open() == IDialogConstants.CANCEL_ID) {
-			// cancel button pressed
 			return null;
 		}
+		var enteredData = dialog.getEnteredData();
 		
-		// the fact that the user was able to press the OK button means that
-		// he has effectively changed something; get the area specification from 
-		// the IAreaSpecificationProvider
-		AreaSpecification areaSpecification = 
-			areaSpecificationProvider.getAreaSpecification();
+		// the fact that the user was able to press the OK button means that he/she has effectively changed
+		// something; get the area specification from the IAreaSpecificationProvider
+		var areaSpecification = areaSpecificationProvider.getAreaSpecification();
 			
 		// now is a good time to create the model change context
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.CHANGE_AREA_SPECIFICATION);
+		var context = new ModelChangeContext(ModelChangeType.CHANGE_AREA_SPECIFICATION);
 		if (areaSpecification.getRecord() != null) {
 			context.putContextData(areaSpecification.getRecord());
 		} else {
 			context.putContextData(areaSpecification.getSystemOwner().getSet(), ModelChangeContext.setContextDataAssembler);
 		}
 		
-		// see what area the record or system owner has to be located in; if it
-		// is the same (possibly renamed) area, we will not replace the whole
-		// AreaSpecification, if the record is moved to a different (possibly
-		// new) area, we will create a new AreaSpecification and, if no other
-		// items are contained in the 'old' area, we will remove the 'old' area
-		// from the schema
-		AreaDialog.Action action = dialog.getAction();
-		String areaName = dialog.getAreaName();
-		if (action == AreaDialog.Action.KEEP_IN_CURRENT_AREA ||
-			action == AreaDialog.Action.RENAME_AREA) {
-			
-			// the record remains located in the same area, but the area may 
-			// have to be renamed
-			List<IModelChangeCommand> commands = new ArrayList<>();
-			if (action == AreaDialog.Action.RENAME_AREA) {
-				// rename area; create a command to set the new area name
-				String attributeLabel;
-				try {
-					String key = "label.org.lh.dmlj.schema.SchemaArea.name";
-					attributeLabel = PluginPropertiesCache.get(Plugin.getDefault(), key);
-				} catch (MissingResourceException e) {
-					throw new RuntimeException(e);
-				}
-				commands.add(new SetObjectAttributeCommand(areaSpecification.getArea(), 
-												  		   attribute, areaName, 
-												  		   attributeLabel));
-			}
-			
-			// get the old and new area specification information...
-			String oldSymbolicSubareaName = 
-				areaSpecification.getSymbolicSubareaName(); 
-			String newSymbolicSubareaName = dialog.getSymbolicSubareaName();			
-			
-			OffsetExpression offsetExpression = 
-				areaSpecification.getOffsetExpression();
-			
-			Integer oldOffsetPageCount = offsetExpression == null ? null :
-				offsetExpression.getOffsetPageCount();
-			Integer newOffsetPageCount = dialog.getOffsetPageCount();
-			
-			Short oldOffsetPercent = offsetExpression == null ? null :
-				offsetExpression.getOffsetPercent();
-			Short newOffsetPercent = dialog.getOffsetPercent();
-			
-			Integer oldPageCount = offsetExpression == null ? null :
-				offsetExpression.getPageCount();
-			Integer newPageCount = dialog.getPageCount();
-			
-			Short oldPercent = offsetExpression == null ? null :
-				offsetExpression.getPercent();
-			Short newPercent = dialog.getPercent();
-			
-			// ... if something has changed, create the appropriate command to
-			// deal with it
-			if (oldSymbolicSubareaName != null &&
-				!oldSymbolicSubareaName.equals(newSymbolicSubareaName) ||
-				newSymbolicSubareaName != null &&
-				!newSymbolicSubareaName.equals(oldSymbolicSubareaName) ||
-				
-				oldOffsetPageCount != null &&
-			    !oldOffsetPageCount.equals(newOffsetPageCount) ||
-			    newOffsetPageCount != null &&
-			    !newOffsetPageCount.equals(oldOffsetPageCount) ||
-			    
-			    oldOffsetPercent != null &&
-			    !oldOffsetPercent.equals(newOffsetPercent) ||
-			    newOffsetPercent != null &&
-			    !newOffsetPercent.equals(oldOffsetPercent) ||
-			    
-			    oldPageCount != null && !oldPageCount.equals(newPageCount) ||
-			    newPageCount != null && !newPageCount.equals(oldPageCount) ||
-			    
-			    oldPercent != null && !oldPercent.equals(newOffsetPercent) ||			    
-			    newPercent != null && !newPercent.equals(oldOffsetPercent)) {
-				
-				IModelChangeCommand command = 
-					new ChangeAreaSpecificationCommand(areaSpecification, 
-													   newSymbolicSubareaName, 
-													   newOffsetPageCount, 
-													   newOffsetPercent, 
-													   newPageCount, 
-													   newPercent);
-				commands.add(command);
-			}
-			
-			if (commands.isEmpty()) {
-				throw new RuntimeException("logic error: no commands created");				
-			} else if (commands.size() > 1) {
-				ModelChangeCompoundCommand cc = 
-					new ModelChangeCompoundCommand("Change area specification");				
-				cc.setContext(context);
-				for (IModelChangeCommand command : commands) {
-					cc.add((Command) command);
-				}
-				return cc;
-			} else {
-				IModelChangeCommand command = commands.get(0);
-				command.setContext(context);
-				return (Command) commands.get(0);
-			}
-			
+		// see what area the record or system owner has to be located in; if it is the same (possibly renamed)
+		// area, we will not replace the whole AreaSpecification, if the record is moved to a different (possibly
+		// new) area, we will create a new AreaSpecification and, if no other items are contained in the 'old'
+		// area, we will remove the 'old' area from the schema
+		if (enteredData.action() == AreaDialog.Action.KEEP_IN_CURRENT_AREA || enteredData.action() == AreaDialog.Action.RENAME_AREA) {
+			return createCommandsToKeepInSameAreaWithPossibleAreaRename(attribute, context, areaSpecification, enteredData);	
 		} else {
-						
-			// the record or system owner (and index) move(s) to another area; we might need to 
-			// create the new area first and a cleanup of the old area is possibly needed - return a 
-			// compound command if either the symbolic subarea or 1 or more offset expression 
-			// attributes have changed...
-			if (isSymbolicSubareaChanged(areaSpecification, dialog) ||
-				isOffsetExpressionChanged(areaSpecification, dialog)) {
+			return createCommandsToMoveToAnotherArea(context, areaSpecification, enteredData);
+		}
+	}
+	
+	private Command createCommandsToKeepInSameAreaWithPossibleAreaRename(EAttribute attribute, ModelChangeContext context,
+			AreaSpecification areaSpecification, AreaDialog.EnteredData enteredData) {
+		
+		var commands = new ArrayList<IModelChangeCommand>();
+		commands.addAll(createCommandsForPossibleAreaRename(attribute, areaSpecification, enteredData));
 				
-				// the record moves to another area AND either the symbolic subarea or at least 1 
-				// offset expression attribute have changed; we need to create a compound command
-								
-				// create the command to move the record or index to another area 
-				String ccLabel;
-				MoveRecordOrIndexToOtherAreaCommand moveRecordOrIndexToOtherAreaCommand;
-				if (areaSpecification.getRecord() != null) {
-					SchemaRecord record = areaSpecification.getRecord();
-					ccLabel = "Move record '" + Tools.removeTrailingUnderscore(record.getName()) + 
-							"' to area '" + dialog.getAreaName() + "'";
-					moveRecordOrIndexToOtherAreaCommand = 
-						new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), 
-											 	     			dialog.getAreaName());				
-				} else {
-					SystemOwner systemOwner = areaSpecification.getSystemOwner();
-					ccLabel = "Move index '" + 
-							Tools.removeTrailingUnderscore(systemOwner.getSet().getName()) + 
-							"' to area '" + dialog.getAreaName() + "'";
-					moveRecordOrIndexToOtherAreaCommand = 
-						new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), 
-			 	     		   									dialog.getAreaName());
-				}
-				
-				// create the command to change the area specification (symbolic subarea or offset
-				// expression
-				Command changeAreaSpecificationCommand =
-					new ChangeAreaSpecificationCommand(areaSpecification, 
-													   dialog.getSymbolicSubareaName(), 
-													   dialog.getOffsetPageCount(), 
-													   dialog.getOffsetPercent(), 
-													   dialog.getPageCount(), 
-													   dialog.getPercent());				
-				
-				// create the compound command and return it			
-				ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(ccLabel);				
-				cc.setContext(context);
-				cc.add(moveRecordOrIndexToOtherAreaCommand);
-				cc.add(changeAreaSpecificationCommand);
-				return cc;
-				
-			} else {
-				// the record or index moves to another area; neither the symbolic subarea nor any 
-				// offset expression attribute have changed
-				if (areaSpecification.getRecord() != null) {
-					IModelChangeCommand command = 
-						new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), 
-	 	     											   	    dialog.getAreaName());
-					command.setContext(context);
-					return (Command) command;
-				} else {
-					IModelChangeCommand command = 
-						new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), 
-																dialog.getAreaName());
-					command.setContext(context);
-					return (Command) command;
-				}
+		var oldSymbolicSubareaName = areaSpecification.getSymbolicSubareaName();
+		var offsetExpression = areaSpecification.getOffsetExpression();
+		var oldOffsetPageCount = offsetExpression == null ? null : offsetExpression.getOffsetPageCount();
+		var oldOffsetPercent = offsetExpression == null ? null : offsetExpression.getOffsetPercent();
+		var oldPageCount = offsetExpression == null ? null : offsetExpression.getPageCount();
+		var oldPercent = offsetExpression == null ? null : offsetExpression.getPercent();
+		if (!Objects.equals(oldSymbolicSubareaName, enteredData.symbolicSubareaName()) ||
+			!Objects.equals(oldOffsetPageCount, enteredData.offsetPageCount()) ||
+			!Objects.equals(oldOffsetPercent, enteredData.offsetPercent()) ||
+			!Objects.equals(oldPageCount, enteredData.pageCount()) ||
+			!Objects.equals(oldPercent, enteredData.percent())) {
+			
+			var command = new ChangeAreaSpecificationCommand(areaSpecification, enteredData.symbolicSubareaName(),
+					enteredData.offsetPageCount(), enteredData.offsetPercent(), enteredData.pageCount(),
+					enteredData.percent());
+			commands.add(command);
+		}
+		return createFinalCommand(context, commands);
+	}
+	
+	private List<IModelChangeCommand> createCommandsForPossibleAreaRename(EAttribute attribute, AreaSpecification areaSpecification,
+			AreaDialog.EnteredData enteredData) {
+		
+		if (enteredData.action() == AreaDialog.Action.RENAME_AREA) {
+			// rename area; create a command to set the new area name
+			String attributeLabel;
+			try {
+				var key = "label.org.lh.dmlj.schema.SchemaArea.name";
+				attributeLabel = PluginPropertiesCache.get(Plugin.getDefault(), key);
+			} catch (MissingResourceException e) {
+				throw new IllegalStateException(e);
 			}
-		}		
-		
+			return List.of(new SetObjectAttributeCommand(areaSpecification.getArea(), attribute, enteredData.areaName(), attributeLabel));
+		} else {
+			return List.of();
+		}
 	}
 	
-	private boolean isOffsetExpressionChanged(AreaSpecification areaSpecification, 
-											  AreaDialog dialog) {
+	private Command createCommandsToMoveToAnotherArea(ModelChangeContext context, AreaSpecification areaSpecification,
+			AreaDialog.EnteredData enteredData) {
 		
-		// get the old and new area specification information...
-		
-		OffsetExpression offsetExpression = areaSpecification.getOffsetExpression();
-		
-		Integer oldOffsetPageCount = 
-			offsetExpression == null ? null : offsetExpression.getOffsetPageCount();
-		Integer newOffsetPageCount = dialog.getOffsetPageCount();
-		
-		Short oldOffsetPercent = 
-			offsetExpression == null ? null : offsetExpression.getOffsetPercent();
-		Short newOffsetPercent = dialog.getOffsetPercent();
-		
-		Integer oldPageCount = 
-			offsetExpression == null ? null : offsetExpression.getPageCount();
-		Integer newPageCount = dialog.getPageCount();
-		
-		Short oldPercent = 
-			offsetExpression == null ? null : offsetExpression.getPercent();
-		Short newPercent = dialog.getPercent();
-		
-		// ... and see if something has changed
-		return oldOffsetPageCount != null && !oldOffsetPageCount.equals(newOffsetPageCount) ||
-			   newOffsetPageCount != null && !newOffsetPageCount.equals(oldOffsetPageCount) ||
-		    
-			   oldOffsetPercent != null && !oldOffsetPercent.equals(newOffsetPercent) ||
-			   newOffsetPercent != null && !newOffsetPercent.equals(oldOffsetPercent) ||
-		    
-			   oldPageCount != null && !oldPageCount.equals(newPageCount) ||
-			   newPageCount != null && !newPageCount.equals(oldPageCount) ||
-		    
-			   oldPercent != null && !oldPercent.equals(newOffsetPercent) ||			    
-			   newPercent != null && !newPercent.equals(oldOffsetPercent);
-						
+		// the record or system owner (and index) move(s) to another area; we might need to create the new area
+		// first and a cleanup of the old area is possibly needed - return a compound command if either the
+		// symbolic subarea or 1 or more offset expression attributes have changed...
+		if (isSymbolicSubareaChanged(areaSpecification, enteredData) || isOffsetExpressionChanged(areaSpecification, enteredData)) {
+			// the record moves to another area AND either the symbolic subarea or at least 1 offset expression
+			// attribute have changed; we need to create a compound command
+							
+			// create the command to move the record or index to another area 
+			String ccLabel;
+			MoveRecordOrIndexToOtherAreaCommand moveRecordOrIndexToOtherAreaCommand;
+			if (areaSpecification.getRecord() != null) {
+				var schemaRecord = areaSpecification.getRecord();
+				ccLabel = "Move record '" + Tools.removeTrailingUnderscore(schemaRecord.getName()) +  "' to area '" + enteredData.areaName() + "'";
+				moveRecordOrIndexToOtherAreaCommand = new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), enteredData.areaName());
+			} else {
+				var systemOwner = areaSpecification.getSystemOwner();
+				ccLabel = "Move index '" + Tools.removeTrailingUnderscore(systemOwner.getSet().getName()) + "' to area '" + enteredData.areaName() + "'";
+				moveRecordOrIndexToOtherAreaCommand = new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), enteredData.areaName());
+			}
+			
+			// create the command to change the area specification (symbolic subarea or offset expression
+			var changeAreaSpecificationCommand = new ChangeAreaSpecificationCommand(areaSpecification, enteredData.symbolicSubareaName(),
+					enteredData.offsetPageCount(), enteredData.offsetPercent(), enteredData.pageCount(), enteredData.percent());
+			
+			// create the compound command and return it			
+			var cc = new ModelChangeCompoundCommand(ccLabel);				
+			cc.setContext(context);
+			cc.add(moveRecordOrIndexToOtherAreaCommand);
+			cc.add(changeAreaSpecificationCommand);
+			return cc;
+		} else {
+			// the record or index moves to another area; neither the symbolic subarea nor any offset expression
+			// attribute have changed
+			if (areaSpecification.getRecord() != null) {
+				var command = new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getRecord(), enteredData.areaName());
+				command.setContext(context);
+				return command;
+			} else {
+				var command = new MoveRecordOrIndexToOtherAreaCommand(areaSpecification.getSystemOwner(), enteredData.areaName());
+				command.setContext(context);
+				return command;
+			}
+		}
 	}
 	
-	private boolean isSymbolicSubareaChanged(AreaSpecification areaSpecification, 
-			  								 AreaDialog dialog) {
-		
+	private Command createFinalCommand(ModelChangeContext context, List<IModelChangeCommand> commands) {
+		if (commands.isEmpty()) {
+			throw new IllegalStateException("logic error: no commands created");				
+		} else if (commands.size() > 1) {
+			var cc = new ModelChangeCompoundCommand("Change area specification");				
+			cc.setContext(context);
+			for (IModelChangeCommand command : commands) {
+				cc.add((Command) command);
+			}
+			return cc;
+		} else {
+			var command = commands.get(0);
+			command.setContext(context);
+			return (Command) commands.get(0);
+		}
+	}
+	
+	private boolean isOffsetExpressionChanged(AreaSpecification areaSpecification, AreaDialog.EnteredData enteredData) {
+		var offsetExpression = areaSpecification.getOffsetExpression();
+		var oldOffsetPageCount = offsetExpression == null ? null : offsetExpression.getOffsetPageCount();
+		var oldOffsetPercent = offsetExpression == null ? null : offsetExpression.getOffsetPercent();
+		var oldPageCount = offsetExpression == null ? null : offsetExpression.getPageCount();
+		var oldPercent = offsetExpression == null ? null : offsetExpression.getPercent();
+		return !Objects.equals(oldOffsetPageCount,enteredData.offsetPageCount()) ||
+			   !Objects.equals(oldOffsetPercent, enteredData.offsetPercent()) ||
+			   !Objects.equals(oldPageCount, enteredData.pageCount()) ||
+			   !Objects.equals(oldPercent, enteredData.percent());
+	}
+	
+	private boolean isSymbolicSubareaChanged(AreaSpecification areaSpecification, AreaDialog.EnteredData enteredData) {
 		// get the old and new area specification information...
-		String oldSymbolicSubareaName = areaSpecification.getSymbolicSubareaName(); 
-		String newSymbolicSubareaName = dialog.getSymbolicSubareaName();			
+		var oldSymbolicSubareaName = areaSpecification.getSymbolicSubareaName(); 
+		var newSymbolicSubareaName = enteredData.symbolicSubareaName();			
 		
-		// ... and see if something has changed
-		return oldSymbolicSubareaName != null && 
-				!oldSymbolicSubareaName.equals(newSymbolicSubareaName) ||
-				
-				newSymbolicSubareaName != null && 
-				!newSymbolicSubareaName.equals(oldSymbolicSubareaName);
-		
+		// ...and see if something has changed
+		return oldSymbolicSubareaName != null && !oldSymbolicSubareaName.equals(newSymbolicSubareaName) ||
+			   newSymbolicSubareaName != null && !newSymbolicSubareaName.equals(oldSymbolicSubareaName);
 	}
 
 }

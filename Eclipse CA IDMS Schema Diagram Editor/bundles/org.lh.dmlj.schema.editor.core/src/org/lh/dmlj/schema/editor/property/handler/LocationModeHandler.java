@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,34 +25,26 @@ import org.lh.dmlj.schema.editor.property.IRecordProvider;
 import org.lh.dmlj.schema.editor.property.ui.LocationModeDialog;
 
 public class LocationModeHandler implements IHyperlinkHandler<EAttribute, Command> {
-
 	private IRecordProvider recordProvider;	
 	
 	public LocationModeHandler(IRecordProvider recordProvider) {
-		super();
 		this.recordProvider = recordProvider;		
 	}
 	
 	@Override
-	public Command hyperlinkActivated(EAttribute attribute) {		
-		
-		// create and open the dialog for maintaining a record's location mode data; if the user 
-		// presses the cancel button, get out and return a null Command
-		LocationModeDialog dialog = 
-			new LocationModeDialog(Display.getCurrent().getActiveShell(), recordProvider.getRecord());
+	public Command hyperlinkActivated(EAttribute attribute) {	
+		// create and open the dialog for maintaining a record's location mode data; if the user presses the
+		// cancel button, get out and return a null Command
+		var dialog = new LocationModeDialog(Display.getCurrent().getActiveShell(), recordProvider.getRecord());
 		if (dialog.open() == IDialogConstants.CANCEL_ID) {
-			// cancel button pressed
 			return null;
 		}
 		
-		// the fact that the user was able to press the OK button means that he has effectively 
-		// changed something; get the record from the IRecordProvider - depending on the record's 
-		// current location mode, assemble a command to be executed on the command stack and return 
-		// it to the caller
-		ChangeLocationModeCommandFactory factory = new ChangeLocationModeCommandFactory();
+		// the fact that the user was able to press the OK button means that he has effectively changed
+		// something; get the record from the IRecordProvider - depending on the record's current location mode,
+		// assemble a command to be executed on the command stack and return it to the caller
+		var factory = new ChangeLocationModeCommandFactory();
 		return (Command) factory.getCommand(recordProvider.getRecord(), dialog);
-		
-		
 	}
 
 }

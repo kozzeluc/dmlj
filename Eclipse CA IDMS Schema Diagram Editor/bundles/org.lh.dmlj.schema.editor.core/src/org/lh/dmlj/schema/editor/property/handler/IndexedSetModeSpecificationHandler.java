@@ -20,46 +20,37 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
-import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.ChangeIndexedSetModeSpecificationCommand;
-import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.property.IIndexedSetModeSpecificationProvider;
 import org.lh.dmlj.schema.editor.property.ui.IndexedSetModeSpecificationDialog;
 
 public class IndexedSetModeSpecificationHandler implements IHyperlinkHandler<EAttribute, Command> {
-	
 	private IIndexedSetModeSpecificationProvider indexedSetModeSpecificationProvider;
 
 	public IndexedSetModeSpecificationHandler(IIndexedSetModeSpecificationProvider indexedSetModeSpecificationProvider) {
-		super();
 		this.indexedSetModeSpecificationProvider = indexedSetModeSpecificationProvider;
 	}
 	
 	@Override
 	public Command hyperlinkActivated(EAttribute attribute) {
-		IndexedSetModeSpecificationDialog dialog = 
-			new IndexedSetModeSpecificationDialog(Display.getCurrent().getActiveShell(),
-							   					  indexedSetModeSpecificationProvider.getIndexedSetModeSpecification());
+		var dialog = new IndexedSetModeSpecificationDialog(Display.getCurrent().getActiveShell(),
+				indexedSetModeSpecificationProvider.getIndexedSetModeSpecification());
 		if (dialog.open() == IDialogConstants.CANCEL_ID) {
-			// cancel button pressed
 			return null;
 		}
 		
-		// the fact that the user was able to press the OK button means that he has effectively 
-		// changed something; create a ChangeIndexedSetModeSpecificationCommand and return it
-		Set set = indexedSetModeSpecificationProvider.getIndexedSetModeSpecification().getSet();
-		ModelChangeContext context = 
-			new ModelChangeContext(ModelChangeType.CHANGE_INDEXED_SET_MODE_SPECIFICATION);
+		// the fact that the user was able to press the OK button means that he has effectively changed
+		// something; create a ChangeIndexedSetModeSpecificationCommand and return it
+		var set = indexedSetModeSpecificationProvider.getIndexedSetModeSpecification().getSet();
+		var context = new ModelChangeContext(ModelChangeType.CHANGE_INDEXED_SET_MODE_SPECIFICATION);
 		context.putContextData(set, ModelChangeContext.setContextDataAssembler);		
 				
-		IModelChangeCommand command = 
-			new ChangeIndexedSetModeSpecificationCommand(set, dialog.getSymbolicIndexName(),
-														 dialog.getKeyCount(), 
-														 dialog.getDisplacementPages());
+		var command = new ChangeIndexedSetModeSpecificationCommand(set, dialog.getSymbolicIndexName(),
+				dialog.getKeyCount(), dialog.getDisplacementPages());
 		command.setContext(context);
-		return (Command) command;
+		return command;
 	}
 
 }
