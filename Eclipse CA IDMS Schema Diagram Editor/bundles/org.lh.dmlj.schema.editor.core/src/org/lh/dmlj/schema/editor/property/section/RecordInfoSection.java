@@ -38,12 +38,10 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
 import org.lh.dmlj.schema.editor.log.Logger;
-import org.lh.dmlj.schema.editor.property.RecordInfoValueObject;
 import org.lh.dmlj.schema.editor.template.RecordInfoTemplate;
 
 public class RecordInfoSection extends AbstractPropertiesSection {
-		
-	private static RecordInfoTemplate template = new RecordInfoTemplate();
+	private static final RecordInfoTemplate template = new RecordInfoTemplate();
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 		
 	private Control pageControl;
@@ -51,7 +49,7 @@ public class RecordInfoSection extends AbstractPropertiesSection {
 	private StackLayout stackLayout;
 	private Composite dataComposite;
 	private Browser browser;
-	private GridData gd_browser;
+	private GridData gdBrowser;
 	private Label emptyLabel;
 	
 	private Optional<String> html;
@@ -60,18 +58,11 @@ public class RecordInfoSection extends AbstractPropertiesSection {
 		@Override
 		public void controlResized(ControlEvent e) {
 			stackComposite.setBounds(0, 0, pageControl.getBounds().width - 100, pageControl.getBounds().height);
-			gd_browser.widthHint = pageControl.getBounds().width - 100;
-			gd_browser.heightHint = pageControl.getBounds().height;
+			gdBrowser.widthHint = pageControl.getBounds().width - 100;
+			gdBrowser.heightHint = pageControl.getBounds().height;
 		}			
-	};
+	};	
 		
-	public RecordInfoSection() {
-		super();		
-	}
-	
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	@Override
 	public final void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);        		
@@ -89,11 +80,11 @@ public class RecordInfoSection extends AbstractPropertiesSection {
 		dataComposite.setLayout(new GridLayout(2, false));
 		
 		browser = new Browser(dataComposite, SWT.NONE);
-		gd_browser = new GridData(SWT.LEFT, SWT.FILL, false, false, 2, 1);
-		gd_browser.verticalIndent = 5;
-		gd_browser.widthHint = pageControl.getBounds().width - 100;
-		gd_browser.heightHint = pageControl.getBounds().height;
-		browser.setLayoutData(gd_browser);
+		gdBrowser = new GridData(SWT.LEFT, SWT.FILL, false, false, 2, 1);
+		gdBrowser.verticalIndent = 5;
+		gdBrowser.widthHint = pageControl.getBounds().width - 100;
+		gdBrowser.heightHint = pageControl.getBounds().height;
+		browser.setLayoutData(gdBrowser);
 		
 		emptyLabel = new Label(stackComposite, SWT.NO_FOCUS);
 		stackLayout.topControl = emptyLabel;
@@ -123,14 +114,13 @@ public class RecordInfoSection extends AbstractPropertiesSection {
 	public final void setInput(IWorkbenchPart part, ISelection selection) {
 		super.setInput(part, selection);
         try {
-        	String recordName = ((SchemaRecord) modelObject).getName();
-        	Optional<RecordInfoValueObject> data = 
-        		Optional.ofNullable(DictguidesRegistry.getInstance().getRecordInfoValueObject(recordName));
-        	if (data.isPresent()) {
-        		html = Optional.of(template.generate(data.get()));
-        	} else {
-        		html = Optional.empty();
-        	}
+        		var recordName = ((SchemaRecord) modelObject).getName();
+        		var data = Optional.ofNullable(DictguidesRegistry.getInstance().getRecordInfoValueObject(recordName));
+	        	if (data.isPresent()) {
+	        		html = Optional.of(template.generate(data.get()));
+	        	} else {
+	        		html = Optional.empty();
+	        	}
         } catch (IOException e) {
 			logger.error(e.getMessage(), e);
 			html = Optional.empty();

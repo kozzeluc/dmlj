@@ -262,7 +262,7 @@ public class RecordTreeEditPart extends AbstractSchemaTreeEditPart<SchemaRecord>
 		}
 		var parentModelObject = getParentModelObject();
 		if (parentModelObject instanceof Set set) {
-			if (set.isVsam() || set.getOwner().getRecord() != getModel()) {
+			if (set.isVsam() || set.getOwner() != null && set.getOwner().getRecord() != getModel()) {
 				// the model record is a member of the parent edit part's model set; the next edit policy allows
 				// for the removal of the record as a set member, without the ability to remove the set when the
 				// record is the last remaining member in the set

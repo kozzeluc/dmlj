@@ -18,6 +18,7 @@ package org.lh.dmlj.schema.editor.outline.part;
 
 import static java.util.Comparator.comparing;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -185,8 +186,8 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 
 	@Override
 	public List<?> getModelChildren() {
-		return Stream.concat(Stream.of(getModel().getOwner().getRecord()),
-							 getModel().getMembers().stream().map(MemberRole::getRecord))
+		var owner = getModel().getOwner() != null ? List.of(getModel().getOwner().getRecord()) : new ArrayList<SchemaRecord>();
+		return Stream.concat(owner.stream(), getModel().getMembers().stream().map(MemberRole::getRecord))
 				.sorted(comparing(SchemaRecord::getName, String.CASE_INSENSITIVE_ORDER))
 				.toList();
 	}

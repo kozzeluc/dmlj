@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,11 +21,9 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.property.IRecordProvider;
 
-public abstract class AbstractRecordPropertiesSection 
-	extends AbstractAttributesBasedPropertiesSection<SchemaRecord>
-    implements IRecordProvider {
+public abstract class AbstractRecordPropertiesSection extends AbstractAttributesBasedPropertiesSection<SchemaRecord> implements IRecordProvider {
 
-	public AbstractRecordPropertiesSection() {
+	protected AbstractRecordPropertiesSection() {
 		super(Plugin.getDefault());
 	}
 

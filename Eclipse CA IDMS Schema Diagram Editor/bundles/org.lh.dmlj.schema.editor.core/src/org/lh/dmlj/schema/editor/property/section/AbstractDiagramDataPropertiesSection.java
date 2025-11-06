@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,17 +21,16 @@ import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.editor.Plugin;
 
-public abstract class AbstractDiagramDataPropertiesSection 
-	extends AbstractAttributesBasedPropertiesSection<DiagramData> {	
+public abstract class AbstractDiagramDataPropertiesSection extends AbstractAttributesBasedPropertiesSection<DiagramData> {
 
-	public AbstractDiagramDataPropertiesSection() {
+	protected AbstractDiagramDataPropertiesSection() {
 		super(Plugin.getDefault());
 	}
 
 	@Override
 	protected final DiagramData getTarget(Object modelObject) {				
 		Assert.isTrue(modelObject instanceof Schema, "not a Schema");				
-		return ((Schema) modelObject).getDiagramData();		
+		return ((Schema) modelObject).getDiagramData();
 	}
 	
 }

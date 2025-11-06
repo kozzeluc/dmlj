@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,58 +26,38 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 /**
- * An abstract superclass for sections in the tabbed properties view that show  
- * their information in a single styled text control.  Subclasses must supply  
- * the valid edit part model object types during construction and can override
- * the getFont method if they want another font than the standard 'syntax' font
- * to be used.
+ * An abstract superclass for sections in the tabbed properties view that show their information in a single
+ * styled text control. Subclasses must supply the valid edit part model object types during construction and can
+ * override the getFont method if they want another font than the standard 'syntax' font to be used.
  */
 public abstract class AbstractSectionWithStyledText extends AbstractPropertiesSection {
-	
-	private StyledText styledText;
-	private Font 	   syntaxFont = new Font(Display.getCurrent(), "Courier New", 10, SWT.NORMAL);
-	private Class<?>[] validEditPartModelObjectTypes;
-		
+	private final Class<?>[] validEditPartModelObjectTypes;
+	private final Font syntaxFont = SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL);
+	private StyledText styledText;	
 	
 	protected AbstractSectionWithStyledText(Class<?>[] validEditPartModelObjectTypes) {
-		super();
 		this.validEditPartModelObjectTypes = validEditPartModelObjectTypes;		
 	}
 	
 	@Override
 	public final void createControls(Composite parent, TabbedPropertySheetPage page) {
-				
 		super.createControls(parent, page);
-        Composite composite = getWidgetFactory().createFlatFormComposite(parent);
+        var composite = getWidgetFactory().createFlatFormComposite(parent);
 
 		styledText = new StyledText(composite, SWT.MULTI | SWT.READ_ONLY);				
 		styledText.setFont(getFont());
 		
-		FormData data = new FormData();	
+		var data = new FormData();	
 		data.left = new FormAttachment(0, 0);
         data.right = new FormAttachment(100, 0);
         data.top = new FormAttachment(0, ITabbedPropertyConstants.VSPACE);
 		styledText.setLayoutData(data);
-		
-		// if we ever want to add 'dynamic tooltips', a MouseTrackListener is
-		// way to go...
-		/*MouseTrackListener mouseTrackListener = getMouseTrackListener();
-		if (mouseTrackListener != null) {
-			styledText.addMouseTrackListener(mouseTrackListener);
-		}*/
-        
-	}
-	
-	@Override
-	public void dispose() {
-		syntaxFont.dispose();
-		super.dispose();
 	}
 	
 	protected Font getFont() {
@@ -87,30 +67,21 @@ public abstract class AbstractSectionWithStyledText extends AbstractPropertiesSe
 	protected abstract String getValue(Object editPartModelObject);
 
 	private boolean isValidType(Object object) {
-		for (Class<?> _class : validEditPartModelObjectTypes) {
-			if (_class.isInstance(object)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(validEditPartModelObjectTypes)
+				.anyMatch(validObjectType -> validObjectType.isInstance(object));
 	}	
 	
 	@Override
 	public final void refresh() {
-		String value = getValue(modelObject);
+		var value = getValue(modelObject);
 		styledText.setText(value);
 		styledText.setCaretOffset(value.length()); // avoid flickering cursor in top left corner
 	}
 
 	@Override
 	public final void setInput(IWorkbenchPart part, ISelection selection) {
-		
 		super.setInput(part, selection);
-        
-        Assert.isTrue(isValidType(modelObject), 
-  			  		  "not a " + Arrays.asList(validEditPartModelObjectTypes) +
-  			  		  " but a " + modelObject.getClass().getName());
-        
+        Assert.isTrue(isValidType(modelObject), "not a " + Arrays.asList(validEditPartModelObjectTypes) + " but a " + modelObject.getClass().getName());
 	}	
 	
 }

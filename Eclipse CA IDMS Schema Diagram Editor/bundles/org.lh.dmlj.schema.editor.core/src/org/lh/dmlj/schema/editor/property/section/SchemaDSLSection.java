@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,25 +14,25 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor.property.section
+package org.lh.dmlj.schema.editor.property.section;
 
-import org.lh.dmlj.schema.Schema
-import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder
+import org.lh.dmlj.schema.Schema;
+import org.lh.dmlj.schema.editor.dsl.builder.syntax.SchemaSyntaxBuilder;
 
 public class SchemaDSLSection extends AbstractSectionWithStyledText {
-	
-	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS = [ Schema.class ]
+	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS = new Class<?>[] { Schema.class };
 
 	public SchemaDSLSection() {
-		super(VALID_EDIT_PART_MODEL_OBJECTS)
+		super(VALID_EDIT_PART_MODEL_OBJECTS);
 	}
 
 	@Override
 	protected String getValue(Object editPartModelObject) {
-		// TODO avoid showing the DSL for all areas, records and sets
-		SchemaSyntaxBuilder builder = 
-			new SchemaSyntaxBuilder(generateAreaDSL : false, generateRecordDSL : false, generateSetDSL : false) 
-		return builder.build((Schema) editPartModelObject)	
+		var builder = new SchemaSyntaxBuilder();
+		builder.setGenerateAreaDSL(false);
+		builder.setGenerateRecordDSL(false);
+		builder.setGenerateSetDSL(false);
+		return builder.build((Schema) editPartModelObject);
 	}
 
 }

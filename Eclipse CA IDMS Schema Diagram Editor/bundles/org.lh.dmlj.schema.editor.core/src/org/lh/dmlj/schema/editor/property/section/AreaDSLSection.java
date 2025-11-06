@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,8 +20,7 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.AreaSyntaxBuilder;
 
 public class AreaDSLSection extends AbstractSectionWithStyledText {
-	
-	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS = new Class[] {SchemaArea.class};
+	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS = new Class[] { SchemaArea.class };
 
 	public AreaDSLSection() {
 		super(VALID_EDIT_PART_MODEL_OBJECTS);

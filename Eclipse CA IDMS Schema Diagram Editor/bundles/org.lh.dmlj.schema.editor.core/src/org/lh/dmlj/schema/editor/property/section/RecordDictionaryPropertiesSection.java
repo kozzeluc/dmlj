@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.property.section;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -28,30 +27,22 @@ import org.lh.dmlj.schema.editor.common.ValidationResult;
 import org.lh.dmlj.schema.editor.property.handler.ErrorEditHandler;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
 
-public class RecordDictionaryPropertiesSection extends AbstractRecordPropertiesSection 
-	 {
-
-	private static final EAttribute[] ATTRIBUTES = 
-		{SchemaPackage.eINSTANCE.getSchemaRecord_SynonymName(),
-		 SchemaPackage.eINSTANCE.getSchemaRecord_SynonymVersion(),
-		 SchemaPackage.eINSTANCE.getSchemaRecord_BaseName(),
-		 SchemaPackage.eINSTANCE.getSchemaRecord_BaseVersion()};
-	
-	public RecordDictionaryPropertiesSection() {
-		super();
-	}
+public class RecordDictionaryPropertiesSection extends AbstractRecordPropertiesSection {
+	private static final List<EAttribute> ATTRIBUTES = List.of(
+			SchemaPackage.eINSTANCE.getSchemaRecord_SynonymName(),
+			SchemaPackage.eINSTANCE.getSchemaRecord_SynonymVersion(),
+			SchemaPackage.eINSTANCE.getSchemaRecord_BaseName(),
+			SchemaPackage.eINSTANCE.getSchemaRecord_BaseVersion());
 	
 	@Override
 	public List<EAttribute> getAttributes() {		
-		return Arrays.asList(ATTRIBUTES);
+		return ATTRIBUTES;
 	}
 	
 	@Override
 	public EObject getEditableObject(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_BaseName() ||
-			attribute == SchemaPackage.eINSTANCE.getSchemaRecord_BaseVersion() ||
-			attribute == SchemaPackage.eINSTANCE.getSchemaRecord_SynonymName() ||
-			attribute == SchemaPackage.eINSTANCE.getSchemaRecord_SynonymVersion()) {
+		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_BaseName() || attribute == SchemaPackage.eINSTANCE.getSchemaRecord_BaseVersion() ||
+			attribute == SchemaPackage.eINSTANCE.getSchemaRecord_SynonymName() || attribute == SchemaPackage.eINSTANCE.getSchemaRecord_SynonymVersion()) {
 			
 			return target;
 		} else {
@@ -62,62 +53,46 @@ public class RecordDictionaryPropertiesSection extends AbstractRecordPropertiesS
 	@Override
 	public IEditHandler getEditHandler(EAttribute attribute, Object newValue) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_BaseName()) {
-			// get the new base (primary) record name
-			String newBaseRecordName = newValue != null ? ((String) newValue).toUpperCase() : null;
-			// validate the base (primary) record name
-			ValidationResult validationResult = 
-				NamingConventions.validate(newBaseRecordName, NamingConventions.Type.PRIMARY_RECORD_NAME);
-			if (validationResult.getStatus() == ValidationResult.Status.ERROR) {				
-				return new ErrorEditHandler(validationResult.getMessage());
-			}
-			// we have no clue of whether the primary record exists in any dictionary, so we perform
-			// no further checks here; pass the new base (primary) record name to the set attribute 
-			// command
-			return super.getEditHandler(attribute, newBaseRecordName);
+			// we have no clue of whether the primary record exists in any dictionary, so we perform no further
+			// checks when a valid primary record name is supplied; pass the new base (primary) record name to
+			// the set attribute command
+			return validateAndCreateEditHandler(attribute, (String) newValue, NamingConventions.Type.PRIMARY_RECORD_NAME);
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_BaseVersion()) {			
-			// get the new base (primary) record version
-			short newBaseRecordVersion = newValue != null ? ((Short) newValue).shortValue() : null;
-			// validate the base (primary) record version
-			ValidationResult validationResult = 
-				NamingConventions.validate(newBaseRecordVersion, 
-										   NamingConventions.Type.VERSION_SPECIFICATION);
-			if (validationResult.getStatus() == ValidationResult.Status.ERROR) {				
-				return new ErrorEditHandler(validationResult.getMessage());
-			}
-			// we have no clue of whether the primary record exists in any dictionary, so we perform
-			// no further checks here; pass the new base (primary) record version to the set 
-			// attribute command
-			return super.getEditHandler(attribute, newBaseRecordVersion);						
+			// we have no clue of whether the primary record exists in any dictionary, so we perform no further
+			// checks here when a valid primary record version is supplied; pass the new base (primary) record
+			// version to the set attribute command
+			return validateAndCreateEditHandler(attribute, (Short) newValue, NamingConventions.Type.VERSION_SPECIFICATION);
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_SynonymName()) {
-			// get the new record synonym name
-			String newRecordSynonymName = newValue != null ? ((String) newValue).toUpperCase() : null;
-			// validate the record synonym name
-			ValidationResult validationResult = 
-				NamingConventions.validate(newRecordSynonymName, NamingConventions.Type.RECORD_NAME);
-			if (validationResult.getStatus() == ValidationResult.Status.ERROR) {				
-				return new ErrorEditHandler(validationResult.getMessage());
-			}
-			// we have no clue of whether the record synonym exists in any dictionary, so we perform
-			// no further checks here (even not making sure the name is equal to the schema record 
-			// name); pass the new record synonym name to the set attribute command
-			return super.getEditHandler(attribute, newRecordSynonymName);		
+			// we have no clue of whether the record synonym exists in any dictionary, so we perform no further
+			// checks here when a valid record synonym name is supplied (even not making sure the name is equal
+			// to the schema record name); pass the new record synonym name to the set attribute command
+			return validateAndCreateEditHandler(attribute, (String) newValue, NamingConventions.Type.RECORD_NAME);
 		} else if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_SynonymVersion()) {
-			// get the new record synonym version
-			short newBaseRecordVersion = newValue != null ? ((Short) newValue).shortValue() : null;
-			// validate the record synonym version
-			ValidationResult validationResult = 
-				NamingConventions.validate(newBaseRecordVersion, 
-										   NamingConventions.Type.VERSION_SPECIFICATION);
-			if (validationResult.getStatus() == ValidationResult.Status.ERROR) {				
-				return new ErrorEditHandler(validationResult.getMessage());
-			}
-			// we have no clue of whether the record synonym exists in any dictionary, so we perform
-			// no further checks here; pass the new record synonym version to the set attribute 
-			// command
-			return super.getEditHandler(attribute, newBaseRecordVersion);				
+			// we have no clue of whether the record synonym exists in any dictionary, so we perform no further
+			// checks here when a valid record synonym version is supplied; pass the new record synonym version
+			// to the set attribute command
+			return validateAndCreateEditHandler(attribute, (Short) newValue, NamingConventions.Type.VERSION_SPECIFICATION);
 		}
 		return super.getEditHandler(attribute, newValue);		
-	}	
+	}
+	
+	private IEditHandler validateAndCreateEditHandler(EAttribute attribute, String newValue, NamingConventions.Type type) {
+		var newValueInUpperCase = newValue != null ? newValue.toUpperCase() : null;
+		var validationResult = NamingConventions.validate(newValueInUpperCase, type);
+		if (validationResult.getStatus() == ValidationResult.Status.ERROR) {
+			return new ErrorEditHandler(validationResult.getMessage());
+		}
+		return super.getEditHandler(attribute, newValueInUpperCase);		
+	}
+	
+	private IEditHandler validateAndCreateEditHandler(EAttribute attribute, Short newValue, NamingConventions.Type type) {
+		var newValueAsPrimitive = newValue != null ? newValue.shortValue() : null;
+		var validationResult = NamingConventions.validate(newValueAsPrimitive, type);
+		if (validationResult.getStatus() == ValidationResult.Status.ERROR) {				
+			return new ErrorEditHandler(validationResult.getMessage());
+		}
+		return super.getEditHandler(attribute, newValueAsPrimitive);
+	}
 	
 	@Override
 	public String getLabel(EAttribute attribute) {
@@ -131,8 +106,7 @@ public class RecordDictionaryPropertiesSection extends AbstractRecordPropertiesS
 	@Override
 	protected String getValue(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {
-			// remove the trailing underscore from the record name if we're 
-			// dealing with a DDLCATLOD record
+			// remove the trailing underscore from the record name if we're dealing with a DDLCATLOD record
 			return Tools.removeTrailingUnderscore(target.getName());			
 		} else {
 			return super.getValue(attribute);

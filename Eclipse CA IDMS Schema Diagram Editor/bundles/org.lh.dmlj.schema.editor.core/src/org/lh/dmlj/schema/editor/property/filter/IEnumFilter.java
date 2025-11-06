@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EAttribute;
 /**
  * A filter that filters the items in a combo created for editing enum attributes.
  */
-public interface IEnumFilter<T extends Enum<?>> {
+public interface IEnumFilter {
 	
 	/**
 	 * Indicates whether the given element has to be listed in the combo created for editing the enum attribute.
@@ -29,6 +29,6 @@ public interface IEnumFilter<T extends Enum<?>> {
 	 * @param element the enum element to filter
 	 * @return true if the element has to be listed in the combo, false if not
 	 */
-	boolean include(EAttribute attribute, T element);
+	boolean include(EAttribute attribute, Enum<?> element);
 	
 }

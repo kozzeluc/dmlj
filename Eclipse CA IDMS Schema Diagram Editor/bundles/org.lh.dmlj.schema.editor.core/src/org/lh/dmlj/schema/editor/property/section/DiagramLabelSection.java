@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.property.section;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -34,9 +33,7 @@ public class DiagramLabelSection extends AbstractAttributesBasedPropertiesSectio
 
 	@Override
 	public List<EAttribute> getAttributes() {
-		List<EAttribute> attributes = new ArrayList<>();
-		attributes.add(SchemaPackage.eINSTANCE.getDiagramLabel_Description());
-		return attributes;
+		return List.of(SchemaPackage.eINSTANCE.getDiagramLabel_Description());
 	}
 	
 	@Override

@@ -42,38 +42,28 @@ import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandlerProvider;
 import org.lh.dmlj.schema.editor.property.ui.PointerOrderDialog;
                       
-public class RecordPrefixPropertiesSection 
-	extends AbstractPropertiesSection 
-	implements IHyperlinkHandlerProvider<Pointer, Object> {	
-
+public class RecordPrefixPropertiesSection extends AbstractPropertiesSection implements IHyperlinkHandlerProvider<Pointer, Object> {
 	private CommandStack commandStack;
 	private Prefix prefix;
 	private HyperlinkOnlyPropertyEditor<Pointer> hyperlinkOnlyPropertyEditor;
 	private Table table;
 	protected SchemaRecord target;
 
-	public RecordPrefixPropertiesSection() {
-		super();
-	}	
-
 	@Override
-	public final void createControls(Composite parent,
-							   		 TabbedPropertySheetPage page) {
-
+	public final void createControls(Composite parent, TabbedPropertySheetPage page) {
 		super.createControls(parent, page);	
 
 		// create the container to hold the table
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setBackground(Display.getCurrent()
-			     					   .getSystemColor(SWT.COLOR_WHITE));
-		GridLayout gridLayout = new GridLayout(1, false);
+		var composite = new Composite(parent, SWT.NONE);
+		composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		var gridLayout = new GridLayout(1, false);
 		composite.setLayout(gridLayout);
 
 		// create the table and set its layout data
 		table = new Table(composite, SWT.FULL_SELECTION);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		GridData gridData = new GridData();
+		var gridData = new GridData();
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessVerticalSpace = true;
@@ -81,28 +71,27 @@ public class RecordPrefixPropertiesSection
 		table.setLayoutData(gridData);
 
 		// create the first table column, holding the pointer position
-		final TableColumn column1 = new TableColumn(table, SWT.NONE);
+		var column1 = new TableColumn(table, SWT.NONE);
 		column1.setWidth(50);
 		column1.setText("Pos.");		
 		
 		// create the second table column, holding the set to which the pointer
 		// applies
-		TableColumn column2 = new TableColumn(table, SWT.NONE);
+		var column2 = new TableColumn(table, SWT.NONE);
 		column2.setWidth(125);
 		column2.setText("Set");
 		
 		// create the third table column, holding the pointer type
-		TableColumn column3 = new TableColumn(table, SWT.NONE);
+		var column3 = new TableColumn(table, SWT.NONE);
 		column3.setWidth(60);
 		column3.setText("Role");
 		
 		// create the third table column, holding the pointer type
-		TableColumn column4 = new TableColumn(table, SWT.NONE);
+		var column4 = new TableColumn(table, SWT.NONE);
 		column4.setWidth(60);
 		column4.setText("Pointer");	
 		
-		hyperlinkOnlyPropertyEditor = new HyperlinkOnlyPropertyEditor<>(table, this, new int[] {1});
-
+		hyperlinkOnlyPropertyEditor = new HyperlinkOnlyPropertyEditor<>(table, this, 1);
 	}
 	
 	@Override
@@ -118,15 +107,14 @@ public class RecordPrefixPropertiesSection
 	}
 
 	@Override
-	public final void refresh() {		
-	
+	public final void refresh() {
 		// remove all table rows
 		table.removeAll();		
 		
 		// (re-)populate the table
 		prefix = PrefixFactory.newPrefixForInquiry(target);
-		for (Pointer pointer : prefix.getPointers()) {												
-			TableItem item = new TableItem(table, SWT.NONE);			
+		for (var pointer : prefix.getPointers()) {												
+			var item = new TableItem(table, SWT.NONE);			
 			item.setText(0, String.valueOf(pointer.getCurrentPositionInPrefix()));			
 			item.setText(1, Tools.removeTrailingUnderscore(pointer.getSetName()));						
 			if (pointer.isOwnerDefined()) {
@@ -134,27 +122,23 @@ public class RecordPrefixPropertiesSection
 			} else {
 				item.setText(2, "member");
 			}
-			String pointerTypeAsString = pointer.getType().toString();
+			var pointerTypeAsString = pointer.getType().toString();
 			item.setText(3, pointerTypeAsString.substring(pointerTypeAsString.indexOf("_") + 1));
 		}
 		hyperlinkOnlyPropertyEditor.refresh();
 	
-		// we don't want any vertical scrollbar in the table; the following
-		// sequence allows us to do just that (i.e. vertically stretch the table
-		// as needed)          
-		for (Composite parent = table.getParent(); parent != null; 
-			 parent = parent.getParent()) {                      
-		     
+		// we don't want any vertical scrollbar in the table; the following sequence allows us to do just that
+		// (i.e. vertically stretch the table as needed)
+		for (Composite parent = table.getParent(); parent != null; parent = parent.getParent()) {
 			parent.layout();                                          
 		}
-	
 	}	
 	
 	@Override
 	public void setInput(IWorkbenchPart part, ISelection selection) {		
 		super.setInput(part, selection);
 		target = (SchemaRecord) modelObject;
-		commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
+		commandStack = CommandStack.class.cast(editor.getAdapter(CommandStack.class));
 	    Assert.isNotNull(commandStack, "no command stack available");
 	}
 
@@ -167,28 +151,18 @@ public class RecordPrefixPropertiesSection
 			// we don't expect this to happen since we've only made 1 column hyperlink enabled
 			return null; 
 		}
-		return new IHyperlinkHandler<Pointer, Object>() {
-			@Override
-			public Object hyperlinkActivated(Pointer context) {
-				showPointerOrderDialog();
-				return null;
-			}
-		};
+		return context -> showPointerOrderDialog();
 	}
 
-	protected void showPointerOrderDialog() {
-		PointerOrderDialog dialog = 
-			new PointerOrderDialog(Display.getCurrent().getActiveShell(), prefix);
-		if (dialog.open() == IDialogConstants.CANCEL_ID) {
-			// cancel button pressed
-			return;
+	protected IHyperlinkHandler<Pointer, Object> showPointerOrderDialog() {
+		var dialog = new PointerOrderDialog(Display.getCurrent().getActiveShell(), prefix);
+		if (dialog.open() != IDialogConstants.CANCEL_ID) {
+			var context = new ModelChangeContext(ModelChangeType.REORDER_POINTERS_IN_PREFIX);
+			var command = new ChangePointerOrderCommand(target, dialog.getDesiredPointerList());
+			command.setContext(context);
+			commandStack.execute(command);
 		}
-		ModelChangeContext context = 
-			new ModelChangeContext(ModelChangeType.REORDER_POINTERS_IN_PREFIX);
-		ChangePointerOrderCommand command = 
-			new ChangePointerOrderCommand(target, dialog.getDesiredPointerList());
-		command.setContext(context);
-		commandStack.execute(command);
+		return null;
 	}
 
 }

@@ -27,7 +27,6 @@ import org.lh.dmlj.schema.editor.property.exception.DSLFacetValidationException
 import org.lh.dmlj.schema.editor.property.ui.IDslFacetModifier
 
 class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
-	
 	static areaSyntaxBuilder = { SchemaArea area -> new AreaSyntaxBuilder().build(area) }
 	static areaModelBuilder = { String syntax -> ModelFromDslBuilderForJava.area(syntax) }
 	
@@ -65,16 +64,12 @@ class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
 	
 	static IDslFacetModifier forModel(SchemaArea area) {
 		String facet = buildOriginalFacetDefinition(area, areaSyntaxBuilder)
-		new ProcedureCallsDslFacetModifier(model : area,
-										   originalFacetDefinition : facet,
-										   buildModel : areaModelBuilder)
+		new ProcedureCallsDslFacetModifier(model : area, originalFacetDefinition : facet, buildModel : areaModelBuilder)
 	}
 	
 	static IDslFacetModifier forModel(SchemaRecord record) {
 		String facet = buildOriginalFacetDefinition(record, recordSyntaxBuilder)
-		new ProcedureCallsDslFacetModifier(model : record,
-										   originalFacetDefinition : facet,
-										   buildModel : recordModelBuilder)
+		new ProcedureCallsDslFacetModifier(model : record, originalFacetDefinition : facet, buildModel : recordModelBuilder)
 	}
 	
 	@Override
@@ -103,14 +98,11 @@ class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
 	}
 
 	@Override
-	void setModifiedFacetDefinition(String modifiedFacetDefinition)
-		throws DSLFacetValidationException {
-		
+	void setModifiedFacetDefinition(String modifiedFacetDefinition)throws DSLFacetValidationException {
 		verifyCallStructure(modifiedFacetDefinition)
 		try {
 			buildModel(modifiedFacetDefinition.trim())
-			this.modifiedFacetDefinition = 
-				modifiedFacetDefinition.split('\n').findAll(relevant).collect(trim).collect(procedureToUppercase).join('\n')
+			this.modifiedFacetDefinition = modifiedFacetDefinition.split('\n').findAll(relevant).collect(trim).collect(procedureToUppercase).join('\n')
 				modifiedFacetDefinitionSet = true
 		} catch (Exception e) {
 			this.modifiedFacetDefinition = null
@@ -122,9 +114,8 @@ class ProcedureCallsDslFacetModifier implements IDslFacetModifier {
 		String[] lines = modifiedFacetDefinition.split('\n')
 		for (int i = 0; i < lines.length; i++) {
 			String trimmedLine = lines[i].trim()
-			boolean valid = trimmedLine.isEmpty() ||
-				  			trimmedLine.startsWith("callProcedure '") && trimmedLine.endsWith("'") ||
-							trimmedLine.startsWith('callProcedure "') && trimmedLine.endsWith('"')
+			boolean valid = trimmedLine.isEmpty() || trimmedLine.startsWith("callProcedure '") && trimmedLine.endsWith("'") ||
+						   trimmedLine.startsWith('callProcedure "') && trimmedLine.endsWith('"')
 			if (!valid) {				
 			  	String message = "line ${i + 1} does not start with \"callProcedure '\" (or 'callProcedure \"') or end with a single quote:\n${lines[i]}"
 				throw new DSLFacetValidationException(message, null, modifiedFacetDefinition)
