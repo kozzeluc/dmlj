@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -33,78 +33,41 @@ import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.editor.common.Tools;
 
 public class IndexedSetPointersDialog extends Dialog {
-
-	private Button 	   btnIndexPointers;
-	private Button 	   btnOwnerPointers;
-	private boolean    indexPointers;
-	private MemberRole memberRole;
-	private boolean    ownerPointers;	
-
-	/**
-	 * Create the dialog.
-	 * @param parentShell
-	 */
+	private final MemberRole memberRole;
+	private boolean indexPointers;
+	private boolean ownerPointers;
+	
+	private Button btnIndexPointers;
+	private Button btnOwnerPointers;
+		
 	public IndexedSetPointersDialog(Shell parentShell, MemberRole memberRole) {
 		super(parentShell);
 		this.memberRole = memberRole;
 		setShellStyle(getShellStyle() | SWT.RESIZE); 
 	}
 	
-	private boolean anythingChanged() {
-		
-		// check if the user has (un)checked the index dbkey position checkbox
-		boolean hasIndexPointers = memberRole.getIndexDbkeyPosition() != null;
-		if (btnIndexPointers.getSelection() != hasIndexPointers) {
-			return true;
-		}
-		
-		// check if the user has (un)checked the owner dbkey position checkbox
-		boolean hasOwnerPointers = memberRole.getOwnerDbkeyPosition() != null;
-		if (btnOwnerPointers.getSelection() != hasOwnerPointers) {
-			return true;
-		}
-		
-		// nothing changed
-		return false;
-	}
-	
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		Assert.isTrue(memberRole.getSet().getMode() == SetMode.INDEXED, 
-					  "logic error: not an indexed set");
-		shell.setText("Edit pointers for set " + 
-					  Tools.removeTrailingUnderscore(memberRole.getSet()
-							  						 		   .getName()));	    
+		Assert.isTrue(memberRole.getSet().getMode() == SetMode.INDEXED, "logic error: not an indexed set");
+		shell.setText("Edit pointers for set " + Tools.removeTrailingUnderscore(memberRole.getSet().getName()));
 	}
 
-	/**
-	 * Create contents of the button bar.
-	 * @param parent
-	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-					 true);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-					 IDialogConstants.CANCEL_LABEL, false);
-		enableAndDisable();
+	protected Point getInitialSize() {
+		return new Point(375, 200);
 	}
-
-	/**
-	 * Create contents of the dialog.
-	 * @param parent
-	 */
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
+		var container = (Composite) super.createDialogArea(parent);
 		
-		Button btnNextPointersowner = new Button(container, SWT.CHECK);
+		var btnNextPointersowner = new Button(container, SWT.CHECK);
 		btnNextPointersowner.setEnabled(false);
 		btnNextPointersowner.setSelection(true);
 		btnNextPointersowner.setText("NEXT pointers (owner record)");
 		
-		Button btnPriorPointrsowner = new Button(container, SWT.CHECK);
+		var btnPriorPointrsowner = new Button(container, SWT.CHECK);
 		btnPriorPointrsowner.setSelection(true);
 		btnPriorPointrsowner.setEnabled(false);
 		btnPriorPointrsowner.setText("PRIOR pointers (owner record)");
@@ -128,44 +91,46 @@ public class IndexedSetPointersDialog extends Dialog {
 		btnOwnerPointers.setText("OWNER pointers (member record)");
 		
 		initialize();
-
+	
 		return container;
+	}
+	
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		enableAndDisable();
+	}
+
+	private void initialize() {
+		btnIndexPointers.setSelection(memberRole.getIndexDbkeyPosition() != null);
+		btnIndexPointers.setEnabled(memberRole.getSet().getSystemOwner() != null && memberRole.getMembershipOption() == SetMembershipOption.MANDATORY_AUTOMATIC);
+		btnOwnerPointers.setSelection(memberRole.getOwnerDbkeyPosition() != null);
+		btnOwnerPointers.setEnabled(memberRole.getSet().getSystemOwner() == null);
 	}
 
 	private void enableAndDisable() {
-	
 		// no checks to perform
 		
-		// make sure we've got all information available should the user press
-		// the OK button
+		// make sure we've got all information available should the user press the OK button
 		indexPointers = btnIndexPointers.getSelection();
 		ownerPointers = btnOwnerPointers.getSelection();		
-		
-		// only enable the OK Button if anything will change
-		Button okButton = getButton(IDialogConstants.OK_ID);
-		okButton.setEnabled(anythingChanged());				
-		
+				
+		getButton(IDialogConstants.OK_ID).setEnabled(anythingChanged());
 	}
 	
-	/**
-	 * Return the initial size of the dialog.
-	 */
-	@Override
-	protected Point getInitialSize() {
-		return new Point(375, 200);
+	private boolean anythingChanged() {
+		// check if the user has (un)checked the index dbkey position checkbox
+		var hasIndexPointers = memberRole.getIndexDbkeyPosition() != null;
+		if (btnIndexPointers.getSelection() != hasIndexPointers) {
+			return true;
+		}
+		
+		// check if the user has (un)checked the owner dbkey position checkbox
+		var hasOwnerPointers = memberRole.getOwnerDbkeyPosition() != null;
+		return btnOwnerPointers.getSelection() != hasOwnerPointers;
 	}
-	
-	private void initialize() {
 		
-		btnIndexPointers.setSelection(memberRole.getIndexDbkeyPosition() != null);
-		btnIndexPointers.setEnabled(memberRole.getSet().getSystemOwner() != null &&
-									memberRole.getMembershipOption() == SetMembershipOption.MANDATORY_AUTOMATIC);
-		
-		btnOwnerPointers.setSelection(memberRole.getOwnerDbkeyPosition() != null);
-		btnOwnerPointers.setEnabled(memberRole.getSet().getSystemOwner() == null);		
-		
-	}
-	
 	public boolean isIndexPointers() {
 		return indexPointers;
 	}	

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -41,62 +41,38 @@ import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class IndexedSetModeSpecificationDialog extends Dialog {
+	private final IndexedSetModeSpecification indexedSetModeSpecification;
+	private String symbolicIndexName;
+	private Short keyCount;
+	private Short displacementPages;
 	
-	private IndexedSetModeSpecification indexedSetModeSpecification;
 	private Text textSymbolicIndex;
 	private Text textKeyCount;
 	private Text textDisplacementPages;
 	private Button btnIndexBlockContainsAndDisplacementPages;
 	private Button btnSymbolicIndex;
-	
-	private String symbolicIndexName;
-	private Short keyCount;
-	private Short displacementPages;
 
-	public IndexedSetModeSpecificationDialog(Shell activeShell, 
-											 IndexedSetModeSpecification indexedSetModeSpecification) {
-		
+	public IndexedSetModeSpecificationDialog(Shell activeShell, IndexedSetModeSpecification indexedSetModeSpecification) {
 		super(activeShell);
 		this.indexedSetModeSpecification = indexedSetModeSpecification;
 		setShellStyle(getShellStyle() | SWT.RESIZE); 
-	}
-	
-	private boolean anythingChanged() {
-		if (indexedSetModeSpecification.getSymbolicIndexName() != null) {
-			return btnIndexBlockContainsAndDisplacementPages.getSelection() ||
-				   !getSymbolicIndexNameFromUI().equalsIgnoreCase(indexedSetModeSpecification.getSymbolicIndexName());
-		} else {
-			return btnSymbolicIndex.getSelection() ||
-				   !getKeyCountFromUI().equals(indexedSetModeSpecification.getKeyCount()) ||
-				   (indexedSetModeSpecification.getDisplacementPageCount() == null &&
-				    getDisplacementPagesFromUI() != null ||
-				    indexedSetModeSpecification.getDisplacementPageCount() != null &&
-				    getDisplacementPagesFromUI() == null ||
-				    indexedSetModeSpecification.getDisplacementPageCount() != null &&
-				    indexedSetModeSpecification.getDisplacementPageCount().shortValue() != 0 &&
-				    !indexedSetModeSpecification.getDisplacementPageCount().equals(getDisplacementPagesFromUI()));
-				    
-		}
 	}
 
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText("Edit indexed set mode specification for set " + 
-					  removeTrailingUnderscore(indexedSetModeSpecification.getSet().getName()));	    
+		shell.setText("Edit indexed set mode specification for set " + removeTrailingUnderscore(indexedSetModeSpecification.getSet().getName()));
 	}
 
 	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
-		enableAndDisable();
+	protected Point getInitialSize() {
+		return new Point(450, 300);
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite area = (Composite) super.createDialogArea(parent);
-		Composite container = new Composite(area, SWT.NONE);
+		var area = (Composite) super.createDialogArea(parent);
+		var container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(3, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
@@ -112,15 +88,14 @@ public class IndexedSetModeSpecificationDialog extends Dialog {
 		btnSymbolicIndex.setText("Symbolic index name:");
 		
 		textSymbolicIndex = new Text(container, SWT.BORDER);
-		GridData gd_textSymbolicIndex = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
-		gd_textSymbolicIndex.widthHint = 150;
-		textSymbolicIndex.setLayoutData(gd_textSymbolicIndex);
+		var gdTextSymbolicIndex = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gdTextSymbolicIndex.widthHint = 150;
+		textSymbolicIndex.setLayoutData(gdTextSymbolicIndex);
 		
 		textSymbolicIndex.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				String p = textSymbolicIndex.getText().toUpperCase();
-				textSymbolicIndex.setText(p);
+				textSymbolicIndex.setText(textSymbolicIndex.getText().toUpperCase());
 				textSymbolicIndex.selectAll();
 				enableAndDisable();				
 			}
@@ -129,12 +104,8 @@ public class IndexedSetModeSpecificationDialog extends Dialog {
 		textSymbolicIndex.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {				
-				if (e.keyCode == 13 || 		 // enter-key
-					e.keyCode == 16777296 || // enter-key								
-					e.keyCode == SWT.ESC) {	
-					
-					String p = textSymbolicIndex.getText().toUpperCase();
-					textSymbolicIndex.setText(p);
+				if (e.keyCode == 13 || e.keyCode == 16777296 || e.keyCode == SWT.ESC) { // enter and escape -keys
+					textSymbolicIndex.setText(textSymbolicIndex.getText().toUpperCase());
 					textSymbolicIndex.selectAll();
 					enableAndDisable();					
 				}
@@ -150,16 +121,16 @@ public class IndexedSetModeSpecificationDialog extends Dialog {
 				textKeyCount.selectAll();
 			}
 		});
-		GridData gd_btnIndexBlockContains = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnIndexBlockContains.verticalIndent = 5;
-		btnIndexBlockContainsAndDisplacementPages.setLayoutData(gd_btnIndexBlockContains);
+		var gdBtnIndexBlockContains = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdBtnIndexBlockContains.verticalIndent = 5;
+		btnIndexBlockContainsAndDisplacementPages.setLayoutData(gdBtnIndexBlockContains);
 		btnIndexBlockContainsAndDisplacementPages.setText("Index block contains:");
 		
 		textKeyCount = new Text(container, SWT.BORDER);
-		GridData gd_textKeyCount = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textKeyCount.verticalIndent = 5;
-		gd_textKeyCount.widthHint = 50;
-		textKeyCount.setLayoutData(gd_textKeyCount);
+		var gdTextKeyCount = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdTextKeyCount.verticalIndent = 5;
+		gdTextKeyCount.widthHint = 50;
+		textKeyCount.setLayoutData(gdTextKeyCount);
 		
 		textKeyCount.addFocusListener(new FocusAdapter() {
 			@Override
@@ -171,31 +142,28 @@ public class IndexedSetModeSpecificationDialog extends Dialog {
 		textKeyCount.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {				
-				if (e.keyCode == 13 || 		 // enter-key
-					e.keyCode == 16777296 || // enter-key								
-					e.keyCode == SWT.ESC) {	
-					
+				if (e.keyCode == 13 || e.keyCode == 16777296 || e.keyCode == SWT.ESC) { // enter and escape keys
 					enableAndDisable();					
 				}
 			}
 		});
 		
-		Label lblKeys = new Label(container, SWT.NONE);
-		GridData gd_lblKeys = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblKeys.verticalIndent = 5;
-		lblKeys.setLayoutData(gd_lblKeys);
+		var lblKeys = new Label(container, SWT.NONE);
+		var gdLblKeys = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblKeys.verticalIndent = 5;
+		lblKeys.setLayoutData(gdLblKeys);
 		lblKeys.setText("key(s)");
 		
-		Label lblDisplacement = new Label(container, SWT.NONE);
-		GridData gd_lblDisplacement = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblDisplacement.horizontalIndent = 15;
-		lblDisplacement.setLayoutData(gd_lblDisplacement);
+		var lblDisplacement = new Label(container, SWT.NONE);
+		var gdLblDisplacement = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblDisplacement.horizontalIndent = 15;
+		lblDisplacement.setLayoutData(gdLblDisplacement);
 		lblDisplacement.setText("Displacement:");
 		
 		textDisplacementPages = new Text(container, SWT.BORDER);
-		GridData gd_textDisplacementPages = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textDisplacementPages.widthHint = 50;
-		textDisplacementPages.setLayoutData(gd_textDisplacementPages);
+		var gdTextDisplacementPages = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdTextDisplacementPages.widthHint = 50;
+		textDisplacementPages.setLayoutData(gdTextDisplacementPages);
 		
 		textDisplacementPages.addFocusListener(new FocusAdapter() {
 			@Override
@@ -207,73 +175,56 @@ public class IndexedSetModeSpecificationDialog extends Dialog {
 		textDisplacementPages.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {				
-				if (e.keyCode == 13 || 		 // enter-key
-					e.keyCode == 16777296 || // enter-key								
-					e.keyCode == SWT.ESC) {	
-					
+				if (e.keyCode == 13 || e.keyCode == 16777296 || e.keyCode == SWT.ESC) { // enter and escape keys					
 					enableAndDisable();					
 				}
 			}
 		});
 		
-		Label lblPages = new Label(container, SWT.NONE);
+		var lblPages = new Label(container, SWT.NONE);
 		lblPages.setText("page(s)");
 	
 		initialize();
 		
 		return area;
 	}
-	
-	private void enableAndDisable() {
-	
-		boolean ok = true;
-		
-		if (btnSymbolicIndex.getSelection()) {
-			String symbolicIndexName = textSymbolicIndex.getText();
-			ValidationResult validationResult = 
-				NamingConventions.validate(symbolicIndexName, 
-										   NamingConventions.Type.SYMBOLIC_INDEX_NAME);
-			if (validationResult.getStatus() != ValidationResult.Status.OK) {
-				ok = false;
-			}
+
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		enableAndDisable();
+	}
+
+	private void initialize() {
+		if (indexedSetModeSpecification.getSymbolicIndexName() != null) {
+			btnSymbolicIndex.setSelection(true);
+			textSymbolicIndex.setText(indexedSetModeSpecification.getSymbolicIndexName());
+			textSymbolicIndex.setFocus();
+			textSymbolicIndex.selectAll();
 		} else {
-			String sKeyCount = textKeyCount.getText().trim();
-			String sDisplacementPages = textDisplacementPages.getText().trim();
-			if (sKeyCount.isEmpty()) {
-				ok = false;
-			} else {
-				try {
-					int keyCount = Integer.valueOf(sKeyCount).intValue();
-					if (keyCount < 3 || keyCount > 8180) {
-						ok = false;
-					}
-				} catch (NumberFormatException e) {
-					ok = false;
-				}
+			btnIndexBlockContainsAndDisplacementPages.setSelection(true);
+			if (indexedSetModeSpecification.getKeyCount() != null) {
+				// this should always be the case
+				textKeyCount.setText(String.valueOf(indexedSetModeSpecification.getKeyCount().shortValue()));
+				textKeyCount.setFocus();
+				textKeyCount.selectAll();
 			}
-			if (!sDisplacementPages.isEmpty()) {
-				try {
-					int displacementPages = Integer.valueOf(sDisplacementPages).intValue();
-					if (displacementPages < 1 || displacementPages > 32767) {
-						ok = false;
-					}
-				} catch (NumberFormatException e) {
-					ok = false;
-				}
+			if (indexedSetModeSpecification.getDisplacementPageCount() != null &&
+				indexedSetModeSpecification.getDisplacementPageCount().shortValue() != 0) {
+				
+				textDisplacementPages.setText(String.valueOf(indexedSetModeSpecification.getDisplacementPageCount().shortValue()));
 			}
 		}
-		
-		if (ok) {
-			ok = anythingChanged();
-		}
-		
+	}
+
+	private void enableAndDisable() {
 		textSymbolicIndex.setEnabled(btnSymbolicIndex.getSelection());
 		textKeyCount.setEnabled(btnIndexBlockContainsAndDisplacementPages.getSelection());
 		textDisplacementPages.setEnabled(textKeyCount.isEnabled());
-	
-		Button okButton = getButton(IDialogConstants.OK_ID);
-		okButton.setEnabled(ok);
-		if (!ok) {
+			
+		getButton(IDialogConstants.OK_ID).setEnabled(checkDataEntered() && anythingChanged());
+		if (!getButton(IDialogConstants.OK_ID).isEnabled()) {
 			return;
 		}
 		
@@ -282,25 +233,69 @@ public class IndexedSetModeSpecificationDialog extends Dialog {
 		keyCount = getKeyCountFromUI();
 		displacementPages = getDisplacementPagesFromUI();
 	}
+	
+	private boolean checkDataEntered() {
+		if (btnSymbolicIndex.getSelection()) {
+			var validationResult = NamingConventions.validate(textSymbolicIndex.getText(), NamingConventions.Type.SYMBOLIC_INDEX_NAME);
+			return validationResult.getStatus() == ValidationResult.Status.OK;
+		} else {
+			return keyCountValid() && displacementPagesValid();
+		}		
+	}
+	
+	private boolean keyCountValid() {
+		if (textKeyCount.getText().isBlank()) {
+			return false;
+		} else {
+			try {
+				var enteredKeyCount = Integer.parseInt(textKeyCount.getText().trim());
+				return enteredKeyCount >= 3 && enteredKeyCount <= 8180;
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+	}
+	
+	private boolean displacementPagesValid() {
+		if (!textDisplacementPages.getText().isBlank()) {
+			try {
+				var enteredDisplacementPages = Integer.parseInt(textDisplacementPages.getText().trim());
+				return enteredDisplacementPages >= 1 && enteredDisplacementPages <= 32767;
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+	
+	private boolean anythingChanged() {
+		if (indexedSetModeSpecification.getSymbolicIndexName() != null) {
+			return btnIndexBlockContainsAndDisplacementPages.getSelection() ||
+				   !indexedSetModeSpecification.getSymbolicIndexName().equalsIgnoreCase(getSymbolicIndexNameFromUI());
+		} else {
+			return btnSymbolicIndex.getSelection() || !indexedSetModeSpecification.getKeyCount().equals(getKeyCountFromUI()) ||
+				   (indexedSetModeSpecification.getDisplacementPageCount() == null && getDisplacementPagesFromUI() != null ||
+				    indexedSetModeSpecification.getDisplacementPageCount() != null && getDisplacementPagesFromUI() == null ||
+				    indexedSetModeSpecification.getDisplacementPageCount() != null &&
+				    indexedSetModeSpecification.getDisplacementPageCount().shortValue() != 0 &&
+				    !indexedSetModeSpecification.getDisplacementPageCount().equals(getDisplacementPagesFromUI()));
+				    
+		}
+	}
 
 	public Short getDisplacementPages() {
 		return displacementPages;
 	}
 
 	private Short getDisplacementPagesFromUI() {
-		if (btnIndexBlockContainsAndDisplacementPages.getSelection() &&
-			!textDisplacementPages.getText().trim().isEmpty() &&
+		if (btnIndexBlockContainsAndDisplacementPages.getSelection() && !textDisplacementPages.getText().trim().isEmpty() &&
 			!textDisplacementPages.getText().trim().equals("0")) {
 			
 			return Short.valueOf(textDisplacementPages.getText().trim());
 		} else {
 			return null;
 		}
-	}
-	
-	@Override
-	protected Point getInitialSize() {
-		return new Point(450, 300);
 	}
 	
 	public Short getKeyCount() {
@@ -324,28 +319,6 @@ public class IndexedSetModeSpecificationDialog extends Dialog {
 			return textSymbolicIndex.getText().trim().toUpperCase();
 		} else {
 			return null;
-		}
-	}
-	
-	private void initialize() {
-		if (indexedSetModeSpecification.getSymbolicIndexName() != null) {
-			btnSymbolicIndex.setSelection(true);
-			textSymbolicIndex.setText(indexedSetModeSpecification.getSymbolicIndexName());
-			textSymbolicIndex.setFocus();
-			textSymbolicIndex.selectAll();
-		} else {
-			btnIndexBlockContainsAndDisplacementPages.setSelection(true);
-			if (indexedSetModeSpecification.getKeyCount() != null) {
-				// this should always be the case
-				textKeyCount.setText(String.valueOf(indexedSetModeSpecification.getKeyCount().shortValue()));
-				textKeyCount.setFocus();
-				textKeyCount.selectAll();
-			}
-			if (indexedSetModeSpecification.getDisplacementPageCount() != null &&
-				indexedSetModeSpecification.getDisplacementPageCount().shortValue() != 0) {
-				
-				textDisplacementPages.setText(String.valueOf(indexedSetModeSpecification.getDisplacementPageCount().shortValue()));
-			}
 		}
 	}
 

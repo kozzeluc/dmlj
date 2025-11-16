@@ -141,10 +141,9 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 	}
 	
 	private static class SortKeyDescription implements ISortKeyDescription {
-		private SchemaRecord memberRecord;
+		private final SchemaRecord memberRecord;
 
 		private SortKeyDescription(SchemaRecord memberRecord) {
-			super();
 			this.memberRecord = memberRecord;
 		}
 		

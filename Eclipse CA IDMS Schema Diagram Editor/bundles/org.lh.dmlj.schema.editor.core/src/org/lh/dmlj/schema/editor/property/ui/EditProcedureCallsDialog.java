@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -41,7 +41,8 @@ public class EditProcedureCallsDialog extends Dialog {
 	private static final String AREA_EXAMPLES = "call 'IDMSCOMP BEFORE READY EXCLUSIVE UPDATE'\ncall 'IDMSDCOM AFTER FINISH'\ncall 'IDMSCOMP ON_ERROR_DURING ROLLBACK'";
 	private static final String RECORD_EXAMPLES = "call 'IDMSCOMP BEFORE STORE'\ncall 'IDMSCOMP AFTER GET'\ncall 'IDMSCOMP ON_ERROR_DURING DISCONNECT'";
 	
-	private IDslFacetModifier dslFacetModifier;
+	private final IDslFacetModifier dslFacetModifier;
+	
 	private Text textDsl;
 	private Text textMessage;
 
@@ -65,13 +66,13 @@ public class EditProcedureCallsDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite area = (Composite) super.createDialogArea(parent);
-		GridLayout glArea = new GridLayout(2, false);
+		var area = (Composite) super.createDialogArea(parent);
+		var glArea = new GridLayout(2, false);
 		glArea.marginWidth = 11;
 		glArea.marginHeight = 13;
 		area.setLayout(glArea);
 		
-		Label lblProcedureDefinitionDsl = new Label(area, SWT.NONE);
+		var lblProcedureDefinitionDsl = new Label(area, SWT.NONE);
 		lblProcedureDefinitionDsl.setText("Procedure Definition DSL:");
 		new Label(area, SWT.NONE);
 		
@@ -79,9 +80,7 @@ public class EditProcedureCallsDialog extends Dialog {
 		textDsl.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if (e.keyCode != SWT.ARROW_LEFT && e.keyCode != SWT.ARROW_RIGHT && 
-					e.keyCode != SWT.ARROW_UP && e.keyCode != SWT.ARROW_DOWN) {					
-					
+				if (e.keyCode != SWT.ARROW_LEFT && e.keyCode != SWT.ARROW_RIGHT && e.keyCode != SWT.ARROW_UP && e.keyCode != SWT.ARROW_DOWN) {
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				}
 			}
@@ -89,7 +88,7 @@ public class EditProcedureCallsDialog extends Dialog {
 		textDsl.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
 		textDsl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		
-		Button btnValidate = new Button(area, SWT.NONE);
+		var btnValidate = new Button(area, SWT.NONE);
 		btnValidate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -99,7 +98,7 @@ public class EditProcedureCallsDialog extends Dialog {
 		btnValidate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnValidate.setText("Validate");
 		
-		Button btnReset = new Button(area, SWT.NONE);
+		var btnReset = new Button(area, SWT.NONE);
 		btnReset.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -118,20 +117,20 @@ public class EditProcedureCallsDialog extends Dialog {
 		});
 		textMessage.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		textMessage.setBackground(area.getBackground());
-		GridData gdTextMessage = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		var gdTextMessage = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gdTextMessage.heightHint = 50;
 		textMessage.setLayoutData(gdTextMessage);
 		textMessage.setText("<message>");
 		new Label(area, SWT.NONE);
 		
-		Label lblExample = new Label(area, SWT.NONE);
-		GridData gdLblExample = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		var lblExample = new Label(area, SWT.NONE);
+		var gdLblExample = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gdLblExample.verticalIndent = 5;
 		lblExample.setLayoutData(gdLblExample);
 		lblExample.setText("Example:");
 		new Label(area, SWT.NONE);
 		
-		Text textExample = new Text(area, SWT.NO_FOCUS | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		var textExample = new Text(area, SWT.NO_FOCUS | SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		if ("area".equals(dslFacetModifier.getModelType())) {
 			textExample.setText(AREA_EXAMPLES);
 		} else {
@@ -158,15 +157,15 @@ public class EditProcedureCallsDialog extends Dialog {
 	}
 
 	protected void validate() {		
-		boolean valid = true;
+		var valid = true;
 		try {
 			dslFacetModifier.setModifiedFacetDefinition(textDsl.getText());
 			textMessage.setText("");
 			textDsl.setText(dslFacetModifier.getModifiedFacetDefinition());
 			textDsl.setSelection(0, 0);
 		} catch (DSLFacetValidationException e) {
-			StringBuilder message = new StringBuilder();
-			Throwable cause = e.getCause();
+			var message = new StringBuilder();
+			var cause = e.getCause();
 			if (cause != null) {
 				message.append(cause.getClass().getSimpleName());
 			} else {
@@ -179,4 +178,5 @@ public class EditProcedureCallsDialog extends Dialog {
 		}		
 		getButton(IDialogConstants.OK_ID).setEnabled(valid);
 	}
+	
 }

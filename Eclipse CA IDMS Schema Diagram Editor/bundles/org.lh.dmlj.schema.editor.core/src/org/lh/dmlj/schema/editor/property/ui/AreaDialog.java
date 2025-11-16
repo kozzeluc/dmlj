@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -15,6 +15,8 @@
  * Contact information: kozzeluc@gmail.com.
  */
 package org.lh.dmlj.schema.editor.property.ui;
+
+import java.util.stream.IntStream;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -36,123 +38,42 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.AreaSpecification;
-import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.Schema;
-import org.lh.dmlj.schema.SchemaArea;
-import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class AreaDialog extends Dialog {
-
-	public enum Action 
-		{KEEP_IN_CURRENT_AREA, MOVE_TO_NEW_AREA, MOVE_TO_OTHER_EXISTING_AREA, RENAME_AREA};
+	public enum Action { KEEP_IN_CURRENT_AREA, MOVE_TO_NEW_AREA, MOVE_TO_OTHER_EXISTING_AREA, RENAME_AREA }
 	
-	private Action 			  action;
-	private String			  areaName;
+	private Action action;
+	private String areaName;
 	private AreaSpecification areaSpecification;
-	private Button 			  btnNewArea;
-	private Button 			  btnOffset;
-	private Button 			  btnRenameArea;
-	private Button 			  btnSelectArea;
-	private Button 			  btnSymbolicSubarea;
-	private Combo 			  comboExistingArea;
-	private Combo 			  comboOffsetUnits;
-	private Combo 			  comboSizeUnits;
-	private Integer			  offsetPageCount;
-	private Short 			  offsetPercent;
-	private Integer 		  pageCount;
-	private Short 			  percent;
-	private Schema 		      schema;
-	private String			  symbolicSubareaName;
-	private Text 			  textNewArea;
-	private Text 			  textOffset;
-	private Text 			  textRenameArea;
-	private Text 			  textSize;
-	private Text 			  textSymbolicSubarea;	
-	
-	/**
-	 * Create the dialog.
-	 * @param parentShell
-	 */
+	private Button btnNewArea;
+	private Button btnOffset;
+	private Button btnRenameArea;
+	private Button btnSelectArea;
+	private Button btnSymbolicSubarea;
+	private Combo comboExistingArea;
+	private Combo comboOffsetUnits;
+	private Combo comboSizeUnits;
+	private Integer	offsetPageCount;
+	private Short offsetPercent;
+	private Integer pageCount;
+	private Short percent;
+	private Schema schema;
+	private String symbolicSubareaName;
+	private Text textNewArea;
+	private Text textOffset;
+	private Text textRenameArea;
+	private Text textSize;
+	private Text textSymbolicSubarea;	
+		
 	public AreaDialog(Shell parentShell, AreaSpecification areaSpecification) {
 		super(parentShell);
 		this.areaSpecification = areaSpecification;
 		schema = areaSpecification.getArea().getSchema();
 		setShellStyle(getShellStyle() | SWT.RESIZE); 
-	}
-
-	private boolean anythingChanged() {
-		
-		if (!getAreaNameFromUI().equals(areaSpecification.getArea().getName())) {
-			return true;
-		}
-		
-		String oldSymbolicSubareaName = 
-			areaSpecification.getSymbolicSubareaName();
-		String newSymbolicSubareaName = getSymbolicSubareaNameFromUI();
-		
-		// symbolic subarea
-		if (oldSymbolicSubareaName != null &&
-			!oldSymbolicSubareaName.equals(newSymbolicSubareaName) ||
-			newSymbolicSubareaName != null &&
-			!newSymbolicSubareaName.equals(oldSymbolicSubareaName)) {
-			
-			return true;
-		}
-		
-		// get the current offset expression, if any
-		OffsetExpression offsetExpression = 
-			areaSpecification.getOffsetExpression();
-		
-		// offset page count
-		Integer oldOffsetPageCount = offsetExpression == null ? null :
-			offsetExpression.getOffsetPageCount();
-		Integer newOffsetPageCount = getOffsetPageCountFromUI();
-		if (oldOffsetPageCount != null &&
-			!oldOffsetPageCount.equals(newOffsetPageCount) ||
-			newOffsetPageCount != null &&
-			!newOffsetPageCount.equals(oldOffsetPageCount)) {
-				
-			return true;
-		}
-		
-		// offset percent
-		Short oldOffsetPercent = offsetExpression == null ? null :
-			offsetExpression.getOffsetPercent();
-		Short newOffsetPercent = getOffsetPercentFromUI();
-		if (oldOffsetPercent != null && 
-			!oldOffsetPercent.equals(newOffsetPercent) ||
-			newOffsetPercent != null &&
-			!newOffsetPercent.equals(oldOffsetPercent)) {
-				
-			return true;
-		}
-		
-		// page count
-		Integer oldPageCount = offsetExpression == null ? null :
-			offsetExpression.getPageCount();
-		Integer newPageCount = getPageCountFromUI();
-		if (oldPageCount != null && !oldPageCount.equals(newPageCount) ||
-			newPageCount != null && !newPageCount.equals(oldPageCount)) {
-				
-			return true;
-		}
-		
-		// percent
-		Short oldPercent = offsetExpression == null ? null :
-			offsetExpression.getPercent();
-		Short newPercent = getPercentFromUI();
-		if (oldPercent != null && !oldPercent.equals(newPercent) ||
-			newPercent != null && !newPercent.equals(oldPercent)) {
-				
-			return true;
-		}
-		
-		// nothing has changed
-		return false;
-		
 	}
 	
 	@Override
@@ -162,20 +83,13 @@ public class AreaDialog extends Dialog {
 		if (areaSpecification.getRecord() != null) {
 			p = "record " + areaSpecification.getRecord().getName();
 		} else if (areaSpecification.getSystemOwner() != null) {
-			p = "system owner of set " + areaSpecification.getSystemOwner()
-														  .getSet()
-														  .getName();
+			p = "system owner of set " + areaSpecification.getSystemOwner().getSet().getName();
 		} else {
-			String message = "logic error: neither record nor system owner";
-			throw new RuntimeException(message);
+			throw new IllegalStateException("logic error: neither record nor system owner");
 		}
 	    shell.setText("Edit area specification for " + p);	    
 	}	
-	
-	/**
-	 * Create contents of the button bar.
-	 * @param parent
-	 */
+		
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
@@ -184,15 +98,11 @@ public class AreaDialog extends Dialog {
 				IDialogConstants.CANCEL_LABEL, false);
 		enableAndDisable();
 	}
-
-	/**
-	 * Create contents of the dialog.
-	 * @param parent
-	 */
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
-		GridLayout gridLayout = (GridLayout) container.getLayout();
+		var container = (Composite) super.createDialogArea(parent);
+		var gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 2;
 		
 		btnSelectArea = new Button(container, SWT.RADIO);
@@ -205,9 +115,9 @@ public class AreaDialog extends Dialog {
 		btnSelectArea.setText("Area :");
 		
 		comboExistingArea = new Combo(container, SWT.READ_ONLY);
-		GridData gd_comboExistingArea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_comboExistingArea.widthHint = 150;
-		comboExistingArea.setLayoutData(gd_comboExistingArea);
+		var gdComboExistingArea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gdComboExistingArea.widthHint = 150;
+		comboExistingArea.setLayoutData(gdComboExistingArea);
 		
 		btnNewArea = new Button(container, SWT.RADIO);
 		btnNewArea.addSelectionListener(new SelectionAdapter() {
@@ -220,9 +130,9 @@ public class AreaDialog extends Dialog {
 		
 		textNewArea = new Text(container, SWT.BORDER);
 		textNewArea.setEnabled(false);
-		GridData gd_textNewArea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_textNewArea.widthHint = 150;
-		textNewArea.setLayoutData(gd_textNewArea);
+		var gdTextNewArea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gdTextNewArea.widthHint = 150;
+		textNewArea.setLayoutData(gdTextNewArea);
 		
 		btnRenameArea = new Button(container, SWT.RADIO);
 		btnRenameArea.addSelectionListener(new SelectionAdapter() {
@@ -235,14 +145,14 @@ public class AreaDialog extends Dialog {
 		
 		textRenameArea = new Text(container, SWT.BORDER);
 		textRenameArea.setEnabled(false);
-		GridData gd_textRenameArea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_textRenameArea.widthHint = 150;
-		textRenameArea.setLayoutData(gd_textRenameArea);		
+		var gdTextRenameArea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gdTextRenameArea.widthHint = 150;
+		textRenameArea.setLayoutData(gdTextRenameArea);		
 		
-		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
+		var label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		
-		Composite composite = new Composite(container, SWT.NONE);
+		var composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(6, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
@@ -256,9 +166,9 @@ public class AreaDialog extends Dialog {
 		btnSymbolicSubarea.setText("Subarea :");
 		
 		textSymbolicSubarea = new Text(composite, SWT.BORDER);
-		GridData gd_textSymbolicSubarea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 5, 1);
-		gd_textSymbolicSubarea.widthHint = 150;
-		textSymbolicSubarea.setLayoutData(gd_textSymbolicSubarea);
+		var gdTextSymbolicSubarea = new GridData(SWT.LEFT, SWT.CENTER, true, false, 5, 1);
+		gdTextSymbolicSubarea.widthHint = 150;
+		textSymbolicSubarea.setLayoutData(gdTextSymbolicSubarea);
 		
 		btnOffset = new Button(composite, SWT.RADIO);
 		btnOffset.addSelectionListener(new SelectionAdapter() {
@@ -271,31 +181,31 @@ public class AreaDialog extends Dialog {
 		
 		textOffset = new Text(composite, SWT.BORDER | SWT.RIGHT);
 		textOffset.setText("0");
-		GridData gd_textOffset = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textOffset.widthHint = 50;
-		textOffset.setLayoutData(gd_textOffset);
+		var gdTextOffset = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdTextOffset.widthHint = 50;
+		textOffset.setLayoutData(gdTextOffset);
 		
 		comboOffsetUnits = new Combo(composite, SWT.READ_ONLY);
-		GridData gd_comboOffsetUnits = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboOffsetUnits.widthHint = 100;
-		comboOffsetUnits.setLayoutData(gd_comboOffsetUnits);
+		var gdComboOffsetUnits = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdComboOffsetUnits.widthHint = 100;
+		comboOffsetUnits.setLayoutData(gdComboOffsetUnits);
 		
-		Label lblNewLabel = new Label(composite, SWT.CENTER);
-		GridData gd_lblNewLabel = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
-		gd_lblNewLabel.widthHint = 25;
-		lblNewLabel.setLayoutData(gd_lblNewLabel);
+		var lblNewLabel = new Label(composite, SWT.CENTER);
+		var gdLblNewLabel = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
+		gdLblNewLabel.widthHint = 25;
+		lblNewLabel.setLayoutData(gdLblNewLabel);
 		lblNewLabel.setText("for");
 		
 		textSize = new Text(composite, SWT.BORDER | SWT.RIGHT);
 		textSize.setText("100");
-		GridData gd_textSize = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textSize.widthHint = 50;
-		textSize.setLayoutData(gd_textSize);
+		var gdTextSize = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdTextSize.widthHint = 50;
+		textSize.setLayoutData(gdTextSize);
 		
 		comboSizeUnits = new Combo(composite, SWT.READ_ONLY);
-		GridData gd_comboSizeUnits = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboSizeUnits.widthHint = 100;
-		comboSizeUnits.setLayoutData(gd_comboSizeUnits);
+		var gdComboSizeUnits = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdComboSizeUnits.widthHint = 100;
+		comboSizeUnits.setLayoutData(gdComboSizeUnits);
 
 		comboOffsetUnits.add("pages");
 		comboOffsetUnits.add("percent");
@@ -311,231 +221,116 @@ public class AreaDialog extends Dialog {
 				enableAndDisable();				
 			}
 		});
-		
 		textNewArea.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				enableAndDisable();				
 			}
 		});
-		
 		textNewArea.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {								
-				Point selection = textNewArea.getSelection();
-				String p = textNewArea.getText().toUpperCase();
+				var selection = textNewArea.getSelection();
+				var p = textNewArea.getText().toUpperCase();
 				textNewArea.setText(p);
 				textNewArea.setSelection(selection);
 				enableAndDisable();				
 			}
 		});
-		
 		textRenameArea.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				enableAndDisable();				
 			}
 		});
-		
 		textRenameArea.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {				
-				Point selection = textRenameArea.getSelection();
-				String p = textRenameArea.getText().toUpperCase();
+				var selection = textRenameArea.getSelection();
+				var p = textRenameArea.getText().toUpperCase();
 				textRenameArea.setText(p);
 				textRenameArea.setSelection(selection);
 				enableAndDisable();
 			}
 		});
-		
 		textSymbolicSubarea.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				enableAndDisable();				
 			}
 		});
-		
 		textSymbolicSubarea.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {				
-				if (e.keyCode == 13 || 		 // enter-key
-					e.keyCode == 16777296 || // enter-key								
-					e.keyCode == SWT.ESC) {	
-					
-					String p = textSymbolicSubarea.getText().toUpperCase();
+				if (e.keyCode == 13 || e.keyCode == 16777296 || e.keyCode == SWT.ESC) { // enter + escape keys
+					var p = textSymbolicSubarea.getText().toUpperCase();
 					textSymbolicSubarea.setText(p);
 					textSymbolicSubarea.setSelection(p.length());
 					enableAndDisable();					
 				}
 			}
 		});
-		
 		textOffset.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				enableAndDisable();				
 			}
 		});
-		
 		textOffset.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {				
-				if (e.keyCode == 13 || 		 // enter-key
-					e.keyCode == 16777296 || // enter-key								
-					e.keyCode == SWT.ESC) {	
-					
+				if (e.keyCode == 13 || e.keyCode == 16777296 || e.keyCode == SWT.ESC) { // enter + escape keys
 					enableAndDisable();					
 				}
 			}
 		});
-		
 		comboOffsetUnits.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				enableAndDisable();				
 			}
 		});
-		
 		textSize.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				enableAndDisable();				
 			}
 		});
-		
 		textSize.addKeyListener(new KeyAdapter() {			
 			@Override
 			public void keyReleased(KeyEvent e) {				
-				if (e.keyCode == 13 || 		 // enter-key
-					e.keyCode == 16777296 || // enter-key								
-					e.keyCode == SWT.ESC) {	
-					
+				if (e.keyCode == 13 || e.keyCode == 16777296 || e.keyCode == SWT.ESC) { // enter + escape keys
 					enableAndDisable();					
 				}
 			}
-		});		
-
+		});
 		comboSizeUnits.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				enableAndDisable();				
 			}
-		});		
-		
+		});
 		initialize();
-		
 		return container;
 	}
 
-	private void enableAndDisable() {		
-		
+	private void enableAndDisable() {
 		comboExistingArea.setEnabled(btnSelectArea.getSelection());
 		textNewArea.setEnabled(btnNewArea.getSelection());
 		textRenameArea.setEnabled(btnRenameArea.getSelection());
-		
-		// OK button 
-		Button okButton = getButton(IDialogConstants.OK_ID);		
-		boolean enabled1 = false;
-		
-		// check the area name in the case of a new or renamed area; the area 
-		// must not already exist
-		if (btnSelectArea.getSelection()) {
-			enabled1 = true;
-		} else if (btnNewArea.getSelection()) {
-			// new area
-			String areaName = textNewArea.getText().trim();
-			ValidationResult validationResult = 
-				NamingConventions.validate(areaName, 
-									   	   NamingConventions.Type
-									   	   					.LOGICAL_AREA_NAME);
-			if (validationResult.getStatus() == ValidationResult.Status.OK &&
-				schema.getArea(areaName) == null) {			
-				
-				enabled1 = true;
-			}
-		} else if (btnRenameArea.getSelection()) {
-			// area to be renamed
-			String areaName = textRenameArea.getText().trim();
-			ValidationResult validationResult = 
-				NamingConventions.validate(areaName, 
-									   	   NamingConventions.Type
-									   	   					.LOGICAL_AREA_NAME);
-			if (validationResult.getStatus() == ValidationResult.Status.OK &&
-				schema.getArea(areaName) == null) {			
-					
-				enabled1 = true;
-			}
-		}
-		
 		textSymbolicSubarea.setEnabled(btnSymbolicSubarea.getSelection());
-		
 		textOffset.setEnabled(btnOffset.getSelection());
 		comboOffsetUnits.setEnabled(btnOffset.getSelection());
 		textSize.setEnabled(btnOffset.getSelection());
-		comboSizeUnits.setEnabled(btnOffset.getSelection());		
-		
-		boolean enabled2 = false;
-		if (btnSymbolicSubarea.getSelection()) {
-			// symbolic subarea selected
-			String symbolicSubareaName = textSymbolicSubarea.getText();
-			ValidationResult validationResult = 
-				NamingConventions.validate(symbolicSubareaName, 
-										   NamingConventions.Type.SYMBOLIC_DISPLACEMENT);
-			if (validationResult.getStatus() == ValidationResult.Status.OK) {
-				enabled2 = true;
-			}			
-		} else {
-			// page count or percentage specified
-			try {
-				boolean b1 = false;			
-				if (comboOffsetUnits.getSelectionIndex() == 0) {
-					// pages; must be >= 0
-					int offsetPageCount = 
-						Integer.valueOf(textOffset.getText().trim()).intValue();
-					if (offsetPageCount > -1) {
-						b1 = true;
-					}
-				} else {
-					// percent; range: 0-100
-					short percent = 
-						Short.valueOf(textOffset.getText().trim()).shortValue();
-					if (percent > -1 && percent <= 100) {
-						b1 = true;
-					}
-				}
-				boolean b2 = false;	
-				if (comboSizeUnits.getSelectionIndex() == 0) {
-					// pages; must be >= 1
-					int offsetPages = 
-						Integer.valueOf(textSize.getText().trim()).intValue();
-					if (offsetPages > 0) {
-						b2 = true;
-					}
-				} else {
-					// percent; range: 1-100
-					short percent = 
-						Short.valueOf(textSize.getText().trim()).shortValue();
-					if (percent > 0 && percent <= 100) {
-						b2 = true;
-					}
-				}
-				enabled2 = b1 && b2;
-			} catch (NumberFormatException e) {				
-			}
-		}		
-		
-		boolean enabled = enabled1 && enabled2;
-		if (enabled) {
-			enabled = anythingChanged();
-		}
-		okButton.setEnabled(enabled);
-		
-		if (!enabled) {
+		comboSizeUnits.setEnabled(btnOffset.getSelection());
+				
+		var okButton = getButton(IDialogConstants.OK_ID);
+		okButton.setEnabled(checkAreaNameInCaseOfNewOrRenamedArea() && checkSymbolicsAndOtherData() && anythingChanged());
+		if (!okButton.isEnabled()) {
 			return;
 		}
 		
-		// make sure we've got all information available should the user press
-		// the OK button	
+		// make sure we've got all information available should the user press the OK button
 		action = getActionFromUI();
 		areaName = getAreaNameFromUI();		
 				
@@ -544,7 +339,107 @@ public class AreaDialog extends Dialog {
 		offsetPercent = getOffsetPercentFromUI();
 		pageCount = getPageCountFromUI();
 		percent = getPercentFromUI();
+	}
+	
+	private boolean checkAreaNameInCaseOfNewOrRenamedArea() {
+		// check the area name in the case of a new or renamed area; the area must not already exist
+		if (btnSelectArea.getSelection()) {
+			return true;
+		} else if (btnNewArea.getSelection()) {
+			var newAreaName = textNewArea.getText().trim();
+			var validationResult = NamingConventions.validate(newAreaName, NamingConventions.Type.LOGICAL_AREA_NAME);
+			if (validationResult.getStatus() == ValidationResult.Status.OK && schema.getArea(newAreaName) == null) {
+				return true;
+			}
+		} else if (btnRenameArea.getSelection()) {
+			var renamedAreaName = textRenameArea.getText().trim();
+			var validationResult = NamingConventions.validate(renamedAreaName, NamingConventions.Type.LOGICAL_AREA_NAME);
+			if (validationResult.getStatus() == ValidationResult.Status.OK && schema.getArea(renamedAreaName) == null) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean checkSymbolicsAndOtherData() {
+		if (btnSymbolicSubarea.getSelection()) {
+			var validationResult = NamingConventions.validate(textSymbolicSubarea.getText(), NamingConventions.Type.SYMBOLIC_DISPLACEMENT);
+			return validationResult.getStatus() == ValidationResult.Status.OK;
+		} else {
+			// page count or percentage specified
+			try {
+				boolean b1;			
+				if (comboOffsetUnits.getSelectionIndex() == 0) {
+					// pages; must be >= 0
+					var enteredOffsetPageCount = Integer.parseInt(textOffset.getText().trim());
+					b1 = enteredOffsetPageCount > -1;
+				} else {
+					// percent; range: 0-100
+					var enteredPercent = Short.parseShort(textOffset.getText().trim());
+					b1 = enteredPercent > -1 && enteredPercent <= 100;
+				}
+				boolean b2;
+				if (comboSizeUnits.getSelectionIndex() == 0) {
+					// pages; must be >= 1
+					var enteredOffsetPages = Integer.parseInt(textSize.getText().trim());
+					b2 = enteredOffsetPages > 0;
+				} else {
+					// percent; range: 1-100
+					var enteredPercent = Short.parseShort(textSize.getText().trim());
+					b2 = enteredPercent > 0 && enteredPercent <= 100;
+				}
+				return b1 && b2;
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+	}
+	
+	private boolean anythingChanged() {
+		return areaNameChanged() || symbolicSubareaNameChanged() || offsetPageCountChanged() ||
+			   offsetPercentChanged() || pageCountChanged() || percentChanged();		
+	}
+	
+	private boolean areaNameChanged() {
+		return !getAreaNameFromUI().equals(areaSpecification.getArea().getName());
+	}
+	
+	private boolean symbolicSubareaNameChanged() {
+		var oldSymbolicSubareaName = areaSpecification.getSymbolicSubareaName();
+		var newSymbolicSubareaName = getSymbolicSubareaNameFromUI();
+		return oldSymbolicSubareaName != null && !oldSymbolicSubareaName.equals(newSymbolicSubareaName) ||
+			   newSymbolicSubareaName != null && !newSymbolicSubareaName.equals(oldSymbolicSubareaName);		
+	}
+	
+	private boolean offsetPageCountChanged() {
+		var oldOffsetExpression = areaSpecification.getOffsetExpression();
+		var oldOffsetPageCount = oldOffsetExpression == null ? null : oldOffsetExpression.getOffsetPageCount();
+		var newOffsetPageCount = getOffsetPageCountFromUI();
+		return oldOffsetPageCount != null && !oldOffsetPageCount.equals(newOffsetPageCount) ||
+			   newOffsetPageCount != null && !newOffsetPageCount.equals(oldOffsetPageCount);
 		
+	}
+	
+	private boolean offsetPercentChanged() {
+		var oldOffsetExpression = areaSpecification.getOffsetExpression();
+		var oldOffsetPercent = oldOffsetExpression == null ? null : oldOffsetExpression.getOffsetPercent();
+		var newOffsetPercent = getOffsetPercentFromUI();
+		return oldOffsetPercent != null && !oldOffsetPercent.equals(newOffsetPercent) ||
+			   newOffsetPercent != null && !newOffsetPercent.equals(oldOffsetPercent);
+	}
+	
+	private boolean pageCountChanged() {
+		var oldOffsetExpression = areaSpecification.getOffsetExpression();
+		var oldPageCount = oldOffsetExpression == null ? null : oldOffsetExpression.getPageCount();
+		var newPageCount = getPageCountFromUI();
+		return oldPageCount != null && !oldPageCount.equals(newPageCount) || newPageCount != null && !newPageCount.equals(oldPageCount);
+	}
+	
+	private boolean percentChanged() {
+		var oldOffsetExpression = areaSpecification.getOffsetExpression();
+		var oldPercent = oldOffsetExpression == null ? null : oldOffsetExpression.getPercent();
+		var newPercent = getPercentFromUI();
+		return oldPercent != null && !oldPercent.equals(newPercent) || newPercent != null && !newPercent.equals(oldPercent);
 	}
 	
 	public Action getAction() {
@@ -553,8 +448,7 @@ public class AreaDialog extends Dialog {
 
 	private Action getActionFromUI() {
 		if (btnSelectArea.getSelection()) {
-			String areaName = areaSpecification.getArea().getName();
-			if (comboExistingArea.getText().equals(areaName)) {
+			if (comboExistingArea.getText().equals(areaSpecification.getArea().getName())) {
 				return Action.KEEP_IN_CURRENT_AREA;
 			} else {
 				return Action.MOVE_TO_OTHER_EXISTING_AREA;
@@ -572,18 +466,14 @@ public class AreaDialog extends Dialog {
 
 	private String getAreaNameFromUI() {
 		if (btnSelectArea.getSelection()) {
-			int i = comboExistingArea.getSelectionIndex();
-			return comboExistingArea.getItem(i);
+			return comboExistingArea.getItem(comboExistingArea.getSelectionIndex());
 		} else if (btnNewArea.getSelection()) {
 			return textNewArea.getText().trim();
 		} else {
 			return textRenameArea.getText().trim();
 		}
 	}
-
-	/**
-	 * Return the initial size of the dialog.
-	 */
+	
 	@Override
 	protected Point getInitialSize() {
 		return new Point(500, 300);
@@ -594,10 +484,7 @@ public class AreaDialog extends Dialog {
 	}
 
 	private Integer	getOffsetPageCountFromUI() {
-		if (btnOffset.getSelection() && 
-			comboOffsetUnits.getSelectionIndex() == 0 &&
-			!textOffset.getText().trim().equals("")) {
-			
+		if (btnOffset.getSelection() && comboOffsetUnits.getSelectionIndex() == 0 && !textOffset.getText().trim().equals("")) {
 			return Integer.valueOf(textOffset.getText());
 		} else {
 			return null;
@@ -609,10 +496,7 @@ public class AreaDialog extends Dialog {
 	}
 
 	private Short getOffsetPercentFromUI() {
-		if (btnOffset.getSelection() && 
-			comboOffsetUnits.getSelectionIndex() == 1 &&
-			!textOffset.getText().trim().equals("")) {
-			
+		if (btnOffset.getSelection() && comboOffsetUnits.getSelectionIndex() == 1 && !textOffset.getText().trim().equals("")) {
 			return Short.valueOf(textOffset.getText());
 		} else {
 			return null;
@@ -624,10 +508,7 @@ public class AreaDialog extends Dialog {
 	}
 
 	private Integer	getPageCountFromUI() {
-		if (btnOffset.getSelection() && 
-			comboSizeUnits.getSelectionIndex() == 0 &&
-			!textSize.getText().trim().equals("")) {
-			
+		if (btnOffset.getSelection() && comboSizeUnits.getSelectionIndex() == 0 && !textSize.getText().trim().equals("")) {
 			return Integer.valueOf(textSize.getText());
 		} else {
 			return null;
@@ -639,10 +520,7 @@ public class AreaDialog extends Dialog {
 	}
 
 	private Short getPercentFromUI() {
-		if (btnOffset.getSelection() && 
-			comboSizeUnits.getSelectionIndex() == 1 &&
-			!textSize.getText().trim().equals("")) {
-			
+		if (btnOffset.getSelection() && comboSizeUnits.getSelectionIndex() == 1 && !textSize.getText().trim().equals("")) {
 			return Short.valueOf(textSize.getText());
 		} else {
 			return null;
@@ -662,30 +540,8 @@ public class AreaDialog extends Dialog {
 	}
 	
 	private void initialize() {
-		
-		// fill the list of area names and select the current area - the 'Area' radio button is 
-		// initially selected
-		for (SchemaArea area : schema.getAreas()) {
-			// make sure the user cannot mix VSAM and non-VSAM items in an area
-			SchemaRecord record = areaSpecification.getRecord();
-			if (record != null) {
-				if (Tools.areaMixesWithRecord(area, record)) {				
-					comboExistingArea.add(area.getName());	
-				}
-			} else if (Tools.canHoldSystemOwners(area)) {
-				comboExistingArea.add(area.getName());				
-			}
-		}
-		String areaName = areaSpecification.getArea().getName();
-		for (int i = 0; i < comboExistingArea.getItemCount(); i++) {
-			if (comboExistingArea.getItem(i).equals(areaName)) {
-				comboExistingArea.select(i);
-				break;
-			}
-		}
-		// copy the area name to the rename area text control
-		textRenameArea.setText(areaName);
-		
+		initializeComboExistingArea();
+		textRenameArea.setText(areaSpecification.getArea().getName());
 		if (areaSpecification.getSymbolicSubareaName() != null) {
 			btnSymbolicSubarea.setSelection(true);
 			textSymbolicSubarea.setText(areaSpecification.getSymbolicSubareaName());			
@@ -695,33 +551,44 @@ public class AreaDialog extends Dialog {
 			comboSizeUnits.setEnabled(false);			
 		} else {
 			btnOffset.setSelection(true);
-			OffsetExpression offsetExpression = 
-				areaSpecification.getOffsetExpression();
+			var offsetExpression = areaSpecification.getOffsetExpression();
 			if (offsetExpression != null) {
 				if (offsetExpression.getOffsetPageCount() != null) {
-					int offsetPageCount = 
-						offsetExpression.getOffsetPageCount().intValue();
-					textOffset.setText(String.valueOf(offsetPageCount));
+					textOffset.setText(String.valueOf(offsetExpression.getOffsetPageCount().intValue()));
 					comboOffsetUnits.select(0);
 				} else if (offsetExpression.getOffsetPercent() != null) {
-					short offsetPercent = 
-						offsetExpression.getOffsetPercent().shortValue();
-					textOffset.setText(String.valueOf(offsetPercent));
+					textOffset.setText(String.valueOf(offsetExpression.getOffsetPercent().shortValue()));
 					comboOffsetUnits.select(1);
 				}
 				if (offsetExpression.getPageCount() != null) {
-					int pageCount = offsetExpression.getPageCount().intValue();
-					textSize.setText(String.valueOf(pageCount));
+					textSize.setText(String.valueOf(offsetExpression.getPageCount().intValue()));
 					comboSizeUnits.select(0);
 				} else if (offsetExpression.getPercent() != null) {
-					short percent = offsetExpression.getPercent().shortValue();
-					textSize.setText(String.valueOf(percent));
+					textSize.setText(String.valueOf(offsetExpression.getPercent().shortValue()));
 					comboSizeUnits.select(1);
 				}
 			}
 			textSymbolicSubarea.setEnabled(false);
 		}
-		
+	}
+	
+	private void initializeComboExistingArea() {
+		// fill the list of area names and select the current area - the 'Area' radio button is initially selected
+		for (var area : schema.getAreas()) {
+			// make sure the user cannot mix VSAM and non-VSAM items in an area
+			var schemaRecord = areaSpecification.getRecord();
+			if (schemaRecord != null) {
+				if (Tools.areaMixesWithRecord(area, schemaRecord)) {				
+					comboExistingArea.add(area.getName());	
+				}
+			} else if (Tools.canHoldSystemOwners(area)) {
+				comboExistingArea.add(area.getName());				
+			}
+		}
+		IntStream.range(0, comboExistingArea.getItemCount())
+			.filter(i -> comboExistingArea.getItem(i).equals(areaSpecification.getArea().getName()))
+			.limit(1L)
+			.forEach(comboExistingArea::select);
 	}
 	
 	public EnteredData getEnteredData() {
