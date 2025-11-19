@@ -48,43 +48,22 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 	
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
-	private String   description;
-	private Label 	 lblPdfExtractorServiceDescription;
-	private Label    lblTitle;
-	private String 	 licensedProductName;
-	private String 	 licensedProductVersion;
-	private String 	 licenseName;
-	private String 	 licenseText;
-	private Link 	 linkLicense;
-	private String   manualType;
+	private final String manualType;
+	private final String description;
+	private Label lblTitle;
+	private String licenseName;
+	private String licenseText;
 	private String[] manualTypeTokens;
-	private Text     textDescription;
-	private Text     textFile;	
+	private Text textFile;	
 	
-	private static String getTitle(final File file) {				
-		
-		// declare an array to hold the title and release information
-		final String[] title = new String[1];		
-		
-		// create a Runnable so that we can show the busy pointer as parsing the
-		// .pdf file can sometimes take a few seconds
-		Runnable runnable = new Runnable() {
-			public void run() {		
-				title[0] = DictguidesRegistry.getInstance().getDocumentTitle(file);							
-			}
-		};
-		
-		// go parse the .pdf document while showing the busy cursor
-		BusyIndicator.showWhile(Display.getCurrent(), runnable);		
-		
-		// return the title, combined with the release information if available
+	private static String getTitle(File file) {
+		var title = new String[1];
+		// go parse the .pdf document to get the title combined with the release information if available while
+		// showing the busy cursor
+		BusyIndicator.showWhile(Display.getCurrent(), () -> title[0] = DictguidesRegistry.getInstance().getDocumentTitle(file));
 		return title[0];
-		
 	}	
-	
-	/**
-	 * Create the wizard.
-	 */
+		
 	public DictguidesPdfSelectionPage(String manualType, String description) {
 		super("wizardPage");
 		this.manualType = manualType;
@@ -93,31 +72,27 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		setMessage("Select the .pdf file containing the " + manualType);
 		setTitle("CA IDMS/DB Dictionary Structure and SQL Reference Guides");		
 	}
-
-	/**
-	 * Create contents of the wizard.
-	 * @param parent
-	 */
+	
 	public void createControl(Composite parent) {
-		final Composite container = new Composite(parent, SWT.NULL);
+		var container = new Composite(parent, SWT.NULL);
 
 		setControl(container);
 		container.setLayout(new GridLayout(3, false));
 		
-		Label lblpdfFile = new Label(container, SWT.NONE);
+		var lblpdfFile = new Label(container, SWT.NONE);
 		lblpdfFile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblpdfFile.setText(".pdf File :");
 		
 		textFile = new Text(container, SWT.BORDER | SWT.READ_ONLY);
 		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Button btnBrowse = new Button(container, SWT.NONE);
+		var btnBrowse = new Button(container, SWT.NONE);
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(container.getShell());
+				var fileDialog = new FileDialog(container.getShell());
 				fileDialog.setFileName(textFile.getText());
-				String newValue = fileDialog.open();							
+				var newValue = fileDialog.open();							
 				if (newValue != null) {
 					textFile.setText(newValue);
 					textFile.redraw();
@@ -131,70 +106,62 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 		btnBrowse.setText("Browse...");
 		new Label(container, SWT.NONE);
 		
-		lblPdfExtractorServiceDescription = new Label(container, SWT.NONE);
+		var lblPdfExtractorServiceDescription = new Label(container, SWT.NONE);
 		lblPdfExtractorServiceDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		lblPdfExtractorServiceDescription.setText("(PDF Extractor Service description)");
 		new Label(container, SWT.NONE);
 		
-		linkLicense = new Link(container, SWT.WRAP);
+		var linkLicense = new Link(container, SWT.WRAP);
 		linkLicense.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1));
 		linkLicense.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ViewLicenseDialog dialog = 
-					new ViewLicenseDialog(Display.getCurrent().getActiveShell(), licenseName, 
-										  licenseText);
-				dialog.open();
+				new ViewLicenseDialog(Display.getCurrent().getActiveShell(), licenseName, licenseText).open();
 			}
 		});
 		new Label(container, SWT.NONE);
 		
 		lblTitle = new Label(container, SWT.NONE);
 		lblTitle.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		GridData gd_lblTitle = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-		gd_lblTitle.verticalIndent = 20;
-		lblTitle.setLayoutData(gd_lblTitle);
+		var gdLblTitle = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gdLblTitle.verticalIndent = 20;
+		lblTitle.setLayoutData(gdLblTitle);
 		new Label(container, SWT.NONE);
 		
-		textDescription = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
-		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1);
-		gd_text.verticalIndent = 20;
-		gd_text.widthHint = 300;
-		textDescription.setLayoutData(gd_text);
+		var textDescription = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		var gdText = new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1);
+		gdText.verticalIndent = 20;
+		gdText.widthHint = 300;
+		textDescription.setLayoutData(gdText);
 		textDescription.setText(description);
 		
-		IPdfExtractorService pdfExtractorService = 
-			ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
+		var pdfExtractorService = ServicesPlugin.getDefault().getService(IPdfExtractorService.class);
 		btnBrowse.setEnabled(pdfExtractorService != null);
 		
 		if (pdfExtractorService == null) {
 			setErrorMessage("PDF Extractor Service is NOT available");
 		} else {
-			licensedProductName = pdfExtractorService.getLicensedProductName();
-			licensedProductVersion = pdfExtractorService.getLicensedProductVersion();
+			var licensedProductName = pdfExtractorService.getLicensedProductName();
+			var licensedProductVersion = pdfExtractorService.getLicensedProductVersion();
 			licenseName = pdfExtractorService.getLicenseName();
 			licenseText = pdfExtractorService.getLicenseText();
 			if (licensedProductName != null) {
-				String p = "PDF content is extracted using " + licensedProductName + " version " +
-						   licensedProductVersion +".";
+				var p = "PDF content is extracted using " + licensedProductName + " version " + licensedProductVersion +".";
 				lblPdfExtractorServiceDescription.setText(p);
-				// make sure the required license is also copied in the feature project USING THE
-				// RIGHT FILE NAME
-				linkLicense.setText(licensedProductName + " version " + licensedProductVersion +
-								    " is protected by the <a>" + licenseName + 
-									"</a>.\nThis license is distributed with the CA IDMS/DB " +
-									"Schema Diagram Editor\n(this product); see the " +
-									"'" + licenseName + ".txt' file in your Eclipse\ninstallation's " +
-									"'features/org.lh.dmlj.schema.editor_x.y.z.qualifier' folder\n" +
-									"or use the above link to read this license.");
+				// make sure the required license is also copied in the feature project USING THE RIGHT FILE NAME
+				linkLicense.setText(String.format("""
+						%s version %s is protected by the <a>%s</a>.
+						This license is distributed with the CA IDMS/DB Schema Diagram Editor
+						(this product); see the '%s.txt' file in your Eclipse
+						installation's 'features/org.lh.dmlj.schema.editor_x.y.z.qualifier' folder
+						or use the above link to read this license.\
+						""", licensedProductName, licensedProductVersion, licenseName, licenseName));
 			} else {
 				lblPdfExtractorServiceDescription.setVisible(false);
 				linkLicense.setVisible(false);
 			}
 		}
-		
 		setPageComplete(false);
-		
 	}
 	
 	public File getRefGuideFile() {
@@ -211,8 +178,8 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 			
 			return true;
 		} else {
-			int i = 0;
-			for (String token : manualTypeTokens) {
+			var i = 0;
+			for (var token : manualTypeTokens) {
 				i = title.indexOf(token, i);
 				if (i < 0) {
 					return false;
@@ -223,13 +190,9 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 	}
 	
 	private boolean isVersionOK(String title) {
-		return title.equals(CA_IDMS_DICTIONARY_STRUCTURE_REFERENCE) ||
-			   title.equals(CA_IDMS_SQL_REFERENCE) ||
-			   title.endsWith(" (r16 SP2)") ||
-			   title.endsWith(" (r17)") ||
-			   title.endsWith(" (Version 18.0.00)") ||
-			   title.endsWith(" (Release 18.5.00)") ||
-			   title.endsWith(" (Release 18.5.00, 2nd Edition)");
+		return title.equals(CA_IDMS_DICTIONARY_STRUCTURE_REFERENCE) || title.equals(CA_IDMS_SQL_REFERENCE) ||
+			   title.endsWith(" (r16 SP2)") || title.endsWith(" (r17)") || title.endsWith(" (Version 18.0.00)") ||
+			   title.endsWith(" (Release 18.5.00)") || title.endsWith(" (Release 18.5.00, 2nd Edition)");
 	}
 
 	private void validatePage() {
@@ -241,16 +204,16 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 			return;
 		}
 		
-		boolean pageComplete = true;
+		var pageComplete = true;
 		
-		File file = new File(textFile.getText().trim());
+		var file = new File(textFile.getText().trim());
 		if (!file.exists()) {
 			setErrorMessage("File does not exist");
 			pageComplete = false;
 		}
 	
 		try {			
-			String title = getTitle(file);					
+			var title = getTitle(file);					
 			if (!isTitleOK(title)) {
 				setErrorMessage("Not a " + manualType);
 				pageComplete = false;
@@ -258,13 +221,11 @@ public class DictguidesPdfSelectionPage extends WizardPage {
 				setErrorMessage("The version of the manual you selected is not supported; you can try to proceed but results may be unpredictable");
 			}
 			lblTitle.setText(title);
-		} catch (Throwable t) {
-			logger.error(t.getMessage(), t);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			setErrorMessage("Not a " + manualType);
 			pageComplete = false;
 		}		
-		
 		setPageComplete(pageComplete);
-		
 	}
 }

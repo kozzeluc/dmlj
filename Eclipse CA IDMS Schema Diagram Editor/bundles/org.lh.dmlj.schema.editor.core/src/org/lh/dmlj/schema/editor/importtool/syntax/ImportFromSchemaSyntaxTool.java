@@ -249,7 +249,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		var context = (SchemaSyntaxWrapper) recordOrElementContext;
 		
 		var i = 0;
-		while (!context.getLines().get(i).substring(2).trim().equals(".")) {			
+		while (!context.getLines().get(i).substring(2).trim().equals(".")) {
 			i += 1;
 		}
 		i += 1;
@@ -267,8 +267,8 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 		var scanItem = line.substring(0, j + 3);
 		
 		var list = new ArrayList<SchemaSyntaxWrapper>();
+		SchemaSyntaxWrapper listWrapper = null;
 		for (var aLine : context.getLines()) {
-			SchemaSyntaxWrapper listWrapper = null;
 			if (aLine.startsWith(scanItem)) {
 				listWrapper = new SchemaSyntaxWrapper();
 				list.add(listWrapper);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,23 +17,15 @@
 package org.lh.dmlj.schema.editor.ui;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.lh.dmlj.schema.editor.SchemaEditor;
 
-
 public class DiagramMenuVisiblePropertyTester extends PropertyTester {
-
-	public DiagramMenuVisiblePropertyTester() {
-		super();
-	}
 
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		// it is assumed that the 'Diagram' menu is visible (only) when the active editor is an
-		// instance of our SchemaEditor
-		IEditorPart activeEditor =
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		// it is assumed that the 'Diagram' menu is visible (only) when the active editor is an instance of our SchemaEditor
+		var activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		return activeEditor instanceof SchemaEditor;
 	}
 

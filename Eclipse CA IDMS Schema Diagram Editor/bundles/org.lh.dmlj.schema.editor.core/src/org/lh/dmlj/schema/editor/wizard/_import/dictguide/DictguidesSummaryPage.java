@@ -34,18 +34,15 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 public class DictguidesSummaryPage extends WizardPage {
-	private Button  btnSetAsDefault;
-	private boolean calledFromPreferences;
+	private final boolean calledFromPreferences;
 	private boolean defaultForInfoTab;
-	private String  id;
-	private Label   lblDictrefguideTitle;
-	private Label   lblRemark;
-	private Label   lblSqlrefguideTitle;	
-	private Text    txtId;
+	private String id;
 	
-	/**
-	 * Create the wizard.
-	 */
+	private Button btnSetAsDefault;
+	private Label lblDictrefguideTitle;
+	private Label lblSqlrefguideTitle;	
+	private Text txtId;
+		
 	public DictguidesSummaryPage(boolean calledFromPreferences) {
 		super("wizardPage");
 		this.calledFromPreferences = calledFromPreferences;
@@ -53,18 +50,14 @@ public class DictguidesSummaryPage extends WizardPage {
 		setTitle("CA IDMS/DB Dictionary Structure and SQL Reference Guides");
 		setDescription("Wizard Page description");
 	}
-
-	/**
-	 * Create contents of the wizard.
-	 * @param parent
-	 */
+	
 	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
+		var container = new Composite(parent, SWT.NULL);
 
 		setControl(container);
 		container.setLayout(new GridLayout(2, false));
 		
-		Label lblName = new Label(container, SWT.NONE);
+		var lblName = new Label(container, SWT.NONE);
 		lblName.setText("Id :");
 		
 		txtId = new Text(container, SWT.BORDER);
@@ -87,16 +80,16 @@ public class DictguidesSummaryPage extends WizardPage {
 		
 		lblDictrefguideTitle = new Label(container, SWT.NONE);
 		lblDictrefguideTitle.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		GridData gd = new GridData();
+		var gd = new GridData();
 		gd.horizontalAlignment = SWT.FILL;
 		lblDictrefguideTitle.setLayoutData(gd);
 		new Label(container, SWT.NONE);
 		
 		lblSqlrefguideTitle = new Label(container, SWT.NONE);
 		lblSqlrefguideTitle.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		GridData gd_1 = new GridData();
-		gd_1.horizontalAlignment = SWT.FILL;
-		lblSqlrefguideTitle.setLayoutData(gd_1);
+		var gd1 = new GridData();
+		gd1.horizontalAlignment = SWT.FILL;
+		lblSqlrefguideTitle.setLayoutData(gd1);
 		new Label(container, SWT.NONE);
 		
 		btnSetAsDefault = new Button(container, SWT.CHECK);
@@ -107,14 +100,14 @@ public class DictguidesSummaryPage extends WizardPage {
 			}
 		});
 		btnSetAsDefault.setSelection(true);
-		GridData gd_btnSetAsDefault = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnSetAsDefault.verticalIndent = 5;
-		btnSetAsDefault.setLayoutData(gd_btnSetAsDefault);
+		var gdBtnSetAsDefault = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdBtnSetAsDefault.verticalIndent = 5;
+		btnSetAsDefault.setLayoutData(gdBtnSetAsDefault);
 		btnSetAsDefault.setText("Use this combination in the \"Info\" tab (Properties view) for dictionary related record types");
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		
-		lblRemark = new Label(container, SWT.NONE);
+		var lblRemark = new Label(container, SWT.NONE);
 		lblRemark.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true, 2, 1));
 		lblRemark.setText("Please note :  You can manage reference guide combinations in this plug-in's preferences.");
 		
@@ -123,7 +116,6 @@ public class DictguidesSummaryPage extends WizardPage {
 		lblRemark.setVisible(!calledFromPreferences);		
 		
 		setPageComplete(false);
-		
 	}
 	
 	public String getId() {
@@ -143,32 +135,25 @@ public class DictguidesSummaryPage extends WizardPage {
 	}
 	
 	private void validatePage() {
-		
 		setErrorMessage(null);
 		
-		if (txtId.getText().trim().equals("")) {
+		if (txtId.getText().isBlank()) {
 			return;
 		}
 		
-		boolean pageComplete = true;
-		
+		var pageComplete = true;
 		if (!DictguidesRegistry.getInstance().isValid(txtId.getText().trim())) {
-			setErrorMessage("Id can contain only letters, digits, spaces, " +
-						    "hyphens, underscores and periods");
+			setErrorMessage("Id can contain only letters, digits, spaces, hyphens, underscores and periods");
 			pageComplete = false;
 		} else if (DictguidesRegistry.getInstance().entryExists(txtId.getText().trim())) {
 			setErrorMessage("Id is already in use");
 			pageComplete = false;
 		}
-		
 		if (pageComplete) {
 			id = txtId.getText().trim();
 			defaultForInfoTab = btnSetAsDefault.getSelection();
-			
 		}
-		
 		setPageComplete(pageComplete);
-		
 	}
 	
 }

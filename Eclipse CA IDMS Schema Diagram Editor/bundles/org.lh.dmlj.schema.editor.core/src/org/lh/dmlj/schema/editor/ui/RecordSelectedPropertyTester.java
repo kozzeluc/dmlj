@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,37 +18,22 @@ package org.lh.dmlj.schema.editor.ui;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.gef.EditPart;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 import org.lh.dmlj.schema.SchemaRecord;
 
 public class RecordSelectedPropertyTester extends PropertyTester {
 
-	public RecordSelectedPropertyTester() {
-		super();
-	}
-
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		ISelection selection;
+		
 		try {
-			selection = PlatformUI.getWorkbench()
-			 					  .getActiveWorkbenchWindow()
-					 			  .getSelectionService()
-					 			  .getSelection();
-		} catch (Throwable t) {
+			var selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+			return !selection.isEmpty() && selection instanceof IStructuredSelection structuredSelection &&
+				   structuredSelection.getFirstElement() instanceof EditPart editPart && editPart.getModel() instanceof SchemaRecord;
+		} catch (Exception e) {
 			return false;
 		}
-		if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
-			return false;
-		}
-		IStructuredSelection ss = (IStructuredSelection) selection;
-		if (!(ss.getFirstElement() instanceof EditPart)) {
-			return false;
-		}
-		EditPart editPart = (EditPart) ss.getFirstElement();
-		return editPart.getModel() instanceof SchemaRecord;
 	}
 
 }
