@@ -710,7 +710,6 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		List<Pointer> pointers = PrefixUtil.getPointersForRecord(record);
 		EList<Pointer> newPointerOrder = new BasicEList<Pointer>();
 		for (int i = 0; i < 16; i++) {
-			@SuppressWarnings("unchecked")
 			Pointer pointer = mock(Pointer.class);
 			when(pointer.getCurrentPositionInPrefix()).thenReturn(pointers.get(i).getCurrentPositionInPrefix());
 			when(pointer.getRole()).thenReturn(pointers.get(i).getRole());
@@ -736,7 +735,6 @@ public class PrefixFactoryTest extends AbstractPointerOrPrefixRelatedTestCase {
 		List<Pointer> pointers = PrefixUtil.getPointersForRecord(record);
 		EList<Pointer> newPointerOrder = new BasicEList<Pointer>();
 		for (int i = 0; i < 16; i++) {
-			@SuppressWarnings("unchecked")
 			Pointer pointer = mock(Pointer.class);
 			if (i == 15) {
 				when(pointer.getCurrentPositionInPrefix()).thenReturn((short) 8180);					

@@ -42,7 +42,7 @@ public class AbstractSchemaTreeEditPartTest {
 	@Before
 	public void setup() {
 		
-		MockitoAnnotations.initMocks(this);
+		MockitoAnnotations.openMocks(this);
 		
 		// simulate a (top level) schema tree edit part, using a concrete list of (mock) children:
 		// [0] the DiagramLabel

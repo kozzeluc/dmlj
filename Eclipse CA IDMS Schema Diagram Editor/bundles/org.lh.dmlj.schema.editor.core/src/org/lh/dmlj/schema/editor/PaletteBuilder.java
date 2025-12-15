@@ -36,7 +36,8 @@ import org.lh.dmlj.schema.editor.palette.IIndexedSetPlaceHolder;
 import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 
 public class PaletteBuilder {
-	
+		
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PaletteRoot build() {
 		var palette = new PaletteRoot();
         
