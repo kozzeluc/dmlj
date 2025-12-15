@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -34,43 +34,41 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.extension.RecordElementsImportToolExtensionElement;
 
 public class ImportToolSelectionPage extends WizardPage {
+	private static final String CONFIRM_BUTTON_MESSAGE = """
+		After selecting a data source, press the 'Select' button so that you can proceed with the next page; you \
+		will NOT be able to change your choice once you have pressed the 'Select' button. You will NOT be able \
+		to return to this page once you press the 'Next' button.\
+		""";
 	
-	private static final String CONFIRM_BUTTON_MESSAGE = 
-		"After selecting a data source, press the 'Select' button so that you can proceed with " +
-		"the next page; you will NOT be able to change your choice once you have pressed the " +
-		"'Select' button.  You will NOT be able to return to this page once you press the 'Next' " +
-		"button.";
+	private final List<RecordElementsImportToolExtensionElement> extensionElements;
+	private final String recordElementsDSL;
+	private RecordElementsImportToolExtensionElement extensionElement;
 	
 	private Button btnSelect;
 	private Combo combo;
-	private RecordElementsImportToolExtensionElement extensionElement;
-	private List<RecordElementsImportToolExtensionElement> extensionElements;		
 	private Text textDescription;
 	private Text textCurrentRecordElementsDSL;
-	private String recordElementsDSL;
 	
 	public ImportToolSelectionPage(List<RecordElementsImportToolExtensionElement> extensionElements,
-								   SchemaRecord record, String recordElementsDSL) {
+			SchemaRecord schemaRecord, String recordElementsDSL) {
 		
-		super("_importToolSelectionPage", "Elements for Record " + record.getName(), null);
-		// there will be at least 1 import tool
+		super("_importToolSelectionPage", "Elements for Record " + schemaRecord.getName(), null);
 		this.extensionElements = extensionElements;
 		this.recordElementsDSL = recordElementsDSL;
-		setMessage("Select the (data) source; the current record structure will be COMPLETELY " +
-				   "replaced");
+		setMessage("Select the (data) source; the current record structure will be COMPLETELY replaced");
 	}
 
 	@Override
 	public void createControl(Composite parent) {		
-		Composite container = new Composite(parent, SWT.NONE);
+		var container = new Composite(parent, SWT.NONE);
 		setControl(container);				
 		container.setLayout(new GridLayout(3, false));
 		
-		Label lblInstalledImportTools = new Label(container, SWT.NONE);
+		var lblInstalledImportTools = new Label(container, SWT.NONE);
 		lblInstalledImportTools.setText("Source:");
 		
 		combo = new Combo(container, SWT.READ_ONLY);
-		int i = extensionElements.size() > 1 ? 1 : 2;		
+		var i = extensionElements.size() > 1 ? 1 : 2;		
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, i, 1));		
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -79,9 +77,9 @@ public class ImportToolSelectionPage extends WizardPage {
 			}
 		});
 		
-		// the 'Select' button is only relevant if more than 1 import tool is defined; we use this 
-		// button to enable the 'Next (page)' button - once this button is enabled, the next pages 
-		// for the wizard will be added so this is a one time operation with no way back
+		// the 'Select' button is only relevant if more than 1 import tool is defined; we use this button to
+		// enable the 'Next (page)' button - once this button is enabled, the next pages for the wizard will be
+		// added so this is a one time operation with no way back
 		if (extensionElements.size() > 1) {
 			btnSelect = new Button(container, SWT.NONE);
 			btnSelect.setEnabled(false);
@@ -96,71 +94,64 @@ public class ImportToolSelectionPage extends WizardPage {
 			btnSelect.setText("Select");
 		}
 		
-		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+		var lblNewLabel1 = new Label(container, SWT.NONE);
+		lblNewLabel1.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 		
-		Label lblDescription = new Label(container, SWT.NONE);
+		var lblDescription = new Label(container, SWT.NONE);
 		lblDescription.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		lblDescription.setText("Description:");
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1);
-		gd_text.heightHint = 75;
-		gd_text.widthHint = 300;
-		textDescription.setLayoutData(gd_text);
+		var gdText = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1);
+		gdText.heightHint = 75;
+		gdText.widthHint = 300;
+		textDescription.setLayoutData(gdText);
 			
 		if (extensionElements.size() > 1) {
 			combo.add("[select a data source and press the 'Select' button]");
 		}		
-		for (RecordElementsImportToolExtensionElement extensionElement : extensionElements) {
-			combo.add(extensionElement.getSource());
-		}
+		extensionElements.stream()
+				.map(RecordElementsImportToolExtensionElement::getSource)
+				.forEach(combo::add);
 		combo.select(0);
 		
-		Label lblNewLabel = new Label(container, SWT.NONE);
+		var lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 		
-		Label lblCurrentRecordStructure = new Label(container, SWT.WRAP);
-		GridData gd_lblCurrentRecordStructure = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
-		gd_lblCurrentRecordStructure.widthHint = 75;
-		lblCurrentRecordStructure.setLayoutData(gd_lblCurrentRecordStructure);
+		var lblCurrentRecordStructure = new Label(container, SWT.WRAP);
+		var gdLblCurrentRecordStructure = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gdLblCurrentRecordStructure.widthHint = 75;
+		lblCurrentRecordStructure.setLayoutData(gdLblCurrentRecordStructure);
 		lblCurrentRecordStructure.setText("Current record elements DSL:");
 		
 		textCurrentRecordElementsDSL = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		textCurrentRecordElementsDSL.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
-		GridData gd_textCurrentRecordStructure = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
-		gd_textCurrentRecordStructure.heightHint = 200;
-		gd_textCurrentRecordStructure.widthHint = 200;
-		textCurrentRecordElementsDSL.setLayoutData(gd_textCurrentRecordStructure);
+		var gdTextCurrentRecordStructure = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
+		gdTextCurrentRecordStructure.heightHint = 200;
+		gdTextCurrentRecordStructure.widthHint = 200;
+		textCurrentRecordElementsDSL.setLayoutData(gdTextCurrentRecordStructure);
 		
 		if (extensionElements.size() > 1) {
-			// if there is more than 1 import tool available, pressing the 'Select' button will 
-			// mark the page as complete			
+			// if there is more than 1 import tool available, pressing the 'Select' button will mark the page as complete			
 			textDescription.setText(CONFIRM_BUTTON_MESSAGE);
 			setPageComplete(false);
 		} else {
-			// if there is only 1 import tool, there is no point in requiring the 'Select' button to 
-			// be pressed								
+			// if there is only 1 import tool, there is no point in requiring the 'Select' button to be pressed								
 			extensionElement = extensionElements.get(0);
 			textDescription.setText(extensionElement.getDescription());			
 			setPageComplete(true);		
 		}
 		
 		initialize();
-			
-	}	
-
-	public RecordElementsImportToolExtensionElement getExtensionElement() {
-		return extensionElement;
 	}
-
+	
 	private void initialize() {
 		textCurrentRecordElementsDSL.setText(recordElementsDSL);		
 	}
 
 	private void selectImportTool() {		
-		
-		int i = combo.getSelectionIndex();
+		// there will always be at least 1 import tool
+		var i = combo.getSelectionIndex();
 		if (extensionElements.size() == 1) {
 			extensionElement = extensionElements.get(0);
 		} else if (i > 0) {
@@ -171,8 +162,11 @@ public class ImportToolSelectionPage extends WizardPage {
 			extensionElement = null;
 			textDescription.setText(CONFIRM_BUTTON_MESSAGE);
 			btnSelect.setEnabled(false);
-		}		
-		
-	}	
+		}
+	}
+	
+	public RecordElementsImportToolExtensionElement getExtensionElement() {
+		return extensionElement;
+	}
 	
 }

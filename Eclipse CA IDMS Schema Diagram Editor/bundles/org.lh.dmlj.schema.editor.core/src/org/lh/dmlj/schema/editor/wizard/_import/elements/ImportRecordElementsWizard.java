@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,7 +22,6 @@ import static org.lh.dmlj.schema.editor.extension.ExtensionPointConstants.EXTENS
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,8 +32,8 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.SchemaRecord;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.SwapRecordElementsCommandCreationAssistant;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
@@ -46,32 +45,28 @@ import org.lh.dmlj.schema.editor.extension.ExtensionElementFactory;
 import org.lh.dmlj.schema.editor.extension.RecordElementsImportToolExtensionElement;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryPageController;
-import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool;
 import org.lh.dmlj.schema.editor.wizard._import.ImportWizardPage;
 import org.lh.dmlj.schema.editor.wizard._import.schema.DataEntryContext;
 
 public class ImportRecordElementsWizard extends Wizard implements IImportWizard {
-
-	private RecordElementsImportToolExtensionElement activeRecordElementsImportToolExtensionElement;	
-	private IDataEntryContext context = new DataEntryContext();
+	private final SchemaRecord schemaRecord;
+	private final IDataEntryContext context = new DataEntryContext();
+	private RecordElementsImportToolExtensionElement activeRecordElementsImportToolExtensionElement;
 	private List<ImportWizardPage> dataEntryWizardPages;
 	private List<RecordElementsImportToolExtensionElement> importToolExtensionElements;
 	private ImportToolSelectionPage importToolSelectionPage;
-	private SchemaRecord record;
 	private boolean initOK;
 	private PreviewPage previewPage;
 	private RecordElementsImportToolProxy proxy;
 	private IModelChangeCommand command;
 	
-	public ImportRecordElementsWizard(SchemaRecord record) {
-		super();
-		this.record = record;
+	public ImportRecordElementsWizard(SchemaRecord schemaRecord) {
+		this.schemaRecord = schemaRecord;
 		setWindowTitle("Import");
 	}
 
 	private void addDataEntryPages(RecordElementsImportToolExtensionElement extensionElement) {
-		if (dataEntryWizardPages == null) {				
-			
+		if (dataEntryWizardPages == null) {			
 			// keep a reference to the active import tool extension element
 			activeRecordElementsImportToolExtensionElement = extensionElement;
 			
@@ -79,14 +74,10 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 			dataEntryWizardPages = new ArrayList<>();
 			
 			// deal with the pre options pages first
-			List<DataEntryPageExtensionElement> dataEntryPagesElements = 
-				activeRecordElementsImportToolExtensionElement.getDataEntryPageExtensionElements();
-			for (DataEntryPageExtensionElement dataEntryPageExtensionElement : 
-				 dataEntryPagesElements) {
-					
+			var dataEntryPagesElements = activeRecordElementsImportToolExtensionElement.getDataEntryPageExtensionElements();
+			for (var dataEntryPageExtensionElement : dataEntryPagesElements) {
 				// create a data entry wizard page and add it to our list and to the wizard
-				ImportWizardPage importWizardPage = 
-					createImportWizardPage(dataEntryPageExtensionElement);					
+				var importWizardPage = createImportWizardPage(dataEntryPageExtensionElement);
 				dataEntryWizardPages.add(importWizardPage);
 				addPage(importWizardPage);
 			}
@@ -95,10 +86,10 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 
 	@Override
 	public void addPages() {
-		String dsl = Tools.generateRecordElementsDSL(record);
-		importToolSelectionPage = new ImportToolSelectionPage(importToolExtensionElements, record, dsl);		
+		var dsl = Tools.generateRecordElementsDSL(schemaRecord);
+		importToolSelectionPage = new ImportToolSelectionPage(importToolExtensionElements, schemaRecord, dsl);		
 		addPage(importToolSelectionPage);
-		previewPage = new PreviewPage(record);
+		previewPage = new PreviewPage(schemaRecord);
 		addPage(previewPage);
 	}
 	
@@ -113,35 +104,29 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	}
 	
 	private void createAndInjectController(final ImportWizardPage wizardPage) {
-		IDataEntryPageController controller = 
-			new IDataEntryPageController() {
-				@Override
-				public void setErrorMessage(String message) {
-					wizardPage.setErrorMessage(message);
-				}
-				@Override
-				public void setPageComplete(boolean pageComplete) {								
-					wizardPage.setPageComplete(pageComplete);
-				}						
-			};
+		var controller = new IDataEntryPageController() {
+			@Override
+			public void setErrorMessage(String message) {
+				wizardPage.setErrorMessage(message);
+			}
+			@Override
+			public void setPageComplete(boolean pageComplete) {								
+				wizardPage.setPageComplete(pageComplete);
+			}						
+		};
 		wizardPage.getDataEntryPage().setController(controller);
 	}
 
 	private ImportWizardPage createImportWizardPage(DataEntryPageExtensionElement configElement) {
-		// create the data entry page
-		var dataEntryPage = configElement.createDataEntryPage();		
-		
-		// wrap the data entry page in a wizard page
-		var importWizardPage = 
-			new ImportWizardPage(dataEntryPage, configElement.getName(), 
-								 "Elements for Record " + record.getName(), configElement.getMessage());
-		
+		// create the data entry page and wrap it in a wizard page
+		var dataEntryPage = configElement.createDataEntryPage();
+		var importWizardPage = new ImportWizardPage(dataEntryPage, configElement.getName(),
+				"Elements for Record " + schemaRecord.getName(), configElement.getMessage());
 		dataEntryPage.setContext(context);
 		
 		// create a controller and inject it in the data entry page's @Controller annotated field
 		createAndInjectController(importWizardPage);
-		
-		// return the import wizard page
+				
 		return importWizardPage;
 	}
 
@@ -152,64 +137,58 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	}
 
 	public IModelChangeCommand getCommand() {
+		// note: the command is NOT yet executed, this is up to the caller of this method
 		return command;
 	}
 
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == importToolSelectionPage) {
-			
-			// The user has chosen an import tool and cannot change his/her selection; go get the 
-			// data entry pages from the import tool extension element and add all import wizard 
-			// pages.  Make sure we build and add the wizard pages only once.
+			// The user has chosen an import tool and cannot change his/her selection; go get the data entry
+			// pages from the import tool extension element and add all import wizard pages. Make sure we build
+			// and add the wizard pages only once.
 			
 			addDataEntryPages(importToolSelectionPage.getExtensionElement());
 			
-			// get a hold of the import tool and the parameters configured for it in the defining
-			// extension and create the import tool proxy 
-			IRecordElementsImportTool importTool = 
-				activeRecordElementsImportToolExtensionElement.getRecordElementsImportTool();
-			Properties importToolParms = activeRecordElementsImportToolExtensionElement.getParameters();
+			// get a hold of the import tool and the parameters configured for it in the defining extension and
+			// create the import tool proxy 
+			var importTool = activeRecordElementsImportToolExtensionElement.getRecordElementsImportTool();
+			var importToolParms = activeRecordElementsImportToolExtensionElement.getParameters();
 			proxy = new RecordElementsImportToolProxy(importTool, importToolParms);
 			
-			// return the first import tool data entry page or null if no data entry pages are
-			// defined
+			// return the first import tool data entry page or null if no data entry pages are defined
 			if (!dataEntryWizardPages.isEmpty()) {
 				dataEntryWizardPages.get(0).aboutToShow();
 				return dataEntryWizardPages.get(0);
 			} else {
 				return null;
-			}		
+			}
 		} else if (dataEntryWizardPages != null && dataEntryWizardPages.contains(page)) {
 			// we need the next data entry page
-			int i = dataEntryWizardPages.indexOf(page);
-			if (i < 0) {
-				throw new RuntimeException("logic error");
-			} else {
-				// get the next relevant data entry page, if any
-				ImportWizardPage nextPage = getNextRelevantPageIndex(i);
+			if (dataEntryWizardPages.contains(page)) {
+				var nextPage = getNextRelevantPageIndex(dataEntryWizardPages.indexOf(page));
 				if (nextPage != null) {					
-					// there is a next relevant data entry page, so return it
 					nextPage.aboutToShow();
 					return nextPage;					
 				} else {
-					// no next data entry page, prepare the preview page and return it					
-					SchemaRecord record = new RecordModelBuilder().build("DUMMY");
-					record.getRootElements().clear();
-					record.getRootElements().addAll(proxy.invokeImportTool(context));
-					String recordElementsDSL = Tools.generateRecordElementsDSL(record);									
+					var dummyRecord = new RecordModelBuilder().build("DUMMY");
+					dummyRecord.getRootElements().clear();
+					dummyRecord.getRootElements().addAll(proxy.invokeImportTool(context));
+					var recordElementsDSL = Tools.generateRecordElementsDSL(dummyRecord);									
 					previewPage.setRecordElementsDSL(recordElementsDSL);
 					return previewPage;
 				}
+			} else {
+				throw new IllegalStateException("logic error");
 			}
 		}
 		return null;
 	}
 
-	private ImportWizardPage getNextRelevantPageIndex(int i) {
-		for (int j = i + 1; j < dataEntryWizardPages.size(); j++) {
-			if (dataEntryWizardPages.get(j).isRelevant()) {
-				return dataEntryWizardPages.get(j);
+	private ImportWizardPage getNextRelevantPageIndex(int currentPageIndex) {
+		for (int nextPageIndex = currentPageIndex + 1; nextPageIndex < dataEntryWizardPages.size(); nextPageIndex++) {
+			if (dataEntryWizardPages.get(nextPageIndex).isRelevant()) {
+				return dataEntryWizardPages.get(nextPageIndex);
 			}
 		}		
 		return null;	
@@ -217,7 +196,7 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	
 	public String getRecordName() {
 		if (initOK) {
-			return Tools.removeTrailingUnderscore(record.getName());
+			return Tools.removeTrailingUnderscore(schemaRecord.getName());
 		} else {
 			throw new IllegalStateException("init() was NOT invoked");
 		}
@@ -225,12 +204,9 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		context.setAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD, record);
-		importToolExtensionElements = 
-			ExtensionElementFactory.getExtensionElements(EXTENSION_POINT_IMPORT_RECORD_ELEMENTS_ID, 
-														 ELEMENT_IMPORT_TOOLS, 
-														 ELEMENT_IMPORT_TOOL, 
-														 RecordElementsImportToolExtensionElement.class);
+		context.setAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD, schemaRecord);
+		importToolExtensionElements = ExtensionElementFactory.getExtensionElements(EXTENSION_POINT_IMPORT_RECORD_ELEMENTS_ID,
+				ELEMENT_IMPORT_TOOLS, ELEMENT_IMPORT_TOOL, RecordElementsImportToolExtensionElement.class);
 		initOK = true;
 	}
 
@@ -242,42 +218,29 @@ public class ImportRecordElementsWizard extends Wizard implements IImportWizard 
 	
 	@Override
 	public boolean performFinish() {
-		
-		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {			
-			@Override
-			public void run(IProgressMonitor progressMonitor) {
-				progressMonitor.beginTask("Import RecordElements", IProgressMonitor.UNKNOWN);								
-				try {											
-					List<Element> newRootElements = proxy.invokeImportTool(context);										
-					ModelChangeContext context = 
-						new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
-					context.putContextData(record);
-					command = SwapRecordElementsCommandCreationAssistant.getCommand(record, newRootElements);
-					command.setContext(context);
-				} catch (Throwable t) {
-					throw new RuntimeException(t);					
-				}
-				finally {
-					disposeImportTool();					
-				}				
-				progressMonitor.done();				
-			}
+		IRunnableWithProgress runnableWithProgress = progressMonitor -> {
+			progressMonitor.beginTask("Import RecordElements", IProgressMonitor.UNKNOWN);								
+			try {											
+				var newRootElements = proxy.invokeImportTool(context);										
+				var commandContext = new ModelChangeContext(ModelChangeType.SWAP_RECORD_ELEMENTS);
+				commandContext.putContextData(schemaRecord);
+				command = SwapRecordElementsCommandCreationAssistant.getCommand(schemaRecord, newRootElements);
+				command.setContext(commandContext);
+			} catch (Exception e) {
+				throw new IllegalStateException(e);
+			} finally {
+				disposeImportTool();					
+			}				
+			progressMonitor.done();			
 		};		
 		try {
-			org.lh.dmlj.schema.editor.Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
-		} catch (Throwable e) {
+			Plugin.getDefault().runWithOperationInProgressIndicator(runnableWithProgress);
+		} catch (Exception e) {
 			// the plug-in's runWithOperationInProgressIndicator method has already logged the error
-			Throwable cause = e.getCause();
-			if (cause != null) {
-				MessageDialog.openError(Display.getCurrent().getActiveShell(), 
-										"Edit Record Elements", cause.getMessage());
-			} else {
-				MessageDialog.openError(Display.getCurrent().getActiveShell(), 
-										"Edit Record Elements", e.getMessage());
-			}
+			var message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Edit Record Elements", message);
 			return false;
 		}		
-		
 		return true;
 	}
 

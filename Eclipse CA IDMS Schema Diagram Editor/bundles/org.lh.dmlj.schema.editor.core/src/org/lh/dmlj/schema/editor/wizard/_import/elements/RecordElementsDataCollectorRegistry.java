@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,20 +23,15 @@ import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;
 import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsDataCollectorRegistry;
 
 public class RecordElementsDataCollectorRegistry implements IRecordElementsDataCollectorRegistry {
+	private Map<Class<?>, IElementDataCollector<?>> dataCollectors = new HashMap<>();
 
-	private Map<Class<?>, IElementDataCollector<?>> dataCollectors = new HashMap<>();		
-	
-	RecordElementsDataCollectorRegistry() {
-		super();
-	}
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> IElementDataCollector<T> getDataCollector(Class<T> _class) {
-		if (dataCollectors.containsKey(_class)) {
-			return (IElementDataCollector<T>) dataCollectors.get(_class);
+	@SuppressWarnings("unchecked")
+	public <T> IElementDataCollector<T> getDataCollector(Class<T> type) {
+		if (dataCollectors.containsKey(type)) {
+			return (IElementDataCollector<T>) dataCollectors.get(type);
 		} else {
-			for (Class<?> _interface : _class.getInterfaces()) {
+			for (var _interface : type.getInterfaces()) {
 				if (dataCollectors.containsKey(_interface)) {
 					return (IElementDataCollector<T>) dataCollectors.get(_interface);
 				}
@@ -46,8 +41,8 @@ public class RecordElementsDataCollectorRegistry implements IRecordElementsDataC
 	}
 
 	@Override
-	public <T> void registerDataCollector(Class<T> _class, IElementDataCollector<T> dataCollector) {		
-		dataCollectors.put(_class, dataCollector);
+	public <T> void registerDataCollector(Class<T> type, IElementDataCollector<T> dataCollector) {		
+		dataCollectors.put(type, dataCollector);
 	}
 
 }
