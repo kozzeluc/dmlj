@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.common.util.URI;
@@ -106,8 +107,9 @@ import org.lh.dmlj.schema.editor.ruler.SchemaEditorRulerProvider;
 public class SchemaEditor 
 	extends GraphicalEditorWithFlyoutPalette 
 	implements CommandStackEventListener, ITabbedPropertySheetPageContributor {
-
+	
 	public static final String ID = "org.lh.dmlj.schema.editor.schemaeditor";
+	private static final String ORG_ECLIPSE_GEF_ID = "org.eclipse.gef";
 		
 	private static final String FILE_EXTENSION_SCHEMA = "schema";
 	private static final String FILE_EXTENSION_SCHEMADSL = "schemadsl";
@@ -189,6 +191,7 @@ public class SchemaEditor
 	private IResource workspaceResource;
 	private boolean readOnlyFlag = false;
 	private String fileExtension;
+	private boolean needToRemoveAsCommandStackEventListener = false;
 	
 	@Override
 	protected void createGraphicalViewer(Composite parent) {
@@ -274,7 +277,12 @@ public class SchemaEditor
 		// always leave the model in a consistent state after its execute(), redo() or undo() method has been
 		// called (like any other command actually; the annotation is merely used to extract the kind [category]
 		// of model change)
-		getCommandStack().addCommandStackEventListener(this);
+		// ATTENTION: since GEF 3.24, the GraphicalEditor's init method will already have added us as a listener and we
+		// don't want any command stack event to be processed twice because that causes trouble
+		if (!alreadyAddedAsCommandStackEventListener()) {
+			getCommandStack().addCommandStackEventListener(this);
+			needToRemoveAsCommandStackEventListener = true;
+		}
 		
 		// attach a model change listener to respond to changes to rulers&guides, grid visibility and zoom level
 		var modelChangeListener = new IModelChangeListener() {
@@ -315,6 +323,13 @@ public class SchemaEditor
 		modelChangeDispatcher.addModelChangeListener(modelChangeListener);
 	}
 	
+	private boolean alreadyAddedAsCommandStackEventListener() {
+		var gefBundle = Platform.getBundle(ORG_ECLIPSE_GEF_ID);
+		var gefMajorVersion = gefBundle.getVersion().getMajor();
+		var gefMinorVersion = gefBundle.getVersion().getMinor();
+		return gefMajorVersion == 3 && gefMinorVersion >= 24 || gefMajorVersion > 3;
+	}
+
 	private void addZoomListener(ZoomManager manager) {
 		try {
 			var invocationHandler = new InvocationHandler() {
@@ -381,8 +396,8 @@ public class SchemaEditor
 		// As of GEF 3.11 (Eclipse Neon), CommandStackEventListener instances are also notified when:
 		// - flushing the stack (event.detail == 64/256)
 		// - marking the save location of the stack (event.detail == 128/512)
-		// In both cases, the event's command is set to null so there is nothing we should do (apart from
-		// preventing a NPE further down the line, e.g. when saving a diagram).
+		// In both cases, the event's command is set to null so there is nothing we should do (apart from preventing a
+		// NPE further down the line, e.g. when saving a diagram).
 		if (event.getCommand() != null) {
 			modelChangeDispatcher.setSchema(schema);
 			modelChangeDispatcher.dispatch(event);
@@ -775,7 +790,9 @@ public class SchemaEditor
 	
 	@Override
 	public void dispose() {
-		getCommandStack().removeCommandStackEventListener(this);
+		if (needToRemoveAsCommandStackEventListener) {
+			getCommandStack().removeCommandStackEventListener(this);
+		}
 		var paletteViewerProvider = (ModifiedPaletteViewerProvider) getPaletteViewerProvider();
 		paletteViewerProvider.dispose(); 
 		hookActivePaletteViewerToEditDomain();		
