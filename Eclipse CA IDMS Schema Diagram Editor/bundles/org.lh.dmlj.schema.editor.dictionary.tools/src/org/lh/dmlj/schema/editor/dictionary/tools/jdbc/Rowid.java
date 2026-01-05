@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,9 +21,9 @@ import java.util.Optional;
 
 public class Rowid {
 	private final String hexString;
-	
 	private long dbkey;
 	private Optional<PageInformation> pageInformation;
+	private boolean initialized = false;
 	
 	public static Rowid fromHexString(String hexString) {
 		return new Rowid(hexString);
@@ -41,7 +41,7 @@ public class Rowid {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Rowid other = (Rowid) obj;
+		var other = (Rowid) obj;
 		return Objects.equals(hexString, other.hexString);
 	}
 
@@ -62,7 +62,7 @@ public class Rowid {
 	}
 
 	boolean isInitialized() {
-		return pageInformation != null;
+		return initialized;
 	}
 	
 	public Optional<PageInformation> getPageInformation() {
@@ -84,6 +84,7 @@ public class Rowid {
 		} else {
 			throw new IllegalArgumentException("invalid hexString; cannot initialize: " + hexString);
 		}
+		initialized = true;
 	}
 	
 	@Override

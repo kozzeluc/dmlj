@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,13 +20,11 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
 public class SchemaImportSession extends DictionarySession {
-	
-	private String schemaName;
-	private int schemaVersion;
+	private final String schemaName;
+	private final int schemaVersion;
 
 	public SchemaImportSession(Dictionary dictionary, String schemaName, int schemaVersion) {
-		super(dictionary, "Import schema " + schemaName + " version " + schemaVersion + 
-			  " from dictionary " + dictionary.getId());
+		super(dictionary, "Import schema " + schemaName + " version " + schemaVersion + " from dictionary " + dictionary.getId());
 		this.schemaName = schemaName;
 		this.schemaVersion = schemaVersion;
 	}

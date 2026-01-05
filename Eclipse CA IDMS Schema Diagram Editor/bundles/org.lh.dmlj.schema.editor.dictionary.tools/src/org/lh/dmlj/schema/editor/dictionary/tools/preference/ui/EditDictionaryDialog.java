@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,15 +16,19 @@
  */
 package org.lh.dmlj.schema.editor.dictionary.tools.preference.ui;
 
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,28 +43,11 @@ import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceConstants;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 
 public class EditDictionaryDialog extends TitleAreaDialog {
+	private static final InputValidationResult VALIDATION_OK = new InputValidationResult(true, null, null);
 	
-	private Text textId;
-	private Text textHostname;
-	private Text textPort;
-	private Text textDictname;
-	private Text textUser;
-	private Text textPassword;
-	private Button btnDefaultSchema;
-	private Button btnCustomSchema;
-	private Text textCustomSchema;
-	private Button btnDefaultQueryRowidListSizeMaximum;
-	private Button btnCustomQueryRowidListSizeMaximum;
-	private Text textCustomQueryRowidListSizeMaximum;
-	private Button btnSysdirl;
-	private Button btnTestConnection;
-	
-	private Dictionary dictionary;
-	
+	private final Dictionary dictionary;
 	private String dictionaryId;
 	private String dictionaryHostname;
 	private int dictionaryPort;
@@ -79,6 +66,21 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 	private boolean passwordTouched;
 	private boolean schemaTouched;
 	private boolean queryRowidListSizeMaximumTouched;
+	
+	private Text textId;
+	private Text textHostname;
+	private Text textPort;
+	private Text textDictname;
+	private Text textUser;
+	private Text textPassword;
+	private Button btnDefaultSchema;
+	private Button btnCustomSchema;
+	private Text textCustomSchema;
+	private Button btnDefaultQueryRowidListSizeMaximum;
+	private Button btnCustomQueryRowidListSizeMaximum;
+	private Text textCustomQueryRowidListSizeMaximum;
+	private Button btnSysdirl;
+	private Button btnTestConnection;
 	
 	public EditDictionaryDialog(Shell parentShell, Dictionary dictionary) {
 		super(parentShell);
@@ -106,12 +108,12 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite area = (Composite) super.createDialogArea(parent);
-		Composite container = new Composite(area, SWT.NONE);
+		var area = (Composite) super.createDialogArea(parent);
+		var container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(3, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		Label lblNewLabel = new Label(container, SWT.NONE);
+		var lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setText("Id:");
 		
 		textId = new Text(container, SWT.BORDER);
@@ -129,16 +131,14 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		textId.addTraverseListener(new TraverseListener() {
-			public void keyTraversed(TraverseEvent e) {
-				idTouched = true;
-				validateAndMoveToNextFieldWhenApplicable(e);
-			}
+		textId.addTraverseListener(e -> {
+			idTouched = true;
+			validateAndMoveToNextFieldWhenApplicable(e);
 		});
 		textId.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		
-		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setText("Hostname:");
+		var lblNewLabel1 = new Label(container, SWT.NONE);
+		lblNewLabel1.setText("Hostname:");
 		
 		textHostname = new Text(container, SWT.BORDER);
 		textHostname.addKeyListener(new KeyAdapter() {
@@ -155,17 +155,14 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		textHostname.addTraverseListener(new TraverseListener() {
-			@Override
-			public void keyTraversed(TraverseEvent e) {
-				hostnameTouched = true;
-				validateAndMoveToNextFieldWhenApplicable(e);
-			}
+		textHostname.addTraverseListener(e -> {
+			hostnameTouched = true;
+			validateAndMoveToNextFieldWhenApplicable(e);
 		});
 		textHostname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		
-		Label lblNewLabel_2 = new Label(container, SWT.NONE);
-		lblNewLabel_2.setText("Port:");
+		var lblNewLabel2 = new Label(container, SWT.NONE);
+		lblNewLabel2.setText("Port:");
 		
 		textPort = new Text(container, SWT.BORDER);
 		textPort.addKeyListener(new KeyAdapter() {
@@ -182,19 +179,16 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		textPort.addTraverseListener(new TraverseListener() {
-			@Override
-			public void keyTraversed(TraverseEvent e) {
-				portTouched = true;
-				validateAndMoveToNextFieldWhenApplicable(e);
-			}
+		textPort.addTraverseListener(e -> {
+			portTouched = true;
+			validateAndMoveToNextFieldWhenApplicable(e);
 		});
-		GridData gd_textPort = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
-		gd_textPort.widthHint = 50;
-		textPort.setLayoutData(gd_textPort);
+		var gdTextPort = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gdTextPort.widthHint = 50;
+		textPort.setLayoutData(gdTextPort);
 		
-		Label lblNewLabel_3 = new Label(container, SWT.NONE);
-		lblNewLabel_3.setText("Dictname:");
+		var lblNewLabel3 = new Label(container, SWT.NONE);
+		lblNewLabel3.setText("Dictname:");
 		
 		textDictname = new Text(container, SWT.BORDER);
 		textDictname.addKeyListener(new KeyAdapter() {
@@ -211,19 +205,16 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		textDictname.addTraverseListener(new TraverseListener() {
-			@Override
-			public void keyTraversed(TraverseEvent e) {
-				dictnameTouched = true;
-				validateAndMoveToNextFieldWhenApplicable(e);
-			}
+		textDictname.addTraverseListener(e -> {
+			dictnameTouched = true;
+			validateAndMoveToNextFieldWhenApplicable(e);
 		});
-		GridData gd_textDictname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
-		gd_textDictname.widthHint = 100;
-		textDictname.setLayoutData(gd_textDictname);
+		var gdTextDictname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gdTextDictname.widthHint = 100;
+		textDictname.setLayoutData(gdTextDictname);
 		
-		Label lblNewLabel_4 = new Label(container, SWT.NONE);
-		lblNewLabel_4.setText("User:");
+		var lblNewLabel4 = new Label(container, SWT.NONE);
+		lblNewLabel4.setText("User:");
 		
 		textUser = new Text(container, SWT.BORDER);
 		textUser.addKeyListener(new KeyAdapter() {
@@ -240,19 +231,16 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		textUser.addTraverseListener(new TraverseListener() {
-			@Override
-			public void keyTraversed(TraverseEvent e) {
-				userTouched = true;
-				validateAndMoveToNextFieldWhenApplicable(e);
-			}
+		textUser.addTraverseListener(e -> {
+			userTouched = true;
+			validateAndMoveToNextFieldWhenApplicable(e);
 		});
-		GridData gd_textUser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
-		gd_textUser.widthHint = 100;
-		textUser.setLayoutData(gd_textUser);
+		var gdTextUser = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gdTextUser.widthHint = 100;
+		textUser.setLayoutData(gdTextUser);
 		
-		Label lblNewLabel_5 = new Label(container, SWT.NONE);
-		lblNewLabel_5.setText("Password:");
+		var lblNewLabel5 = new Label(container, SWT.NONE);
+		lblNewLabel5.setText("Password:");
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textPassword.addKeyListener(new KeyAdapter() {
@@ -269,24 +257,21 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		textPassword.addTraverseListener(new TraverseListener() {
-			@Override
-			public void keyTraversed(TraverseEvent e) {
-				passwordTouched = true;
-				validateAndMoveToNextFieldWhenApplicable(e);
-			}
+		textPassword.addTraverseListener(e -> {
+			passwordTouched = true;
+			validateAndMoveToNextFieldWhenApplicable(e);
 		});
-		GridData gd_textPassword = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textPassword.widthHint = 100;
-		textPassword.setLayoutData(gd_textPassword);
+		var gdTextPassword = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdTextPassword.widthHint = 100;
+		textPassword.setLayoutData(gdTextPassword);
 		
-		Label lblpromptWhenEmpty = new Label(container, SWT.NONE);
-		GridData gd_lblpromptWhenEmpty = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblpromptWhenEmpty.horizontalIndent = 10;
-		lblpromptWhenEmpty.setLayoutData(gd_lblpromptWhenEmpty);
+		var lblpromptWhenEmpty = new Label(container, SWT.NONE);
+		var gdLblpromptWhenEmpty = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblpromptWhenEmpty.horizontalIndent = 10;
+		lblpromptWhenEmpty.setLayoutData(gdLblpromptWhenEmpty);
 		lblpromptWhenEmpty.setText("(prompt when empty)");
 		
-		Group grpSchema = new Group(container, SWT.NONE);
+		var grpSchema = new Group(container, SWT.NONE);
 		grpSchema.setLayout(new GridLayout(2, false));
 		grpSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		grpSchema.setText("Schema");
@@ -320,9 +305,9 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		GridData gd_textCustomSchema = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textCustomSchema.widthHint = 100;
-		textCustomSchema.setLayoutData(gd_textCustomSchema);
+		var gdTextCustomSchema = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdTextCustomSchema.widthHint = 100;
+		textCustomSchema.setLayoutData(gdTextCustomSchema);
 		textCustomSchema.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -330,15 +315,12 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		textCustomSchema.addTraverseListener(new TraverseListener() {
-			@Override
-			public void keyTraversed(TraverseEvent e) {
-				schemaTouched = true;
-				validateAndMoveToNextFieldWhenApplicable(e);
-			}
+		textCustomSchema.addTraverseListener(e -> {
+			schemaTouched = true;
+			validateAndMoveToNextFieldWhenApplicable(e);
 		});
 		
-		Group grpQueryRowidListSizeMaximum = new Group(container, SWT.NONE);
+		var grpQueryRowidListSizeMaximum = new Group(container, SWT.NONE);
 		grpQueryRowidListSizeMaximum.setLayout(new GridLayout(2, false));
 		grpQueryRowidListSizeMaximum.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
 		grpQueryRowidListSizeMaximum.setText("Maximum rowid list size in queries");
@@ -372,11 +354,9 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		textCustomQueryRowidListSizeMaximum.addTraverseListener(new TraverseListener() {
-			public void keyTraversed(TraverseEvent e) {
-				queryRowidListSizeMaximumTouched = true;
-				validateAndMoveToNextFieldWhenApplicable(e);
-			}
+		textCustomQueryRowidListSizeMaximum.addTraverseListener(e -> {
+			queryRowidListSizeMaximumTouched = true;
+			validateAndMoveToNextFieldWhenApplicable(e);
 		});
 		textCustomQueryRowidListSizeMaximum.addFocusListener(new FocusAdapter() {
 			@Override
@@ -385,9 +365,9 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		GridData gd_textCustomQueryRowidListSizeMaximum = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_textCustomQueryRowidListSizeMaximum.widthHint = 25;
-		textCustomQueryRowidListSizeMaximum.setLayoutData(gd_textCustomQueryRowidListSizeMaximum);
+		var gdTextCustomQueryRowidListSizeMaximum = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdTextCustomQueryRowidListSizeMaximum.widthHint = 25;
+		textCustomQueryRowidListSizeMaximum.setLayoutData(gdTextCustomQueryRowidListSizeMaximum);
 		
 		btnSysdirl = new Button(container, SWT.CHECK);
 		btnSysdirl.addFocusListener(new FocusAdapter() {
@@ -402,9 +382,9 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		GridData gd_btnSysdirl = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
-		gd_btnSysdirl.verticalIndent = 10;
-		btnSysdirl.setLayoutData(gd_btnSysdirl);
+		var gdBtnSysdirl = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
+		gdBtnSysdirl.verticalIndent = 10;
+		btnSysdirl.setLayoutData(gdBtnSysdirl);
 		btnSysdirl.setText("This is a SYSDIRL dictionary");
 		
 		btnTestConnection = new Button(container, SWT.NONE);
@@ -415,15 +395,15 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				testConnection();
 			}
 		});
-		GridData gd_btnTestConnection = new GridData(SWT.CENTER, SWT.CENTER, true, false, 3, 1);
-		gd_btnTestConnection.verticalIndent = 20;
-		btnTestConnection.setLayoutData(gd_btnTestConnection);
+		var gdBtnTestConnection = new GridData(SWT.CENTER, SWT.CENTER, true, false, 3, 1);
+		gdBtnTestConnection.verticalIndent = 20;
+		btnTestConnection.setLayoutData(gdBtnTestConnection);
 		btnTestConnection.setText("Test Connection");
 		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
-		GridData gd_label = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
-		gd_label.verticalIndent = 10;
-		label.setLayoutData(gd_label);
+		var gdLabel = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
+		gdLabel.verticalIndent = 10;
+		label.setLayoutData(gdLabel);
 		
 		initializeValues();
 
@@ -473,22 +453,16 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 	}
 	
 	private void initializeValues() {
-	
 		setTitle("Dictionary properties");
 		setMessage("The password you enter is encrypted before it is stored.");
 		
-		String defaultSchema = 
-			Plugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DEFAULT_SCHEMA);
+		var defaultSchema = Plugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DEFAULT_SCHEMA);
 		btnDefaultSchema.setText("Default (" + defaultSchema + ")");
 		
-		int defaultQueryRowidListSizeMaximum =
-			Plugin.getDefault()
-				  .getPreferenceStore()
-				  .getInt(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM);
+		var defaultQueryRowidListSizeMaximum = Plugin.getDefault().getPreferenceStore().getInt(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM);
 		btnDefaultQueryRowidListSizeMaximum.setText("Default (" + defaultQueryRowidListSizeMaximum + ")");
 		
 		if (dictionary != null) {			
-			
 			textId.setText(dictionary.getId());
 			textHostname.setText(dictionary.getHostname());
 			textPort.setText(String.valueOf(dictionary.getPort()));
@@ -498,8 +472,8 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				textPassword.setText(dictionary.getPassword());
 			}
 			
-			String schema = dictionary.getSchema();
-			boolean selectDefault = schema.equals(Dictionary.USE_DEFAULT_SCHEMA_INDICATOR); 
+			var schema = dictionary.getSchema();
+			var selectDefault = schema.equals(Dictionary.USE_DEFAULT_SCHEMA_INDICATOR); 
 			btnDefaultSchema.setSelection(selectDefault);
 			btnCustomSchema.setSelection(!selectDefault);
 			textCustomSchema.setEnabled(!selectDefault);
@@ -507,7 +481,7 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 				textCustomSchema.setText(schema);
 			}
 			
-			int queryRowidListSizeMaximum = dictionary.getQueryRowidListSizeMaximum();
+			var queryRowidListSizeMaximum = dictionary.getQueryRowidListSizeMaximum();
 			selectDefault = queryRowidListSizeMaximum == Dictionary.USE_DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM_INDICATOR;
 			btnDefaultQueryRowidListSizeMaximum.setSelection(selectDefault);
 			btnCustomQueryRowidListSizeMaximum.setSelection(!selectDefault);
@@ -517,7 +491,6 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 			}
 			
 			btnSysdirl.setSelection(dictionary.isSysdirl());
-			
 		} else {
 			textPort.setText("3709");
 			btnDefaultSchema.setSelection(true);
@@ -529,37 +502,29 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		enableAndDisable();
 		setFocusAndSelectText(textId, null);
 		
-		btnTestConnection.setEnabled(validateInput().validationOK &&
-									 Plugin.getDefault().isDriverInstalled());
-		
+		btnTestConnection.setEnabled(validateInput().validationOK && Plugin.getDefault().isDriverInstalled());
 	}
 
 	public boolean isDictionarySysdirl() {
 		return dictionarySysdirl;
 	}
 
-	private void setFocusAndSelectText(Control control, InputValidationResult inputValidationResult) {		
-		
-		if (control == btnTestConnection && inputValidationResult != null && 
-			!inputValidationResult.validationOK) {
-			
-			// if focus should go to the test connection button but a text field is in error, move
-			// the focus to the text field in error (and select its text, if any) and not the test
-			// connection button
+	private void setFocusAndSelectText(Control control, InputValidationResult inputValidationResult) {
+		if (control == btnTestConnection && inputValidationResult != null && !inputValidationResult.validationOK) {
+			// if focus should go to the test connection button but a text field is in error, move the focus to
+			// the text field in error (and select its text, if any) and not the test connection button
 			inputValidationResult.fieldInError.setFocus();
 			inputValidationResult.fieldInError.selectAll();
-			return;
+		} else {	
+			control.setFocus();
+			if (control instanceof Text text) {
+				text.selectAll();
+			}
 		}
-		
-		control.setFocus();
-		if (control instanceof Text) {
-			((Text) control).selectAll();
-		}
-		
 	}
 
 	protected void testConnection() {
-		Dictionary tmpDictionary = Dictionary.newTemporaryInstance();
+		var tmpDictionary = Dictionary.newTemporaryInstance();
 		tmpDictionary.setId(dictionaryId);
 		tmpDictionary.setHostname(dictionaryHostname);
 		tmpDictionary.setPort(dictionaryPort);
@@ -571,18 +536,64 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 		JdbcTools.testConnectionWithOperationInProgressIndicator(tmpDictionary);
 	}
 
+	private void validateAndMoveToNextFieldWhenApplicable(TraverseEvent e) {
+		if (e.detail != SWT.TRAVERSE_RETURN && e.detail != SWT.TRAVERSE_TAB_NEXT && e.detail != SWT.TRAVERSE_TAB_PREVIOUS) {
+			return;
+		}
+		var inputValidationResult = validate();		
+		if (e.getSource() == textId) {
+			setFocusAndSelectText(textHostname, inputValidationResult);
+		} else if (e.getSource() == textHostname) {
+			setFocusAndSelectText(textPort, inputValidationResult);
+		} else if (e.getSource() == textPort) {
+			setFocusAndSelectText(textDictname, inputValidationResult);
+		} else if (e.getSource() == textDictname) {
+			setFocusAndSelectText(textUser, inputValidationResult);
+		} else if (e.getSource() == textUser) {
+			setFocusAndSelectText(textPassword, inputValidationResult);
+		} else if (e.getSource() == textPassword) {
+			setFocusAndSelectTextForPassword(inputValidationResult);
+		} else if (e.getSource() == textCustomSchema) {
+			setFocusAndSelectTextForCustomSchema(inputValidationResult);
+		} else if (e.getSource() == textCustomQueryRowidListSizeMaximum) {
+			setFocusAndSelectText(btnTestConnection, inputValidationResult);
+		}
+		if (e.detail == SWT.TRAVERSE_RETURN) {
+			// make sure to set the event's doit indicator to false in order for our actions to be honored when
+			// the return key is pressed
+			e.doit = false;
+		}
+	}
+	
+	private void setFocusAndSelectTextForPassword(InputValidationResult inputValidationResult) {
+		if (btnCustomSchema.getSelection()) {
+			setFocusAndSelectText(textCustomSchema, inputValidationResult);
+		} else if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
+			setFocusAndSelectText(textCustomQueryRowidListSizeMaximum, inputValidationResult);
+		} else {
+			setFocusAndSelectText(btnTestConnection, inputValidationResult);
+		}
+	}
+	
+	private void setFocusAndSelectTextForCustomSchema(InputValidationResult inputValidationResult) {
+		if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
+			setFocusAndSelectText(textCustomQueryRowidListSizeMaximum, inputValidationResult);
+		} else {
+			setFocusAndSelectText(btnTestConnection, inputValidationResult);
+		}
+	}
+
 	private InputValidationResult validate() {
-		
-		InputValidationResult inputValidationResult = validateInput();
+		var inputValidationResult = validateInput();
 		setErrorMessage(inputValidationResult.errorMessage);
 		
 		if (inputValidationResult.validationOK) {
 			dictionaryId = textId.getText().trim();
 			dictionaryHostname = textHostname.getText().trim();
-			dictionaryPort = Integer.valueOf(textPort.getText().trim()).intValue();
+			dictionaryPort = Integer.parseInt(textPort.getText().trim());
 			dictionaryDictname = textDictname.getText().trim();
 			dictionaryUser = textUser.getText().trim();
-			if (!textPassword.getText().trim().equals("")) {
+			if (!textPassword.getText().isBlank()) {
 				dictionaryPassword = textPassword.getText().trim();
 			} else {
 				dictionaryPassword = null;
@@ -602,125 +613,117 @@ public class EditDictionaryDialog extends TitleAreaDialog {
 			dictionarySysdirl = btnSysdirl.getSelection();
 		}
 		
-		btnTestConnection.setEnabled(inputValidationResult.validationOK && 
-									 Plugin.getDefault().isDriverInstalled());
+		btnTestConnection.setEnabled(inputValidationResult.validationOK && Plugin.getDefault().isDriverInstalled());
 		getButton(IDialogConstants.OK_ID).setEnabled(inputValidationResult.validationOK);
 		
 		return inputValidationResult;
-		
-	}
-	
-	private void validateAndMoveToNextFieldWhenApplicable(TraverseEvent e) {
-		if (e.detail != SWT.TRAVERSE_RETURN && e.detail != SWT.TRAVERSE_TAB_NEXT &&
-			e.detail != SWT.TRAVERSE_TAB_PREVIOUS) {
-			
-			return;
-		}
-		InputValidationResult inputValidationResult = validate();		
-		if (e.getSource() == textId) {
-			setFocusAndSelectText(textHostname, inputValidationResult);
-		} else if (e.getSource() == textHostname) {
-			setFocusAndSelectText(textPort, inputValidationResult);
-		} else if (e.getSource() == textPort) {
-			setFocusAndSelectText(textDictname, inputValidationResult);
-		} else if (e.getSource() == textDictname) {
-			setFocusAndSelectText(textUser, inputValidationResult);
-		} else if (e.getSource() == textUser) {
-			setFocusAndSelectText(textPassword, inputValidationResult);
-		} else if (e.getSource() == textPassword) {
-			if (btnCustomSchema.getSelection()) {
-				setFocusAndSelectText(textCustomSchema, inputValidationResult);
-			} else if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
-				setFocusAndSelectText(textCustomQueryRowidListSizeMaximum, inputValidationResult);
-			} else {
-				setFocusAndSelectText(btnTestConnection, inputValidationResult);
-			}
-		} else if (e.getSource() == textCustomSchema) {
-			if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
-				setFocusAndSelectText(textCustomQueryRowidListSizeMaximum, inputValidationResult);
-			} else {
-				setFocusAndSelectText(btnTestConnection, inputValidationResult);
-			}
-		} else if (e.getSource() == textCustomQueryRowidListSizeMaximum) {
-			setFocusAndSelectText(btnTestConnection, inputValidationResult);
-		}
-		if (e.detail == SWT.TRAVERSE_RETURN) {
-			// make sure to set the event's doit indicator to false in order for our actions to be
-			// honored when the return key is pressed
-			e.doit = false;
-		}
 	}
 	
 	private InputValidationResult validateInput() {
-		if (textId.getText().trim().equals("")) {
-			String message = idTouched ? "Id is mandatory" : null;
-			return new InputValidationResult(false, message, textId);
+		var inputValidationResult = Stream.of(validateId(), validateHostname(), validatePort(), validateDictname(),
+											 validateUser(), validatePassword(), validateCustomSchema(), validateCustomQueryRowidListSizeMaximum())
+				.flatMap(Function.identity())
+				.findFirst();
+		if (inputValidationResult.isPresent()) {
+			return inputValidationResult.orElseThrow();
+		} else {
+			return VALIDATION_OK;
 		}
-		if (textHostname.getText().trim().equals("")) {
-			String message = hostnameTouched ? "Hostname is mandatory" : null;
-			return new InputValidationResult(false, message, textHostname);
+	}
+	
+	private Stream<InputValidationResult> validateId() {
+		if (textId.getText().isBlank()) {
+			var message = idTouched ? "Id is mandatory" : null;
+			return Stream.of(new InputValidationResult(false, message, textId));
+		} else {
+			return Stream.empty();
 		}
-		if (textPort.getText().trim().equals("")) {
-			String message = portTouched ? "Port is mandatory" : null;
-			return new InputValidationResult(false, message, textPort);
+	}
+	
+	private Stream<InputValidationResult> validateHostname() {
+		if (textHostname.getText().isBlank()) {
+			var message = hostnameTouched ? "Hostname is mandatory" : null;
+			return Stream.of(new InputValidationResult(false, message, textHostname));
+		} else {
+			return Stream.empty();
+		}
+	}
+	
+	private Stream<InputValidationResult> validatePort() {
+		if (textPort.getText().isBlank()) {
+			var message = portTouched ? "Port is mandatory" : null;
+			return Stream.of(new InputValidationResult(false, message, textPort));
 		} else {
 			try {
 				Integer.parseInt(textPort.getText());
+				return Stream.empty();
 			} catch (NumberFormatException e) {
-				String message = portTouched ? "Port is invalid" : null;
-				return new InputValidationResult(false, message, textPort);
+				var message = portTouched ? "Port is invalid" : null;
+				return Stream.of(new InputValidationResult(false, message, textPort));
 			}
 		}
-		if (textDictname.getText().trim().equals("")) {
-			String message = dictnameTouched ? "Dictname is mandatory" : null;
-			return new InputValidationResult(false, message, textDictname);
+	}
+	
+	private Stream<InputValidationResult> validateDictname() {
+		if (textDictname.getText().isBlank()) {
+			var message = dictnameTouched ? "Dictname is mandatory" : null;
+			return Stream.of(new InputValidationResult(false, message, textDictname));
+		} else {
+			return Stream.empty();
 		}
-		if (textUser.getText().trim().equals("")) {
-			String message = userTouched ? "User is mandatory" : null;
-			return new InputValidationResult(false, message, textUser);
+	}
+	
+	private Stream<InputValidationResult> validateUser() {
+		if (textUser.getText().isBlank()) {
+			var message = userTouched ? "User is mandatory" : null;
+			return Stream.of(new InputValidationResult(false, message, textUser));
+		} else {
+			return Stream.empty();
 		}
+	}
+	
+	private Stream<InputValidationResult> validatePassword() {
 		if (textPassword.getText().trim().length() > 99) {
-			String message = passwordTouched ? "Password is invalid" : null;
-			return new InputValidationResult(false, message, textPassword);
+			var message = passwordTouched ? "Password is invalid" : null;
+			return Stream.of(new InputValidationResult(false, message, textPassword));
+		} else {
+			return Stream.empty();
 		}
-		if (btnCustomSchema.getSelection() && textCustomSchema.getText().trim().equals("")) {
-			String message = schemaTouched ? "Custom schema is mandatory" : null;
-			return new InputValidationResult(false, message, textCustomSchema);
+	}
+	
+	private Stream<InputValidationResult> validateCustomSchema() {
+		if (btnCustomSchema.getSelection() && textCustomSchema.getText().isBlank()) {
+			var message = schemaTouched ? "Custom schema is mandatory" : null;
+			return Stream.of(new InputValidationResult(false, message, textCustomSchema));
+		} else {
+			return Stream.empty();
 		}
-		if (btnCustomSchema.getSelection() && textCustomSchema.getText().trim().length() > 18) {
-			String message = "Custom schema cannot exceed 18 characters in length";
-			return new InputValidationResult(false, message, textCustomSchema);
-		}
-		if (btnCustomQueryRowidListSizeMaximum.getSelection() && 
-			textCustomQueryRowidListSizeMaximum.getText().trim().equals("")) {
-			
-			String message = queryRowidListSizeMaximumTouched ? 
-							 "Custom maximum rowid list size in queries is mandatory" : null;
-			return new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum);
-		}
-		if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
-			String message = "Custom maximum rowid list size in queries must be a positive " +
-							 "number in the range 1 to 1000";
+	}
+	
+	private Stream<InputValidationResult> validateCustomQueryRowidListSizeMaximum() {
+		if (btnCustomQueryRowidListSizeMaximum.getSelection() && textCustomQueryRowidListSizeMaximum.getText().isBlank()) {
+			var message = queryRowidListSizeMaximumTouched ? "Custom maximum rowid list size in queries is mandatory" : null;
+			return  Stream.of(new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum));
+		} else if (btnCustomQueryRowidListSizeMaximum.getSelection()) {
+			var message = "Custom maximum rowid list size in queries must be a positive number in the range 1 to 1000";
 			try {
-				int i = Integer.valueOf(textCustomQueryRowidListSizeMaximum.getText().trim());
+				var i = Integer.parseInt(textCustomQueryRowidListSizeMaximum.getText().trim());
 				if (i < 1 || i > 1000) {
-					return new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum);
+					return  Stream.of(new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum));
 				}	
 			} catch (NumberFormatException e) {
-				return new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum);
+				return  Stream.of(new InputValidationResult(false, message, textCustomQueryRowidListSizeMaximum));
 			}
 		}
-		return new InputValidationResult(true, null, null);
+		return Stream.empty();
 	}
 
 	public static class InputValidationResult {
-		
 		private String errorMessage;
 		private boolean validationOK;
 		private Text fieldInError;
 		
 		public InputValidationResult(boolean validationOK, String errorMessage, Text fieldInError) {
-			super();
 			this.validationOK = validationOK;
 			this.errorMessage = errorMessage;
 			this.fieldInError = fieldInError;

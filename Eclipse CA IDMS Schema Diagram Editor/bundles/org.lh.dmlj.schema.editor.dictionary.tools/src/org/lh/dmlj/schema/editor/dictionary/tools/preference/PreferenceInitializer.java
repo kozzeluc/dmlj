@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,18 +17,13 @@
 package org.lh.dmlj.schema.editor.dictionary.tools.preference;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
-	public PreferenceInitializer() {
-		super();
-	}
-
 	@Override
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		var store = Plugin.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.DEFAULT_SCHEMA, "SYSDICT");
 		store.setDefault(PreferenceConstants.DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM, 47);
 		store.setDefault(PreferenceConstants.CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS, true);

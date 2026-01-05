@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,117 +22,91 @@ import java.util.List;
 
 import org.lh.dmlj.schema.Usage;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Column_1028;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Table_1050;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Column1028;
 import org.lh.dmlj.schema.editor.importtool.IElementDataCollector;
 
-public class CatalogElementDataCollector implements IElementDataCollector<Column_1028> {
+public class CatalogElementDataCollector implements IElementDataCollector<Column1028> {
+	private static final String FILLER = "FILLER";
 
 	public CatalogElementDataCollector(SchemaImportSession session) {
-		super();
 	}
 
 	@Override
-	public String getBaseName(Column_1028 column_1028) {
-		return getName(column_1028);
+	public String getBaseName(Column1028 column1028) {
+		return getName(column1028);
 	}
 
 	@Override
-	public String getDependsOnElementName(Column_1028 column_1028) {
+	public String getDependsOnElementName(Column1028 column1028) {
 		return null;
 	}
 
 	@Override
-	public Collection<String> getIndexElementBaseNames(Column_1028 column_1028) {
+	public Collection<String> getIndexElementBaseNames(Column1028 column1028) {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public Collection<String> getIndexElementNames(Column_1028 column_1028) {
+	public Collection<String> getIndexElementNames(Column1028 column1028) {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public boolean getIsNullable(Column_1028 column_1028) {
-		return column_1028.getNulls_1028().equals("Y");
+	public boolean getIsNullable(Column1028 column1028) {
+		return column1028.getNulls1028().equals("Y");
 	}
 
 	@Override
-	public short getLevel(Column_1028 column_1028) {
+	public short getLevel(Column1028 column1028) {
 		return 2;
 	}
 
 	@Override
-	public String getName(Column_1028 column_1028) {
-		Table_1050 table_1050 = column_1028.getTable_1050();
-		StringBuilder p = new StringBuilder(column_1028.getName_1028().replaceAll("_", "-"));
-		if (!p.toString().equals("FILLER")) {
+	public String getName(Column1028 column1028) {
+		var table1050 = column1028.getTable1050();
+		var p = new StringBuilder(column1028.getName1028().replace("_", "-"));
+		if (!p.toString().equals(FILLER)) {
 			p.append("-");
-			p.append(String.valueOf(table_1050.getTableid_1050()));
+			p.append(String.valueOf(table1050.getTableid1050()));
 		}
 		return p.toString();
 	}
 
 	@Override
-	public short getOccurrenceCount(Column_1028 column_1028) {
+	public short getOccurrenceCount(Column1028 column1028) {
 		return 1;
 	}
 
 	@Override
-	public String getPicture(Column_1028 column_1028) {
-		String type = column_1028.getType_1028();			
-		if (type.equals("CHARACTER")) {
-			return "X(" + column_1028.getVlength_1028() + ")";			
-		} else if (type.equals("INTEGER")) {
-			return "S9(8) SYNC";			
-		} else if (type.equals("REAL")) {
-			return "S9(8) SYNC";			
-		} else if (type.equals("SMALLINT")) {
-			return "S9(4) SYNC";			
-		} else if (type.equals("TIMESTAMP")) {
-			// should we make this kind of element COMPUTATIONAL ?
-			return "X(8)";						
-		} else if (type.equals("BINARY")) {
-			if (getName(column_1028).equals("FILLER")) {
-				return "X(" + column_1028.getVlength_1028() + ")";					
-			} else {
-				return "X(" + (column_1028.getVlength_1028() * 8) + ")";				
-			}				
-		}
+	public String getPicture(Column1028 column1028) {
+		return switch (column1028.getType1028()) {
+			case "CHARACTER" -> "X(" + column1028.getVlength1028() + ")";
+			case "INTEGER", "REAL" -> "S9(8) SYNC";
+			case "SMALLINT" -> "S9(4) SYNC";
+			case "TIMESTAMP" -> "X(8)";
+			case "BINARY" -> getName(column1028).equals(FILLER) ? "X(" + column1028.getVlength1028() + ")" : "X(" + (column1028.getVlength1028() * 8) + ")";
+			default -> null;
+		};
+	}
+
+	@Override
+	public String getRedefinedElementName(Column1028 column1028) {
 		return null;
 	}
 
 	@Override
-	public String getRedefinedElementName(Column_1028 column_1028) {
-		return null;
+	public Usage getUsage(Column1028 column1028) {
+		return switch (column1028.getType1028()) {
+			case "CHARACTER" -> Usage.DISPLAY;
+			case "INTEGER", "REAL", "SMALLINT" -> Usage.COMPUTATIONAL;
+			case "TIMESTAMP" -> Usage.DISPLAY;
+			case "BINARY" -> getName(column1028).equals(FILLER) ? Usage.DISPLAY : Usage.BIT;
+			default -> null;
+		};
 	}
 
 	@Override
-	public Usage getUsage(Column_1028 column_1028) {
-		String type = column_1028.getType_1028();			
-		if (type.equals("CHARACTER")) {			
-			return Usage.DISPLAY;
-		} else if (type.equals("INTEGER")) {			
-			return Usage.COMPUTATIONAL;
-		} else if (type.equals("REAL")) {			
-			return Usage.COMPUTATIONAL;
-		} else if (type.equals("SMALLINT")) {			
-			return Usage.COMPUTATIONAL;
-		} else if (type.equals("TIMESTAMP")) {			
-			// should we make this kind of element COMPUTATIONAL ?
-			return Usage.DISPLAY;
-		} else if (type.equals("BINARY")) {
-			if (getName(column_1028).equals("FILLER")) {
-				return Usage.DISPLAY;					
-			} else {									
-				return Usage.BIT;					
-			}				
-		}
-		return null;
-	}
-
-	@Override
-	public List<String> getValues(Column_1028 column_1028) {
+	public List<String> getValues(Column1028 column1028) {
 		return Collections.emptyList();
 	}
 

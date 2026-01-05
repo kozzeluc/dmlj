@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -34,26 +34,18 @@ import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 
 public class DictionarySelectionPage extends AbstractDataEntryPage {
-
-	private Table table;
-	
 	private List<Dictionary> dictionaries;
 	
-	public DictionarySelectionPage() {
-		super();
-	}
+	private Table table;
 
 	@Override
 	public void aboutToShow() {
 		validatePage();
 	}
-
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+	
 	@Override
 	public Control createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
+		var container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
 		
 		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
@@ -67,23 +59,23 @@ public class DictionarySelectionPage extends AbstractDataEntryPage {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		TableColumn tblclmnId = new TableColumn(table, SWT.NONE);
+		var tblclmnId = new TableColumn(table, SWT.NONE);
 		tblclmnId.setWidth(125);
 		tblclmnId.setText("Id");
 		
-		TableColumn tblclmnHostname = new TableColumn(table, SWT.NONE);
+		var tblclmnHostname = new TableColumn(table, SWT.NONE);
 		tblclmnHostname.setWidth(125);
 		tblclmnHostname.setText("Hostname");
 		
-		TableColumn tblclmnPort = new TableColumn(table, SWT.RIGHT);
+		var tblclmnPort = new TableColumn(table, SWT.RIGHT);
 		tblclmnPort.setWidth(50);
 		tblclmnPort.setText("Port");
 		
-		TableColumn tblclmnDictname = new TableColumn(table, SWT.NONE);
+		var tblclmnDictname = new TableColumn(table, SWT.NONE);
 		tblclmnDictname.setWidth(75);
 		tblclmnDictname.setText("Dictname");
 		
-		TableColumn tblclmnSchema = new TableColumn(table, SWT.NONE);
+		var tblclmnSchema = new TableColumn(table, SWT.NONE);
 		tblclmnSchema.setWidth(75);
 		tblclmnSchema.setText("Schema");
 		
@@ -95,8 +87,8 @@ public class DictionarySelectionPage extends AbstractDataEntryPage {
 	private void getDictionaries() {
 		try {
 			dictionaries = Dictionary.list(Plugin.getDefault().getDictionaryFolder());
-			for (Dictionary dictionary : dictionaries) {
-				TableItem tableItem = new TableItem(table, SWT.NONE);
+			for (var dictionary : dictionaries) {
+				var tableItem = new TableItem(table, SWT.NONE);
 				tableItem.setText(0, dictionary.getId());
 				tableItem.setText(1, dictionary.getHostname());
 				tableItem.setText(2, String.valueOf(dictionary.getPort()));
@@ -104,12 +96,11 @@ public class DictionarySelectionPage extends AbstractDataEntryPage {
 				tableItem.setText(4, dictionary.getSchemaWithDefault(Plugin.getDefault()));
 			}
 		} catch (Throwable t) {
-			throw new RuntimeException(t);
+			throw new IllegalStateException(t);
 		}
 	}	
 	
 	private void validatePage() {
-	
 		getContext().clearAttribute(ContextAttributeKeys.DICTIONARY);
 		
 		getController().setPageComplete(false);
@@ -117,15 +108,10 @@ public class DictionarySelectionPage extends AbstractDataEntryPage {
 		
 		if (!Plugin.getDefault().isDriverInstalled()) {
 			getController().setErrorMessage("CA IDMS JDBC driver NOT installed");
-			return;
-		}
-		
-		if (table.getSelectionIndex() > -1) {
-			getContext().setAttribute(ContextAttributeKeys.DICTIONARY, 
-									  dictionaries.get(table.getSelectionIndex()));
+		} else if (table.getSelectionIndex() > -1) {
+			getContext().setAttribute(ContextAttributeKeys.DICTIONARY, dictionaries.get(table.getSelectionIndex()));
 			getController().setPageComplete(true);
 		}
-		
 	}
 
 }
