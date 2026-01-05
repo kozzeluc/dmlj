@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,16 +23,11 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 public class ServicesPlugin implements BundleActivator {
-
 	private static ServicesPlugin plugin;
 	private Map<Class<?>, Object> services = new HashMap<>();	
 	
 	public static ServicesPlugin getDefault() {
 		return plugin;
-	}
-	
-	public ServicesPlugin() {
-		super();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -50,7 +45,8 @@ public class ServicesPlugin implements BundleActivator {
 	}
 
 	@Override
-	public void stop(BundleContext context) throws Exception {				
+	public void stop(BundleContext context) throws Exception {
+		plugin = null;
 	}
 
 }
