@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,8 +38,18 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 
 public class EditProcedureCallsDialog extends Dialog {
-	private static final String AREA_EXAMPLES = "call 'IDMSCOMP BEFORE READY EXCLUSIVE UPDATE'\ncall 'IDMSDCOM AFTER FINISH'\ncall 'IDMSCOMP ON_ERROR_DURING ROLLBACK'";
-	private static final String RECORD_EXAMPLES = "call 'IDMSCOMP BEFORE STORE'\ncall 'IDMSCOMP AFTER GET'\ncall 'IDMSCOMP ON_ERROR_DURING DISCONNECT'";
+	private static final String AREA_EXAMPLES =
+			"""
+			callProcedure 'IDMSCOMP BEFORE READY EXCLUSIVE UPDATE'
+			callProcedure 'IDMSDCOM AFTER FINISH'
+			callProcedure 'IDMSCOMP ON_ERROR_DURING ROLLBACK'
+			""";
+	private static final String RECORD_EXAMPLES = 
+			"""
+			callProcedure 'IDMSCOMP BEFORE STORE'
+			callProcedure 'IDMSCOMP AFTER GET'
+			callProcedure 'IDMSCOMP ON_ERROR_DURING DISCONNECT'
+			""";
 	
 	private final IDslFacetModifier dslFacetModifier;
 	
@@ -148,7 +158,7 @@ public class EditProcedureCallsDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 350);
+		return new Point(525, 400);
 	}
 
 	private void initialize() {		
