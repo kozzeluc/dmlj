@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -61,7 +61,7 @@ class DataCollectorRegistry implements IDataCollectorRegistry {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> IRecordDataCollector<T> getRecordDataCollector(Class<T> type) {
-		return (IRecordDataCollector<T>) getDataCollector(areaDataCollectors, type);
+		return (IRecordDataCollector<T>) getDataCollector(recordDataCollectors, type);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ class DataCollectorRegistry implements IDataCollectorRegistry {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> ISetDataCollector<T> getSetDataCollector(Class<T> type) {
-		return (ISetDataCollector<T>) getDataCollector(areaDataCollectors, type);
+		return (ISetDataCollector<T>) getDataCollector(setDataCollectors, type);
 	}
 
 	@Override
