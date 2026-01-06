@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025 Luc Hermans
+ * Copyright (C) 2026 Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -57,7 +57,8 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 	private final AbstractAttributesBasedPropertiesSection<?> section;
 	private final IStatusLineManager statusLineManager;
 	private final TableEditor tableEditor;
-	private CommandStack	commandStack;
+	private CommandStack commandStack;
+	private Cursor handCursor;
 	
 	private static Enum<?> getEnumElement(EAttribute attribute, String value) {
 		var classifier = attribute.getEType();
@@ -86,6 +87,9 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 	}
 	
 	public void dispose() {
+		if (handCursor != null) {
+			handCursor.dispose();
+		}
 		if (tableEditor.getEditor() != null && !tableEditor.getEditor().isDisposed()) {
 			tableEditor.getEditor().dispose();
 		}
@@ -163,7 +167,10 @@ public class PropertyEditor extends MouseAdapter implements MouseMoveListener {
 		var styleRange = new StyleRange(0, item.getText(1).length(), item.getForeground(1), table.getBackground());
 		styleRange.underline = true;
 		styledText.setStyleRange(styleRange);
-		styledText.setCursor(new Cursor(table.getDisplay(), SWT.CURSOR_HAND));
+		if (handCursor == null) {
+			handCursor = new Cursor(table.getDisplay(), SWT.CURSOR_HAND);
+		}
+		styledText.setCursor(handCursor);
 		
 		// set the editor control's top margin so that the text doesn't shift
 		// up or down in it's cell when being underlined
