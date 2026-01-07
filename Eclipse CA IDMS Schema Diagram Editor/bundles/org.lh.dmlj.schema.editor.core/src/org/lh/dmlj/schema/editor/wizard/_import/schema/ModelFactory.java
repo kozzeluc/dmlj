@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -400,7 +400,7 @@ class ModelFactory {
 			createViaSpecification(schemaRecord);
 			
 			// cache the VIA record for the set
-			var viaRecordsForSet = viaSetMembers.putIfAbsent(ucViaSetName, new ArrayList<>());
+			var viaRecordsForSet = viaSetMembers.computeIfAbsent(ucViaSetName, unused -> new ArrayList<>());
 			viaRecordsForSet.add(schemaRecord);
 		}		
 		return schemaRecord;
