@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -465,7 +465,6 @@ public final class SchemaImportToolProxy {
 			var indexElementBaseNames = new ArrayList<>(dataCollector.getIndexElementBaseNames(elementContext));
 			if (!indexElementBaseNames.isEmpty()) {
 				var indexElementNames = new ArrayList<>(dataCollector.getIndexElementNames(elementContext));
-				indexElementNames.addAll(dataCollector.getIndexElementNames(elementContext));
 				if (indexElementBaseNames.size() != indexElementNames.size()) {
 					throw new IllegalStateException("indexElementBaseNames.size() != indexElementNames.size(): " +
 							indexElementBaseNames.size() + " " + indexElementNames.size());
