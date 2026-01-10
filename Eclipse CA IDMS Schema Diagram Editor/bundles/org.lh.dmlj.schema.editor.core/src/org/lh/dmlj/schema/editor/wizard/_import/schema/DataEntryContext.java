@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,8 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.wizard._import.schema;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,12 +23,7 @@ import java.util.Map;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
 public class DataEntryContext implements IDataEntryContext {
-
 	private Map<String, Object> map = new HashMap<>();
-	
-	public DataEntryContext() {
-		super();
-	}
 	
 	@Override
 	public void clear() {
@@ -49,8 +42,8 @@ public class DataEntryContext implements IDataEntryContext {
 		return map.containsKey(key);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getAttribute(String key) {
 		if (map.containsKey(key)) {
 			return (T) map.get(key);
@@ -61,9 +54,9 @@ public class DataEntryContext implements IDataEntryContext {
 
 	@Override
 	public List<String> getAttributeNames() {
-		List<String> attributeNames = new ArrayList<>(map.keySet());		
-		Collections.sort(attributeNames);
-		return attributeNames;
+		return map.keySet().stream()
+				.sorted()
+				.toList();
 	}
 
 	@Override

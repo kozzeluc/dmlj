@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,29 +22,25 @@ import org.lh.dmlj.schema.SchemaRecord;
 
 public class PrefixForPointerRemoval extends Prefix {	
 	
-	PrefixForPointerRemoval(SchemaRecord record, List<Pointer<?>> pointers) {
-		super(record, pointers);
+	PrefixForPointerRemoval(SchemaRecord schemaRecord, List<Pointer> pointers) {
+		super(schemaRecord, pointers);
 	}
 	
 	public void removePointers() {
-		for (Pointer<?> pointer : pointers) {
-			if (pointer instanceof PointerToUnset<?>) {
-				PointerToUnset<?> pointerToUnset = (PointerToUnset<?>) pointer;
+		for (var pointer : pointers) {
+			if (pointer instanceof PointerToUnset pointerToUnset) {
 				pointerToUnset.unset();
-			} else if (pointer instanceof PointerToMove<?>) {
-				PointerToMove<?> pointerToMove = (PointerToMove<?>) pointer;
+			} else if (pointer instanceof PointerToMove pointerToMove) {
 				pointerToMove.move();
 			}
 		}
 	}
 	
 	public void reset() {
-		for (Pointer<?> pointer : pointers) {
-			if (pointer instanceof PointerToUnset<?>) {
-				PointerToUnset<?> pointerToUnset = (PointerToUnset<?>) pointer;
+		for (var pointer : pointers) {
+			if (pointer instanceof PointerToUnset pointerToUnset) {
 				pointerToUnset.reset();
-			} else if (pointer instanceof PointerToMove<?>) {
-				PointerToMove<?> pointerToMove = (PointerToMove<?>) pointer;
+			} else if (pointer instanceof PointerToMove pointerToMove) {
 				pointerToMove.moveBack();
 			}
 		}

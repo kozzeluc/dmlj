@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -34,20 +34,14 @@ import org.eclipse.swt.graphics.Font;
 import org.lh.dmlj.schema.editor.Plugin;
 
 public class RecordFigure extends Figure {
-	
 	public static final int UNSCALED_WIDTH = 130;
 	public static final int UNSCALED_HEIGHT = 53;
 	
 	private static final Font standardFont = Plugin.getDefault().getFigureFont();
 	private static final Font vsamCalcFont = Plugin.getDefault().getFigureFontSmall();
-	
-	private static final Border standardBorder = 
-		new CompoundBorder(new LineBorder(1), new MarginBorder(0, 4, 0, 0));
-	private static final Border vsamCalcBorder =
-		new CompoundBorder(new LineBorder(1), new MarginBorder(0, 2, 0, 0));
-	
-	private static final DecimalFormat recordIdFormatter = 
-		new DecimalFormat("000");
+	private static final Border standardBorder = new CompoundBorder(new LineBorder(1), new MarginBorder(0, 4, 0, 0));
+	private static final Border vsamCalcBorder = new CompoundBorder(new LineBorder(1), new MarginBorder(0, 2, 0, 0));
+	private static final DecimalFormat recordIdFormatter = new DecimalFormat("000");
 	
 	private Label recordNameFigure;
 	
@@ -62,16 +56,13 @@ public class RecordFigure extends Figure {
 	private Label areaNameFigure;	
 	
 	/**
-	 * Scales the relative anchorPoint on the recordFigure to the given 
-	 * zoomLevel.
+	 * Scales the relative anchorPoint on the recordFigure to the given zoomLevel.
 	 * @param anchorPoint The unscaled relative anchor point 
 	 * @param figure The record figure
 	 * @param zoomLevel The zoom level to scale up or down to
 	 */
-	public static void scale(PrecisionPoint anchorPoint, RecordFigure figure, 
-							 double zoomLevel) {
-	
-		Rectangle bounds = figure.getBounds().getCopy();
+	public static void scale(PrecisionPoint anchorPoint, RecordFigure figure, double zoomLevel) {
+		var bounds = figure.getBounds().getCopy();
 		figure.translateToAbsolute(bounds);
 		
 		anchorPoint.setPreciseX(anchorPoint.preciseX() * zoomLevel);
@@ -86,15 +77,11 @@ public class RecordFigure extends Figure {
 	}
 	
 	/**
-	 * Unscales the relative anchorPoint on the recordFigure from the given 
-	 * zoomLevel.
+	 * Unscales the relative anchorPoint on the recordFigure from the given zoomLevel.
 	 * @param anchorPoint The scaled relative anchor point 
-	 * @param figure The record figure
 	 * @param zoomLevel The zoom level to unscale from
 	 */
-	public static void unscale(PrecisionPoint anchorPoint, RecordFigure figure, 
-			 				   double zoomLevel) {			
-	
+	public static void unscale(PrecisionPoint anchorPoint, double zoomLevel) {
 		anchorPoint.setPreciseX(anchorPoint.preciseX() / zoomLevel);
 		if (anchorPoint.preciseX() > UNSCALED_WIDTH) {
 			anchorPoint.setPreciseX(UNSCALED_WIDTH);
@@ -106,11 +93,9 @@ public class RecordFigure extends Figure {
 	}
 	
 	public RecordFigure() {
-		super();
-		
 		setOpaque(true);
 		
-		XYLayout layout = new XYLayout();
+		var layout = new XYLayout();
 		setLayoutManager(layout);
 		
 		setPreferredSize(UNSCALED_WIDTH, UNSCALED_HEIGHT);
@@ -125,14 +110,15 @@ public class RecordFigure extends Figure {
 		locationModeDetailsFigure = addLabel(0, 26, 102, 14);
 		duplicatesOptionFigure = addLabel(101, 26, 29, 14);
 		
-		areaNameFigure = addLabel(0, 39, 130, 14);		
-		
+		areaNameFigure = addLabel(0, 39, 130, 14);
 	}
+	
 	private Label addLabel(int x, int y, int width, int height) {
 		return addLabel(x, y, width, height, true);
 	}
+	
 	private Label addLabel(int x, int y, int width, int height, boolean setFontAndBorder) {
-		Label label = new Label();
+		var label = new Label();
 		label.setLabelAlignment(PositionConstants.LEFT);
 		if (setFontAndBorder) {
 			label.setFont(standardFont);
@@ -185,4 +171,5 @@ public class RecordFigure extends Figure {
 	public void setStorageMode(String storageMode) {
 		storageModeFigure.setText(storageMode);
 	}
+	
 }

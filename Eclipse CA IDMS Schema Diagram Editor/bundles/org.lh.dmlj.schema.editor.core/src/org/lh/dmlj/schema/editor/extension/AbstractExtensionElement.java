@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,12 +20,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 
 public abstract class AbstractExtensionElement {
-
 	protected final IConfigurationElement configElement;
-	protected final IExtension 			  extension;	
+	protected final IExtension extension;	
 	
-	public AbstractExtensionElement(IConfigurationElement configElement) {
-		super();		
+	protected AbstractExtensionElement(IConfigurationElement configElement) {
 		this.configElement = configElement;
 		this.extension = configElement.getDeclaringExtension();
 	}
@@ -35,21 +33,15 @@ public abstract class AbstractExtensionElement {
 	}
 	
 	public final String getDescription() {
-		return Util.getAttribute(configElement, 
-				  				 ExtensionPointConstants.ATTRIBUTE_DESCRIPTION, 
-				  				 ""); // not in every extension element
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_DESCRIPTION, "");
 	}
 
 	public final String getId() {
-		return Util.getAttribute(configElement, 
-				   				 ExtensionPointConstants.ATTRIBUTE_ID, 
-				   				 ""); // not in every extension element
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_ID, "");
 	}
 
 	public final String getName() {
-		return Util.getAttribute(configElement, 
-				 				 ExtensionPointConstants.ATTRIBUTE_NAME, 
-				 				 ""); // not in every extension element
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_NAME, "");
 	}
 
 	public final String getPluginId() {

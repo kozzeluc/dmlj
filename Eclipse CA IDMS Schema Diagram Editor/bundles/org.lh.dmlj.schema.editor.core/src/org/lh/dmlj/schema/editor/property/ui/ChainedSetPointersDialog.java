@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -34,94 +34,41 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 public class ChainedSetPointersDialog extends Dialog {
-
-	private Button 	   btnOwnerPointers;
-	private Button 	   btnOwnerPointersAllMembers;
-	private Button     btnOwnerPointersCurrentMember;
-	private Button 	   btnPriorPointers;
-	private MemberRole memberRole;
-	private boolean    ownerPointerManipulationForAllMembers;
-	private boolean    ownerPointers;
-	private boolean    priorPointers;
+	private final MemberRole memberRole;
+	private boolean ownerPointerManipulationForAllMembers;
+	private boolean ownerPointers;
+	private boolean priorPointers;
 	
-	
-	/**
-	 * Create the dialog.
-	 * @param parentShell
-	 */
+	private Button btnOwnerPointers;
+	private Button btnOwnerPointersAllMembers;
+	private Button btnOwnerPointersCurrentMember;
+	private Button btnPriorPointers;
+		
 	public ChainedSetPointersDialog(Shell parentShell, MemberRole memberRole) {
 		super(parentShell);
 		this.memberRole = memberRole;
 		setShellStyle(getShellStyle() | SWT.RESIZE); 
 	}
-
-	private boolean anythingChanged() {
-		
-		// check if the user has (un)checked the prior dbkey position checkbox
-		boolean hasPriorPointers = memberRole.getPriorDbkeyPosition() != null;
-		if (btnPriorPointers.getSelection() != hasPriorPointers) {
-			return true;
-		}
-		
-		// check if the user has (un)checked the owner dbkey position checkbox
-		boolean hasOwnerPointers = memberRole.getOwnerDbkeyPosition() != null;
-		if (btnOwnerPointers.getSelection() != hasOwnerPointers) {
-			return true;
-		}
-		
-		// if we're not dealing with a multiple member set and the user has NOT
-		// checked the "For all other member records as well." checkbox, we're 
-		// done (i.e. no changes to perform)
-		if (memberRole.getSet().getMembers().size() == 1 ||
-			!btnOwnerPointersAllMembers.getSelection()) {
-			
-			return false;
-		}
-		
-		// check if the multiple member set's other member records are affected
-		for (MemberRole aMemberRole : memberRole.getSet().getMembers()) {
-			hasOwnerPointers = aMemberRole.getOwnerDbkeyPosition() != null;
-			if (btnOwnerPointers.getSelection() != hasOwnerPointers) {
-				return true;
-			}
-		}
-		
-		// no changes (multiple member set)
-		return false;
-	}
 	
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		Assert.isTrue(memberRole.getSet().getMode() == SetMode.CHAINED, 
-					  "logic error: not a chained set");
-		shell.setText("Edit pointers for set " + 
-					  Tools.removeTrailingUnderscore(memberRole.getSet()
-							  						 		   .getName()));	    
+		Assert.isTrue(memberRole.getSet().getMode() == SetMode.CHAINED, "logic error: not a chained set");
+		shell.setText("Edit pointers for set " + Tools.removeTrailingUnderscore(memberRole.getSet().getName()));	    
 	}	
 	
-	/**
-	 * Create contents of the button bar.
-	 * @param parent
-	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-					 true);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-					 IDialogConstants.CANCEL_LABEL, false);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 		enableAndDisable();
 	}
 
-	/**
-	 * Create contents of the dialog.
-	 * @param parent
-	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
+		var container = (Composite) super.createDialogArea(parent);
 		
-		Button btnNextPointers = new Button(container, SWT.CHECK);
+		var btnNextPointers = new Button(container, SWT.CHECK);
 		btnNextPointers.setEnabled(false);
 		btnNextPointers.setSelection(true);
 		btnNextPointers.setText("NEXT pointers (owner record and all member records)");
@@ -152,16 +99,16 @@ public class ChainedSetPointersDialog extends Dialog {
 			}
 		});
 		btnOwnerPointersCurrentMember.setSelection(true);
-		GridData gd_btnOwnerPointersCurrentMember = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnOwnerPointersCurrentMember.horizontalIndent = 15;
-		btnOwnerPointersCurrentMember.setLayoutData(gd_btnOwnerPointersCurrentMember);
+		var gdBtnOwnerPointersCurrentMember = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdBtnOwnerPointersCurrentMember.horizontalIndent = 15;
+		btnOwnerPointersCurrentMember.setLayoutData(gdBtnOwnerPointersCurrentMember);
 		btnOwnerPointersCurrentMember.setText("For member record [...] only");
 		
-		Label lblotherMemberRecords = new Label(container, SWT.NONE);
-		GridData gd_lblotherMemberRecords = new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1);
-		gd_lblotherMemberRecords.verticalIndent = -10;
-		gd_lblotherMemberRecords.horizontalIndent = 30;
-		lblotherMemberRecords.setLayoutData(gd_lblotherMemberRecords);
+		var lblotherMemberRecords = new Label(container, SWT.NONE);
+		var gdLblotherMemberRecords = new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1);
+		gdLblotherMemberRecords.verticalIndent = -10;
+		gdLblotherMemberRecords.horizontalIndent = 30;
+		lblotherMemberRecords.setLayoutData(gdLblotherMemberRecords);
 		lblotherMemberRecords.setText("(other member records, if any, will remain unchanged)");
 		
 		btnOwnerPointersAllMembers = new Button(container, SWT.RADIO);
@@ -171,9 +118,9 @@ public class ChainedSetPointersDialog extends Dialog {
 				enableAndDisable();
 			}
 		});
-		GridData gd_btnOwnerPointersAllMembers = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnOwnerPointersAllMembers.horizontalIndent = 15;
-		btnOwnerPointersAllMembers.setLayoutData(gd_btnOwnerPointersAllMembers);
+		var gdBtnOwnerPointersAllMembers = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdBtnOwnerPointersAllMembers.horizontalIndent = 15;
+		btnOwnerPointersAllMembers.setLayoutData(gdBtnOwnerPointersAllMembers);
 		btnOwnerPointersAllMembers.setText("For all other member records as well.");
 
 		initialize();
@@ -181,52 +128,22 @@ public class ChainedSetPointersDialog extends Dialog {
 		return container;
 	}
 	
-	private void enableAndDisable() {
-		
-		// no checks to perform
-		
-		// make sure we've got all information available should the user press
-		// the OK button
-		priorPointers = btnPriorPointers.getSelection();
-		ownerPointers = btnOwnerPointers.getSelection();
-		ownerPointerManipulationForAllMembers = 
-			btnOwnerPointersAllMembers.getSelection();
-		
-		// only enable the OK Button if anything will change
-		Button okButton = getButton(IDialogConstants.OK_ID);
-		okButton.setEnabled(anythingChanged());
-		
-	}
-
-	/**
-	 * Return the initial size of the dialog.
-	 */
-	@Override
-	protected Point getInitialSize() {
-		return new Point(375, 250);
-	}
-	
 	private void initialize() {
-		
 		btnPriorPointers.setSelection(memberRole.getPriorDbkeyPosition() != null);
 		
 		btnOwnerPointers.setSelection(memberRole.getOwnerDbkeyPosition() != null);
 		
-		String recordName = 
-			Tools.removeTrailingUnderscore(memberRole.getRecord().getName()); 
-		btnOwnerPointersCurrentMember.setText("For member record " + 
-											  recordName + " only");
+		var recordName = Tools.removeTrailingUnderscore(memberRole.getRecord().getName()); 
+		btnOwnerPointersCurrentMember.setText("For member record " + recordName + " only");
 		
-		boolean multipleMemberSet = memberRole.getSet().getMembers().size() > 1;
+		var multipleMemberSet = memberRole.getSet().getMembers().size() > 1;
 		btnOwnerPointersAllMembers.setEnabled(multipleMemberSet);
 		
 		if (multipleMemberSet) {
-			boolean b = memberRole.getOwnerDbkeyPosition() != null;
-			boolean b2 = true;
-			for (MemberRole aMemberRole : memberRole.getSet().getMembers()) {
-				if (aMemberRole != memberRole &&
-					!(aMemberRole.getOwnerDbkeyPosition() != null) == b) {
-					
+			var b = memberRole.getOwnerDbkeyPosition() != null;
+			var b2 = true;
+			for (var aMemberRole : memberRole.getSet().getMembers()) {
+				if (aMemberRole != memberRole && (aMemberRole.getOwnerDbkeyPosition() == null) == b) {
 					b2 = false;
 					break;
 				}
@@ -236,6 +153,53 @@ public class ChainedSetPointersDialog extends Dialog {
 		}
 	}
 
+	private void enableAndDisable() {
+		// no checks to perform
+		
+		// make sure we've got all information available should the user press the OK button
+		priorPointers = btnPriorPointers.getSelection();
+		ownerPointers = btnOwnerPointers.getSelection();
+		ownerPointerManipulationForAllMembers = btnOwnerPointersAllMembers.getSelection();
+				
+		getButton(IDialogConstants.OK_ID).setEnabled(anythingChanged());
+	}
+	
+	private boolean anythingChanged() {
+		// check if the user has (un)checked the prior dbkey position checkbox
+		var hasPriorPointers = memberRole.getPriorDbkeyPosition() != null;
+		if (btnPriorPointers.getSelection() != hasPriorPointers) {
+			return true;
+		}
+		
+		// check if the user has (un)checked the owner dbkey position checkbox
+		var hasOwnerPointers = memberRole.getOwnerDbkeyPosition() != null;
+		if (btnOwnerPointers.getSelection() != hasOwnerPointers) {
+			return true;
+		}
+		
+		// if we're not dealing with a multiple member set and the user has NOT checked the "For all other member
+		// records as well." checkbox, we're done (i.e. no changes to perform)
+		if (memberRole.getSet().getMembers().size() == 1 || !btnOwnerPointersAllMembers.getSelection()) {
+			return false;
+		}
+		
+		// check if the multiple member set's other member records are affected
+		for (var aMemberRole : memberRole.getSet().getMembers()) {
+			hasOwnerPointers = aMemberRole.getOwnerDbkeyPosition() != null;
+			if (btnOwnerPointers.getSelection() != hasOwnerPointers) {
+				return true;
+			}
+		}
+		
+		// no changes (multiple member set)
+		return false;
+	}
+	
+	@Override
+	protected Point getInitialSize() {
+		return new Point(375, 250);
+	}
+	
 	public boolean isOwnerPointerManipulationForAllMembers() {
 		return ownerPointerManipulationForAllMembers;
 	}

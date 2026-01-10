@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,26 +22,22 @@ import org.lh.dmlj.schema.SchemaRecord;
 
 public class PrefixForPointerReordering extends Prefix {	
 	
-	PrefixForPointerReordering(SchemaRecord record, List<Pointer<?>> pointers) {
-		super(record, pointers);
+	PrefixForPointerReordering(SchemaRecord schemaRecord, List<Pointer> pointers) {
+		super(schemaRecord, pointers);
 	}
 	
 	public void reorderPointers() {
-		for (Pointer<?> pointer : pointers) {
-			if (pointer instanceof PointerToMove<?>) {
-				PointerToMove<?> pointerToMove = (PointerToMove<?>) pointer;
-				pointerToMove.move();
-			}
-		}
+		pointers.stream()
+				.filter(PointerToMove.class::isInstance)
+				.map(PointerToMove.class::cast)
+				.forEach(PointerToMove::move);
 	}
 	
 	public void reset() {
-		for (Pointer<?> pointer : pointers) {
-			if (pointer instanceof PointerToMove<?>) {
-				PointerToMove<?> pointerToMove = (PointerToMove<?>) pointer;
-				pointerToMove.moveBack();
-			}
-		}
+		pointers.stream()
+				.filter(PointerToMove.class::isInstance)
+				.map(PointerToMove.class::cast)
+				.forEach(PointerToMove::moveBack);
 	}
 	
 }

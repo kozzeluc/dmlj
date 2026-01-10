@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,14 +18,11 @@ package org.lh.dmlj.schema.editor.importtool.elements.diagram;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.swt.SWT;
@@ -44,10 +41,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.lh.dmlj.schema.Schema;
@@ -57,7 +51,6 @@ import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
 public class SchemaSelectionPage extends AbstractDataEntryPage {
-	
 	private Button btnOpenEditor;
 	private Button btnBrowse;
 	private Button btnFileSystem;
@@ -69,17 +62,10 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 	private SchemaEditor currentEditor;
 	private File currentSchemaFile;
 	
-	public SchemaSelectionPage() {
-		super();
-	}
-
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	@Override
 	public Control createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		Layout layout = new GridLayout(3, false);
+		var container = new Composite(parent, SWT.NONE);
+		var layout = new GridLayout(3, false);
 		container.setLayout(layout);
 		
 		btnOpenEditor = new Button(container, SWT.RADIO);
@@ -99,9 +85,9 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 				validate();
 			}
 		});
-		GridData gd_comboOpenEditor = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_comboOpenEditor.widthHint = 375;
-		comboOpenEditor.setLayoutData(gd_comboOpenEditor);
+		var gdComboOpenEditor = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gdComboOpenEditor.widthHint = 375;
+		comboOpenEditor.setLayoutData(gdComboOpenEditor);
 		new Label(container, SWT.NONE);
 		
 		btnFileSystem = new Button(container, SWT.RADIO);
@@ -132,11 +118,11 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(Display.getCurrent().getActiveShell());
+				var fileDialog = new FileDialog(Display.getCurrent().getActiveShell());
 				fileDialog.setText("Select a .schema File");
 				fileDialog.setFileName(textFileSystem.getText());
 				fileDialog.setFilterExtensions(new String[] {"*.schema"});
-				String newValue = fileDialog.open();							
+				var newValue = fileDialog.open();							
 				if (newValue != null) {
 					textFileSystem.setText(newValue);
 					textFileSystem.redraw();
@@ -159,51 +145,39 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 	}
 
 	private void getOpenEditors() {
-		for (IEditorReference editorReference : PlatformUI.getWorkbench()
-				  										  .getActiveWorkbenchWindow()
-				  										  .getActivePage()
-				  										  .getEditorReferences()) {
-			IEditorPart editorPart = editorReference.getEditor(true);
-			if (editorPart instanceof SchemaEditor) {
-				openEditors.add((SchemaEditor) editorPart);
-			}
-		}
-		Collections.sort(openEditors, new Comparator<SchemaEditor>() {
-			@Override
-			public int compare(SchemaEditor e1, SchemaEditor e2) {
-				Schema schema1 = e1.getSchema();
-				Schema schema2 = e2.getSchema();
-				if (schema1.getName().equals(schema2.getName())) {
-					if (schema1.getVersion() == schema2.getVersion()) {
-						IFile file1 = ((IFileEditorInput) e1.getEditorInput()).getFile();
-						IFile file2 = ((IFileEditorInput) e2.getEditorInput()).getFile();
-						return file1.getFullPath().toString().compareTo(file2.getFullPath().toString());
-					} else {
-						return schema1.getVersion() - schema2.getVersion();
-					}
+		Arrays.stream(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences())
+				.map(editorReference -> editorReference.getEditor(true))
+				.filter(SchemaEditor.class::isInstance)
+				.map(SchemaEditor.class::cast)
+				.forEach(openEditors::add);
+		Collections.sort(openEditors, (e1, e2) -> {
+			var schema1 = e1.getSchema();
+			var schema2 = e2.getSchema();
+			if (schema1.getName().equals(schema2.getName())) {
+				if (schema1.getVersion() == schema2.getVersion()) {
+					var file1 = ((IFileEditorInput) e1.getEditorInput()).getFile();
+					var file2 = ((IFileEditorInput) e2.getEditorInput()).getFile();
+					return file1.getFullPath().toString().compareTo(file2.getFullPath().toString());
 				} else {
-					return schema1.getName().compareTo(schema2.getName());
-				}				
-			}			
+					return schema1.getVersion() - schema2.getVersion();
+				}
+			} else {
+				return schema1.getName().compareTo(schema2.getName());
+			}
 		});
 	}
 
 	private void initialize() {
-		
-		currentEditor = (SchemaEditor) PlatformUI.getWorkbench()
-												 .getActiveWorkbenchWindow()
-												 .getActivePage()
-												 .getActiveEditor();
-		IFile file = ((IFileEditorInput) currentEditor.getEditorInput()).getFile();
+		currentEditor = (SchemaEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		var file = ((IFileEditorInput) currentEditor.getEditorInput()).getFile();
 		currentSchemaFile = new File(file.getParent().getLocation().toFile(), file.getName());
 		
 		getOpenEditors();
-		SchemaRecord currentRecord = 
-			getContext().getAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD);
+		SchemaRecord currentRecord = getContext().getAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD);
 		currentSchema = currentRecord.getSchema();
-		for (SchemaEditor schemaEditor : openEditors) {
+		for (var schemaEditor : openEditors) {
 			file = ((IFileEditorInput) schemaEditor.getEditorInput()).getFile();
-			StringBuilder entryText = new StringBuilder();
+			var entryText = new StringBuilder();
 			if (schemaEditor.getSchema() == currentSchema) {
 				entryText.append("*");
 			}
@@ -213,19 +187,15 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 			entryText.append(")");
 			comboOpenEditor.add(entryText.toString());
 		}
-		comboOpenEditor.select(openEditors.indexOf(PlatformUI.getWorkbench()
-				  											   .getActiveWorkbenchWindow()
-				  											   .getActivePage()
-				  											   .getActiveEditor()));
+		comboOpenEditor.select(openEditors.indexOf(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor()));
 	}
 
 	private void validate() {
-		
-		boolean pageComplete = true;
+		var pageComplete = true;
 		getController().setErrorMessage(null);
 		
 		if (btnOpenEditor.getSelection()) {
-			int i = comboOpenEditor.getSelectionIndex();
+			var i = comboOpenEditor.getSelectionIndex();
 			getContext().setAttribute(IDataEntryContext.SCHEMA, openEditors.get(i).getSchema());
 		} else if (btnFileSystem.getSelection()) {
 			if (textFileSystem.getText().trim().isEmpty()) {
@@ -233,35 +203,31 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 			} else if (!new File(textFileSystem.getText()).exists()) {
 				getController().setErrorMessage("File not found: " + textFileSystem.getText().trim());
 				pageComplete = false;
-			} else if (!new File(textFileSystem.getText()).exists()) {
+			} else if (!new File(textFileSystem.getText()).isFile()) {
 				getController().setErrorMessage("Not a file: " + textFileSystem.getText().trim());
 				pageComplete = false;
 			} else {
 				try {
-					ResourceSet resourceSet = new ResourceSetImpl();
-					resourceSet.getResourceFactoryRegistry()
-					   		   .getExtensionToFactoryMap()
-					   		   .put("schema", new XMIResourceFactoryImpl());
-					File schemaFile = new File(textFileSystem.getText());
-					URI uri = URI.createFileURI(schemaFile.getAbsolutePath());
-					Resource resource = resourceSet.getResource(uri, true);
-					Schema schema = (Schema) resource.getContents().get(0);					
+					var resourceSet = new ResourceSetImpl();
+					resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("schema", new XMIResourceFactoryImpl());
+					var schemaFile = new File(textFileSystem.getText());
+					var uri = URI.createFileURI(schemaFile.getAbsolutePath());
+					var resource = resourceSet.getResource(uri, true);
+					var schema = (Schema) resource.getContents().get(0);					
 					if (currentSchemaFile.equals(schemaFile) && !currentEditor.isDirty()) {
 						// use the current schema if the current editor is not dirty
 						getContext().setAttribute(IDataEntryContext.SCHEMA, currentSchema);
 					} else {
 						getContext().setAttribute(IDataEntryContext.SCHEMA, schema);
 					}
-				} catch (Throwable t) {
+				} catch (Exception t) {
 					getController().setErrorMessage("Not a valid file: " + t.getMessage());
 					pageComplete = false;
 				}
 			}
 		}
-		
 		enableAndDisable();
 		getController().setPageComplete(pageComplete);
-		
 	}
 
 }

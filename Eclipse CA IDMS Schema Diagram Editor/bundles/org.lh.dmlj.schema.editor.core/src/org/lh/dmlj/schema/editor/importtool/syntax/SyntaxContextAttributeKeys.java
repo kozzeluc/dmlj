@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,13 +16,12 @@
  */
 package org.lh.dmlj.schema.editor.importtool.syntax;
 
-public abstract class SyntaxContextAttributeKeys {
-
-	public static final String DIGIT_COUNT_FOR_MISSING_SUFFIXES_3_DIGITS = 
-		"digitCountForMissingSuffixes_3_digits";	
-	public static final String DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS = 
-		"digitCountForMissingSuffixes_4_digits";
-	public static final String DIGIT_COUNT_FOR_MISSING_SUFFIXES_PROMPT = 
-		"digitCountForMissingSuffixes_prompt_for_digits";
+public final class SyntaxContextAttributeKeys {
+	public static final String DIGIT_COUNT_FOR_MISSING_SUFFIXES_3_DIGITS = "digitCountForMissingSuffixes_3_digits";	
+	public static final String DIGIT_COUNT_FOR_MISSING_SUFFIXES_4_DIGITS = "digitCountForMissingSuffixes_4_digits";
+	public static final String DIGIT_COUNT_FOR_MISSING_SUFFIXES_PROMPT = "digitCountForMissingSuffixes_prompt_for_digits";
+	
+	private SyntaxContextAttributeKeys() {
+	}
 	
 }

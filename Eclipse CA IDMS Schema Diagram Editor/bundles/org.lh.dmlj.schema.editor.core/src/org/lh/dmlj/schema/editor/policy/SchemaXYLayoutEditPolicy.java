@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,10 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.policy;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
@@ -39,8 +37,6 @@ import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.command.CreateDiagramLabelCommand;
 import org.lh.dmlj.schema.editor.command.CreateRecordCommand;
-import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
-import org.lh.dmlj.schema.editor.command.ModelChangeBasicCommand;
 import org.lh.dmlj.schema.editor.command.MoveDiagramNodeCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -49,49 +45,40 @@ import org.lh.dmlj.schema.editor.part.AbstractDiagramNodeEditPart;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 
 public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
-
 	private Schema schema;
 	private boolean readOnlyMode;
 	
 	public SchemaXYLayoutEditPolicy(Schema schema, boolean readOnlyMode) {
-		super();
 		this.schema = schema;
 		this.readOnlyMode = readOnlyMode;
 	}
 	
 	@Override
-	protected Command createChangeConstraintCommand(ChangeBoundsRequest request, 
-													EditPart child,
-													Object constraint) {
-		
+	protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
 		if (readOnlyMode) {
 			return null;
 		}
 		
-		if (child.getModel() instanceof DiagramNode) {
-			// we're dealing with a DiagramNode, it can only be a
-			// move request, so create the move command...
-			Rectangle box = (Rectangle)constraint;
-			DiagramNode diagramNode = (DiagramNode) child.getModel();
-			MoveDiagramNodeData moveDiagramNodeData = new MoveDiagramNodeData(diagramNode);
-			ModelChangeContext context = 
-				new ModelChangeContext(moveDiagramNodeData.getModelChangeType());
+		if (child.getModel() instanceof DiagramNode diagramNode) {
+			// we're dealing with a DiagramNode, it can only be a move request, so create the move command...
+			var box = (Rectangle) constraint;
+			var moveDiagramNodeData = new MoveDiagramNodeData(diagramNode);
+			var context = new ModelChangeContext(moveDiagramNodeData.getModelChangeType());
 			context.putContextData(diagramNode);
-			IModelChangeCommand command = new MoveDiagramNodeCommand(diagramNode, box.x, box.y);
+			var command = new MoveDiagramNodeCommand(diagramNode, box.x, box.y);
 			command.setContext(context);
-			return (Command) command;
+			return command;
 		} else {
-			// not a DiagramNode or user is trying to resize, make
-			// sure he/she gets the right feedback
+			// not a DiagramNode or user is trying to resize, make sure he/she gets the right feedback
 			return null;
 		}
 	}
 	
 	@Override
 	protected EditPolicy createChildEditPolicy(EditPart child) {		
-		if (child instanceof AbstractDiagramNodeEditPart<?>) {
+		if (child instanceof AbstractDiagramNodeEditPart<?> diagramNodeEditPart) {
 			// a diagram node edit part (resizable or not)
-			return ((AbstractDiagramNodeEditPart<?>) child).getResizeEditPolicy();
+			return diagramNodeEditPart.getResizeEditPolicy();
 		} else {
 			// any other edit part
 			return super.createChildEditPolicy(child);
@@ -100,50 +87,34 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
-		
-		if (readOnlyMode) {
-			return null;
-		}
-		
-		if (request.getNewObjectType() != DiagramLabel.class && 
-			request.getNewObjectType() != SchemaRecord.class ||
-			request.getNewObjectType() == DiagramLabel.class && 
-			schema.getDiagramData().getLabel() != null) {
+		if (readOnlyMode ||
+			request.getNewObjectType() != DiagramLabel.class && request.getNewObjectType() != SchemaRecord.class ||
+			request.getNewObjectType() == DiagramLabel.class && schema.getDiagramData().getLabel() != null) {
 			
 			return null;
 		}	
 		
 		if (request.getNewObjectType() == DiagramLabel.class) {
-			String organisation = Plugin.getDefault()
-										.getPreferenceStore()
-										.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
+			var organisation = Plugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
 			String lastModified = null;
-			if (Plugin.getDefault()
-					  .getPreferenceStore()
-					  .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
-				
-				String pattern = 
-					Plugin.getDefault()
-						  .getPreferenceStore()
-						  .getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
-				DateFormat format = new SimpleDateFormat(pattern);
-				lastModified = 
-					"Last modified: " + format.format(System.currentTimeMillis()) + " (not saved)";
+			if (Plugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
+				var pattern = Plugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+				var format = new SimpleDateFormat(pattern);
+				lastModified = "Last modified: " + format.format(System.currentTimeMillis()) + " (not saved)";
 			}
-			Dimension size = 
-				DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(), 
-												  schema.getDescription(), lastModified); 
-			PrecisionPoint p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
+			var size = DiagramLabelFigure.getInitialSize(organisation, schema.getName(), schema.getVersion(),
+					schema.getDescription(), lastModified); 
+			var p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
 			getHostFigure().translateToRelative(p);
-			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_DIAGRAM_LABEL);
-			ModelChangeBasicCommand command = new CreateDiagramLabelCommand(schema, p, size);
+			var context = new ModelChangeContext(ModelChangeType.ADD_DIAGRAM_LABEL);
+			var command = new CreateDiagramLabelCommand(schema, p, size);
 			command.setContext(context);
 			return command;
 		} else if (request.getNewObjectType() == SchemaRecord.class) {
-			PrecisionPoint p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
+			var p = new PrecisionPoint(request.getLocation().x, request.getLocation().y); 				
 			getHostFigure().translateToRelative(p);
-			ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
-			ModelChangeBasicCommand command = new CreateRecordCommand(schema, p);
+			var context = new ModelChangeContext(ModelChangeType.ADD_RECORD);
+			var command = new CreateRecordCommand(schema, p);
 			command.setContext(context);
 			return command;
 		}
@@ -151,11 +122,9 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	}	
 	
 	public static class MoveDiagramNodeData {
-		
 		private DiagramNode diagramNode;
 		
 		public MoveDiagramNodeData(DiagramNode diagramNode) {
-			super();
 			this.diagramNode = diagramNode;
 		}
 		
@@ -176,7 +145,6 @@ public class SchemaXYLayoutEditPolicy extends XYLayoutEditPolicy {
 				throw new IllegalStateException("Unexpected diagram node: " + diagramNode);
 			}
 		}
-		
 	}
 	
 }

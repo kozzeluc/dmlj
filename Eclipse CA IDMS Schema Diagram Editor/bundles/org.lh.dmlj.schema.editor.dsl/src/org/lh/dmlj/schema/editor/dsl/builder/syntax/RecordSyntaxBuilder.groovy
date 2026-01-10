@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -193,7 +193,7 @@ class RecordSyntaxBuilder extends AbstractSyntaxBuilder<SchemaRecord> {
 			if (call.verb.value != -1) {
 				verb = " ${replaceUnderscoresBySpaces(call.verb)}"
 			}
-			without_tab "call '${call.procedure.name} ${call.callTime}$verb'"			
+			without_tab "callProcedure '${call.procedure.name} ${call.callTime}$verb'"			
 		}
 	}
 	

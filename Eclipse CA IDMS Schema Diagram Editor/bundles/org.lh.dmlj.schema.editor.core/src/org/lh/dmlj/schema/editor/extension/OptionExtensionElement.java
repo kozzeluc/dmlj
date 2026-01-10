@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.extension;
 
+import java.util.Objects;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 
 public class OptionExtensionElement extends AbstractExtensionElement {
@@ -25,35 +27,42 @@ public class OptionExtensionElement extends AbstractExtensionElement {
 	}
 	
 	public String getCheckButtonLabel() {
-		return Util.getAttribute(configElement, 
- 				 				 ExtensionPointConstants.ATTRIBUTE_CHECK_BUTTON_LABEL, null);
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_CHECK_BUTTON_LABEL, null);
 	}
 	
 	public String getGroup() {
-		return Util.getAttribute(configElement, 
- 				 				 ExtensionPointConstants.ATTRIBUTE_GROUP, "");
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_GROUP, "");
 	}	
 	
 	public boolean getIdmsntwkOnly() {
-		String p = Util.getAttribute(configElement, 
- 				 				     ExtensionPointConstants.ATTRIBUTE_IDMSNTWK_ONLY, null);
-		return Boolean.valueOf(p).booleanValue();
+		String p = Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_IDMSNTWK_ONLY, null);
+		return Boolean.parseBoolean(p);
 	}
 	
 	public boolean getInitialValue() {
-		String p = Util.getAttribute(configElement, 
- 				 				     ExtensionPointConstants.ATTRIBUTE_INITIAL_VALUE, null);
-		return Boolean.valueOf(p).booleanValue();
+		String p = Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_INITIAL_VALUE, null);
+		return Boolean.parseBoolean(p);
 	}
 	
 	public String getMutuallyExclusiveWith() {
-		return Util.getAttribute(configElement, 
- 				 				 ExtensionPointConstants.ATTRIBUTE_MUTUALLY_EXCLUSIVE_WITH, "");
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_MUTUALLY_EXCLUSIVE_WITH, "");
 	}
-	
+
 	@Override
-	public int hashCode() {		
-		return getName().hashCode();
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		var other = (OptionExtensionElement) obj;
+		return Objects.equals(getName(), other.getName());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getName());
 	}
 
 }

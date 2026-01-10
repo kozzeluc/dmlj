@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -27,12 +27,10 @@ import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.property.ISetProvider;
 
-public abstract class AbstractSetPropertiesSection 
-	extends AbstractAttributesBasedPropertiesSection<MemberRole> implements ISetProvider {
-	
+public abstract class AbstractSetPropertiesSection extends AbstractAttributesBasedPropertiesSection<MemberRole> implements ISetProvider {
 	protected Set set;
 	
-	public AbstractSetPropertiesSection() {
+	protected AbstractSetPropertiesSection() {
 		super(Plugin.getDefault());
 	}	
 
@@ -43,37 +41,26 @@ public abstract class AbstractSetPropertiesSection
 	
 	@Override
 	protected final MemberRole getTarget(Object modelObject) {		
-		Assert.isTrue(modelObject instanceof ConnectionPart ||
-					  modelObject instanceof ConnectionLabel ||
-					  modelObject instanceof SystemOwner ||
-					  modelObject instanceof Connector ||
-					  modelObject instanceof Set ||
-					  modelObject instanceof VsamIndex,
-					  "not a ConnectionPart, ConnectionLabel, SystemOwner, Connector, Set or VsamIndex");
+		Assert.isTrue(modelObject instanceof ConnectionPart || modelObject instanceof ConnectionLabel ||
+					  modelObject instanceof SystemOwner || modelObject instanceof Connector || modelObject instanceof Set ||
+					  modelObject instanceof VsamIndex, "not a ConnectionPart, ConnectionLabel, SystemOwner, Connector, Set or VsamIndex");
 				
 		MemberRole memberRole;
-		if (modelObject instanceof ConnectionPart) {        	
-        	ConnectionPart connectionPart = (ConnectionPart) modelObject;
-        	memberRole = connectionPart.getMemberRole();
-		} else if (modelObject instanceof ConnectionLabel) {
-        	ConnectionLabel connectionLabel = (ConnectionLabel) modelObject;
-        	memberRole = connectionLabel.getMemberRole();
-        } else if (modelObject instanceof SystemOwner) {	
-        	SystemOwner systemOwner = (SystemOwner) modelObject;
-        	memberRole = systemOwner.getSet().getMembers().get(0);
-        } else if (modelObject instanceof Set) {	
-        	Set set = (Set) modelObject;
-        	memberRole = set.getMembers().get(0);
-        } else if (modelObject instanceof VsamIndex) {	
-        	VsamIndex vsamIndex = (VsamIndex) modelObject;
-        	memberRole = vsamIndex.getMemberRole();
+		if (modelObject instanceof ConnectionPart connectionPart) {        		
+        		memberRole = connectionPart.getMemberRole();
+		} else if (modelObject instanceof ConnectionLabel connectionLabel) {
+        		memberRole = connectionLabel.getMemberRole();
+        } else if (modelObject instanceof SystemOwner systemOwner) {
+        		memberRole = systemOwner.getSet().getMembers().get(0);
+        } else if (modelObject instanceof Set aSet) {
+        		memberRole = aSet.getMembers().get(0);
+        } else if (modelObject instanceof VsamIndex vsamIndex) {
+        		memberRole = vsamIndex.getMemberRole();
         } else {
-        	Connector connector = (Connector) modelObject;
-        	memberRole = connector.getConnectionPart().getMemberRole();
-        }
-		
-		set = memberRole.getSet();		
-		
+        		var connector = (Connector) modelObject;
+        		memberRole = connector.getConnectionPart().getMemberRole();
+        }		
+		set = memberRole.getSet();
 		return memberRole;
 	}
 	

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,24 +21,22 @@ import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.SchemaRecord;
 
 public class RemoveRecordProcedureCallSpecificationCommand extends ModelChangeBasicCommand {
+	protected final RecordProcedureCallSpecification callSpec;
 	
-	protected RecordProcedureCallSpecification callSpec;
-	private SchemaRecord record;
+	private SchemaRecord schemaRecord;
 	private Procedure procedure;
 	private int recordInsertionIndex;
 	
 	public RemoveRecordProcedureCallSpecificationCommand(RecordProcedureCallSpecification callSpec) {
-		super();
 		this.callSpec = callSpec;
 	}
 	
 	@Override
 	public void execute() {
-		
-		record = callSpec.getRecord();
+		schemaRecord = callSpec.getRecord();
 		procedure = callSpec.getProcedure();
 		
-		recordInsertionIndex = record.getProcedures().indexOf(callSpec);
+		recordInsertionIndex = schemaRecord.getProcedures().indexOf(callSpec);
 		
 		removeCallSpec();
 	}
@@ -59,7 +57,7 @@ public class RemoveRecordProcedureCallSpecificationCommand extends ModelChangeBa
 	}
 
 	private void restoreCallSpec() {
-		record.getProcedures().add(recordInsertionIndex, callSpec);
+		schemaRecord.getProcedures().add(recordInsertionIndex, callSpec);
 		callSpec.setProcedure(procedure);
 	}
 	

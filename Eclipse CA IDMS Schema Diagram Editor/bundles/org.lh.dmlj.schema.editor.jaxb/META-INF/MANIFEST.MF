@@ -48,5 +48,5 @@ Export-Package: com.sun.activation.registries,
  javax.xml.bind.attachment,
  javax.xml.bind.helpers,
  javax.xml.bind.util
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.lh.dmlj.schema.editor.jaxb

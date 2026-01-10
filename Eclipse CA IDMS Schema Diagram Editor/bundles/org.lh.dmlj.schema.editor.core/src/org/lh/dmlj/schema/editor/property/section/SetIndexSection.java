@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.property.section;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -28,16 +27,13 @@ import org.lh.dmlj.schema.editor.property.IIndexedSetModeSpecificationProvider;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 import org.lh.dmlj.schema.editor.property.handler.IndexedSetModeSpecificationHandler;
 
-public class SetIndexSection 
-	extends AbstractSetPropertiesSection implements IIndexedSetModeSpecificationProvider {
-
-	private static final EAttribute[] ATTRIBUTES = 
-		{SchemaPackage.eINSTANCE.getIndexedSetModeSpecification_SymbolicIndexName(),
-		 SchemaPackage.eINSTANCE.getIndexedSetModeSpecification_KeyCount(),
-		 SchemaPackage.eINSTANCE.getIndexedSetModeSpecification_DisplacementPageCount()};
+public class SetIndexSection extends AbstractSetPropertiesSection implements IIndexedSetModeSpecificationProvider {
+	private static final List<EAttribute> ATTRIBUTES = List.of( 
+			SchemaPackage.eINSTANCE.getIndexedSetModeSpecification_SymbolicIndexName(),
+			SchemaPackage.eINSTANCE.getIndexedSetModeSpecification_KeyCount(),
+			SchemaPackage.eINSTANCE.getIndexedSetModeSpecification_DisplacementPageCount());
 	
-	private IHyperlinkHandler<EAttribute, Command> indexHandler = 
-		new IndexedSetModeSpecificationHandler(this);
+	private IHyperlinkHandler<EAttribute, Command> indexHandler = new IndexedSetModeSpecificationHandler(this);
 	
 	@Override
 	protected EObject getAttributeOwner(EAttribute attribute) {
@@ -53,7 +49,7 @@ public class SetIndexSection
 	
 	@Override
 	public List<EAttribute> getAttributes() {
-		return Arrays.asList(ATTRIBUTES);
+		return ATTRIBUTES;
 	}
 	
 	@Override

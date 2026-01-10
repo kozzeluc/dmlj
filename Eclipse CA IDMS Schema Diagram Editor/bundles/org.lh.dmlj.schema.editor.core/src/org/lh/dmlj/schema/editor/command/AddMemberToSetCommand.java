@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,13 +17,9 @@
 package org.lh.dmlj.schema.editor.command;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.lh.dmlj.schema.ConnectionLabel;
-import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramData;
-import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaFactory;
@@ -40,35 +36,29 @@ import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendage;
 
 public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
-
-	protected Set set;
+	private final DiagramData diagramData;
+	
 	private MemberRole memberRole;
-			
-	protected SchemaRecord 			  memberRecord;
+	protected SchemaRecord memberRecord;
 	private PrefixForPointerAppendage memberPrefix;
-	private DiagramData	    		  diagramData;
-	protected PointerType[] pointerTypes = 
-		{PointerType.MEMBER_NEXT, PointerType.MEMBER_PRIOR, PointerType.MEMBER_OWNER};	
+	protected PointerType[] pointerTypes = { PointerType.MEMBER_NEXT, PointerType.MEMBER_PRIOR, PointerType.MEMBER_OWNER };	
 	
 	public AddMemberToSetCommand(Set set) {
 		super(set, null);
 		Assert.isNotNull(set, "set is null");
-		Assert.isTrue(set.getMode() == SetMode.CHAINED, "set is NOT chained");		
-		this.set = set;
+		Assert.isTrue(set.getMode() == SetMode.CHAINED, "set is NOT chained");
 		this.diagramData = set.getSchema().getDiagramData();				
 		setLabel("Add member record type to set " + set.getName());
 	}
 	
 	public AddMemberToSetCommand(Set set, PointerType[] pointerTypes) {
 		this(set);
-		List<PointerType> filteredPointerTypes = new ArrayList<>();
-		boolean nextPointerOk = false;
-		for (PointerType pointerType : pointerTypes) {
+		var filteredPointerTypes = new ArrayList<PointerType>();
+		var nextPointerOk = false;
+		for (var pointerType : pointerTypes) {
 			if (pointerType == PointerType.MEMBER_NEXT) {
 				nextPointerOk = true;
-			} else if (pointerType != PointerType.MEMBER_PRIOR &&
-					   pointerType != PointerType.MEMBER_OWNER) {
-				
+			} else if (pointerType != PointerType.MEMBER_PRIOR && pointerType != PointerType.MEMBER_OWNER) {
 				throw new IllegalArgumentException("invalid pointer type: " + pointerType);
 			}
 			filteredPointerTypes.add(pointerType);
@@ -80,38 +70,35 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 	}
 	
 	@Override
-	public void execute() {	
-		
+	public void execute() {
 		Assert.isNotNull(memberRecord, "member not set");		
 		
 		memberRole = SchemaFactory.eINSTANCE.createMemberRole();
 		memberRole.setMembershipOption(SetMembershipOption.MANDATORY_AUTOMATIC);		
 		
 		if (set.getOrder() == SetOrder.SORTED) {
-			// we only supply a sort key description for the new member record type; we do need to
-			// supply it at the correct position in the array though
+			// we only supply a sort key description for the new member record type; we do need to supply it at
+			// the correct position in the array though
 			sortKeyDescriptions = new ISortKeyDescription[set.getMembers().size() + 1];
 			sortKeyDescriptions[set.getMembers().size()] = new SortKeyDescription(memberRecord);
 			prepareSortKey(memberRecord, set.getMembers().size(), 0);
 		}
 		
-		ConnectionPart connectionPart = SchemaFactory.eINSTANCE.createConnectionPart();
+		var connectionPart = SchemaFactory.eINSTANCE.createConnectionPart();
 		connectionPart.setMemberRole(memberRole);
 		
-		DiagramLocation labelLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
-		labelLocation.setEyecatcher("set label " + set.getName() + " (" + memberRecord.getName() +
-									")");
-		// TODO make calculating the label location more intelligent
-		SchemaRecord ownerRecord = set.getOwner().getRecord();
+		var labelLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+		labelLocation.setEyecatcher("set label " + set.getName() + " (" + memberRecord.getName() + ")");
+		
+		var ownerRecord = set.getOwner().getRecord();
 		labelLocation.setX(ownerRecord.getDiagramLocation().getX() + RecordFigure.UNSCALED_WIDTH + 5);
 		labelLocation.setY(ownerRecord.getDiagramLocation().getY());
 		
-		ConnectionLabel connectionLabel = SchemaFactory.eINSTANCE.createConnectionLabel();
+		var connectionLabel = SchemaFactory.eINSTANCE.createConnectionLabel();
 		connectionLabel.setMemberRole(memberRole);
 		connectionLabel.setDiagramLocation(labelLocation);
 		
-		redo();		
-				
+		redo();
 	}
 	
 	public Set getSet() {
@@ -119,19 +106,17 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 	}
 	
 	@Override
-	public void redo() {		
-		
+	public void redo() {
 		memberRole.setRecord(memberRecord);	
 		memberRole.setSet(set);
 		
 		if (memberPrefix == null) {
-			memberPrefix = 
-				PrefixFactory.newPrefixForPointerAppendage(memberRole, pointerTypes);			
+			memberPrefix = PrefixFactory.newPrefixForPointerAppendage(memberRole, pointerTypes);			
 		}
 		memberPrefix.appendPointers();
 		
 		if (set.getOrder() == SetOrder.SORTED) {
-			restoreSortKey(memberRecord, set.getMembers().size() - 1, 0);			
+			restoreSortKey(set.getMembers().size() - 1, 0);			
 		}
 		
 		diagramData.getConnectionParts().add(memberRole.getConnectionParts().get(0));
@@ -156,17 +141,15 @@ public class AddMemberToSetCommand extends AbstractSortKeyManipulationCommand {
 	}
 	
 	private static class SortKeyDescription implements ISortKeyDescription {
-
-		private SchemaRecord memberRecord;
+		private final SchemaRecord memberRecord;
 
 		private SortKeyDescription(SchemaRecord memberRecord) {
-			super();
 			this.memberRecord = memberRecord;
 		}
 		
 		@Override
 		public String[] getElementNames() {
-			return new String[] {Tools.getDefaultSortKeyElement(memberRecord).getName()};
+			return new String[] { Tools.getDefaultSortKeyElement(memberRecord).getName() };
 		}
 
 		@Override

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -50,8 +50,7 @@ public interface ISetDataCollector<T> {
 
 	String getOwnerRecordName(T context);
 
-	SetMembershipOption getSetMembershipOption(T context, 
-											   String memberRecordName);
+	SetMembershipOption getSetMembershipOption(T context, String memberRecordName);
 
 	SetMode getSetMode(T context);
 
@@ -59,8 +58,7 @@ public interface ISetDataCollector<T> {
 
 	Collection<String> getSortKeyElements(T context, String memberRecordName);
 
-	SortSequence getSortSequence(T context, String memberRecordName, 
-								 String keyElementName);
+	SortSequence getSortSequence(T context, String memberRecordName, String keyElementName);
 
 	String getSymbolicIndexName(T context);
 

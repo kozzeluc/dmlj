@@ -83,7 +83,7 @@ Version 1.2.0
   other than the ones collecting the procedure names were refactored.
 - BUG FIX: when exporting a schema, bad names were generated for the tree items in the tree showing
   all the workspace's .schema files (first export wizard page, the one with the message
-  'Select the CA IDMS/DB Schema' – depending on the number and complexity of workspace projects, it
+  'Select the CA IDMS/DB Schema' - depending on the number and complexity of workspace projects, it
   takes (too) long before this page shows the schemas available for export).
 - BUG FIX: when building the list of projects containing .schema files during an export, a NPE was
   thrown for projects not containing any .schema file.

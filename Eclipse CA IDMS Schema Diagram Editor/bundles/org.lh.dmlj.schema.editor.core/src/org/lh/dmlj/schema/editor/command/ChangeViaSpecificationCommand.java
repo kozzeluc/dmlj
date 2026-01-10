@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,17 +18,11 @@ package org.lh.dmlj.schema.editor.command;
 
 import org.lh.dmlj.schema.SchemaRecord;
 
-
 /**
- * A command that will change the record's VIA specification.  This command can 
- * only be used for VIA records and will definitely run into trouble when 
- * executed for a record that is defined as either CALC or DIRECT.
+ * A command that will change the record's VIA specification.  This command can only be used for VIA records and
+ * will definitely run into trouble when executed for a record that is defined as either CALC or DIRECT.
  */
-public class ChangeViaSpecificationCommand 
-	extends AbstractChangeLocationModeCommand {
-
-	private SchemaRecord record;	
-	
+public class ChangeViaSpecificationCommand extends AbstractChangeLocationModeCommand {
 	private String newViaSetName; 
 	private String newSymbolicDisplacementName; 
 	private Short  newDisplacementPageCount;	
@@ -38,12 +32,10 @@ public class ChangeViaSpecificationCommand
 	private Short  oldDisplacementPageCount;
 	private int    oldViaSpecificationIndex;
 	
-	public ChangeViaSpecificationCommand(SchemaRecord record, String viaSetName, 
-										 String symbolicDisplacementName, 
-										 Short displacementPageCount) {
+	public ChangeViaSpecificationCommand(SchemaRecord schemaRecord, String viaSetName,
+			String symbolicDisplacementName, Short displacementPageCount) {
 		
-		super("Change VIA specification", record);
-		this.record = record;
+		super("Change VIA specification", schemaRecord);
 		newViaSetName = viaSetName;
 		newSymbolicDisplacementName = symbolicDisplacementName;
 		newDisplacementPageCount = displacementPageCount;
@@ -51,41 +43,26 @@ public class ChangeViaSpecificationCommand
 	
 	@Override
 	public void execute() {
-		
 		// save the old data
-		oldViaSetName = record.getViaSpecification().getSet().getName();
-		oldSymbolicDisplacementName = 
-			record.getViaSpecification().getSymbolicDisplacementName();
-		oldDisplacementPageCount = 
-			record.getViaSpecification().getDisplacementPageCount();
-		oldViaSpecificationIndex = record.getViaSpecification()
-				  						 .getSet()
-				  						 .getViaMembers()
-				  						 .indexOf(record.getViaSpecification());
+		oldViaSetName = schemaRecord.getViaSpecification().getSet().getName();
+		oldSymbolicDisplacementName = schemaRecord.getViaSpecification().getSymbolicDisplacementName();
+		oldDisplacementPageCount = schemaRecord.getViaSpecification().getDisplacementPageCount();
+		oldViaSpecificationIndex = schemaRecord.getViaSpecification().getSet().getViaMembers().indexOf(schemaRecord.getViaSpecification());
 		
 		// make the change
 		redo();
-		
 	}
 	
+	@Override
 	public void redo() {
-		
 		removeViaSpecification();
-		
-		createViaSpecification(newViaSetName, newSymbolicDisplacementName, 
-							   newDisplacementPageCount, -1);
-		
-	};
+		createViaSpecification(newViaSetName, newSymbolicDisplacementName, newDisplacementPageCount, -1);
+	}
 	
 	@Override
 	public void undo() {
-	
 		removeViaSpecification();
-		
-		createViaSpecification(oldViaSetName, oldSymbolicDisplacementName, 
-							   oldDisplacementPageCount, 
-							   oldViaSpecificationIndex);
-		
+		createViaSpecification(oldViaSetName, oldSymbolicDisplacementName, oldDisplacementPageCount, oldViaSpecificationIndex);
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,7 +29,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.part.FileEditorInput;
 import org.lh.dmlj.schema.DiagramLabel;
-import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.SchemaEditor;
@@ -40,10 +39,7 @@ import org.lh.dmlj.schema.editor.figure.DiagramLabelFigure;
 import org.lh.dmlj.schema.editor.policy.DiagramLabelComponentEditPolicy;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 
-public class DiagramLabelEditPart 
-	extends AbstractResizableDiagramNodeEditPart<DiagramLabel> 
-	implements IPropertyChangeListener, IPropertyListener {
-
+public class DiagramLabelEditPart extends AbstractResizableDiagramNodeEditPart<DiagramLabel> implements IPropertyChangeListener, IPropertyListener {
 	private File diagramFile;
 	private SchemaEditor schemaEditor;
 	private IPreferenceStore store = Plugin.getDefault().getPreferenceStore();	
@@ -51,17 +47,11 @@ public class DiagramLabelEditPart
 	private static IModelChangeProvider getModelChangeProvider(SchemaEditor schemaEditor) {
 		return (IModelChangeProvider) schemaEditor.getAdapter(IModelChangeProvider.class);
 	}
-
-	private DiagramLabelEditPart() {
-		super(null, null); // disabled constructor
-	}
 	
 	public DiagramLabelEditPart(DiagramLabel diagramLabel, SchemaEditor schemaEditor) {
-		
 		super(diagramLabel, getModelChangeProvider(schemaEditor));
 		this.schemaEditor = schemaEditor;		
-		if (schemaEditor.getEditorInput() instanceof FileEditorInput) {
-			FileEditorInput editorInput = (FileEditorInput) schemaEditor.getEditorInput();
+		if (schemaEditor.getEditorInput() instanceof FileEditorInput editorInput) {
 			diagramFile = editorInput.getFile().getLocation().toFile();
 		}
 	}
@@ -75,15 +65,13 @@ public class DiagramLabelEditPart
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-		    context.isPropertySet(SchemaPackage.eINSTANCE.getDiagramLabel_Description())) {
-			
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getDiagramLabel_Description())) {
 			// the diagram label's description has been set
 			refreshVisuals();
 		}
-		// note that we do NOT have to do anything here to refresh the visuals in case the diagram 
-		// label is moved or resized; that event is perfectly handled in method  
-		// propertyChanged(Object source, int propId), which is called in that situation as well
+		// note that we do NOT have to do anything here to refresh the visuals in case the diagram label is moved
+		// or resized; that event is perfectly handled in method propertyChanged(Object source, int propId),
+		// which is called in that situation as well
 	}
 	
 	@Override
@@ -96,8 +84,8 @@ public class DiagramLabelEditPart
 	
 	@Override
 	protected IFigure createFigure() {
-		IFigure figure = new DiagramLabelFigure();
-		Label tooltip = new Label("Diagram label");
+		var figure = new DiagramLabelFigure();
+		var tooltip = new Label("Diagram label");
         figure.setToolTip(tooltip);
         return figure;
 	}
@@ -110,28 +98,16 @@ public class DiagramLabelEditPart
 	}
 
 	private String getLastModified() {
-		
-		if (diagramFile == null ||
-			!Plugin.getDefault()
-				   .getPreferenceStore()
-				   .getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
-			
+		if (diagramFile == null || !Plugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED)) {
 			return null;
 		}
-					
-		StringBuilder lastModified = new StringBuilder("Last modified: ");
-		
-		String pattern = 
-				Plugin.getDefault()
-					  .getPreferenceStore()
-					  .getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
-		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		var lastModified = new StringBuilder("Last modified: ");
+		var pattern = Plugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		var format = new SimpleDateFormat(pattern);
 		lastModified.append(format.format(diagramFile.lastModified()));
-		
 		if (schemaEditor.isDirty()) {
 			lastModified.append(" (not saved)");
 		}
-		
 		return lastModified.toString();
 	}
 
@@ -146,9 +122,8 @@ public class DiagramLabelEditPart
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		String property = event.getProperty();
-		if (property.equals(PreferenceConstants.DIAGRAMLABEL_ORGANISATION) ||
-			property.equals(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED) ||
+		var property = event.getProperty();
+		if (property.equals(PreferenceConstants.DIAGRAMLABEL_ORGANISATION) || property.equals(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED) ||
 			property.equals(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN)) {
 			
 			refreshVisuals();
@@ -157,20 +132,18 @@ public class DiagramLabelEditPart
 	
 	@Override
 	public void propertyChanged(Object source, int propId) {
-		if (source == schemaEditor && propId == IEditorPart.PROP_DIRTY && 
-			isDiagramLabelStillPresent()) {
-			
-			// note that when the diagram label is moved or resized, this method is called as well, 
-			/// so the refresh of the visuals in that situation happens here:
+		if (source == schemaEditor && propId == IEditorPart.PROP_DIRTY && isDiagramLabelStillPresent()) {
+			// note that when the diagram label is moved or resized, this method is called as well, so the
+			// refresh of the visuals in that situation happens here:
 			refreshVisuals();
 		}
 	}
 
 	@Override
 	protected void setFigureData() {
-		DiagramLabel diagramLabel = getModel();
-		Schema schema = diagramLabel.getDiagramData().getSchema();
-		DiagramLabelFigure figure = (DiagramLabelFigure) getFigure();
+		var diagramLabel = getModel();
+		var schema = diagramLabel.getDiagramData().getSchema();
+		var figure = (DiagramLabelFigure) getFigure();
 		figure.setOrganisation(store.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION));
 		figure.setSchemaIdentification(schema.getName(), schema.getVersion());
 		figure.setDescription(diagramLabel.getDescription());

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,68 +23,61 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public abstract class Phase4Formatter {
+public final class Phase4Formatter {
 	
-	private static void processFile(File file, File outputFolder) 
-		throws IOException{
-		
-		PrintWriter out = 
-			new PrintWriter(new File(outputFolder, file.getName()));
-		boolean inField = false;
-		boolean inList1 = false;
-		boolean inList2 = false;
-		boolean inRecordLength = false;
-		BufferedReader in = new BufferedReader(new FileReader(file));
-		String p = in.readLine();
-		while (p != null) {
-			if (p.length() == 80 && p.startsWith("/* Record length */ -----")) {
-				inRecordLength = true;
-				out.println(p);
-			} else if (inRecordLength) {
-				out.println(p);
-				inRecordLength = false;
-			} else if (p.length() == 80 && p.startsWith("/* Field ") && 
-				p.indexOf("*/ -") != -1 && p.endsWith("-")) {
-				
-				inField = true;
-				inList1 = false;
-				inList2 = false;
-				out.println(p);
-			} else if (inField && p.startsWith("¦ ")) {
-				inList1 = true;
-				inList2 = false;
-				out.println();
-				out.println("* " + p.substring(2));
-			} else if (inField && p.startsWith("– ")) {
-				inList2 = true;
-				out.println();
-				out.println("  " + p);
-			} else if (inField) {
-				if (inList2) {
-					out.println("    " + p);
-				} else if (inList1) {
+	private static final String DOUBLE_STX = "\u0002\u0002";
+
+	private static void processFile(File file, File outputFolder) throws IOException{
+		try (var out = new PrintWriter(new File(outputFolder, file.getName())); var in = new BufferedReader(new FileReader(file))) {
+			var inField = false;
+			var inList1 = false;
+			var inList2 = false;
+			var inRecordLength = false;
+			var p = in.readLine();
+			while (p != null) {
+				if (p.length() == 80 && p.startsWith("/* Record length */ -----")) {
+					inRecordLength = true;
+					out.println(p);
+				} else if (inRecordLength) {
+					out.println(p);
+					inRecordLength = false;
+				} else if (p.length() == 80 && p.startsWith("/* Field ") && p.contains("*/ -") && p.endsWith("-")) {
+					inField = true;
+					inList1 = false;
+					inList2 = false;
+					out.println(p);
+				} else if (inField && p.startsWith("Â¦ ")) {
+					inList1 = true;
+					inList2 = false;
+					out.println();
+					out.println("* " + p.substring(2));
+				} else if (inField && p.startsWith("â€“ ")) {
+					inList2 = true;
+					out.println();
 					out.println("  " + p);
-				} else {
+				} else if (inField) {
+					if (inList2) {
+						out.println("    " + p);
+					} else if (inList1) {
+						out.println("  " + p);
+					} else {
+						out.println(p);
+					}
+				} else if (!inField && p.startsWith(DOUBLE_STX)) {
+					out.println(">>" + p.substring(2));
+				} else if (!trimmedLineIsNumber(p)) {
 					out.println(p);
 				}
-			} else if (!inField && p.startsWith("")) {
-				out.println(">>" + p.substring(2));
-			} else if (!trimmedLineIsNumber(p)) {
-				out.println(p);
+				p = in.readLine();
 			}
-			p = in.readLine();
+			out.flush();
 		}
-		in.close();
-		out.flush();
-		out.close();
 	}
 	
-	public static void performTask(File inputFolder, File outputFolder) 
-		throws IOException {
-		
-		File[] file = inputFolder.listFiles();
-		for (int i = 0; i < file.length; i++) {
-			processFile(file[i], outputFolder);
+	public static void performTask(File inputFolder, File outputFolder) throws IOException {
+		var files = inputFolder.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			processFile(files[i], outputFolder);
 		}
 	}
 	
@@ -95,6 +88,9 @@ public abstract class Phase4Formatter {
 		} catch (NumberFormatException e) {
 			return false;
 		}
-		
 	}
+	
+	private Phase4Formatter() {
+	}
+	
 }

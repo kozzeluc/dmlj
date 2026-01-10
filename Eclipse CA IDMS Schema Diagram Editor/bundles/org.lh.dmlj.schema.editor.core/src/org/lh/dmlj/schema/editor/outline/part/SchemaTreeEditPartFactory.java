@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,24 +30,23 @@ import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 
 public class SchemaTreeEditPartFactory implements EditPartFactory {
-	
 	private IModelChangeProvider modelChangeProvider; // null means we're in read-only mode
 	
 	public static EditPart createEditPart(Object model, IModelChangeProvider modelChangeProvider) {
-		if (model instanceof Schema) {
-			return new SchemaTreeEditPart((Schema) model, modelChangeProvider);
-		} else if (model instanceof DiagramLabel) {
-			return new DiagramLabelTreeEditPart((DiagramLabel) model, modelChangeProvider);
-		} else if (model instanceof SchemaArea) {
-			return new AreaTreeEditPart((SchemaArea) model, modelChangeProvider);
-		} else if (model instanceof SchemaRecord) {
-			return new RecordTreeEditPart((SchemaRecord) model, modelChangeProvider);
-		} else if (model instanceof Set) {
-			return new SetTreeEditPart((Set) model, modelChangeProvider);
-		} else if (model instanceof SystemOwner) {
-			return new IndexTreeEditPart((SystemOwner) model, modelChangeProvider);
-		} else if (model instanceof VsamIndex) {
-			return new VsamIndexTreeEditPart((VsamIndex) model, modelChangeProvider);
+		if (model instanceof Schema schema) {
+			return new SchemaTreeEditPart(schema, modelChangeProvider);
+		} else if (model instanceof DiagramLabel diagramLabel) {
+			return new DiagramLabelTreeEditPart(diagramLabel, modelChangeProvider);
+		} else if (model instanceof SchemaArea schemaArea) {
+			return new AreaTreeEditPart(schemaArea, modelChangeProvider);
+		} else if (model instanceof SchemaRecord schemaRecord) {
+			return new RecordTreeEditPart(schemaRecord, modelChangeProvider);
+		} else if (model instanceof Set set) {
+			return new SetTreeEditPart(set, modelChangeProvider);
+		} else if (model instanceof SystemOwner systemOwner) {
+			return new IndexTreeEditPart(systemOwner, modelChangeProvider);
+		} else if (model instanceof VsamIndex vsamIndex) {
+			return new VsamIndexTreeEditPart(vsamIndex, modelChangeProvider);
 		}
 		throw new IllegalArgumentException("Unexpected model type: " + model.getClass().getName());
 	}

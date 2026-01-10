@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,8 +17,8 @@
 package org.lh.dmlj.schema.editor.wizard._import.dictguide;
 
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.MissingResourceException;
-import java.util.Stack;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,28 +32,24 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
 
-public class DictguidesImportWizard extends Wizard implements IImportWizard {	
-
-	private static final String KEY_DESCRIPTION_DICTIONARY_STRUCTURE = 
-		"description.dicionary.structure";
+public class DictguidesImportWizard extends Wizard implements IImportWizard {
+	private static final String KEY_DESCRIPTION_DICTIONARY_STRUCTURE = "description.dicionary.structure";
 	private static final String KEY_DESCRIPTION_SQL = "description.sql";	
 	
-	private boolean 				   calledFromPreferences = false;
+	private final boolean calledFromPreferences;
 	private DictguidesPdfSelectionPage dictionaryStructurePdfSelectionPage;
-	private File 					   dictionaryStructureFile;
-	private String 					   dictionaryStructureTitle;
+	private File dictionaryStructureFile;
+	private String dictionaryStructureTitle;
 	private DictguidesPdfSelectionPage sqlPdfSelectionPage;
-	private File 					   sqlFile;
-	private String 					   sqlTitle;
-	private DictguidesSummaryPage 	   summaryPage;
+	private File sqlFile;
+	private String sqlTitle;
+	private DictguidesSummaryPage summaryPage;
 	
 	public DictguidesImportWizard() {
-		new DictguidesImportWizard(false);
-		setWindowTitle("Import");
+		this(false);
 	}
 	
 	public DictguidesImportWizard(boolean calledFromPreferences) {
-		super();
 		this.calledFromPreferences = calledFromPreferences;
 		setWindowTitle("Import");
 	}	
@@ -64,7 +60,7 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 		try {
 			description = PluginPropertiesCache.get(Plugin.getDefault(), KEY_DESCRIPTION_DICTIONARY_STRUCTURE);
 		} catch (MissingResourceException e) {
-			description = "";;
+			description = "";
 		}		
 		dictionaryStructurePdfSelectionPage = new DictguidesPdfSelectionPage(DictguidesPdfSelectionPage.MANUAL_TYPE_DICTIONARY_STRUCTURE_REFERENCE_GUIDE,description);		
 		addPage(dictionaryStructurePdfSelectionPage);
@@ -72,7 +68,7 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 		try {
 			description = PluginPropertiesCache.get(Plugin.getDefault(), KEY_DESCRIPTION_SQL);
 		} catch (MissingResourceException e) {
-			description = "";;
+			description = "";
 		}
 		sqlPdfSelectionPage = new DictguidesPdfSelectionPage(DictguidesPdfSelectionPage.MANUAL_TYPE_SQL_REFERENCE_GUIDE, description);		
 		addPage(sqlPdfSelectionPage);
@@ -84,10 +80,8 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == dictionaryStructurePdfSelectionPage) {
-			dictionaryStructureFile = 
-				dictionaryStructurePdfSelectionPage.getRefGuideFile();
-			dictionaryStructureTitle = 
-				dictionaryStructurePdfSelectionPage.getRefGuideTitle();
+			dictionaryStructureFile = dictionaryStructurePdfSelectionPage.getRefGuideFile();
+			dictionaryStructureTitle = dictionaryStructurePdfSelectionPage.getRefGuideTitle();
 			return sqlPdfSelectionPage;
 		} else if (page == sqlPdfSelectionPage) {
 			sqlFile = sqlPdfSelectionPage.getRefGuideFile();
@@ -100,38 +94,27 @@ public class DictguidesImportWizard extends Wizard implements IImportWizard {
 	}
 
 	@Override
-	public void init(IWorkbench workbench, IStructuredSelection selection) {		
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		// nothing to do here
 	}
 
 	@Override
 	public boolean performFinish() {
+		var id = summaryPage.getId();
+		var defaultForInfoTab = summaryPage.isDefaultForInfoTab();
 		
-		final String id = summaryPage.getId();
-		final boolean defaultForInfoTab = summaryPage.isDefaultForInfoTab();
-		
-		// create a Runnable so that we can show the busy pointer when the 
-		// DictguidesRegistry instance creates the .zip file, this can take a
-		// few seconds
-		Stack<Throwable> errors = new Stack<>();
-		Runnable runnable = new Runnable() {
-			public void run() {		
-				try {
-					DictguidesRegistry.INSTANCE
-									  .createEntry(dictionaryStructureFile,
-											  	   dictionaryStructureTitle,
-											  	   sqlFile,
-											  	   sqlTitle,
-											  	   id,
-											  	   defaultForInfoTab,
-											  	   Plugin.getDefault().createTmpFolder());
-				} catch (Throwable t) {
-					errors.push(t);
-				}
+		// create a Runnable so that we can show the busy pointer when the DictguidesRegistry instance creates
+		// the .zip file, this can take a few seconds
+		var errors = new ArrayDeque<Exception>();
+		Runnable runnable = () -> {
+			try {
+				DictguidesRegistry.getInstance().createEntry(dictionaryStructureFile, dictionaryStructureTitle,
+						sqlFile, sqlTitle, id, defaultForInfoTab, Plugin.getDefault().createTmpFolder());
+			} catch (Exception e) {
+				errors.push(e);
 			}
 		};
-		
-		// have the DictguidesRegistry instance create the .zip file while 
-		// the busy cursor is shown
+		// have the DictguidesRegistry instance create the .zip file while the busy cursor is shown
 		BusyIndicator.showWhile(Display.getCurrent(), runnable);
 		
 		if (!errors.isEmpty()) {

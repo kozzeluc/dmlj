@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,28 +28,25 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-import org.lh.dmlj.schema.AreaProcedureCallSpecification;
-import org.lh.dmlj.schema.RecordProcedureCallSpecification;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.property.ui.EditProcedureCallsDialog;
 import org.lh.dmlj.schema.editor.property.ui.IDslFacetModifier;
                       
 /**
- * A properties section that shows the procedures being called for either an area or a record.
- * Apart from each procedure's name, the time when it is called is listed.
+ * A properties section that shows the procedures being called for either an area or a record. Apart from each
+ * procedure's name, the time when it is called is listed.
  * @author Luc Hermans
  */
 public class CalledProceduresPropertiesSection extends AbstractPropertiesSection {
-	private Table		 table;
-	private SchemaArea 	 targetArea;	// either an area...
-	private SchemaRecord targetRecord;  // or a record are set, not both
+	private Table table;
+	private SchemaArea targetArea;		// either an area...
+	private SchemaRecord targetRecord;	// or a record are set, not both
 	
 	private CommandStack commandStack;
 	private Link link;
@@ -57,30 +54,22 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 	private static String removeUnderscores(String value) {
 		return value.replace("_", " ");
 	}
-
-	public CalledProceduresPropertiesSection() {
-		super();
-	}	
-
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+	
 	@Override
 	public final void createControls(Composite parent, TabbedPropertySheetPage page) {
 		super.createControls(parent, page);		
 
 		// create the container to hold the table
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setBackground(Display.getCurrent()
-			     					   .getSystemColor(SWT.COLOR_WHITE));
-		GridLayout gridLayout = new GridLayout(1, false);
+		var composite = new Composite(parent, SWT.NONE);
+		composite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		var gridLayout = new GridLayout(1, false);
 		composite.setLayout(gridLayout);
 
 		// create the table and set its layout data
 		table = new Table(composite, SWT.FULL_SELECTION);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		GridData gridData = new GridData();
+		var gridData = new GridData();
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessVerticalSpace = true;
@@ -88,18 +77,18 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 		table.setLayoutData(gridData);
 
 		// create the first table column, holding the procedure names
-		final TableColumn column1 = new TableColumn(table, SWT.NONE);
+		final var column1 = new TableColumn(table, SWT.NONE);
 		column1.setWidth(100);
 		column1.setText("Procedure");
 
 		// create the second table column, holding the procedure call times and verbs
-		TableColumn column2 = new TableColumn(table, SWT.NONE);
+		var column2 = new TableColumn(table, SWT.NONE);
 		column2.setWidth(200);
 		column2.setText("Called");		
 		
 		link = new Link(composite, SWT.NONE);
 		link.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));		
-		GridData gdLink = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		var gdLink = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gdLink.horizontalIndent = 5;
 		link.setLayoutData(gdLink);
 		link.addSelectionListener(new SelectionAdapter() {
@@ -112,7 +101,7 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 	}		
 
 	protected void editProcedureCalls() {
-		Shell parentShell = getPart().getSite().getShell();
+		var parentShell = getPart().getSite().getShell();
 		
 		IDslFacetModifier dslFacetModifier; 
 		if (targetArea != null) {
@@ -121,7 +110,7 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 			dslFacetModifier = ProcedureCallsDslFacetModifier.forModel(targetRecord);
 		}
 		
-		EditProcedureCallsDialog dialog = new EditProcedureCallsDialog(parentShell, dslFacetModifier);
+		var dialog = new EditProcedureCallsDialog(parentShell, dslFacetModifier);
 		if (dialog.open() == IDialogConstants.CANCEL_ID || !dslFacetModifier.hasChanges()) {			
 			return;
 		}
@@ -134,23 +123,23 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 		table.removeAll();		
 		
 		if (targetArea != null) {
-			for (AreaProcedureCallSpecification callSpec : targetArea.getProcedures() ) {				
-				TableItem item = new TableItem(table, SWT.NONE);			
+			for (var callSpec : targetArea.getProcedures() ) {				
+				var item = new TableItem(table, SWT.NONE);			
 				item.setText(0, callSpec.getProcedure().getName());
 				item.setText(1, removeUnderscores(callSpec.getCallTime().toString()) + " " + removeUnderscores(callSpec.getFunction().toString()));
 			}
 		} else {
 			// list the procedures called for the target record
-			for (RecordProcedureCallSpecification callSpec : targetRecord.getProcedures() ) {				
-				TableItem item = new TableItem(table, SWT.NONE);			
+			for (var callSpec : targetRecord.getProcedures() ) {				
+				var item = new TableItem(table, SWT.NONE);			
 				item.setText(0, callSpec.getProcedure().getName());
 				item.setText(1, removeUnderscores(callSpec.getCallTime().toString()) + " " + removeUnderscores(callSpec.getVerb().toString()));
 			}
 		}
 	
-		// we don't want any vertical scrollbar in the table; the following sequence allows us to do just that (i.e. vertically 
-		// stretch the table as needed)          
-		for (Composite parent = table.getParent(); parent != null;  parent = parent.getParent()) {
+		// we don't want any vertical scrollbar in the table; the following sequence allows us to do just that
+		// (i.e. vertically stretch the table as needed)
+		for (var parent = table.getParent(); parent != null;  parent = parent.getParent()) {
 			parent.layout();                                          
 		}
 		
@@ -161,17 +150,15 @@ public class CalledProceduresPropertiesSection extends AbstractPropertiesSection
 	public final void setInput(IWorkbenchPart part, ISelection selection) {
 		super.setInput(part, selection);
 		
-		Assert.isTrue(modelObject instanceof SchemaArea || modelObject instanceof SchemaRecord, 
-					  "not a SchemaArea nor a SchemaRecord");
-        if (modelObject instanceof SchemaArea) {
-        	targetArea = (SchemaArea) modelObject;
-        	targetRecord = null;
+		Assert.isTrue(modelObject instanceof SchemaArea || modelObject instanceof SchemaRecord, "not a SchemaArea nor a SchemaRecord");
+        if (modelObject instanceof SchemaArea schemaArea) {
+        		targetArea = schemaArea;
+        		targetRecord = null;
         } else {
-        	targetArea = null;
-        	targetRecord = (SchemaRecord) modelObject;
+        		targetArea = null;
+        		targetRecord = (SchemaRecord) modelObject;
         }
-        
-        commandStack = (CommandStack) editor.getAdapter(CommandStack.class);
+        commandStack = CommandStack.class.cast(editor.getAdapter(CommandStack.class));
 	    Assert.isNotNull(commandStack, "no command stack available");
 	}	
 

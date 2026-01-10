@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,13 +17,11 @@
 package org.lh.dmlj.schema.editor.property.handler;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ModelChangeCompoundCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
@@ -32,98 +30,63 @@ import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.IMemberRoleProvider;
 import org.lh.dmlj.schema.editor.property.ui.IndexedSetPointersDialog;
 
-public class IndexedSetPointersHandler 
-	extends AbstractSetPointersHandler
-	implements IHyperlinkHandler<EAttribute, Command> {	
-	
+public class IndexedSetPointersHandler extends AbstractSetPointersHandler implements IHyperlinkHandler<EAttribute, Command> {
 	private IMemberRoleProvider memberRoleProvider;
 	
 	public IndexedSetPointersHandler(IMemberRoleProvider memberRoleProvider) {
-		super();
 		this.memberRoleProvider = memberRoleProvider;
 	}	
 
 	@Override
-	public Command hyperlinkActivated(EAttribute attribute) {		
+	public Command hyperlinkActivated(EAttribute attribute) {
+		var memberRole = memberRoleProvider.getMemberRole();
 		
-		// we need the MemberRole		
-		MemberRole memberRole = memberRoleProvider.getMemberRole();
-		
-		// create and open the dialog for maintaining an indexed set's pointer settings; 
-		// if the user presses the cancel button, get out and return a null 
-		// Command		
-		IndexedSetPointersDialog dialog = 
-			new IndexedSetPointersDialog(Display.getCurrent().getActiveShell(),
-										 memberRole);
+		// create and open the dialog for maintaining an indexed set's pointer settings; if the user presses the
+		// cancel button, get out and return null		
+		var dialog = new IndexedSetPointersDialog(Display.getCurrent().getActiveShell(), memberRole);
 		if (dialog.open() == IDialogConstants.CANCEL_ID) {
-			// cancel button pressed
 			return null;
 		}
 		
-		// the user pressed the OK button, which means something has to be
-		// changed (regarding the member record's pointers); build a list of 
-		// commands to execute on the command stack...
-		List<IModelChangeCommand> commands = new ArrayList<>();
+		// the user pressed the OK button, which means something has to be changed (regarding the member record's
+		// pointers); build a list of commands to execute on the command stack...
+		var commands = new ArrayList<IModelChangeCommand>();
 		
 		// index pointers
-		if (memberRole.getIndexDbkeyPosition() == null && 
-			dialog.isIndexPointers()) {
-			
-			// there was no index pointer but the user wants it to be appended
-			// to the prefix of the member record
-			commands.add(createAppendPointerCommand(memberRole.getRecord(),
-					  								memberRole,
-					  								MEMBER_INDEX_POINTER_POSITION));
-		} else if (memberRole.getIndexDbkeyPosition() != null && 
-				   !dialog.isIndexPointers()) {
-			
-			// there was an index pointer for the set but the user wants it
-			// removed from the member record's prefix
-			commands.addAll(createShiftPointersCommands(memberRole.getRecord(), 
-			  		  									memberRole,
-			  		  									MEMBER_INDEX_POINTER_POSITION));
+		if (memberRole.getIndexDbkeyPosition() == null && dialog.isIndexPointers()) {
+			// there was no index pointer but the user wants it to be appended to the prefix of the member record
+			commands.add(createAppendPointerCommand(memberRole.getRecord(), memberRole, MEMBER_INDEX_POINTER_POSITION));
+		} else if (memberRole.getIndexDbkeyPosition() != null && !dialog.isIndexPointers()) {
+			// there was an index pointer for the set but the user wants it removed from the member record's prefix
+			commands.addAll(createShiftPointersCommands(memberRole.getRecord(), memberRole, MEMBER_INDEX_POINTER_POSITION));
 		}
 		
 		// owner pointers
-		if (memberRole.getOwnerDbkeyPosition() == null && 
-			dialog.isOwnerPointers()) {
-			
-			// there was no owner pointer but the user wants it to be appended
-			// to the prefix of the member record
-			commands.add(createAppendPointerCommand(memberRole.getRecord(),
-					  								memberRole,
-					  								MEMBER_OWNER_POINTER_POSITION));
-		} else if (memberRole.getOwnerDbkeyPosition() != null && 
-				   !dialog.isOwnerPointers()) {
-			
-			// there was an owner pointer for the set but the user wants it
-			// removed from the member record's prefix
-			commands.addAll(createShiftPointersCommands(memberRole.getRecord(), 
-			  		  									memberRole,
-			  		  									MEMBER_OWNER_POINTER_POSITION));
+		if (memberRole.getOwnerDbkeyPosition() == null && dialog.isOwnerPointers()) {
+			// there was no owner pointer but the user wants it to be appended to the prefix of the member record
+			commands.add(createAppendPointerCommand(memberRole.getRecord(), memberRole, MEMBER_OWNER_POINTER_POSITION));
+		} else if (memberRole.getOwnerDbkeyPosition() != null && !dialog.isOwnerPointers()) {
+			// there was an owner pointer for the set but the user wants it removed from the member record's prefix
+			commands.addAll(createShiftPointersCommands(memberRole.getRecord(), memberRole, MEMBER_OWNER_POINTER_POSITION));
 		}
 		
 		// now is a good time to create the model change context
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.ADD_OR_REMOVE_SET_POINTERS);
-		context.putContextData(memberRole);
+		var context = new ModelChangeContext(ModelChangeType.ADD_OR_REMOVE_SET_POINTERS);
+		context.putContextData(memberRole, ModelChangeContext.memberRoleContextDataAssembler);
 		
-		// create a compound command if needed; there should always be at least 
-		// 1 command to add to it
+		// create a compound command if needed; there should always be at least 1 command to add to it
 		if (commands.isEmpty()) {
-			throw new RuntimeException("logic error: no commands created");				
-		} else if (commands.size() > 1) {			
-			String label = 
-				"Change pointers for set '" + 
-				Tools.removeTrailingUnderscore(memberRole.getSet().getName()) + 
-				"'";			
-			ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(label);
+			throw new IllegalStateException("logic error: no commands created");
+		} else if (commands.size() > 1) {
+			var label = "Change pointers for set '" + Tools.removeTrailingUnderscore(memberRole.getSet().getName()) + "'";
+			var cc = new ModelChangeCompoundCommand(label);
 			cc.setContext(context);
-			for (IModelChangeCommand command : commands) {
-				cc.add((Command) command);
-			}
+			commands.stream()
+					.map(Command.class::cast)
+					.forEach(cc::add);
 			return cc;
 		} else {
-			IModelChangeCommand command = commands.get(0);
+			var command = commands.get(0);
 			command.setContext(context);
 			return (Command) command;
 		}

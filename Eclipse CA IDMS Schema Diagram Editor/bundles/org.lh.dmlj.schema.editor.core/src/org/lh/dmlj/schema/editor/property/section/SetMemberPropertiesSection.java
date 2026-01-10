@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -37,19 +37,10 @@ import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 import org.lh.dmlj.schema.editor.property.handler.IndexedSetPointersHandler;
 
-public class SetMemberPropertiesSection 
-	extends AbstractSetPropertiesSection 
-	implements IAreaSpecificationProvider, IMemberRoleProvider {
-
+public class SetMemberPropertiesSection extends AbstractSetPropertiesSection implements IAreaSpecificationProvider, IMemberRoleProvider {
 	private IHyperlinkHandler<EAttribute, Command> areaHandler = new AreaHandler(this);	
-	private IHyperlinkHandler<EAttribute, Command> chainedSetPointersHandler = 
-		new ChainedSetPointersHandler(this);
-	private IHyperlinkHandler<EAttribute, Command> indexedSetPointersHandler = 
-		new IndexedSetPointersHandler(this);
-	
-	public SetMemberPropertiesSection() {
-		super();	
-	}	
+	private IHyperlinkHandler<EAttribute, Command> chainedSetPointersHandler = new ChainedSetPointersHandler(this);
+	private IHyperlinkHandler<EAttribute, Command> indexedSetPointersHandler = new IndexedSetPointersHandler(this);
 	
 	@Override
 	public AreaSpecification getAreaSpecification() {		
@@ -69,7 +60,7 @@ public class SetMemberPropertiesSection
 	
 	@Override
 	public List<EAttribute> getAttributes() {		
-		List<EAttribute> attributes = new ArrayList<>();
+		var attributes = new ArrayList<EAttribute>();
 		attributes.add(SchemaPackage.eINSTANCE.getSchemaRecord_Name());
 		attributes.add(SchemaPackage.eINSTANCE.getSchemaArea_Name());
 		if (set.isChained()) {
@@ -98,15 +89,10 @@ public class SetMemberPropertiesSection
 
 	@Override
 	public EObject getEditableObject(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE
-									  .getMemberRole_MembershipOption()) {
-			// in the case of system owned indexed sets without index pointers,
-			// the membership option MUST be MANDATORY AUTOMATIC, so we will not
-			// allow editing in that case
-			if (set.getMode() == SetMode.INDEXED &&
-				set.getSystemOwner() != null &&
-				set.getMembers().get(0).getIndexDbkeyPosition() == null) {
-				
+		if (attribute == SchemaPackage.eINSTANCE.getMemberRole_MembershipOption()) {
+			// in the case of system owned indexed sets without index pointers, the membership option MUST be
+			// MANDATORY AUTOMATIC, so we will not allow editing in that case
+			if (set.getMode() == SetMode.INDEXED && set.getSystemOwner() != null && set.getMembers().get(0).getIndexDbkeyPosition() == null) {
 				return super.getEditableObject(attribute);
 			} else {
 				return target;
@@ -118,44 +104,30 @@ public class SetMemberPropertiesSection
 	
 	@Override
 	public IEditHandler getEditHandler(EAttribute attribute, Object newValue) {
-		if (attribute == SchemaPackage.eINSTANCE
-				  					  .getMemberRole_MembershipOption()) {
-						
-			if (newValue == SetMembershipOption.MANDATORY_MANUAL ||
-				newValue == SetMembershipOption.OPTIONAL_MANUAL &&
-				target.getRecord().getLocationMode() == LocationMode.VIA &&
-				target.getRecord().getViaSpecification().getSet() == set) {
+		if (attribute == SchemaPackage.eINSTANCE.getMemberRole_MembershipOption() &&
+			(newValue == SetMembershipOption.MANDATORY_MANUAL || newValue == SetMembershipOption.OPTIONAL_MANUAL &&
+			 target.getRecord().getLocationMode() == LocationMode.VIA && target.getRecord().getViaSpecification().getSet() == set)) {
 				
-				String message = 
-					"specifying the MANUAL connect option for a set if the " +
-					"member record is stored VIA a set is NOT recommended " +
-					"since this option may result in the target page for the " +
-					"member record being determined from a page that does " +
-					"not hold the owner record";
-				return super.getEditHandler(attribute, newValue, message);
-			}
+			var message =  "specifying the MANUAL connect option for a set if the member record is stored VIA " +
+				"a set is NOT recommended since this option may result in the target page for the member " +
+				"record being determined from a page that does not hold the owner record";
+			return super.getEditHandler(attribute, newValue, message);
+		} else {
+			return super.getEditHandler(attribute, newValue);
 		}
-		return super.getEditHandler(attribute, newValue);
 	}
 	
 	@Override
 	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaArea_Name()) {
 			return areaHandler;
-		} else if (attribute == SchemaPackage.eINSTANCE
-										     .getMemberRole_NextDbkeyPosition() ||
-				   attribute == SchemaPackage.eINSTANCE
-										     .getMemberRole_PriorDbkeyPosition() ||
-				   attribute == SchemaPackage.eINSTANCE
-										     .getMemberRole_OwnerDbkeyPosition() &&
-				   set.getMode() == SetMode.CHAINED) {
+		} else if (attribute == SchemaPackage.eINSTANCE.getMemberRole_NextDbkeyPosition() ||
+				   attribute == SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition() ||
+				   attribute == SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition() && set.getMode() == SetMode.CHAINED) {
 			
 			return chainedSetPointersHandler;			
-		} else if (attribute == SchemaPackage.eINSTANCE
-			     							 .getMemberRole_IndexDbkeyPosition() ||
-			       attribute == SchemaPackage.eINSTANCE
-			     						     .getMemberRole_OwnerDbkeyPosition() &&
-			       set.getMode() == SetMode.INDEXED) {
+		} else if (attribute == SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition() ||
+			       attribute == SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition() && set.getMode() == SetMode.INDEXED) {
 
 			return indexedSetPointersHandler;			
 		} else {
@@ -180,21 +152,13 @@ public class SetMemberPropertiesSection
 	@Override
 	protected String getValue(EAttribute attribute) {		
 		if (attribute == SchemaPackage.eINSTANCE.getSchemaRecord_Name()) {			
-			// remove the trailing underscore from the record name if we're 
-			// dealing with a DDLCATLOD member record
+			// remove the trailing underscore from the record name if we're dealing with a DDLCATLOD member record
 			return Tools.removeTrailingUnderscore(target.getRecord().getName());
-		} else if (attribute == SchemaPackage.eINSTANCE
-				 							 .getMemberRole_IndexDbkeyPosition() &&
-				   target.getIndexDbkeyPosition() == null ||
-				   attribute == SchemaPackage.eINSTANCE
-					 						 .getMemberRole_OwnerDbkeyPosition() &&
-				   target.getOwnerDbkeyPosition() == null  ||
-				   attribute == SchemaPackage.eINSTANCE
-					 						 .getMemberRole_PriorDbkeyPosition() &&
-				   target.getPriorDbkeyPosition() == null) {
+		} else if (attribute == SchemaPackage.eINSTANCE.getMemberRole_IndexDbkeyPosition() && target.getIndexDbkeyPosition() == null ||
+				   attribute == SchemaPackage.eINSTANCE.getMemberRole_OwnerDbkeyPosition() && target.getOwnerDbkeyPosition() == null  ||
+				   attribute == SchemaPackage.eINSTANCE.getMemberRole_PriorDbkeyPosition() && target.getPriorDbkeyPosition() == null) {
 			
-			// (when requested to return the value for the next pointer 
-			// position, that position will always be available)
+			// (when requested to return the value for the next pointer position, that position will always be available)
 			return "OMITTED";
 		}
 		return super.getValue(attribute);

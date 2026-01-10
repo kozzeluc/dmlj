@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,7 +30,6 @@ import org.lh.dmlj.schema.editor.importtool.elements.IRecordElementsImportTool;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class RecordElementsImportToolExtensionElement extends AbstractExtensionElement {
-
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	private Properties parameters;
@@ -39,33 +38,26 @@ public class RecordElementsImportToolExtensionElement extends AbstractExtensionE
 	
 	public RecordElementsImportToolExtensionElement(IConfigurationElement configElement) {	
 		super(configElement);
-		Assert.isTrue(configElement.getName()
-								   .equals(ExtensionPointConstants.ELEMENT_IMPORT_TOOL), 
-					  "wrong IConfigurationElement: " + configElement.getName());		
+		Assert.isTrue(configElement.getName().equals(ExtensionPointConstants.ELEMENT_IMPORT_TOOL),
+				"wrong IConfigurationElement: " + configElement.getName());		
 	}	
 
 	public List<DataEntryPageExtensionElement> getDataEntryPageExtensionElements() {		
 		if (dataEntryPageExtensionElements == null) {
 			dataEntryPageExtensionElements = new ArrayList<>();
-			List<DataEntryPageExtensionElement> pages =
-				ExtensionElementFactory.getExtensionElements(configElement, 
-															 ELEMENT_DATA_ENTRY_PAGE, 
-															 DataEntryPageExtensionElement.class);		
+			var pages = ExtensionElementFactory.getExtensionElements(configElement, ELEMENT_DATA_ENTRY_PAGE, DataEntryPageExtensionElement.class);		
 			dataEntryPageExtensionElements.addAll(pages);
 		}
 		return dataEntryPageExtensionElements;
 	}
 
 	public String getImplementingClass() {
-		return Util.getAttribute(configElement, 
-				  				 ExtensionPointConstants.ATTRIBUTE_CLASS, null);
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_CLASS, null);
 	}	
 	
 	public Properties getParameters() {
 		if (parameters == null) {		
-			parameters = 
-				Util.getResourceAsProperties(configElement, 
-											 ExtensionPointConstants.ATTRIBUTE_PARAMETERS);
+			parameters = Util.getResourceAsProperties(configElement, ExtensionPointConstants.ATTRIBUTE_PARAMETERS);
 		}
 		return parameters;
 	}	
@@ -75,14 +67,14 @@ public class RecordElementsImportToolExtensionElement extends AbstractExtensionE
 			return recordElementsImportTool;
 		}
 		try {
-			String propertyName = ExtensionPointConstants.ATTRIBUTE_CLASS;
-			Object executableExtension = configElement.createExecutableExtension(propertyName);
+			var propertyName = ExtensionPointConstants.ATTRIBUTE_CLASS;
+			var executableExtension = configElement.createExecutableExtension(propertyName);
 			recordElementsImportTool = (IRecordElementsImportTool) executableExtension;
 			return recordElementsImportTool;
 		} catch (CoreException e) {
-			String message = e.getMessage();
+			var message = e.getMessage();
 			logger.error(message, e);
-			throw new RuntimeException(message);
+			throw new IllegalStateException(message);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.wizard.export;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,25 +27,17 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
 
 public class ExportOptionsPage extends WizardPage {
-
-	private Button btnSortSchemaEntities;
 	private boolean sortSchemaEntities;
-	
-	/**
-	 * Create the wizard.
-	 */
+	private Button btnSortSchemaEntities;
+		
 	public ExportOptionsPage() {
 		super("xxportOptionsPage");
 		setTitle("CA IDMS/DB Schema Syntax");
 		setDescription("Set option(s)");
 	}
-
-	/**
-	 * Create contents of the wizard.
-	 * @param parent
-	 */
+	
 	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
+		var container = new Composite(parent, SWT.NULL);
 
 		setControl(container);
 		container.setLayout(new GridLayout(1, false));
@@ -61,15 +52,11 @@ public class ExportOptionsPage extends WizardPage {
 		btnSortSchemaEntities.setText("Sort schema entities");
 		
 		initialize();
-		
 		setPageComplete(true);
-		
 	}
 
 	private void initialize() {
-		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
-		sortSchemaEntities = 
-			store.getBoolean(PreferenceConstants.SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX);
+		sortSchemaEntities = Plugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX);
 		btnSortSchemaEntities.setSelection(sortSchemaEntities);
 	}
 

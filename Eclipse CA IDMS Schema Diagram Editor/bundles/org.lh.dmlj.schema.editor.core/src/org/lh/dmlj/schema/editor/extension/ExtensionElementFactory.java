@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,60 +21,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.lh.dmlj.schema.editor.Plugin;
 
-public abstract class ExtensionElementFactory {
+public final class ExtensionElementFactory {
 
-	private static <T extends AbstractExtensionElement> Constructor<T> getConstructor(Class<T> _class) {
+	private static <T extends AbstractExtensionElement> Constructor<T> getConstructor(Class<T> type) {
 		try {
-			return _class.getConstructor(IConfigurationElement.class);
-		} catch (Throwable t) {			
-			throw new RuntimeException(t);
+			return type.getConstructor(IConfigurationElement.class);
+		} catch (Exception t) {			
+			throw new IllegalStateException(t);
 		}				
 	}
 	
 	public static <T extends AbstractExtensionElement> List<T> getExtensionElements(String extensionPointId,
-																					String rootElementName,
-																					String elementName,
-																					Class<T> extensionElementClass) {
-		
-		// we'll need the extension element class' constructor that accepts an
-		// IConfigurationElement as its only argument:
-		Constructor<T> constructor = getConstructor(extensionElementClass);		
-		
-		// create the result list
-		List<T> list = new ArrayList<>();
-		
-		// build the list of extension point elements...
-		IExtension[] extensions = 
-			Platform.getExtensionRegistry()
-					.getExtensionPoint(Plugin.PLUGIN_ID, extensionPointId)
-					.getExtensions();		
-		
-		// ... by traversing all defined extensions for the given extension 
-		// point, in all installed plug-ins:
-		for (IExtension extension : extensions) {
-			// for each defined extension, walk the list of elements and process 
-			// the (only) one matching the given root element name:
-			for (IConfigurationElement rootElement : 
-				 extension.getConfigurationElements()) {
+			String rootElementName, String elementName, Class<T> extensionElementClass) {
 				
-				if (rootElement.getName().equals(rootElementName)) {
-					// root element found; process the elements we're interested 
-					// in, 1 by 1...
-					for (IConfigurationElement element : 
-						 rootElement.getChildren(elementName)) {
+		var constructor = getConstructor(extensionElementClass);
+		var list = new ArrayList<T>();
 						
-						// instantiate an extension element of the right type
-						// (T) and add it to our list						
+		var extensions = Platform.getExtensionRegistry().getExtensionPoint(Plugin.PLUGIN_ID, extensionPointId).getExtensions();
+		for (var extension : extensions) {
+			for (var rootElement : extension.getConfigurationElements()) {				
+				if (rootElement.getName().equals(rootElementName)) {
+					for (var element : rootElement.getChildren(elementName)) {
 						try {
-							T extensionElement = 
-								constructor.newInstance(element);
+							T extensionElement = constructor.newInstance(element);
 							list.add(extensionElement);
-						} catch (Throwable t) {
-							throw new RuntimeException(t);
+						} catch (Exception e) {
+							throw new IllegalStateException(e);
 						}						
 					}					
 					break; // we're done as we only expect 1 root element
@@ -86,30 +61,23 @@ public abstract class ExtensionElementFactory {
 	}
 	
 	public static <T extends AbstractExtensionElement> List<T> getExtensionElements(IConfigurationElement parentElement,
-																				    String elementName,
-																				    Class<T> extensionElementClass) {
+			String elementName, Class<T> extensionElementClass) {
+				
+		var constructor = getConstructor(extensionElementClass);		
+		var list = new ArrayList<T>();
 		
-		// we'll need the extension element class' constructor that accepts an
-		// IConfigurationElement as its only argument:
-		Constructor<T> constructor = getConstructor(extensionElementClass);		
-		
-		// create the result list
-		List<T> list = new ArrayList<>();
-		
-		for (IConfigurationElement element : 
-			 parentElement.getChildren(elementName)) {					
-			
-			// instantiate an extension element of the right type (T) and add it 
-			// to our list						
+		for (var element : parentElement.getChildren(elementName)) {
 			try {
-				T extensionElement = constructor.newInstance(element);
+				var extensionElement = constructor.newInstance(element);
 				list.add(extensionElement);
-			} catch (Throwable t) {
-				throw new RuntimeException(t);
+			} catch (Exception e) {
+				throw new IllegalStateException(e);
 			}						
-		}		
-		
+		}
 		return list;
+	}
+	
+	private ExtensionElementFactory() {
 	}
 
 }

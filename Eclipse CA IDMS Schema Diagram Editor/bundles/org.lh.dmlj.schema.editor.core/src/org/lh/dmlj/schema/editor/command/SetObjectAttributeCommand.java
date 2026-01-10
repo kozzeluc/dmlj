@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,25 +16,25 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import java.util.function.Supplier;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 public class SetObjectAttributeCommand extends ModelChangeBasicCommand {
-	
 	protected EObject owner;
-	private EStructuralFeature[] features;
+	protected Supplier<EObject> eObjectSupplier;
+	private final EStructuralFeature[] features;
+	protected final Object newValue;
 	
 	private Object oldValue;
-	protected Object newValue;
-	
-	protected ISupplier<EObject> eObjectSupplier;
 	
 	private static String getLabel(EAttribute attribute, Object value, String attributeLabel) {		
 		if (value != null) {
 			if (attribute.getEType().getInstanceClass().isEnum()) {
-				String sValue = value.toString();
-				return "Set '" + attributeLabel + "' to '" + sValue.replaceAll("_", " ") + "'";
+				var sValue = value.toString();
+				return "Set '" + attributeLabel + "' to '" + sValue.replace("_", " ") + "'";
 			} else {
 				return "Set '" + attributeLabel + "' to '" + value + "'";
 			}
@@ -43,18 +43,14 @@ public class SetObjectAttributeCommand extends ModelChangeBasicCommand {
 		}
 	}
 	
-	public SetObjectAttributeCommand(EObject owner, EAttribute attribute, Object newValue, 
-									 String attributeLabel) {
-		
+	public SetObjectAttributeCommand(EObject owner, EAttribute attribute, Object newValue, String attributeLabel) {
 		super(getLabel(attribute, newValue, attributeLabel));
 		this.owner = owner;
 		this.features = new EStructuralFeature[] {attribute};
 		this.newValue = newValue;		
 	}
 	
-	public SetObjectAttributeCommand(ISupplier<EObject> eObjectSupplier, EAttribute attribute, 
-									 Object newValue, String attributeLabel) {
-
+	public SetObjectAttributeCommand(Supplier<EObject> eObjectSupplier, EAttribute attribute, Object newValue, String attributeLabel) {
 		super(getLabel(attribute, newValue, attributeLabel));
 		this.eObjectSupplier = eObjectSupplier;
 		this.features = new EStructuralFeature[] {attribute};
@@ -64,7 +60,7 @@ public class SetObjectAttributeCommand extends ModelChangeBasicCommand {
 	@Override
 	public void execute() {
 		if (eObjectSupplier != null) {
-			owner = eObjectSupplier.supply();
+			owner = eObjectSupplier.get();
 		}
 		oldValue = owner.eGet(features[0]);
 		owner.eSet(features[0], newValue);

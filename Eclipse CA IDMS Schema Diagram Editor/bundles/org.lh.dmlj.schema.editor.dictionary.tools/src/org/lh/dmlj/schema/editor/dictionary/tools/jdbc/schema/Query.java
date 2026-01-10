@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,8 @@ import java.util.List;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn_079;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr_036;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn079;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr036;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.AreaProcedureListQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.BaseRecordSynonymListQueryTemplate;
@@ -51,9 +51,7 @@ import org.lh.dmlj.schema.editor.dictionary.tools.template.ValidSchemaListForNon
 import org.lh.dmlj.schema.editor.dictionary.tools.template.ValidSchemaListForSysdirlDictionariesQueryTemplate;
 import org.lh.dmlj.schema.editor.dictionary.tools.template.ViaSetListQueryTemplate;
 
-
 public class Query implements IQuery {
-	
 	private static final IQueryTemplate areaListQueryTemplate = new AreaListQueryTemplate();
 	private static final IQueryTemplate areaProcedureListQueryTemplate = new AreaProcedureListQueryTemplate();
 	private static final IQueryTemplate baseRecordSynonymListQueryTemplate = new BaseRecordSynonymListQueryTemplate();
@@ -82,13 +80,12 @@ public class Query implements IQuery {
 	private static final IQueryTemplate viaSetListQueryTemplate = new ViaSetListQueryTemplate();
 	
 	private String description;
-	private int number;
 	private String sql;
+	private int number;
 
 	private Query(Builder builder) {
-		super();
-		this.setDescription(builder.description);
-		this.setSql(builder.sql);
+		setDescription(builder.description);
+		setSql(builder.sql);
 	}
 	
 	@Override
@@ -124,13 +121,8 @@ public class Query implements IQuery {
 	}
 
 	public static class Builder {
-		
 		private String description;
 		private String sql;
-		
-		public Builder() {
-			super();
-		}
 		
 		public IQuery build() {
 			return new Query(this);
@@ -138,174 +130,200 @@ public class Query implements IQuery {
 
 		public Builder forAreaList(SchemaImportSession session) {
 			description = "area list";
-			IQueryTemplate template = areaListQueryTemplate; 
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-												  session.getSchemaName(), 
-												  session.getSchemaVersion()});
+			var template = areaListQueryTemplate; 
+			sql = template.generate(new Object[] { 
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(), 
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 		
 		public Builder forAreaProcedureList(SchemaImportSession session) {
 			description = "area procedure list";
-			IQueryTemplate template = areaProcedureListQueryTemplate; 
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-												  session.getSchemaName(), 
-												  session.getSchemaVersion()});
+			var template = areaProcedureListQueryTemplate; 
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(),
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 
-		public Builder forBaseRecordSynonymList(DictionarySession session, List<Sr_036> sr_036s) {
+		public Builder forBaseRecordSynonymList(DictionarySession session, List<Sr036> sr036s) {
 			description = "base record synonym list";
-			IQueryTemplate template = baseRecordSynonymListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary(), sr_036s});
+			var template = baseRecordSynonymListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary(), sr036s
+				});
 			return this;
 		}
 
 		public Builder forCalcKeyElementList(SchemaImportSession session) {
 			description = "CALC key element list";
-			IQueryTemplate template = calcKeyElementListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-												  session.getSchemaName(), 
-												  session.getSchemaVersion()});
+			var template = calcKeyElementListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(), 
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 
-		public Builder forCatalogCalcKeyElementList(SchemaImportSession session) {
+		public Builder forCatalogCalcKeyElementList() {
 			description = "CALC key element list (catalog)";
-			sql = catalogCalcKeyElementListQueryTemplate.generate(new Object[] {});
+			sql = catalogCalcKeyElementListQueryTemplate.generate(new Object[] { });
 			return this;
 		}
 
 		public Builder forCatalogElementList() {		
 			description = "element list (catalog)";
-			IQueryTemplate template = catalogElementListQueryTemplate;
-			sql = template.generate(new Object[] {});
+			var template = catalogElementListQueryTemplate;
+			sql = template.generate(new Object[] { });
 			return this;
 		}
 		
 		public Builder forCatalogForeignKeyList() {
 			description = "foreign key list (catalog)";
-			sql = catalogForeignKeyListQueryTemplate.generate(new Object[] {});
+			sql = catalogForeignKeyListQueryTemplate.generate(new Object[] { });
 			return this;
 		}
 
 		public Builder forCatalogIndexList() {		
 			description = "index list (catalog)";
-			sql = catalogIndexListQueryTemplate.generate(new Object[] {});
+			sql = catalogIndexListQueryTemplate.generate(new Object[] { });
 			return this;
 		}
 
 		public Builder forCatalogRecordList() {		
 			description = "record list (catalog)";
-			sql = catalogRecordListQueryTemplate.generate(new Object[] {});
+			sql = catalogRecordListQueryTemplate.generate(new Object[] { });
 			return this;
 		}
 		
 		public Builder forCatalogSetList() {		
 			description = "set list (catalog)";
-			sql = catalogSetListQueryTemplate.generate(new Object[] {});
+			sql = catalogSetListQueryTemplate.generate(new Object[] { });
 			return this;
 		}
 
-		public Builder forCatalogSortKeyElementListForSystemOwnedSets(SchemaImportSession session) {
+		public Builder forCatalogSortKeyElementListForSystemOwnedSets() {
 			description = "sort key element list (system owned sets, catalog)";
-			sql = catalogSortKeyElementListForSystemOwnedSetQueryTemplate.generate(new Object[] {});
+			sql = catalogSortKeyElementListForSystemOwnedSetQueryTemplate.generate(new Object[] { });
 			return this;
 		}
 
-		public Builder forCatalogSortKeyElementListForUserOwnedSetsQuery(SchemaImportSession session) {
+		public Builder forCatalogSortKeyElementListForUserOwnedSetsQuery() {
 			description = "sort key element list  (user owned sets, catalog)";
-			sql = catalogSortKeyElementListForUserOwnedSetQueryTemplate.generate(new Object[] {});
+			sql = catalogSortKeyElementListForUserOwnedSetQueryTemplate.generate(new Object[] { });
 			return this;
 		}
 
-		public Builder forCatalogViaSetList(SchemaImportSession session) {
+		public Builder forCatalogViaSetList() {
 			description = "VIA set list (catalog)";
-			sql = catalogViaSetListQueryTemplate.generate(new Object[] {});
+			sql = catalogViaSetListQueryTemplate.generate(new Object[] { });
 			return this;
 		}
 
-		public Builder forElementCommentList(DictionarySession session, List<Rcdsyn_079> rcdsyn_079s) {
+		public Builder forElementCommentList(DictionarySession session, List<Rcdsyn079> rcdsyn079s) {
 			description = "element comment list";
-			sql = elementCommentListQueryTemplate.generate(new Object[] {session.getDictionary(),
-																		 rcdsyn_079s});			
+			sql = elementCommentListQueryTemplate.generate(new Object[] {
+					session.getDictionary(),
+					rcdsyn079s
+				});
 			return this;
 		}		
 		
-		public Builder forElementList(DictionarySession session, List<Rcdsyn_079> rcdsyn_079s) {
+		public Builder forElementList(DictionarySession session, List<Rcdsyn079> rcdsyn079s) {
 			description = "element list";
-			IQueryTemplate template = elementListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary(), rcdsyn_079s});			
+			var template = elementListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary(), rcdsyn079s
+				});			
 			return this;
 		}
 		
-		public Builder forElementSynonymCommentList(DictionarySession session, 
-													List<Rcdsyn_079> rcdsyn_079s) {
-			
+		public Builder forElementSynonymCommentList(DictionarySession session, List<Rcdsyn079> rcdsyn079s) {
 			description = "element synonym comment list";
-			IQueryTemplate template = elementSynonymCommentsListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary(), rcdsyn_079s});			
+			var template = elementSynonymCommentsListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary(), rcdsyn079s
+				});			
 			return this;
 		}		
 		
 		public Builder forRecordList(SchemaImportSession session) {
 			description = "record list";
-			IQueryTemplate template = recordListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-								 				  session.getSchemaName(),
-								 				  session.getSchemaVersion()});
+			var template = recordListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(),
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 
 		public Builder forRecordSynonymList(RecordElementsImportSession session) {
 			description = "record synonym list";
-			IQueryTemplate template = recordSynonymListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-								 				  session.getRecordSynonymName()});
+			var template = recordSynonymListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getRecordSynonymName()
+				});
 			return this;
 		}		
 		
 		public Builder forRecordProcedureList(SchemaImportSession session) {
 			description = "record procedure list";
-			IQueryTemplate template = recordProcedureListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-						  						  session.getSchemaName(),
-						  						  session.getSchemaVersion()}); 
+			var template = recordProcedureListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(),
+					session.getSchemaVersion()
+				}); 
 			return this;
 		}
 
 		public Builder forSchemaDescriptionAndCommentList(SchemaImportSession session) {			
 			description = "schema description and comment list";
-			IQueryTemplate template = schemaDescriptionAndCommentListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-												  session.getSchemaName(),
-												  session.getSchemaVersion()});
+			var template = schemaDescriptionAndCommentListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(),
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 
 		public Builder forSetList(SchemaImportSession session) {
 			description = "set list";
-			sql = setListQueryTemplate.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-					  								  		  session.getSchemaName(),
-					  								  		  session.getSchemaVersion()});
+			sql = setListQueryTemplate.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(),
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 		
 		public Builder forSetOwnerList(SchemaImportSession session) {
 			description = "set owner list";
-			IQueryTemplate template = setOwnerListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-												  session.getSchemaName(),
-												  session.getSchemaVersion()});
+			var template = setOwnerListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(),
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 		
 		public Builder forSortKeyElementList(SchemaImportSession session) {
 			description = "sort key element list";
-			IQueryTemplate template = sortKeyElementListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-												  session.getSchemaName(), 
-												  session.getSchemaVersion()});
+			var template = sortKeyElementListQueryTemplate;
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(), 
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 
@@ -318,16 +336,20 @@ public class Query implements IQuery {
 				description = "valid schema list";
 				template = validSchemaListForNonSysdirlDictionariesQueryTemplate;
 			}
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault())});
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault())
+				});
 			return this;
 		}
 
 		public Builder forViaSetList(SchemaImportSession session) {
 			description = "VIA set list";
 			IQueryTemplate template = viaSetListQueryTemplate;
-			sql = template.generate(new Object[] {session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
-												  session.getSchemaName(),
-												  session.getSchemaVersion()});
+			sql = template.generate(new Object[] {
+					session.getDictionary().getSchemaWithDefault(Plugin.getDefault()),
+					session.getSchemaName(),
+					session.getSchemaVersion()
+				});
 			return this;
 		}
 		

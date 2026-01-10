@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,22 +20,14 @@ import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.ResizableDiagramNode;
 
 public class ResizeDiagramNodeCommand extends ModelChangeBasicCommand {
-	
-	private ResizableDiagramNode diagramNode;
+	private final ResizableDiagramNode diagramNode;
+	private final short newWidth;
+	private final short newHeight;
 	
 	private short oldWidth;
 	private short oldHeight;
 	
-	private short newWidth;
-	private short newHeight;
-	
-	@SuppressWarnings("unused")
-	private ResizeDiagramNodeCommand() {
-		super();
-	}
-	
 	public ResizeDiagramNodeCommand(ResizableDiagramNode diagramNode, short width, short height) {
-		super();
 		this.diagramNode = diagramNode;
 		this.newWidth = width;
 		this.newHeight = height;

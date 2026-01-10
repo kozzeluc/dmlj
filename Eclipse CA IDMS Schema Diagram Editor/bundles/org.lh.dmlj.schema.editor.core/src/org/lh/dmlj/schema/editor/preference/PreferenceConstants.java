@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,8 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.preference;
 
-public abstract class PreferenceConstants {
-	
+public final class PreferenceConstants {
 	public static final int CLOSE_SCHEMADSL_EDITORS_YES = 1;
 	public static final int CLOSE_SCHEMADSL_EDITORS_NO = 0;
 	public static final int CLOSE_SCHEMADSL_EDITORS_ASK = 2;
@@ -34,8 +33,7 @@ public abstract class PreferenceConstants {
 	
 	public static final String DIAGRAMLABEL_ORGANISATION = "organisation";
 	public static final String DIAGRAMLABEL_SHOW_LAST_MODIFIED = "showLastModified";
-	public static final String DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN = 
-		"lastModifiedDateFormatPattern";
+	public static final String DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN = "lastModifiedDateFormatPattern";
 	
 	public static final String SHOW_RULERS = "showRulers";
 	public static final String SHOW_GRID = "showGrid";
@@ -43,8 +41,7 @@ public abstract class PreferenceConstants {
 	public static final String SNAP_TO_GRID = "snapToGrid";
 	public static final String SNAP_TO_GEOMETRY = "snapToGeometry";
 	
-	public static final String SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX = 
-		"sortSchemaEntitiesOnExportToSyntax";
+	public static final String SORT_SCHEMA_ENTITIES_ON_EXPORT_TO_SYNTAX = "sortSchemaEntitiesOnExportToSyntax";
 	
 	public static final String OPERATING_SYSTEM_TEXT_SIZE = "operatingSystemTextSize";
 	
@@ -55,5 +52,8 @@ public abstract class PreferenceConstants {
 	public static final String CLOSE_SCHEMADSL_EDITORS = "closeSchemaDslEditors";
 	
 	public static final String RUN_DSL_WARM_UP_JOB_ON_STARTUP = "runDslWarmUpJobOnStartup";
+	
+	private PreferenceConstants() {
+	}
 	
 }

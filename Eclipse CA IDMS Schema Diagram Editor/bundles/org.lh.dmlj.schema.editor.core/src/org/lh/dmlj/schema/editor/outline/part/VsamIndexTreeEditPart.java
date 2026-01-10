@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,16 +16,12 @@
  */
 package org.lh.dmlj.schema.editor.outline.part;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
-import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
-import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -41,36 +37,31 @@ public class VsamIndexTreeEditPart extends AbstractSchemaTreeEditPart<VsamIndex>
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
 			context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
 			
-			Boolean needToRefreshVisuals = (Boolean) context.getListenerData();
+			var needToRefreshVisuals = (Boolean) context.getListenerData();
 			if (needToRefreshVisuals != null && needToRefreshVisuals.equals(Boolean.TRUE)) {
-				// the set name has changed (execute/redo)... the order of the parent edit part's 
-				// children might become disrupted, so we have to inform that edit part of this fact
+				// the set name has changed (execute/redo)... the order of the parent edit part's children might
+				// become disrupted, so we have to inform that edit part of this fact
 				nodeTextChanged();
 			}
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				   context.appliesTo(getModel().getSet())) {
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO && context.appliesTo(getModel().getSet())) {
 				
-			// the set name change was undone... the order of the parent edit part's children might  
-			// become disrupted, so we have to inform that edit part of this fact
+			// the set name change was undone... the order of the parent edit part's children might become
+			// disrupted, so we have to inform that edit part of this fact
 			nodeTextChanged();
 		}
 	}
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-			context.appliesTo(getModel().getSet())) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO && context.appliesTo(getModel().getSet())) {
 				
-			// the set name is changing (execute/redo); put a boolean in the listener data, which we 
-			// will pick up again when processing the after model change event
+			// the set name is changing (execute/redo); put a boolean in the listener data, which we will pick up
+			// again when processing the after model change event
 			context.setListenerData(Boolean.TRUE);					
 		}
 	}	
@@ -85,7 +76,7 @@ public class VsamIndexTreeEditPart extends AbstractSchemaTreeEditPart<VsamIndex>
 	
 	@Override
 	protected Class<?>[] getChildNodeTextProviderOrder() {
-		return new Class<?>[] {SchemaRecord.class};
+		return new Class<?>[] { SchemaRecord.class };
 	}
 	
 	@Override
@@ -100,37 +91,27 @@ public class VsamIndexTreeEditPart extends AbstractSchemaTreeEditPart<VsamIndex>
 	
 	@Override
 	public List<?> getModelChildren() {
-		
-		List<SchemaRecord> children = new ArrayList<>();
-		
-		// add the member record
-		children.add(getModel().getRecord());
-		
-		return children;
-		
+		return List.of(getModel().getRecord());
 	}
 
 	@Override
-	protected INodeTextProvider<Set> getNodeTextProvider() {
-		return getModel().getSet();
+	protected WrappedNodeTextProvider getNodeTextProvider() {
+		return new WrappedNodeTextProvider(getModel().getSet());
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	protected void registerModel() {
-		// different edit parts exist for the same VSAM index; make sure that selecting a VSAM index 
-		// in the SchemaEditor yields the outline view's top level index to become the current 
-		// selection
-		EObject parentModelObject = getParentModelObject();
+		// different edit parts exist for the same VSAM index; make sure that selecting a VSAM index in the
+		// SchemaEditor yields the outline view's top level index to become the current selection
+		var parentModelObject = getParentModelObject();
 		if (parentModelObject instanceof Schema) {
-			// the model object is the key in the edit part registry; this is what we want so that
-			// selecting an index in the SchemaEditor selects the top level index edit part in the
-			// outline view
+			// the model object is the key in the edit part registry; this is what we want so that selecting an
+			// index in the SchemaEditor selects the top level index edit part in the outline view
 			super.registerModel(); 
 		} else {
-			// assure that VSAM index edit parts that are not at the top level will never be found
-			// by their model object; create an artificial key to make this happen
-			EditPartRegistryKey<VsamIndex> key = new EditPartRegistryKey<>(getModel());
+			// assure that VSAM index edit parts that are not at the top level will never be found by their model
+			// object; create an artificial key to make this happen
+			var key = new EditPartRegistryKey<>(getModel());
 			getViewer().getEditPartRegistry().put(key, this);
 		}		
 	}	

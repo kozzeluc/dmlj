@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -153,19 +153,6 @@ class RecordModelBuilder extends AbstractModelBuilder<SchemaRecord> {
 		record.storageMode = StorageMode.FIXED		
 		record.diagramLocation = buildAndRegisterDiagramLocation(null) // eyecatcher is set later
 		
-		// Define 'call' as an alias for 'callProcedure', this makes the DSL groovier.
-		// Note that a closure already has a 'call' method defined; we must override it to get the
-		// procedure call details (the string argument) and pass them to our 'callProcedure' method
-		// to define the procedure call.
-		// FYI: 'doCall' is the closure method that is invoked when, for a closure x, we code x()
-		//      or invoke its 'call' method.  It is clear that invoking 'call' from within the
-		//      closure causes a stack overflow error.  We don't directly invoke the closure's
-		//      'call' method anywhere else, so we get away with the override.		
-		definition.metaClass {
-			call = { callSpec ->
-				callProcedure callSpec
-			}
-		}
 		runClosure definition
 		
 		assert !bodies

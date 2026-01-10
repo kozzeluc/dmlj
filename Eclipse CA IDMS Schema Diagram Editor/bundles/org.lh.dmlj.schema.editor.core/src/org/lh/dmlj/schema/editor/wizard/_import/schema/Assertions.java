@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,87 +18,69 @@ package org.lh.dmlj.schema.editor.wizard._import.schema;
 
 import java.util.Collection;
 
-import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
 
-abstract class Assertions {
-	
+final class Assertions {
 	private static final String MSG_DBKEY_OVERLAPS = "dbkey position overlap";
 
 	static void isCollectionNotEmpty(Collection<?> collection, String message) {
 		if (collection.isEmpty()) {
-			throw new RuntimeException(message);
+			throw new IllegalStateException(message);
 		}
 	}
 
-	static void isFreeDbkeyPosition(SchemaRecord record, short dbkeyPosition) {
-	
-		for (OwnerRole ownerRole : record.getOwnerRoles()) {
-			if (dbkeyPosition == ownerRole.getNextDbkeyPosition() ||
-				ownerRole.getPriorDbkeyPosition() != null &&
+	static void isFreeDbkeyPosition(SchemaRecord schemaRecord, short dbkeyPosition) {
+		for (var ownerRole : schemaRecord.getOwnerRoles()) {
+			if (dbkeyPosition == ownerRole.getNextDbkeyPosition() || ownerRole.getPriorDbkeyPosition() != null &&
 				dbkeyPosition == ownerRole.getPriorDbkeyPosition().shortValue()) {
 	
-				throw new RuntimeException(MSG_DBKEY_OVERLAPS);
+				throw new IllegalArgumentException(MSG_DBKEY_OVERLAPS);
 			}			
 		}
-		
-		for (MemberRole memberRole : record.getMemberRoles()) {
-			if (memberRole.getIndexDbkeyPosition() != null &&
-				dbkeyPosition == memberRole.getIndexDbkeyPosition()
-										   .shortValue() ||
-				memberRole.getNextDbkeyPosition() != null &&
-				dbkeyPosition == memberRole.getNextDbkeyPosition()
-										   .shortValue() ||
-				memberRole.getOwnerDbkeyPosition() != null &&
-				dbkeyPosition == memberRole.getOwnerDbkeyPosition()
-										   .shortValue() ||
-				memberRole.getPriorDbkeyPosition() != null &&
-				dbkeyPosition == memberRole.getPriorDbkeyPosition()
-										   .shortValue()) {
+		for (var memberRole : schemaRecord.getMemberRoles()) {
+			if (memberRole.getIndexDbkeyPosition() != null && dbkeyPosition == memberRole.getIndexDbkeyPosition().shortValue() ||
+				memberRole.getNextDbkeyPosition() != null && dbkeyPosition == memberRole.getNextDbkeyPosition().shortValue() ||
+				memberRole.getOwnerDbkeyPosition() != null && dbkeyPosition == memberRole.getOwnerDbkeyPosition().shortValue() ||
+				memberRole.getPriorDbkeyPosition() != null && dbkeyPosition == memberRole.getPriorDbkeyPosition().shortValue()) {
 	
-				throw new RuntimeException(MSG_DBKEY_OVERLAPS);
+				throw new IllegalArgumentException(MSG_DBKEY_OVERLAPS);
 			}
 		}
-		
 	}
 
-	static void isSingleElementCollection(Collection<?> collection,
-										  String message) {
-		
+	static void isSingleElementCollection(Collection<?> collection, String message) {
 		if (collection.size() != 1) {
-			throw new RuntimeException(message);
+			throw new IllegalArgumentException(message);
 		}
 	}
 
 	static void isEqualInSize(Collection<?> col1, Collection<?> col2, String message) {
 		if (col1.size() != col2.size()) {
-			throw new RuntimeException(message);
+			throw new IllegalArgumentException(message);
 		}
 	}
 	
 	static void isNotNull(Object object, Class<?> targetClass) {
-		String message = 
-			"the supplied " + targetClass.getSimpleName() + " is null";
-		isNotNull(object, message);
+		isNotNull(object, "the supplied %s is null".formatted(targetClass.getSimpleName()));
 	}
 
 	static void isNotNull(Object object, String message) {
 		if (object == null) {
-			throw new RuntimeException(message);
+			throw new IllegalArgumentException(message);
 		}
 	}
 
-	static void isNull(Object object, Class<?> targetClass) {
-		String message = 
-			"the supplied " + targetClass.getSimpleName() + " is NOT null";
-		isNotNull(object, message);
+	static void isNull(Object object, Class<?> targetClass) {	
+		isNotNull(object, "the supplied %s is NOT null".formatted(targetClass.getSimpleName()));
 	}
 
 	static void isNull(Object object, String message) {
 		if (object != null) {
-			throw new RuntimeException(message);
+			throw new IllegalArgumentException(message);
 		}
-	}	
+	}
+	
+	private Assertions() {
+	}
 	
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,134 +16,108 @@
  */
 package org.lh.dmlj.schema.editor.prefix;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.SchemaRecord;
 
-public class PrefixFactory {
+public final class PrefixFactory {
 
-	public static Prefix newPrefixForInquiry(SchemaRecord record) {		
-		List<Pointer<?>> pointers = PrefixUtil.getPointersForRecord(record);
+	public static Prefix newPrefixForInquiry(SchemaRecord schemaRecord) {		
+		var pointers = PrefixUtil.getPointersForRecord(schemaRecord);
 		if (!PrefixUtil.isPointerListConsistent(pointers)) {
-			throw new IllegalArgumentException("record prefix invalid: " + record);
+			throw new IllegalArgumentException("record prefix invalid: " + schemaRecord);
 		}
-		return new Prefix(record, pointers);		
+		return new Prefix(schemaRecord, pointers);		
 	}
 
-	public static PrefixForPointerAppendage newPrefixForPointerAppendage(Role role, 
-																	 	    PointerType... pointersToAppend) {
-		
-		SchemaRecord record;
-		if (role instanceof OwnerRole) {
-			record = ((OwnerRole) role).getRecord();
+	public static PrefixForPointerAppendage newPrefixForPointerAppendage(Role role, PointerType... pointersToAppend) {
+		SchemaRecord schemaRecord;
+		if (role instanceof OwnerRole ownerRole) {
+			schemaRecord = ownerRole.getRecord();
 		} else {
-			record = ((MemberRole) role).getRecord();
+			schemaRecord = ((MemberRole) role).getRecord();
 		}
-		List<Pointer<?>> pointers = PrefixUtil.getPointersForRecord(record);
+		var pointers = new ArrayList<>(PrefixUtil.getPointersForRecord(schemaRecord));
 		if (!PrefixUtil.isPointerListConsistent(pointers)) {
-			throw new IllegalArgumentException("record prefix invalid: " + record);
+			throw new IllegalArgumentException("record prefix invalid: " + schemaRecord);
 		}
-		short positionInPrefixToSet = (short) (pointers.size() + 1);
-		for (PointerType pointerType : pointersToAppend) {
-			PointerToSet<Role> pointerToAppend = 
-				PointerFactory.newPointerToSet(role, pointerType, positionInPrefixToSet++);
+		var positionInPrefixToSet = (short) (pointers.size() + 1);
+		for (var pointerType : pointersToAppend) {
+			var pointerToAppend = PointerFactory.newPointerToSet(role, pointerType, positionInPrefixToSet++);
 			pointers.add(pointerToAppend);
 		}		
-		return new PrefixForPointerAppendage(record, pointers);
+		return new PrefixForPointerAppendage(schemaRecord, pointers);
 	}
 	
-	public static PrefixForPointerRemoval newPrefixForPointerRemoval(Role role, 
-																   	 PointerType... pointersToRemove) {
-
-		SchemaRecord record;
-		if (role instanceof OwnerRole) {
-			record = ((OwnerRole) role).getRecord();
+	public static PrefixForPointerRemoval newPrefixForPointerRemoval(Role role, PointerType... pointersToRemove) {
+		SchemaRecord schemaRecord;
+		if (role instanceof OwnerRole ownerRole) {
+			schemaRecord = ownerRole.getRecord();
 		} else {
-			record = ((MemberRole) role).getRecord();
+			schemaRecord = ((MemberRole) role).getRecord();
 		}
-		List<Pointer<?>> pointers = PrefixUtil.getPointersForRecord(record);
+		var pointers = new ArrayList<>(PrefixUtil.getPointersForRecord(schemaRecord));
 		if (!PrefixUtil.isPointerListConsistent(pointers)) {
-			throw new IllegalArgumentException("record prefix invalid: " + record);
+			throw new IllegalArgumentException("record prefix invalid: " + schemaRecord);
 		}
-		short decrementForPointersToMove = (short) 0;
-		for (int i = 0; i < pointers.size(); i++) {
-			Pointer<?> originalPointer = pointers.get(i);
+		var decrementForPointersToMove = (short) 0;
+		for (var i = 0; i < pointers.size(); i++) {
+			var originalPointer = pointers.get(i);
 			if (originalPointer.getRole() == role) {
-				for (PointerType pointerType : pointersToRemove) {
+				for (var pointerType : pointersToRemove) {
 					if (originalPointer.getType() == pointerType) {
-						PointerToUnset<?> replacementPointer = 
-							PointerFactory.newPointerToUnset(role, pointerType);
+						var replacementPointer = PointerFactory.newPointerToUnset(role, pointerType);
 						pointers.set(i, replacementPointer);
 						decrementForPointersToMove += 1;
 					}
 				}
 			} else if (decrementForPointersToMove > 0) {
-				short newPositionInPrefixToSet = 
-					(short) (originalPointer.getCurrentPositionInPrefix().shortValue() - 
-							 decrementForPointersToMove);
-				PointerToMove<?> replacementPointer = 
-					PointerFactory.newPointerToMove(originalPointer.getRole(), 
-													originalPointer.getType(), 
-													newPositionInPrefixToSet);
+				var newPositionInPrefixToSet = (short) (originalPointer.getCurrentPositionInPrefix().shortValue() - decrementForPointersToMove);
+				var replacementPointer = PointerFactory.newPointerToMove(originalPointer.getRole(), originalPointer.getType(),
+						newPositionInPrefixToSet);
 				pointers.set(i, replacementPointer);
 			}
 		}		
-		return new PrefixForPointerRemoval(record, pointers);
+		return new PrefixForPointerRemoval(schemaRecord, pointers);
 	}
 	
-	public static PrefixForPointerReordering newPrefixForPointerReordering(SchemaRecord record, 
-	   																	   List<Pointer<?>> newPointerOrder) {
-
-		List<Pointer<?>> pointers = PrefixUtil.getPointersForRecord(record);
+	public static PrefixForPointerReordering newPrefixForPointerReordering(SchemaRecord schemaRecord, List<Pointer> newPointerOrder) {
+		var pointers = new ArrayList<>(PrefixUtil.getPointersForRecord(schemaRecord));
 		if (!PrefixUtil.isPointerListConsistent(pointers)) {
-			throw new IllegalArgumentException("record prefix invalid: " + record);
+			throw new IllegalArgumentException("record prefix invalid: " + schemaRecord);
 		}
-		
 		if (newPointerOrder.size() != pointers.size()) {
-			throw new IllegalArgumentException("newPointerOrder.size() mismatch: " +
-											   newPointerOrder.size() + " (expected: " + 
-											   pointers.size() + ")");
+			throw new IllegalArgumentException("newPointerOrder.size() mismatch: " + newPointerOrder.size() + 
+					" (expected: " + pointers.size() + ")");
 		}
-		
-		List<Pointer<?>> newPointerOrderSorted = PrefixUtil.asSortedList(newPointerOrder);
-				
-		for (int i = 0; i < pointers.size(); i++) {
-			
-			Pointer<?> originalPointer = pointers.get(i);
-			Pointer<?> newOrderPointer = newPointerOrderSorted.get(i);
-			
+		var newPointerOrderSorted = PrefixUtil.asSortedList(newPointerOrder);
+		for (var i = 0; i < pointers.size(); i++) {
+			var originalPointer = pointers.get(i);
+			var newOrderPointer = newPointerOrderSorted.get(i);
 			if (originalPointer.getRole() != newOrderPointer.getRole()) {				
-				String message = "newPointerOrder content mismatch (role): " + i;
-				throw new IllegalArgumentException(message);
+				throw new IllegalArgumentException("newPointerOrder content mismatch (role): " + i);
 			}
 			if (originalPointer.getType() != newOrderPointer.getType()) {				
-				String message = "newPointerOrder content mismatch (type): " + i;
-				throw new IllegalArgumentException(message);
+				throw new IllegalArgumentException("newPointerOrder content mismatch (type): " + i);
 			}
-			if (originalPointer.getCurrentPositionInPrefix() != 
-													 newOrderPointer.getCurrentPositionInPrefix()) {
-				
-				String message = 
-					"newPointerOrder content mismatch (current position in prefix): " + i;
-				throw new IllegalArgumentException(message);
+			if (!Objects.equals(originalPointer.getCurrentPositionInPrefix(), newOrderPointer.getCurrentPositionInPrefix())) {
+				throw new IllegalArgumentException("newPointerOrder content mismatch (current position in prefix): " + i);
 			}
-			
-			short newPositionInPrefix = (short) (newPointerOrder.indexOf(newOrderPointer) + 1);
-			
+			var newPositionInPrefix = (short) (newPointerOrder.indexOf(newOrderPointer) + 1);
 			if (newPositionInPrefix != originalPointer.getCurrentPositionInPrefix()) {
-				PointerToMove<?> replacementPointer = 
-					PointerFactory.newPointerToMove(originalPointer.getRole(), 
-													originalPointer.getType(), 
-													newPositionInPrefix);
+				var replacementPointer = PointerFactory.newPointerToMove(originalPointer.getRole(), originalPointer.getType(), newPositionInPrefix);
 				pointers.set(i, replacementPointer);
 			}
-			
 		}
-		
-		return new PrefixForPointerReordering(record, pointers);
-	}	
+		return new PrefixForPointerReordering(schemaRecord, pointers);
+	}
+	
+	private PrefixFactory() {
+	}
 	
 }

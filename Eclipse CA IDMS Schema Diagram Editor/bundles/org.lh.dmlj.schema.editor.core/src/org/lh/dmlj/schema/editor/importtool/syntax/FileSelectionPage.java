@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,30 +35,21 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 import org.lh.dmlj.schema.editor.wizard._import.schema.GeneralContextAttributeKeys;
 
 public class FileSelectionPage extends AbstractDataEntryPage {
-	
 	private Text textFile;
-
-	public FileSelectionPage() {
-		super();
-	}
-
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+	
 	@Override
 	public Control createControl(Composite parent) {
-		final Composite container = new Composite(parent, SWT.NONE);
-		Layout layout = new GridLayout(3, false);
+		var container = new Composite(parent, SWT.NONE);
+		var layout = new GridLayout(3, false);
 		container.setLayout(layout);
 		
-		Label lblFile = new Label(container, SWT.NONE);
+		var lblFile = new Label(container, SWT.NONE);
 		lblFile.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFile.setText("File :");
 		
@@ -79,13 +70,13 @@ public class FileSelectionPage extends AbstractDataEntryPage {
 		});
 		textFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Button btnBrowse = new Button(container, SWT.NONE);
+		var btnBrowse = new Button(container, SWT.NONE);
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(container.getShell());
+				var fileDialog = new FileDialog(container.getShell());
 				fileDialog.setFileName(textFile.getText());
-				String newValue = fileDialog.open();							
+				var newValue = fileDialog.open();							
 				if (newValue != null) {
 					textFile.setText(newValue);
 					textFile.redraw();
@@ -99,18 +90,17 @@ public class FileSelectionPage extends AbstractDataEntryPage {
 		btnBrowse.setText("Browse...");		
 		new Label(container, SWT.NONE);
 		
-		Text lblNewLabel = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
-		GridData gd_lblNewLabel = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-		gd_lblNewLabel.verticalIndent = 10;
-		gd_lblNewLabel.widthHint = 300;
-		lblNewLabel.setLayoutData(gd_lblNewLabel);
+		var lblNewLabel = new Text(container, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		var gdLblNewLabel = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gdLblNewLabel.verticalIndent = 10;
+		gdLblNewLabel.widthHint = 300;
+		lblNewLabel.setLayoutData(gdLblNewLabel);
 		lblNewLabel.setText("Please specify a file that was created with the schema compiler's 'PUNch SCHema name is schema-name Version is version-number AS SYNtax.' statement. ");
 		
 		return container;
 	}
 
 	private void validatePage() {
-		
 		getContext().clearAttribute(IDataEntryContext.SCHEMA_NAME);
 		getContext().clearAttribute(IDataEntryContext.SCHEMA_VERSION);
 		getContext().clearAttribute(GeneralContextAttributeKeys.SCHEMA_SYNTAX_FILE);
@@ -118,7 +108,7 @@ public class FileSelectionPage extends AbstractDataEntryPage {
 		getController().setPageComplete(false);
 		getController().setErrorMessage(null);
 		
-		if (textFile.getText().trim().equals("")) {
+		if (textFile.getText().isEmpty()) {
 			return;
 		} else if (!new File(textFile.getText().trim()).exists()) {
 			getController().setErrorMessage("File not found");
@@ -127,38 +117,31 @@ public class FileSelectionPage extends AbstractDataEntryPage {
 		
 		String schemaName = null;
 		Short schemaVersion = null;
-		File file = new File(textFile.getText().trim());
-		try {
-			BufferedReader in = 
-				new BufferedReader(new FileReader(file));
-			for (String line = in.readLine(); line != null; line = in.readLine()) {
-				int i = line.indexOf("SCHEMA NAME IS ");
-				int j = line.indexOf(" VERSION IS "); 
+		var file = new File(textFile.getText().trim());
+		try (var in = new BufferedReader(new FileReader(file))) {
+			for (var line = in.readLine(); line != null; line = in.readLine()) {
+				var i = line.indexOf("SCHEMA NAME IS ");
+				var j = line.indexOf(" VERSION IS "); 
 				if (i > -1 && j > -1 && j > i) {
 					schemaName = line.substring(i + 15, j);											
-					schemaVersion = 
-						Short.valueOf(line.substring(j + 12). trim());
+					schemaVersion = Short.valueOf(line.substring(j + 12).trim());
 					break;
 				}
-			}						
-			in.close();
+			}			
 		} catch (IOException e) {
-			getController().setErrorMessage("File does not appear to contain " +
-										    "CA IDMS/DB schema syntax");
+			getController().setErrorMessage("File does not appear to contain CA IDMS/DB schema syntax");
 			return;
 		}
 		
 		if (schemaName == null || schemaVersion == null) {
-			getController().setErrorMessage("File does not appear to contain " +
-				    						"CA IDMS/DB schema syntax");
+			getController().setErrorMessage("File does not appear to contain CA IDMS/DB schema syntax");
 			return;
 		}
 		
 		getContext().setAttribute(IDataEntryContext.SCHEMA_NAME, schemaName);
 		getContext().setAttribute(IDataEntryContext.SCHEMA_VERSION, schemaVersion);
 		getContext().setAttribute(GeneralContextAttributeKeys.SCHEMA_SYNTAX_FILE, file);
-		getController().setPageComplete(true);		
-		
+		getController().setPageComplete(true);
 	}
 	
 }

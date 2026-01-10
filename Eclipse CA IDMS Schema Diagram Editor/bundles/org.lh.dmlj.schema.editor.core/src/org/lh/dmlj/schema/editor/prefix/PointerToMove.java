@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,15 +19,13 @@ package org.lh.dmlj.schema.editor.prefix;
 import org.lh.dmlj.schema.Role;
 
 /**
- * Represents a pointer in a record's prefix whose position in the prefix is to be changed to
- * another position.
+ * Represents a pointer in a record's prefix whose position in the prefix is to be changed to another position.
  */
-class PointerToMove<T extends Role> extends Pointer<T> {
-
-	private Short newPositionInPrefix;	
-	private Short oldPositionInPrefix;
+class PointerToMove extends Pointer {
+	private final Short newPositionInPrefix;	
+	private final Short oldPositionInPrefix;
 	
-	protected PointerToMove(T role, PointerType type, short newPositionInPrefix) {
+	protected PointerToMove(Role role, PointerType type, short newPositionInPrefix) {
 		super(role, type);
 		this.newPositionInPrefix = Short.valueOf(newPositionInPrefix);
 		oldPositionInPrefix = PrefixUtil.getPositionInPrefix(role, type);

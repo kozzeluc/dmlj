@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,10 +16,9 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import java.util.stream.IntStream;
+
 import org.eclipse.core.runtime.Assert;
-import org.lh.dmlj.schema.ConnectionLabel;
-import org.lh.dmlj.schema.ConnectionPart;
-import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.IndexedSetModeSpecification;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
@@ -36,20 +35,20 @@ import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerAppendage;
 
 public class CreateSetCommand extends ModelChangeBasicCommand {
-	
 	private static final String SET_NAME_PREFIX = "NEW-SET-";
 
+	private final SchemaRecord owner;
+	private final SetMode mode;
+	
 	private Schema schema;
 	private Set	set;
+	private SchemaRecord member;
+	private PrefixForPointerAppendage memberPrefix;	
 	
-	private SchemaRecord 	 		  member;
-	private PrefixForPointerAppendage memberPrefix;
-	private SetMode 	 	 		  mode;
-	private SchemaRecord 	 		  owner;
 	private PrefixForPointerAppendage ownerPrefix;
 	
-	private MemberRole 		memberRole;
-	private OwnerRole  		ownerRole;
+	private MemberRole memberRole;
+	private OwnerRole ownerRole;
 
 	public CreateSetCommand(SchemaRecord owner, SetMode mode) {
 		super(mode == SetMode.CHAINED ? "Create chained set" : "Create user owned indexed set");
@@ -58,18 +57,15 @@ public class CreateSetCommand extends ModelChangeBasicCommand {
 	}
 	
 	private String calculateSetName() {
-		for (int i = 1; i <= Integer.MAX_VALUE; i++) {
-			String setName = SET_NAME_PREFIX + i;
-			if (schema.getSet(setName) == null) {				
-				return setName;				
-			}			
-		}
-		throw new RuntimeException("cannot determine set name");
+		return IntStream.range(1, Integer.MAX_VALUE)
+				.mapToObj(i -> SET_NAME_PREFIX + i)
+				.filter(setName -> schema.getSet(setName) == null)
+				.findFirst()
+				.orElseThrow(() -> new IllegalStateException("cannot determine set name"));
 	}	
 
 	@Override
 	public void execute() {
-				
 		schema = owner.getSchema();
 		Assert.isNotNull(member, "member not set");
 				
@@ -79,8 +75,7 @@ public class CreateSetCommand extends ModelChangeBasicCommand {
 		set.setOrder(SetOrder.LAST);
 		
 		if (mode == SetMode.INDEXED) {
-			IndexedSetModeSpecification indexedSetModeSpecification =
-				SchemaFactory.eINSTANCE.createIndexedSetModeSpecification();		
+			IndexedSetModeSpecification indexedSetModeSpecification = SchemaFactory.eINSTANCE.createIndexedSetModeSpecification();		
 			indexedSetModeSpecification.setSymbolicIndexName(set.getName());
 			set.setIndexedSetModeSpecification(indexedSetModeSpecification);
 		}
@@ -92,21 +87,19 @@ public class CreateSetCommand extends ModelChangeBasicCommand {
 		memberRole.setSet(set);
 		memberRole.setMembershipOption(SetMembershipOption.MANDATORY_AUTOMATIC);
 		
-		ConnectionPart connectionPart = SchemaFactory.eINSTANCE.createConnectionPart();
+		var connectionPart = SchemaFactory.eINSTANCE.createConnectionPart();
 		connectionPart.setMemberRole(memberRole);
 		
-		DiagramLocation labelLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+		var labelLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
 		labelLocation.setEyecatcher("set label " + set.getName() + " (" + member.getName() +")");
-		// TODO make calculating the label location more intelligent
 		labelLocation.setX(owner.getDiagramLocation().getX() + RecordFigure.UNSCALED_WIDTH + 5);
 		labelLocation.setY(owner.getDiagramLocation().getY());
 		
-		ConnectionLabel connectionLabel = SchemaFactory.eINSTANCE.createConnectionLabel();
+		var connectionLabel = SchemaFactory.eINSTANCE.createConnectionLabel();
 		connectionLabel.setMemberRole(memberRole);
 		connectionLabel.setDiagramLocation(labelLocation);
 		
 		redo();
-		
 	}
 
 	public final SchemaRecord getOwner() {
@@ -115,40 +108,31 @@ public class CreateSetCommand extends ModelChangeBasicCommand {
 
 	@Override
 	public void redo() {
-		
 		ownerRole.setRecord(owner);
 		
 		set.setSchema(schema);
 		
 		ownerRole.setRecord(owner);
 		if (ownerPrefix == null) {
-			ownerPrefix = 
-				PrefixFactory.newPrefixForPointerAppendage(ownerRole, PointerType.OWNER_NEXT, 
-														   PointerType.OWNER_PRIOR);
+			ownerPrefix = PrefixFactory.newPrefixForPointerAppendage(ownerRole, PointerType.OWNER_NEXT, PointerType.OWNER_PRIOR);
 		}
 		ownerPrefix.appendPointers();
 		
 		memberRole.setRecord(member);
 		if (memberPrefix == null) {
 			if (mode == SetMode.CHAINED) {
-				memberPrefix = 
-					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_NEXT, 
-															   PointerType.MEMBER_PRIOR, 
-															   PointerType.MEMBER_OWNER);
+				memberPrefix = PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_NEXT, 
+						PointerType.MEMBER_PRIOR, PointerType.MEMBER_OWNER);
 			} else {
-				memberPrefix = 
-					PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_INDEX, 
-															   PointerType.MEMBER_OWNER);			
+				memberPrefix = PrefixFactory.newPrefixForPointerAppendage(memberRole, PointerType.MEMBER_INDEX, 
+						PointerType.MEMBER_OWNER);			
 			}
 		}
 		memberPrefix.appendPointers();
 		
 		schema.getDiagramData().getConnectionParts().add(memberRole.getConnectionParts().get(0));
 		schema.getDiagramData().getConnectionLabels().add(memberRole.getConnectionLabel());
-		schema.getDiagramData()
-			  .getLocations()
-			  .add(memberRole.getConnectionLabel().getDiagramLocation());
-		
+		schema.getDiagramData().getLocations().add(memberRole.getConnectionLabel().getDiagramLocation());
 	}
 	
 	public void setMemberRecord(SchemaRecord member) {
@@ -157,7 +141,6 @@ public class CreateSetCommand extends ModelChangeBasicCommand {
 
 	@Override
 	public void undo() {
-	
 		ownerRole.setRecord(null);
 		
 		set.setSchema(null);
@@ -170,10 +153,7 @@ public class CreateSetCommand extends ModelChangeBasicCommand {
 		
 		schema.getDiagramData().getConnectionParts().remove(memberRole.getConnectionParts().get(0));
 		schema.getDiagramData().getConnectionLabels().remove(memberRole.getConnectionLabel());
-		schema.getDiagramData()
-			  .getLocations()
-			  .remove(memberRole.getConnectionLabel().getDiagramLocation());		
-		
+		schema.getDiagramData().getLocations().remove(memberRole.getConnectionLabel().getDiagramLocation());		
 	}
 
 }

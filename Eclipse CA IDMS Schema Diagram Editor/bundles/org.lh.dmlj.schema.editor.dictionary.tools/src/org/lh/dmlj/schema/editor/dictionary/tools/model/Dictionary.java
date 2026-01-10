@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,20 +20,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.xml.bind.DatatypeConverter;
 
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.encryption.EncDec;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.IDefaultDictionaryPropertyProvider;
 
-public class Dictionary implements Comparable<Dictionary> {
-	
+public class Dictionary implements Comparable<Dictionary> {	
 	public static final String USE_DEFAULT_SCHEMA_INDICATOR = "%default%";
 	public static final int USE_DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM_INDICATOR = Integer.MIN_VALUE;
 	
@@ -48,15 +57,11 @@ public class Dictionary implements Comparable<Dictionary> {
 	private static final String KEY_QUERY_ROWID_LIST_SIZE_MAXIMUM = "queryDbkeyListSizeMaximum";
 	private static final String KEY_SYSDIRL = "sysdirl";	
 	
-	private static final FilenameFilter FILENAME_FILTER = new FilenameFilter() {
-		@Override
-		public boolean accept(File dir, String name) {
-			return name.toLowerCase().startsWith("dictionary_") &&
-				   name.toLowerCase().endsWith(".properties");
-		}
-	};
+	private static final String DICTIONARY_PREFIX = "Dictionary_";
+	private static final String PROPERTIES_SUFFIX = ".properties";
+	private static final FilenameFilter FILENAME_FILTER = (dir, name) -> name.toLowerCase().startsWith("dictionary_") && name.toLowerCase().endsWith(PROPERTIES_SUFFIX);
 
-	private int internalId;
+	private final int internalId;
 	private String id;
 	private String hostname;
 	private int port;
@@ -67,29 +72,28 @@ public class Dictionary implements Comparable<Dictionary> {
 	private int queryRowidListSizeMaximum;
 	private boolean sysdirl;
 	
-	private static Dictionary fromFile(File file) throws Throwable {
+	private static Dictionary fromFile(File file) throws IOException {
+		var properties = new Properties();
+		try (var in = new FileInputStream(file)) {
+			properties.load(in);
+		}
 		
-		Properties properties = new Properties();
-		InputStream in = new FileInputStream(file);
-		properties.load(in);
-		in.close();
-		
-		int internalId = Integer.valueOf(properties.getProperty(KEY_INTERNAL_ID)).intValue();
-		Dictionary dictionary = new Dictionary(internalId);
+		var internalId = Integer.parseInt(properties.getProperty(KEY_INTERNAL_ID));
+		var dictionary = new Dictionary(internalId);
 		dictionary.setId(properties.getProperty(KEY_ID));
 		dictionary.setHostname(properties.getProperty(KEY_HOSTNAME));
-		int port = Integer.valueOf(properties.getProperty(KEY_PORT));
+		var port = Integer.valueOf(properties.getProperty(KEY_PORT));
 		dictionary.setPort(port);
 		dictionary.setDictname(properties.getProperty(KEY_DICTNAME));
 		dictionary.setUser(properties.getProperty(KEY_USER));
 		if (properties.containsKey(KEY_PASSWORD)) {
-			String encodedAndEncryptedAsHex = properties.getProperty(KEY_PASSWORD);
-			String password = null;
+			var encodedAndEncryptedAsHex = properties.getProperty(KEY_PASSWORD);
 			try {				
-				password = EncDec.decryptAndDecode(DatatypeConverter.parseHexBinary(encodedAndEncryptedAsHex));
-			} catch (Throwable t) {	
+				var password = EncDec.decryptAndDecode(DatatypeConverter.parseHexBinary(encodedAndEncryptedAsHex));
+				dictionary.setPassword(password);
+			} catch (Exception e) {
+				throw new IllegalStateException(e);
 			}
-			dictionary.setPassword(password);
 		}
 		if (properties.containsKey(KEY_SCHEMA)) {
 			dictionary.setSchema(properties.getProperty(KEY_SCHEMA));
@@ -97,39 +101,34 @@ public class Dictionary implements Comparable<Dictionary> {
 			dictionary.setSchema(USE_DEFAULT_SCHEMA_INDICATOR);
 		}
 		if (properties.containsKey(KEY_QUERY_ROWID_LIST_SIZE_MAXIMUM)) {
-			int queryRowidListSizeMaximum = Integer.valueOf(properties.getProperty(KEY_QUERY_ROWID_LIST_SIZE_MAXIMUM));
+			var queryRowidListSizeMaximum = Integer.parseInt(properties.getProperty(KEY_QUERY_ROWID_LIST_SIZE_MAXIMUM));
 			dictionary.setQueryRowidListSizeMaximum(queryRowidListSizeMaximum);
 		} else {
 			dictionary.setQueryRowidListSizeMaximum(USE_DEFAULT_QUERY_ROWID_LIST_SIZE_MAXIMUM_INDICATOR);
 		}
 		if (properties.containsKey(KEY_SYSDIRL)) {
-			dictionary.setSysdirl(Boolean.valueOf(properties.getProperty(KEY_SYSDIRL)).booleanValue());
+			dictionary.setSysdirl(Boolean.parseBoolean(properties.getProperty(KEY_SYSDIRL)));
 		}
 		return dictionary;
-		
 	}
 	
 	private static int getHighestInternalId(List<Dictionary> dictionaries) {
-		int highestInternalId = -1;
-		for (Dictionary dictionary : dictionaries) {
-			if (dictionary.getInternalId() > highestInternalId) {
-				highestInternalId = dictionary.getInternalId();
-			}
-		}
-		return highestInternalId;
+		return dictionaries.stream()
+				.mapToInt(Dictionary::getInternalId)
+				.max()
+				.orElse(-1);
 	}
 
-	public static List<Dictionary> list(File folder) throws Throwable {
-		List<Dictionary> dictionaries = new ArrayList<>();
-		File[] files = folder.listFiles(FILENAME_FILTER);
-		for (File file : files) {
+	public static List<Dictionary> list(File folder) throws IOException {
+		var dictionaries = new ArrayList<Dictionary>();
+		for (var file : folder.listFiles(FILENAME_FILTER)) {
 			dictionaries.add(fromFile(file));
 		}
 		Collections.sort(dictionaries);
 		return dictionaries;
 	}
 	
-	public static Dictionary newInstance(File folder) throws Throwable {
+	public static Dictionary newInstance(File folder) throws IOException {
 		return new Dictionary(getHighestInternalId(list(folder)) + 1);		
 	}
 	
@@ -137,19 +136,18 @@ public class Dictionary implements Comparable<Dictionary> {
 		return new Dictionary(-1);
 	}
 	
-	public static Dictionary read(File folder, int internalId) throws Throwable {
-		File file = new File(folder, "Dictionary_" + internalId + ".properties");
+	public static Dictionary read(File folder, int internalId) throws IOException {
+		var file = new File(folder, DICTIONARY_PREFIX + internalId + PROPERTIES_SUFFIX);
 		return fromFile(file);
 	}
 
 	public Dictionary(int internalId) {
-		super();
 		this.internalId = internalId;
 	}
 	
 	@Override
 	public int compareTo(Dictionary dictionary) {
-		if (id.toLowerCase().equals(dictionary.id.toLowerCase())) {
+		if (id.equalsIgnoreCase(dictionary.id)) {
 			return internalId - dictionary.internalId;
 		} else {
 			return id.toLowerCase().compareTo(dictionary.id.toLowerCase());
@@ -161,11 +159,16 @@ public class Dictionary implements Comparable<Dictionary> {
 		if (other == this) {
 			return true;
 		}
-		if (other == null || !(other instanceof Dictionary)) {
+		if (!(other instanceof Dictionary)) {
 			return false;
 		}
-		Dictionary otherDictionary = (Dictionary) other;
+		var otherDictionary = (Dictionary) other;
 		return internalId == otherDictionary.internalId;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(internalId);
 	}
 
 	public String getConnectionUrl() {
@@ -237,8 +240,14 @@ public class Dictionary implements Comparable<Dictionary> {
 	}
 
 	public boolean remove(File containingFolder) {
-		File file = new File(containingFolder, "Dictionary_" + internalId + ".properties");
-		return file.delete();
+		var file = new File(containingFolder, DICTIONARY_PREFIX + internalId + PROPERTIES_SUFFIX);
+		try {
+			Files.delete(file.toPath());
+			return true;
+		} catch (IOException e) {
+			Plugin.getDefault().getLog().error("deleting file %s threw an exception".formatted(file.getAbsolutePath()), e);
+			return false;
+		}
 	}
 
 	public void setDictname(String dictname) {
@@ -277,8 +286,10 @@ public class Dictionary implements Comparable<Dictionary> {
 		this.user = user;
 	}
 	
-	private Properties toProperties() throws Throwable {
-		Properties properties = new Properties();
+	private Properties toProperties() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException,
+			NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+		
+		var properties = new Properties();
 		properties.put(KEY_INTERNAL_ID, String.valueOf(internalId));
 		properties.put(KEY_ID, id);
 		properties.put(KEY_HOSTNAME, hostname);
@@ -286,8 +297,7 @@ public class Dictionary implements Comparable<Dictionary> {
 		properties.put(KEY_DICTNAME, dictname);
 		properties.put(KEY_USER, user);
 		if (password != null) {
-			String encodedAndEncryptedAsHex = 
-				DatatypeConverter.printHexBinary(EncDec.encodeAndEncrypt(password));
+			var encodedAndEncryptedAsHex = DatatypeConverter.printHexBinary(EncDec.encodeAndEncrypt(password));
 			properties.put(KEY_PASSWORD, encodedAndEncryptedAsHex);
 		}
 		if (isCustomSchemaSet()) {
@@ -300,16 +310,18 @@ public class Dictionary implements Comparable<Dictionary> {
 		return properties;
 	}
 	
-	public void toFile(File folder) throws Throwable {
+	public void toFile(File folder) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException,
+			NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
+		
 		if (internalId < 0) {
 			throw new IllegalStateException("internalId is invalid: " + internalId);
 		}
-		Properties properties = toProperties();
-		File file = new File(folder, "Dictionary_" + internalId + ".properties");
-		PrintWriter out = new PrintWriter(new FileWriter(file));
-		properties.store(out, "Dictionary Properties");
-		out.flush();
-		out.close();
+		var properties = toProperties();
+		var file = new File(folder, DICTIONARY_PREFIX + internalId + PROPERTIES_SUFFIX);
+		try (var out = new PrintWriter(new FileWriter(file))) {
+			properties.store(out, "Dictionary Properties");
+			out.flush();
+		}
 	}
 	
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,15 +28,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ViewLicenseDialog extends Dialog {
+	private final String licenseName;
+	private final String licenseText;
 	
-	private String licenseName;
-	private String licenseText;
-	private Text   text;
-
-	/**
-	 * Create the dialog.
-	 * @param parentShell
-	 */
 	public ViewLicenseDialog(Shell parentShell, String licenseName, String licenseText) {
 		super(parentShell);
 		this.licenseName = licenseName;
@@ -49,34 +43,23 @@ public class ViewLicenseDialog extends Dialog {
 		super.configureShell(shell);
 		shell.setText(licenseName);	
 	}	
-
-	/**
-	 * Create contents of the dialog.
-	 * @param parent
-	 */
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
-		text = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		var container = (Composite) super.createDialogArea(parent);
+		var text = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		text.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		text.setFont(SWTResourceManager.getFont("Courier New", 8, SWT.NORMAL));
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		text.setText(licenseText);
 		return container;
 	}
-
-	/**
-	 * Create contents of the button bar.
-	 * @param parent
-	 */
+	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 	}
-
-	/**
-	 * Return the initial size of the dialog.
-	 */
+	
 	@Override
 	protected Point getInitialSize() {
 		return new Point(600, 400);

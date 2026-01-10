@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,9 +22,9 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
 import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRole;
 
 /**
- * A command that removes a set from a schema, disconnects the owner- and member roles from the
- * owner-and member record types and cleans up the sort key and its elements in the case of a sorted
- * set.  This command can <b>NOT</b> deal with :<ul>
+ * A command that removes a set from a schema, disconnects the owner- and member roles from the owner-and member
+ * record types and cleans up the sort key and its elements in the case of a sorted set. This command can
+ * <b>NOT</b> deal with :<ul>
  * <li>system owned indexed sets</li>
  * <li>VSAM indexes</li>
  * <li>multiple-member sets</li>
@@ -34,10 +34,9 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableOwnerRole;
  *</ul>
  */
 public class DeleteSetCommand extends ModelChangeBasicCommand {
-
-	private Schema schema;
-	protected Set set;	
+	protected final Set set;
 	
+	private Schema schema;
 	private int indexOfSetInSchemasSets;	
 	private RemovableOwnerRole ownerRoleToBecomeObsolete;
 	private RemovableMemberRole memberRoleToBecomeObsolete;
@@ -50,25 +49,25 @@ public class DeleteSetCommand extends ModelChangeBasicCommand {
 	
 	@Override
 	public void execute() {
-		rememberState();		
-		deleteSet();		
+		rememberState();
+		deleteSet();	
 	}
 	
 	private void rememberState() {
 		indexOfSetInSchemasSets = schema.getSets().indexOf(set);
 		ownerRoleToBecomeObsolete = new RemovableOwnerRole(set.getOwner());
 		memberRoleToBecomeObsolete = new RemovableMemberRole(set.getMembers().get(0));		
-	}	
-
-	private void deleteSet() {		
-		ownerRoleToBecomeObsolete.remove();
-		memberRoleToBecomeObsolete.remove();
-		schema.getSets().remove(set);
 	}
 
 	@Override
 	public void redo() {
 		deleteSet();				
+	}
+	
+	private void deleteSet() {		
+		ownerRoleToBecomeObsolete.remove();
+		memberRoleToBecomeObsolete.remove();
+		schema.getSets().remove(set);
 	}
 	
 	@Override

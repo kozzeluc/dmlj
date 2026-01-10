@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,12 +24,9 @@ import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
  * A generic import wizard page that wraps a data entry page.
  */
 public class ImportWizardPage extends WizardPage {
+	private final AbstractDataEntryPage dataEntryPage;
 	
-	private AbstractDataEntryPage dataEntryPage;
-	
-	public ImportWizardPage(AbstractDataEntryPage dataEntryPage, String pageName, String title, 
-						    String message) {
-		
+	public ImportWizardPage(AbstractDataEntryPage dataEntryPage, String pageName, String title, String message) {
 		super(pageName);
 		this.dataEntryPage = dataEntryPage;
 		setTitle(title);

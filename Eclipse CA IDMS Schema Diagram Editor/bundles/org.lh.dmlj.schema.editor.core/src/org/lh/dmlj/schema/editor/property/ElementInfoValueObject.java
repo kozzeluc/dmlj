@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,15 +17,14 @@
 package org.lh.dmlj.schema.editor.property;
 
 public class ElementInfoValueObject {
+	private final int seqNo;
 	
 	private String description;
-	private String elementName;		
+	private String elementName;
 	private String levelAndElementName;
 	private String pictureAndUsage;
-	private int	   seqNo;
 	
 	public ElementInfoValueObject(int seqNo) {
-		super();	
 		this.seqNo = seqNo;
 	}
 

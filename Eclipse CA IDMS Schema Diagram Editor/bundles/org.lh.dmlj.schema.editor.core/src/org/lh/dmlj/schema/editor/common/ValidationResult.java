@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,24 +17,16 @@
 package org.lh.dmlj.schema.editor.common;
 
 public class ValidationResult {
-	
-	public static enum Status {OK, ERROR};
+	public enum Status { OK, ERROR }
 	
 	private String message;
 	private Status status;
-
-	@SuppressWarnings("unused")
-	private ValidationResult() {
-		// disabled constructor
-		super();
-	}
 	
 	ValidationResult(Status status) {
 		this(status, null);
 	}
 	
 	ValidationResult(Status status, String message) {
-		super();
 		this.status = status;
 		this.message = message;
 	}

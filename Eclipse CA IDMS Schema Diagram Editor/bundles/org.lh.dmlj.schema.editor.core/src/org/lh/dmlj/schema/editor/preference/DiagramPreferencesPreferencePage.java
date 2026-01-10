@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -36,16 +36,15 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.PluginPropertiesCache;
 
 public class DiagramPreferencesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	
 	private static final String FALSE = "false";
 	private static final String TRUE = "true";
 	
 	private static final EAttribute[] DIAGRAMDATA_ATTRIBUTES = 
-		new EAttribute[] {SchemaPackage.eINSTANCE.getDiagramData_ShowRulers(),
-						  SchemaPackage.eINSTANCE.getDiagramData_ShowGrid(),
-						  SchemaPackage.eINSTANCE.getDiagramData_SnapToGuides(),
-						  SchemaPackage.eINSTANCE.getDiagramData_SnapToGrid(),
-						  SchemaPackage.eINSTANCE.getDiagramData_SnapToGeometry()};
+		new EAttribute[] { SchemaPackage.eINSTANCE.getDiagramData_ShowRulers(),
+						   SchemaPackage.eINSTANCE.getDiagramData_ShowGrid(),
+						   SchemaPackage.eINSTANCE.getDiagramData_SnapToGuides(),
+						   SchemaPackage.eINSTANCE.getDiagramData_SnapToGrid(),
+						   SchemaPackage.eINSTANCE.getDiagramData_SnapToGeometry() };
 	private static final int DIAGRAMDATA_SHOW_RULERS = 0;
 	private static final int DIAGRAMDATA_SHOW_GRID = 1;
 	private static final int DIAGRAMDATA_SNAP_TO_GUIDES = 2;
@@ -55,21 +54,18 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 	private Button btnCentimeters;
 	private Button btnInches;
 	private Button btnPixels;
-	private Combo  comboShowGrid;
-	private Combo  comboShowRulers;
-	private Combo  comboSnapToGeometry;
-	private Combo  comboSnapToGrid;
-	private Combo  comboSnapToGuides;
-	private Text   textDiagramLabelOrganisation;
+	private Combo comboShowGrid;
+	private Combo comboShowRulers;
+	private Combo comboSnapToGeometry;
+	private Combo comboSnapToGrid;
+	private Combo comboSnapToGuides;
+	private Text textDiagramLabelOrganisation;
 	private Button btnDiagramLabelShowLastModified;
 	private Text textDiagramLabelLastModifiedPattern;
-	private Group grpFontSizeAdjustment;
 	private Button btnFontSize100;
 	private Button btnFontSize125;
 	private Button btnFontSize150;
 	private Button btnFontSize175;
-	private Label lblNewLabel;
-	private Label lblNewLabel_1;
 	
 	private static void initializeDiagramAttributeComboValues(Combo combo) {
 		combo.add(FALSE);
@@ -78,9 +74,9 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 	}
 	
 	private static String getDiagramAttributeLabelText(int i) {
-		EAttribute attribute = DIAGRAMDATA_ATTRIBUTES[i];
-		String key = "label." + attribute.getContainerClass().getName() + "." + attribute.getName();
-		String label = PluginPropertiesCache.get(Plugin.getDefault(), key);		
+		var attribute = DIAGRAMDATA_ATTRIBUTES[i];
+		var key = "label." + attribute.getContainerClass().getName() + "." + attribute.getName();
+		var label = PluginPropertiesCache.get(Plugin.getDefault(), key);		
 		if (label != null) {
 			return label + ":";
 		} else {
@@ -89,10 +85,9 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 	}
 	
 	private static String getDiagramAttributeTooltipText(int i) {
-		EAttribute attribute = DIAGRAMDATA_ATTRIBUTES[i];
-		String key = "description." + attribute.getContainerClass().getName() + "." + attribute.getName();
-		String label = PluginPropertiesCache.get(Plugin.getDefault(), key);		
-		return label;
+		var attribute = DIAGRAMDATA_ATTRIBUTES[i];
+		var key = "description." + attribute.getContainerClass().getName() + "." + attribute.getName();
+		return PluginPropertiesCache.get(Plugin.getDefault(), key);		
 	}	
 	
 	private static void selectDiagramAttributeComboValue(Combo combo, boolean b) {
@@ -102,24 +97,19 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 	private static boolean getDiagramAttributeComboValue(Combo combo) {
 		return combo.getSelectionIndex() == 1;		
 	}	
-
-	/**
-	 * @wbp.parser.constructor
-	 */
+	
 	public DiagramPreferencesPreferencePage() {
-		super();
 		setDescription("Diagram Settings:");
 	}
 	
 	@Override
 	protected Control createContents(Composite parent) {
-		
-		Composite container = new Composite(parent, SWT.NONE);		
-		GridLayout layout = new GridLayout(3, false);
+		var container = new Composite(parent, SWT.NONE);		
+		var layout = new GridLayout(3, false);
 		container.setLayout(layout);
 		new Label(container, SWT.NONE);
 		
-		Group compositeUnits = new Group(container, SWT.NONE);
+		var compositeUnits = new Group(container, SWT.NONE);
 		compositeUnits.setText("Units");
 		compositeUnits.setLayout(new GridLayout(3, false));
 		compositeUnits.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -136,82 +126,82 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		btnPixels.setText("Pixels");
 		new Label(container, SWT.NONE);
 		
-		Group compositeSchemaDiagramProperties = new Group(container, SWT.NONE);
+		var compositeSchemaDiagramProperties = new Group(container, SWT.NONE);
 		compositeSchemaDiagramProperties.setText("Default diagram properties for new and imported schemas");
 		compositeSchemaDiagramProperties.setLayout(new GridLayout(4, false));
 		compositeSchemaDiagramProperties.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		
-		Label lblShowRulers = new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		var lblShowRulers = new Label(compositeSchemaDiagramProperties, SWT.NONE);
 		lblShowRulers.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SHOW_RULERS));
 		lblShowRulers.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_RULERS));
 		
 		comboShowRulers = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboShowRulers = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboShowRulers.widthHint = 75;
-		comboShowRulers.setLayoutData(gd_comboShowRulers);
+		var gdComboShowRulers = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdComboShowRulers.widthHint = 75;
+		comboShowRulers.setLayoutData(gdComboShowRulers);
 		comboShowRulers.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_RULERS));
 		
-		Label lblSnapToGuides = new Label(compositeSchemaDiagramProperties, SWT.NONE);
-		GridData gd_lblSnapToGuides = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblSnapToGuides.horizontalIndent = 10;
-		lblSnapToGuides.setLayoutData(gd_lblSnapToGuides);
+		var lblSnapToGuides = new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		var gdLblSnapToGuides = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblSnapToGuides.horizontalIndent = 10;
+		lblSnapToGuides.setLayoutData(gdLblSnapToGuides);
 		lblSnapToGuides.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SNAP_TO_GUIDES));
 		lblSnapToGuides.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GUIDES));
 		
 		comboSnapToGuides = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboSnapToGuides = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_comboSnapToGuides.widthHint = 75;
-		comboSnapToGuides.setLayoutData(gd_comboSnapToGuides);
+		var gdComboSnapToGuides = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdComboSnapToGuides.widthHint = 75;
+		comboSnapToGuides.setLayoutData(gdComboSnapToGuides);
 		comboSnapToGuides.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GUIDES));
 		initializeDiagramAttributeComboValues(comboSnapToGuides);
 		
-		Label lblShowGrid = new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		var lblShowGrid = new Label(compositeSchemaDiagramProperties, SWT.NONE);
 		lblShowGrid.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SHOW_GRID));
 		lblShowGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_GRID));
 		
 		comboShowGrid = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboShowGrid = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_comboShowGrid.widthHint = 25;
-		comboShowGrid.setLayoutData(gd_comboShowGrid);
+		var gdComboShowGrid = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gdComboShowGrid.widthHint = 25;
+		comboShowGrid.setLayoutData(gdComboShowGrid);
 		comboShowGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SHOW_GRID));
 		
-		Label lblSnapToGrid = new Label(compositeSchemaDiagramProperties, SWT.NONE);
-		GridData gd_lblSnapToGrid = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblSnapToGrid.horizontalIndent = 10;
-		lblSnapToGrid.setLayoutData(gd_lblSnapToGrid);
+		var lblSnapToGrid = new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		var gdLblSnapToGrid = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblSnapToGrid.horizontalIndent = 10;
+		lblSnapToGrid.setLayoutData(gdLblSnapToGrid);
 		lblSnapToGrid.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SNAP_TO_GRID));
 		lblSnapToGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GRID));
 		
 		comboSnapToGrid = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboSnapToGrid = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_comboSnapToGrid.widthHint = 25;
-		comboSnapToGrid.setLayoutData(gd_comboSnapToGrid);
+		var gdComboSnapToGrid = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gdComboSnapToGrid.widthHint = 25;
+		comboSnapToGrid.setLayoutData(gdComboSnapToGrid);
 		comboSnapToGrid.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GRID));
 		initializeDiagramAttributeComboValues(comboSnapToGrid);
 		new Label(compositeSchemaDiagramProperties, SWT.NONE);
 		new Label(compositeSchemaDiagramProperties, SWT.NONE);
 		
-		Label lblSnapToGeometry = new Label(compositeSchemaDiagramProperties, SWT.NONE);
-		GridData gd_lblSnapToGeometry = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblSnapToGeometry.horizontalIndent = 10;
-		lblSnapToGeometry.setLayoutData(gd_lblSnapToGeometry);
+		var lblSnapToGeometry = new Label(compositeSchemaDiagramProperties, SWT.NONE);
+		var gdLblSnapToGeometry = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdLblSnapToGeometry.horizontalIndent = 10;
+		lblSnapToGeometry.setLayoutData(gdLblSnapToGeometry);
 		lblSnapToGeometry.setText(getDiagramAttributeLabelText(DIAGRAMDATA_SNAP_TO_GEOMETRY));
 		lblSnapToGeometry.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GEOMETRY));
 		
 		comboSnapToGeometry = new Combo(compositeSchemaDiagramProperties, SWT.READ_ONLY);
-		GridData gd_comboSnapToGeometry = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_comboSnapToGeometry.widthHint = 25;
-		comboSnapToGeometry.setLayoutData(gd_comboSnapToGeometry);
+		var gdComboSnapToGeometry = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gdComboSnapToGeometry.widthHint = 25;
+		comboSnapToGeometry.setLayoutData(gdComboSnapToGeometry);
 		comboSnapToGeometry.setToolTipText(getDiagramAttributeTooltipText(DIAGRAMDATA_SNAP_TO_GEOMETRY));
 		initializeDiagramAttributeComboValues(comboSnapToGeometry);
 		new Label(container, SWT.NONE);
 		
-		Group grpDiagramLabel = new Group(container, SWT.NONE);
+		var grpDiagramLabel = new Group(container, SWT.NONE);
 		grpDiagramLabel.setLayout(new GridLayout(3, false));
 		grpDiagramLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 		grpDiagramLabel.setText("Diagram label");
 		
-		Label lblOrganisation = new Label(grpDiagramLabel, SWT.NONE);
+		var lblOrganisation = new Label(grpDiagramLabel, SWT.NONE);
 		lblOrganisation.setToolTipText("The name of the organisation to appear on the first line of the diagram label");
 		lblOrganisation.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblOrganisation.setText("Organisation:");
@@ -228,12 +218,12 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		textDiagramLabelLastModifiedPattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		new Label(container, SWT.NONE);
 		
-		grpFontSizeAdjustment = new Group(container, SWT.NONE);
+		var grpFontSizeAdjustment = new Group(container, SWT.NONE);
 		grpFontSizeAdjustment.setLayout(new GridLayout(4, false));
 		grpFontSizeAdjustment.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 2, 1));
 		grpFontSizeAdjustment.setText("Font Size Adjustment");
 		
-		lblNewLabel = new Label(grpFontSizeAdjustment, SWT.NONE);
+		var lblNewLabel = new Label(grpFontSizeAdjustment, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 4, 1));
 		lblNewLabel.setText("Select the text size configured in your OS:");
 		
@@ -249,11 +239,11 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		btnFontSize175 = new Button(grpFontSizeAdjustment, SWT.RADIO);
 		btnFontSize175.setText("175%");
 		
-		lblNewLabel_1 = new Label(grpFontSizeAdjustment, SWT.WRAP);
-		GridData gd_lblNewLabel_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
-		gd_lblNewLabel_1.widthHint = 400;
-		lblNewLabel_1.setLayoutData(gd_lblNewLabel_1);
-		lblNewLabel_1.setText("This setting affects the font size used in your diagrams; changing it requires a workbench restart.");
+		var lblNewLabel1 = new Label(grpFontSizeAdjustment, SWT.WRAP);
+		var gdLblNewLabel1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 4, 1);
+		gdLblNewLabel1.widthHint = 400;
+		lblNewLabel1.setLayoutData(gdLblNewLabel1);
+		lblNewLabel1.setText("This setting affects the font size used in your diagrams; changing it requires a workbench restart.");
 		
 		initializeDiagramAttributeComboValues(comboShowRulers);
 		initializeDiagramAttributeComboValues(comboShowGrid);
@@ -262,10 +252,6 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		
 		return container;
 	}
-
-	private void doChecks() {
-		// no checks to perform so far
-	}
 	
 	@Override
 	protected IPreferenceStore doGetPreferenceStore() {		
@@ -273,84 +259,74 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 	}	
 
 	@Override
-	public void init(IWorkbench workbench) {		
+	public void init(IWorkbench workbench) {
+		// nothing to do here
 	}
 	
 	private void initializeDefaults() {
+		var store = getPreferenceStore();
 		
-		IPreferenceStore store = getPreferenceStore();
-		
-		Unit unit = Unit.valueOf(store.getDefaultString(PreferenceConstants.UNITS));		
+		var unit = Unit.valueOf(store.getDefaultString(PreferenceConstants.UNITS));		
 		btnCentimeters.setSelection(unit == Unit.CENTIMETERS);
 		btnInches.setSelection(unit == Unit.INCHES);
 		btnPixels.setSelection(unit == Unit.PIXELS);
 		
-		String organisation = store.getDefaultString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
+		var organisation = store.getDefaultString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
 		textDiagramLabelOrganisation.setText(organisation);
-		boolean showLastModified = 
-			store.getDefaultBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED);
+		var showLastModified = store.getDefaultBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED);
 		btnDiagramLabelShowLastModified.setSelection(showLastModified);
-		String pattern = 
-			store.getDefaultString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		var pattern = store.getDefaultString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
 		textDiagramLabelLastModifiedPattern.setText(pattern);
 		
-		boolean showRulers = store.getDefaultBoolean(PreferenceConstants.SHOW_RULERS);
+		var showRulers = store.getDefaultBoolean(PreferenceConstants.SHOW_RULERS);
 		selectDiagramAttributeComboValue(comboShowRulers, showRulers);
-		boolean showGrid = store.getDefaultBoolean(PreferenceConstants.SHOW_GRID);
+		var showGrid = store.getDefaultBoolean(PreferenceConstants.SHOW_GRID);
 		selectDiagramAttributeComboValue(comboShowGrid, showGrid);
-		boolean snapToGuides = store.getDefaultBoolean(PreferenceConstants.SNAP_TO_GUIDES);
+		var snapToGuides = store.getDefaultBoolean(PreferenceConstants.SNAP_TO_GUIDES);
 		selectDiagramAttributeComboValue(comboSnapToGuides, snapToGuides);
-		boolean snapToGrid = store.getDefaultBoolean(PreferenceConstants.SNAP_TO_GRID);
+		var snapToGrid = store.getDefaultBoolean(PreferenceConstants.SNAP_TO_GRID);
 		selectDiagramAttributeComboValue(comboSnapToGrid, snapToGrid);
-		boolean snapToGeometry = store.getDefaultBoolean(PreferenceConstants.SNAP_TO_GEOMETRY);		
+		var snapToGeometry = store.getDefaultBoolean(PreferenceConstants.SNAP_TO_GEOMETRY);		
 		selectDiagramAttributeComboValue(comboSnapToGeometry, snapToGeometry);
 		
-		int operatingSystemTextSize = store.getDefaultInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
+		var operatingSystemTextSize = store.getDefaultInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
 		btnFontSize100.setSelection(operatingSystemTextSize == 100);
 		btnFontSize125.setSelection(operatingSystemTextSize == 125);
 		btnFontSize150.setSelection(operatingSystemTextSize == 150);
 		btnFontSize175.setSelection(operatingSystemTextSize == 175);
-		
-		doChecks();		
-		
 	}	
 	
-	private void initializeValues() {		
+	private void initializeValues() {
+		var store = getPreferenceStore();
 		
-		IPreferenceStore store = getPreferenceStore();
-		
-		Unit unit = Unit.valueOf(store.getString(PreferenceConstants.UNITS));		
+		var unit = Unit.valueOf(store.getString(PreferenceConstants.UNITS));		
 		btnCentimeters.setSelection(unit == Unit.CENTIMETERS);
 		btnInches.setSelection(unit == Unit.INCHES);
 		btnPixels.setSelection(unit == Unit.PIXELS);
 		
-		String organisation = store.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
+		var organisation = store.getString(PreferenceConstants.DIAGRAMLABEL_ORGANISATION);
 		textDiagramLabelOrganisation.setText(organisation);
-		boolean showLastModified = 
-			store.getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED);
+		var showLastModified = store.getBoolean(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED);
 		btnDiagramLabelShowLastModified.setSelection(showLastModified);
-		String pattern = 
-			store.getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
+		var pattern = store.getString(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN);
 		textDiagramLabelLastModifiedPattern.setText(pattern);
 		
-		boolean showRulers = store.getBoolean(PreferenceConstants.SHOW_RULERS);
+		var showRulers = store.getBoolean(PreferenceConstants.SHOW_RULERS);
 		selectDiagramAttributeComboValue(comboShowRulers, showRulers);
-		boolean showGrid = store.getBoolean(PreferenceConstants.SHOW_GRID);
+		var showGrid = store.getBoolean(PreferenceConstants.SHOW_GRID);
 		selectDiagramAttributeComboValue(comboShowGrid, showGrid);
-		boolean snapToGuides = store.getBoolean(PreferenceConstants.SNAP_TO_GUIDES);
+		var snapToGuides = store.getBoolean(PreferenceConstants.SNAP_TO_GUIDES);
 		selectDiagramAttributeComboValue(comboSnapToGuides, snapToGuides);
-		boolean snapToGrid = store.getBoolean(PreferenceConstants.SNAP_TO_GRID);
+		var snapToGrid = store.getBoolean(PreferenceConstants.SNAP_TO_GRID);
 		selectDiagramAttributeComboValue(comboSnapToGrid, snapToGrid);
-		boolean snapToGeometry = store.getBoolean(PreferenceConstants.SNAP_TO_GEOMETRY);		
+		var snapToGeometry = store.getBoolean(PreferenceConstants.SNAP_TO_GEOMETRY);		
 		selectDiagramAttributeComboValue(comboSnapToGeometry, snapToGeometry);		
 		
-		int operatingSystemTextSize = store.getInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
+		var operatingSystemTextSize = store.getInt(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE);
 		btnFontSize100.setSelection(operatingSystemTextSize == 100);
 		btnFontSize125.setSelection(operatingSystemTextSize == 125);
 		btnFontSize150.setSelection(operatingSystemTextSize == 150);
 		btnFontSize175.setSelection(operatingSystemTextSize == 175);
-		
-		doChecks();		
 	}
 	
 	@Override
@@ -370,11 +346,7 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 	}
 
 	private boolean storeValues() {
-		
 		setErrorMessage(null);
-		
-		IPreferenceStore store = getPreferenceStore();
-		
 		Unit unit;
 		if (btnCentimeters.getSelection()) {
 			unit = Unit.CENTIMETERS;
@@ -383,25 +355,6 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		} else {
 			unit = Unit.PIXELS;		
 		}
-		store.setValue(PreferenceConstants.UNITS, unit.toString());
-		
-		store.setValue(PreferenceConstants.DIAGRAMLABEL_ORGANISATION, 
-					   textDiagramLabelOrganisation.getText().trim());
-		store.setValue(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED, 
-				   	   btnDiagramLabelShowLastModified.getSelection());
-		store.setValue(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN, 
-				   	   textDiagramLabelLastModifiedPattern.getText().trim());
-		
-		store.setValue(PreferenceConstants.SHOW_RULERS,
-					   getDiagramAttributeComboValue(comboShowRulers));
-		store.setValue(PreferenceConstants.SHOW_GRID, getDiagramAttributeComboValue(comboShowGrid));
-		store.setValue(PreferenceConstants.SNAP_TO_GUIDES,
-					   getDiagramAttributeComboValue(comboSnapToGuides));
-		store.setValue(PreferenceConstants.SNAP_TO_GRID,
-					   getDiagramAttributeComboValue(comboSnapToGrid));
-		store.setValue(PreferenceConstants.SNAP_TO_GEOMETRY,
-					   getDiagramAttributeComboValue(comboSnapToGeometry));
-		
 		int operatingSystemTextSize;
 		if (btnFontSize125.getSelection()) {
 			operatingSystemTextSize = 125;
@@ -412,8 +365,17 @@ public class DiagramPreferencesPreferencePage extends PreferencePage implements 
 		} else {
 			operatingSystemTextSize = 100;
 		}
+		var store = getPreferenceStore();
+		store.setValue(PreferenceConstants.UNITS, unit.toString());
+		store.setValue(PreferenceConstants.DIAGRAMLABEL_ORGANISATION, textDiagramLabelOrganisation.getText().trim());
+		store.setValue(PreferenceConstants.DIAGRAMLABEL_SHOW_LAST_MODIFIED, btnDiagramLabelShowLastModified.getSelection());
+		store.setValue(PreferenceConstants.DIAGRAMLABEL_LAST_MODIFIED_DATE_FORMAT_PATTERN, textDiagramLabelLastModifiedPattern.getText().trim());
+		store.setValue(PreferenceConstants.SHOW_RULERS, getDiagramAttributeComboValue(comboShowRulers));
+		store.setValue(PreferenceConstants.SHOW_GRID, getDiagramAttributeComboValue(comboShowGrid));
+		store.setValue(PreferenceConstants.SNAP_TO_GUIDES, getDiagramAttributeComboValue(comboSnapToGuides));
+		store.setValue(PreferenceConstants.SNAP_TO_GRID, getDiagramAttributeComboValue(comboSnapToGrid));
+		store.setValue(PreferenceConstants.SNAP_TO_GEOMETRY, getDiagramAttributeComboValue(comboSnapToGeometry));
 		store.setValue(PreferenceConstants.OPERATING_SYSTEM_TEXT_SIZE, operatingSystemTextSize);
-		
 		return true;
 	}	
 }

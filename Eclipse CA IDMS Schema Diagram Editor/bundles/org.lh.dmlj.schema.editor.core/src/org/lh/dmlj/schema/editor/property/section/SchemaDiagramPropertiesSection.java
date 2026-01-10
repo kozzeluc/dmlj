@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,16 +23,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EAttribute;
 import org.lh.dmlj.schema.SchemaPackage;
 
-public class SchemaDiagramPropertiesSection 
-	extends AbstractDiagramDataPropertiesSection {
-
-	public SchemaDiagramPropertiesSection() {
-		super();
-	}
+public class SchemaDiagramPropertiesSection extends AbstractDiagramDataPropertiesSection {
 
 	@Override
 	public List<EAttribute> getAttributes() {
-		List<EAttribute> attributes = new ArrayList<>();
+		var attributes = new ArrayList<EAttribute>();
 		attributes.add(SchemaPackage.eINSTANCE.getDiagramData_ShowRulers());
 		attributes.add(SchemaPackage.eINSTANCE.getDiagramData_ShowGrid());
 		if (target.isShowRulers()) {
@@ -54,8 +49,9 @@ public class SchemaDiagramPropertiesSection
 			attribute == SchemaPackage.eINSTANCE.getDiagramData_SnapToGeometry()) {
 				
 			return target;
+		} else {
+			return super.getEditableObject(attribute);
 		}
-		return super.getEditableObject(attribute);
 	}	
 	
 }

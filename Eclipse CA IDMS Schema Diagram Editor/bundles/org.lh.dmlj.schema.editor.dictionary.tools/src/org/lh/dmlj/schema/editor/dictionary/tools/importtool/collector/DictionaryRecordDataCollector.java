@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.lh.dmlj.schema.DuplicatesOption;
@@ -29,28 +28,22 @@ import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.ProcedureCallTime;
 import org.lh.dmlj.schema.RecordProcedureCallVerb;
 import org.lh.dmlj.schema.VsamLengthType;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.SchemaImportSession;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn_079;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Sam_056;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Scr_054;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Smr_052;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr_036;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Srcall_040;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Srcd_113;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Sam056;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Scr054;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Smr052;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Srcd113;
 import org.lh.dmlj.schema.editor.importtool.IRecordDataCollector;
 
-public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_113> {
-
-	private Map<String, Smr_052> calcKeyElementsMap;
-	private SchemaImportSession session;
+public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd113> {
+	private final SchemaImportSession session;
+	private Map<String, Smr052> calcKeyElementsMap;
 	private Map<String, String> viaSetNames;
 
 	public DictionaryRecordDataCollector(SchemaImportSession session) {
-		super();
 		this.session = session;
 	}
 	
@@ -59,27 +52,31 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 			return;
 		}
 		calcKeyElementsMap = new HashMap<>();
-		IQuery calcKeyElementListQuery = new Query.Builder().forCalcKeyElementList(session).build();
+		var calcKeyElementListQuery = new Query.Builder().forCalcKeyElementList(session).build();
 		session.runQuery(calcKeyElementListQuery, new IRowProcessor() {			
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				String srNam_056 = 
-					JdbcTools.removeTrailingSpaces(row.getString(Sam_056.SR_NAM_056));
-				if (!calcKeyElementsMap.containsKey(srNam_056)) {
-					Smr_052 smr_052 = new Smr_052();
-					// we only take what we need for our SMR-052, so some fields will NOT be set
-					smr_052.setRowid(JdbcTools.getRowid(row, Smr_052.ROWID));
-					smr_052.setDup_052(row.getShort(Smr_052.DUP_052));
-					smr_052.setSetNam_052(row.getString(Smr_052.SET_NAM_052)); // CALC
-					calcKeyElementsMap.put(srNam_056, smr_052);
-				}
-				Smr_052 smr_052 = calcKeyElementsMap.get(srNam_056);
+				var srNam056 = JdbcTools.removeTrailingSpaces(row.getString(Sam056.SR_NAM_056));
+				var smr052 = calcKeyElementsMap.computeIfAbsent(srNam056, unused -> createSmr052(row));
 				// we only take what we need for our SCR-054, so some fields will NOT be set
-				Scr_054 scr_054 = new Scr_054();
-				scr_054.setScrNam_054(row.getString(Scr_054.SCR_NAM_054));
-				smr_052.getScr_054s().add(scr_054);		
+				var scr054 = new Scr054();
+				scr054.setScrNam054(row.getString(Scr054.SCR_NAM_054));
+				smr052.getScr054s().add(scr054);		
 			}
 		});
+	}
+	
+	private Smr052 createSmr052(ResultSet row) {
+		try {
+			var smr052 = new Smr052();
+			// we only take what we need for our SMR-052, so some fields will NOT be set
+			smr052.setRowid(JdbcTools.getRowid(row, Smr052.ROWID));
+			smr052.setDup052(row.getShort(Smr052.DUP_052));
+			smr052.setSetNam052(row.getString(Smr052.SET_NAM_052)); // CALC
+			return smr052;
+		} catch (SQLException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	private void buildViaSetNamesMapIfNeeded() {
@@ -87,165 +84,145 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 			return;
 		}
 		viaSetNames = new HashMap<>();
-		IQuery viaSetListQuery = new Query.Builder().forViaSetList(session).build();
+		var viaSetListQuery = new Query.Builder().forViaSetList(session).build();
 		session.runQuery(viaSetListQuery, new IRowProcessor() {
 			@Override
 			public void processRow(ResultSet row) throws SQLException {
-				String srNam_056 = 
-					JdbcTools.removeTrailingSpaces(row.getString(Sam_056.SR_NAM_056));
-				String setNam_052 = 
-					JdbcTools.removeTrailingSpaces(row.getString(Smr_052.SET_NAM_052));
-				viaSetNames.put(srNam_056, setNam_052);
+				var srNam056 = JdbcTools.removeTrailingSpaces(row.getString(Sam056.SR_NAM_056));
+				var setNam052 = JdbcTools.removeTrailingSpaces(row.getString(Smr052.SET_NAM_052));
+				viaSetNames.put(srNam056, setNam052);
 			}
 		});				
 	}
 
 	@Override
-	public String getAreaName(Srcd_113 srcd_113) {
-		Sam_056 sam_056 = srcd_113.getSam_056();
-		return sam_056.getSaNam_056();
+	public String getAreaName(Srcd113 srcd113) {
+		return srcd113.getSam056().getSaNam056();
 	}
 
 	@Override
-	public String getBaseName(Srcd_113 srcd_113) {
-		Sr_036 sr_036 = srcd_113.getRcdsyn_079().getSr_036();
-		return sr_036.getSrNam_036();
+	public String getBaseName(Srcd113 srcd113) {
+		return srcd113.getRcdsyn079().getSr036().getSrNam036();
 	}
 
 	@Override
-	public short getBaseVersion(Srcd_113 srcd_113) {
-		Sr_036 sr_036 = srcd_113.getRcdsyn_079().getSr_036();
-		return sr_036.getRcdVers_036();
+	public short getBaseVersion(Srcd113 srcd113) {
+		return srcd113.getRcdsyn079().getSr036().getRcdVers036();
 	}
 
 	@Override
-	public DuplicatesOption getCalcKeyDuplicatesOption(Srcd_113 srcd_113) {
+	public DuplicatesOption getCalcKeyDuplicatesOption(Srcd113 srcd113) {
 		buildCalcKeyElementsMapIfNeeded();
-		Smr_052 smr_052 = calcKeyElementsMap.get(getName(srcd_113));
-		if (smr_052.getDup_052() == 0) {
-			return DuplicatesOption.NOT_ALLOWED;
-		} else if (smr_052.getDup_052() == 1) {
-			return DuplicatesOption.FIRST;
-		} else if (smr_052.getDup_052() == 2) {
-			return DuplicatesOption.LAST;
-		} else if (smr_052.getDup_052() == 3) {
-			return DuplicatesOption.UNORDERED;
-		} else if (smr_052.getDup_052() == 4) {
-			return DuplicatesOption.BY_DBKEY;
-		} else {
-			return null;
-		}
+		return switch (calcKeyElementsMap.get(getName(srcd113)).getDup052()) {
+			case 0 -> DuplicatesOption.NOT_ALLOWED;
+			case 1 -> DuplicatesOption.FIRST;
+			case 2 -> DuplicatesOption.LAST;
+			case 3 -> DuplicatesOption.UNORDERED;
+			case 4 -> DuplicatesOption.BY_DBKEY;
+			default -> null;
+		};
 	}
 
 	@Override
-	public Collection<String> getCalcKeyElementNames(Srcd_113 srcd_113) {
+	public Collection<String> getCalcKeyElementNames(Srcd113 srcd113) {
 		buildCalcKeyElementsMapIfNeeded();
-		List<String> list = new ArrayList<>();
-		Smr_052 smr_052 = calcKeyElementsMap.get(getName(srcd_113));
-		for (Scr_054 scr_054 :  smr_052.getScr_054s()) {	
-			list.add(scr_054.getScrNam_054());
-		}
-		return list;
+		return calcKeyElementsMap.get(getName(srcd113)).getScr054s().stream()
+				.map(Scr054::getScrNam054)
+				.toList();
 	}
 
 	@Override
-	public LocationMode getLocationMode(Srcd_113 srcd_113) {
-		if (srcd_113.getMode_113() == 0) {
-			return LocationMode.VIA;
-		} else if (srcd_113.getMode_113() == 1) {
-			return LocationMode.CALC;
-		} else if (srcd_113.getMode_113() == 3) {
-			return LocationMode.VSAM;
-		} else if (srcd_113.getMode_113() == 4) {
-			return LocationMode.VSAM_CALC;
-		} else {
-			return LocationMode.DIRECT;
-		}
+	public LocationMode getLocationMode(Srcd113 srcd113) {
+		return switch (srcd113.getMode113()) {
+			case 0 -> LocationMode.VIA;
+			case 1 -> LocationMode.CALC;
+			case 3 -> LocationMode.VSAM;
+			case 4 -> LocationMode.VSAM_CALC;
+			default -> LocationMode.DIRECT;
+		};
 	}
 
 	@Override
-	public Short getMinimumFragmentLength(Srcd_113 srcd_113) {
-		if (srcd_113.getRecType_113().equals("V")) {
-			return Short.valueOf(srcd_113.getMinFrag_113());
+	public Short getMinimumFragmentLength(Srcd113 srcd113) {
+		if (srcd113.getRecType113().equals("V")) {
+			return srcd113.getMinFrag113();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public Short getMinimumRootLength(Srcd_113 srcd_113) {
-		if (srcd_113.getRecType_113().equals("V")) {
-			return Short.valueOf((short) (srcd_113.getMinRoot_113() - 4));
+	public Short getMinimumRootLength(Srcd113 srcd113) {
+		if (srcd113.getRecType113().equals("V")) {
+			return (short) (srcd113.getMinRoot113() - 4);
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public String getName(Srcd_113 srcd_113) {
-		Sam_056 sam_056 = srcd_113.getSam_056();
-		return sam_056.getSrNam_056();
+	public String getName(Srcd113 srcd113) {
+		return srcd113.getSam056().getSrNam056();
 	}
 
 	@Override
-	public Integer getOffsetOffsetPageCount(Srcd_113 srcd_113) {
-		if (srcd_113.getPageOffset_113() > -1) {
-			return Integer.valueOf(srcd_113.getPageOffset_113());
+	public Integer getOffsetOffsetPageCount(Srcd113 srcd113) {
+		if (srcd113.getPageOffset113() > -1) {
+			return srcd113.getPageOffset113();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public Short getOffsetOffsetPercent(Srcd_113 srcd_113) {
-		if (srcd_113.getPageOffsetPercent_113() > -1) {
-			return Short.valueOf(srcd_113.getPageOffsetPercent_113());
+	public Short getOffsetOffsetPercent(Srcd113 srcd113) {
+		if (srcd113.getPageOffsetPercent113() > -1) {
+			return srcd113.getPageOffsetPercent113();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public Integer getOffsetPageCount(Srcd_113 srcd_113) {
-		if (srcd_113.getPageCount_113() > -1) {
-			return Integer.valueOf(srcd_113.getPageCount_113());
+	public Integer getOffsetPageCount(Srcd113 srcd113) {
+		if (srcd113.getPageCount113() > -1) {
+			return srcd113.getPageCount113();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public Short getOffsetPercent(Srcd_113 srcd_113) {
-		if (srcd_113.getPageCountPercent_113() > -1) {
-			return Short.valueOf(srcd_113.getPageCountPercent_113());
+	public Short getOffsetPercent(Srcd113 srcd113) {
+		if (srcd113.getPageCountPercent113() > -1) {
+			return srcd113.getPageCountPercent113();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public Collection<ProcedureCallTime> getProcedureCallTimes(Srcd_113 srcd_113) {
-		List<ProcedureCallTime> list = new ArrayList<>();		
-		for (Srcall_040 srcall_040 : srcd_113.getSrcall_040s()) {
-			if (srcall_040.getCallTime_040().equals("00")) {
+	public Collection<ProcedureCallTime> getProcedureCallTimes(Srcd113 srcd113) {
+		var list = new ArrayList<ProcedureCallTime>();		
+		for (var srcall040 : srcd113.getSrcall040s()) {
+			if (srcall040.getCallTime040().equals("00")) {
 				list.add(ProcedureCallTime.BEFORE);
-			} else if (srcall_040.getCallTime_040().equals("01")) {
+			} else if (srcall040.getCallTime040().equals("01")) {
 				list.add(ProcedureCallTime.ON_ERROR_DURING);
-			} else if (srcall_040.getCallTime_040().equals("02")) {
+			} else if (srcall040.getCallTime040().equals("02")) {
 				list.add(ProcedureCallTime.AFTER);
 			}
-			
 		}		
 		return list;
 	}
 
 	@Override
-	public Collection<RecordProcedureCallVerb> getProcedureCallVerbs(Srcd_113 srcd_113) {
-		List<RecordProcedureCallVerb> list = new ArrayList<>();		
-		for (Srcall_040 srcall_040 : srcd_113.getSrcall_040s()) {
-			if (!srcall_040.getDbpFunc_040().equals("")) {
-				String trigger = srcall_040.getDbpFunc_040().toUpperCase();					
-				list.add(RecordProcedureCallVerb.valueOf(trigger.toString()));				
+	public Collection<RecordProcedureCallVerb> getProcedureCallVerbs(Srcd113 srcd113) {
+		var list = new ArrayList<RecordProcedureCallVerb>();		
+		for (var srcall040 : srcd113.getSrcall040s()) {
+			if (!srcall040.getDbpFunc040().isEmpty()) {
+				var trigger = srcall040.getDbpFunc040().toUpperCase();					
+				list.add(RecordProcedureCallVerb.valueOf(trigger));
 			} else {
 				// null doesn't work here and hence the EVERY_DML_FUNCTION verb was created
 				list.add(RecordProcedureCallVerb.EVERY_DML_FUNCTION);
@@ -255,70 +232,68 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 	}
 
 	@Override
-	public Collection<String> getProceduresCalled(Srcd_113 srcd_113) {
-		List<String> list = new ArrayList<>();		
-		for (Srcall_040 srcall_040 : srcd_113.getSrcall_040s()) {
-			String procedureName = srcall_040.getCallProc_040();
+	public Collection<String> getProceduresCalled(Srcd113 srcd113) {
+		var list = new ArrayList<String>();		
+		for (var srcall040 : srcd113.getSrcall040s()) {
+			var procedureName = srcall040.getCallProc040();
 			list.add(procedureName);
 		}		
 		return list;
 	}
 
 	@Override
-	public short getRecordId(Srcd_113 srcd_113) {
-		return srcd_113.getSrId_113();
+	public short getRecordId(Srcd113 srcd113) {
+		return srcd113.getSrId113();
 	}
 
 	@Override
-	public String getSymbolicSubareaName(Srcd_113 srcd_113) {
-		if (!srcd_113.getSubarea_113().equals("")) {
-			return srcd_113.getSubarea_113();
+	public String getSymbolicSubareaName(Srcd113 srcd113) {
+		if (!srcd113.getSubarea113().isEmpty()) {
+			return srcd113.getSubarea113();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public String getSynonymName(Srcd_113 srcd_113) {
-		Rcdsyn_079 rcdsyn_079 = srcd_113.getRcdsyn_079();		
-		return rcdsyn_079.getRsynName_079();
+	public String getSynonymName(Srcd113 srcd113) {
+		return srcd113.getRcdsyn079().getRsynName079();
 	}
 
 	@Override
-	public short getSynonymVersion(Srcd_113 srcd_113) {
-		Rcdsyn_079 rcdsyn_079 = srcd_113.getRcdsyn_079();		
-		return rcdsyn_079.getRsynVer_079();
+	public short getSynonymVersion(Srcd113 srcd113) {
+		return srcd113.getRcdsyn079().getRsynVer079();
 	}
 
 	@Override
-	public Short getViaDisplacementPageCount(Srcd_113 srcd_113) {
-		if (srcd_113.getDspl_113() > 0) {
-			return Short.valueOf(srcd_113.getDspl_113());
+	public Short getViaDisplacementPageCount(Srcd113 srcd113) {
+		if (srcd113.getDspl113() > 0) {
+			return srcd113.getDspl113();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public String getViaSetName(Srcd_113 srcd_113) {
+	public String getViaSetName(Srcd113 srcd113) {
 		buildViaSetNamesMapIfNeeded();
-		return viaSetNames.get(getName(srcd_113));
+		return viaSetNames.get(getName(srcd113));
 	}
 
 	@Override
-	public String getViaSymbolicDisplacementName(Srcd_113 srcd_113) {
-		if (!srcd_113.getSymbolDisplace_113().equals("")) {
-			return srcd_113.getSymbolDisplace_113();
+	public String getViaSymbolicDisplacementName(Srcd113 srcd113) {
+		if (!srcd113.getSymbolDisplace113().isEmpty()) {
+			return srcd113.getSymbolDisplace113();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public VsamLengthType getVsamLengthType(Srcd_113 srcd_113) {
-		if (srcd_113.getRecType_113().equals("F")) {
+	public VsamLengthType getVsamLengthType(Srcd113 srcd113) {
+		if (srcd113.getRecType113().equals("F")) {
 			return VsamLengthType.FIXED;
-		} else if (srcd_113.getRecType_113().equals("V")) {
+		} else if (srcd113.getRecType113().equals("V")) {
 			return VsamLengthType.VARIABLE;
 		} else {
 			return null;
@@ -326,8 +301,8 @@ public class DictionaryRecordDataCollector implements IRecordDataCollector<Srcd_
 	}
 
 	@Override
-	public boolean isVsamSpanned(Srcd_113 srcd_113) {
-		String vsamType = srcd_113.getVsamType_113();
+	public boolean isVsamSpanned(Srcd113 srcd113) {
+		var vsamType = srcd113.getVsamType113();
 		return vsamType.equals("D"); // "A" denotes NONSPANNED
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,32 +24,25 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
-import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 
 public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
-
-	public SetDescriptionComponentEditPolicy() {
-		super();
-	}
 	
 	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
 		@SuppressWarnings("unchecked")
-		List<EditPart> editParts = deleteRequest.getEditParts(); 
+		var editParts = (List<EditPart>) deleteRequest.getEditParts(); 
 		if (editParts.size() != 1 || !(editParts.get(0).getModel() instanceof ConnectionLabel)) {						
 			return null;
 		}
 		// get the connection label and have the right command created
-		ConnectionLabel connectionLabel = (ConnectionLabel) editParts.get(0).getModel();
-		IModelChangeCommand command = 
-			DeleteSetOrIndexCommandCreationAssistant.getCommand(connectionLabel.getMemberRole());
+		var connectionLabel = (ConnectionLabel) editParts.get(0).getModel();
+		var command = DeleteSetOrIndexCommandCreationAssistant.getCommand(connectionLabel.getMemberRole());
 		if (connectionLabel.getMemberRole().getSet().isMultipleMember()) {
-			ModelChangeContext context = 
-				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
-			context.putContextData(connectionLabel.getMemberRole());
+			var context = new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
+			context.putContextData(connectionLabel.getMemberRole(), ModelChangeContext.memberRoleContextDataAssembler);
 			command.setContext(context);
 		} else {
 			ModelChangeType modelChangeType;
@@ -60,8 +53,8 @@ public class SetDescriptionComponentEditPolicy extends ComponentEditPolicy {
 			} else {
 				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 			}
-			ModelChangeContext context = new ModelChangeContext(modelChangeType);
-			context.putContextData(connectionLabel.getMemberRole().getSet());
+			var context = new ModelChangeContext(modelChangeType);
+			context.putContextData(connectionLabel.getMemberRole().getSet(), ModelChangeContext.setContextDataAssembler);
 			command.setContext(context);
 		}
 		return (Command) command;

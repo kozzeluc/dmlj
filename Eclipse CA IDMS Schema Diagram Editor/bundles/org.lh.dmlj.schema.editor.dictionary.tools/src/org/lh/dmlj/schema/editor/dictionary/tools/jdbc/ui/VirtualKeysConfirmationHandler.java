@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,18 +21,17 @@ import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.preference.PreferenceConstants;
 
-public abstract class VirtualKeysConfirmationHandler {
+public final class VirtualKeysConfirmationHandler {
 	private static final int NO = 1;
 	private static final int ALWAYS = 2;
 
 	public static void handleConfirmation(DictionarySession session, Runnable acceptProcessor, Runnable rejectProcessor) {
-		boolean confirmationRequiredWhenSchemaWithVirtualKeys = 
-			Plugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS);
+		var confirmationRequiredWhenSchemaWithVirtualKeys = Plugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.CONFIRMATION_REQUIRED_WHEN_SCHEMA_DEFINED_WITH_VIRTUAL_KEYS);
 		if (confirmationRequiredWhenSchemaWithVirtualKeys && session.isSchemaDefinedWithVirtualKeys()) {
-			String question = "Schema " + session.getDictionary().getSchema() + " is defined WITH VIRTUAL KEYS, OK to proceed ?";
-			MessageDialog dialog = 
-				new MessageDialog(null, "Warning", null, question, MessageDialog.WARNING, new String[] { "Yes", "No", "Always" }, NO);
-			int answer = dialog.open();
+			var question = "Schema " + session.getDictionary().getSchema() + " is defined WITH VIRTUAL KEYS, OK to proceed ?";
+			int answer = new MessageDialog(null, "Warning", null, question, MessageDialog.WARNING, new String[] { "Yes", "No", "Always" }, NO)
+					.open();
 			if (answer == NO) {
 				rejectProcessor.run();
 				return;
@@ -41,6 +40,9 @@ public abstract class VirtualKeysConfirmationHandler {
 			}
 		}
 		acceptProcessor.run();
+	}
+	
+	private VirtualKeysConfirmationHandler() {
 	}
 	
 }

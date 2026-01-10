@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,20 +16,16 @@
  */
 package org.lh.dmlj.schema.editor.part;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.lh.dmlj.schema.ConnectionPart;
-import org.lh.dmlj.schema.MemberRole;
-import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.anchor.VsamIndexSourceAnchor;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -39,10 +35,6 @@ import org.lh.dmlj.schema.editor.figure.VsamIndexFigure;
 import org.lh.dmlj.schema.editor.policy.VsamIndexComponentEditPolicy;
 
 public class VsamIndexEditPart extends AbstractNonResizableDiagramNodeEditPart<VsamIndex> {
-
-	private VsamIndexEditPart() { 
-		super(null, null); // disabled constructor
-	}
 	
 	public VsamIndexEditPart(VsamIndex vsamIndex, IModelChangeProvider modelChangeProvider) {
 		super(vsamIndex, modelChangeProvider);
@@ -50,8 +42,7 @@ public class VsamIndexEditPart extends AbstractNonResizableDiagramNodeEditPart<V
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if ((context.getModelChangeType() == ModelChangeType.MOVE_VSAM_INDEX ||
-			 context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
+		if ((context.getModelChangeType() == ModelChangeType.MOVE_VSAM_INDEX || context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
 			context.appliesTo(getModel().getSet())) {
 			
 			// the VSAM index was moved
@@ -61,7 +52,7 @@ public class VsamIndexEditPart extends AbstractNonResizableDiagramNodeEditPart<V
 	}
 
 	@Override
-	protected void createEditPolicies() {			
+	protected void createEditPolicies() {
 		if (!isReadOnlyMode()) {
 			// the next edit policy allows for the deletion of a VSAM index
 			installEditPolicy(EditPolicy.COMPONENT_ROLE, new VsamIndexComponentEditPolicy());
@@ -70,19 +61,17 @@ public class VsamIndexEditPart extends AbstractNonResizableDiagramNodeEditPart<V
 	
 	@Override
 	protected IFigure createFigure() {
-		Figure figure = new VsamIndexFigure();
+		var figure = new VsamIndexFigure();
 		
 		// add a tooltip containing the set's name...
         String adjustedSetName;
-        Set set = getModel().getSet();
+        var set = getModel().getSet();
         if (set.getName().endsWith("_")) {
-            StringBuilder p = new StringBuilder(set.getName());
-            p.setLength(p.length() - 1);
-            adjustedSetName = p.toString();
+            adjustedSetName = set.getName().substring(0, set.getName().lastIndexOf("_"));
         } else {
             adjustedSetName = set.getName();
         }
-        Label tooltip = new Label(adjustedSetName);
+        var tooltip = new Label(adjustedSetName);
         figure.setToolTip(tooltip);
 		
 		return figure;
@@ -90,11 +79,7 @@ public class VsamIndexEditPart extends AbstractNonResizableDiagramNodeEditPart<V
 
 	@Override
 	protected List<ConnectionPart> getModelSourceConnections() {
-		List<ConnectionPart> connectionParts = new ArrayList<>();
-		MemberRole memberRole = getModel().getMemberRole();
-		ConnectionPart connectionPart = memberRole.getConnectionParts().get(0);					
-		connectionParts.add(connectionPart);
-		return connectionParts;
+		return List.of(getModel().getMemberRole().getConnectionParts().get(0));
 	}
 
 	@Override
@@ -109,12 +94,10 @@ public class VsamIndexEditPart extends AbstractNonResizableDiagramNodeEditPart<V
 	
 	@Override
 	protected void refreshConnections() {
-		MemberRole memberRole = getModel().getMemberRole();
-		for (ConnectionPart connectionPart : memberRole.getConnectionParts()) {
-			GraphicalEditPart editPart = 
-				(GraphicalEditPart) getViewer().getEditPartRegistry().get(connectionPart);
-			editPart.refresh();		
-		}
+		getModel().getMemberRole().getConnectionParts().stream()
+				.map(connectionPart -> getViewer().getEditPartRegistry().get(connectionPart))
+				.map(EditPart.class::cast)
+				.forEach(EditPart::refresh);
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.importtool.elements.diagram;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,33 +36,24 @@ public class RecordElementsDataCollector implements IElementDataCollector<Elemen
 	public String getDependsOnElementName(Element element) {
 		if (element.getOccursSpecification() == null) {
 			return null;
+		} else {
+			var dependsOnElement = element.getOccursSpecification().getDependingOn();
+			return dependsOnElement != null ? dependsOnElement.getName() : null;
 		}
-		Element dependsOnElement = element.getOccursSpecification().getDependingOn();
-		return dependsOnElement != null ? dependsOnElement.getName() : null;
 	}
 
 	@Override
 	public Collection<String> getIndexElementBaseNames(Element element) {
-		if (element.getOccursSpecification() == null) {
-			return null;
-		}
-		List<String> indexElementBaseNames = new ArrayList<>();
-		for (IndexElement indexElement : element.getOccursSpecification().getIndexElements()) {
-			indexElementBaseNames.add(indexElement.getBaseName());
-		}
-		return indexElementBaseNames;
+		return element.getOccursSpecification() == null ? List.of() : element.getOccursSpecification().getIndexElements().stream()
+					.map(IndexElement::getBaseName)
+					.toList();
 	}
 
 	@Override
 	public Collection<String> getIndexElementNames(Element element) {
-		if (element.getOccursSpecification() == null) {
-			return null;
-		}
-		List<String> indexBaseNames = new ArrayList<>();
-		for (IndexElement indexElement : element.getOccursSpecification().getIndexElements()) {
-			indexBaseNames.add(indexElement.getName());
-		}
-		return indexBaseNames;
+		return element.getOccursSpecification() == null ? List.of() : element.getOccursSpecification().getIndexElements().stream()
+				.map(IndexElement::getName)
+				.toList();
 	}
 
 	@Override
@@ -83,10 +73,7 @@ public class RecordElementsDataCollector implements IElementDataCollector<Elemen
 
 	@Override
 	public short getOccurrenceCount(Element element) {
-		if (element.getOccursSpecification() == null) {
-			return 0;
-		}
-		return element.getOccursSpecification().getCount();
+		return element.getOccursSpecification() == null ? 0 : element.getOccursSpecification().getCount();
 	}
 
 	@Override
@@ -96,11 +83,7 @@ public class RecordElementsDataCollector implements IElementDataCollector<Elemen
 
 	@Override
 	public String getRedefinedElementName(Element element) {
-		if (element.getRedefines() != null) {
-			return element.getRedefines().getName();
-		} else {
-			return null;
-		}
+		return element.getRedefines() != null ? element.getRedefines().getName() : null;
 	}
 
 	@Override

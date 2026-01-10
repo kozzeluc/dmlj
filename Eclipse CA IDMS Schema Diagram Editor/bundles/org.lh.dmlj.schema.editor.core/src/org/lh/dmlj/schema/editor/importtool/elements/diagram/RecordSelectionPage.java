@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,46 +20,37 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.List;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 public class RecordSelectionPage extends AbstractDataEntryPage {
-
 	private List listRecords;
 	private java.util.List<SchemaRecord> modelRecords = new ArrayList<>();
-
-	public RecordSelectionPage() {
-		super();
-	}
 	
 	@Override
 	public void aboutToShow() {
 		populateRecordList();
 		validate();
 	}
-
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+	
 	@Override
 	public Control createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		Layout layout = new GridLayout(2, false);
+		var container = new Composite(parent, SWT.NONE);
+		var layout = new GridLayout(2, false);
 		container.setLayout(layout);
 		
-		Label lblRecords = new Label(container, SWT.NONE);
+		var lblRecords = new Label(container, SWT.NONE);
 		lblRecords.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		lblRecords.setText("Records:");
 		
@@ -70,9 +61,9 @@ public class RecordSelectionPage extends AbstractDataEntryPage {
 				validate();
 			}
 		});
-		GridData gd_listRecords = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		gd_listRecords.heightHint = 300;
-		listRecords.setLayoutData(gd_listRecords);
+		var gdListRecords = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gdListRecords.heightHint = 300;
+		listRecords.setLayoutData(gdListRecords);
 		
 		return container;
 	}
@@ -81,34 +72,29 @@ public class RecordSelectionPage extends AbstractDataEntryPage {
 		listRecords.removeAll();
 		modelRecords.clear();
 		Schema schema = getContext().getAttribute(IDataEntryContext.SCHEMA);
-		for (SchemaRecord record : schema.getRecords()) {
-			modelRecords.add(record);
-		}
+		modelRecords.addAll(schema.getRecords());
 		Collections.sort(modelRecords);
-		SchemaRecord currentRecord = 
-			getContext().getAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD);
-		for (SchemaRecord record : modelRecords) {
-			StringBuilder entryText = new StringBuilder();
-			if (record == currentRecord) {
+		SchemaRecord currentRecord = getContext().getAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD);
+		for (var schemaRecord : modelRecords) {
+			var entryText = new StringBuilder();
+			if (schemaRecord == currentRecord) {
 				entryText.append("*"); 
 			}
-			entryText.append(Tools.removeTrailingUnderscore(record.getName()));
+			entryText.append(Tools.removeTrailingUnderscore(schemaRecord.getName()));
 			listRecords.add(entryText.toString());
 		}
 	}
 
 	protected void validate() {
-		
-		boolean pageComplete = true;
+		var pageComplete = true;
 		getController().setErrorMessage(null);
 		
 		if (listRecords.getSelectionIndex() > -1) {
-			SchemaRecord record = modelRecords.get(listRecords.getSelectionIndex());
-			if (record != getContext().getAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD)) {
-				getContext().setAttribute(IDataEntryContext.RECORD, record);
+			var schemaRecord = modelRecords.get(listRecords.getSelectionIndex());
+			if (schemaRecord != getContext().getAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD)) {
+				getContext().setAttribute(IDataEntryContext.RECORD, schemaRecord);
 			} else {
-				getController().setErrorMessage("You must select a record other than the current" +
-												" selection");
+				getController().setErrorMessage("You must select a record other than the current selection");
 				pageComplete = false;
 			}
 		} else {
@@ -116,7 +102,6 @@ public class RecordSelectionPage extends AbstractDataEntryPage {
 		}
 		
 		getController().setPageComplete(pageComplete);
-		
 	}
 
 }

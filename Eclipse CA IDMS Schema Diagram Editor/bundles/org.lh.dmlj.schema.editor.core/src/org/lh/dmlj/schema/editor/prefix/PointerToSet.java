@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,11 +21,10 @@ import org.lh.dmlj.schema.Role;
 /**
  * Represents a pointer in a record's prefix whose position in the prefix is to be set.
  */
-class PointerToSet<T extends Role> extends Pointer<T> {
-
-	private Short positionInPrefixToSet;	
+class PointerToSet extends Pointer {
+	private final Short positionInPrefixToSet;	
 	
-	PointerToSet(T role, PointerType type, short positionInPrefixToSet) {
+	PointerToSet(Role role, PointerType type, short positionInPrefixToSet) {
 		super(role, type);
 		this.positionInPrefixToSet = Short.valueOf(positionInPrefixToSet);
 	}

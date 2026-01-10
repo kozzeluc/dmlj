@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2022  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,8 +18,6 @@ package org.lh.dmlj.schema.editor.wizard._import.schema;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -29,13 +27,10 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -54,14 +49,15 @@ import org.lh.dmlj.schema.editor.log.Logger;
 public class LayoutManagerSelectionPage extends WizardPage {
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
+	private List<LayoutManagerExtensionElement> extensionElements = List.of();
+	private LayoutManagerExtensionElement extensionElement;
+	private ImageCache imageCache = new ImageCache();
+	
 	private Button btnBrowse;
 	private Canvas canvas;
 	private Combo combo;
-	private LayoutManagerExtensionElement extensionElement;
-	private List<LayoutManagerExtensionElement> extensionElements = new ArrayList<>();
-	private Color imageBackground = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-	private ImageCache imageCache = new ImageCache();
-	private Label lblExample;
+	
+	private final Color imageBackground = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);	
 	private Text textDescription;	
 	private Text textPropertiesFileName;
 	
@@ -73,11 +69,11 @@ public class LayoutManagerSelectionPage extends WizardPage {
 	
 	@Override
 	public void createControl(Composite parent) {		
-		final Composite container = new Composite(parent, SWT.NONE);
+		var container = new Composite(parent, SWT.NONE);
 		setControl(container);
 		container.setLayout(new GridLayout(3, false));
 		
-		Label lblInstalledLayoutManagers = new Label(container, SWT.NONE);
+		var lblInstalledLayoutManagers = new Label(container, SWT.NONE);
 		lblInstalledLayoutManagers.setText("Layout manager:");
 		
 		combo = new Combo(container, SWT.READ_ONLY);
@@ -86,17 +82,17 @@ public class LayoutManagerSelectionPage extends WizardPage {
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 		
-		Label lblDescription = new Label(container, SWT.NONE);
+		var lblDescription = new Label(container, SWT.NONE);
 		lblDescription.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		lblDescription.setText("Description:");
 		
 		textDescription = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1);
-		gd_text.widthHint = 300;
-		gd_text.heightHint = 50;
-		textDescription.setLayoutData(gd_text);
+		var gdText = new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1);
+		gdText.widthHint = 300;
+		gdText.heightHint = 50;
+		textDescription.setLayoutData(gdText);
 		
-		Label lblPropertiesFile = new Label(container, SWT.NONE);
+		var lblPropertiesFile = new Label(container, SWT.NONE);
 		lblPropertiesFile.setText("Properties file:");
 		
 		textPropertiesFileName = new Text(container, SWT.BORDER);
@@ -120,70 +116,71 @@ public class LayoutManagerSelectionPage extends WizardPage {
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(container.getShell());
-				fileDialog.setFileName(textPropertiesFileName.getText());
-				String newValue = fileDialog.open();							
-				if (newValue != null) {
-					textPropertiesFileName.setText(newValue);
-					textPropertiesFileName.redraw();
-			        validatePage();			        			
-				} else {
-					textPropertiesFileName.setText("");
-					textPropertiesFileName.redraw();
-				}				
+				selectPropertiesFile();
 			}
 		});
 		btnBrowse.setText("Browse...");
 		
-		lblExample = new Label(container, SWT.NONE);
-		GridData gd_lblExample = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
-		gd_lblExample.verticalIndent = 10;
-		lblExample.setLayoutData(gd_lblExample);
+		var lblExample = new Label(container, SWT.NONE);
+		var gdLblExample = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gdLblExample.verticalIndent = 10;
+		lblExample.setLayoutData(gdLblExample);
 		lblExample.setText("Example:");
 		
 		canvas = new Canvas(container, SWT.NONE);
-		GridData gd_canvas = new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1);
-		gd_canvas.verticalIndent = 10;
-		canvas.setLayoutData(gd_canvas);
+		var gdCanvas = new GridData(SWT.FILL, SWT.FILL, false, true, 2, 1);
+		gdCanvas.verticalIndent = 10;
+		canvas.setLayoutData(gdCanvas);
 		
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int i = combo.getSelectionIndex();
-				
-				extensionElement = extensionElements.get(i);
-				
-				textDescription.setText(extensionElement.getDescription());
-				textDescription.redraw();
-				
-				boolean b = extensionElement.isPromptForPropertiesFile();
-				textPropertiesFileName.setEnabled(b);
-				btnBrowse.setEnabled(b);
-				if (b) {
-					textPropertiesFileName.setFocus();
-				}
-			
-				canvas.redraw();
-				
-				validatePage();
-			}
-		});		
-		
-		// we use the following MO to draw the layout manager image for the first time in the canvas because the image 
-		// might otherwise not show up...
-		canvas.addPaintListener(new PaintListener() {
-			@Override
-			public void paintControl(PaintEvent e) {
-				drawImage(e.gc);
+				comboSelectionChanged();
 			}
 		});
 		
+		// we use the following MO to draw the layout manager image for the first time in the canvas because the
+		// image might otherwise not show up...
+		canvas.addPaintListener(e -> drawImage(e.gc));
+		
 		setExtensionElements(extensionElements);
 		
-		boolean b = extensionElements.get(0).isPromptForPropertiesFile();
+		var b = extensionElements.get(0).isPromptForPropertiesFile();
 		textPropertiesFileName.setEnabled(b);
 		btnBrowse.setEnabled(b);
 		
+		validatePage();
+	}
+	
+	private void selectPropertiesFile() {
+		var fileDialog = new FileDialog(getShell());
+		fileDialog.setFileName(textPropertiesFileName.getText());
+		var newValue = fileDialog.open();							
+		if (newValue != null) {
+			textPropertiesFileName.setText(newValue);
+			textPropertiesFileName.redraw();
+	        validatePage();			        			
+		} else {
+			textPropertiesFileName.setText("");
+			textPropertiesFileName.redraw();
+		}
+	}
+	
+	private void comboSelectionChanged() {
+		var i = combo.getSelectionIndex();
+		
+		extensionElement = extensionElements.get(i);
+		
+		textDescription.setText(extensionElement.getDescription());
+		textDescription.redraw();
+		
+		var promptForPropertiesFile = extensionElement.isPromptForPropertiesFile();
+		textPropertiesFileName.setEnabled(promptForPropertiesFile);
+		btnBrowse.setEnabled(promptForPropertiesFile);
+		if (promptForPropertiesFile) {
+			textPropertiesFileName.setFocus();
+		}
+		canvas.redraw();
 		validatePage();
 	}
 	
@@ -194,20 +191,19 @@ public class LayoutManagerSelectionPage extends WizardPage {
 	}
 
 	private void drawImage(GC gc) {
-		if (gc == null) {
-			return;
+		if (gc != null) {
+			gc.setBackground(imageBackground);
+			gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
+			if (extensionElement != null) {
+				var image = extensionElement.getImageDescriptor() != null ? imageCache.getImage(extensionElement.getImageDescriptor()) : null;
+				if (image != null) {
+					var width = Math.min(image.getBounds().width, canvas.getBounds().width);
+					var height = Math.min(image.getBounds().height, canvas.getBounds().height);			
+					gc.drawImage(image, 0, 0, width, height, 0, 0, width, height);
+				}
+			}
+			gc.dispose();
 		}
-		// clear the canvas first
-		gc.setBackground(imageBackground);
-		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
-		if (extensionElement != null) {			
-			// an image is available; make it show up in the canvas
-			Image image = extensionElement != null ? imageCache.getImage(extensionElement.getImageDescriptor()) : null;
-			int width = Math.min(image.getBounds().width, canvas.getBounds().width);
-			int height = Math.min(image.getBounds().height, canvas.getBounds().height);			
-			gc.drawImage(image, 0, 0, width, height, 0, 0, width, height);
-		}
-		gc.dispose();	
 	}
 
 	public LayoutManagerExtensionElement getExtensionElement() {
@@ -215,78 +211,70 @@ public class LayoutManagerSelectionPage extends WizardPage {
 	}	
 	
 	public Properties getUserEnteredParameters() {
-		Properties properties = new Properties();
+		var properties = new Properties();
 		try {			
-			File file = new File(textPropertiesFileName.getText());
+			var file = new File(textPropertiesFileName.getText());
 			if (file.exists()) {
-				InputStream in = new FileInputStream(file);
-				properties.load(in);
-				in.close();
+				try (var in = new FileInputStream(file)) {
+					properties.load(in);
+				}
 			}
-		} catch (Throwable t) {
-			logger.error(t.getMessage(), t);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		return properties;
 	}
 
 	public void setExtensionElements(List<LayoutManagerExtensionElement> extensionElements) {
-		this.extensionElements = extensionElements;
+		this.extensionElements = List.copyOf(extensionElements);
 		
 		if (combo == null) {
 			return;
 		}
-		
 		combo.removeAll();
-		
-		for (LayoutManagerExtensionElement extensionElement : extensionElements) {			
-			combo.add(extensionElement.getName());
-		}
-		
+		extensionElements.stream()
+				.map(LayoutManagerExtensionElement::getName)
+				.forEach(combo::add);
 		if (combo.getItemCount() > 0) {
 			combo.select(0);
 			extensionElement = extensionElements.get(0);
 			textDescription.setText(extensionElement.getDescription());
 		} else {
-			// we shouldn't get into this situation because our plug-in provides some layout managers itself and at 
-			// least 1 of them should be available since it is valid for all schemas
+			// we shouldn't get into this situation because our plug-in provides some layout managers itself and
+			// at least 1 of them should be available since it is valid for all schemas
 			combo.setEnabled(false);
 			setErrorMessage("No layout managers installed or none of the layout managers is valid");
-			textDescription.setText("Please install at least 1 plug-in that provides a schema import layout manager " +
-									"for the CA IDMS/DB schema you want to import.");
+			textDescription.setText("Please install at least 1 plug-in that provides a schema import layout " +
+									"manager for the CA IDMS/DB schema you want to import.");
 		}
-		canvas.redraw();
-		
+		canvas.redraw();	
 		validatePage();
 	}
 
 	private void validatePage() {
 		setErrorMessage(null);
-		boolean pageComplete = true;
+		var pageComplete = true;
 		
 		if (extensionElement.isPromptForPropertiesFile()) {
 			// the properties file should be specified
-			String fileName = textPropertiesFileName.getText();
+			var fileName = textPropertiesFileName.getText();
 			if (fileName.trim().equals("")) {
 				pageComplete = false;
 			} else {
-				File file = new File(fileName);
+				var file = new File(fileName);
 				if (!file.exists()) {
 					setErrorMessage("The .properties file does not exist");
 					pageComplete = false;
 				} else {
-					try {
-						Properties properties = new Properties();
-						InputStream in = new FileInputStream(file);
-						properties.load(in);
-						in.close();
-					} catch (Throwable t) {
-						setErrorMessage(t.getMessage());
+					try (var in = new FileInputStream(file)) {
+						new Properties().load(in);
+					} catch (Exception e) {
+						setErrorMessage(e.getMessage());
 						pageComplete = false;
 					}
 				}
 			}
 		}
-		
 		setPageComplete(pageComplete);
 	}
 	

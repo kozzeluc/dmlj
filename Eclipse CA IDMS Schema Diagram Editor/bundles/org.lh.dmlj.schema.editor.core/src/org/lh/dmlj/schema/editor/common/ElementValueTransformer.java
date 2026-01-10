@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,15 +21,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ElementValueTransformer {
+public final class ElementValueTransformer {
 	private static final String COLON = ":";
 	private static final String COMMA = ",";
 	private static final String INITIAL_DELIMITER_PART = "list" + COLON;
 	private static final String INITIAL_DELIMITER_PART_PLUS_COMMA = INITIAL_DELIMITER_PART + COMMA;
 
-
 	private static String calculateDelimiterChars(List<String> values) {
-		StringBuilder commas = new StringBuilder(COMMA);
+		var commas = new StringBuilder(COMMA);
 		while (values.stream().anyMatch(value -> value.contains(commas.toString()))) {
 			commas.append(COMMA);
 		}
@@ -38,7 +37,7 @@ public class ElementValueTransformer {
 	
 	private static String extractDelimiterChars(String value) {
 		if (value.startsWith(INITIAL_DELIMITER_PART_PLUS_COMMA)) {
-			int secondColonOffset = value.indexOf(COLON, 5);
+			var secondColonOffset = value.indexOf(COLON, 5);
 			if (secondColonOffset > -1) {
 				return value.substring(5, secondColonOffset);
 			}
@@ -51,8 +50,8 @@ public class ElementValueTransformer {
 			if (values.size() == 1) {
 				return values.get(0);
 			} else {
-				String delimiterChars = calculateDelimiterChars(values);
-				String delimiterPrefix = INITIAL_DELIMITER_PART + delimiterChars + COLON;
+				var delimiterChars = calculateDelimiterChars(values);
+				var delimiterPrefix = INITIAL_DELIMITER_PART + delimiterChars + COLON;
 				return delimiterPrefix + values.stream().collect(Collectors.joining(delimiterChars));
 			}
 		} else {
@@ -63,7 +62,7 @@ public class ElementValueTransformer {
 
 	public static List<String> toValueList(String value) {
 		if  (value != null && !value.trim().isEmpty()) {
-			String delimiterChars = extractDelimiterChars(value);
+			var delimiterChars = extractDelimiterChars(value);
 			if (delimiterChars == null) {
 				return Arrays.asList(value);
 			} else {
@@ -73,6 +72,9 @@ public class ElementValueTransformer {
 		} else {
 			return Collections.emptyList();
 		}
+	}
+	
+	private ElementValueTransformer() {
 	}
 
 }

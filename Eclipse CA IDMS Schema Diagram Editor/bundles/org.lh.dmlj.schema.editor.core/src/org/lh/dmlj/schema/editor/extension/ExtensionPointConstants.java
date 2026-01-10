@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,8 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.extension;
 
-public class ExtensionPointConstants {
-
+public final class ExtensionPointConstants {
 	public static final String EXTENSION_POINT_IMPORT_ID = "import";
 	public static final String EXTENSION_POINT_IMPORT_RECORD_ELEMENTS_ID = "importRecordElements";
 	
@@ -44,15 +43,15 @@ public class ExtensionPointConstants {
 	public static final String ATTRIBUTE_INITIAL_VALUE = "initialValue";
 	public static final String ATTRIBUTE_LABEL = "label";
 	public static final String ATTRIBUTE_MESSAGE = "message";
-	public static final String ATTRIBUTE_MUTUALLY_EXCLUSIVE_WITH = 
-		"mutuallyExclusiveWith";
+	public static final String ATTRIBUTE_MUTUALLY_EXCLUSIVE_WITH = "mutuallyExclusiveWith";
 	public static final String ATTRIBUTE_NAME = "name";
 	public static final String ATTRIBUTE_PARAMETERS = "parameters";	
-	public static final String ATTRIBUTE_PROMPT_FOR_PROPERTIES_FILE = 
-		"promptForPropertiesFile";
+	public static final String ATTRIBUTE_PROMPT_FOR_PROPERTIES_FILE = "promptForPropertiesFile";
 	public static final String ATTRIBUTE_SCHEMA_NAME = "schemaName";	
 	public static final String ATTRIBUTE_SCHEMA_VERSIONS = "schemaVersions";	
 	public static final String ATTRIBUTE_SOURCE = "source";	
 	
+	private ExtensionPointConstants() {
+	}
 	
 }

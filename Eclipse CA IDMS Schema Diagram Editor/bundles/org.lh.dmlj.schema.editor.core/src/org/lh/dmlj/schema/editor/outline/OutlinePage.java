@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,7 +28,6 @@ import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
@@ -41,20 +40,14 @@ import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.outline.part.SchemaTreeEditPartFactory;
 import org.lh.dmlj.schema.editor.property.IGraphicalEditorProvider;
 
-public class OutlinePage 
-	extends ContentOutlinePage implements IGraphicalEditorProvider<SchemaEditor> {
-	
+public class OutlinePage extends ContentOutlinePage implements IGraphicalEditorProvider<SchemaEditor> {
 	private SchemaEditor editor;
-	private PageBook 	 pageBook;
+	private PageBook pageBook;
 	
 	public OutlinePage(SchemaEditor editor) {
 		super(new TreeViewer());
 		this.editor = editor;
 	}
-
-	public boolean canConvertEditPart(EditPartViewer viewer, EditPart part) {
-		return true;
-	}	
 	
 	private void configureOutlineViewer() {
 		getViewer().setEditDomain((EditDomain) editor.getAdapter(DefaultEditDomain.class));
@@ -62,31 +55,28 @@ public class OutlinePage
 	}
 	
 	public EditPart convert(EditPartViewer viewer, EditPart part) {
-		EditPart editPart = (EditPart) viewer.getEditPartRegistry().get(part.getModel());
+		var editPart = (EditPart) viewer.getEditPartRegistry().get(part.getModel());
 		if (editPart != null) {
 			return editPart;
 		}
-		Object model = part.getModel();
-		if (model instanceof Connector) {
-			Connector connector = (Connector) model;
-			EObject target = getTarget(connector.getConnectionPart().getMemberRole().getSet());
+		var model = part.getModel();
+		if (model instanceof Connector connector) {
+			var target = getTarget(connector.getConnectionPart().getMemberRole().getSet());
 			return (EditPart) viewer.getEditPartRegistry().get(target);
-		} else if (model instanceof ConnectionLabel) {
-			ConnectionLabel connectionLabel = (ConnectionLabel) model;
-			EObject target = getTarget(connectionLabel.getMemberRole().getSet());
+		} else if (model instanceof ConnectionLabel connectionLabel) {
+			var target = getTarget(connectionLabel.getMemberRole().getSet());
 			return (EditPart) viewer.getEditPartRegistry().get(target);
-		} else if (model instanceof ConnectionPart) {
-			ConnectionPart connectionPart = (ConnectionPart) model;
-			EObject target = getTarget(connectionPart.getMemberRole().getSet());
+		} else if (model instanceof ConnectionPart connectionPart) {
+			var target = getTarget(connectionPart.getMemberRole().getSet());
 			return (EditPart) viewer.getEditPartRegistry().get(target);
-		} else if (model instanceof Set) {
-			Set set = (Set) model;
-			EObject target = set.getMembers().get(0).getConnectionParts().get(0);
+		} else if (model instanceof Set set) {
+			var target = set.getMembers().get(0).getConnectionParts().get(0);
 			return (EditPart) viewer.getEditPartRegistry().get(target);
 		}
 		return null;
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		pageBook = new PageBook(parent, SWT.NONE);
 		pageBook.showPage(getViewer().createControl(pageBook));
@@ -95,11 +85,13 @@ public class OutlinePage
 		initializeOutlineViewer();
 	}	
 	
+	@Override
 	public void dispose() {
 		unhookOutlineViewer();
 		super.dispose();
 	}
 	
+	@Override
 	public Control getControl() {
 		return pageBook;
 	}
@@ -114,23 +106,23 @@ public class OutlinePage
 		if (set.getSystemOwner() != null) {
 			return set.getSystemOwner();
 		} else if (set.isVsam()) {
-				return set.getVsamIndex();
+			return set.getVsamIndex();
 		} else {
 			return set;
 		}
 	}
 
 	private void hookOutlineViewer() {
-		SelectionSynchronizer selectionSynchronizer = 
-			(SelectionSynchronizer) editor.getAdapter(SelectionSynchronizer.class);
+		var selectionSynchronizer = (SelectionSynchronizer) editor.getAdapter(SelectionSynchronizer.class);
 		selectionSynchronizer.addViewer(getViewer());
 	}
 	
+	@Override
 	public void init(IPageSite pageSite) {
 		super.init(pageSite);
-		ActionRegistry registry = (ActionRegistry) editor.getAdapter(ActionRegistry.class);
-		IActionBars bars = pageSite.getActionBars();
-		String id = ActionFactory.UNDO.getId();
+		var registry = (ActionRegistry) editor.getAdapter(ActionRegistry.class);
+		var bars = pageSite.getActionBars();
+		var id = ActionFactory.UNDO.getId();
 		bars.setGlobalActionHandler(id, registry.getAction(id));
 		id = ActionFactory.REDO.getId();
 		bars.setGlobalActionHandler(id, registry.getAction(id));
@@ -148,8 +140,7 @@ public class OutlinePage
 	}
 	
 	private void unhookOutlineViewer() {
-		SelectionSynchronizer selectionSynchronizer = 
-			(SelectionSynchronizer) editor.getAdapter(SelectionSynchronizer.class);
+		var selectionSynchronizer = (SelectionSynchronizer) editor.getAdapter(SelectionSynchronizer.class);
 		selectionSynchronizer.removeViewer(getViewer());
 	}
 		

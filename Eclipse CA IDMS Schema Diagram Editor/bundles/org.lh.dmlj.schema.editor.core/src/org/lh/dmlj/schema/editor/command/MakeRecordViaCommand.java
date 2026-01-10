@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,26 +21,17 @@ import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.SchemaRecord;
 
 /**
- * A command that will change the record's location mode to VIA and set the 
- * VIA specification.  This command can only be used for DIRECT records (at time 
- * of execution) and will definitely run into trouble when executed for a record 
- * that is defined as either CALC or VIA.
+ * A command that will change the record's location mode to VIA and set the VIA specification.  This command can
+ * only be used for DIRECT records (at time of execution) and will definitely run into trouble when executed for
+ * a record that is defined as either CALC or VIA.
  */
 public class MakeRecordViaCommand extends AbstractChangeLocationModeCommand {
-
-	protected SchemaRecord record;
+	protected final String viaSetName; 
+	protected final String symbolicDisplacementName; 
+	protected final Short displacementPageCount;
 	
-	protected String viaSetName; 
-	protected String symbolicDisplacementName; 
-	protected Short  displacementPageCount;
-	
-	public MakeRecordViaCommand(SchemaRecord record,
-								String viaSetName, 
-								String symbolicDisplacementName, 
-								Short displacementPageCount) {
-		
-		super("Set 'Location mode' to 'VIA'", record);	
-		this.record = record;
+	public MakeRecordViaCommand(SchemaRecord schemaRecord, String viaSetName, String symbolicDisplacementName, Short displacementPageCount) {
+		super("Set 'Location mode' to 'VIA'", schemaRecord);
 		this.viaSetName = viaSetName;
 		this.symbolicDisplacementName = symbolicDisplacementName;
 		this.displacementPageCount = displacementPageCount;
@@ -48,23 +39,23 @@ public class MakeRecordViaCommand extends AbstractChangeLocationModeCommand {
 	
 	@Override
 	public void execute() {
-		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");
+		Assert.isTrue(schemaRecord.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");
 		createViaSpecification(viaSetName, symbolicDisplacementName, displacementPageCount, -1);
-		record.setLocationMode(LocationMode.VIA);
+		schemaRecord.setLocationMode(LocationMode.VIA);
 		stash(0);
 	}
 	
 	@Override
 	public void redo() {
-		Assert.isTrue(record.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");
+		Assert.isTrue(schemaRecord.getLocationMode() == LocationMode.DIRECT, "record not DIRECT");
 		restoreViaSpecification(0);
-		record.setLocationMode(LocationMode.VIA);
+		schemaRecord.setLocationMode(LocationMode.VIA);
 	}
 	
 	@Override
 	public void undo() {
-		Assert.isTrue(record.getLocationMode() == LocationMode.VIA, "record not VIA");
-		record.setLocationMode(LocationMode.DIRECT);
+		Assert.isTrue(schemaRecord.getLocationMode() == LocationMode.VIA, "record not VIA");
+		schemaRecord.setLocationMode(LocationMode.DIRECT);
 		removeViaSpecification();	
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,21 +17,15 @@
 package org.lh.dmlj.schema.editor.preference;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.lh.dmlj.schema.editor.Plugin;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
-		
 	private static final String DEFAULT_FILE_EXTENSION = "schema";
 	private static final String TM_CHAR = "\u2122";
 
-	public PreferenceInitializer() {
-		super();
-	}
-
 	@Override
 	public void initializeDefaultPreferences() {		
-		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		var store = Plugin.getDefault().getPreferenceStore();
 		
 		// general preferences...
 		store.setDefault(PreferenceConstants.DEFAULT_FILE_EXTENSION, DEFAULT_FILE_EXTENSION);

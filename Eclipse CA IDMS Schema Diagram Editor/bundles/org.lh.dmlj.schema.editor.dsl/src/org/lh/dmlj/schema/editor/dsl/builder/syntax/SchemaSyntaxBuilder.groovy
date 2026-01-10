@@ -236,6 +236,18 @@ class SchemaSyntaxBuilder extends AbstractSyntaxBuilder<Schema> {
 			blank_line()
 			without_tab '// suppressed: set DSL'
 		}
-	}	
+	}
+	
+	void setGenerateAreaDSL(boolean value) {
+		generateAreaDSL = value
+	}
+	
+	void setGenerateRecordDSL(boolean value) {
+		generateRecordDSL = value
+	}
+	
+	void setGenerateSetDSL(boolean value) {
+		generateSetDSL = value
+	}
 
 }

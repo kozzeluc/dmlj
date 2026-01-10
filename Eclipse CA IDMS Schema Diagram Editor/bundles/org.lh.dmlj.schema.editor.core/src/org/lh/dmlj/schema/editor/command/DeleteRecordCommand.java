@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,8 +25,8 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 
 public class DeleteRecordCommand extends ModelChangeBasicCommand {
-
-	protected SchemaRecord record;
+	protected final SchemaRecord schemaRecord;
+	
 	private Schema schema;
 	private int recordIndex;
 	private SchemaArea area;
@@ -36,22 +36,22 @@ public class DeleteRecordCommand extends ModelChangeBasicCommand {
 	private DiagramLocation diagramLocation;
 	private int diagramLocationIndex;
 
-	public DeleteRecordCommand(SchemaRecord record) {
+	public DeleteRecordCommand(SchemaRecord schemaRecord) {
 		super();
-		this.record = record;
+		this.schemaRecord = schemaRecord;
 	}
 	
 	@Override
 	public void execute() {
-		schema = record.getSchema();
-		recordIndex = schema.getRecords().indexOf(record);
-		area = record.getAreaSpecification().getArea();
-		areaSpecificationIndex = area.getAreaSpecifications().indexOf(record.getAreaSpecification());
-		if (record.getLocationMode() == LocationMode.VIA) {
-			viaSet = record.getViaSpecification().getSet();
-			viaSpecificationIndex = viaSet.getViaMembers().indexOf(record.getViaSpecification());
+		schema = schemaRecord.getSchema();
+		recordIndex = schema.getRecords().indexOf(schemaRecord);
+		area = schemaRecord.getAreaSpecification().getArea();
+		areaSpecificationIndex = area.getAreaSpecifications().indexOf(schemaRecord.getAreaSpecification());
+		if (schemaRecord.getLocationMode() == LocationMode.VIA) {
+			viaSet = schemaRecord.getViaSpecification().getSet();
+			viaSpecificationIndex = viaSet.getViaMembers().indexOf(schemaRecord.getViaSpecification());
 		}
-		diagramLocation = record.getDiagramLocation();
+		diagramLocation = schemaRecord.getDiagramLocation();
 		diagramLocationIndex = schema.getDiagramData().getLocations().indexOf(diagramLocation);
 		removeRecord();
 	}
@@ -67,29 +67,26 @@ public class DeleteRecordCommand extends ModelChangeBasicCommand {
 	}
 	
 	private void removeRecord() {
-		Assert.isTrue(record.getOwnerRoles().isEmpty(), 
-					  "Record is an owner of at least 1 set: " + record.getName());
-		Assert.isTrue(record.getMemberRoles().isEmpty(), 
-				  	  "Record is a member of at least 1 set: " + record.getName());
-		Assert.isTrue(record.getProcedures().isEmpty(), 
-			  	  	  "Record references at least 1 procedure: " + record.getName());
-		record.setSchema(null);
-		area.getAreaSpecifications().remove(record.getAreaSpecification());
-		if (record.getLocationMode() == LocationMode.VIA) {
-			record.getViaSpecification().setSet(null);
+		Assert.isTrue(schemaRecord.getOwnerRoles().isEmpty(), "Record is an owner of at least 1 set: " + schemaRecord.getName());
+		Assert.isTrue(schemaRecord.getMemberRoles().isEmpty(), "Record is a member of at least 1 set: " + schemaRecord.getName());
+		Assert.isTrue(schemaRecord.getProcedures().isEmpty(), "Record references at least 1 procedure: " + schemaRecord.getName());
+		
+		schemaRecord.setSchema(null);
+		area.getAreaSpecifications().remove(schemaRecord.getAreaSpecification());
+		if (schemaRecord.getLocationMode() == LocationMode.VIA) {
+			schemaRecord.getViaSpecification().setSet(null);
 		}
 		schema.getDiagramData().getLocations().remove(diagramLocation);
 	}
 	
 	private void restoreRecord() {
-		Assert.isTrue(record.getSchema() == null, 
-				  	  "Record is already referenced by a schema: " + record.getName());		
+		Assert.isTrue(schemaRecord.getSchema() == null, "Record is already referenced by a schema: " + schemaRecord.getName());		
 		schema.getDiagramData().getLocations().add(diagramLocationIndex, diagramLocation);
-		if (record.getLocationMode() == LocationMode.VIA) {
-			viaSet.getViaMembers().add(viaSpecificationIndex, record.getViaSpecification());
+		if (schemaRecord.getLocationMode() == LocationMode.VIA) {
+			viaSet.getViaMembers().add(viaSpecificationIndex, schemaRecord.getViaSpecification());
 		}
-		area.getAreaSpecifications().add(areaSpecificationIndex, record.getAreaSpecification());
-		schema.getRecords().add(recordIndex, record);
+		area.getAreaSpecifications().add(areaSpecificationIndex, schemaRecord.getAreaSpecification());
+		schema.getRecords().add(recordIndex, schemaRecord);
 	}
 	
 }

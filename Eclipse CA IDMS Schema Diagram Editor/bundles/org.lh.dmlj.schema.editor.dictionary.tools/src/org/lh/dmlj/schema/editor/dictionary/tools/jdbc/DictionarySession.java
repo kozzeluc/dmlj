@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -35,33 +34,30 @@ import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class DictionarySession {
-	
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	private static final String VIRTUAL_KEYS_SQL = "SELECT INCLVIRTKEYS FROM SYSTEM.SCHEMA WHERE NAME = ?";
+	
+	protected final Dictionary dictionary;
+	private final String description;
+	private final DateFormat dateFormat;
 	
 	protected Connection connection;
 	private long connectionClosed = -1;
 	private long connectionOpened = -1;
-	private DateFormat dateFormat;
-	private String description;
-	protected Dictionary dictionary;
 	private int queryNumber = 0;
 	private int runningQueryCount = 0;
-	private List<QueryStatistics> statistics = new ArrayList<>();
+	private final List<QueryStatistics> statistics = new ArrayList<>();
 	
-	private static Connection connect(String url, String userid, String password) 
-		throws SQLException {
-        
+	private static Connection connect(String url, String userid, String password) throws SQLException {
 		return DriverManager.getConnection(url, userid, password);
     }
 		
 	private static Connection connect(Dictionary dictionary) throws Throwable {	
 		String password;
 		if (dictionary.getPassword() == null) {
-			PromptForPasswordDialog dialog = 
-				new PromptForPasswordDialog(Display.getCurrent().getActiveShell(), dictionary);
+			var dialog = new PromptForPasswordDialog(Display.getCurrent().getActiveShell(), dictionary);
 			if (dialog.open() == IDialogConstants.CANCEL_ID) {
-				throw new RuntimeException("Password required for dictionary " + dictionary.getId());
+				throw new IllegalStateException("Password required for dictionary " + dictionary.getId());
 			}
 			password = dialog.getPassword();
 			if (dialog.isStorePassword()) {
@@ -69,7 +65,7 @@ public class DictionarySession {
 				try {
 					dictionary.toFile(Plugin.getDefault().getDictionaryFolder());
 				} catch (Throwable t) {
-					throw new RuntimeException("Error while saving dictionary data", t);
+					throw new IllegalStateException("Error while saving dictionary data", t);
 				}
 			}
 		} else {
@@ -79,20 +75,15 @@ public class DictionarySession {
 	}
 
 	private static String getColumnNames(ResultSet rs) throws SQLException {
-		List<String> columnNames = new ArrayList<>();
-		ResultSetMetaData metaData = rs.getMetaData();
-		for (int i = 1; i <= metaData.getColumnCount(); i++) {
+		var columnNames = new ArrayList<String>();
+		var metaData = rs.getMetaData();
+		for (var i = 1; i <= metaData.getColumnCount(); i++) {
 			columnNames.add(metaData.getColumnName(i));
 		}
 		return columnNames.stream().collect(Collectors.joining(","));
 	}
-
-	@SuppressWarnings("unused")
-	private DictionarySession() {
-	}
 	
 	public DictionarySession(Dictionary dictionary, String description) {
-		super();
 		this.dictionary = dictionary;
 		this.description = description;
 		dateFormat = org.lh.dmlj.schema.editor.Plugin.getDefault().getDateFormat();
@@ -100,23 +91,23 @@ public class DictionarySession {
 	
 	public final void close() {
 		if (connectionClosed != -1) {
-			throw new RuntimeException("already closed");
+			throw new IllegalStateException("already closed");
 		}
 		try {
 			connection.close();
 			connectionClosed = System.currentTimeMillis();
 		} catch (SQLException e) {
 			connectionClosed = System.currentTimeMillis();
-			throw new RuntimeException("Error while closing the JDBC connection", e);
+			throw new IllegalStateException("Error while closing the JDBC connection", e);
 		}
-		StringBuilder p = new StringBuilder();
+		var p = new StringBuilder();
 		p.append("***** Statistics for import session '" + description + "' *****\n");
 		p.append("        Opened on: " + format(connectionOpened) + "\n");
 		p.append("        Closed on: " + format(connectionClosed) + "\n");
-		long elapseTimeInMilliseconds = connectionClosed - connectionOpened;
+		var elapseTimeInMilliseconds = connectionClosed - connectionOpened;
 		p.append("      Elapse time: " + elapseTimeInMilliseconds + "ms\n");
 		p.append("#Queries executed: " + statistics.size() + "\n");
-		for (QueryStatistics queryStatistics : statistics) {
+		for (var queryStatistics : statistics) {
 			p.append(queryStatistics.toString());
 			p.append("\n");
 		}
@@ -141,17 +132,17 @@ public class DictionarySession {
 	
 	public final boolean isSchemaDefinedWithVirtualKeys() {
 		if (connectionOpened == -1) {
-			throw new RuntimeException("connection not open");
+			throw new IllegalStateException("connection not open");
 		} else if (connectionClosed != -1) {
-			throw new RuntimeException("connection closed");
+			throw new IllegalStateException("connection closed");
 		}
 		
-		boolean result = false;
+		var result = false;
 		PreparedStatement ps = null;
 		try {
 			ps = connection.prepareStatement(VIRTUAL_KEYS_SQL);
 			ps.setString(1, dictionary.getSchema());
-			ResultSet rs = ps.executeQuery();
+			var rs = ps.executeQuery();
 			if (rs.next()) {
 				result = rs.getString(1).equals("S");
 			}
@@ -171,47 +162,45 @@ public class DictionarySession {
 	
 	public final void open() {
 		if (connectionOpened != -1) {
-			throw new RuntimeException("already opened");
+			throw new IllegalStateException("already opened");
 		}
 		try {
 			connection = connect(dictionary);
 			connectionOpened = System.currentTimeMillis();
 		} catch (Throwable t) {
-			throw new RuntimeException("Error while opening the JDBC connection", t);
+			throw new IllegalStateException("Error while opening the JDBC connection", t);
 		}
 	}
 
 	public final void runQuery(IQuery query, IRowProcessor rowProcessor) {
-		
 		if (connectionOpened == -1) {
-			throw new RuntimeException("session not open");
+			throw new IllegalStateException("session not open");
 		}
 		if (connectionClosed != -1) {
-			throw new RuntimeException("session closed");
+			throw new IllegalStateException("session closed");
 		}		
 		if (runningQueryCount > 0) {
-			// we don't allow nested queries for performance reasons; we might blow-up the CV with
-			// not even that big result sets
-			throw new RuntimeException("nested queries are NOT allowed");
+			// we don't allow nested queries for performance reasons; we might blow-up the CV with not even that big result sets
+			throw new IllegalStateException("nested queries are NOT allowed");
 		}
 		runningQueryCount += 1;
 		
 		query.setNumber(++queryNumber);		
-		long end1 = -1;
-		long end2 = -1;
-		int rowsProcessed = 0;
-		long start = System.currentTimeMillis();
+		var end1 = -1L;
+		var end2 = -1L;
+		var rowsProcessed = 0;
+		var start = System.currentTimeMillis();
 		try {
 			logger.debug("Start execution of " + query);
-			PreparedStatement ps = connection.prepareStatement(query.getSql());
-			ResultSet rs = ps.executeQuery();
+			var ps = connection.prepareStatement(query.getSql());
+			var rs = ps.executeQuery();
 			end1 = System.currentTimeMillis();
 			logger.debug("Start processing rows for query '" + query.getDescription() + "'\nColumns: " + getColumnNames(rs));
 			while (rs.next()) {
-				int row = rs.getRow();
+				var row = rs.getRow();
 				rowProcessor.processRow(rs);
 				if (rs.getRow() != row) {
-					throw new RuntimeException("internal error: current row changed");
+					throw new IllegalStateException("internal error: current row changed");
 				}
 				rowsProcessed += 1;
 			}
@@ -220,19 +209,17 @@ public class DictionarySession {
 			logger.debug("Processed " + rowsProcessed + " rows for query '" + query.getDescription() + "'");
 			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, null));
 			runningQueryCount -= 1;
-		} catch (Throwable t) {
-			String message = "Exception while executing query '" + query.getDescription() + 
-							 "'; see log for details.";
-			logger.error("Exception while running query '" + query.getDescription() + 
-						 "': " + t.getClass().getName() + " (" + t.getMessage() + ")", t);
-			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, t));
+		} catch (Exception e) {
+			var message = "Exception while executing query '" + query.getDescription() + "'; see log for details.";
+			logger.error("Exception while running query '" + query.getDescription() + "': " + e.getClass().getName() +
+					" (" + e.getMessage() + ")", e);
+			statistics.add(new QueryStatistics(query, start, end1, end2, rowsProcessed, e));
 			runningQueryCount -= 1;
-			throw new RuntimeException(message, t);
+			throw new IllegalStateException(message, e);
 		}	
 	}
 	
 	public static class QueryStatistics {
-		
 		private long end1;
 		private long end2;
 		private IQuery query;
@@ -240,9 +227,7 @@ public class DictionarySession {
 		private long start;
 		private Throwable t;
 		
-		public QueryStatistics(IQuery query, long start, long end1, long end2, int rowsProcessed, 
-							   Throwable t) {
-			
+		public QueryStatistics(IQuery query, long start, long end1, long end2, int rowsProcessed, Throwable t) {
 			this.query = query;
 			this.start = start;
 			this.end1 = end1;
@@ -252,10 +237,10 @@ public class DictionarySession {
 		}
 
 		public String toString() {
-			return "  query #" + query.getNumber() + ", description='" + query.getDescription() + 
-				   "', elapseTimeQuery=" + (end1 - start) + ", " + "elapseTimeRowProcessing=" + 
-				   (end2 - end1) + ", " + "rowsProcessed=" + rowsProcessed + 
-				   (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + " (" + t.getMessage() + ")'" : "");
+			return "  query #" + query.getNumber() + ", description='" + query.getDescription() + "', elapseTimeQuery=" +
+					(end1 - start) + ", " + "elapseTimeRowProcessing=" + (end2 - end1) + ", " + "rowsProcessed=" +
+					rowsProcessed + (t != null ? "\n--> Exception='" + t.getClass().getSimpleName() + " (" +
+					t.getMessage() + ")'" : "");
 		}
 		
 	}

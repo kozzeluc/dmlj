@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,11 +20,10 @@ import org.lh.dmlj.schema.Guide;
 import org.lh.dmlj.schema.Ruler;
 
 public class DeleteGuideCommand extends ModelChangeBasicCommand {
-
-	private Ruler ruler;
-	private Guide guide;
+	private final Ruler ruler;
+	private final Guide guide;
 	
-	private int i;
+	private int guideIndex;
 	
 	public DeleteGuideCommand(Ruler ruler, Guide guide) {
 		super("Delete Guide");
@@ -34,7 +33,7 @@ public class DeleteGuideCommand extends ModelChangeBasicCommand {
 	
 	@Override
 	public void execute() {
-		i = ruler.getGuides().indexOf(guide);
+		guideIndex = ruler.getGuides().indexOf(guide);
 		redo();
 	}
 	
@@ -45,7 +44,7 @@ public class DeleteGuideCommand extends ModelChangeBasicCommand {
 	
 	@Override
 	public void undo() {		
-		ruler.getGuides().add(i, guide);		
+		ruler.getGuides().add(guideIndex, guide);		
 	}	
 	
 }

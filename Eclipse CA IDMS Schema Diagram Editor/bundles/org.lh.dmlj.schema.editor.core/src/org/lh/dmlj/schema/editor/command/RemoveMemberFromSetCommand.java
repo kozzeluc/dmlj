@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,15 +21,13 @@ import org.lh.dmlj.schema.editor.command.helper.RemovableMemberRole;
 import org.lh.dmlj.schema.editor.common.Tools;
 
 public class RemoveMemberFromSetCommand extends ModelChangeBasicCommand {
-		
-	protected MemberRole memberRole;
+	protected final MemberRole memberRole;
 	
 	private RemovableMemberRole memberRoleToBecomeObsolete;
 
 	public RemoveMemberFromSetCommand(MemberRole memberRole) {
-		super("Remove member record type from set " + 
-			  Tools.removeTrailingUnderscore(memberRole.getSet().getName()));
-		this.memberRole = memberRole;		
+		super("Remove member record type from set " + Tools.removeTrailingUnderscore(memberRole.getSet().getName()));
+		this.memberRole = memberRole;
 	}
 	
 	@Override
