@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -78,7 +78,6 @@ public class SchemaTreeEditPart extends AbstractSchemaTreeEditPart<Schema> {
 			// edit part and add it as a child
 			var diagramLabel = getModel().getDiagramData().getLabel();
 			createAndAddChild(diagramLabel);
-			findAndRemoveChild(diagramLabel, true);
 		} else if (context.getModelChangeType() == ModelChangeType.ADD_RECORD) {
 			// a RECORD was added; avoid just refreshing the children since this may be costly; first, create an
 			// edit part for the record and add it as a child
