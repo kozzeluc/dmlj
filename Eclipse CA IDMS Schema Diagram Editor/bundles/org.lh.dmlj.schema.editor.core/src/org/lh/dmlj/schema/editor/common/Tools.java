@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -252,7 +252,8 @@ public final class Tools {
 			return null;
 		} else {
 			var sortKeys = new StringBuilder();
-			var inAscendingMode = memberRole.getSortKey().getElements().get(0).getSortSequence() == SortSequence.ASCENDING;
+			var inAscendingMode = memberRole.getSortKey().getElements().isEmpty() ||
+					memberRole.getSortKey().getElements().get(0).getSortSequence() == SortSequence.ASCENDING;
 			for (var keyElement : memberRole.getSortKey().getElements()) {
 				inAscendingMode = appendKeyElementData(keyElement, inAscendingMode, sortKeys);
 			}
