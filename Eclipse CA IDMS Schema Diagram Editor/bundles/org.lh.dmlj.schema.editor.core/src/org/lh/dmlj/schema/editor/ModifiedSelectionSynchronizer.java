@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,20 +16,23 @@
  */
 package org.lh.dmlj.schema.editor;
 
+import java.util.function.Supplier;
+
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.lh.dmlj.schema.editor.outline.OutlinePage;
 
 public class ModifiedSelectionSynchronizer extends SelectionSynchronizer {
-	private final OutlinePage outlinePage;
+	private final Supplier<OutlinePage> outlinePageProvider;
 	
-	public ModifiedSelectionSynchronizer(OutlinePage outlinePage) {
-		this.outlinePage = outlinePage;
+	public ModifiedSelectionSynchronizer(Supplier<OutlinePage> outlinePageProvider) {
+		this.outlinePageProvider = outlinePageProvider;
 	}
 	
 	@Override
 	protected EditPart convert(EditPartViewer viewer, EditPart part) {
+		var outlinePage = outlinePageProvider.get();
 		if (outlinePage != null) {
 			// make sure the most relevant edit part is selected in the outline page
 			return outlinePage.convert(viewer, part);

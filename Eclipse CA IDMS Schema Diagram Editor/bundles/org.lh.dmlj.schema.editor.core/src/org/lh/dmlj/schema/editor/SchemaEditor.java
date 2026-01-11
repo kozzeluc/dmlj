@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -542,7 +542,7 @@ public class SchemaEditor
 	@Override
 	protected SelectionSynchronizer getSelectionSynchronizer() {
 		if (selectionSynchronizer == null) {
-			selectionSynchronizer = new ModifiedSelectionSynchronizer(outlinePage);
+			selectionSynchronizer = new ModifiedSelectionSynchronizer(() -> outlinePage);
 		}
 		return selectionSynchronizer;
 	}
