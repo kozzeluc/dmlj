@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,6 +29,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaFactory;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
+import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
@@ -178,6 +179,7 @@ public class UpdateLayoutManager implements ILayoutManager {
 		if (!targetSchema.getRecords().isEmpty()) {
 			layoutRecords();		
 			layoutSystemOwners();
+			layoutVsamIndexes();
 			copyConnectors();
 			layoutConnectionParts();
 			layoutConnectionLabels();
@@ -324,7 +326,37 @@ public class UpdateLayoutManager implements ILayoutManager {
 				}
 			}
 		}		
-	}	
+	}
+	
+	private void layoutVsamIndexes() {
+		for (var targetRecord : targetSchema.getRecords()) {
+			// traverse all sets in which the record participates as a member
+			var i = 0; // new VSAM index counter
+			for (var targetMemberRole : targetRecord.getMemberRoles()) {
+				// we're only interested in VSAM indexes
+				if (targetMemberRole.getSet().getVsamIndex() != null) {					
+					// VSAM index encountered, see if the VSAM index was already defined on the record in the reference schema
+					// and, if so, copy its diagram location
+					var targetVsamIndex = targetMemberRole.getSet().getVsamIndex();
+					var referenceMemberRole = getReferenceMemberRole(targetMemberRole);
+					if (referenceMemberRole != null && referenceMemberRole.getSet().getVsamIndex() != null) {
+						var referenceVsamIndex = referenceMemberRole.getSet().getVsamIndex();
+						var referenceLocation = referenceVsamIndex.getDiagramLocation();
+						setDiagramLocation(targetVsamIndex, referenceLocation.getX(), referenceLocation.getY());
+					}
+					// if no diagram location is set, create one; all new VSAM indexes will be placed above the record, next to
+					// each other
+					if (targetVsamIndex.getDiagramLocation() == null) {
+						var x = targetRecord.getDiagramLocation().getX() + 25 * i - 11;
+						var y = targetRecord.getDiagramLocation().getY() - RecordFigure.UNSCALED_HEIGHT + 5;
+						setDiagramLocation(targetVsamIndex, x, y);
+						// next new VSAM index will be located to the right of this one:
+						i += 1; 
+					}
+				}
+			}
+		}		
+	}
 
 	private void setDiagramLocation(ConnectionLabel connectionLabel, int x, int y) {
 		var location = SchemaFactory.eINSTANCE.createDiagramLocation();
@@ -352,6 +384,15 @@ public class UpdateLayoutManager implements ILayoutManager {
 		targetLocation.setX(x);
 		targetLocation.setY(y);		
 		targetLocation.setEyecatcher("system owner " + systemOwner.getSet().getName());
+	}
+	
+	private void setDiagramLocation(VsamIndex vsamIndex, int x, int y) {
+		var targetLocation = SchemaFactory.eINSTANCE.createDiagramLocation();
+		vsamIndex.getSet().getSchema().getDiagramData().getLocations().add(targetLocation);
+		vsamIndex.setDiagramLocation(targetLocation);
+		targetLocation.setX(x);
+		targetLocation.setY(y);		
+		targetLocation.setEyecatcher("VSAM index " + vsamIndex.getSet().getName());
 	}
 
 }
