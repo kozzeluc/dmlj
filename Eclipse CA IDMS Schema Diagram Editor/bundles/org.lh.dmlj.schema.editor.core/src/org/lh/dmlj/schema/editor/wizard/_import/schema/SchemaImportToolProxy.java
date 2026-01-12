@@ -536,8 +536,9 @@ public final class SchemaImportToolProxy {
 			handleCalcKey(schemaRecord, recordContext, dataCollector);
 		} else if (schemaRecord.getLocationMode() == LocationMode.VIA) {
 			handleViaSpecification(schemaRecord, recordContext, dataCollector);
-		} else if (schemaRecord.getLocationMode() == LocationMode.VSAM || schemaRecord.getLocationMode() == LocationMode.VSAM_CALC) {
-			handleVsamType(schemaRecord, recordContext, dataCollector);		
+		}
+		if (schemaRecord.getLocationMode() == LocationMode.VSAM || schemaRecord.getLocationMode() == LocationMode.VSAM_CALC) {
+			handleVsamType(schemaRecord, recordContext, dataCollector);
 		}
 	
 		// deal with the record's offset expression
