@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,20 +16,24 @@
  */
 package org.lh.dmlj.schema.editor.dsl.builder.model;
 
-import static java.util.stream.Collectors.joining;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
 
 public final class Utils {
 	
 	public static String getSchemadslFileContents(File file) throws IOException {
-		try (var lines = Files.lines(file.toPath())) {
-			return lines
-					.map(Utils::toImprovedLine)
-					.collect(joining(System.lineSeparator()));
+		var contents = new StringBuilder();
+		try (var fr = new FileReader(file); var in = new BufferedReader(fr)) {
+			for (var line = in.readLine(); line != null; line = in.readLine()) {
+				if (!contents.isEmpty()) {
+					contents.append(System.lineSeparator());
+				}
+				contents.append(toImprovedLine(line));
+			}
 		}
+		return contents.toString();
 	}
 	
 	private static String toImprovedLine(String line) {
