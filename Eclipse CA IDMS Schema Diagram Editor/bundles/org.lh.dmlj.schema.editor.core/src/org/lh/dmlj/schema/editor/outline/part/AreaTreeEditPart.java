@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.lh.dmlj.schema.AreaSpecification;
+import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaPackage;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -252,6 +253,17 @@ public class AreaTreeEditPart extends AbstractSchemaTreeEditPart<SchemaArea> {
 				.map(AreaSpecification::getSystemOwner)
 				.filter(Objects::nonNull)
 				.map(SystemOwner::getSet)
+				.sorted(Comparator.comparing(Set::getName, String.CASE_INSENSITIVE_ORDER))
+				.map(Set::getSystemOwner)
+				.toList());
+		// add the area's user owned indexed sets in alphabetical order
+		children.addAll(getModel().getAreaSpecifications().stream()
+				.map(AreaSpecification::getRecord)
+				.filter(Objects::nonNull)
+				.map(SchemaRecord::getOwnerRoles)
+				.flatMap(List::stream)
+				.map(OwnerRole::getSet)
+				.filter(Set::isIndexed)
 				.sorted(Comparator.comparing(Set::getName, String.CASE_INSENSITIVE_ORDER))
 				.toList());
 		return children;
