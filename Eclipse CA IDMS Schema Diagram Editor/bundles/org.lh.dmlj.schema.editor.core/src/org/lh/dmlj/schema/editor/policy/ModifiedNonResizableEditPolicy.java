@@ -50,7 +50,7 @@ public class ModifiedNonResizableEditPolicy extends NonResizableEditPolicy {
 	
 	@Override
 	public Command getCommand(Request request) {
-		return fixCommandIfNeeded(request, super.getCommand(request), getHost());
+		return fixCommandIfNeeded(request, super.getCommand(request), GraphicalEditPart.class.cast(getHost()));
 	}
 	
 	Command fixCommandIfNeeded(Request request, Command command, GraphicalEditPart host) {
