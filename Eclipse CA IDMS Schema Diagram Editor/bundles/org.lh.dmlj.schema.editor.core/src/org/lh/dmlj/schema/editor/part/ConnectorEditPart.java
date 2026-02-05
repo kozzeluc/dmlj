@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -190,6 +190,13 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 		var set = getModel().getConnectionPart().getMemberRole().getSet();
 		var adjustedSetName = Tools.removeTrailingUnderscore(set.getName());
 		figure.setName(adjustedSetName);
+	}
+	
+	@Override
+	protected void refreshConnections() {
+		var connectionPart = getModel().getConnectionPart();
+		var editPart = EditPart.class.cast(getViewer().getEditPartRegistry().get(connectionPart));
+		editPart.refresh();
 	}
 	
 }

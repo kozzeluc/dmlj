@@ -1,0 +1,1299 @@
+name 'NEWSCHEM'
+version 1
+
+diagram {
+    label {
+        x '-38'
+        y 494
+        width 178
+        height 45
+    }
+    showRulersAndGuides
+    showGrid
+    snapToGuides
+    snapToGrid
+}
+
+area 'RECORD-1-AREA'
+
+area 'NEW-INDEX-1-AREA'
+
+area 'VSAM-AREA'
+
+record 'NEW-RECORD-1' {
+    shareStructure 'NEW-RECORD-1 version 1'
+    recordId 10
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 304
+        y 228
+    }
+}
+
+record 'NEW-RECORD-2' {
+    shareStructure 'NEW-RECORD-2 version 1'
+    recordId 11
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 304
+        y 57
+    }
+}
+
+record 'NEW-RECORD-3' {
+    shareStructure 'NEW-RECORD-3 version 1'
+    recordId 12
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 551
+        y 57
+    }
+}
+
+record 'NEW-RECORD-4' {
+    shareStructure 'NEW-RECORD-4 version 1'
+    recordId 13
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 646
+        y 228
+    }
+}
+
+record 'NEW-RECORD-5' {
+    shareStructure 'NEW-RECORD-5 version 1'
+    recordId 14
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 551
+        y 399
+    }
+}
+
+record 'NEW-RECORD-6' {
+    shareStructure 'NEW-RECORD-6 version 1'
+    recordId 15
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 304
+        y 399
+    }
+}
+
+record 'NEW-RECORD-7' {
+    shareStructure 'NEW-RECORD-7 version 1'
+    recordId 16
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 57
+        y 399
+    }
+}
+
+record 'NEW-RECORD-8' {
+    shareStructure 'NEW-RECORD-8 version 1'
+    recordId 17
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x '-38'
+        y 228
+    }
+}
+
+record 'NEW-RECORD-9' {
+    shareStructure 'NEW-RECORD-9 version 1'
+    recordId 18
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 57
+        y 57
+    }
+}
+
+record 'NEW-RECORD-10' {
+    shareStructure 'NEW-RECORD-10 version 1'
+    recordId 19
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 798
+        y 57
+    }
+}
+
+record 'NEW-RECORD-11' {
+    shareStructure 'NEW-RECORD-11 version 1'
+    recordId 20
+
+    area 'RECORD-1-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 798
+        y 399
+    }
+}
+
+record 'NEW-RECORD-12' {
+    shareStructure 'NEW-RECORD-12 version 1'
+    recordId 10
+
+    vsamCalc {
+        element 'ELEMENT-1'
+        duplicates 'NOT ALLOWED'
+    }
+
+    area 'VSAM-AREA'
+
+    elements """
+        02 ELEMENT-1 picture X(8)
+    """
+
+    diagram {
+        x 303
+        y 551
+    }
+}
+
+set 'NEW-SET-1' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 1
+        prior 2
+    }
+
+    member 'NEW-RECORD-2' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 374
+                y 122
+            }
+        }
+    }
+}
+
+set 'NEW-SET-2' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 3
+        prior 4
+    }
+
+    member 'NEW-RECORD-4' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 589
+                y 247
+            }
+        }
+    }
+}
+
+set 'NEW-SET-3' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 5
+        prior 6
+    }
+
+    member 'NEW-RECORD-6' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 375
+                y 378
+            }
+        }
+    }
+}
+
+set 'NEW-SET-4' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 7
+        prior 8
+    }
+
+    member 'NEW-RECORD-8' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 114
+                y 247
+            }
+        }
+    }
+}
+
+set 'NEW-SET-5' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 9
+        prior 10
+    }
+
+    member 'NEW-RECORD-9' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 253
+                y 156
+            }
+
+            line {
+                start {
+                    x 38
+                    y 0
+                }
+
+                bendpoint {
+                    x 38
+                    y '-55'
+                }
+
+                bendpoint {
+                    x '-57'
+                    y '-55'
+                }
+
+                bendpoint {
+                    x '-57'
+                    y '-145'
+                }
+
+                end {
+                    x 130
+                    y 26
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-6' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 11
+        prior 12
+    }
+
+    member 'NEW-RECORD-7' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 252
+                y 347
+            }
+
+            line {
+                start {
+                    x 38
+                    y 53
+                }
+
+                bendpoint {
+                    x 38
+                    y 114
+                }
+
+                bendpoint {
+                    x '-56'
+                    y 114
+                }
+
+                bendpoint {
+                    x '-56'
+                    y 195
+                }
+
+                end {
+                    x 130
+                    y 24
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-7' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 13
+        prior 14
+    }
+
+    member 'NEW-RECORD-3' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 447
+                y 155
+            }
+
+            line {
+                start {
+                    x 94
+                    y 0
+                }
+
+                bendpoint {
+                    x 94
+                    y '-57'
+                }
+
+                bendpoint {
+                    x 191
+                    y '-57'
+                }
+
+                bendpoint {
+                    x 191
+                    y '-144'
+                }
+
+                end {
+                    x 0
+                    y 27
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-8' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 15
+        prior 16
+    }
+
+    member 'NEW-RECORD-5' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 446
+                y 347
+            }
+
+            line {
+                start {
+                    x 95
+                    y 53
+                }
+
+                bendpoint {
+                    x 95
+                    y 114
+                }
+
+                bendpoint {
+                    x 190
+                    y 114
+                }
+
+                bendpoint {
+                    x 190
+                    y 197
+                }
+
+                end {
+                    x 0
+                    y 26
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-9' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 17
+        prior 18
+    }
+
+    member 'NEW-RECORD-9' {
+        next 4
+        prior 5
+        owner 6
+
+        diagram {
+            label {
+                x 277
+                y 197
+            }
+
+            line {
+                start {
+                    x 22
+                    y 0
+                }
+
+                bendpoint {
+                    x 22
+                    y '-36'
+                }
+
+                bendpoint {
+                    x '-132'
+                    y '-35'
+                }
+
+                end {
+                    x 114
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-10' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 19
+        prior 20
+    }
+
+    member 'NEW-RECORD-9' {
+        next 7
+        prior 8
+        owner 9
+
+        diagram {
+            label {
+                x 124
+                y 225
+            }
+
+            line {
+                start {
+                    x 0
+                    y 11
+                }
+
+                bendpoint {
+                    x '-184'
+                    y 12
+                }
+
+                end {
+                    x 63
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-11' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 21
+        prior 22
+    }
+
+    member 'NEW-RECORD-3' {
+        next 4
+        prior 5
+        owner 6
+
+        diagram {
+            label {
+                x 422
+                y 197
+            }
+
+            line {
+                start {
+                    x 113
+                    y 0
+                }
+
+                bendpoint {
+                    x 113
+                    y '-37'
+                }
+
+                bendpoint {
+                    x 265
+                    y '-37'
+                }
+
+                end {
+                    x 19
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-12' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 23
+        prior 24
+    }
+
+    member 'NEW-RECORD-3' {
+        next 7
+        prior 8
+        owner 9
+
+        diagram {
+            label {
+                x 563
+                y 224
+            }
+
+            line {
+                start {
+                    x 130
+                    y 13
+                }
+
+                bendpoint {
+                    x 309
+                    y 11
+                }
+
+                end {
+                    x 62
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-13' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 25
+        prior 26
+    }
+
+    member 'NEW-RECORD-7' {
+        next 4
+        prior 5
+        owner 6
+
+        diagram {
+            label {
+                x 131
+                y 273
+            }
+
+            line {
+                start {
+                    x 0
+                    y 37
+                }
+
+                bendpoint {
+                    x '-178'
+                    y 38
+                }
+
+                end {
+                    x 69
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-14' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 27
+        prior 28
+    }
+
+    member 'NEW-RECORD-7' {
+        next 7
+        prior 8
+        owner 9
+
+        diagram {
+            label {
+                x 273
+                y 308
+            }
+
+            line {
+                start {
+                    x 18
+                    y 53
+                }
+
+                bendpoint {
+                    x 18
+                    y 95
+                }
+
+                bendpoint {
+                    x '-135'
+                    y 94
+                }
+
+                end {
+                    x 111
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-15' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 29
+        prior 30
+    }
+
+    member 'NEW-RECORD-5' {
+        next 4
+        prior 5
+        owner 6
+
+        diagram {
+            label {
+                x 561
+                y 270
+            }
+
+            line {
+                start {
+                    x 130
+                    y 37
+                }
+
+                bendpoint {
+                    x 305
+                    y 37
+                }
+
+                end {
+                    x 58
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-16' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-1' {
+        next 31
+        prior 32
+    }
+
+    member 'NEW-RECORD-5' {
+        next 7
+        prior 8
+        owner 9
+
+        diagram {
+            label {
+                x 422
+                y 307
+            }
+
+            line {
+                start {
+                    x 114
+                    y 53
+                }
+
+                bendpoint {
+                    x 114
+                    y 94
+                }
+
+                bendpoint {
+                    x 268
+                    y 94
+                }
+
+                end {
+                    x 21
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-17' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-9' {
+        next 10
+        prior 11
+    }
+
+    member 'NEW-RECORD-8' {
+        next 4
+        prior 5
+        owner 6
+
+        diagram {
+            label {
+                x 28
+                y 208
+            }
+
+            line {
+                start {
+                    x 28
+                    y 53
+                }
+
+                connectors {
+                    label 'D'
+
+                    connector {
+                        x 76
+                        y 133
+                    }
+
+                    connector {
+                        x 66
+                        y 162
+                    }
+                }
+
+                end {
+                    x 114
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-18' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-3' {
+        next 10
+        prior 11
+    }
+
+    member 'NEW-RECORD-4' {
+        next 4
+        prior 5
+        owner 6
+
+        diagram {
+            label {
+                x 669
+                y 205
+            }
+
+            line {
+                start {
+                    x 114
+                    y 53
+                }
+
+                end {
+                    x 19
+                    y 0
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-19' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-5' {
+        next 10
+        prior 11
+    }
+
+    member 'NEW-RECORD-4' {
+        next 7
+        prior 8
+        owner 9
+
+        diagram {
+            label {
+                x 684
+                y 285
+            }
+
+            line {
+                start {
+                    x 86
+                    y 0
+                }
+
+                connectors {
+                    label 'C'
+
+                    connector {
+                        x 627
+                        y 342
+                    }
+
+                    connector {
+                        x 665
+                        y 323
+                    }
+                }
+
+                end {
+                    x 29
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-20' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-7' {
+        next 10
+        prior 11
+    }
+
+    member 'NEW-RECORD-8' {
+        next 7
+        prior 8
+        owner 9
+
+        diagram {
+            label {
+                x 27
+                y 289
+            }
+
+            line {
+                start {
+                    x 19
+                    y 0
+                }
+
+                end {
+                    x 114
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-21' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-4' {
+        next 10
+        prior 11
+    }
+
+    member 'NEW-RECORD-10' {
+        next 1
+        prior 2
+        owner 3
+
+        diagram {
+            label {
+                x 813
+                y 184
+            }
+
+            line {
+                start {
+                    x 100
+                    y '-1'
+                }
+
+                bendpoint {
+                    x 172
+                    y '-56'
+                }
+
+                end {
+                    x 51
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-22' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-11' {
+        next 1
+        prior 2
+    }
+
+    member 'NEW-RECORD-4' {
+        next 12
+        prior 13
+        owner 14
+
+        diagram {
+            label {
+                x 843
+                y 350
+            }
+
+            line {
+                start {
+                    x 53
+                    y '-1'
+                }
+
+                bendpoint {
+                    x 26
+                    y '-68'
+                }
+
+                end {
+                    x 104
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-23' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-11' {
+        next 3
+        prior 4
+    }
+
+    member 'NEW-RECORD-10' {
+        next 4
+        prior 5
+        owner 6
+
+        diagram {
+            label {
+                x 919
+                y 249
+            }
+
+            line {
+                start {
+                    x 114
+                    y 0
+                }
+
+                bendpoint {
+                    x 115
+                    y '-161'
+                }
+
+                connectors {
+                    label 'A'
+
+                    connector {
+                        x 969
+                        y 228
+                    }
+
+                    connector {
+                        x 969
+                        y 190
+                    }
+                }
+
+                bendpoint {
+                    x 180
+                    y '-317'
+                }
+
+                end {
+                    x 130
+                    y 26
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-SET-24' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-5' {
+        next 12
+        prior 13
+    }
+
+    member 'NEW-RECORD-11' {
+        next 5
+        prior 6
+        owner 7
+
+        diagram {
+            label {
+                x 722
+                y 475
+            }
+
+            line {
+                start {
+                    x 130
+                    y 27
+                }
+
+                bendpoint {
+                    x 162
+                    y 26
+                }
+
+                connectors {
+                    label 'B'
+
+                    connector {
+                        x 703
+                        y 513
+                    }
+
+                    connector {
+                        x 798
+                        y 513
+                    }
+                }
+
+                bendpoint {
+                    x 296
+                    y 123
+                }
+
+                end {
+                    x 48
+                    y 53
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-INDEX-1' {
+    order 'LAST'
+
+    index 'NEW-INDEX-1'
+
+    systemOwner {
+        area 'NEW-INDEX-1-AREA'
+
+        diagram {
+            x 35
+            y 13
+        }
+    }
+
+    member 'NEW-RECORD-9' {
+
+        diagram {
+            label {
+                x 62
+                y 13
+            }
+        }
+    }
+}
+
+set 'NEW-SET-25' {
+    order 'LAST'
+
+    owner 'NEW-RECORD-11' {
+        next 8
+        prior 9
+    }
+
+    member 'NEW-RECORD-10' {
+        next 7
+        prior 8
+        owner 9
+
+        diagram {
+            label {
+                x 950
+                y 437
+            }
+
+            line {
+                start {
+                    x 130
+                    y 36
+                }
+
+                bendpoint {
+                    x 211
+                    y 35
+                }
+
+                connectors {
+                    label 'E'
+
+                    connector {
+                        x 1045
+                        y 285
+                    }
+
+                    connector {
+                        x 1051
+                        y 203
+                    }
+                }
+
+                bendpoint {
+                    x 202
+                    y '-374'
+                }
+
+                end {
+                    x 130
+                    y 13
+                }
+            }
+        }
+    }
+}
+
+set 'NEW-VSAM-INDEX-1' {
+    order 'SORTED'
+
+    vsamIndex {
+        x 281
+        y 507
+    }
+
+    member 'NEW-RECORD-12' {
+
+        key {
+            ascending 'ELEMENT-1'
+            duplicates 'NOT ALLOWED'
+        }
+
+        diagram {
+            label {
+                x 308
+                y 507
+            }
+        }
+    }
+}

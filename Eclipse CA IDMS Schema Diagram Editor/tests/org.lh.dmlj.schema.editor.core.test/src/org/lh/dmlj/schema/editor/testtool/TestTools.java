@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,8 +35,6 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.gef.commands.Command;
@@ -66,6 +64,7 @@ import org.lh.dmlj.schema.editor.command.ChangeSetOrderCommand;
 import org.lh.dmlj.schema.editor.command.DeleteBendpointCommand;
 import org.lh.dmlj.schema.editor.command.LockEndpointsCommand;
 import org.lh.dmlj.schema.editor.command.MakeRecordDirectCommand;
+import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
 import org.lh.dmlj.schema.editor.prefix.Pointer;
 import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.Prefix;
@@ -608,18 +607,18 @@ public abstract class TestTools {
 	}
 
 	public static Schema getSchema(String path) {
-		
-		URI uri = URI.createFileURI(new File(path).getAbsolutePath());
-		
-		ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry()
-		   		   .getExtensionToFactoryMap()
-		   		   .put("schema", new XMIResourceFactoryImpl());
-		Resource resource = resourceSet.getResource(uri, true);
-		Schema schema = (Schema) resource.getContents().get(0);
-		
-		return schema;		
-		
+		if (path.endsWith(".schema")) {
+			var uri = URI.createFileURI(new File(path).getAbsolutePath());
+			var resourceSet = new ResourceSetImpl();
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("schema", new XMIResourceFactoryImpl());
+			var resource = resourceSet.getResource(uri, true);
+			return (Schema) resource.getContents().get(0);		
+		} else if (path.endsWith(".schemadsl")) {
+			var file = new File(path);
+			return ModelFromDslBuilderForJava.schema(file);
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public static Set getSet(Schema schema, String setName) {

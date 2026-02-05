@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.PlatformUI;
+import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
 import org.lh.dmlj.schema.KeyElement;
@@ -408,6 +409,11 @@ public final class Tools {
 	
 	private static void writeToFileAsDSL(Schema schema, File file) throws IOException {
 		writeToFile(new SchemaSyntaxBuilder().build(schema), file);
+	}
+	
+	public static boolean isAtOwnerSideOfSet(SchemaRecord schemaRecord, ConnectionPart connectionPart) {
+		var set = connectionPart.getMemberRole().getSet();
+		return set.getOwner() != null && schemaRecord == set.getOwner().getRecord();
 	}
 	
 	private Tools() {
