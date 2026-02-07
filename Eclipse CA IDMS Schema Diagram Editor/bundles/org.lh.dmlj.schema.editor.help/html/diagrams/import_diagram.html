@@ -93,9 +93,17 @@ Enter the names of the <b>database procedures</b> you use for <i>compression</i>
 <br><br>
 <img src="../../images/import_syntax_options.png" alt="[import from syntax options]">
 <br><br>
-You also can help the import tool in determining the correct <b>base record- and record synonym names</b> if there is a 
-relation with their record ids. Note that there is only 1 method to have these 100% correct: import your schema
-diagrams directly from your dictionaries...
+You also can help the import tool in determining the correct <b>base record- and record synonym names</b>, e.g. if there is a 
+relation with their record ids; you can also create a file where you list all record suffixes:
+<pre>
+RECORD-1-100=-100
+RECORD-2-200=-200
+...
+</pre>
+Note that there is only 1 method to have these 100% correct: import your schema diagrams directly from your dictionaries...
+<br><br>
+<b>Warning:</b><br>
+It is possible that you encounter issues when importing a diagram from schema syntax because the implementation is not perfect.
 <a id="dictionary"><h2>Importing from a Dictionary</h2></a>
 Although it is fairly easy to import diagrams from schema <i>syntax</i>, it is much more efficient and precise to import
 diagrams directly from an <b>IDMS application dictionary</b>. In order to be able to import schema diagrams from a 
