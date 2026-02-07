@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,11 +23,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.ui.PlatformUI;
 import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.common.Pair;
@@ -38,6 +42,7 @@ import org.lh.dmlj.schema.editor.importtool.ISchemaImportTool;
 import org.lh.dmlj.schema.editor.wizard._import.schema.GeneralContextAttributeKeys;
 
 public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
+	private static final String IMPORT_CANCELLED = "Import cancelled.";
 	private static final String PREFIX = "prefix";
 	private static final String SUFFIX = "suffix";
 	private static final String BASE_SUFFIX = "baseSuffix";
@@ -50,6 +55,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 	private IDataEntryContext dataEntryContext;
 	private File file;
 	private IPromptForDigitCountResolver promptForDigitCountResolver; // used only when TESTing
+	private HashMap<String, String> suffixMap;
 	
 	private static String pad(short number, int length) {
 		var p = new StringBuilder();
@@ -430,21 +436,60 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 				}
 			}
 		}
-		
-		// no prefix/suffix mismatch or no control fields available - use the record-id as a suffix if 
-		// (and only if) the user selected one of the available options, while also honoring the digit count
-		// assigned to the selected option
-		var digitCount = getDigitCount(context, recordDataCollector, controlElementName);
-		if (digitCount != -1) {
-			// get the record id
-			var recordId = recordDataCollector.getRecordId(context);				
-			// add a suffix containing the record-id		
-			var suffix = "-" + pad(recordId, digitCount);		
-			context.getProperties().put(SUFFIX, suffix);
-			setContainsBaseNamesFlag(context, null, suffix);
+				
+		handleSuffix(context, recordDataCollector, controlElementName);
+	}
+	
+	private void handleSuffix(SchemaSyntaxWrapper context, IRecordDataCollector<SchemaSyntaxWrapper> recordDataCollector, String controlElementName) {
+		var promptForSuffixFile = dataEntryContext.<Boolean>getAttribute(SyntaxContextAttributeKeys.PROMPT_FOR_SUFFIX_FILE).booleanValue();
+		if (promptForSuffixFile) {
+			createSuffixMapIFNotExists();
+			var recordName = recordDataCollector.getName(context);
+			if (suffixMap.containsKey(recordName)) {
+				var suffix = suffixMap.get(recordName);
+				context.getProperties().put(SUFFIX, suffix);
+				setContainsBaseNamesFlag(context, null, suffix);
+			}
+		} else {
+			var digitCount = getDigitCount(context, recordDataCollector, controlElementName);
+			if (digitCount != -1) {
+				// get the record id
+				var recordId = recordDataCollector.getRecordId(context);
+				// add a suffix containing the record-id		
+				var suffix = "-" + pad(recordId, digitCount);
+				context.getProperties().put(SUFFIX, suffix);
+				setContainsBaseNamesFlag(context, null, suffix);
+			}
 		}
 	}
 	
+	private void createSuffixMapIFNotExists() {
+		if (suffixMap != null) {
+			return;
+		}
+		suffixMap = new HashMap<>();
+		var dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+		dialog.setText("Select Suffix File");
+		var suffixFilePath = dialog.open();
+		if (suffixFilePath == null) {
+			throw new IllegalStateException(IMPORT_CANCELLED);
+		}
+		try (var fr = new FileReader(new File(suffixFilePath)); var in = new BufferedReader(fr)) {
+			for (var line = in.readLine(); line != null; line = in.readLine()) {
+				var i = line.indexOf("=");
+				if (i > -1) {
+					var recordName = line.substring(0, i);
+					var suffix = line.substring(i + 1);
+					if (!suffix.isEmpty()) {
+						suffixMap.put(recordName, suffix);
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
 	private List<String> getAllElementNames(SchemaSyntaxWrapper context) {
 		var allElementNames = new ArrayList<String>();
 		var inElementSyntax = false;
@@ -539,7 +584,7 @@ public class ImportFromSchemaSyntaxTool implements ISchemaImportTool {
 				// prompt for digit count
 				var dialog = new PromptForDigitCountDialog(Display.getCurrent().getActiveShell(), context, recordDataCollector, controlElementName);			
 				if (dialog.open() == IDialogConstants.CANCEL_ID) {
-					throw new IllegalStateException("Import cancelled.");
+					throw new IllegalStateException(IMPORT_CANCELLED);
 				}
 				digitCount = dialog.getSelectedDigitCount();
 			}
