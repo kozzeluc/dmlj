@@ -42,6 +42,8 @@ import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.lh.dmlj.schema.editor.dictguide.DictguidesRegistry;
+import org.lh.dmlj.schema.editor.job.CheckEnableAutoscaleSystemPropertyJob;
+import org.lh.dmlj.schema.editor.job.DSLWarmUpJob;
 import org.lh.dmlj.schema.editor.log.LogProvidingPlugin;
 import org.lh.dmlj.schema.editor.log.Logger;
 import org.lh.dmlj.schema.editor.preference.PreferenceConstants;
@@ -256,6 +258,8 @@ public class Plugin extends AbstractUIPlugin implements IPropertyChangeListener,
 		}
 		
 		hookWorkbenchListener();
+		
+		new CheckEnableAutoscaleSystemPropertyJob().schedule(15000);
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,7 +14,7 @@
  * 
  * Contact information: kozzeluc@gmail.com.
  */
-package org.lh.dmlj.schema.editor;
+package org.lh.dmlj.schema.editor.job;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +24,7 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
+import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.AreaSyntaxBuilder;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.RecordSyntaxBuilder;
