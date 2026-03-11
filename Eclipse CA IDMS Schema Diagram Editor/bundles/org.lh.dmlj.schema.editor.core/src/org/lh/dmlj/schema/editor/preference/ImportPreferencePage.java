@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -40,61 +40,38 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.wizard._import.schema.AddProcedureDialog;
 
 public class ImportPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-
-	private Button 	btnRemoveProcedure;
-	private List 	listProcedures;
-	
-	/**
-	 * @wbp.parser.constructor
-	 */
+	private Button btnRemoveProcedure;
+	private List listProcedures;
+		
 	public ImportPreferencePage() {
-		super();
 		setDescription("Import settings:");
 	}
 
 	@Override
 	protected Control createContents(Composite parent) {
-		
-		final Composite container = new Composite(parent, SWT.NONE);		
-		GridLayout layout = new GridLayout(3, false);
+		var container = new Composite(parent, SWT.NONE);		
+		var layout = new GridLayout(3, false);
 		container.setLayout(layout);
 		
-		Label lblNewLabel = new Label(container, SWT.NONE);
+		var lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 		lblNewLabel.setText("Database procedures used for COMPRESSION:");
 		
 		listProcedures = new List(container, SWT.BORDER);
-		GridData gd_list = new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 3);
-		gd_list.widthHint = 100;
-		listProcedures.setLayoutData(gd_list);
+		var gdList = new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 3);
+		gdList.widthHint = 100;
+		listProcedures.setLayoutData(gdList);
 		
-		Label label = new Label(container, SWT.NONE);
-		GridData gd_label = new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1);
-		gd_label.heightHint = 25;
-		label.setLayoutData(gd_label);
+		var label = new Label(container, SWT.NONE);
+		var gdLabel = new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1);
+		gdLabel.heightHint = 25;
+		label.setLayoutData(gdLabel);
 		
-		Button btnAddProcedure = new Button(container, SWT.NONE);
+		var btnAddProcedure = new Button(container, SWT.NONE);
 		btnAddProcedure.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				java.util.List<String> currentList = 
-					new ArrayList<>(Arrays.asList(listProcedures.getItems()));
-				AddProcedureDialog dialog = 
-					new AddProcedureDialog(container.getShell(), currentList);
-				if (dialog.open() == IDialogConstants.OK_ID) {
-					listProcedures.removeAll();
-					currentList.add(dialog.getProcedureName());
-					Collections.sort(currentList);
-					int i = 0;
-					for (String procedureName : currentList) {
-						listProcedures.add(procedureName);
-						if (procedureName.equals(dialog.getProcedureName())) {
-							listProcedures.select(i);
-						}
-						i += 1;
-					}
-					enableOrDisable();
-				}
+				addProcedure();
 			}
 		});
 		btnAddProcedure.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, false, 1, 1));
@@ -106,10 +83,7 @@ public class ImportPreferencePage extends PreferencePage implements IWorkbenchPr
 		btnRemoveProcedure.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int i = listProcedures.getSelectionIndex();
-				listProcedures.deselect(i);
-				listProcedures.remove(i);
-				enableOrDisable();
+				removeProcedure();
 			}
 		});
 		btnRemoveProcedure.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -127,11 +101,32 @@ public class ImportPreferencePage extends PreferencePage implements IWorkbenchPr
 		initializeValues();
 		
 		return container;
-		
 	}
 	
-	private void doChecks() {
-		// nothing to check
+	private void addProcedure() {
+		var currentList =new ArrayList<>(Arrays.asList(listProcedures.getItems()));
+		var dialog = new AddProcedureDialog(getShell(), currentList);
+		if (dialog.open() == IDialogConstants.OK_ID) {
+			listProcedures.removeAll();
+			currentList.add(dialog.getProcedureName());
+			Collections.sort(currentList);
+			int i = 0;
+			for (var procedureName : currentList) {
+				listProcedures.add(procedureName);
+				if (procedureName.equals(dialog.getProcedureName())) {
+					listProcedures.select(i);
+				}
+				i += 1;
+			}
+			enableOrDisable();
+		}		
+	}
+	
+	private void removeProcedure() {
+		var i = listProcedures.getSelectionIndex();
+		listProcedures.deselect(i);
+		listProcedures.remove(i);
+		enableOrDisable();
 	}
 
 	@Override
@@ -145,44 +140,31 @@ public class ImportPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	private void fillProcedureList(String procedures) {
 		listProcedures.removeAll();
-		java.util.List<String> procedureNames = new ArrayList<>();
-		StringTokenizer tokenizer = new StringTokenizer(procedures.trim(), ",");
+		var procedureNames = new ArrayList<String>();
+		var tokenizer = new StringTokenizer(procedures.trim(), ",");
 		while (tokenizer.hasMoreTokens()) {
-			String procedureName = tokenizer.nextToken().trim(); // we assume this is valid
+			var procedureName = tokenizer.nextToken().trim(); // we assume this is valid
 			procedureNames.add(procedureName);
 		}
 		Collections.sort(procedureNames);
-		for (String procedureName : procedureNames) {
+		for (var procedureName : procedureNames) {
 			listProcedures.add(procedureName);
 		}
 	}
 	
 	@Override
 	public void init(IWorkbench workbench) {
+		// nothing to do here
 	}
 	
 	private void initializeDefaults() {
-		
-		IPreferenceStore store = getPreferenceStore();
-				
-		fillProcedureList(store.getDefaultString(PreferenceConstants.COMPRESSION_PROCEDURES));
-		
-		doChecks();
-		
+		fillProcedureList(getPreferenceStore().getDefaultString(PreferenceConstants.COMPRESSION_PROCEDURES));
 		enableOrDisable();
-		
 	}	
 	
 	private void initializeValues() {		
-		
-		IPreferenceStore store = getPreferenceStore();
-		
-		fillProcedureList(store.getString(PreferenceConstants.COMPRESSION_PROCEDURES));		
-		
-		doChecks();
-		
+		fillProcedureList(getPreferenceStore().getString(PreferenceConstants.COMPRESSION_PROCEDURES));		
 		enableOrDisable();
-		
 	}
 	
 	@Override
@@ -203,19 +185,16 @@ public class ImportPreferencePage extends PreferencePage implements IWorkbenchPr
 	}
 	
 	private boolean storeValues() {
-		
 		setErrorMessage(null);
 		
-		IPreferenceStore store = getPreferenceStore();
-		
-		StringBuilder p = new StringBuilder();
-		for (String procedure : listProcedures.getItems()) {
-			if (p.length() > 0) {
+		var p = new StringBuilder();
+		for (var procedure : listProcedures.getItems()) {
+			if (!p.isEmpty()) {
 				p.append(", ");
 			}
 			p.append(procedure);
 		}
-		store.setValue(PreferenceConstants.COMPRESSION_PROCEDURES, p.toString());			
+		getPreferenceStore().setValue(PreferenceConstants.COMPRESSION_PROCEDURES, p.toString());			
 		
 		return true;
 	}

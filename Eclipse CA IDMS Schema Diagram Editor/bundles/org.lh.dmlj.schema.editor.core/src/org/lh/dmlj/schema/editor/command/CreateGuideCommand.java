@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,12 +21,11 @@ import org.lh.dmlj.schema.Ruler;
 import org.lh.dmlj.schema.SchemaFactory;
 
 public class CreateGuideCommand extends ModelChangeBasicCommand {
-
-	private Ruler ruler;
+	private final Ruler ruler;
+	private final int position;
+	
 	private Guide guide; 	
-	
-	private int position;	
-	
+		
 	public CreateGuideCommand(Ruler ruler, int position) {
 		super("Add Guide");
 		this.ruler = ruler;
@@ -37,7 +36,7 @@ public class CreateGuideCommand extends ModelChangeBasicCommand {
 	public void execute() {		
 		guide = SchemaFactory.eINSTANCE.createGuide();
 		guide.setPosition(position);
-		redo();							
+		redo();
 	}
 	
 	@Override

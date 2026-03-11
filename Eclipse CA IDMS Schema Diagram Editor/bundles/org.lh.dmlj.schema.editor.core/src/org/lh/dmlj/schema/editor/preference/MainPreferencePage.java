@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -31,38 +31,29 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.lh.dmlj.schema.editor.Plugin;
 
 public class MainPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	
 	private static final String FILE_EXTENSION_SCHEMA = "schema";
 	private static final String FILE_EXTENSION_SCHEMADSL = "schemadsl";
 	
 	private Button btnLogDiagnosticMessages;
-	private Label  lbldontCheckThis;
-	private Button btnReadOnlyMode;	
-	private Group grpDefaultFileExtension;
+	private Button btnReadOnlyMode;
 	private Button btnFileExtensionSchema;
 	private Button btnFileExtensionSchemadsl;
-	private Group grpCloseschemadslEditors;
 	private Button btnCloseSchemaDslYes;
 	private Button btnCloseSchemaDslNo;
 	private Button btnCloseSchemaDslAskMe;
 	private Button btnRunDslWarmUpJobOnStartup;
-
-	/**
-	 * @wbp.parser.constructor
-	 */
+	
 	public MainPreferencePage() {
-		super();
 		setDescription("General Settings:");
 	}
 	
 	@Override
 	protected Control createContents(Composite parent) {
-		
-		Composite container = new Composite(parent, SWT.NONE);		
-		GridLayout layout = new GridLayout(1, false);
+		var container = new Composite(parent, SWT.NONE);		
+		var layout = new GridLayout(1, false);
 		container.setLayout(layout);
 		
-		grpDefaultFileExtension = new Group(container, SWT.NONE);
+		var grpDefaultFileExtension = new Group(container, SWT.NONE);
 		grpDefaultFileExtension.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		grpDefaultFileExtension.setText("Default File Extension");
 		grpDefaultFileExtension.setLayout(new GridLayout(2, false));
@@ -73,11 +64,11 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnFileExtensionSchemadsl = new Button(grpDefaultFileExtension, SWT.RADIO);
 		btnFileExtensionSchemadsl.setText(".schemadsl (DSL)");
 		
-		grpCloseschemadslEditors = new Group(container, SWT.NONE);
+		var grpCloseschemadslEditors = new Group(container, SWT.NONE);
 		grpCloseschemadslEditors.setLayout(new GridLayout(3, false));
-		GridData gd_grpCloseschemadslEditors = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_grpCloseschemadslEditors.verticalIndent = 5;
-		grpCloseschemadslEditors.setLayoutData(gd_grpCloseschemadslEditors);
+		var gdGrpCloseschemadslEditors = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gdGrpCloseschemadslEditors.verticalIndent = 5;
+		grpCloseschemadslEditors.setLayoutData(gdGrpCloseschemadslEditors);
 		grpCloseschemadslEditors.setText("Close editors on workbench shutdown (.schemadsl files only) ?");
 		
 		btnCloseSchemaDslYes = new Button(grpCloseschemadslEditors, SWT.RADIO);
@@ -90,9 +81,9 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnCloseSchemaDslAskMe.setText("Ask me");
 		
 		btnRunDslWarmUpJobOnStartup = new Button(container, SWT.CHECK);
-		GridData gd_btnRunDslWarmUpJobOnStartup = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_btnRunDslWarmUpJobOnStartup.verticalIndent = 10;
-		btnRunDslWarmUpJobOnStartup.setLayoutData(gd_btnRunDslWarmUpJobOnStartup);
+		var gdBtnRunDslWarmUpJobOnStartup = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdBtnRunDslWarmUpJobOnStartup.verticalIndent = 10;
+		btnRunDslWarmUpJobOnStartup.setLayoutData(gdBtnRunDslWarmUpJobOnStartup);
 		btnRunDslWarmUpJobOnStartup.setText("Run DSL warm up job on startup");
 				
 		btnReadOnlyMode = new Button(container, SWT.CHECK);
@@ -103,20 +94,16 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		btnLogDiagnosticMessages.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, 2, 1));
 		btnLogDiagnosticMessages.setText("Log diagnostic messages to the workspace log");
 				
-		lbldontCheckThis = new Label(container, SWT.NONE);
-		GridData gd_lbldontCheckThis = new GridData(SWT.LEFT, SWT.FILL, false, false, 2, 1);
-		gd_lbldontCheckThis.verticalIndent = -5;
-		gd_lbldontCheckThis.horizontalIndent = 17;
-		lbldontCheckThis.setLayoutData(gd_lbldontCheckThis);
+		var lbldontCheckThis = new Label(container, SWT.NONE);
+		var gdLbldontCheckThis = new GridData(SWT.LEFT, SWT.FILL, false, false, 2, 1);
+		gdLbldontCheckThis.verticalIndent = -5;
+		gdLbldontCheckThis.horizontalIndent = 17;
+		lbldontCheckThis.setLayoutData(gdLbldontCheckThis);
 		lbldontCheckThis.setText("(don't check this option unless asked)");
 		
 		initializeValues();
 		
 		return container;
-	}
-
-	private void doChecks() {
-		// no checks to perform so far
 	}
 	
 	@Override
@@ -125,61 +112,52 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	}	
 
 	@Override
-	public void init(IWorkbench workbench) {		
+	public void init(IWorkbench workbench) {
+		// nothing to do here
 	}
 	
 	private void initializeDefaults() {
+		var store = getPreferenceStore();
 		
-		IPreferenceStore store = getPreferenceStore();
-		
-		String defaultFileExtension = store.getDefaultString(PreferenceConstants.DEFAULT_FILE_EXTENSION);
+		var defaultFileExtension = store.getDefaultString(PreferenceConstants.DEFAULT_FILE_EXTENSION);
 		btnFileExtensionSchema.setSelection(defaultFileExtension.equals(FILE_EXTENSION_SCHEMA));
 		btnFileExtensionSchemadsl.setSelection(defaultFileExtension.equals(FILE_EXTENSION_SCHEMADSL));
 		
-		int closeSchemaDslEditors = store.getDefaultInt(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS);
+		var closeSchemaDslEditors = store.getDefaultInt(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS);
 		btnCloseSchemaDslYes.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_YES);
 		btnCloseSchemaDslNo.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_NO);
 		btnCloseSchemaDslAskMe.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
 		
-		boolean runDslWarmUpJobOnStartup = store.getDefaultBoolean(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP);
+		var runDslWarmUpJobOnStartup = store.getDefaultBoolean(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP);
 		btnRunDslWarmUpJobOnStartup.setSelection(runDslWarmUpJobOnStartup);
 		
-		boolean readOnlyMode = store.getDefaultBoolean(PreferenceConstants.READ_ONLY_MODE);
+		var readOnlyMode = store.getDefaultBoolean(PreferenceConstants.READ_ONLY_MODE);
 		btnReadOnlyMode.setSelection(readOnlyMode);
 		
-		boolean logDiagnosticMessages = 
-			store.getDefaultBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
-		btnLogDiagnosticMessages.setSelection(logDiagnosticMessages);
-		
-		doChecks();		
-		
+		var logDiagnosticMessages = store.getDefaultBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
+		btnLogDiagnosticMessages.setSelection(logDiagnosticMessages);	
 	}	
 	
 	private void initializeValues() {		
+		var store = getPreferenceStore();
 		
-		IPreferenceStore store = getPreferenceStore();
-		
-		String defaultFileExtension = store.getString(PreferenceConstants.DEFAULT_FILE_EXTENSION);
+		var defaultFileExtension = store.getString(PreferenceConstants.DEFAULT_FILE_EXTENSION);
 		btnFileExtensionSchema.setSelection(defaultFileExtension.equals(FILE_EXTENSION_SCHEMA));
 		btnFileExtensionSchemadsl.setSelection(defaultFileExtension.equals(FILE_EXTENSION_SCHEMADSL));
 		
-		int closeSchemaDslEditors = store.getInt(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS);
+		var closeSchemaDslEditors = store.getInt(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS);
 		btnCloseSchemaDslYes.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_YES);
 		btnCloseSchemaDslNo.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_NO);
 		btnCloseSchemaDslAskMe.setSelection(closeSchemaDslEditors == PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK);
 		
-		boolean runDslWarmUpJobOnStartup = store.getBoolean(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP);
+		var runDslWarmUpJobOnStartup = store.getBoolean(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP);
 		btnRunDslWarmUpJobOnStartup.setSelection(runDslWarmUpJobOnStartup);
 		
-		boolean readOnlyMode = store.getBoolean(PreferenceConstants.READ_ONLY_MODE);
+		var readOnlyMode = store.getBoolean(PreferenceConstants.READ_ONLY_MODE);
 		btnReadOnlyMode.setSelection(readOnlyMode);
 		
-		boolean logDiagnosticMessages = 
-			store.getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
+		var logDiagnosticMessages = store.getBoolean(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES);
 		btnLogDiagnosticMessages.setSelection(logDiagnosticMessages);
-		
-		doChecks();
-		
 	}
 	
 	@Override
@@ -199,15 +177,8 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 	}
 
 	private boolean storeValues() {
-		
 		setErrorMessage(null);
-		
-		IPreferenceStore store = getPreferenceStore();
-		
-		String defaultFileExtension = 
-			btnFileExtensionSchemadsl.getSelection() ? FILE_EXTENSION_SCHEMADSL : FILE_EXTENSION_SCHEMA;
-		store.setValue(PreferenceConstants.DEFAULT_FILE_EXTENSION, defaultFileExtension);
-		
+		var defaultFileExtension = btnFileExtensionSchemadsl.getSelection() ? FILE_EXTENSION_SCHEMADSL : FILE_EXTENSION_SCHEMA;
 		int closeSchemaDslEditors;
 		if (btnCloseSchemaDslYes.getSelection()) {
 			closeSchemaDslEditors = PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_YES;
@@ -216,13 +187,13 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		} else {
 			closeSchemaDslEditors = PreferenceConstants.CLOSE_SCHEMADSL_EDITORS_ASK;
 		}
+		var store = getPreferenceStore();
+		store.setValue(PreferenceConstants.DEFAULT_FILE_EXTENSION, defaultFileExtension);
 		store.setValue(PreferenceConstants.CLOSE_SCHEMADSL_EDITORS, closeSchemaDslEditors);
-		
-		store.setValue(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP, Boolean.valueOf(btnRunDslWarmUpJobOnStartup.getSelection()));		
-		store.setValue(PreferenceConstants.READ_ONLY_MODE, Boolean.valueOf(btnReadOnlyMode.getSelection()));		
-		store.setValue(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, 
-					   Boolean.valueOf(btnLogDiagnosticMessages.getSelection()));
-		
+		store.setValue(PreferenceConstants.RUN_DSL_WARM_UP_JOB_ON_STARTUP, btnRunDslWarmUpJobOnStartup.getSelection());
+		store.setValue(PreferenceConstants.READ_ONLY_MODE, btnReadOnlyMode.getSelection());
+		store.setValue(PreferenceConstants.LOG_DIAGNISTIC_MESSAGES, btnLogDiagnosticMessages.getSelection());
 		return true;
-	}	
+	}
+	
 }

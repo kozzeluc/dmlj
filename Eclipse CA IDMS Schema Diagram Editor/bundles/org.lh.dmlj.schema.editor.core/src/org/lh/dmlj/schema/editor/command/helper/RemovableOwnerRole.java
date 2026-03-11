@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,14 +19,12 @@ package org.lh.dmlj.schema.editor.command.helper;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
-import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerRemoval;
 import org.lh.dmlj.schema.editor.prefix.PrefixUtil;
 
 public class RemovableOwnerRole extends AbstractRemovableRole<OwnerRole> {
-	
-	private SchemaRecord record;
+	private SchemaRecord schemaRecord;
 	private int indexOfRoleInRecordsOwnerRoles;
 	private PrefixForPointerRemoval prefix;
 	
@@ -39,9 +37,9 @@ public class RemovableOwnerRole extends AbstractRemovableRole<OwnerRole> {
 	}
 	
 	private void rememberRecordData() {
-		record = role.getRecord();
-		indexOfRoleInRecordsOwnerRoles = record.getOwnerRoles().indexOf(role);
-		PointerType[] definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		schemaRecord = role.getRecord();
+		indexOfRoleInRecordsOwnerRoles = schemaRecord.getOwnerRoles().indexOf(role);
+		var definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
 		prefix = PrefixFactory.newPrefixForPointerRemoval(role, definedPointerTypes);
 	}
 	
@@ -56,7 +54,7 @@ public class RemovableOwnerRole extends AbstractRemovableRole<OwnerRole> {
 	
 	private void removeRecordData() {
 		prefix.removePointers();
-		record.getOwnerRoles().remove(role);
+		schemaRecord.getOwnerRoles().remove(role);
 	}
 	
 	private void removeSetData() {
@@ -69,7 +67,7 @@ public class RemovableOwnerRole extends AbstractRemovableRole<OwnerRole> {
 	}
 	
 	private void restoreRecordData() {
-		record.getOwnerRoles().add(indexOfRoleInRecordsOwnerRoles, role);
+		schemaRecord.getOwnerRoles().add(indexOfRoleInRecordsOwnerRoles, role);
 		prefix.reset();	
 	}
 	

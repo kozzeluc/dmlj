@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,117 +22,86 @@ import org.lh.dmlj.schema.OffsetExpression;
 import org.lh.dmlj.schema.SchemaFactory;
 
 /**
- * A Command class to change 1 or more attributes in an AreaSpecification and its (optional) 
- * OffsetExpression.
+ * A Command class to change 1 or more attributes in an AreaSpecification and its (optional) OffsetExpression.
  */
 public class ChangeAreaSpecificationCommand extends ModelChangeBasicCommand {
+	private static final String LOGIC_ERROR_SYMBOLIC_SUBAREA_NULL = "logic error: symbolic subarea != null";
+
+	private final AreaSpecification areaSpecification;
 	
-	private AreaSpecification 	areaSpecification;
-	
-	private String  		 oldSymbolicSubareaName;
+	private String oldSymbolicSubareaName;
 	private OffsetExpression oldOffsetExpression;
-	private Integer 		 oldOffsetPageCount;
-	private Short   		 oldOffsetPercent;
-	private Integer 		 oldPageCount;
-	private Short   		 oldPercent;
+	private Integer oldOffsetPageCount;
+	private Short oldOffsetPercent;
+	private Integer oldPageCount;
+	private Short oldPercent;
 	
-	private String  		 newSymbolicSubareaName;
-	private Integer 		 newOffsetPageCount;
-	private Short   		 newOffsetPercent;
-	private Integer 		 newPageCount;
-	private Short   		 newPercent;
+	private final String newSymbolicSubareaName;
+	private final Integer newOffsetPageCount;
+	private final Short newOffsetPercent;
+	private final Integer newPageCount;
+	private final Short newPercent;
 	
-	private static void createOffsetExpression(
-		AreaSpecification areaSpecification, Integer offsetPageCount, Short offsetPercent, 
-		Integer pageCount, Short percent) {
+	private static void createOffsetExpression(AreaSpecification areaSpecification, Integer offsetPageCount,
+			Short offsetPercent, Integer pageCount, Short percent) {
 
 		// make sure neither symbolic subarea and offset expression are set
-		Assert.isTrue(areaSpecification.getSymbolicSubareaName() == null,
-					  "logic error: symbolic subarea != null");
-		Assert.isTrue(areaSpecification.getOffsetExpression() == null,
-					  "logic error: offset expression != null");
+		Assert.isTrue(areaSpecification.getSymbolicSubareaName() == null, LOGIC_ERROR_SYMBOLIC_SUBAREA_NULL);
+		Assert.isTrue(areaSpecification.getOffsetExpression() == null, "logic error: offset expression != null");
 
-		// only create an offset expression if the attribute values are different from the defaults
-		// (OFFSET 0 PAGES FOR 100 PERCENT)
-		if (offsetPageCount != null && offsetPageCount.intValue() != 0 ||
-			percent != null && percent.shortValue() != 100 ||
-			offsetPercent != null || pageCount != null) {
-
-			// offset expression contains non default values, so go ahead and create it
-			OffsetExpression offsetExpression = SchemaFactory.eINSTANCE.createOffsetExpression();
+		// only create an offset expression if the attribute values are different from the defaults (OFFSET 0
+		// PAGES FOR 100 PERCENT)
+		if (offsetPageCount != null && offsetPageCount.intValue() != 0 || percent != null && percent.shortValue() != 100 || offsetPercent != null || pageCount != null) {
+			var offsetExpression = SchemaFactory.eINSTANCE.createOffsetExpression();
 			offsetExpression.setOffsetPageCount(offsetPageCount);
 			offsetExpression.setOffsetPercent(offsetPercent);
 			offsetExpression.setPageCount(pageCount);
 			offsetExpression.setPercent(percent);
 			areaSpecification.setOffsetExpression(offsetExpression);
-
 		}
 
 	}	
 	
-	private static void maintainOffsetExpression(
-		AreaSpecification areaSpecification, Integer offsetPageCount, Short offsetPercent, 
-		Integer pageCount, Short percent) {
+	private static void maintainOffsetExpression(AreaSpecification areaSpecification, Integer offsetPageCount,
+			Short offsetPercent, Integer pageCount, Short percent) {
 
 		// make sure no symbolic subarea is set
-		Assert.isTrue(areaSpecification.getSymbolicSubareaName() == null,
-					  "logic error: symbolic subarea != null");
+		Assert.isTrue(areaSpecification.getSymbolicSubareaName() == null, LOGIC_ERROR_SYMBOLIC_SUBAREA_NULL);
 
-		// depending on the presence or absence of an offset expression, either create it or modify 
-		// it
+		// depending on the presence or absence of an offset expression, either create it or modify it
 		if (areaSpecification.getOffsetExpression() != null) {
-
-			// offset expression present; we only need one if the (new) attribute values are 
-			// different from the default (0 PAGES FOR 0 PERCENT)
-			modifyOrRemoveOffsetExpression(areaSpecification, offsetPageCount, offsetPercent, 
-										   pageCount, percent);
-
+			// offset expression present; we only need one if the (new) attribute values are different from the
+			// default (0 PAGES FOR 0 PERCENT)
+			modifyOrRemoveOffsetExpression(areaSpecification, offsetPageCount, offsetPercent, pageCount, percent);
 		} else {
-
-			// no offset expression is present; we only need one if the (new) attribute values are 
-			// different from the default (0 PAGES FOR 0 PERCENT)
-			createOffsetExpression(areaSpecification, offsetPageCount, offsetPercent, pageCount, 
-								   percent);
-
+			// no offset expression is present; we only need one if the (new) attribute values are different from
+			// the default (0 PAGES FOR 0 PERCENT)
+			createOffsetExpression(areaSpecification, offsetPageCount, offsetPercent, pageCount, percent);
 		}
 
 	}
 	
-	private static void modifyOrRemoveOffsetExpression(
-		AreaSpecification areaSpecification, Integer offsetPageCount, Short offsetPercent, 
-		Integer pageCount, Short percent) {
+	private static void modifyOrRemoveOffsetExpression(AreaSpecification areaSpecification, Integer offsetPageCount,
+			Short offsetPercent, Integer pageCount, Short percent) {
 
 		// make sure no symbolic subarea is set and that an offset expression currently exists
-		Assert.isTrue(areaSpecification.getSymbolicSubareaName() == null,
-					  "logic error: symbolic subarea != null");
-		Assert.isTrue(areaSpecification.getOffsetExpression() != null,
-					  "logic error: offset expression == null");
+		Assert.isTrue(areaSpecification.getSymbolicSubareaName() == null, LOGIC_ERROR_SYMBOLIC_SUBAREA_NULL);
+		Assert.isTrue(areaSpecification.getOffsetExpression() != null, "logic error: offset expression == null");
 
-		if (offsetPageCount == null || offsetPageCount.intValue() != 0 || percent == null || 
-			percent.intValue() != 100) {
-
+		if (offsetPageCount == null || offsetPageCount.intValue() != 0 || percent == null || percent.intValue() != 100) {
 			// offset expression contains non default values
 			OffsetExpression offsetExpression = areaSpecification.getOffsetExpression();
 			offsetExpression.setOffsetPageCount(offsetPageCount);
 			offsetExpression.setOffsetPercent(offsetPercent);
 			offsetExpression.setPageCount(pageCount);
 			offsetExpression.setPercent(percent);
-
 		} else {
-
-			// nullify the offsetExpression because the default values apply (0 PAGES FOR 0 PERCENT)
 			areaSpecification.setOffsetExpression(null);
-
 		}
-
 	}	
 	
-	public ChangeAreaSpecificationCommand(AreaSpecification areaSpecification,
-										  String newSymbolicSubareaName,
-										  Integer newOffsetPageCount,
-										  Short newOffsetPercent,
-										  Integer newPageCount,
-										  Short newPercent) {
+	public ChangeAreaSpecificationCommand(AreaSpecification areaSpecification, String newSymbolicSubareaName,
+			Integer newOffsetPageCount, Short newOffsetPercent, Integer newPageCount, Short newPercent) {
 		
 		super("Change area specification");	
 		this.areaSpecification = areaSpecification;
@@ -145,60 +114,40 @@ public class ChangeAreaSpecificationCommand extends ModelChangeBasicCommand {
 
 	@Override
 	public void execute() {
-		
 		// make sure an area specification is supplied
 		Assert.isNotNull(areaSpecification, "area specification");
 		
 		// perform some integrity checks on the new data
-		Assert.isTrue(!(newSymbolicSubareaName != null &&
-			    		(newOffsetPageCount != null || 
-			    		 newOffsetPercent != null || newPageCount != null ||
-			    		 newPercent != null)), 
-			    	  "logic error: cannot change area specification to " +
-			    	  "contain both a subarea and offset expression data");
+		Assert.isTrue(!(newSymbolicSubareaName != null && (newOffsetPageCount != null || newOffsetPercent != null ||
+				newPageCount != null || newPercent != null)), "logic error: cannot change area specification to " +
+			    	"contain both a subarea and offset expression data");
 		if (newSymbolicSubareaName == null) {
-			Assert.isTrue(!(newOffsetPageCount != null &&
-						    newOffsetPercent != null), 
-		    	    	  "logic error: cannot set both an offset page " +
-		    	    	  "count and offset percent in an offset expression");
-			Assert.isTrue(newOffsetPageCount != null || newOffsetPercent != null, 
-				    	  "logic error: need to set an offset page count or " +
-				    	  "offset percent in an offset expression");
-			Assert.isTrue(!(newPageCount != null && newPercent != null), 
-						  "logic error: cannot set both a page count and " +
-						  "percent in an offset expression");
-			Assert.isTrue(newPageCount != null || newPercent != null, 
-						  "logic error: need to set a page count or percent " +
-						  "in an offset expression");
+			Assert.isTrue(!(newOffsetPageCount != null && newOffsetPercent != null),
+					"logic error: cannot set both an offset page count and offset percent in an offset expression");
+			Assert.isTrue(newOffsetPageCount != null || newOffsetPercent != null,
+					"logic error: need to set an offset page count or offset percent in an offset expression");
+			Assert.isTrue(!(newPageCount != null && newPercent != null),
+					"logic error: cannot set both a page count and percent in an offset expression");
+			Assert.isTrue(newPageCount != null || newPercent != null,
+					"logic error: need to set a page count or percent in an offset expression");
 		}
 		
 		// save the old data and perform some integrity checks
 		oldSymbolicSubareaName = areaSpecification.getSymbolicSubareaName();
 		oldOffsetExpression = areaSpecification.getOffsetExpression();
-		Assert.isTrue(!(oldSymbolicSubareaName != null &&
-					    oldOffsetExpression != null), 
-					  "logic error: area specification with both a subarea " +
-					  "and an offset expression");
+		Assert.isTrue(!(oldSymbolicSubareaName != null && oldOffsetExpression != null),
+				"logic error: area specification with both a subarea and an offset expression");
 		if (oldOffsetExpression != null) {
-			Assert.isTrue(!(oldOffsetExpression.getOffsetPageCount() != null &&
-				    	    oldOffsetExpression.getOffsetPercent() != null), 
-				    	  "logic error: offset expression with both an " +
-				    	  "offset page count and offset percent");
-			Assert.isTrue(oldOffsetExpression.getOffsetPageCount() != null ||
-		    	    	  oldOffsetExpression.getOffsetPercent() != null, 
-		    	    	  "logic error: offset expression must contain an " +
-					 	  "offset page count or offset percent");
-			Assert.isTrue(!(oldOffsetExpression.getPageCount() != null &&
-							oldOffsetExpression.getPercent() != null), 
-						  "logic error: offset expression with both a page " +
-					 	  "count and percent");
-			Assert.isTrue(oldOffsetExpression.getPageCount() != null ||
-						  oldOffsetExpression.getPercent() != null, 
-						  "logic error: offset expression must contain a " +
-						  "page count or percent");
-			// we need the individual attributes as well since undoing the command has to produce
-			// the original OffsetExpression instance but we could be changing attributes on that 
-			// instance as well
+			Assert.isTrue(!(oldOffsetExpression.getOffsetPageCount() != null && oldOffsetExpression.getOffsetPercent() != null), 
+					"logic error: offset expression with both an offset page count and offset percent");
+			Assert.isTrue(oldOffsetExpression.getOffsetPageCount() != null || oldOffsetExpression.getOffsetPercent() != null, 
+					"logic error: offset expression must contain an offset page count or offset percent");
+			Assert.isTrue(!(oldOffsetExpression.getPageCount() != null && oldOffsetExpression.getPercent() != null), 
+					"logic error: offset expression with both a page count and percent");
+			Assert.isTrue(oldOffsetExpression.getPageCount() != null || oldOffsetExpression.getPercent() != null, 
+					"logic error: offset expression must contain a page count or percent");
+			// we need the individual attributes as well since undoing the command has to produce the original
+			// OffsetExpression instance but we could be changing attributes on that instance as well
 			oldOffsetPageCount = oldOffsetExpression.getOffsetPageCount();
 			oldOffsetPercent = oldOffsetExpression.getOffsetPercent();
 			oldPageCount = oldOffsetExpression.getPageCount();
@@ -207,69 +156,31 @@ public class ChangeAreaSpecificationCommand extends ModelChangeBasicCommand {
 		
 		// perform the change(s)
 		redo();
-		
 	}
 	
 	@Override
 	public void redo() {
-	
 		if (oldSymbolicSubareaName != null) {
-			
-			// the area specification contains a symbolic subarea
-			
 			if (newSymbolicSubareaName != null) {
-				
-				// modify the symbolic subarea in the area specification
-				areaSpecification.setSymbolicSubareaName(newSymbolicSubareaName);
-				
-			} else {
-				
-				// nullify the symbolic subarea in the area specification 
-				// because the user has removed it or explicitly specified the
-				// offset expression himself
+				areaSpecification.setSymbolicSubareaName(newSymbolicSubareaName);	
+			} else {					
 				areaSpecification.setSymbolicSubareaName(null);
-				
-				// if the user has specified any of the offset expression data,
-				// set them in the area specification's offset expression, 
-				// unless they contain the default values (0 PAGES FOR 0 
-				// PERCENT), in that case, keep the null offset expression
-				maintainOffsetExpression(areaSpecification, newOffsetPageCount, 
-										 newOffsetPercent, newPageCount, 
-										 newPercent);
-				
+				maintainOffsetExpression(areaSpecification, newOffsetPageCount, newOffsetPercent, newPageCount, newPercent);
 			}
-			
-		} else {
-			
-			// the area specification does NOT contain a symbolic subarea
-			
+		} else {	
 			if (newSymbolicSubareaName != null) {
-				
-				// the user has specified a symbolic subarea, which means we 
-				// have to nullify the offset expression
 				areaSpecification.setOffsetExpression(null);
-				
-				// set the newly specified symbolic subarea in the area 
-				// specification
 				areaSpecification.setSymbolicSubareaName(newSymbolicSubareaName);
-				
-			} else {
-				
-				// maintain the offset expression using the new attributes
-				maintainOffsetExpression(areaSpecification, newOffsetPageCount, 
-										 newOffsetPercent, newPageCount, 
-										 newPercent);
-				
+			} else {					
+				maintainOffsetExpression(areaSpecification, newOffsetPageCount, newOffsetPercent, newPageCount, newPercent);
 			}
 		}
-		
 	}
 	
 	@Override
 	public void undo() {
 		areaSpecification.setSymbolicSubareaName(oldSymbolicSubareaName);
 		if (oldOffsetExpression != null) {
-			// restore the original offset expression attributes
 			oldOffsetExpression.setOffsetPageCount(oldOffsetPageCount);
 			oldOffsetExpression.setOffsetPercent(oldOffsetPercent);
 			oldOffsetExpression.setPageCount(oldPageCount);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,19 +21,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 public class SetShortAttributeCommand extends ModelChangeBasicCommand {
-	
-	private EObject owner;
-	private EStructuralFeature[] features;
+	private final EObject owner;
+	private final EStructuralFeature[] features;
+	private final short newValue;
 	
 	private short oldValue;
-	private short newValue;		
 
-	public SetShortAttributeCommand(EObject owner, EAttribute attribute, short newValue, 
-									String attributeLabel) {
-		
+	public SetShortAttributeCommand(EObject owner, EAttribute attribute, short newValue, String attributeLabel) {
 		super("Set '" + attributeLabel + "' to '" + newValue + "'");
 		this.owner = owner;
-		this.features = new EStructuralFeature[] {attribute};
+		this.features = new EStructuralFeature[] { attribute };
 		oldValue = (short) owner.eGet(attribute);
 		this.newValue = newValue;
 	}
@@ -47,4 +44,5 @@ public class SetShortAttributeCommand extends ModelChangeBasicCommand {
 	public void undo() {
 		owner.eSet(features[0], oldValue);
 	}
+	
 }

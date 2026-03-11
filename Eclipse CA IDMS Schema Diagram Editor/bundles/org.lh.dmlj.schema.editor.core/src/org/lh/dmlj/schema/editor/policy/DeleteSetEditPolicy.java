@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,16 +21,13 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
-import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class DeleteSetEditPolicy extends ComponentEditPolicy {
-	
 	private Set set;
 	
 	public DeleteSetEditPolicy(Set set) {
-		super();
 		this.set = set;
 	}
 	
@@ -47,9 +44,9 @@ public class DeleteSetEditPolicy extends ComponentEditPolicy {
 		} else {
 			modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 		}
-		ModelChangeContext context = new ModelChangeContext(modelChangeType);
-		context.putContextData(set);
-		IModelChangeCommand command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
+		var context = new ModelChangeContext(modelChangeType);
+		context.putContextData(set, ModelChangeContext.setContextDataAssembler);
+		var command = DeleteSetOrIndexCommandCreationAssistant.getCommand(set);
 		command.setContext(context); 
 		return (Command) command;
 	}

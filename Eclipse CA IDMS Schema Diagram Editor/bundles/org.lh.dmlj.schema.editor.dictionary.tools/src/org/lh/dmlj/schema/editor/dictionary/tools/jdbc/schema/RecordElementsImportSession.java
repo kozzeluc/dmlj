@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,23 +20,19 @@ import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.DictionarySession;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
 
 public class RecordElementsImportSession extends DictionarySession {
-	
-	private String recordSynonymName;
-	private int recordSynonymVersion;
+	private final String recordSynonymName;
+	private final int recordSynonymVersion;
 
 	public RecordElementsImportSession(Dictionary dictionary, String recordSynonymName) {
-
-		super(dictionary, "Import record elements from record synonym " + recordSynonymName + 
-			  " version ? from dictionary " + dictionary.getId());
+		super(dictionary, "Import record elements from record synonym " + recordSynonymName +
+				" version ? from dictionary " + dictionary.getId());
 		this.recordSynonymName = recordSynonymName;
 		this.recordSynonymVersion = -1;
 	}	
 	
-	public RecordElementsImportSession(Dictionary dictionary, String recordSynonymName, 
-									   int recordSynonymVersion) {
-		
-		super(dictionary, "Import record elements from record synonym " + recordSynonymName + 
-			  " version " + recordSynonymVersion + " from dictionary " + dictionary.getId());
+	public RecordElementsImportSession(Dictionary dictionary, String recordSynonymName, int recordSynonymVersion) {
+		super(dictionary, "Import record elements from record synonym " + recordSynonymName +
+				" version " + recordSynonymVersion + " from dictionary " + dictionary.getId());
 		this.recordSynonymName = recordSynonymName;
 		this.recordSynonymVersion = recordSynonymVersion;
 	}

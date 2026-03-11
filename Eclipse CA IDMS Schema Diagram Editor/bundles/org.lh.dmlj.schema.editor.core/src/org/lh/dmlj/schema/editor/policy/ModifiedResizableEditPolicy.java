@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,17 +16,12 @@
  */
 package org.lh.dmlj.schema.editor.policy;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.DiagramNode;
-import org.lh.dmlj.schema.ResizableDiagramNode;
-import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.ResizeDiagramNodeCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -42,43 +37,29 @@ public class ModifiedResizableEditPolicy extends ResizableEditPolicy {
 		}
 	}
 	
-	private static void putModelChangeContext(ModelChangeContext context,
-											  ResizableDiagramNode diagramNode) {
-		
-		// since the diagram label is the only diagram node type we can resize, there is no need to
-		// put any context data at the moment
-	}
-
-	public ModifiedResizableEditPolicy() {
-		super();
-	}
-	
 	@Override
 	protected Command getResizeCommand(ChangeBoundsRequest request) {
-		
 		// make sure the resize request is for just 1 (resizable diagram node) edit part
-		List<?> editParts = request.getEditParts(); 
+		var editParts = request.getEditParts(); 
 		Assert.isTrue(editParts.size() == 1, "only 1 resizable diagram node expected");
-		Assert.isTrue(editParts.get(0) instanceof AbstractResizableDiagramNodeEditPart, 
-					  "expected a resizable diagram node");		
+		Assert.isTrue(editParts.get(0) instanceof AbstractResizableDiagramNodeEditPart, "expected a resizable diagram node");
 		
 		// get the resizable diagram node
-		AbstractResizableDiagramNodeEditPart<?> editPart = 
-			(AbstractResizableDiagramNodeEditPart<?>) editParts.get(0); 
-		ResizableDiagramNode diagramNode = editPart.getModel();
+		var editPart = (AbstractResizableDiagramNodeEditPart<?>) editParts.get(0); 
+		var diagramNode = editPart.getModel();
 		
 		// calculate the new (unscaled) width and height
-		Dimension delta = request.getSizeDelta();		
-		double zoomLevel = editPart.getZoomLevel();
-		short newWidth = (short) (diagramNode.getWidth() + delta.width / zoomLevel);
-		short newHeight = (short) (diagramNode.getHeight() + delta.height / zoomLevel);
+		var delta = request.getSizeDelta();		
+		var zoomLevel = editPart.getZoomLevel();
+		var newWidth = (short) (diagramNode.getWidth() + delta.width / zoomLevel);
+		var newHeight = (short) (diagramNode.getHeight() + delta.height / zoomLevel);
 		
-		ModelChangeContext context = new ModelChangeContext(getModelChangeType(diagramNode));
-		putModelChangeContext(context, diagramNode);
-		IModelChangeCommand command = 
-			new ResizeDiagramNodeCommand(diagramNode, newWidth, newHeight);
+		var context = new ModelChangeContext(getModelChangeType(diagramNode));
+		// since the diagram label is the only diagram node type we can resize, there is no need to put any
+		// context data at the moment
+		var command = new ResizeDiagramNodeCommand(diagramNode, newWidth, newHeight);
 		command.setContext(context);
-		return (Command) command;
+		return command;
 	}
 	
 }

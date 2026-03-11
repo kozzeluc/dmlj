@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -26,18 +26,17 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.SchemaRecord;
 
 public class PreviewPage extends WizardPage {
-	
 	private String recordElementsDSL;
 	private Text textDSL;
 
-	public PreviewPage(SchemaRecord record) {
+	public PreviewPage(SchemaRecord schemaRecord) {
 		super("previewPage");
-		setTitle("Elements for Record " + record.getName());
+		setTitle("Elements for Record " + schemaRecord.getName());
 		setDescription("Review the record elements DSL");
 	}
 
 	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
+		var container = new Composite(parent, SWT.NULL);
 		setControl(container);
 		container.setLayout(new GridLayout(1, false));
 		

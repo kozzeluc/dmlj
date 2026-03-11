@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -28,41 +28,26 @@ public class ConnectionWithConnectorsFilter implements IFilter {
 
 	@Override
 	public boolean select(Object object) {
-		if (!(object instanceof EditPart)) {
-			return false;
+		if (object instanceof EditPart editPart) {
+	        var modelObject = editPart.getModel();        
+	        if (modelObject instanceof ConnectionLabel connectionLabel) {
+	        		var connectionPartCount = connectionLabel.getMemberRole().getConnectionParts().size(); 
+	        		return connectionPartCount > 1;
+	        } else if (modelObject instanceof ConnectionPart connectionPart) {
+	            var connectionPartCount = connectionPart.getMemberRole().getConnectionParts().size(); 
+	            return connectionPartCount > 1;
+	        } else if (modelObject instanceof Connector connector) {
+	            var connectionPartCount = connector.getConnectionPart().getMemberRole().getConnectionParts().size(); 
+	            return connectionPartCount > 1;
+	        } else if (modelObject instanceof SystemOwner systemOwner) {
+	            var connectionPartCount = systemOwner.getSet().getMembers().get(0).getConnectionParts().size();
+	            return connectionPartCount > 1;
+	        } else if (modelObject instanceof VsamIndex vsamIndex) {
+	        		var connectionPartCount = vsamIndex.getMemberRole().getConnectionParts().size();
+	        		return connectionPartCount > 1;
+	        }
 		}
-        Object modelObject = ((EditPart) object).getModel();        
-        if (modelObject instanceof ConnectionLabel) {
-        	ConnectionLabel connectionLabel = (ConnectionLabel) modelObject;
-        	int connectionPartCount = 
-        		connectionLabel.getMemberRole().getConnectionParts().size(); 
-        	return connectionPartCount > 1;
-        } else if (modelObject instanceof ConnectionPart) {
-            ConnectionPart connectionPart = (ConnectionPart) modelObject;
-            int connectionPartCount = 
-            	connectionPart.getMemberRole().getConnectionParts().size(); 
-            return connectionPartCount > 1;
-        } else if (modelObject instanceof Connector) {
-            Connector connector = (Connector) modelObject;
-            int connectionPartCount = connector.getConnectionPart()
-            			 					   .getMemberRole()
-            			 					   .getConnectionParts().size(); 
-            return connectionPartCount > 1;
-        } else if (modelObject instanceof SystemOwner) {
-            SystemOwner systemOwner = (SystemOwner) modelObject;
-            int connectionPartCount = systemOwner.getSet()
-            			   						 .getMembers()
-            			   						 .get(0)
-            			   						 .getConnectionParts()
-            			   						 .size(); 
-            return connectionPartCount > 1;
-        } else if (modelObject instanceof VsamIndex) {
-        	VsamIndex vsamIndex = (VsamIndex) modelObject;
-        	int connectionPartCount = vsamIndex.getMemberRole().getConnectionParts().size();
-        	return connectionPartCount > 1;
-        } else {
-        	return false;
-        }        
+        return false;
 	}
 
 }

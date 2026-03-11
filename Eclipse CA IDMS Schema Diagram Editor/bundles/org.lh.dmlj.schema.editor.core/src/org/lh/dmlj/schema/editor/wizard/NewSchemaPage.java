@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -35,12 +35,8 @@ public class NewSchemaPage extends WizardNewFileCreationPage {
 	
 	public File getSchemaFile() {
 		try {
-			return ResourcesPlugin.getWorkspace()
-			  					  .getRoot()
-					  			  .getFile(getContainerFullPath().append(getFileName()))
-					  			  .getLocation()
-					  			  .toFile();
-		} catch (Throwable t) {
+			return ResourcesPlugin.getWorkspace().getRoot().getFile(getContainerFullPath().append(getFileName())).getLocation().toFile();
+		} catch (Exception e) {
 			return null;
 		}
     }
@@ -49,14 +45,13 @@ public class NewSchemaPage extends WizardNewFileCreationPage {
 	protected boolean validatePage() {
 		setErrorMessage(null);
 		if (super.validatePage()) {
-			String extension = new Path(getFileName()).getFileExtension();
-	        if (extension == null || 
-	        	!(extension.equals("schema") || extension.equals("schemadsl"))) {
-	        	
-	        	setErrorMessage("The file extension must be '.schema' or '.schemadsl'");
-	        	return false;
+			var extension = new Path(getFileName()).getFileExtension();
+	        if (extension == null || !(extension.equals("schema") || extension.equals("schemadsl"))) {
+	        		setErrorMessage("The file extension must be '.schema' or '.schemadsl'");
+	        		return false;
+	        } else {
+	        		return true;
 	        }
-	        return true;
 	    }
 	    return false;
 	}

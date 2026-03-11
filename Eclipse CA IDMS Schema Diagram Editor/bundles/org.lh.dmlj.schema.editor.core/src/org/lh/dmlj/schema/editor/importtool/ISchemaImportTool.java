@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,17 +23,19 @@ public interface ISchemaImportTool {
 
 	void dispose();
 	
-	Collection<?> getAreaContexts();
+	ContextCollection getAreaContexts();
 		
-	Collection<?> getRecordContexts();
+	ContextCollection getRecordContexts();
 	
-	Collection<?> getRootElementContexts(Object recordContext);
+	ContextCollection getRootElementContexts(Object recordContext);
 
-	Collection<?> getSetContexts();
+	ContextCollection getSetContexts();
 	
 	<T> Collection<T> getSubordinateElementContexts(T elementContext);
 
-	void init(IDataEntryContext dataEntryContext, Properties parameters,
-			  IDataCollectorRegistry dataCollectorRegistry);	
+	void init(IDataEntryContext dataEntryContext, Properties parameters, IDataCollectorRegistry dataCollectorRegistry);
+	
+	public static record ContextCollection(Collection<?> elements) {
+	}
 	
 }

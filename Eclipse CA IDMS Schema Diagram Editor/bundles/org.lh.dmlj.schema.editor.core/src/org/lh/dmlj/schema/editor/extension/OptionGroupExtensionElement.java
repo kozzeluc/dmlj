@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,14 +23,12 @@ public class OptionGroupExtensionElement extends AbstractExtensionElement {
 
 	public OptionGroupExtensionElement(IConfigurationElement configElement) {
 		super(configElement);
-		Assert.isTrue(configElement.getName()
-								   .equals(ExtensionPointConstants.ELEMENT_OPTION_GROUP), 
-					  "wrong IConfigurationElement: " + configElement.getName());
+		Assert.isTrue(configElement.getName().equals(ExtensionPointConstants.ELEMENT_OPTION_GROUP),
+				"wrong IConfigurationElement: " + configElement.getName());
 	}
 	
 	public String getLabel() {
-		return Util.getAttribute(configElement, 
- 				 				 ExtensionPointConstants.ATTRIBUTE_LABEL, null);
+		return Util.getAttribute(configElement, ExtensionPointConstants.ATTRIBUTE_LABEL, null);
 	}	
 
 }

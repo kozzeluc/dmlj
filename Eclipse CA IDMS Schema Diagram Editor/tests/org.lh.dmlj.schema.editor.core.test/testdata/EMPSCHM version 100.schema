@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.lh.dmlj.schema:Schema xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.lh.dmlj.schema="http://org.lh.dmlj.schema/schema.ecore" description="EMPLOYEE DEMO DATABASE" name="EMPSCHM" version="100">
+  <areas name="EMP-DEMO-REGION">
+    <areaSpecifications record="//@records.3">
+      <offsetExpression offsetPageCount="5" pageCount="95"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.4">
+      <offsetExpression offsetPageCount="5" pageCount="95"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.5">
+      <offsetExpression offsetPageCount="5" pageCount="95"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.12">
+      <offsetExpression offsetPageCount="5" pageCount="95"/>
+    </areaSpecifications>
+    <areaSpecifications systemOwner="//@sets.5/@systemOwner">
+      <offsetExpression offsetPageCount="1" pageCount="4"/>
+    </areaSpecifications>
+  </areas>
+  <areas name="ORG-DEMO-REGION">
+    <areaSpecifications record="//@records.2">
+      <offsetExpression offsetPageCount="5" pageCount="45"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.8">
+      <offsetExpression offsetPageCount="5" pageCount="45"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.10">
+      <offsetExpression offsetPageCount="5" pageCount="45"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.11">
+      <offsetExpression offsetPageCount="5" pageCount="45"/>
+    </areaSpecifications>
+    <areaSpecifications systemOwner="//@sets.7/@systemOwner">
+      <offsetExpression offsetPageCount="1" pageCount="4"/>
+    </areaSpecifications>
+    <areaSpecifications systemOwner="//@sets.12/@systemOwner">
+      <offsetExpression offsetPageCount="1" pageCount="4"/>
+    </areaSpecifications>
+  </areas>
+  <areas name="INS-DEMO-REGION">
+    <areaSpecifications record="//@records.0">
+      <offsetExpression offsetPageCount="5" pageCount="45"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.1">
+      <offsetExpression offsetPageCount="5" pageCount="45"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.6">
+      <offsetExpression offsetPageCount="5" pageCount="45"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.7">
+      <offsetExpression offsetPageCount="1" pageCount="4"/>
+    </areaSpecifications>
+    <areaSpecifications record="//@records.9">
+      <offsetExpression offsetPageCount="5" pageCount="45"/>
+    </areaSpecifications>
+  </areas>
+  <comments>INSTALLATION: COMMONWEATHER CORPORATION</comments>
+  <diagramData horizontalRuler="//@diagramData/@rulers.1" showRulers="true" snapToGuides="true" verticalRuler="//@diagramData/@rulers.0">
+    <connectionLabels diagramLocation="//@diagramData/@locations.13" memberRole="//@sets.2/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.14" memberRole="//@sets.0/@members.2"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.15" memberRole="//@sets.1/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.16" memberRole="//@sets.5/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.18" memberRole="//@sets.9/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.19" memberRole="//@sets.3/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.20" memberRole="//@sets.6/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.21" memberRole="//@sets.4/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.22" memberRole="//@sets.11/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.23" memberRole="//@sets.0/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.24" memberRole="//@sets.7/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.26" memberRole="//@sets.0/@members.1"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.27" memberRole="//@sets.12/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.29" memberRole="//@sets.8/@members.0"/>
+    <connectionLabels diagramLocation="//@diagramData/@locations.30" memberRole="//@sets.10/@members.0"/>
+    <connectionParts memberRole="//@sets.0/@members.0" sourceEndpointLocation="//@diagramData/@locations.52" targetEndpointLocation="//@diagramData/@locations.58"/>
+    <connectionParts bendpointLocations="//@diagramData/@locations.56 //@diagramData/@locations.49" memberRole="//@sets.0/@members.1" sourceEndpointLocation="//@diagramData/@locations.55" targetEndpointLocation="//@diagramData/@locations.47"/>
+    <connectionParts bendpointLocations="//@diagramData/@locations.54 //@diagramData/@locations.50" memberRole="//@sets.0/@members.2" sourceEndpointLocation="//@diagramData/@locations.53" targetEndpointLocation="//@diagramData/@locations.48"/>
+    <connectionParts bendpointLocations="//@diagramData/@locations.37 //@diagramData/@locations.43" memberRole="//@sets.1/@members.0" sourceEndpointLocation="//@diagramData/@locations.36" targetEndpointLocation="//@diagramData/@locations.38"/>
+    <connectionParts memberRole="//@sets.2/@members.0" sourceEndpointLocation="//@diagramData/@locations.51"/>
+    <connectionParts memberRole="//@sets.3/@members.0"/>
+    <connectionParts memberRole="//@sets.4/@members.0"/>
+    <connectionParts memberRole="//@sets.5/@members.0"/>
+    <connectionParts memberRole="//@sets.6/@members.0" sourceEndpointLocation="//@diagramData/@locations.57"/>
+    <connectionParts memberRole="//@sets.7/@members.0" targetEndpointLocation="//@diagramData/@locations.59"/>
+    <connectionParts bendpointLocations="//@diagramData/@locations.46 //@diagramData/@locations.45" memberRole="//@sets.8/@members.0" sourceEndpointLocation="//@diagramData/@locations.35" targetEndpointLocation="//@diagramData/@locations.31"/>
+    <connectionParts bendpointLocations="//@diagramData/@locations.42 //@diagramData/@locations.40" memberRole="//@sets.9/@members.0" sourceEndpointLocation="//@diagramData/@locations.41" targetEndpointLocation="//@diagramData/@locations.39"/>
+    <connectionParts bendpointLocations="//@diagramData/@locations.33 //@diagramData/@locations.44" memberRole="//@sets.10/@members.0" sourceEndpointLocation="//@diagramData/@locations.34" targetEndpointLocation="//@diagramData/@locations.32"/>
+    <connectionParts memberRole="//@sets.11/@members.0"/>
+    <connectionParts memberRole="//@sets.12/@members.0"/>
+    <locations eyecatcher="record COVERAGE" x="285" y="361"/>
+    <locations eyecatcher="record DENTAL-CLAIM" x="475" y="475"/>
+    <locations eyecatcher="record DEPARTMENT" x="171" y="19"/>
+    <locations eyecatcher="record EMPLOYEE" x="285" y="247"/>
+    <locations eyecatcher="record EMPOSITION" x="38" y="247"/>
+    <locations eyecatcher="record EXPERTISE" x="532" y="247"/>
+    <locations eyecatcher="record HOSPITAL-CLAIM" x="285" y="475"/>
+    <locations eyecatcher="record INSURANCE-PLAN" x="532" y="361"/>
+    <locations eyecatcher="record JOB" x="38" y="133"/>
+    <locations eyecatcher="record NON-HOSP-CLAIM" x="95" y="475"/>
+    <locations eyecatcher="record OFFICE" x="399" y="19"/>
+    <locations eyecatcher="record SKILL" x="532" y="133"/>
+    <locations eyecatcher="record STRUCTURE" x="39" y="361"/>
+    <locations eyecatcher="set label EMP-COVERAGE (COVERAGE)" x="358" y="324"/>
+    <locations eyecatcher="set label COVERAGE-CLAIMS (DENTAL-CLAIM)" x="544" y="445"/>
+    <locations eyecatcher="set label DEPT-EMPLOYEE (EMPLOYEE)" x="242" y="84"/>
+    <locations eyecatcher="set label EMP-NAME-NDX (EMPLOYEE)" x="178" y="139"/>
+    <locations eyecatcher="system owner EMP-NAME-NDX" x="274" y="190"/>
+    <locations eyecatcher="set label OFFICE-EMPLOYEE (EMPLOYEE)" x="384" y="198"/>
+    <locations eyecatcher="set label EMP-EMPOSITION (EMPOSITION)" x="190" y="276"/>
+    <locations eyecatcher="set label JOB-EMPOSITION (EMPOSITION)" x="27" y="209"/>
+    <locations eyecatcher="set label EMP-EXPERTISE (EXPERTISE)" x="419" y="276"/>
+    <locations eyecatcher="set label SKILL-EXPERTISE (EXPERTISE)" x="602" y="200"/>
+    <locations eyecatcher="set label COVERAGE-CLAIMS (HOSPITAL-CLAIM)" x="358" y="445"/>
+    <locations eyecatcher="set label JOB-TITLE-NDX (JOB)" x="28" y="29"/>
+    <locations eyecatcher="system owner JOB-TITLE-NDX" x="27" y="76"/>
+    <locations eyecatcher="set label COVERAGE-CLAIMS (NON-HOSP-CLAIM)" x="163" y="445"/>
+    <locations eyecatcher="set label SKILL-NAME-NDX (SKILL)" x="535" y="77"/>
+    <locations eyecatcher="system owner SKILL-NAME-NDX" x="651" y="76"/>
+    <locations eyecatcher="set label MANAGES (STRUCTURE)" x="139" y="336"/>
+    <locations eyecatcher="set label REPORTS-TO (STRUCTURE)" x="39" y="332"/>
+    <locations eyecatcher="set MANAGES member endpoint (STRUCTURE)" x="95"/>
+    <locations eyecatcher="set REPORTS-TO member endpoint (STRUCTURE)" x="63"/>
+    <locations eyecatcher="bendpoint [0] set REPORTS-TO (STRUCTURE)" x="19" y="77"/>
+    <locations eyecatcher="set REPORTS-TO owner endpoint (STRUCTURE)" x="19" y="53"/>
+    <locations eyecatcher="set MANAGES owner endpoint (STRUCTURE)" x="38" y="53"/>
+    <locations eyecatcher="set DEPT-EMPLOYEE owner endpoint (EMPLOYEE)" x="66" y="53"/>
+    <locations eyecatcher="bendpoint [0] set DEPT-EMPLOYEE (EMPLOYEE)" x="66" y="114"/>
+    <locations eyecatcher="set DEPT-EMPLOYEE member endpoint (EMPLOYEE)" x="38"/>
+    <locations eyecatcher="set OFFICE-EMPLOYEE member endpoint (EMPLOYEE)" x="95"/>
+    <locations eyecatcher="bendpoint [1] set OFFICE-EMPLOYEE (EMPLOYEE)" x="-19" y="171"/>
+    <locations eyecatcher="set OFFICE-EMPLOYEE owner endpoint (EMPLOYEE)" x="65" y="53"/>
+    <locations eyecatcher="bendpoint [0] set OFFICE-EMPLOYEE (EMPLOYEE)" x="65" y="171"/>
+    <locations eyecatcher="bendpoint [1] set DEPT-EMPLOYEE (EMPLOYEE)" x="152" y="114"/>
+    <locations eyecatcher="bendpoint [1] set REPORTS-TO (STRUCTURE)" x="-183" y="77"/>
+    <locations eyecatcher="bendpoint [1] set MANAGES (STRUCTURE)" x="-151" y="87"/>
+    <locations eyecatcher="bendpoint [0] set MANAGES (STRUCTURE)" x="38" y="87"/>
+    <locations eyecatcher="set COVERAGE-CLAIMS member endpoint (NON-HOSP-CLAIM)" x="63"/>
+    <locations eyecatcher="set COVERAGE-CLAIMS member endpoint (DENTAL-CLAIM)" x="64"/>
+    <locations eyecatcher="bendpoint [1] set COVERAGE-CLAIMS (NON-HOSP-CLAIM)" x="-127" y="76"/>
+    <locations eyecatcher="bendpoint [1] set COVERAGE-CLAIMS (DENTAL-CLAIM)" x="254" y="76"/>
+    <locations eyecatcher="set EMP-COVERAGE owner endpoint (COVERAGE)" x="65" y="53"/>
+    <locations eyecatcher="set COVERAGE-CLAIMS owner endpoint (HOSPITAL-CLAIM)" x="65" y="53"/>
+    <locations eyecatcher="set COVERAGE-CLAIMS owner endpoint (DENTAL-CLAIM)" x="65" y="53"/>
+    <locations eyecatcher="bendpoint [0] set COVERAGE-CLAIMS (DENTAL-CLAIM)" x="65" y="76"/>
+    <locations eyecatcher="set COVERAGE-CLAIMS owner endpoint (NON-HOSP-CLAIM)" x="65" y="53"/>
+    <locations eyecatcher="bendpoint [0] set COVERAGE-CLAIMS (NON-HOSP-CLAIM)" x="65" y="76"/>
+    <locations eyecatcher="set JOB-EMPOSITION owner endpoint (EMPOSITION)" x="64" y="53"/>
+    <locations eyecatcher="set COVERAGE-CLAIMS member endpoint (HOSPITAL-CLAIM)" x="65"/>
+    <locations eyecatcher="set JOB-TITLE-NDX member endpoint (JOB)" x="20"/>
+    <rulers type="VERTICAL"/>
+    <rulers/>
+  </diagramData>
+  <procedures name="IDMSCOMP"/>
+  <procedures name="IDMSDCOM"/>
+  <records diagramLocation="//@diagramData/@locations.0" baseName="COVERAGE" baseVersion="100" id="400" locationMode="VIA" name="COVERAGE" areaSpecification="//@areas.2/@areaSpecifications.0" memberRoles="//@sets.2/@members.0" ownerRoles="//@sets.0/@owner" rootElements="//@records.0/@elements.0 //@records.0/@elements.4 //@records.0/@elements.8 //@records.0/@elements.12" synonymName="COVERAGE" synonymVersion="100">
+    <elements baseName="SELECTION-DATE-0400" children="//@records.0/@elements.1 //@records.0/@elements.2 //@records.0/@elements.3" level="2" name="SELECTION-DATE-0400"/>
+    <elements baseName="SELECTION-YEAR-0400" level="3" name="SELECTION-YEAR-0400" parent="//@records.0/@elements.0" picture="9(4)"/>
+    <elements baseName="SELECTION-MONTH-0400" level="3" name="SELECTION-MONTH-0400" parent="//@records.0/@elements.0" picture="9(2)"/>
+    <elements baseName="SELECTION-DAY-0400" level="3" name="SELECTION-DAY-0400" parent="//@records.0/@elements.0" picture="9(2)"/>
+    <elements baseName="TERMINATION-DATE-0400" children="//@records.0/@elements.5 //@records.0/@elements.6 //@records.0/@elements.7" level="2" name="TERMINATION-DATE-0400"/>
+    <elements baseName="TERMINATION-YEAR-0400" level="3" name="TERMINATION-YEAR-0400" parent="//@records.0/@elements.4" picture="9(4)"/>
+    <elements baseName="TERMINATION-MONTH-0400" level="3" name="TERMINATION-MONTH-0400" parent="//@records.0/@elements.4" picture="9(2)"/>
+    <elements baseName="TERMINATION-DAY-0400" level="3" name="TERMINATION-DAY-0400" parent="//@records.0/@elements.4" picture="9(2)"/>
+    <elements baseName="TYPE-0400" children="//@records.0/@elements.9 //@records.0/@elements.10 //@records.0/@elements.11" level="2" name="TYPE-0400" picture="X"/>
+    <elements baseName="MASTER-0400" level="88" name="MASTER-0400" parent="//@records.0/@elements.8" usage="CONDITION_NAME" value="'M'"/>
+    <elements baseName="FAMILY-0400" level="88" name="FAMILY-0400" parent="//@records.0/@elements.8" usage="CONDITION_NAME" value="'F'"/>
+    <elements baseName="DEPENDENT-0400" level="88" name="DEPENDENT-0400" parent="//@records.0/@elements.8" usage="CONDITION_NAME" value="'D'"/>
+    <elements baseName="INS-PLAN-CODE-0400" children="//@records.0/@elements.13 //@records.0/@elements.14 //@records.0/@elements.15 //@records.0/@elements.16" level="2" name="INS-PLAN-CODE-0400" picture="X(3)"/>
+    <elements baseName="GROUP-LIFE-0400" level="88" name="GROUP-LIFE-0400" parent="//@records.0/@elements.12" usage="CONDITION_NAME" value="'001'"/>
+    <elements baseName="HMO-0400" level="88" name="HMO-0400" parent="//@records.0/@elements.12" usage="CONDITION_NAME" value="'002'"/>
+    <elements baseName="GROUP-HEALTH-0400" level="88" name="GROUP-HEALTH-0400" parent="//@records.0/@elements.12" usage="CONDITION_NAME" value="'003'"/>
+    <elements baseName="GROUP-DENTAL-0400" level="88" name="GROUP-DENTAL-0400" parent="//@records.0/@elements.12" usage="CONDITION_NAME" value="'004'"/>
+    <viaSpecification set="//@sets.2"/>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.1" baseName="DENTAL-CLAIM" baseVersion="100" id="405" locationMode="VIA" minimumFragmentLength="932" minimumRootLength="132" name="DENTAL-CLAIM" storageMode="VARIABLE" areaSpecification="//@areas.2/@areaSpecifications.1" memberRoles="//@sets.0/@members.2" rootElements="//@records.1/@elements.0 //@records.1/@elements.4 //@records.1/@elements.7 //@records.1/@elements.11 //@records.1/@elements.12 //@records.1/@elements.13 //@records.1/@elements.16 //@records.1/@elements.23 //@records.1/@elements.24 //@records.1/@elements.25 //@records.1/@elements.26" synonymName="DENTAL-CLAIM" synonymVersion="100">
+    <elements baseName="CLAIM-DATE-0405" children="//@records.1/@elements.1 //@records.1/@elements.2 //@records.1/@elements.3" level="2" name="CLAIM-DATE-0405"/>
+    <elements baseName="CLAIM-YEAR-0405" level="3" name="CLAIM-YEAR-0405" parent="//@records.1/@elements.0" picture="9(4)"/>
+    <elements baseName="CLAIM-MONTH-0405" level="3" name="CLAIM-MONTH-0405" parent="//@records.1/@elements.0" picture="9(2)"/>
+    <elements baseName="CLAIM-DAY-0405" level="3" name="CLAIM-DAY-0405" parent="//@records.1/@elements.0" picture="9(2)"/>
+    <elements baseName="PATIENT-NAME-0405" children="//@records.1/@elements.5 //@records.1/@elements.6" level="2" name="PATIENT-NAME-0405"/>
+    <elements baseName="PATIENT-FIRST-NAME-0405" level="3" name="PATIENT-FIRST-NAME-0405" parent="//@records.1/@elements.4" picture="X(10)"/>
+    <elements baseName="PATIENT-LAST-NAME-0405" level="3" name="PATIENT-LAST-NAME-0405" parent="//@records.1/@elements.4" picture="X(15)"/>
+    <elements baseName="PATIENT-BIRTH-DATE-0405" children="//@records.1/@elements.8 //@records.1/@elements.9 //@records.1/@elements.10" level="2" name="PATIENT-BIRTH-DATE-0405"/>
+    <elements baseName="PATIENT-BIRTH-YEAR-0405" level="3" name="PATIENT-BIRTH-YEAR-0405" parent="//@records.1/@elements.7" picture="9(4)"/>
+    <elements baseName="PATIENT-BIRTH-MONTH-0405" level="3" name="PATIENT-BIRTH-MONTH-0405" parent="//@records.1/@elements.7" picture="9(2)"/>
+    <elements baseName="PATIENT-BIRTH-DAY-0405" level="3" name="PATIENT-BIRTH-DAY-0405" parent="//@records.1/@elements.7" picture="9(2)"/>
+    <elements baseName="PATIENT-SEX-0405" level="2" name="PATIENT-SEX-0405" picture="X"/>
+    <elements baseName="RELATION-TO-EMPLOYEE-0405" level="2" name="RELATION-TO-EMPLOYEE-0405" picture="X(10)"/>
+    <elements baseName="DENTIST-NAME-0405" children="//@records.1/@elements.14 //@records.1/@elements.15" level="2" name="DENTIST-NAME-0405"/>
+    <elements baseName="DENTIST-FIRST-NAME-0405" level="3" name="DENTIST-FIRST-NAME-0405" parent="//@records.1/@elements.13" picture="X(10)"/>
+    <elements baseName="DENTIST-LAST-NAME-0405" level="3" name="DENTIST-LAST-NAME-0405" parent="//@records.1/@elements.13" picture="X(15)"/>
+    <elements baseName="DENTIST-ADDRESS-0405" children="//@records.1/@elements.17 //@records.1/@elements.18 //@records.1/@elements.19 //@records.1/@elements.20" level="2" name="DENTIST-ADDRESS-0405"/>
+    <elements baseName="DENTIST-STREET-0405" level="3" name="DENTIST-STREET-0405" parent="//@records.1/@elements.16" picture="X(20)"/>
+    <elements baseName="DENTIST-CITY-0405" level="3" name="DENTIST-CITY-0405" parent="//@records.1/@elements.16" picture="X(15)"/>
+    <elements baseName="DENTIST-STATE-0405" level="3" name="DENTIST-STATE-0405" parent="//@records.1/@elements.16" picture="X(2)"/>
+    <elements baseName="DENTIST-ZIP-0405" children="//@records.1/@elements.21 //@records.1/@elements.22" level="3" name="DENTIST-ZIP-0405" parent="//@records.1/@elements.16"/>
+    <elements baseName="DENTIST-ZIP-FIRST-FIVE-0405" level="4" name="DENTIST-ZIP-FIRST-FIVE-0405" parent="//@records.1/@elements.20" picture="X(5)"/>
+    <elements baseName="DENTIST-ZIP-LAST-FOUR-0405" level="4" name="DENTIST-ZIP-LAST-FOUR-0405" parent="//@records.1/@elements.20" picture="X(4)"/>
+    <elements baseName="DENTIST-LICENSE-NUMBER-0405" level="2" name="DENTIST-LICENSE-NUMBER-0405" picture="9(6)"/>
+    <elements baseName="NUMBER-OF-PROCEDURES-0405" level="2" name="NUMBER-OF-PROCEDURES-0405" picture="9(2)" usage="COMPUTATIONAL"/>
+    <elements baseName="FILLER" level="2" name="FILLER" picture="X"/>
+    <elements baseName="DENTIST-CHARGES-0405" children="//@records.1/@elements.27 //@records.1/@elements.28 //@records.1/@elements.32 //@records.1/@elements.33 //@records.1/@elements.34 //@records.1/@elements.35" level="2" name="DENTIST-CHARGES-0405">
+      <occursSpecification count="10" dependingOn="//@records.1/@elements.24"/>
+    </elements>
+    <elements baseName="TOOTH-NUMBER-0405" level="3" name="TOOTH-NUMBER-0405" parent="//@records.1/@elements.26" picture="9(2)"/>
+    <elements baseName="SERVICE-DATE-0405" children="//@records.1/@elements.29 //@records.1/@elements.30 //@records.1/@elements.31" level="3" name="SERVICE-DATE-0405" parent="//@records.1/@elements.26"/>
+    <elements baseName="SERVICE-YEAR-0405" level="4" name="SERVICE-YEAR-0405" parent="//@records.1/@elements.28" picture="9(4)"/>
+    <elements baseName="SERVICE-MONTH-0405" level="4" name="SERVICE-MONTH-0405" parent="//@records.1/@elements.28" picture="9(2)"/>
+    <elements baseName="SERVICE-DAY-0405" level="4" name="SERVICE-DAY-0405" parent="//@records.1/@elements.28" picture="9(2)"/>
+    <elements baseName="PROCEDURE-CODE-0405" level="3" name="PROCEDURE-CODE-0405" parent="//@records.1/@elements.26" picture="9(4)"/>
+    <elements baseName="DESCRIPTION-OF-SERVICE-0405" level="3" name="DESCRIPTION-OF-SERVICE-0405" parent="//@records.1/@elements.26" picture="X(60)"/>
+    <elements baseName="FEE-0405" level="3" name="FEE-0405" parent="//@records.1/@elements.26" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="FILLER" level="3" name="FILLER" parent="//@records.1/@elements.26" picture="X"/>
+    <viaSpecification set="//@sets.0"/>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.2" baseName="DEPARTMENT" baseVersion="100" id="410" name="DEPARTMENT" areaSpecification="//@areas.1/@areaSpecifications.0" calcKey="//@records.2/@keys.0" ownerRoles="//@sets.1/@owner" rootElements="//@records.2/@elements.0 //@records.2/@elements.1 //@records.2/@elements.2 //@records.2/@elements.3" synonymName="DEPARTMENT" synonymVersion="100">
+    <elements baseName="DEPT-ID-0410" keyElements="//@records.2/@keys.0/@elements.0" level="2" name="DEPT-ID-0410" picture="9(4)"/>
+    <elements baseName="DEPT-NAME-0410" level="2" name="DEPT-NAME-0410" picture="X(45)"/>
+    <elements baseName="DEPT-HEAD-ID-0410" level="2" name="DEPT-HEAD-ID-0410" picture="9(4)"/>
+    <elements baseName="FILLER" level="2" name="FILLER" picture="XXX"/>
+    <keys duplicatesOption="NOT_ALLOWED">
+      <elements element="//@records.2/@elements.0"/>
+    </keys>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.3" baseName="EMPLOYEE" baseVersion="100" id="415" name="EMPLOYEE" areaSpecification="//@areas.0/@areaSpecifications.0" calcKey="//@records.3/@keys.0" memberRoles="//@sets.1/@members.0 //@sets.5/@members.0 //@sets.9/@members.0" ownerRoles="//@sets.2/@owner //@sets.3/@owner //@sets.4/@owner //@sets.8/@owner //@sets.10/@owner" rootElements="//@records.3/@elements.0 //@records.3/@elements.1 //@records.3/@elements.4 //@records.3/@elements.11 //@records.3/@elements.12 //@records.3/@elements.18 //@records.3/@elements.19 //@records.3/@elements.23 //@records.3/@elements.27" synonymName="EMPLOYEE" synonymVersion="100">
+    <elements baseName="EMP-ID-0415" keyElements="//@records.3/@keys.0/@elements.0" level="2" name="EMP-ID-0415" picture="9(4)"/>
+    <elements baseName="EMP-NAME-0415" children="//@records.3/@elements.2 //@records.3/@elements.3" level="2" name="EMP-NAME-0415"/>
+    <elements baseName="EMP-FIRST-NAME-0415" keyElements="//@records.3/@keys.1/@elements.1 //@records.3/@keys.2/@elements.1 //@records.3/@keys.3/@elements.1" level="3" name="EMP-FIRST-NAME-0415" parent="//@records.3/@elements.1" picture="X(10)"/>
+    <elements baseName="EMP-LAST-NAME-0415" keyElements="//@records.3/@keys.1/@elements.0 //@records.3/@keys.2/@elements.0 //@records.3/@keys.3/@elements.0" level="3" name="EMP-LAST-NAME-0415" parent="//@records.3/@elements.1" picture="X(15)"/>
+    <elements baseName="EMP-ADDRESS-0415" children="//@records.3/@elements.5 //@records.3/@elements.6 //@records.3/@elements.7 //@records.3/@elements.8" level="2" name="EMP-ADDRESS-0415"/>
+    <elements baseName="EMP-STREET-0415" level="3" name="EMP-STREET-0415" parent="//@records.3/@elements.4" picture="X(20)"/>
+    <elements baseName="EMP-CITY-0415" level="3" name="EMP-CITY-0415" parent="//@records.3/@elements.4" picture="X(15)"/>
+    <elements baseName="EMP-STATE-0415" level="3" name="EMP-STATE-0415" parent="//@records.3/@elements.4" picture="X(2)"/>
+    <elements baseName="EMP-ZIP-0415" children="//@records.3/@elements.9 //@records.3/@elements.10" level="3" name="EMP-ZIP-0415" parent="//@records.3/@elements.4"/>
+    <elements baseName="EMP-ZIP-FIRST-FIVE-0415" level="4" name="EMP-ZIP-FIRST-FIVE-0415" parent="//@records.3/@elements.8" picture="X(5)"/>
+    <elements baseName="EMP-ZIP-LAST-FOUR-0415" level="4" name="EMP-ZIP-LAST-FOUR-0415" parent="//@records.3/@elements.8" picture="X(4)"/>
+    <elements baseName="EMP-PHONE-0415" level="2" name="EMP-PHONE-0415" picture="9(10)"/>
+    <elements baseName="STATUS-0415" children="//@records.3/@elements.13 //@records.3/@elements.14 //@records.3/@elements.15 //@records.3/@elements.16 //@records.3/@elements.17" level="2" name="STATUS-0415" picture="X(2)"/>
+    <elements baseName="ACTIVE-0415" level="88" name="ACTIVE-0415" parent="//@records.3/@elements.12" usage="CONDITION_NAME" value="'01'"/>
+    <elements baseName="ST-DISABIL-0415" level="88" name="ST-DISABIL-0415" parent="//@records.3/@elements.12" usage="CONDITION_NAME" value="'02'"/>
+    <elements baseName="LT-DISABIL-0415" level="88" name="LT-DISABIL-0415" parent="//@records.3/@elements.12" usage="CONDITION_NAME" value="'03'"/>
+    <elements baseName="LEAVE-OF-ABSENCE-0415" level="88" name="LEAVE-OF-ABSENCE-0415" parent="//@records.3/@elements.12" usage="CONDITION_NAME" value="'04'"/>
+    <elements baseName="TERMINATED-0415" level="88" name="TERMINATED-0415" parent="//@records.3/@elements.12" usage="CONDITION_NAME" value="'05'"/>
+    <elements baseName="SS-NUMBER-0415" level="2" name="SS-NUMBER-0415" picture="9(9)"/>
+    <elements baseName="START-DATE-0415" children="//@records.3/@elements.20 //@records.3/@elements.21 //@records.3/@elements.22" level="2" name="START-DATE-0415"/>
+    <elements baseName="START-YEAR-0415" level="3" name="START-YEAR-0415" parent="//@records.3/@elements.19" picture="9(4)"/>
+    <elements baseName="START-MONTH-0415" level="3" name="START-MONTH-0415" parent="//@records.3/@elements.19" picture="9(2)"/>
+    <elements baseName="START-DAY-0415" level="3" name="START-DAY-0415" parent="//@records.3/@elements.19" picture="9(2)"/>
+    <elements baseName="TERMINATION-DATE-0415" children="//@records.3/@elements.24 //@records.3/@elements.25 //@records.3/@elements.26" level="2" name="TERMINATION-DATE-0415"/>
+    <elements baseName="TERMINATION-YEAR-0415" level="3" name="TERMINATION-YEAR-0415" parent="//@records.3/@elements.23" picture="9(4)"/>
+    <elements baseName="TERMINATION-MONTH-0415" level="3" name="TERMINATION-MONTH-0415" parent="//@records.3/@elements.23" picture="9(2)"/>
+    <elements baseName="TERMINATION-DAY-0415" level="3" name="TERMINATION-DAY-0415" parent="//@records.3/@elements.23" picture="9(2)"/>
+    <elements baseName="BIRTH-DATE-0415" children="//@records.3/@elements.28 //@records.3/@elements.29 //@records.3/@elements.30" level="2" name="BIRTH-DATE-0415"/>
+    <elements baseName="BIRTH-YEAR-0415" level="3" name="BIRTH-YEAR-0415" parent="//@records.3/@elements.27" picture="9(4)"/>
+    <elements baseName="BIRTH-MONTH-0415" level="3" name="BIRTH-MONTH-0415" parent="//@records.3/@elements.27" picture="9(2)"/>
+    <elements baseName="BIRTH-DAY-0415" level="3" name="BIRTH-DAY-0415" parent="//@records.3/@elements.27" picture="9(2)"/>
+    <keys duplicatesOption="NOT_ALLOWED">
+      <elements element="//@records.3/@elements.0"/>
+    </keys>
+    <keys duplicatesOption="LAST" memberRole="//@sets.1/@members.0" naturalSequence="true">
+      <elements element="//@records.3/@elements.3"/>
+      <elements element="//@records.3/@elements.2"/>
+    </keys>
+    <keys compressed="true" duplicatesOption="LAST" memberRole="//@sets.5/@members.0" naturalSequence="true">
+      <elements element="//@records.3/@elements.3"/>
+      <elements element="//@records.3/@elements.2"/>
+    </keys>
+    <keys compressed="true" duplicatesOption="LAST" memberRole="//@sets.9/@members.0" naturalSequence="true">
+      <elements element="//@records.3/@elements.3"/>
+      <elements element="//@records.3/@elements.2"/>
+    </keys>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.4" baseName="EMPOSITION" baseVersion="100" id="420" locationMode="VIA" name="EMPOSITION" areaSpecification="//@areas.0/@areaSpecifications.1" memberRoles="//@sets.3/@members.0 //@sets.6/@members.0" rootElements="//@records.4/@elements.0 //@records.4/@elements.4 //@records.4/@elements.8 //@records.4/@elements.9 //@records.4/@elements.10 //@records.4/@elements.11 //@records.4/@elements.12 //@records.4/@elements.13" synonymName="EMPOSITION" synonymVersion="100">
+    <elements baseName="START-DATE-0420" children="//@records.4/@elements.1 //@records.4/@elements.2 //@records.4/@elements.3" level="2" name="START-DATE-0420"/>
+    <elements baseName="START-YEAR-0420" level="3" name="START-YEAR-0420" parent="//@records.4/@elements.0" picture="9(4)"/>
+    <elements baseName="START-MONTH-0420" level="3" name="START-MONTH-0420" parent="//@records.4/@elements.0" picture="9(2)"/>
+    <elements baseName="START-DAY-0420" level="3" name="START-DAY-0420" parent="//@records.4/@elements.0" picture="9(2)"/>
+    <elements baseName="FINISH-DATE-0420" children="//@records.4/@elements.5 //@records.4/@elements.6 //@records.4/@elements.7" level="2" name="FINISH-DATE-0420"/>
+    <elements baseName="FINISH-YEAR-0420" level="3" name="FINISH-YEAR-0420" parent="//@records.4/@elements.4" picture="9(4)"/>
+    <elements baseName="FINISH-MONTH-0420" level="3" name="FINISH-MONTH-0420" parent="//@records.4/@elements.4" picture="9(2)"/>
+    <elements baseName="FINISH-DAY-0420" level="3" name="FINISH-DAY-0420" parent="//@records.4/@elements.4" picture="9(2)"/>
+    <elements baseName="SALARY-GRADE-0420" level="2" name="SALARY-GRADE-0420" picture="9(2)"/>
+    <elements baseName="SALARY-AMOUNT-0420" level="2" name="SALARY-AMOUNT-0420" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="BONUS-PERCENT-0420" level="2" name="BONUS-PERCENT-0420" picture="SV999" usage="COMPUTATIONAL_3"/>
+    <elements baseName="COMMISSION-PERCENT-0420" level="2" name="COMMISSION-PERCENT-0420" picture="SV999" usage="COMPUTATIONAL_3"/>
+    <elements baseName="OVERTIME-RATE-0420" level="2" name="OVERTIME-RATE-0420" picture="S9V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="FILLER" level="2" name="FILLER" picture="XXX"/>
+    <viaSpecification set="//@sets.3"/>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.5" baseName="EXPERTISE" baseVersion="100" id="425" locationMode="VIA" name="EXPERTISE" areaSpecification="//@areas.0/@areaSpecifications.2" memberRoles="//@sets.4/@members.0 //@sets.11/@members.0" rootElements="//@records.5/@elements.0 //@records.5/@elements.5 //@records.5/@elements.9" synonymName="EXPERTISE" synonymVersion="100">
+    <elements baseName="SKILL-LEVEL-0425" children="//@records.5/@elements.1 //@records.5/@elements.2 //@records.5/@elements.3 //@records.5/@elements.4" keyElements="//@records.5/@keys.0/@elements.0 //@records.5/@keys.1/@elements.0" level="2" name="SKILL-LEVEL-0425" picture="XX"/>
+    <elements baseName="EXPERT-0425" level="88" name="EXPERT-0425" parent="//@records.5/@elements.0" usage="CONDITION_NAME" value="'04'"/>
+    <elements baseName="PROFICIENT-0425" level="88" name="PROFICIENT-0425" parent="//@records.5/@elements.0" usage="CONDITION_NAME" value="'03'"/>
+    <elements baseName="COMPETENT-0425" level="88" name="COMPETENT-0425" parent="//@records.5/@elements.0" usage="CONDITION_NAME" value="'02'"/>
+    <elements baseName="ELEMENTARY-0425" level="88" name="ELEMENTARY-0425" parent="//@records.5/@elements.0" usage="CONDITION_NAME" value="'01'"/>
+    <elements baseName="EXPERTISE-DATE-0425" children="//@records.5/@elements.6 //@records.5/@elements.7 //@records.5/@elements.8" level="2" name="EXPERTISE-DATE-0425"/>
+    <elements baseName="EXPERTISE-YEAR-0425" level="3" name="EXPERTISE-YEAR-0425" parent="//@records.5/@elements.5" picture="9(4)"/>
+    <elements baseName="EXPERTISE-MONTH-0425" level="3" name="EXPERTISE-MONTH-0425" parent="//@records.5/@elements.5" picture="9(2)"/>
+    <elements baseName="EXPERTISE-DAY-0425" level="3" name="EXPERTISE-DAY-0425" parent="//@records.5/@elements.5" picture="9(2)"/>
+    <elements baseName="FILLER" level="2" name="FILLER" picture="XX"/>
+    <keys memberRole="//@sets.4/@members.0" naturalSequence="true">
+      <elements element="//@records.5/@elements.0" sortSequence="DESCENDING"/>
+    </keys>
+    <keys memberRole="//@sets.11/@members.0" naturalSequence="true">
+      <elements element="//@records.5/@elements.0" sortSequence="DESCENDING"/>
+    </keys>
+    <viaSpecification set="//@sets.4"/>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.6" baseName="HOSPITAL-CLAIM" baseVersion="100" id="430" locationMode="VIA" name="HOSPITAL-CLAIM" areaSpecification="//@areas.2/@areaSpecifications.2" memberRoles="//@sets.0/@members.0" rootElements="//@records.6/@elements.0 //@records.6/@elements.4 //@records.6/@elements.7 //@records.6/@elements.11 //@records.6/@elements.12 //@records.6/@elements.13 //@records.6/@elements.14 //@records.6/@elements.21 //@records.6/@elements.25 //@records.6/@elements.29 //@records.6/@elements.30" synonymName="HOSPITAL-CLAIM" synonymVersion="100">
+    <elements baseName="CLAIM-DATE-0430" children="//@records.6/@elements.1 //@records.6/@elements.2 //@records.6/@elements.3" level="2" name="CLAIM-DATE-0430"/>
+    <elements baseName="CLAIM-YEAR-0430" level="3" name="CLAIM-YEAR-0430" parent="//@records.6/@elements.0" picture="9(4)"/>
+    <elements baseName="CLAIM-MONTH-0430" level="3" name="CLAIM-MONTH-0430" parent="//@records.6/@elements.0" picture="9(2)"/>
+    <elements baseName="CLAIM-DAY-0430" level="3" name="CLAIM-DAY-0430" parent="//@records.6/@elements.0" picture="9(2)"/>
+    <elements baseName="PATIENT-NAME-0430" children="//@records.6/@elements.5 //@records.6/@elements.6" level="2" name="PATIENT-NAME-0430"/>
+    <elements baseName="PATIENT-FIRST-NAME-0430" level="3" name="PATIENT-FIRST-NAME-0430" parent="//@records.6/@elements.4" picture="X(10)"/>
+    <elements baseName="PATIENT-LAST-NAME-0430" level="3" name="PATIENT-LAST-NAME-0430" parent="//@records.6/@elements.4" picture="X(15)"/>
+    <elements baseName="PATIENT-BIRTH-DATE-0430" children="//@records.6/@elements.8 //@records.6/@elements.9 //@records.6/@elements.10" level="2" name="PATIENT-BIRTH-DATE-0430"/>
+    <elements baseName="PATIENT-BIRTH-YEAR-0430" level="3" name="PATIENT-BIRTH-YEAR-0430" parent="//@records.6/@elements.7" picture="9(4)"/>
+    <elements baseName="PATIENT-BIRTH-MONTH-0430" level="3" name="PATIENT-BIRTH-MONTH-0430" parent="//@records.6/@elements.7" picture="9(2)"/>
+    <elements baseName="PATIENT-BIRTH-DAY-0430" level="3" name="PATIENT-BIRTH-DAY-0430" parent="//@records.6/@elements.7" picture="9(2)"/>
+    <elements baseName="PATIENT-SEX-0430" level="2" name="PATIENT-SEX-0430" picture="X"/>
+    <elements baseName="RELATION-TO-EMPLOYEE-0430" level="2" name="RELATION-TO-EMPLOYEE-0430" picture="X(10)"/>
+    <elements baseName="HOSPITAL-NAME-0430" level="2" name="HOSPITAL-NAME-0430" picture="X(25)"/>
+    <elements baseName="HOSP-ADDRESS-0430" children="//@records.6/@elements.15 //@records.6/@elements.16 //@records.6/@elements.17 //@records.6/@elements.18" level="2" name="HOSP-ADDRESS-0430"/>
+    <elements baseName="HOSP-STREET-0430" level="3" name="HOSP-STREET-0430" parent="//@records.6/@elements.14" picture="X(20)"/>
+    <elements baseName="HOSP-CITY-0430" level="3" name="HOSP-CITY-0430" parent="//@records.6/@elements.14" picture="X(15)"/>
+    <elements baseName="HOSP-STATE-0430" level="3" name="HOSP-STATE-0430" parent="//@records.6/@elements.14" picture="X(2)"/>
+    <elements baseName="HOSP-ZIP-0430" children="//@records.6/@elements.19 //@records.6/@elements.20" level="3" name="HOSP-ZIP-0430" parent="//@records.6/@elements.14"/>
+    <elements baseName="HOSP-ZIP-FIRST-FIVE-0430" level="4" name="HOSP-ZIP-FIRST-FIVE-0430" parent="//@records.6/@elements.18" picture="X(5)"/>
+    <elements baseName="HOSP-ZIP-LAST-FOUR-0430" level="4" name="HOSP-ZIP-LAST-FOUR-0430" parent="//@records.6/@elements.18" picture="X(4)"/>
+    <elements baseName="ADMIT-DATE-0430" children="//@records.6/@elements.22 //@records.6/@elements.23 //@records.6/@elements.24" level="2" name="ADMIT-DATE-0430"/>
+    <elements baseName="ADMIT-YEAR-0430" level="3" name="ADMIT-YEAR-0430" parent="//@records.6/@elements.21" picture="9(4)"/>
+    <elements baseName="ADMIT-MONTH-0430" level="3" name="ADMIT-MONTH-0430" parent="//@records.6/@elements.21" picture="9(2)"/>
+    <elements baseName="ADMIT-DAY-0430" level="3" name="ADMIT-DAY-0430" parent="//@records.6/@elements.21" picture="9(2)"/>
+    <elements baseName="DISCHARGE-DATE-0430" children="//@records.6/@elements.26 //@records.6/@elements.27 //@records.6/@elements.28" level="2" name="DISCHARGE-DATE-0430"/>
+    <elements baseName="DISCHARGE-YEAR-0430" level="3" name="DISCHARGE-YEAR-0430" parent="//@records.6/@elements.25" picture="9(4)"/>
+    <elements baseName="DISCHARGE-MONTH-0430" level="3" name="DISCHARGE-MONTH-0430" parent="//@records.6/@elements.25" picture="9(2)"/>
+    <elements baseName="DISCHARGE-DAY-0430" level="3" name="DISCHARGE-DAY-0430" parent="//@records.6/@elements.25" picture="9(2)"/>
+    <elements baseName="DIAGNOSIS-0430" level="2" name="DIAGNOSIS-0430" picture="X(60)">
+      <occursSpecification count="2"/>
+    </elements>
+    <elements baseName="HOSPITAL-CHARGES-0430" children="//@records.6/@elements.31 //@records.6/@elements.40" level="2" name="HOSPITAL-CHARGES-0430"/>
+    <elements baseName="ROOM-AND-BOARD-0430" children="//@records.6/@elements.32 //@records.6/@elements.36" level="3" name="ROOM-AND-BOARD-0430" parent="//@records.6/@elements.30"/>
+    <elements baseName="WARD-0430" children="//@records.6/@elements.33 //@records.6/@elements.34 //@records.6/@elements.35" level="4" name="WARD-0430" parent="//@records.6/@elements.31"/>
+    <elements baseName="WARD-DAYS-0430" level="5" name="WARD-DAYS-0430" parent="//@records.6/@elements.32" picture="S9(5)" usage="COMPUTATIONAL_3"/>
+    <elements baseName="WARD-RATE-0430" level="5" name="WARD-RATE-0430" parent="//@records.6/@elements.32" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="WARD-TOTAL-0430" level="5" name="WARD-TOTAL-0430" parent="//@records.6/@elements.32" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="SEMI-PRIVATE-0430" children="//@records.6/@elements.37 //@records.6/@elements.38 //@records.6/@elements.39" level="4" name="SEMI-PRIVATE-0430" parent="//@records.6/@elements.31"/>
+    <elements baseName="SEMI-DAYS-0430" level="5" name="SEMI-DAYS-0430" parent="//@records.6/@elements.36" picture="S9(5)" usage="COMPUTATIONAL_3"/>
+    <elements baseName="SEMI-RATE-0430" level="5" name="SEMI-RATE-0430" parent="//@records.6/@elements.36" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="SEMI-TOTAL-0430" level="5" name="SEMI-TOTAL-0430" parent="//@records.6/@elements.36" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="OTHER-CHARGES-0430" children="//@records.6/@elements.41 //@records.6/@elements.42 //@records.6/@elements.43" level="3" name="OTHER-CHARGES-0430" parent="//@records.6/@elements.30"/>
+    <elements baseName="DELIVERY-COST-0430" level="4" name="DELIVERY-COST-0430" parent="//@records.6/@elements.40" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="ANESTHESIA-COST-0430" level="4" name="ANESTHESIA-COST-0430" parent="//@records.6/@elements.40" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="LAB-COST-0430" level="4" name="LAB-COST-0430" parent="//@records.6/@elements.40" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <viaSpecification set="//@sets.0"/>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.7" baseName="INSURANCE-PLAN" baseVersion="100" id="435" name="INSURANCE-PLAN" areaSpecification="//@areas.2/@areaSpecifications.3" calcKey="//@records.7/@keys.0" rootElements="//@records.7/@elements.0 //@records.7/@elements.5 //@records.7/@elements.6 //@records.7/@elements.13 //@records.7/@elements.14 //@records.7/@elements.15 //@records.7/@elements.20" synonymName="INSURANCE-PLAN" synonymVersion="100">
+    <elements baseName="INS-PLAN-CODE-0435" children="//@records.7/@elements.1 //@records.7/@elements.2 //@records.7/@elements.3 //@records.7/@elements.4" keyElements="//@records.7/@keys.0/@elements.0" level="2" name="INS-PLAN-CODE-0435" picture="X(3)"/>
+    <elements baseName="GROUP-LIFE-0435" level="88" name="GROUP-LIFE-0435" parent="//@records.7/@elements.0" usage="CONDITION_NAME" value="'001'"/>
+    <elements baseName="HMO-0435" level="88" name="HMO-0435" parent="//@records.7/@elements.0" usage="CONDITION_NAME" value="'002'"/>
+    <elements baseName="GROUP-HEALTH-0435" level="88" name="GROUP-HEALTH-0435" parent="//@records.7/@elements.0" usage="CONDITION_NAME" value="'003'"/>
+    <elements baseName="GROUP-DENTAL-0435" level="88" name="GROUP-DENTAL-0435" parent="//@records.7/@elements.0" usage="CONDITION_NAME" value="'004'"/>
+    <elements baseName="INS-CO-NAME-0435" level="2" name="INS-CO-NAME-0435" picture="X(45)"/>
+    <elements baseName="INS-CO-ADDRESS-0435" children="//@records.7/@elements.7 //@records.7/@elements.8 //@records.7/@elements.9 //@records.7/@elements.10" level="2" name="INS-CO-ADDRESS-0435"/>
+    <elements baseName="INS-CO-STREET-0435" level="3" name="INS-CO-STREET-0435" parent="//@records.7/@elements.6" picture="X(20)"/>
+    <elements baseName="INS-CO-CITY-0435" level="3" name="INS-CO-CITY-0435" parent="//@records.7/@elements.6" picture="X(15)"/>
+    <elements baseName="INS-CO-STATE-0435" level="3" name="INS-CO-STATE-0435" parent="//@records.7/@elements.6" picture="X(2)"/>
+    <elements baseName="INS-CO-ZIP-0435" children="//@records.7/@elements.11 //@records.7/@elements.12" level="3" name="INS-CO-ZIP-0435" parent="//@records.7/@elements.6"/>
+    <elements baseName="INS-CO-ZIP-FIRST-FIVE-0435" level="4" name="INS-CO-ZIP-FIRST-FIVE-0435" parent="//@records.7/@elements.10" picture="X(5)"/>
+    <elements baseName="INS-CO-ZIP-LAST-FOUR-0435" level="4" name="INS-CO-ZIP-LAST-FOUR-0435" parent="//@records.7/@elements.10" picture="X(4)"/>
+    <elements baseName="INS-CO-PHONE-0435" level="2" name="INS-CO-PHONE-0435" picture="9(10)"/>
+    <elements baseName="GROUP-NUMBER-0435" level="2" name="GROUP-NUMBER-0435" picture="9(6)"/>
+    <elements baseName="PLAN-DESCRIPTION-0435" children="//@records.7/@elements.16 //@records.7/@elements.17 //@records.7/@elements.18 //@records.7/@elements.19" level="2" name="PLAN-DESCRIPTION-0435"/>
+    <elements baseName="DEDUCT-0435" level="3" name="DEDUCT-0435" parent="//@records.7/@elements.15" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="MAXIMUM-LIFE-COST-0435" level="3" name="MAXIMUM-LIFE-COST-0435" parent="//@records.7/@elements.15" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="FAMILY-COST-0435" level="3" name="FAMILY-COST-0435" parent="//@records.7/@elements.15" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="DEP-COST-0435" level="3" name="DEP-COST-0435" parent="//@records.7/@elements.15" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="FILLER" level="2" name="FILLER" picture="XX"/>
+    <keys duplicatesOption="NOT_ALLOWED">
+      <elements element="//@records.7/@elements.0"/>
+    </keys>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.8" baseName="JOB" baseVersion="100" id="440" minimumFragmentLength="296" minimumRootLength="24" name="JOB" storageMode="FIXED_COMPRESSED" areaSpecification="//@areas.1/@areaSpecifications.1" calcKey="//@records.8/@keys.0" memberRoles="//@sets.7/@members.0" ownerRoles="//@sets.6/@owner" rootElements="//@records.8/@elements.0 //@records.8/@elements.1 //@records.8/@elements.2 //@records.8/@elements.4 //@records.8/@elements.6 //@records.8/@elements.7 //@records.8/@elements.8 //@records.8/@elements.9 //@records.8/@elements.10 //@records.8/@elements.11" synonymName="JOB" synonymVersion="100">
+    <elements baseName="JOB-ID-0440" keyElements="//@records.8/@keys.0/@elements.0" level="2" name="JOB-ID-0440" picture="9(4)"/>
+    <elements baseName="TITLE-0440" keyElements="//@records.8/@keys.1/@elements.0" level="2" name="TITLE-0440" picture="X(20)"/>
+    <elements baseName="DESCRIPTION-0440" children="//@records.8/@elements.3" level="2" name="DESCRIPTION-0440"/>
+    <elements baseName="DESCRIPTION-LINE-0440" level="3" name="DESCRIPTION-LINE-0440" parent="//@records.8/@elements.2" picture="X(60)">
+      <occursSpecification count="2"/>
+    </elements>
+    <elements baseName="REQUIREMENTS-0440" children="//@records.8/@elements.5" level="2" name="REQUIREMENTS-0440"/>
+    <elements baseName="REQUIREMENT-LINE-0440" level="3" name="REQUIREMENT-LINE-0440" parent="//@records.8/@elements.4" picture="X(60)">
+      <occursSpecification count="2"/>
+    </elements>
+    <elements baseName="MINIMUM-SALARY-0440" level="2" name="MINIMUM-SALARY-0440" picture="S9(6)V99"/>
+    <elements baseName="MAXIMUM-SALARY-0440" level="2" name="MAXIMUM-SALARY-0440" picture="S9(6)V99"/>
+    <elements baseName="SALARY-GRADES-0440" level="2" name="SALARY-GRADES-0440" picture="9(2)">
+      <occursSpecification count="4"/>
+    </elements>
+    <elements baseName="NUMBER-OF-POSITIONS-0440" level="2" name="NUMBER-OF-POSITIONS-0440" picture="9(3)"/>
+    <elements baseName="NUMBER-OPEN-0440" level="2" name="NUMBER-OPEN-0440" picture="9(3)"/>
+    <elements baseName="FILLER" level="2" name="FILLER" picture="XX"/>
+    <keys duplicatesOption="NOT_ALLOWED">
+      <elements element="//@records.8/@elements.0"/>
+    </keys>
+    <keys duplicatesOption="NOT_ALLOWED" memberRole="//@sets.7/@members.0" naturalSequence="true">
+      <elements element="//@records.8/@elements.1"/>
+    </keys>
+    <procedures procedure="//@procedures.0" verb="STORE"/>
+    <procedures procedure="//@procedures.0" verb="MODIFY"/>
+    <procedures callTime="AFTER" procedure="//@procedures.1" verb="GET"/>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.9" baseName="NON-HOSP-CLAIM" baseVersion="100" id="445" locationMode="VIA" minimumFragmentLength="1052" minimumRootLength="248" name="NON-HOSP-CLAIM" storageMode="VARIABLE" areaSpecification="//@areas.2/@areaSpecifications.4" memberRoles="//@sets.0/@members.1" rootElements="//@records.9/@elements.0 //@records.9/@elements.4 //@records.9/@elements.7 //@records.9/@elements.11 //@records.9/@elements.12 //@records.9/@elements.13 //@records.9/@elements.16 //@records.9/@elements.23 //@records.9/@elements.24 //@records.9/@elements.25 //@records.9/@elements.26 //@records.9/@elements.27" synonymName="NON-HOSP-CLAIM" synonymVersion="100">
+    <elements baseName="CLAIM-DATE-0445" children="//@records.9/@elements.1 //@records.9/@elements.2 //@records.9/@elements.3" level="2" name="CLAIM-DATE-0445"/>
+    <elements baseName="CLAIM-YEAR-0445" level="3" name="CLAIM-YEAR-0445" parent="//@records.9/@elements.0" picture="9(4)"/>
+    <elements baseName="CLAIM-MONTH-0445" level="3" name="CLAIM-MONTH-0445" parent="//@records.9/@elements.0" picture="9(2)"/>
+    <elements baseName="CLAIM-DAY-0445" level="3" name="CLAIM-DAY-0445" parent="//@records.9/@elements.0" picture="9(2)"/>
+    <elements baseName="PATIENT-NAME-0445" children="//@records.9/@elements.5 //@records.9/@elements.6" level="2" name="PATIENT-NAME-0445"/>
+    <elements baseName="PATIENT-FIRST-NAME-0445" level="3" name="PATIENT-FIRST-NAME-0445" parent="//@records.9/@elements.4" picture="X(10)"/>
+    <elements baseName="PATIENT-LAST-NAME-0445" level="3" name="PATIENT-LAST-NAME-0445" parent="//@records.9/@elements.4" picture="X(15)"/>
+    <elements baseName="PATIENT-BIRTH-DATE-0445" children="//@records.9/@elements.8 //@records.9/@elements.9 //@records.9/@elements.10" level="2" name="PATIENT-BIRTH-DATE-0445"/>
+    <elements baseName="PATIENT-BIRTH-YEAR-0445" level="3" name="PATIENT-BIRTH-YEAR-0445" parent="//@records.9/@elements.7" picture="9(4)"/>
+    <elements baseName="PATIENT-BIRTH-MONTH-0445" level="3" name="PATIENT-BIRTH-MONTH-0445" parent="//@records.9/@elements.7" picture="9(2)"/>
+    <elements baseName="PATIENT-BIRTH-DAY-0445" level="3" name="PATIENT-BIRTH-DAY-0445" parent="//@records.9/@elements.7" picture="9(2)"/>
+    <elements baseName="PATIENT-SEX-0445" level="2" name="PATIENT-SEX-0445" picture="X"/>
+    <elements baseName="RELATION-TO-EMPLOYEE-0445" level="2" name="RELATION-TO-EMPLOYEE-0445" picture="X(10)"/>
+    <elements baseName="PHYSICIAN-NAME-0445" children="//@records.9/@elements.14 //@records.9/@elements.15" level="2" name="PHYSICIAN-NAME-0445"/>
+    <elements baseName="PHYSICIAN-FIRST-NAME-0445" level="3" name="PHYSICIAN-FIRST-NAME-0445" parent="//@records.9/@elements.13" picture="X(10)"/>
+    <elements baseName="PHYSICIAN-LAST-NAME-0445" level="3" name="PHYSICIAN-LAST-NAME-0445" parent="//@records.9/@elements.13" picture="X(15)"/>
+    <elements baseName="PHYSICIAN-ADDRESS-0445" children="//@records.9/@elements.17 //@records.9/@elements.18 //@records.9/@elements.19 //@records.9/@elements.20" level="2" name="PHYSICIAN-ADDRESS-0445"/>
+    <elements baseName="PHYSICIAN-STREET-0445" level="3" name="PHYSICIAN-STREET-0445" parent="//@records.9/@elements.16" picture="X(20)"/>
+    <elements baseName="PHYSICIAN-CITY-0445" level="3" name="PHYSICIAN-CITY-0445" parent="//@records.9/@elements.16" picture="X(15)"/>
+    <elements baseName="PHYSICIAN-STATE-0445" level="3" name="PHYSICIAN-STATE-0445" parent="//@records.9/@elements.16" picture="X(2)"/>
+    <elements baseName="PHYSICIAN-ZIP-0445" children="//@records.9/@elements.21 //@records.9/@elements.22" level="3" name="PHYSICIAN-ZIP-0445" parent="//@records.9/@elements.16"/>
+    <elements baseName="PHYSICIAN-ZIP-FIRST-FIVE-0445" level="4" name="PHYSICIAN-ZIP-FIRST-FIVE-0445" parent="//@records.9/@elements.20" picture="X(5)"/>
+    <elements baseName="PHYSICIAN-ZIP-LAST-FOUR-0445" level="4" name="PHYSICIAN-ZIP-LAST-FOUR-0445" parent="//@records.9/@elements.20" picture="X(4)"/>
+    <elements baseName="PHYSICIAN-ID-0445" level="2" name="PHYSICIAN-ID-0445" picture="9(6)"/>
+    <elements baseName="DIAGNOSIS-0445" level="2" name="DIAGNOSIS-0445" picture="X(60)">
+      <occursSpecification count="2"/>
+    </elements>
+    <elements baseName="NUMBER-OF-PROCEDURES-0445" level="2" name="NUMBER-OF-PROCEDURES-0445" picture="9(2)" usage="COMPUTATIONAL"/>
+    <elements baseName="FILLER" level="2" name="FILLER" picture="X"/>
+    <elements baseName="PHYSICIAN-CHARGES-0445" children="//@records.9/@elements.28 //@records.9/@elements.32 //@records.9/@elements.33 //@records.9/@elements.34 //@records.9/@elements.35" level="2" name="PHYSICIAN-CHARGES-0445">
+      <occursSpecification count="10" dependingOn="//@records.9/@elements.25"/>
+    </elements>
+    <elements baseName="SERVICE-DATE-0445" children="//@records.9/@elements.29 //@records.9/@elements.30 //@records.9/@elements.31" level="3" name="SERVICE-DATE-0445" parent="//@records.9/@elements.27"/>
+    <elements baseName="SERVICE-YEAR-0445" level="4" name="SERVICE-YEAR-0445" parent="//@records.9/@elements.28" picture="9(4)"/>
+    <elements baseName="SERVICE-MONTH-0445" level="4" name="SERVICE-MONTH-0445" parent="//@records.9/@elements.28" picture="9(2)"/>
+    <elements baseName="SERVICE-DAY-0445" level="4" name="SERVICE-DAY-0445" parent="//@records.9/@elements.28" picture="9(2)"/>
+    <elements baseName="PROCEDURE-CODE-0445" level="3" name="PROCEDURE-CODE-0445" parent="//@records.9/@elements.27" picture="9(4)"/>
+    <elements baseName="DESCRIPTION-OF-SERVICE-0445" level="3" name="DESCRIPTION-OF-SERVICE-0445" parent="//@records.9/@elements.27" picture="X(60)"/>
+    <elements baseName="FEE-0445" level="3" name="FEE-0445" parent="//@records.9/@elements.27" picture="S9(7)V99" usage="COMPUTATIONAL_3"/>
+    <elements baseName="FILLER" level="3" name="FILLER" parent="//@records.9/@elements.27" picture="XXX"/>
+    <viaSpecification set="//@sets.0"/>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.10" baseName="OFFICE" baseVersion="100" id="450" name="OFFICE" areaSpecification="//@areas.1/@areaSpecifications.2" calcKey="//@records.10/@keys.0" ownerRoles="//@sets.9/@owner" rootElements="//@records.10/@elements.0 //@records.10/@elements.1 //@records.10/@elements.8 //@records.10/@elements.9 //@records.10/@elements.10" synonymName="OFFICE" synonymVersion="100">
+    <elements baseName="OFFICE-CODE-0450" keyElements="//@records.10/@keys.0/@elements.0" level="2" name="OFFICE-CODE-0450" picture="X(3)"/>
+    <elements baseName="OFFICE-ADDRESS-0450" children="//@records.10/@elements.2 //@records.10/@elements.3 //@records.10/@elements.4 //@records.10/@elements.5" level="2" name="OFFICE-ADDRESS-0450"/>
+    <elements baseName="OFFICE-STREET-0450" level="3" name="OFFICE-STREET-0450" parent="//@records.10/@elements.1" picture="X(20)"/>
+    <elements baseName="OFFICE-CITY-0450" level="3" name="OFFICE-CITY-0450" parent="//@records.10/@elements.1" picture="X(15)"/>
+    <elements baseName="OFFICE-STATE-0450" level="3" name="OFFICE-STATE-0450" parent="//@records.10/@elements.1" picture="X(2)"/>
+    <elements baseName="OFFICE-ZIP-0450" children="//@records.10/@elements.6 //@records.10/@elements.7" level="3" name="OFFICE-ZIP-0450" parent="//@records.10/@elements.1"/>
+    <elements baseName="OFFICE-ZIP-FIRST-FIVE-0450" level="4" name="OFFICE-ZIP-FIRST-FIVE-0450" parent="//@records.10/@elements.5" picture="X(5)"/>
+    <elements baseName="OFFICE-ZIP-LAST-FOUR-0450" level="4" name="OFFICE-ZIP-LAST-FOUR-0450" parent="//@records.10/@elements.5" picture="X(4)"/>
+    <elements baseName="OFFICE-PHONE-0450" level="2" name="OFFICE-PHONE-0450" picture="9(7)">
+      <occursSpecification count="3"/>
+    </elements>
+    <elements baseName="OFFICE-AREA-CODE-0450" level="2" name="OFFICE-AREA-CODE-0450" picture="X(3)"/>
+    <elements baseName="SPEED-DIAL-0450" level="2" name="SPEED-DIAL-0450" picture="X(3)"/>
+    <keys duplicatesOption="NOT_ALLOWED">
+      <elements element="//@records.10/@elements.0"/>
+    </keys>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.11" baseName="SKILL" baseVersion="100" id="455" name="SKILL" areaSpecification="//@areas.1/@areaSpecifications.3" calcKey="//@records.11/@keys.0" memberRoles="//@sets.12/@members.0" ownerRoles="//@sets.11/@owner" rootElements="//@records.11/@elements.0 //@records.11/@elements.1 //@records.11/@elements.2" synonymName="SKILL" synonymVersion="100">
+    <elements baseName="SKILL-ID-0455" keyElements="//@records.11/@keys.0/@elements.0" level="2" name="SKILL-ID-0455" picture="9(4)"/>
+    <elements baseName="SKILL-NAME-0455" keyElements="//@records.11/@keys.1/@elements.0" level="2" name="SKILL-NAME-0455" picture="X(12)"/>
+    <elements baseName="SKILL-DESCRIPTION-0455" level="2" name="SKILL-DESCRIPTION-0455" picture="X(60)"/>
+    <keys duplicatesOption="NOT_ALLOWED">
+      <elements element="//@records.11/@elements.0"/>
+    </keys>
+    <keys duplicatesOption="NOT_ALLOWED" memberRole="//@sets.12/@members.0" naturalSequence="true">
+      <elements element="//@records.11/@elements.1"/>
+    </keys>
+  </records>
+  <records diagramLocation="//@diagramData/@locations.12" baseName="STRUCTURE" baseVersion="100" id="460" locationMode="VIA" name="STRUCTURE" areaSpecification="//@areas.0/@areaSpecifications.3" memberRoles="//@sets.8/@members.0 //@sets.10/@members.0" rootElements="//@records.12/@elements.0 //@records.12/@elements.3 //@records.12/@elements.7" synonymName="STRUCTURE" synonymVersion="100">
+    <elements baseName="STRUCTURE-CODE-0460" children="//@records.12/@elements.1 //@records.12/@elements.2" level="2" name="STRUCTURE-CODE-0460" picture="X(2)"/>
+    <elements baseName="ADMIN-0460" level="88" name="ADMIN-0460" parent="//@records.12/@elements.0" usage="CONDITION_NAME" value="'A'"/>
+    <elements baseName="PROJECT-0460" level="88" name="PROJECT-0460" parent="//@records.12/@elements.0" usage="CONDITION_NAME" value="'P1' THRU 'P9'"/>
+    <elements baseName="STRUCTURE-DATE-0460" children="//@records.12/@elements.4 //@records.12/@elements.5 //@records.12/@elements.6" level="2" name="STRUCTURE-DATE-0460"/>
+    <elements baseName="STRUCTURE-YEAR-0460" level="3" name="STRUCTURE-YEAR-0460" parent="//@records.12/@elements.3" picture="9(4)"/>
+    <elements baseName="STRUCTURE-MONTH-0460" level="3" name="STRUCTURE-MONTH-0460" parent="//@records.12/@elements.3" picture="9(2)"/>
+    <elements baseName="STRUCTURE-DAY-0460" level="3" name="STRUCTURE-DAY-0460" parent="//@records.12/@elements.3" picture="9(2)"/>
+    <elements baseName="FILLER" level="2" name="FILLER" picture="XX"/>
+    <viaSpecification set="//@sets.8"/>
+  </records>
+  <sets name="COVERAGE-CLAIMS" order="LAST" viaMembers="//@records.6/@viaSpecification //@records.9/@viaSpecification //@records.1/@viaSpecification">
+    <members nextDbkeyPosition="1" priorDbkeyPosition="2" record="//@records.6" connectionParts="//@diagramData/@connectionParts.0" connectionLabel="//@diagramData/@connectionLabels.9"/>
+    <members nextDbkeyPosition="1" priorDbkeyPosition="2" record="//@records.9" connectionParts="//@diagramData/@connectionParts.1" connectionLabel="//@diagramData/@connectionLabels.11"/>
+    <members nextDbkeyPosition="1" priorDbkeyPosition="2" record="//@records.1" connectionParts="//@diagramData/@connectionParts.2" connectionLabel="//@diagramData/@connectionLabels.1"/>
+    <owner nextDbkeyPosition="4" priorDbkeyPosition="5" record="//@records.0"/>
+  </sets>
+  <sets name="DEPT-EMPLOYEE" order="SORTED">
+    <members membershipOption="OPTIONAL_AUTOMATIC" nextDbkeyPosition="1" priorDbkeyPosition="2" ownerDbkeyPosition="3" record="//@records.3" sortKey="//@records.3/@keys.1" connectionParts="//@diagramData/@connectionParts.3" connectionLabel="//@diagramData/@connectionLabels.2"/>
+    <owner nextDbkeyPosition="1" priorDbkeyPosition="2" record="//@records.2"/>
+  </sets>
+  <sets name="EMP-COVERAGE" viaMembers="//@records.0/@viaSpecification">
+    <members nextDbkeyPosition="1" priorDbkeyPosition="2" ownerDbkeyPosition="3" record="//@records.0" connectionParts="//@diagramData/@connectionParts.4" connectionLabel="//@diagramData/@connectionLabels.0"/>
+    <owner nextDbkeyPosition="7" priorDbkeyPosition="8" record="//@records.3"/>
+  </sets>
+  <sets name="EMP-EMPOSITION" viaMembers="//@records.4/@viaSpecification">
+    <members nextDbkeyPosition="1" priorDbkeyPosition="2" ownerDbkeyPosition="3" record="//@records.4" connectionParts="//@diagramData/@connectionParts.5" connectionLabel="//@diagramData/@connectionLabels.5"/>
+    <owner nextDbkeyPosition="9" priorDbkeyPosition="10" record="//@records.3"/>
+  </sets>
+  <sets name="EMP-EXPERTISE" order="SORTED" viaMembers="//@records.5/@viaSpecification">
+    <members nextDbkeyPosition="1" priorDbkeyPosition="2" ownerDbkeyPosition="3" record="//@records.5" sortKey="//@records.5/@keys.0" connectionParts="//@diagramData/@connectionParts.6" connectionLabel="//@diagramData/@connectionLabels.7"/>
+    <owner nextDbkeyPosition="11" priorDbkeyPosition="12" record="//@records.3"/>
+  </sets>
+  <sets mode="INDEXED" name="EMP-NAME-NDX" order="SORTED">
+    <indexedSetModeSpecification keyCount="40"/>
+    <members indexDbkeyPosition="4" membershipOption="OPTIONAL_AUTOMATIC" record="//@records.3" sortKey="//@records.3/@keys.2" connectionParts="//@diagramData/@connectionParts.7" connectionLabel="//@diagramData/@connectionLabels.3"/>
+    <systemOwner diagramLocation="//@diagramData/@locations.17" areaSpecification="//@areas.0/@areaSpecifications.4"/>
+  </sets>
+  <sets name="JOB-EMPOSITION" order="NEXT">
+    <members membershipOption="OPTIONAL_MANUAL" nextDbkeyPosition="4" priorDbkeyPosition="5" ownerDbkeyPosition="6" record="//@records.4" connectionParts="//@diagramData/@connectionParts.8" connectionLabel="//@diagramData/@connectionLabels.6"/>
+    <owner nextDbkeyPosition="2" priorDbkeyPosition="3" record="//@records.8"/>
+  </sets>
+  <sets mode="INDEXED" name="JOB-TITLE-NDX" order="SORTED">
+    <indexedSetModeSpecification keyCount="30"/>
+    <members indexDbkeyPosition="1" membershipOption="OPTIONAL_AUTOMATIC" record="//@records.8" sortKey="//@records.8/@keys.1" connectionParts="//@diagramData/@connectionParts.9" connectionLabel="//@diagramData/@connectionLabels.10"/>
+    <systemOwner diagramLocation="//@diagramData/@locations.25" areaSpecification="//@areas.1/@areaSpecifications.4"/>
+  </sets>
+  <sets name="MANAGES" order="NEXT" viaMembers="//@records.12/@viaSpecification">
+    <members nextDbkeyPosition="1" priorDbkeyPosition="2" ownerDbkeyPosition="3" record="//@records.12" connectionParts="//@diagramData/@connectionParts.10" connectionLabel="//@diagramData/@connectionLabels.13"/>
+    <owner nextDbkeyPosition="13" priorDbkeyPosition="14" record="//@records.3"/>
+  </sets>
+  <sets mode="INDEXED" name="OFFICE-EMPLOYEE" order="SORTED">
+    <indexedSetModeSpecification keyCount="30"/>
+    <members indexDbkeyPosition="5" membershipOption="OPTIONAL_AUTOMATIC" ownerDbkeyPosition="6" record="//@records.3" sortKey="//@records.3/@keys.3" connectionParts="//@diagramData/@connectionParts.11" connectionLabel="//@diagramData/@connectionLabels.4"/>
+    <owner nextDbkeyPosition="1" priorDbkeyPosition="2" record="//@records.10"/>
+  </sets>
+  <sets name="REPORTS-TO" order="NEXT">
+    <members membershipOption="OPTIONAL_MANUAL" nextDbkeyPosition="4" priorDbkeyPosition="5" ownerDbkeyPosition="6" record="//@records.12" connectionParts="//@diagramData/@connectionParts.12" connectionLabel="//@diagramData/@connectionLabels.14"/>
+    <owner nextDbkeyPosition="15" priorDbkeyPosition="16" record="//@records.3"/>
+  </sets>
+  <sets mode="INDEXED" name="SKILL-EXPERTISE" order="SORTED">
+    <indexedSetModeSpecification keyCount="30"/>
+    <members indexDbkeyPosition="4" ownerDbkeyPosition="5" record="//@records.5" sortKey="//@records.5/@keys.1" connectionParts="//@diagramData/@connectionParts.13" connectionLabel="//@diagramData/@connectionLabels.8"/>
+    <owner nextDbkeyPosition="2" priorDbkeyPosition="3" record="//@records.11"/>
+  </sets>
+  <sets mode="INDEXED" name="SKILL-NAME-NDX" order="SORTED">
+    <indexedSetModeSpecification keyCount="30"/>
+    <members indexDbkeyPosition="1" membershipOption="OPTIONAL_AUTOMATIC" record="//@records.11" sortKey="//@records.11/@keys.1" connectionParts="//@diagramData/@connectionParts.14" connectionLabel="//@diagramData/@connectionLabels.12"/>
+    <systemOwner diagramLocation="//@diagramData/@locations.28" areaSpecification="//@areas.1/@areaSpecifications.5"/>
+  </sets>
+</org.lh.dmlj.schema:Schema>

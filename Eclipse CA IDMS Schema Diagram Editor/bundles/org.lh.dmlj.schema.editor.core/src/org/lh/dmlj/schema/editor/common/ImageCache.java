@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,38 +17,25 @@
 package org.lh.dmlj.schema.editor.common;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 public class ImageCache {
-	
-	private final Map<ImageDescriptor, Image> imageMap =
-		new HashMap<ImageDescriptor, Image>();
-	
-	public ImageCache() {
-		super();
-	}
+	private final Map<ImageDescriptor, Image> imageMap = new HashMap<>();
 	
 	public void dispose() {
-		Iterator<Image> iter = imageMap.values().iterator();
-		while (iter.hasNext()) {
-			iter.next().dispose();
-		}
+		imageMap.values().stream()
+				.forEach(Image::dispose);
 		imageMap.clear();
 	}
 
 	public Image getImage(ImageDescriptor imageDescriptor) {
 		if (imageDescriptor == null) {
 			return null;
+		} else {			
+			return imageMap.computeIfAbsent(imageDescriptor, ImageDescriptor::createImage);
 		}
-		Image image = (Image) imageMap.get(imageDescriptor);
-		if (image == null) {
-			image = imageDescriptor.createImage();
-			imageMap.put(imageDescriptor, image);
-		}
-		return image;
 	}
 }

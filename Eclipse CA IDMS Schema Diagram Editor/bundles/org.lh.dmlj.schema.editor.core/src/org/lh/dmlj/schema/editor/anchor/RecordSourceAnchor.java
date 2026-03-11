@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,16 +21,13 @@ import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.editor.figure.RecordFigure;
 
 /**
- * An anchor that will locate the source (owner) connection endpoint for a 
- * record as follows :
+ * An anchor that will locate the source (owner) connection endpoint for a record as follows :
  * <ul>
- * <li>If the sourceEndpointLocation attribute of the connection's 
- *     ConnectionPart model object is set, these offsets to the record figure 
- *     location (stored at a scale of 1) are used to calculate the location of 
- *     the connection endpoint.<br><br></li>
- * <li>If the sourceEndpointLocation attribute of the connection's 
- *     ConnectionPart model object is NOT set, the location returned by a 
- *     standard chopbox anchor for the record figure will be used.</li>
+ * <li>If the sourceEndpointLocation attribute of the connection's ConnectionPart model object is set, these
+ *     offsets to the record figure location (stored at a scale of 1) are used to calculate the location of the
+ *     connection endpoint.<br><br></li>
+ * <li>If the sourceEndpointLocation attribute of the connection's ConnectionPart model object is NOT set, the
+ *     location returned by a standard chopbox anchor for the record figure will be used.</li>
  * </ul>
  */
 public class RecordSourceAnchor extends AbstractRecordAnchor {
@@ -38,11 +35,9 @@ public class RecordSourceAnchor extends AbstractRecordAnchor {
 	/**
 	 * Constructs a RecordSourceAnchor with the given record figure.
 	 * @param figure The source (owner) record figure
-	 * @param connectionPart The ConnectionPart model object representing the 
-	 *        connection
+	 * @param connectionPart The ConnectionPart model object representing the connection
 	 */
-	public RecordSourceAnchor(RecordFigure figure, 
-									ConnectionPart connectionPart) {
+	public RecordSourceAnchor(RecordFigure figure, ConnectionPart connectionPart) {
 		super(figure, connectionPart);
 	}
 	

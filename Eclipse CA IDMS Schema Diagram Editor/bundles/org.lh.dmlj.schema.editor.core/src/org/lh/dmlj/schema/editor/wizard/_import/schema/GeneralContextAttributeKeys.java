@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,8 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.wizard._import.schema;
 
-public abstract class GeneralContextAttributeKeys {	
-	
+public final class GeneralContextAttributeKeys {
 	public static final String SCHEMA_SYNTAX_FILE = "schemaSyntaxFile";
 	
 	// (fixed) general options
@@ -27,5 +26,9 @@ public abstract class GeneralContextAttributeKeys {
 	public static final String ADD_OFFSET_FOR_OOAK_012 = "addOffsetForOoak_012";
 	public static final String ADD_OFFSET_FOR_LOOAK_155 = "addOffsetForLooak_155";
 	public static final String ADD_DDLCATLOD = "addDDLCATLOD";	
+	
+	
+	private GeneralContextAttributeKeys() {
+	}
 	
 }

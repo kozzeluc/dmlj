@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.property.section;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -27,23 +26,18 @@ import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.property.handler.IHyperlinkHandler;
 import org.lh.dmlj.schema.editor.property.handler.LocationModeHandler;
 
-public class RecordViaPropertiesSection 
-	extends AbstractRecordPropertiesSection {	
-
-	private IHyperlinkHandler<EAttribute, Command> locationModeHandler = 
-		new LocationModeHandler(this);	
+public class RecordViaPropertiesSection extends AbstractRecordPropertiesSection {
+	private static final List<EAttribute> ATTRIBUTES = List.of(
+			SchemaPackage.eINSTANCE.getSet_Name(),
+			SchemaPackage.eINSTANCE.getViaSpecification_SymbolicDisplacementName(),
+			SchemaPackage.eINSTANCE.getViaSpecification_DisplacementPageCount());
 	
-	public RecordViaPropertiesSection() {
-		super();
-	}	
+	private final IHyperlinkHandler<EAttribute, Command> locationModeHandler = new LocationModeHandler(this);
 	
 	@Override
 	protected EObject getAttributeOwner(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getSet_Name() ||
-			attribute == SchemaPackage.eINSTANCE
-									  .getViaSpecification_SymbolicDisplacementName() ||
-			attribute == SchemaPackage.eINSTANCE
-									  .getViaSpecification_DisplacementPageCount()) {
+		if (attribute == SchemaPackage.eINSTANCE.getSet_Name() || attribute == SchemaPackage.eINSTANCE.getViaSpecification_SymbolicDisplacementName() ||
+			attribute == SchemaPackage.eINSTANCE.getViaSpecification_DisplacementPageCount()) {
 			
 			return target.getViaSpecification();
 		} else {
@@ -53,20 +47,13 @@ public class RecordViaPropertiesSection
 	
 	@Override
 	public List<EAttribute> getAttributes() {
-		List<EAttribute> attributes = new ArrayList<>();
-		attributes.add(SchemaPackage.eINSTANCE.getSet_Name());
-		attributes.add(SchemaPackage.eINSTANCE
-									.getViaSpecification_SymbolicDisplacementName());				
-		attributes.add(SchemaPackage.eINSTANCE
-							        .getViaSpecification_DisplacementPageCount());		
-		return attributes;
+		return ATTRIBUTES;
 	}
 	
 	@Override
 	public String getDescription(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {
-			String key = "description.via.record.properties.set";
-			return getPluginProperty(key);
+			return getPluginProperty("description.via.record.properties.set");
 		} else {
 			return super.getDescription(attribute);
 		}
@@ -74,8 +61,7 @@ public class RecordViaPropertiesSection
 	
 	@Override
 	public IHyperlinkHandler<EAttribute, Command> getHyperlinkHandler(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getSet_Name() ||
-			attribute == SchemaPackage.eINSTANCE.getViaSpecification_SymbolicDisplacementName() ||
+		if (attribute == SchemaPackage.eINSTANCE.getSet_Name() || attribute == SchemaPackage.eINSTANCE.getViaSpecification_SymbolicDisplacementName() ||
 			attribute == SchemaPackage.eINSTANCE.getViaSpecification_DisplacementPageCount()) {
 			
 			return locationModeHandler;
@@ -87,8 +73,7 @@ public class RecordViaPropertiesSection
 	@Override
 	public String getLabel(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {
-			String key = "label.via.record.properties.set";
-			return getPluginProperty(key);
+			return getPluginProperty("label.via.record.properties.set");
 		} else {
 			return super.getLabel(attribute);
 		}
@@ -97,11 +82,8 @@ public class RecordViaPropertiesSection
 	@Override
 	protected String getValue(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getSet_Name()) {			
-			// remove the trailing underscore from the via set name if we're 
-			// dealing with a DDLCATLOD record
-			return Tools.removeTrailingUnderscore(target.getViaSpecification()
-													    .getSet()
-													    .getName());			
+			// remove the trailing underscore from the via set name if we're dealing with a DDLCATLOD record
+			return Tools.removeTrailingUnderscore(target.getViaSpecification().getSet().getName());
 		} else {
 			return super.getValue(attribute);
 		}

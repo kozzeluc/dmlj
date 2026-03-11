@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,8 +16,9 @@
  */
 package org.lh.dmlj.schema.editor.property.handler;
 
+import java.util.Objects;
+
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
@@ -28,75 +29,49 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class StandardEditHandler implements IEditHandler {
-
-	private IModelChangeCommand command;
-	private String  message;	
+	private final String message;
+	private final IModelChangeCommand command;
 	
-	@SuppressWarnings("unused")
-	private StandardEditHandler() {
-		super();
-	}
-	
-	public StandardEditHandler(EObject target, EAttribute attribute, String label, Object newValue, 
-							   String message) {
-		
-		super();
-		
+	public StandardEditHandler(EObject target, EAttribute attribute, String label, Object newValue, String message) {
 		this.message = message;
 		
-		// we need to make sure that newValue is different from the old 
-		// attribute value in target because there's no use in executing a 
-		// command that changes nothing to the model but marks the schema editor 
-		// as dirty
-		EClassifier classifier = attribute.getEType();
-		boolean valueChanged = true;
-		Object oldValue = target.eGet(attribute);
-		if (attribute.getEType().getName().equals("EString") ||
-			attribute.getEType().getName().equals("EShortObject")) {
+		// we need to make sure that newValue is different from the old attribute value in target because there's
+		// no use in executing a command that changes nothing to the model but marks the schema editor as dirty
+		var valueChanged = determineWhetherValueChanged(attribute, target.eGet(attribute), newValue);
 		
-			if (oldValue == null) {
-				valueChanged = newValue != null;
-			} else if (newValue == null) {
-				valueChanged = oldValue != null;
-			} else {
-				valueChanged = !oldValue.equals(newValue);
-			}
-		} else if (attribute.getEType().getName().equals("EBoolean")) {
-			boolean oldB = ((Boolean) oldValue).booleanValue();
-			boolean newB = ((Boolean) newValue).booleanValue();
-			valueChanged = oldB != newB;
-		} else if (attribute.getEType().getName().equals("EShort")) {
-			short oldS = ((Short) oldValue).shortValue();
-			short newS = ((Short) newValue).shortValue();
-			valueChanged = oldS != newS;
-		} else if (classifier.getInstanceClass().getSuperclass() == Enum.class) {
-			valueChanged = !oldValue.equals(newValue);
-		}
-		
-		// only if the value has changed (or we are dealing with an unsupported type), create the 
-		// edit command or set a message if we cannot set one
+		// only if the value has changed (or we are dealing with an unsupported type), create the edit command or
+		// set a message if we cannot set one
 		if (valueChanged) {
-			if (attribute.getEType().getName().equals("EString") ||
-				attribute.getEType().getName().equals("EShortObject")) {
-				
+			if (attribute.getEType().getName().equals("EString") || attribute.getEType().getName().equals("EShortObject")) {
 				command = new SetObjectAttributeCommand(target, attribute, newValue, label);
 			} else if (attribute.getEType().getName().equals("EBoolean")) {
-				boolean b = ((Boolean)newValue).booleanValue();
-				command = new SetBooleanAttributeCommand(target, attribute, b, label);
+				command = new SetBooleanAttributeCommand(target, attribute, (Boolean) newValue, label);
 			} else if (attribute.getEType().getName().equals("EShort")) {
-				short i = ((Short)newValue).shortValue();
-				command = new SetShortAttributeCommand(target, attribute, i, label);
-			} else if (classifier.getInstanceClass().isEnum()) {
+				command = new SetShortAttributeCommand(target, attribute, (Short) newValue, label);
+			} else if (attribute.getEType().getInstanceClass().isEnum()) {
 				command = new SetObjectAttributeCommand(target, attribute, newValue, label);
 			} else {
-				command = null;
 				message = "unsupported type: " + attribute.getEType().getName();
+				command = null;
 			}
 			if (command != null) {
-				ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+				var context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
 				context.putContextData(target, attribute);
 				command.setContext(context);
 			}
+		} else {
+			command = null;
+		}
+	}
+	
+	private boolean determineWhetherValueChanged(EAttribute attribute, Object oldValue, Object newValue) {
+		if (attribute.getEType().getName().equals("EString") || attribute.getEType().getName().equals("EShortObject") ||
+			attribute.getEType().getName().equals("EBoolean") || attribute.getEType().getName().equals("EShort") ||
+			attribute.getEType().getInstanceClass().getSuperclass() == Enum.class) {
+			
+			return !Objects.equals(oldValue, newValue);
+		} else {
+			return true;
 		}
 	}
 

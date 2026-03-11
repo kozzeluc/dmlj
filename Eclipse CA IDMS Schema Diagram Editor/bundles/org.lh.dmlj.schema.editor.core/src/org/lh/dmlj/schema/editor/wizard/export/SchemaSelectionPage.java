@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,8 +23,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -44,27 +42,24 @@ import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class SchemaSelectionPage extends WizardPage {
-
 	private static final String FILE_EXTENSION_SCHEMA = ".schema";
 	private static final String FILE_EXTENSION_SCHEMADSL = ".schemadsl";
 
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 		
-	private static final FilenameFilter FILTER = new FilenameFilter() {
-		@Override
-		public boolean accept(File dir, String name) {
-			File fileOrFolder = new File(dir, name);
-			return fileOrFolder.isDirectory() || fileOrFolder.getName().endsWith(FILE_EXTENSION_SCHEMA) || 
-				   fileOrFolder.getName().endsWith(FILE_EXTENSION_SCHEMADSL);
-		}
+	private static final FilenameFilter FILTER = (dir, name) -> {
+		var fileOrFolder = new File(dir, name);
+		return fileOrFolder.isDirectory() || fileOrFolder.getName().endsWith(FILE_EXTENSION_SCHEMA) ||
+			   fileOrFolder.getName().endsWith(FILE_EXTENSION_SCHEMADSL);	
 	};
 	
-	private Image iconFolder =Plugin.getDefault().getImage("icons/fldr_obj.gif");
-	private Image iconProject = Plugin.getDefault().getImage("icons/prj_obj.gif");
-	private Image iconSchema = Plugin.getDefault().getImage("icons/schema.gif");		
-	private Map<TreeItem, File> map = new HashMap<>();
+	private final ISelection selection;
+	private final Image iconFolder = Plugin.getDefault().getImage("icons/fldr_obj.gif");
+	private final Image iconProject = Plugin.getDefault().getImage("icons/prj_obj.gif");
+	private final Image iconSchema = Plugin.getDefault().getImage("icons/schema.gif");		
+	private final Map<TreeItem, File> map = new HashMap<>();
 	private Schema schema;
-	private ISelection selection;
+	
 	private Tree tree;
 
 	public SchemaSelectionPage(ISelection selection) {
@@ -74,32 +69,8 @@ public class SchemaSelectionPage extends WizardPage {
 		setDescription("Select the CA IDMS/DB Schema");
 	}
 
-	private void addTreeItems(TreeItem parentTreeItem, File folder) {
-		for (File fileOrFolder : folder.listFiles(FILTER)) {
-			if (!fileOrFolder.getName().startsWith(".")) {
-				if (fileOrFolder.isDirectory()) {
-					TreeItem folderTreeItem = 
-						new TreeItem(parentTreeItem, SWT.NONE);
-					folderTreeItem.setImage(iconFolder);
-					folderTreeItem.setText(fileOrFolder.getName());
-					map.put(folderTreeItem, fileOrFolder);
-					addTreeItems(folderTreeItem, fileOrFolder);
-					if (folderTreeItem.getItemCount() == 0) {
-						folderTreeItem.dispose();
-					}
-				} else {
-					TreeItem schemaTreeItem = 
-						new TreeItem(parentTreeItem, SWT.NONE);
-					schemaTreeItem.setImage(iconSchema);
-					schemaTreeItem.setText(fileOrFolder.getName());
-					map.put(schemaTreeItem, fileOrFolder);
-				}
-			}
-		}		
-	}
-
 	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NULL);
+		var container = new Composite(parent, SWT.NULL);
 
 		setControl(container);
 		container.setLayout(new GridLayout(1, false));
@@ -113,13 +84,16 @@ public class SchemaSelectionPage extends WizardPage {
 		});
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IWorkspaceRoot root = workspace.getRoot();		
-		
-		for (IProject project : root.getProjects()) {
+		addSchemasInProjectsToTree();
+		dealWithSelection();
+		validatePage();
+	}
+	
+	private void addSchemasInProjectsToTree() {
+		for (var project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
 			if (!project.getName().startsWith(".")) {								
-				File projectFolder = project.getLocation().toFile();
-				TreeItem projectTreeItem = new TreeItem(tree, SWT.NONE);
+				var projectFolder = project.getLocation().toFile();
+				var projectTreeItem = new TreeItem(tree, SWT.NONE);
 				projectTreeItem.setImage(iconProject);
 				projectTreeItem.setText(projectFolder.getName());				
 				try {
@@ -132,57 +106,81 @@ public class SchemaSelectionPage extends WizardPage {
 					projectTreeItem.dispose();
 				}				
 			}
-		}	
-				
-		if (selection != null && !selection.isEmpty() && 
-			selection instanceof TreeSelection) {
-			
-			TreeSelection treeSelection = (TreeSelection) selection;
-			if (treeSelection.getFirstElement() instanceof IProject) {
-				IProject project = (IProject) treeSelection.getFirstElement();
-				for (TreeItem treeItem : tree.getItems()) {
-					if (treeItem.getText().equals(project.getName())) {						
-						tree.setSelection(treeItem);						
-						break;
-					}					
-				}
-			} else if (treeSelection.getFirstElement() instanceof IFile) {
-				File selectedFileOrFolder = 
-					((IFile) treeSelection.getFirstElement()).getRawLocation()
-															 .toFile();
-				for (TreeItem treeItem : map.keySet()) {
-					File aFile = map.get(treeItem);
-					if (aFile.equals(selectedFileOrFolder)) {
-						tree.setSelection(treeItem);
-						tree.showItem(treeItem);
-						break;
+		}		
+	}
+	
+	private void addTreeItems(TreeItem parentTreeItem, File folder) {
+		for (var fileOrFolder : folder.listFiles(FILTER)) {
+			if (!fileOrFolder.getName().startsWith(".")) {
+				if (fileOrFolder.isDirectory()) {
+					var folderTreeItem = new TreeItem(parentTreeItem, SWT.NONE);
+					folderTreeItem.setImage(iconFolder);
+					folderTreeItem.setText(fileOrFolder.getName());
+					map.put(folderTreeItem, fileOrFolder);
+					addTreeItems(folderTreeItem, fileOrFolder);
+					if (folderTreeItem.getItemCount() == 0) {
+						folderTreeItem.dispose();
 					}
+				} else {
+					var schemaTreeItem = new TreeItem(parentTreeItem, SWT.NONE);
+					schemaTreeItem.setImage(iconSchema);
+					schemaTreeItem.setText(fileOrFolder.getName());
+					map.put(schemaTreeItem, fileOrFolder);
 				}
 			}
+		}		
+	}
+	
+	private void dealWithSelection() {
+		if (selection != null && !selection.isEmpty() && selection instanceof TreeSelection treeSelection) {
+			if (treeSelection.getFirstElement() instanceof IProject project) {
+				dealWithSelectedProject(project);
+			} else if (treeSelection.getFirstElement() instanceof IFile file) {
+				dealWithSelectedFile(file);
+			}
 		}
-		
-		validatePage();
-	}	
+	}
+	
+	private void dealWithSelectedProject(IProject project) {
+		for (var treeItem : tree.getItems()) {
+			if (treeItem.getText().equals(project.getName())) {						
+				tree.setSelection(treeItem);						
+				break;
+			}					
+		}
+	}
+	
+	private void dealWithSelectedFile(IFile file) {
+		var selectedFileOrFolder =file.getRawLocation().toFile();
+		for (var entry : map.entrySet()) {
+			var treeItem = entry.getKey();
+			var aFile = map.get(treeItem);
+			if (aFile.equals(selectedFileOrFolder)) {
+				tree.setSelection(treeItem);
+				tree.showItem(treeItem);
+				break;
+			}
+		}
+	}
 
 	public Schema getSchema() {
 		return schema;
 	}
 	
 	private void validatePage() {
-		
-		boolean pageComplete = true;
+		var pageComplete = true;
 		setErrorMessage(null);
 		
-		TreeItem[] selection = tree.getSelection();
-		if (selection.length == 1 && map.containsKey(selection[0])) {
-			File selectedFileOrFolder = map.get(selection[0]);
+		var treeSelection = tree.getSelection();
+		if (treeSelection.length == 1 && map.containsKey(treeSelection[0])) {
+			var selectedFileOrFolder = map.get(treeSelection[0]);
 			if (!selectedFileOrFolder.isDirectory()) {
 				try {
 					schema = Tools.executeWithCursorBusy(() -> Tools.readFromFile(selectedFileOrFolder));
-				} catch (Throwable t) {
+				} catch (Exception e) {
 					pageComplete = false;
-					String p = t.getMessage() == null ? "" : ": " + t.getMessage();
-					setErrorMessage(t.getClass().getSimpleName() + p);
+					var p = e.getMessage() == null ? "" : ": " + e.getMessage();
+					setErrorMessage(e.getClass().getSimpleName() + p);
 				}
 			} else {
 				pageComplete = false;
@@ -190,7 +188,6 @@ public class SchemaSelectionPage extends WizardPage {
 		} else {
 			pageComplete = false;
 		}
-				
 		setPageComplete(pageComplete);
 	}
 	

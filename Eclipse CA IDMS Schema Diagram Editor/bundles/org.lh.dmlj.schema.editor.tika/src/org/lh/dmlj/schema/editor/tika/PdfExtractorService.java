@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2022  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Properties;
 
 import org.apache.tika.Tika;
@@ -35,44 +34,33 @@ public class PdfExtractorService implements IPdfExtractorService {
 	
 	@Override
 	public void extractContent(InputStream in, IPdfContentConsumer contentConsumer) {		
-		try {
-			Reader reader = tika.parse(in);
-			BufferedReader bufferedReader = new BufferedReader(reader);
-			boolean proceed = true;
+		try (var reader = tika.parse(in); var bufferedReader = new BufferedReader(reader)) {
+			var proceed = true;
 			// New in Tika 1.3: text from bookmarks is now extracted (TIKA-1035) 
 			// see: http://issues.apache.org/jira/browse/TIKA-1035).
-			// The IPdfContentConsumer has to be aware of this; it is only of relevence for the
-			// 'Dictionary Structure Reference Guides' because it is the very last chapter in each 
-			// of these books that interests us...
-			for (String line = bufferedReader.readLine(); line != null && proceed; line = bufferedReader.readLine()) {				
+			// The IPdfContentConsumer has to be aware of this; it is only of relevance for the 'Dictionary
+			// Structure Reference Guides' because it is the very last chapter in each of these books that interests us...
+			for (var line = bufferedReader.readLine(); line != null && proceed; line = bufferedReader.readLine()) {				
 				proceed = contentConsumer.handleContent(line);
 			}
-			bufferedReader.close();
-			reader.close();		
 			in.close();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 
 	@Override
 	public Properties extractMetadata(File file) {
-		Metadata metadata = new Metadata();
-		try {
-			InputStream inputStream = new FileInputStream(file);
-			// it's important to close the following Reader afterwards to avoid out-of-memory exeptions			
-			Reader reader = tika.parse(inputStream, metadata);		
-			inputStream.close();
-			reader.close(); // we don't do anything with but closing it is vital !
+		var metadata = new Metadata();
+		try (var inputStream = new FileInputStream(file); var reader = tika.parse(inputStream, metadata)) {
+			// nothing to do here
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
-		
-		Properties properties = new Properties();
-		for (String name : metadata.names()) {
+		var properties = new Properties();
+		for (var name : metadata.names()) {
 			properties.put(name, metadata.get(name));
 		}
-		
 		return properties;
 	}
 	
@@ -93,18 +81,16 @@ public class PdfExtractorService implements IPdfExtractorService {
 
 	@Override
 	public String getLicenseText() {
-		StringBuilder p = new StringBuilder();
-		try {
-			InputStream inStream = PdfExtractorService.class.getClassLoader().getResourceAsStream("license/LICENSE");
-			BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
-			for (String line = in.readLine(); line != null; line = in.readLine()) {
-				if (p.length() > 0) {
+		var p = new StringBuilder();
+		try (var inStream = PdfExtractorService.class.getClassLoader().getResourceAsStream("license/LICENSE");
+			 var in = new BufferedReader(new InputStreamReader(inStream))) {
+			
+			for (var line = in.readLine(); line != null; line = in.readLine()) {
+				if (!p.isEmpty()) {
 					p.append("\n");
 				}
 				p.append(line);
 			}
-			in.close();
-			inStream.close();
 		} catch (IOException e) {
 			p.append("\nIOException: " + e.getMessage());
 		}

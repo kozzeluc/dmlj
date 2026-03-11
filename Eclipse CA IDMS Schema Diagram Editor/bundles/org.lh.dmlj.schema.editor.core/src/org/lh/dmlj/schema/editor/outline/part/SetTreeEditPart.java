@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,13 +16,13 @@
  */
 package org.lh.dmlj.schema.editor.outline.part;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import static java.util.Comparator.comparing;
 
-import org.eclipse.emf.ecore.EObject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.eclipse.gef.EditPolicy;
-import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Schema;
@@ -31,7 +31,7 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
-import org.lh.dmlj.schema.editor.command.infrastructure.IContextDataKeys;
+import org.lh.dmlj.schema.editor.command.infrastructure.ContextDataKeys;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
@@ -46,42 +46,29 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET &&
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-			appliesToMemberOfModelSet(context)) {
-			
-			// a member record type was added to the model set (execute/redo)			
-			createAndAddRecordAsChild(context);
-		} else if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET &&
-				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				   appliesToMemberOfModelSet(context)) {
-			
-			// an add member record to set operation was undone for the model set
-			findAndRemoveRecordAsChild(context);
-		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET &&
-				   context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-				   appliesToMemberOfModelSet(context)) {
-			
-			// a member record type was removed from the model set (execute/redo)
-			findAndRemoveRecordAsChild(context);
-		} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET &&
-				   context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				   appliesToMemberOfModelSet(context)) {
-			
-			// a remove member from set operation was undone for the model set
-			createAndAddRecordAsChild(context);
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-				   appliesToModelSet(context)) {
-			
-			// the set name has changed (execute/undo/redo)... the order of the parent edit part 
-			// might become disrupted, so we have to inform that edit part of this fact
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) && appliesToModelSet(context)) {
+			// the set name has changed (execute/undo/redo)... the order of the parent edit part might become
+			// disrupted, so we have to inform that edit part of this fact
 			nodeTextChanged();						
+		} else if (appliesToMemberOfModelSet(context)) {
+			if (context.getCommandExecutionMode() != CommandExecutionMode.UNDO) {
+				if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET) {	
+					createAndAddRecordAsChild(context);
+				} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {	
+					findAndRemoveRecordAsChild(context);
+				}			
+			} else {
+				if (context.getModelChangeType() == ModelChangeType.ADD_MEMBER_TO_SET) {				
+					findAndRemoveRecordAsChild(context);
+				} else if (context.getModelChangeType() == ModelChangeType.REMOVE_MEMBER_FROM_SET) {
+					createAndAddRecordAsChild(context);
+				}
+			}
 		}
 	}
 	
 	private boolean appliesToMemberOfModelSet(ModelChangeContext context) {
-		String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+		var setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 		return getModel().getName().equals(setName);
 	}
 	
@@ -89,29 +76,26 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 		if (Boolean.TRUE.equals(context.getListenerData())) {
 			return true;
 		} else {
-			String setName = context.getContextData().get(IContextDataKeys.SET_NAME);
+			var setName = context.getContextData().get(ContextDataKeys.SET_NAME);
 			return getModel().getName().equals(setName);
 		}
 	}	
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
-			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-			context.appliesTo(getModel())) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO && context.appliesTo(getModel())) {
 					
-			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's 
-			// listener's data so that we can respond to this when processing the after model change 
-			// event
+			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's listener's data
+			// so that we can respond to this when processing the after model change event
 			context.setListenerData(Boolean.TRUE);
 		}
 	}
 	
 	private void createAndAddRecordAsChild(ModelChangeContext context) {
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
-		SchemaRecord record = getModel().getSchema().getRecord(recordName);
-		createAndAddChild(record);
+		var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+		var schemaRecord = getModel().getSchema().getRecord(recordName);
+		createAndAddChild(schemaRecord);
 	}
 
 	@Override
@@ -122,147 +106,116 @@ public class SetTreeEditPart extends AbstractSchemaTreeEditPart<Set> {
 		if (getParentModelObject() instanceof Schema) {
 			// the next edit policy allows for the deletion of a set
 			installEditPolicy(EditPolicy.COMPONENT_ROLE, new DeleteSetEditPolicy(getModel()));
-		} else if (getParentModelObject() instanceof SchemaRecord) {
-			// if the parent model object is a member in the model set, install an edit policy that 
-			// allows for the removal of that record as a set member, provided it is not the last 
-			// member in that set (in other words, we don't want the whole set to be deleted, just 
-			// this 1 member record removed)
-			if (getParentModelObject() instanceof SchemaRecord &&  
-				isMemberofModelSet((SchemaRecord) getParentModelObject())) {
-				
-				MemberRole memberRole = getMemberRole((SchemaRecord) getParentModelObject());
-				installEditPolicy(EditPolicy.COMPONENT_ROLE, 
-								  new RemoveMemberFromSetEditPolicy(memberRole, false));
-			}
+		} else if (getParentModelObject() instanceof SchemaRecord schemaRecord && isMemberofModelSet(schemaRecord)) {
+			// if the parent model object is a member in the model set, install an edit policy that allows for
+			// the removal of that record as a set member, provided it is not the last member in that set (in
+			// other words, we don't want the whole set to be deleted, just this 1 member record removed)
+			var memberRole = getMemberRole((SchemaRecord) getParentModelObject());
+			installEditPolicy(EditPolicy.COMPONENT_ROLE, new RemoveMemberFromSetEditPolicy(memberRole, false));
 		}
 	}
 	
 	private void findAndRemoveRecordAsChild(ModelChangeContext context) {
-		String recordName = context.getContextData().get(IContextDataKeys.RECORD_NAME);
-		SchemaRecord record = getModel().getSchema().getRecord(recordName);
-		findAndRemoveChild(record, false);
+		var recordName = context.getContextData().get(ContextDataKeys.RECORD_NAME);
+		var schemaRecord = getModel().getSchema().getRecord(recordName);
+		findAndRemoveChild(schemaRecord, false);
 	}
 	
 	@Override
 	protected Class<?>[] getChildNodeTextProviderOrder() {
-		return new Class<?>[] {SchemaRecord.class};
+		return new Class<?>[] { SchemaRecord.class };
 	}
 	
 	@Override
 	protected String getImagePath() {
-		String setName = getModel().getName();
-		if (getModel().getMode() == SetMode.CHAINED) {			
-			// chained set
-			if (getParentModelObject() instanceof SchemaRecord) {
-				// we want the parent record's role to be visible in the set image
-				SchemaRecord record = (SchemaRecord) getParentModelObject();
-				if (getModel().getMembers().size() > 1) {
-					// multiple member set
-					if (record.getRole(setName) instanceof OwnerRole) {		
-						// owner
-						return "icons/multiple_member_set_owner.gif";
-					} else {
-						// member
-						return "icons/multiple_member_set_member.gif";
-					}
-				} else {
-					// single member set
-					if (record.getRole(setName) instanceof OwnerRole) {		
-						// owner
-						return "icons/chained_set_owner.gif";
-					} else {
-						// member
-						return "icons/chained_set_member.gif";
-					}
-				}
+		if (getModel().getMode() == SetMode.CHAINED) {
+			if (getModel().getMembers().size() > 1) {
+				return getImagePathForMultipleMemberSet();
 			} else {
-				if (getModel().getMembers().size() > 1) {
-					// multiple member set
-					return "icons/multiple_member_set.gif";
-				} else {
-					// single member set
-					return "icons/chained_set.gif";
-				}
+				return getImagePathForChainedSet();
 			}
 		} else {
-			// indexed set
-			if (getParentModelObject() instanceof SchemaRecord) {
-				// we want the parent record's role to be visible in the set image
-				SchemaRecord record = (SchemaRecord) getParentModelObject();
-				if (record.getRole(setName) instanceof OwnerRole) {
-					// owner
-					return "icons/indexed_set_owner.gif";
-				} else {
-					// member
-					return "icons/indexed_set_member.gif";
-				}
-			} else {			
-				return "icons/indexed_set.gif";
+			return getImagePathForIndexedSet();
+		}
+	}
+	
+	private String getImagePathForMultipleMemberSet() {
+		if (getParentModelObject() instanceof SchemaRecord schemaRecord) {
+			if (schemaRecord.getRole(getModel().getName()) instanceof OwnerRole) {						
+				return "icons/multiple_member_set_owner.gif";
+			} else {
+				return "icons/multiple_member_set_member.gif";
 			}
+		} else {
+			return "icons/multiple_member_set.gif";
+		}
+	}
+	
+	private String getImagePathForChainedSet() {
+		if (getParentModelObject() instanceof SchemaRecord schemaRecord) {
+			// we want the parent record's role to be visible in the set image
+			if (schemaRecord.getRole(getModel().getName()) instanceof OwnerRole) {						
+				return "icons/chained_set_owner.gif";
+			} else {
+				return "icons/chained_set_member.gif";
+			}
+		} else {
+			return "icons/chained_set.gif";
+		}
+	}
+	
+	private String getImagePathForIndexedSet() {
+		if (getParentModelObject() instanceof SchemaRecord schemaRecord) {
+			// we want the parent record's role to be visible in the set image
+			if (schemaRecord.getRole(getModel().getName()) instanceof OwnerRole) {
+				return "icons/indexed_set_owner.gif";
+			} else {
+				return "icons/indexed_set_member.gif";
+			}
+		} else {			
+			return "icons/indexed_set.gif";
 		}
 	}
 
-	private MemberRole getMemberRole(SchemaRecord record) {
-		for (MemberRole memberRole : getModel().getMembers()) {
-			if (memberRole.getRecord() == record) {
-				return memberRole;
-			}
-		}
-		return null;
+	private MemberRole getMemberRole(SchemaRecord schemaRecord) {
+		return getModel().getMembers().stream()
+				.filter(memberRole -> memberRole.getRecord() == schemaRecord)
+				.findFirst()
+				.orElse(null);
 	}
 
 	@Override
 	public List<?> getModelChildren() {
-		
-		List<SchemaRecord> children = new ArrayList<>();
-		
-		// add the owner record
-		if (getModel().getOwner() != null) {  // the set might have been deleted
-			children.add(getModel().getOwner().getRecord());
-		}
-		
-		// add the member records
-		List<SchemaRecord> memberRecords = new ArrayList<>();
-		for (MemberRole memberRole : getModel().getMembers()) {
-			memberRecords.add(memberRole.getRecord());
-		}
-		children.addAll(memberRecords);
-		
-		// sort the list of children
-		Collections.sort(children);
-		
-		return children;
-		
+		var owner = getModel().getOwner() != null ? List.of(getModel().getOwner().getRecord()) : new ArrayList<SchemaRecord>();
+		return Stream.concat(owner.stream(), getModel().getMembers().stream().map(MemberRole::getRecord))
+				.sorted(comparing(SchemaRecord::getName, String.CASE_INSENSITIVE_ORDER))
+				.toList();
 	}
 
 	@Override
-	protected INodeTextProvider<Set> getNodeTextProvider() {
-		return getModel();
+	protected WrappedNodeTextProvider getNodeTextProvider() {
+		return new WrappedNodeTextProvider(getModel());
 	}
 
-	private boolean isMemberofModelSet(SchemaRecord record) {
-		return getMemberRole(record) != null;
+	private boolean isMemberofModelSet(SchemaRecord schemaRecord) {
+		return getMemberRole(schemaRecord) != null;
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	protected void registerModel() {
-		// different edit parts exist for the same set; make sure that selecting a set in the
-		// SchemaEditor yields the outline view's top level set to become the current selection
-		EObject parentModelObject = getParentModelObject();
+		// different edit parts exist for the same set; make sure that selecting a set in the SchemaEditor yields
+		// the outline view's top level set to become the current selection
+		var parentModelObject = getParentModelObject();
 		if (parentModelObject instanceof Schema) {
-			// the model object is the key in the edit part registry; this is what we want so that
-			// selecting a set in the SchemaEditor selects the top level set edit part in the
-			// outline view
+			// the model object is the key in the edit part registry; this is what we want so that selecting a
+			// set in the SchemaEditor selects the top level set edit part in the outline view
 			super.registerModel(); 
 		} else {
-			// assure that set edit parts that are not at the top level will never be found
-			// by their model object; create an artificial key to make this happen
-			EditPartRegistryKey<Set> key = new EditPartRegistryKey<>(getModel());
+			// assure that set edit parts that are not at the top level will never be found by their model
+			// object; create an artificial key to make this happen
+			var key = new EditPartRegistryKey<>(getModel());
 			getViewer().getEditPartRegistry().put(key, this);
-		}		
-		
-		
+		}
 	}
 
 }

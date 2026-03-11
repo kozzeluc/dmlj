@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,9 +25,7 @@ import org.lh.dmlj.schema.editor.importtool.PopularSchemaLayoutManager;
 public final class GridRecordLayoutManager extends PopularSchemaLayoutManager {
 	
 	@Override
-	public void layout(List<SchemaRecord> records, Properties unused,
-					   Properties locations) {
-		
+	public void layout(List<SchemaRecord> records, Properties unused, Properties locations) {
 		super.layout(records, locations, unused);
 	}
 

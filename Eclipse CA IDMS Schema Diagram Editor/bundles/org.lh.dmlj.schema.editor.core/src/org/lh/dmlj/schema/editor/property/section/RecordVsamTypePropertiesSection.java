@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.property.section;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -24,16 +23,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.lh.dmlj.schema.SchemaPackage;
 
 public class RecordVsamTypePropertiesSection extends AbstractRecordPropertiesSection {
-
-	private static final EAttribute[] ATTRIBUTES = 
-		{SchemaPackage.eINSTANCE.getVsamType_LengthType(),
-		 SchemaPackage.eINSTANCE.getVsamType_Spanned()};
+	private static final List<EAttribute> ATTRIBUTES = List.of( 
+			SchemaPackage.eINSTANCE.getVsamType_LengthType(),
+			SchemaPackage.eINSTANCE.getVsamType_Spanned());
 	
 	@Override
 	protected EObject getAttributeOwner(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getVsamType_LengthType() ||
-			attribute == SchemaPackage.eINSTANCE.getVsamType_Spanned()) {
-			
+		if (attribute == SchemaPackage.eINSTANCE.getVsamType_LengthType() || attribute == SchemaPackage.eINSTANCE.getVsamType_Spanned()) {
 			return target.getVsamType();
 		} else {
 			return super.getAttributeOwner(attribute);
@@ -42,7 +38,7 @@ public class RecordVsamTypePropertiesSection extends AbstractRecordPropertiesSec
 	
 	@Override
 	public List<EAttribute> getAttributes() {
-		return Arrays.asList(ATTRIBUTES);
+		return ATTRIBUTES;
 	}
 
 	@Override
@@ -58,9 +54,7 @@ public class RecordVsamTypePropertiesSection extends AbstractRecordPropertiesSec
 
 	@Override
 	public EObject getEditableObject(EAttribute attribute) {
-		if (attribute == SchemaPackage.eINSTANCE.getVsamType_LengthType() ||
-			attribute == SchemaPackage.eINSTANCE.getVsamType_Spanned()) {			
-			
+		if (attribute == SchemaPackage.eINSTANCE.getVsamType_LengthType() || attribute == SchemaPackage.eINSTANCE.getVsamType_Spanned()) {
 			return target.getVsamType();
 		} else {
 			return super.getEditableObject(attribute);

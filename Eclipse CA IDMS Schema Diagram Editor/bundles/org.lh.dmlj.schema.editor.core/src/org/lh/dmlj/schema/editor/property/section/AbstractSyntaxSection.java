@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,38 +24,32 @@ import org.lh.dmlj.schema.editor.Plugin;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 /**
- * An abstract superclass for sections in the tabbed properties that show the 
- * DDL for a given object (record, set, ...).  Subclasses must supply the valid
- * edit part model object types and a template during construction and must
- * override method getTemplateObject if the template object is different from 
- * the edit part model object.
+ * An abstract superclass for sections in the tabbed properties that show the DDL for a given object (record,
+ * set, ...). Subclasses must supply the valid edit part model object types and a template during construction
+ * and must override method getTemplateObject if the template object is different from the edit part model object.
  */
-public abstract class AbstractSyntaxSection 
-	extends AbstractSectionWithStyledText {
-	
+public abstract class AbstractSyntaxSection extends AbstractSectionWithStyledText {
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
-	private Method generateMethod;
-	private Object template;	
+	private final Object template;
+	private final Method generateMethod;
 		
-	protected AbstractSyntaxSection(Class<?>[] validEditPartModelObjectTypes,
-									Object template) {
+	protected AbstractSyntaxSection(Class<?>[] validEditPartModelObjectTypes, Object template) {
 		super(validEditPartModelObjectTypes);
 		this.template = template;
 		try {
-			generateMethod = 
-				template.getClass().getDeclaredMethod("generate", Object.class);
-		} catch (Throwable t) {			
-			logger.error(t.getMessage(), t);
-			throw new Error(t);
+			generateMethod = template.getClass().getDeclaredMethod("generate", Object.class);
+		} catch (Exception e) {			
+			logger.error(e.getMessage(), e);
+			throw new IllegalStateException(e);
 		}
 	}
 
 	protected EObject getTemplateObject(Object editPartModelObject) {
-		if (editPartModelObject instanceof EObject) {
-			return (EObject) editPartModelObject;
+		if (editPartModelObject instanceof EObject eObject) {
+			return eObject;
 		}
-		throw new Error("no template object");
+		throw new IllegalStateException("no template object");
 	}	
 	
 	protected Object[] getTemplateParametersOtherThanTemplateObject() {
@@ -64,26 +58,21 @@ public abstract class AbstractSyntaxSection
 	
 	@Override
 	protected String getValue(Object editPartModelObject) {
-		EObject templateObject = getTemplateObject(editPartModelObject);
-		Object[] templateParametersOtherThanTemplateObject = 
-			getTemplateParametersOtherThanTemplateObject();
+		var templateObject = getTemplateObject(editPartModelObject);
+		var templateParametersOtherThanTemplateObject = getTemplateParametersOtherThanTemplateObject();
 		String syntax;
 		try {
-			int argsLength = templateParametersOtherThanTemplateObject != null ? 
-							 templateParametersOtherThanTemplateObject.length + 1 : 1; 
-			Object args[] = new Object[argsLength];
+			int argsLength = templateParametersOtherThanTemplateObject != null ? templateParametersOtherThanTemplateObject.length + 1 : 1;
+			var args = new Object[argsLength];
 			args[0] = templateObject;
-			if (templateParametersOtherThanTemplateObject != null && 
-				templateParametersOtherThanTemplateObject.length > 0) {
-				
+			if (templateParametersOtherThanTemplateObject != null && templateParametersOtherThanTemplateObject.length > 0) {
 				System.arraycopy(templateParametersOtherThanTemplateObject, 0, args, 1, argsLength - 1);
 			}
 			syntax = (String) generateMethod.invoke(template, Arrays.asList(args));						
-		} catch (Throwable t) {
-			String message = t.getMessage();
-			logger.error(message, t);
-			syntax = "an error occurred while generating the DDL: " + 
-					 t.getClass().getName() + "(" + message + ")";
+		} catch (Exception e) {
+			String message = e.getMessage();
+			logger.error(message, e);
+			syntax = "an error occurred while generating the DDL: " + e.getClass().getName() + "(" + message + ")";
 		}
 		return syntax;
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,6 +19,10 @@ package org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ui;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,26 +34,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 public class PromptForPasswordDialog extends Dialog {
-	
-	private Text textDictionary;
-	private Text textConnectionUrl;
-	private Text textPassword;	
-	private Button btnStorePassword;
-	
-	private Dictionary dictionary;
-	
+	private final Dictionary dictionary;
 	private String password;
 	private boolean storePassword;
-	private Label lblSchema;
-	private Text textSchema;
+	
+	private Text textPassword;	
+	private Button btnStorePassword;
 	
 	public PromptForPasswordDialog(Shell parentShell, Dictionary dictionary) {
 		super(parentShell);
@@ -72,48 +64,43 @@ public class PromptForPasswordDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
+		var container = (Composite) super.createDialogArea(parent);
 		container.setLayout(new GridLayout(2, false));
 		
-		Label lblDictionary = new Label(container, SWT.NONE);
+		var lblDictionary = new Label(container, SWT.NONE);
 		lblDictionary.setText("Dictionary:");
 		
-		textDictionary = new Text(container, SWT.BORDER | SWT.READ_ONLY);
+		var textDictionary = new Text(container, SWT.BORDER | SWT.READ_ONLY);
 		textDictionary.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblConnectionUrl = new Label(container, SWT.NONE);
+		var lblConnectionUrl = new Label(container, SWT.NONE);
 		lblConnectionUrl.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblConnectionUrl.setText("Connection URL:");
 		
-		textConnectionUrl = new Text(container, SWT.BORDER | SWT.READ_ONLY);
+		var textConnectionUrl = new Text(container, SWT.BORDER | SWT.READ_ONLY);
 		textConnectionUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblSchema = new Label(container, SWT.NONE);
+		var lblSchema = new Label(container, SWT.NONE);
 		lblSchema.setText("Schema:");
 		
-		textSchema = new Text(container, SWT.BORDER | SWT.READ_ONLY);
+		var textSchema = new Text(container, SWT.BORDER | SWT.READ_ONLY);
 		textSchema.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label lblPassword = new Label(container, SWT.NONE);
+		var lblPassword = new Label(container, SWT.NONE);
 		lblPassword.setText("Password:");
 		
 		textPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
-		textPassword.addTraverseListener(new TraverseListener() {
-			public void keyTraversed(TraverseEvent e) {
-				validate();
-			}
-		});
+		textPassword.addTraverseListener(e -> validate());
 		textPassword.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				btnStorePassword.setEnabled(dictionary.getInternalId() > -1 &&
-											textPassword.getText().trim().length() < 100);
+				btnStorePassword.setEnabled(dictionary.getInternalId() > -1 && textPassword.getText().trim().length() < 100);
 				validate();
 			}
 		});
-		GridData gd_text = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_text.widthHint = 100;
-		textPassword.setLayoutData(gd_text);
+		var gdText = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gdText.widthHint = 100;
+		textPassword.setLayoutData(gdText);
 		
 		btnStorePassword = new Button(container, SWT.FLAT | SWT.CHECK);
 		btnStorePassword.addSelectionListener(new SelectionAdapter() {
@@ -122,9 +109,9 @@ public class PromptForPasswordDialog extends Dialog {
 				validate();
 			}
 		});
-		GridData gd_btnCheckButton = new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 2, 1);
-		gd_btnCheckButton.verticalIndent = 10;
-		btnStorePassword.setLayoutData(gd_btnCheckButton);
+		var gdBtnCheckButton = new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 2, 1);
+		gdBtnCheckButton.verticalIndent = 10;
+		btnStorePassword.setLayoutData(gdBtnCheckButton);
 		btnStorePassword.setText("Encrypt and store password; don't prompt in the future.");
 		
 		textDictionary.setText(dictionary.getId());
@@ -152,8 +139,7 @@ public class PromptForPasswordDialog extends Dialog {
 	private void validate() {
 		password = textPassword.getText().trim();
 		storePassword = btnStorePassword.getSelection();
-		getButton(IDialogConstants.OK_ID).setEnabled(!textPassword.getText().trim().equals("") &&
-													 textPassword.getText().trim().length() < 100);
+		getButton(IDialogConstants.OK_ID).setEnabled(!textPassword.getText().isEmpty() && textPassword.getText().trim().length() < 100);
 	}
 
 }

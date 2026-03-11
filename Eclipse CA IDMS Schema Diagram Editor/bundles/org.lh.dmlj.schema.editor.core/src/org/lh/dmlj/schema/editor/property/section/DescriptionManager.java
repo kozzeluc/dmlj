@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.property.section;
 
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -26,20 +25,17 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 /**
  * A description manager for a property section of type AbstractAttributesBasedPropertiesSection<T>.
  * <br><br>  
- * An instance of this class hooks itself as a selection listener to the property table of the 
- * section and will show the description, if any, for the selected property (attribute).  The 
- * descriptions are provided by implementations of AbstractAttributesBasedPropertiesSection<T> and 
- * made available through the getDescription(EAttribute attribute) method. 
+ * An instance of this class hooks itself as a selection listener to the property table of the section and will
+ * show the description, if any, for the selected property (attribute). The descriptions are provided by
+ * implementations of AbstractAttributesBasedPropertiesSection<T> and made available through the
+ * getDescription(EAttribute attribute) method.
  */
 public class DescriptionManager extends SelectionAdapter {
-
-	private AbstractAttributesBasedPropertiesSection<?> section;
-	private IStatusLineManager 		 	 				statusLineManager;
-	private Table 										table;
+	private final AbstractAttributesBasedPropertiesSection<?> section;
+	private final Table table;
+	private final IStatusLineManager statusLineManager;
 	
-	public DescriptionManager(TabbedPropertySheetPage page, 
-							  AbstractAttributesBasedPropertiesSection<?> section, Table table) {
-		super();
+	public DescriptionManager(TabbedPropertySheetPage page, AbstractAttributesBasedPropertiesSection<?> section, Table table) {		
 		this.section = section;
 		this.table = table;
 		statusLineManager = page.getSite().getActionBars().getStatusLineManager();
@@ -66,12 +62,8 @@ public class DescriptionManager extends SelectionAdapter {
 	
 	@Override
 	public void widgetSelected(SelectionEvent e) {
-		
 		// clear the message area
-		clear();
-		
-		// get the Table instance
-		Table table = (Table) e.getSource();
+		clear();	
 		
 		// exit this method if no row is selected
 		if (table.getSelectionCount() != 1) {					
@@ -82,12 +74,11 @@ public class DescriptionManager extends SelectionAdapter {
 		int i = table.getSelectionIndex();
 		
 		// set the property description if available
-		EAttribute attribute = section.getAttributes().get(i);
-		String description = section.getDescription(attribute);
+		var attribute = section.getAttributes().get(i);
+		var description = section.getDescription(attribute);
 		if (description != null) {
 			setMessage(description);
 		}
-		
 	}
 	
 }

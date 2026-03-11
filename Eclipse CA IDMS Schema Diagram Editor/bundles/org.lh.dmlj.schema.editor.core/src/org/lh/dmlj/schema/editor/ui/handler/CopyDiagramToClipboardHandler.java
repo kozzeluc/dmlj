@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
@@ -39,51 +38,46 @@ import org.lh.dmlj.schema.editor.SchemaEditor;
 import org.lh.dmlj.schema.editor.log.Logger;
 
 public class CopyDiagramToClipboardHandler implements IHandler {
-
 	private static final Logger logger = Logger.getLogger(Plugin.getDefault());
 	
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
+		// nothing to do here
 	}
 
 	@Override
 	public void dispose() {
+		// nothing to do here
 	}
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		var schemaEditor = (SchemaEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		var viewer = (GraphicalViewer) schemaEditor.getAdapter(GraphicalViewer.class);
+		var layerManager = (LayerManager)viewer.getEditPartRegistry().get(LayerManager.ID);
+		var figure = layerManager.getLayer(LayerConstants.PRINTABLE_LAYERS);
 		
-		SchemaEditor schemaEditor = (SchemaEditor) PlatformUI.getWorkbench()
-															 .getActiveWorkbenchWindow()
-															 .getActivePage()
-															 .getActiveEditor();
-		GraphicalViewer viewer = (GraphicalViewer) schemaEditor.getAdapter(GraphicalViewer.class);
-		LayerManager layerManager = (LayerManager)viewer.getEditPartRegistry().get(LayerManager.ID);
-		IFigure figure = layerManager.getLayer(LayerConstants.PRINTABLE_LAYERS);
-		
-		Image image = new Image(Display.getDefault(), figure.getSize().width, figure.getSize().height);
-		GC gc = new GC(image);
-		SWTGraphics graphics = new SWTGraphics(gc);
+		var image = new Image(Display.getDefault(), figure.getSize().width, figure.getSize().height);
+		var gc = new GC(image);
+		var graphics = new SWTGraphics(gc);
 		figure.paint(graphics);
 		graphics.dispose();
 		gc.dispose();
 		
-		Clipboard clipboard = new Clipboard(Display.getDefault());
+		var clipboard = new Clipboard(Display.getDefault());
 		try {
-			ImageData imageData = image.getImageData();
-			Transfer transfer = ImageTransfer.getInstance();
+			var imageData = image.getImageData();
+			var transfer = ImageTransfer.getInstance();
 			clipboard.setContents(new ImageData[] { imageData }, new Transfer[] { transfer });
-			String message = "Your diagram was successfully copied to the clipboard.";
+			var message = "Your diagram was successfully copied to the clipboard.";
 			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Information", message);
-		} catch (Throwable t) {
-			String message = "An error occurred while copying your diagram to the clipboard.";
-			logger.error(message, t);
-			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error",
-									message + "  See log.");
+		} catch (Exception e) {
+			var message = "An error occurred while copying your diagram to the clipboard.";
+			logger.error(message, e);
+			MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error", message + "  See log.");
 		} finally {
 			clipboard.dispose();
 		}
-		
 		return null;
 	}
 
@@ -99,6 +93,7 @@ public class CopyDiagramToClipboardHandler implements IHandler {
 
 	@Override
 	public void removeHandlerListener(IHandlerListener handlerListener) {
+		// nothing to do here
 	}
 
 }

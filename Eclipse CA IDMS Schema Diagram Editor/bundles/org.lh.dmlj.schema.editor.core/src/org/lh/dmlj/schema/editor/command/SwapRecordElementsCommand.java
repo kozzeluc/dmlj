@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -23,14 +23,12 @@ import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.SchemaRecord;
 
 public class SwapRecordElementsCommand extends ModelChangeBasicCommand {
-	
-	protected SchemaRecord record;
-	
-	protected List<Element> newRootElements;
-	private List<Element> newAllElements = new ArrayList<>();
-	
+	protected final SchemaRecord schemaRecord;
+	protected final List<Element> newRootElements;
+		
 	private List<Element> oldRootElements = new ArrayList<>();
 	private List<Element> oldAllElements = new ArrayList<>();
+	private List<Element> newAllElements = new ArrayList<>();
 	
 	private static void deepCopyElement(Element element, List<Element> targetList) {
 		targetList.add(element);
@@ -39,16 +37,16 @@ public class SwapRecordElementsCommand extends ModelChangeBasicCommand {
 		}
 	}
 
-	public SwapRecordElementsCommand(SchemaRecord record, List<Element> newRootElements) {
+	public SwapRecordElementsCommand(SchemaRecord schemaRecord, List<Element> newRootElements) {
 		super("Edit Record Elements");
-		this.record = record;
+		this.schemaRecord = schemaRecord;
 		this.newRootElements = newRootElements;
 	}
 	
 	@Override
 	public void execute() {	
 		if (newRootElements.isEmpty()) {
-			throw new RuntimeException("record should contain at least 1 element: " + record.getName());
+			throw new IllegalStateException("record should contain at least 1 element: " + schemaRecord.getName());
 		}
 		saveOldElementLists();
 		collectAllNewElements();
@@ -56,12 +54,12 @@ public class SwapRecordElementsCommand extends ModelChangeBasicCommand {
 	}
 	
 	private void saveOldElementLists() {
-		oldRootElements.addAll(record.getRootElements());
-		oldAllElements.addAll(record.getElements());
+		oldRootElements.addAll(schemaRecord.getRootElements());
+		oldAllElements.addAll(schemaRecord.getElements());
 	}
 
 	private void collectAllNewElements() {
-		for (Element newRootElement : newRootElements) {
+		for (var newRootElement : newRootElements) {
 			deepCopyElement(newRootElement, newAllElements);
 		}		
 	}
@@ -77,13 +75,13 @@ public class SwapRecordElementsCommand extends ModelChangeBasicCommand {
 	}
 
 	private void replaceElements(List<Element> desiredRootElements, List<Element> desiredAllElements) {
-		if (!record.getKeys().isEmpty()) {
-			throw new RuntimeException("record should NOT contain any keys: " + record.getName());
+		if (!schemaRecord.getKeys().isEmpty()) {
+			throw new IllegalStateException("record should NOT contain any keys: " + schemaRecord.getName());
 		}
-		record.getRootElements().clear();
-		record.getElements().clear();
-		record.getRootElements().addAll(desiredRootElements);
-		record.getElements().addAll(desiredAllElements);
+		schemaRecord.getRootElements().clear();
+		schemaRecord.getElements().clear();
+		schemaRecord.getRootElements().addAll(desiredRootElements);
+		schemaRecord.getElements().addAll(desiredAllElements);
 	}
 	
 }

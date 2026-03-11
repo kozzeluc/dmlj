@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,71 +22,53 @@ import java.util.List;
 import org.lh.dmlj.schema.DuplicatesOption;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
-import org.lh.dmlj.schema.KeyElement;
 import org.lh.dmlj.schema.SchemaRecord;
 
-// FIXME make this command suitable for VSAM CALC records as well
-
 /**
- * A command that will change the record's CALC key.  This command can only be  used for CALC 
- * records and will definitely run into trouble when executed for a record that is defined as either 
- * DIRECT or VIA. 
+ * A command that will change the record's CALC key.  This command can only be  used for CALC records and will
+ * definitely run into trouble when executed for a record that is defined as either DIRECT or VIA. 
  */
 public class ChangeCalcKeyCommand extends AbstractChangeLocationModeCommand {
-
-	private SchemaRecord 		   record;
-	
-	private List<Element>	 newCalcKeyElements = new ArrayList<>();
+	private List<Element> newCalcKeyElements = new ArrayList<>();
 	private DuplicatesOption newDuplicatesOption;
-	private int[] 			 newElementIndexes;
 	
-	public ChangeCalcKeyCommand(SchemaRecord record,
-								List<Element> calcKeyElements,
-								DuplicatesOption duplicatesOption) {
-		super("Change CALC key", record);
-		this.record = record;
+	public ChangeCalcKeyCommand(SchemaRecord schemaRecord, List<Element> calcKeyElements, DuplicatesOption duplicatesOption) {
+		super("Change CALC key", schemaRecord);
 		newCalcKeyElements = new ArrayList<>(calcKeyElements);
 		newDuplicatesOption = duplicatesOption;
 	}
 	
 	@Override
-	public void execute() {			
-		
-		// save the old data
+	public void execute() {
 		stash(0);
 		
-		// retain as much element indexes as possible; if an element is still 
-		// part of the CALC key, maintain the element's key element index
-		newElementIndexes = new int[newCalcKeyElements.size()];
-		for (int i = 0; i < newElementIndexes.length; i++) {
+		// retain as much element indexes as possible; if an element is still part of the CALC key, maintain the
+		// element's key element index
+		var newElementIndexes = new int[newCalcKeyElements.size()];
+		for (var i = 0; i < newElementIndexes.length; i++) {
 			newElementIndexes[i] = -1;
 		}
-		Key calcKey = record.getCalcKey();
-		for (int i = 0; i < newElementIndexes.length; i++) {
-			Element element = newCalcKeyElements.get(i);
-			for (KeyElement keyElement : element.getKeyElements()) {
+		Key calcKey = schemaRecord.getCalcKey();
+		for (var i = 0; i < newElementIndexes.length; i++) {
+			var element = newCalcKeyElements.get(i);
+			for (var keyElement : element.getKeyElements()) {
 				if (keyElement.getKey() == calcKey) {
 					newElementIndexes[i] = element.getKeyElements().indexOf(keyElement);
 					break;
 				}
 			}
 		}
-		
-		// remove the CALC key...
+				
 		removeCalcKey();
-		
-		// ...and create a new one; stash the new CALC key
-		createCalcKey(newCalcKeyElements, newElementIndexes, newDuplicatesOption, 
-					  getStashedNaturalSequence(0), getStashedCalcKeyIndex(0));
+		createCalcKey(newCalcKeyElements, newElementIndexes, newDuplicatesOption, getStashedNaturalSequence(0), getStashedCalcKeyIndex(0));
 		stash(1);
-		
 	}
 	
 	@Override
 	public void redo() {		
 		removeCalcKey();		
 		restoreCalcKey(1);		
-	};
+	}
 	
 	@Override
 	public void undo() {				

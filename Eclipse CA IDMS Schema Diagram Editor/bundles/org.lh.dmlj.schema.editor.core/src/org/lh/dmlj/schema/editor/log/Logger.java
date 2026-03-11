@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,21 +16,20 @@
  */
 package org.lh.dmlj.schema.editor.log;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 public final class Logger {
-	
 	private static final String NO_BUNDLE_SYMBOLIC_NAME_AVAILABLE = "<no bundle symbolic name available>";
 	
 	private String bundleSymbolicName;
 	private LogProvidingPlugin logProvider;
 	
 	public static Logger getLogger(LogProvidingPlugin logProvider) {		
-		String bundleSymbolicName =
+		var bundleSymbolicName =
 			logProvider != null && logProvider.getBundle() != null && logProvider.getBundle().getSymbolicName() != null ? 
 			logProvider.getBundle().getSymbolicName() : NO_BUNDLE_SYMBOLIC_NAME_AVAILABLE;
 		if (logProvider != null) {
@@ -41,24 +40,19 @@ public final class Logger {
 	}
 	
 	private Logger(String bundleSymbolicName, LogProvidingPlugin logProvider) {
-		super();
 		this.bundleSymbolicName = bundleSymbolicName;
 		this.logProvider = logProvider;
 	}	
 
-	String createDebugMessageForCallingMethod(String currentThreadName, 
-											  List<WrappedStackTraceElement> stackTraceElements) {
-		
+	String createDebugMessageForCallingMethod(String currentThreadName, List<WrappedStackTraceElement> stackTraceElements) {
 		if (stackTraceElements.size() > 3) {
-			
-			String className = stackTraceElements.get(3).getClassName();
+			var className = stackTraceElements.get(3).getClassName();
 			String simpleClassName;
 			if (className.contains(".")) {
 				simpleClassName = className.substring(className.lastIndexOf(".") + 1);
 			} else {
 				simpleClassName = className;
 			}
-			
 			return "Method " + stackTraceElements.get(2).getMethodName() + "(...) in class " +
 				   stackTraceElements.get(2).getClassName() + "\n       was called from " +
 				   stackTraceElements.get(3).getClassName() + "." +
@@ -79,20 +73,16 @@ public final class Logger {
 	
 	public void debug(DebugItem debugItem) {
 		if (logProvider.isDebugEnabled() && debugItem == DebugItem.CALLING_METHOD) {
-			Thread currentThread = Thread.currentThread();
-			// TODO refactor the following code fragment when the project is 'migrated' to Java 8:
-			StackTraceElement[] stackTraceElements =  currentThread.getStackTrace();
-			List<WrappedStackTraceElement> wrappedStackTraceElements = new ArrayList<>();
-			for (StackTraceElement stackTraceElement : stackTraceElements) {
-				wrappedStackTraceElements.add(new WrappedStackTraceElement(stackTraceElement));
-			}
-			// end of code fragment to be refactored
+			var currentThread = Thread.currentThread();
+			var wrappedStackTraceElements = Arrays.stream(currentThread.getStackTrace())
+					.map(WrappedStackTraceElement::new)
+					.toList();
 			debug(createDebugMessageForCallingMethod(currentThread.getName(), wrappedStackTraceElements));
 		}
 	}
 	
 	private void doLog(int severity, String message, Throwable exception) {
-		IStatus status = new Status(severity, bundleSymbolicName, IStatus.OK, message, exception);
+		var status = new Status(severity, bundleSymbolicName, IStatus.OK, message, exception);
 		logProvider.getLog().log(status);
 	}
 	
@@ -117,11 +107,9 @@ public final class Logger {
 	}
 	
 	static class WrappedStackTraceElement {
-		
 		private StackTraceElement stackTraceElement;
 				
 		WrappedStackTraceElement(StackTraceElement stackTraceElement) {
-			super();
 			this.stackTraceElement = stackTraceElement;
 		}
 		
@@ -138,4 +126,5 @@ public final class Logger {
 		}
 		
 	}
+	
 }

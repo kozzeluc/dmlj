@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,7 @@
 package org.lh.dmlj.schema.editor.outline.part;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
@@ -37,118 +38,110 @@ import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.common.Tools;
 
-public abstract class AbstractSchemaTreeEditPart<T extends EObject> 
-	extends AbstractTreeEditPart implements IModelChangeListener {
-	
+public abstract class AbstractSchemaTreeEditPart<T extends EObject> extends AbstractTreeEditPart implements IModelChangeListener {
 	protected IModelChangeProvider modelChangeProvider;
 	
-	private static final int compareSimilarChildren(INodeTextProvider<?> _new, 
-											  		INodeTextProvider<?> existing) {
-		
-		if (_new instanceof SchemaArea && existing instanceof SchemaArea) {
+	private static final int compareSimilarChildren(INodeTextProvider<?> newTextProvider, INodeTextProvider<?> existingTextProvider) {
+		if (newTextProvider instanceof SchemaArea newSchemaArea && existingTextProvider instanceof SchemaArea existingSchemaArea) {
 			// because we use mocks for unit testing, we have to compare the area names ourselves
-			String newAreaName = ((SchemaArea) _new).getName();
-			String existingAreaName = ((SchemaArea) existing).getName();
+			var newAreaName = newSchemaArea.getName();
+			var existingAreaName = existingSchemaArea.getName();
 			return newAreaName.toUpperCase().compareTo(existingAreaName.toUpperCase());
-		} else if (_new instanceof SchemaRecord && existing instanceof SchemaRecord) {
+		} else if (newTextProvider instanceof SchemaRecord newSchemaRecord && existingTextProvider instanceof SchemaRecord existingSchemaRecord) {
 			// because we use mocks for unit testing, we have to compare the record names ourselves
-			String newRecordName = ((SchemaRecord) _new).getName();
-			String existingRecordName = ((SchemaRecord) existing).getName();
+			var newRecordName = newSchemaRecord.getName();
+			var existingRecordName = existingSchemaRecord.getName();
 			return newRecordName.toUpperCase().compareTo(existingRecordName.toUpperCase());
-		} else if (_new instanceof Set && existing instanceof Set) {
+		} else if (newTextProvider instanceof Set newSet && existingTextProvider instanceof Set existingSet) {
 			// because we use mocks for unit testing, we have to compare the set names ourselves
-			String newSetName = ((Set) _new).getName();
-			String existingSetName = ((Set) existing).getName();
+			var newSetName = newSet.getName();
+			var existingSetName = existingSet.getName();
 			return newSetName.toUpperCase().compareTo(existingSetName.toUpperCase());
 		} 
-		throw new IllegalArgumentException("unexpected combination: " + 
-										   _new.getClass().getSimpleName() + " " + 
-										   existing.getClass().getSimpleName());
+		throw new IllegalArgumentException("unexpected combination: " + newTextProvider.getClass().getSimpleName() + " " +
+				existingTextProvider.getClass().getSimpleName());
 	}
 	
-	protected static final int getInsertionIndex(List<?> children, 
-										   		 INodeTextProvider<?> newChildNodeTextProvider, 
-										   		 Class<?>[] childNodeTextProviderOrder) {
+	protected static final int getInsertionIndex(List<?> children, INodeTextProvider<?> newChildNodeTextProvider,
+			Class<?>[] childNodeTextProviderOrder) {
 		
-		// calculate the childOrder index for the new child's node text provider: this index points  
-		// to the entry in the childOrder array containing the interface for the newChild's node  
-		// text provider; if we don't find a match, return the size of the children list because the 
-		// child is to be appended to the list of children
-		int ci = -1;
-		for (int i = 0; i < childNodeTextProviderOrder.length && ci == -1; i++) {			
-			Class<?> childOrderInterface = childNodeTextProviderOrder[i];				
-			if (childOrderInterface.isInstance(newChildNodeTextProvider)) {
-				ci = i;
-				break;
-			}			
-		}
-		if (ci == -1) {
-			return children.size();
-		}
+		// calculate the childOrder index for the new child's node text provider: this index points to the entry
+		// in the childOrder array containing the interface for the newChild's node text provider; if we don't
+		// find a match, return the size of the children list because the child is to be appended to the list of
+		// children
+		var childOrderIndex = calculateChildOrderIndex(newChildNodeTextProvider, childNodeTextProviderOrder);
 		
-		// calculate the index of the first child whose model class implements the interface found; 
-		// we might not be able to find such an child
-		int i = firstIndexOf(children, childNodeTextProviderOrder[ci]);		
-		
-		if (i > -1) {
-			
-			// i contains the index of the first child whose node text provider class implements the 
-			// INodeTextProvider interface
-			int j = children.size();
-			if (ci < (childNodeTextProviderOrder.length - 1)) {
-				// there is at least 1 more child node text provider interface that we can check
-				do {
-					ci += 1;
-					int k = firstIndexOf(children, childNodeTextProviderOrder[ci]);
-					if (k > -1) {
-						// bingo
-						j = k;
-						break;
-					}
-				} while (ci < (childNodeTextProviderOrder.length - 1));
-			}
-			j -= 1; // j now points to the last (similar) child we need to check
-			for (int k = i; k <= j; k++) {
-				Object model = ((EditPart) children.get(k)).getModel();
-				INodeTextProvider<?> noeTextProvider = toNodeTextProvider(model);
-				if (noeTextProvider != null) {
-					if (compareSimilarChildren(newChildNodeTextProvider, noeTextProvider) < 0) {
-						return k;
-					}
-				}
-			}
-			// if we get here, we need to insert the new child after the last similar child
-			return j + 1;
-			
+		// calculate the index of the first child whose model class implements the interface found; we might not
+		// be able to find such a child
+		var firstModelCandidate = firstIndexOf(children, childNodeTextProviderOrder[childOrderIndex]);
+		if (firstModelCandidate > -1) {
+			return getInsertionIndexWithModelCandidatesAvailable(children, newChildNodeTextProvider,
+					childNodeTextProviderOrder, childOrderIndex, firstModelCandidate);
 		} else {
-			
-			// there currently is no child whose node text provider class implements the interface  
-			// in the child order array; if there is a child whose node text provider implements an  
-			// that child's interface in 1 of the next child order entries, the insertion index   
-			// appended to corresponds to index; if not, return the size of the children list, the   
-			// child will be the list of children
-			if (ci < (childNodeTextProviderOrder.length - 1)) {
-				// there is at least 1 more child order node text provider interface that we can 
-				// check
-				do {
-					ci += 1;
-					i = firstIndexOf(children, childNodeTextProviderOrder[ci]);
-					if (i > -1) {
-						// bingo
-						return i;
-					}
-				} while (ci < (childNodeTextProviderOrder.length - 1));				
-			}
-		
+			return getInsertionIndexWithModelCandidatesMissing(children, childNodeTextProviderOrder, childOrderIndex);
 		}
+	}
+	
+	private static int calculateChildOrderIndex(INodeTextProvider<?> newChildNodeTextProvider, Class<?>[] childNodeTextProviderOrder) {
+		return IntStream.range(0, childNodeTextProviderOrder.length)
+				.filter(i -> childNodeTextProviderOrder[i].isInstance(newChildNodeTextProvider))
+				.findFirst()
+				.orElse(-1);	
+	}
+	
+	private static int getInsertionIndexWithModelCandidatesAvailable(List<?> children, INodeTextProvider<?> newChildNodeTextProvider,
+			Class<?>[] childNodeTextProviderOrder, int childOrderIndex, int firstModelCandidate) {
 		
+		// i contains the index of the first child whose node text provider class implements the INodeTextProvider
+		// interface
+		var j = children.size();
+		if (childOrderIndex < (childNodeTextProviderOrder.length - 1)) {
+			// there is at least 1 more child node text provider interface that we can check
+			do {
+				childOrderIndex += 1;
+				var k = firstIndexOf(children, childNodeTextProviderOrder[childOrderIndex]);
+				if (k > -1) {
+					// bingo
+					j = k;
+					break;
+				}
+			} while (childOrderIndex < (childNodeTextProviderOrder.length - 1));
+		}
+		j -= 1; // j now points to the last (similar) child we need to check
+		for (var k = firstModelCandidate; k <= j; k++) {
+			var model = ((EditPart) children.get(k)).getModel();
+			var noeTextProvider = toNodeTextProvider(model);
+			if (noeTextProvider != null && compareSimilarChildren(newChildNodeTextProvider, noeTextProvider) < 0) {
+				return k;
+			}				
+		}
+		// if we get here, we need to insert the new child after the last similar child
+		return j + 1;
+	}
+	
+	private static int getInsertionIndexWithModelCandidatesMissing(List<?> children, Class<?>[] childNodeTextProviderOrder, int childOrderIndex) {
+		// there currently is no child whose node text provider class implements the interface in the child
+		// order array; if there is a child whose node text provider implements that child's interface in 1
+		// of the next child order entries, the insertion index appended to corresponds to index; if not,
+		// return the size of the children list, the child will be the list of children
+		if (childOrderIndex < (childNodeTextProviderOrder.length - 1)) {
+			// there is at least 1 more child order node text provider interface that we can check
+			do {
+				childOrderIndex += 1;
+				var i = firstIndexOf(children, childNodeTextProviderOrder[childOrderIndex]);
+				if (i > -1) {
+					// bingo
+					return i;
+				}
+			} while (childOrderIndex < (childNodeTextProviderOrder.length - 1));				
+		}
 		return children.size();	
 	}
 	
-	private static final int firstIndexOf(List<?> children, Class<?> _interface) {		
-		for (int i = 0; i < children.size(); i++) {
-			EditPart editPart = (EditPart) children.get(i); 
-			if (_interface.isInstance(toNodeTextProvider(editPart.getModel()))) {
+	private static final int firstIndexOf(List<?> children, Class<?> targetInterface) {		
+		for (var i = 0; i < children.size(); i++) {
+			var editPart = (EditPart) children.get(i); 
+			if (targetInterface.isInstance(toNodeTextProvider(editPart.getModel()))) {
 				return i;
 			}							
 		}
@@ -159,13 +152,10 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	 * Checks whether the feature of interest is set in a grouped model change.
 	 * @param setFeatures the features set in the model change
 	 * @param featureOfInterest the feature of interest
-	 * @return true if the feature of interest is contained in the list of set features, false if 
-	 * 		   not
+	 * @return true if the feature of interest is contained in the list of set features, false if not
 	 */
-	protected static final boolean isFeatureSet(EStructuralFeature[] setFeatures, 
-								   		  		EStructuralFeature featureOfInterest) {
-		
-		for (EStructuralFeature feature : setFeatures) {
+	protected static final boolean isFeatureSet(EStructuralFeature[] setFeatures, EStructuralFeature featureOfInterest) {
+		for (var feature : setFeatures) {
 			if (feature == featureOfInterest) {
 				return true;
 			}
@@ -182,10 +172,10 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 			return (INodeTextProvider<?>) model;
 		} else if (model instanceof Set) {
 			return (INodeTextProvider<?>) model;
-		} else if (model instanceof SystemOwner) {			
-			return ((SystemOwner) model).getSet();
-		} else if (model instanceof VsamIndex) {			
-			return ((VsamIndex) model).getSet();
+		} else if (model instanceof SystemOwner systemOwner) {			
+			return systemOwner.getSet();
+		} else if (model instanceof VsamIndex vsamIndex) {			
+			return vsamIndex.getSet();
 		}			
 		throw new IllegalArgumentException("unexpected: " + model.getClass().getSimpleName());
 	}
@@ -195,6 +185,7 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 		this.modelChangeProvider = modelChangeProvider; // null means we're in read-only mode
 	}
 	
+	@Override
 	public final void activate() {	
 		if (!isReadOnlyMode()) {
 			modelChangeProvider.addModelChangeListener(this);
@@ -211,8 +202,8 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	}
 
 	protected EditPart childFor(Object model) {
-		for (Object child : getChildren()) {
-			EditPart cChild = (EditPart) child;
+		for (var child : getChildren()) {
+			var cChild = (EditPart) child;
 			if (cChild.getModel() == model) {
 				return cChild;
 			}
@@ -221,18 +212,18 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	}
 	
 	protected void createAndAddChild(INodeTextProvider<?> model) {
-		EditPart child = SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);					
-		int index = getInsertionIndex(getChildren(), model, getChildNodeTextProviderOrder());					
+		var child = SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);					
+		var index = getInsertionIndex(getChildren(), model, getChildNodeTextProviderOrder());					
 		addChild(child, index);
 	}
 	
 	protected void createAndAddChild(EObject model, INodeTextProvider<?> nodeTextProvider) {
-		EditPart child = SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);					
-		int index = 
-			getInsertionIndex(getChildren(), nodeTextProvider, getChildNodeTextProviderOrder());					
+		var child = SchemaTreeEditPartFactory.createEditPart(model, modelChangeProvider);					
+		var index = getInsertionIndex(getChildren(), nodeTextProvider, getChildNodeTextProviderOrder());					
 		addChild(child, index);
 	}
 
+	@Override
 	public final void deactivate() {
 		if (!isReadOnlyMode()) {
 			modelChangeProvider.removeModelChangeListener(this);
@@ -253,18 +244,18 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	}
 	
 	/**
-	 * Provides the order in which the edit part's children, if any, should be kept.
-	 * Each subclass that refers to an edit part that contains children should override this method.
-	 * @return the edit part's child order; within each type, the node text providers will be 
-	 *         compared using the standard Java compareTo(...) method (upper case compare)
+	 * Provides the order in which the edit part's children, if any, should be kept. Each subclass that refers to
+	 * an edit part that contains children should override this method.
+	 * @return the edit part's child order; within each type, the node text providers will be compared using the
+	 *         standard Java compareTo(...) method (upper case compare)
 	 */
 	protected Class<?>[] getChildNodeTextProviderOrder() {
-		throw new RuntimeException("no override in subclass: " + getClass().getName());	
+		throw new IllegalArgumentException("no override in subclass: " + getClass().getName());	
 	}
 	
 	@Override
 	protected final Image getImage() {
-		String imagePath = getImagePath();
+		var imagePath = getImagePath();
 		if (imagePath == null) {
 			return null;
 		} else {
@@ -281,17 +272,15 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	}	
 
 	/**
-	 * Returns the model's node text provider; this is the object that holds the node text and 
-	 * determines part of the child order for the parent edit part.  Whenever the node text changes,
-	 * method nodeTextChanged() should be invoked.
-	 * @return the object that provides the node text
+	 * Returns the (wrapped) model's node text provider; this is the object that holds the node text and determines
+	 * part of the child order for the parent edit part. Whenever the node text changes, method nodeTextChanged()
+	 * should be invoked.
+	 * @return the (wrapped) object that provides the node text
 	 */
-	protected abstract INodeTextProvider<?> getNodeTextProvider();
+	protected abstract WrappedNodeTextProvider getNodeTextProvider();
 
 	protected final EObject getParentModelObject() {
-		if (getParent() instanceof AbstractSchemaTreeEditPart<?>) {
-			AbstractSchemaTreeEditPart<?> parentEditPart = 
-				(AbstractSchemaTreeEditPart<?>) getParent();
+		if (getParent() instanceof AbstractSchemaTreeEditPart<?> parentEditPart) {
 			return parentEditPart.getModel();
 		} else {
 			return null;
@@ -300,7 +289,7 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	
 	@Override
 	protected final String getText() {
-		return Tools.removeTrailingUnderscore(getNodeTextProvider().getNodeText());
+		return Tools.removeTrailingUnderscore(getNodeTextProvider().value().getNodeText());
 	}
 	
 	protected boolean hasChildFor(Object model) {
@@ -317,26 +306,22 @@ public abstract class AbstractSchemaTreeEditPart<T extends EObject>
 	}
 	
 	/**
-	 * Causes the edit part's position in the parent's children list to be recalculated and the 
-	 * edit part will be moved to that new position.  This method hould be called whenever the edit 
-	 * part's node text changes. 
+	 * Causes the edit part's position in the parent's children list to be recalculated and the edit part will be
+	 * moved to that new position. This method hould be called whenever the edit part's node text changes. 
 	 */
 	protected void nodeTextChanged() {
-		
 		// make sure the parent can maintain its order...
-		
-		if (getParent() == null || !(getParent() instanceof AbstractSchemaTreeEditPart<?>)) {
+		if (!(getParent() instanceof AbstractSchemaTreeEditPart<?>)) {
 			return;
 		}
-		
-		List<?> siblings = getParent().getChildren();
+		var siblings = getParent().getChildren();
 		siblings.remove(this);
-		
-		AbstractSchemaTreeEditPart<?> parent = (AbstractSchemaTreeEditPart<?>) getParent(); 
-		int newIndex = 
-			getInsertionIndex(siblings, getNodeTextProvider(), parent.getChildNodeTextProviderOrder());
+		var parent = (AbstractSchemaTreeEditPart<?>) getParent(); 
+		int newIndex = getInsertionIndex(siblings, getNodeTextProvider().value(), parent.getChildNodeTextProviderOrder());
 		parent.reorderChild(this, newIndex);
-		 
+	}
+	
+	protected static record WrappedNodeTextProvider(INodeTextProvider<?> value) {
 	}
 	
 }

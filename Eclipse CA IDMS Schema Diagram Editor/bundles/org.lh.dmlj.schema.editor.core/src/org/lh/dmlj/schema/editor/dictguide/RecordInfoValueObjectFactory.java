@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,23 +24,24 @@ import java.util.List;
 import org.lh.dmlj.schema.editor.property.ElementInfoValueObject;
 import org.lh.dmlj.schema.editor.property.RecordInfoValueObject;
 
-public class RecordInfoValueObjectFactory {
-
-	public static RecordInfoValueObjectFactory INSTANCE = 
-		new RecordInfoValueObjectFactory();
+public final class RecordInfoValueObjectFactory {
+	private static final RecordInfoValueObjectFactory instance = new RecordInfoValueObjectFactory();
+	
+	public static RecordInfoValueObjectFactory getInstance() {
+		return instance;
+	}
 	
 	private static String extractFromJavadoc(List<String> lines, String key) {
-		int i = 0;
-		while (i < lines.size() && 
-			   !lines.get(i).startsWith("/* " + key + " */")) {
+		var i = 0;
+		while (i < lines.size() && !lines.get(i).startsWith("/* " + key + " */")) {
 			i++;
 		}
 		if (i >= lines.size()) {
 			return null;
 		}
-		StringBuilder p = new StringBuilder();
+		var p = new StringBuilder();
 		while (++i < lines.size() && !lines.get(i).startsWith("/*")) {
-			if (p.length() > 0) {
+			if (!p.isEmpty()) {
 				p.append("\n");
 			}
 			p.append(lines.get(i));
@@ -48,16 +49,15 @@ public class RecordInfoValueObjectFactory {
 		return p.toString();		
 	}
 	
-	private static String getAdjustedDescription(String description) {		
-		
+	private static String getAdjustedDescription(String description) {
 		if (description.startsWith("USAGE DISPLAY")) {
 			return description.substring(13);
 		}
 		
 		if (description.startsWith("VALUE")) {
-			int i = description.indexOf("'");
-			int j = description.indexOf("'", i + 1);
-			if (i> -1 && j > -1) {
+			var i = description.indexOf("'");
+			var j = description.indexOf("'", i + 1);
+			if (i > -1 && j > -1) {
 				return description.substring(j + 1);				
 			}			
 		}
@@ -65,14 +65,12 @@ public class RecordInfoValueObjectFactory {
 		return description;
 	}
 	
-	private static String getAdjustedPictureAndUsage(String pictureAndUsage,
-											  String description) {
-		String adjustedDescription = getAdjustedDescription(description);
+	private static String getAdjustedPictureAndUsage(String pictureAndUsage, String description) {
+		var adjustedDescription = getAdjustedDescription(description);
 		if (description.equals(adjustedDescription)) {
 			return pictureAndUsage;
 		}
-		String p = description.substring(0, description.length() - 
-										 adjustedDescription.length());
+		var p = description.substring(0, description.length() - adjustedDescription.length());
 		if (p.startsWith("VALUE'")) {
 			p = "VALUE '" + p.substring(6);
 		}
@@ -80,16 +78,12 @@ public class RecordInfoValueObjectFactory {
 	}	
 
 	private RecordInfoValueObjectFactory() {
-		super();
 	}
 	
-	public RecordInfoValueObject createRecordInfoValueObject(BufferedReader in) 
-		throws IOException {
-		
-		// cache the entire entry in a List<String>; this is easier to deal 
-		// with...
-		List<String> lines = new ArrayList<>();
-		for (String line = in.readLine(); line != null; line = in.readLine()) {
+	public RecordInfoValueObject createRecordInfoValueObject(BufferedReader in) throws IOException {
+		// cache the entire entry in a List<String>; this is easier to deal with...
+		var lines = new ArrayList<String>();
+		for (var line = in.readLine(); line != null; line = in.readLine()) {
 			lines.add(line);
 		}		
 		
@@ -98,47 +92,38 @@ public class RecordInfoValueObjectFactory {
 			return null;
 		}
 		
-		// the first line contains the record name (which should be the same as
-		// the one contained in the entry name; if we cannot extract the record
-		// name, ignore the entry...
-		int i = lines.get(0).indexOf("/* ");
-		int j = lines.get(0).indexOf(" */");
+		// the first line contains the record name (which should be the same as the one contained in the entry
+		// name; if we cannot extract the record name, ignore the entry...
+		var i = lines.get(0).indexOf("/* ");
+		var j = lines.get(0).indexOf(" */");
 		if (i < 0 || j < 0 || j < i) {
 			return null;
 		}
-		String recordName = lines.get(0).substring(i + 3, j).trim();
+		var recordName = lines.get(0).substring(i + 3, j).trim();
 		
-		// extract the description attribute value; if it's missing, ignore the 
-		// entry...
-		String description = extractFromJavadoc(lines, "Description");
+		return createRecordInfoValueObject(lines, recordName);
+	}
+	
+	private RecordInfoValueObject createRecordInfoValueObject(List<String> lines, String recordName) {
+		var recordInfoValueObject = new RecordInfoValueObject();
+		var description = extractFromJavadoc(lines, "Description");
 		if (description == null) {
 			return null;
-		}		
+		}
+		setRecordData(recordInfoValueObject, lines, recordName, description);
+		setElementData(recordInfoValueObject, lines);
+		return recordInfoValueObject;		
+	}
+	
+	private void setRecordData(RecordInfoValueObject recordInfoValueObject, List<String> lines, String recordName, String description) {
+		var documentName = extractFromJavadoc(lines, "Document Name");
+		var recordLength = extractFromJavadoc(lines, "Record length");
+		var establishedBy = extractFromJavadoc(lines, "Established by");
+		var ownerOf = extractFromJavadoc(lines, "Owner of");
+		var memberOf = extractFromJavadoc(lines, "Member of");
+		var locationMode = extractFromJavadoc(lines, "Location mode");
+		var withinArea = extractFromJavadoc(lines, "Within area");
 		
-		// extract the documentName attribute value (document title)...
-		String documentName = extractFromJavadoc(lines, "Document Name");
-		
-		// extract the recordLength attribute value...
-		String recordLength = extractFromJavadoc(lines, "Record length");
-		
-		// extract the establishedBy attribute value...
-		String establishedBy = extractFromJavadoc(lines, "Established by");
-		
-		// extract the ownerOf attribute value...
-		String ownerOf = extractFromJavadoc(lines, "Owner of");
-		
-		// extract the memberOf attribute value...
-		String memberOf = extractFromJavadoc(lines, "Member of");
-		
-		// extract the locationMode attribute value...
-		String locationMode = extractFromJavadoc(lines, "Location mode");
-		
-		// extract the withinArea attribute value...
-		String withinArea = extractFromJavadoc(lines, "Within area");
-		
-		// create the RecordInfoValueObject and set it's attributes
-		RecordInfoValueObject recordInfoValueObject = 
-			new RecordInfoValueObject();
 		recordInfoValueObject.setRecordName(recordName);		
 		recordInfoValueObject.setDescription(description);
 		recordInfoValueObject.setDocumentId(null); // obsolete
@@ -163,118 +148,95 @@ public class RecordInfoValueObjectFactory {
 		}
 		if (withinArea != null) {
 			recordInfoValueObject.setWithinArea(withinArea);
-		}
-		
-		// process the record's elements...
-		List<List<String>> elementLists = new ArrayList<>();
-		List<String> elementLines = new ArrayList<String>();
-		boolean processing = false;
-		for (String line : lines) {
-			if (!processing && line.startsWith("/* Field ") &&
-				line.indexOf(" */ ") > -1) {
-				
+		}		
+	}
+	
+	private void setElementData(RecordInfoValueObject recordInfoValueObject, List<String> lines) {
+		createElementLists(lines).stream()
+				.map(this::createInfoValueObject)
+				.forEach(recordInfoValueObject.getElementInfoValueObjects()::add);
+	}
+	
+	private List<List<String>> createElementLists(List<String> lines) {
+		var elementLists = new ArrayList<List<String>>();
+		var elementLines = new ArrayList<String>();
+		var processing = false;
+		for (var line : lines) {
+			if (!processing && line.startsWith("/* Field ") && line.indexOf(" */ ") > -1) {
 				processing = true;
 			}
 			if (processing) {
-				if (line.startsWith("/* Field ") &&
-					line.indexOf(" */ ") > -1) {
-					
-					if (!elementLines.isEmpty()) {
-						elementLists.add(elementLines);
-						elementLines = new ArrayList<String>();							
-					}						
-				}
+				if (line.startsWith("/* Field ") && line.indexOf(" */ ") > -1 && !elementLines.isEmpty()) {
+					elementLists.add(elementLines);
+					elementLines = new ArrayList<String>();							
+				}				
 				elementLines.add(line);
 			}
 		}
 		if (!elementLines.isEmpty()) {
 			elementLists.add(elementLines);
 		}
-		int seqNo = 0;
-		for (List<String> elementLines2 : elementLists) {
-			// we have a list that contains everything for a single element;
-			// the first line contains the elementName				
-			i = elementLines2.get(0).indexOf(" */");
-			String elementName = elementLines2.get(0).substring(9, i);
-			
-			// the second line contains the level number and element name
-			String levelAndElementName = null;
-			if (elementLines2.size() > 1) {
-				levelAndElementName = elementLines2.get(1).trim();
-			}
-			
-			// the third line contains the picture, if any, and usage
-			String pictureAndUsage = null;
-			if (elementLines2.size() > 2) {
-				pictureAndUsage = elementLines2.get(2).trim();
-			}
-			
-			// the description is contained on line 4 and subsequent lines
-			description = null;
-			if (elementLines2.size() > 3) {
-				StringBuilder p = new StringBuilder();				
-				for (i = 3; i < elementLines2.size(); i++) {
-					if (p.length() > 0) {
-						p.append(" ");
-					}
-					p.append(elementLines2.get(i));
-				}
-				description = p.toString();
-			}
-			
-			// create the ElementInfoValueObject and add it to the
-			// RecordInfoValueObject's list of ElementInfoValueObject children 
-			ElementInfoValueObject elementInfoValueObject =
-				new ElementInfoValueObject(seqNo);			
-			elementInfoValueObject.setElementName(elementName);		
-			if (levelAndElementName != null) {
-				elementInfoValueObject.setLevelAndElementName(levelAndElementName);
-			}
-			if (pictureAndUsage != null) {
-				if (description != null) {
-					// only a few elements need some tweaking...
-					pictureAndUsage = 
-						getAdjustedPictureAndUsage(pictureAndUsage, description);
-				}
-				elementInfoValueObject.setPictureAndUsage(pictureAndUsage);
-			}				
-			if (description != null && !description.trim().equals("")) {
-				// only a few elements need some tweaking; mind you that we
-				// might need to adjust the description once more...
-				description = getAdjustedDescription(description);					
-				elementInfoValueObject.setDescription(description);
-			}
-			if (pictureAndUsage != null) {
-				elementInfoValueObject.setPictureAndUsage(pictureAndUsage);
-			}
-			// in some cases some more tweaking has to be done..
-			if (pictureAndUsage != null && 
-			    pictureAndUsage.indexOf("TIMES ") > -1 && 
-				pictureAndUsage.indexOf("TIMES DEPENDING ON") == -1) {									
+		return elementLists;
+	}
+	
+	private ElementInfoValueObject createInfoValueObject(List<String> elementLines) {
+		var elementName = elementLines.get(0).substring(9, elementLines.get(0).indexOf(" */"));
+		var levelAndElementName = elementLines.size() > 1 ? elementLines.get(1).trim() : null;
+		var pictureAndUsage = elementLines.size() > 2 ? elementLines.get(2).trim() : null;
+		var description = extractDescription(elementLines);
 				
-				i = pictureAndUsage.indexOf("TIMES ");
-				if (!pictureAndUsage.substring(i + 6).trim().equals("")) {					
-					if (description == null || 
-						description.trim().equals("")) {
-						
-						description = pictureAndUsage.substring(i + 6);
-					} else {
-						description = pictureAndUsage.substring(i + 6) + 
-									  " " + description;
-					}
-					pictureAndUsage = pictureAndUsage.substring(0, i + 5);
-					elementInfoValueObject.setPictureAndUsage(pictureAndUsage);
-					elementInfoValueObject.setDescription(description);						
-				}
-				
-			}			
-			recordInfoValueObject.getElementInfoValueObjects()
-							     .add(elementInfoValueObject);
-						
+		var elementInfoValueObject = new ElementInfoValueObject(0);			
+		elementInfoValueObject.setElementName(elementName);		
+		if (levelAndElementName != null) {
+			elementInfoValueObject.setLevelAndElementName(levelAndElementName);
 		}
-		
-		return recordInfoValueObject;
-		
-	}	
+		if (pictureAndUsage != null) {
+			if (description != null) {
+				// only a few elements need some tweaking...
+				pictureAndUsage = getAdjustedPictureAndUsage(pictureAndUsage, description);
+			}
+			elementInfoValueObject.setPictureAndUsage(pictureAndUsage);
+		}				
+		if (description != null && !description.trim().equals("")) {
+			// only a few elements need some tweaking; mind you that we might need to adjust the description once more...
+			description = getAdjustedDescription(description);					
+			elementInfoValueObject.setDescription(description);
+		}
+		if (pictureAndUsage != null) {
+			elementInfoValueObject.setPictureAndUsage(pictureAndUsage);
+		}
+		tweakPictureAndUsageAndDescriptionIfNeeded(pictureAndUsage, description, elementInfoValueObject);			
+		return elementInfoValueObject;		
+	}
+	
+	private String extractDescription(List<String> elementLines) {
+		if (elementLines.size() > 3) {
+			var p = new StringBuilder();				
+			for (var i = 3; i < elementLines.size(); i++) {
+				if (!p.isEmpty()) {
+					p.append(" ");
+				}
+				p.append(elementLines.get(i));
+			}
+			return p.toString();
+		} else {
+			return null;
+		}
+	}
+	
+	private void tweakPictureAndUsageAndDescriptionIfNeeded(String pictureAndUsage, String description, ElementInfoValueObject target) {
+		if (pictureAndUsage != null && pictureAndUsage.contains("TIMES ") && !pictureAndUsage.contains("TIMES DEPENDING ON")) {
+			var i = pictureAndUsage.indexOf("TIMES ");
+			if (!pictureAndUsage.substring(i + 6).isBlank()) {
+				target.setPictureAndUsage(pictureAndUsage.substring(0, i + 5));
+				if (description == null || description.isBlank()) {
+					target.setDescription(target.getPictureAndUsage().substring(i + 6));
+				} else {
+					target.setDescription(target.getPictureAndUsage().substring(i + 6) + " " + description);
+				}
+			}
+			
+		}
+	}
 	
 }

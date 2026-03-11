@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -30,22 +30,18 @@ public class TypeMapper extends AbstractTypeMapper {
 
 	@Override
 	public Class<?> mapType(Object object) {
-		if (object instanceof EditPart) {
-			EditPart editPart = (EditPart) object;
-			Object modelObject = editPart.getModel();            
-            if (modelObject instanceof ConnectionPart ||
-            	modelObject instanceof ConnectionLabel ||
-            	modelObject instanceof SystemOwner ||
-            	modelObject instanceof Connector ||
-            	modelObject instanceof Set ||
-            	modelObject instanceof VsamIndex) {
-            	
-            	return MemberRole.class;
+		if (object instanceof EditPart editPart) {
+			var modelObject = editPart.getModel();            
+            if (modelObject instanceof ConnectionPart || modelObject instanceof ConnectionLabel || modelObject instanceof SystemOwner ||
+	            	modelObject instanceof Connector || modelObject instanceof Set || modelObject instanceof VsamIndex) {
+	            	
+	            	return MemberRole.class;
             } else { 
-            	return editPart.getModel().getClass();
+            		return editPart.getModel().getClass();
             }
+        } else {
+        		return super.mapType(object);
         }
-        return super.mapType(object);
 	}
 
 }

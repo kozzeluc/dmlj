@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -38,11 +38,11 @@ import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.dictionary.tools.jar.JarHelper;
 
 public class UploadDriverDialog extends TitleAreaDialog {
-	
+	private static final String IMPLEMENTATION_TITLE = "Implementation-Title";
 	private static final String TM_CHAR = "\u2122";
 	
-	private Text textJarFilePath;
 	private File selectedJarFile;
+	private Text textJarFilePath;
 
 	public UploadDriverDialog(Shell parentShell) {
 		super(parentShell);
@@ -65,25 +65,25 @@ public class UploadDriverDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite area = (Composite) super.createDialogArea(parent);
-		Composite container = new Composite(area, SWT.NONE);
+		var area = (Composite) super.createDialogArea(parent);
+		var container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(3, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		Label lblPath = new Label(container, SWT.NONE);
+		var lblPath = new Label(container, SWT.NONE);
 		lblPath.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPath.setText("Path:");
 		
 		textJarFilePath = new Text(container, SWT.BORDER | SWT.READ_ONLY);
 		textJarFilePath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Button btnSelect = new Button(container, SWT.NONE);
+		var btnSelect = new Button(container, SWT.NONE);
 		btnSelect.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog fileDialog = new FileDialog(getShell());
-				fileDialog.setFilterExtensions(new String[] {"*.jar"});
-				String newValue = fileDialog.open();							
+				var fileDialog = new FileDialog(getShell());
+				fileDialog.setFilterExtensions(new String[] { "*.jar" });
+				var newValue = fileDialog.open();							
 				if (newValue != null) {
 					textJarFilePath.setText(newValue);
 					textJarFilePath.setToolTipText(newValue);
@@ -98,24 +98,24 @@ public class UploadDriverDialog extends TitleAreaDialog {
 		});
 		btnSelect.setText("Select...");
 		
-		Label labelComment = new Label(container, SWT.WRAP);
-		GridData gd_labelComment = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
-		gd_labelComment.verticalIndent = 10;
-		gd_labelComment.widthHint = 100;
-		labelComment.setLayoutData(gd_labelComment);
-		labelComment.setText("Note: the file you're looking for is probably called 'idmsjdbc.jar' " +
-							 "and is provided with CA IDMS" + TM_CHAR + " Server.\n\nThe file you select will " +
-							 "be copied to your Eclipse installation's 'dropins' folder and the " +
-							 "necessary OSGi headers will be added to its 'META-INF/MANIFEST.MF' " +
-							 "file so that it effectively becomes an OSGi bundle.\n\nYou will " +
-							 "need to restart your workbench in order for the IDMS JDBC driver " +
-							 "to be available to the Eclipse CA IDMS/DB Schema Diagram Editor " +
-							 "(and other plug-ins).");
+		var labelComment = new Label(container, SWT.WRAP);
+		var gdLabelComment = new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1);
+		gdLabelComment.verticalIndent = 10;
+		gdLabelComment.widthHint = 100;
+		labelComment.setLayoutData(gdLabelComment);
+		labelComment.setText(
+				"""
+				Note: the file you're looking for is probably called 'idmsjdbc.jar' and is provided with CA IDMS%s Server.
 
+				The file you select will be copied to your Eclipse installation's 'dropins' folder and the \
+				necessary OSGi headers will be added to its 'META-INF/MANIFEST.MF' file so that it effectively \
+				becomes an OSGi bundle.
+
+				You will need to restart your workbench in order for the IDMS JDBC driver to be available to the \
+				Eclipse CA IDMS/DB Schema Diagram Editor (and other plug-ins).
+				""".formatted(TM_CHAR));
 		initializeValues();
-		
 		btnSelect.setFocus();
-		
 		return area;
 	}
 
@@ -124,6 +124,7 @@ public class UploadDriverDialog extends TitleAreaDialog {
 		setMessage("Select the .jar file that contains the IDMS JDBC Driver.");
 	}
 
+	@Override
 	protected Point getInitialSize() {
 		return new Point(450, 400);
 	}
@@ -133,29 +134,22 @@ public class UploadDriverDialog extends TitleAreaDialog {
 	}
 
 	private void validatePage() {
-		
-		Button okButton = getButton(IDialogConstants.OK_ID);
+		var okButton = getButton(IDialogConstants.OK_ID);
 		okButton.setEnabled(false);
 		
-		if (textJarFilePath.getText().trim().isEmpty()) {
-			return;
-		}
-		
-		if (!textJarFilePath.getText().trim().toLowerCase().endsWith(".jar")) {
+		if (textJarFilePath.getText().isBlank() || !textJarFilePath.getText().trim().toLowerCase().endsWith(".jar")) {
 			return;
 		}
 		
 		Properties manifestHeaders;
 		try {
-			File jarFile = new File(textJarFilePath.getText().trim());
+			var jarFile = new File(textJarFilePath.getText().trim());
 			manifestHeaders = JarHelper.getManifestHeaders(jarFile);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
-		if (!manifestHeaders.containsKey("Implementation-Title") ||
-			manifestHeaders.getProperty("Implementation-Title").indexOf("IDMS") < 0 ||
-			manifestHeaders.getProperty("Implementation-Title").indexOf("JDBC") < 0 ||
-			!manifestHeaders.containsKey("Implementation-Version") ||
+		if (!manifestHeaders.containsKey(IMPLEMENTATION_TITLE) || !manifestHeaders.getProperty(IMPLEMENTATION_TITLE).contains("IDMS") ||
+			!manifestHeaders.getProperty(IMPLEMENTATION_TITLE).contains("JDBC") || !manifestHeaders.containsKey("Implementation-Version") ||
 			!manifestHeaders.containsKey("Implementation-Vendor")) {
 			
 			return;
@@ -163,12 +157,11 @@ public class UploadDriverDialog extends TitleAreaDialog {
 		
 		try {
 			selectedJarFile = new File(textJarFilePath.getText().trim());
-		} catch (Throwable t) {
+		} catch (Exception e) {
 			// this shouldn't happen since we have previously inspected the .jar file
-			throw new RuntimeException(t);
+			throw new IllegalStateException(e);
 		}
-		
-		okButton.setEnabled(true);	
-		
+		okButton.setEnabled(true);
 	}
+	
 }

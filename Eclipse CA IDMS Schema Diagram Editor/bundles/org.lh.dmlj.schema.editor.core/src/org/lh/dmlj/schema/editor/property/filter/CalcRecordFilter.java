@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,23 +18,14 @@ package org.lh.dmlj.schema.editor.property.filter;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
-import org.lh.dmlj.schema.LocationMode;
 import org.lh.dmlj.schema.SchemaRecord;
 
 public class CalcRecordFilter implements IFilter {
 
 	@Override
 	public boolean select(Object object) {
-		if (!(object instanceof EditPart)) {
-			return false;
-		}
-        Object modelObject = ((EditPart) object).getModel();        
-        if (modelObject instanceof SchemaRecord) {
-        	SchemaRecord record = (SchemaRecord) modelObject;
-        	return record.getLocationMode() == LocationMode.CALC;
-        } else {
-        	return false;
-        }        
+		return object instanceof EditPart editPart && editPart.getModel() instanceof SchemaRecord schemaRecord &&
+				schemaRecord.isCalc();
 	}
 
 }

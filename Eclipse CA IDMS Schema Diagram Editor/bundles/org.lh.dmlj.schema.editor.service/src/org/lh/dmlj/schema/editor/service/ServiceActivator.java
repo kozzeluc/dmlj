@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,10 +19,6 @@ package org.lh.dmlj.schema.editor.service;
 import org.lh.dmlj.schema.editor.service.api.IPdfExtractorService;
 
 public class ServiceActivator {
-	
-	public ServiceActivator() {
-		super();		
-	}	
 	
 	public void setPdfExtractorService(IPdfExtractorService pdfExtractorService) {
 		ServicesPlugin.getDefault().setService(IPdfExtractorService.class, pdfExtractorService);

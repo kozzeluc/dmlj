@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,6 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.wizard._import.schema;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,64 +28,40 @@ import org.lh.dmlj.schema.editor.importtool.ISchemaDataCollector;
 import org.lh.dmlj.schema.editor.importtool.ISetDataCollector;
 
 class DataCollectorRegistry implements IDataCollectorRegistry {
+	private final Map<Class<?>, IAreaDataCollector<?>> areaDataCollectors = new HashMap<>();
+	private final Map<Class<?>, IElementDataCollector<?>> elementDataCollectors = new HashMap<>();
+	private final Map<Class<?>, IRecordDataCollector<?>> recordDataCollectors = new HashMap<>();
+	private ISchemaDataCollector schemaDataCollector;
+	private final Map<Class<?>, ISetDataCollector<?>> setDataCollectors = new HashMap<>();			
 
-	private Map<Class<?>, IAreaDataCollector<?>>    areaDataCollectors = 
-		new HashMap<>();
-	private Map<Class<?>, IElementDataCollector<?>> elementDataCollectors = 
-		new HashMap<>();
-	private Map<Class<?>, IRecordDataCollector<?>>  recordDataCollectors = 
-		new HashMap<>();
-	private ISchemaDataCollector 					schemaDataCollector;
-	private Map<Class<?>, ISetDataCollector<?>>     setDataCollectors = 
-		new HashMap<>();		
+	private static Object getDataCollector(Map<Class<?>, ?> targetDataCollectors, Class<?> type) {
+		if (targetDataCollectors.containsKey(type)) {
+			return targetDataCollectors.get(type);
+		} else {
+			return Arrays.stream(type.getInterfaces())
+					.filter(targetDataCollectors::containsKey)
+					.map(targetDataCollectors::get)
+					.findFirst()
+					.orElse(null);
+		}
+	}
 	
-	DataCollectorRegistry() {
-		super();
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> IAreaDataCollector<T> getAreaDataCollector(Class<T> type) {
+		return (IAreaDataCollector<T>) getDataCollector(areaDataCollectors, type);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> IAreaDataCollector<T> getAreaDataCollector(Class<T> _class) {
-		if (areaDataCollectors.containsKey(_class)) {
-			return (IAreaDataCollector<T>) areaDataCollectors.get(_class);
-		} else {
-			for (Class<?> _interface : _class.getInterfaces()) {
-				if (areaDataCollectors.containsKey(_interface)) {
-					return (IAreaDataCollector<T>) areaDataCollectors.get(_interface);
-				}
-			}
-			return null;
-		}
+	@SuppressWarnings("unchecked")
+	public <T> IElementDataCollector<T> getElementDataCollector(Class<T> type) {
+		return (IElementDataCollector<T>) getDataCollector(elementDataCollectors, type);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> IElementDataCollector<T> getElementDataCollector(Class<T> _class) {
-		if (elementDataCollectors.containsKey(_class)) {
-			return (IElementDataCollector<T>)elementDataCollectors.get(_class);
-		} else {
-			for (Class<?> _interface : _class.getInterfaces()) {
-				if (elementDataCollectors.containsKey(_interface)) {
-					return (IElementDataCollector<T>) elementDataCollectors.get(_interface);
-				}
-			}
-			return null;
-		}
-	}
-
 	@SuppressWarnings("unchecked")
-	@Override
-	public <T> IRecordDataCollector<T> getRecordDataCollector(Class<T> _class) {
-		if (recordDataCollectors.containsKey(_class)) {
-			return (IRecordDataCollector<T>)recordDataCollectors.get(_class);
-		} else {
-			for (Class<?> _interface : _class.getInterfaces()) {
-				if (recordDataCollectors.containsKey(_interface)) {
-					return (IRecordDataCollector<T>) recordDataCollectors.get(_interface);
-				}
-			}
-			return null;
-		}
+	public <T> IRecordDataCollector<T> getRecordDataCollector(Class<T> type) {
+		return (IRecordDataCollector<T>) getDataCollector(recordDataCollectors, type);
 	}
 
 	@Override
@@ -92,40 +69,25 @@ class DataCollectorRegistry implements IDataCollectorRegistry {
 		return schemaDataCollector;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	@Override
-	public <T> ISetDataCollector<T> getSetDataCollector(Class<T> _class) {
-		if (setDataCollectors.containsKey(_class)) {
-			return (ISetDataCollector<T>)setDataCollectors.get(_class);
-		} else {
-			for (Class<?> _interface : _class.getInterfaces()) {
-				if (setDataCollectors.containsKey(_interface)) {
-					return (ISetDataCollector<T>) setDataCollectors.get(_interface);
-				}
-			}
-			return null;
-		}
+	public <T> ISetDataCollector<T> getSetDataCollector(Class<T> type) {
+		return (ISetDataCollector<T>) getDataCollector(setDataCollectors, type);
 	}
 
 	@Override
-	public <T> void registerAreaDataCollector(Class<T> _class,
-											  IAreaDataCollector<T> dataCollector) {
-		
-		areaDataCollectors.put(_class, dataCollector);		
+	public <T> void registerAreaDataCollector(Class<T> type, IAreaDataCollector<T> dataCollector) {
+		areaDataCollectors.put(type, dataCollector);		
 	}
 
 	@Override
-	public <T> void registerElementDataCollector(Class<T> _class,
-												 IElementDataCollector<T> dataCollector) {
-		
-		elementDataCollectors.put(_class, dataCollector);
+	public <T> void registerElementDataCollector(Class<T> type, IElementDataCollector<T> dataCollector) {
+		elementDataCollectors.put(type, dataCollector);
 	}
 
 	@Override
-	public <T> void registerRecordDataCollector(Class<T> _class,
-												IRecordDataCollector<T> dataCollector) {
-		
-		recordDataCollectors.put(_class, dataCollector);
+	public <T> void registerRecordDataCollector(Class<T> type, IRecordDataCollector<T> dataCollector) {
+		recordDataCollectors.put(type, dataCollector);
 	}
 
 	@Override
@@ -134,10 +96,8 @@ class DataCollectorRegistry implements IDataCollectorRegistry {
 	}
 
 	@Override
-	public <T> void registerSetDataCollector(Class<T> _class,
-											 ISetDataCollector<T> dataCollector) {
-		
-		setDataCollectors.put(_class, dataCollector);
+	public <T> void registerSetDataCollector(Class<T> type, ISetDataCollector<T> dataCollector) {
+		setDataCollectors.put(type, dataCollector);
 	}
 
 }

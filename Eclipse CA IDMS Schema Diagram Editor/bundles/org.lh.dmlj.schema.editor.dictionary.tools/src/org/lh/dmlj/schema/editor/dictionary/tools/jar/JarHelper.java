@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2022  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,8 +25,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -34,125 +32,122 @@ import java.util.zip.ZipOutputStream;
 
 import org.lh.dmlj.schema.editor.dictionary.tools.Plugin;
 
-public abstract class JarHelper {
-	
-	private static String MANIFEST_HEADER_COMMENT_START = 
+public final class JarHelper {
+	private static final String MANIFEST_HEADER_COMMENT_START = 
 		"Comment: All of the following OSGi headers were added using Eclipse plug-in\n " + 
 		Plugin.getDefault().getBundle().getSymbolicName() + " version " + 
 		Plugin.getDefault().getBundle().getVersion() + ":\n";
-	private static byte[] NEW_LINE = "\n".getBytes();
+	private static final byte[] NEW_LINE = "\n".getBytes();
 	
 	public static void copyAndAddOSGiHeadersToManifest(File src, File dest) throws IOException {
-		Properties existingManifestHeaders = JarHelper.getManifestHeaders(src);
-		Properties extraManifestHeaders = new Properties();
+		var existingManifestHeaders = JarHelper.getManifestHeaders(src);
+		var extraManifestHeaders = new Properties();
 		if (!existingManifestHeaders.containsKey("Bundle-ManifestVersion")) {
 			extraManifestHeaders.put("0Bundle-ManifestVersion", "2");
 		}
 		if (!existingManifestHeaders.containsKey("Bundle-Name")) {
-			extraManifestHeaders.put("1Bundle-Name", 
-								 	 existingManifestHeaders.getProperty("Implementation-Title"));
+			extraManifestHeaders.put("1Bundle-Name", existingManifestHeaders.getProperty("Implementation-Title"));
 		}
 		if (!existingManifestHeaders.containsKey("Bundle-SymbolicName")) {
 			extraManifestHeaders.put("2Bundle-SymbolicName", "com.ca.idms.jdbc.driver");
 		}
 		if (!existingManifestHeaders.containsKey("Bundle-Version")) {
-			extraManifestHeaders.put("3Bundle-Version", 
-								 	 existingManifestHeaders.getProperty("Implementation-Version"));
+			extraManifestHeaders.put("3Bundle-Version", existingManifestHeaders.getProperty("Implementation-Version"));
 		}
 		if (!existingManifestHeaders.containsKey("Bundle-Vendor")) {
-			extraManifestHeaders.put("4Bundle-Vendor", 
-								 	 existingManifestHeaders.getProperty("Implementation-Vendor"));
+			extraManifestHeaders.put("4Bundle-Vendor", existingManifestHeaders.getProperty("Implementation-Vendor"));
 		}
 		if (!existingManifestHeaders.containsKey("Export-Package")) {
-			extraManifestHeaders.put("5Export-Package", 
-								 	 "ca.idms.dsi,\n ca.idms.io,\n ca.idms.jdbc,\n ca.idms.net,\n " +
-								     "ca.idms.proxy,\n ca.idms.qcli,\n ca.idms.util,\n ca.idms.xa,\n " +
-								 	 "com.ca.idms.hibernate,\n com.ca.idms.was");
+			extraManifestHeaders.put("5Export-Package",
+					"""
+					ca.idms.dsi,
+					 ca.idms.io,
+					 ca.idms.jdbc,
+					 ca.idms.net,
+					 ca.idms.proxy,
+					 ca.idms.qcli,
+					 ca.idms.util,
+					 ca.idms.xa,
+					 com.ca.idms.hibernate,
+					 com.ca.idms.was\
+					""");
 		}
 		if (!existingManifestHeaders.containsKey("Bundle-RequiredExecutionEnvironment")) {
-			extraManifestHeaders.put("6Bundle-RequiredExecutionEnvironment", "JavaSE-11");
+			extraManifestHeaders.put("6Bundle-RequiredExecutionEnvironment", "JavaSE-17");
 		}
 		copyJarWithExtraManifestHeaders(src, dest, extraManifestHeaders);		
 	}	
 
-	private static void copyJarWithExtraManifestHeaders(File src, File dest, 
-													   Properties extraManifestHeaders) 
-		throws IOException {
-		
-		ZipFile oldJarFile = new ZipFile(src);
-		ZipOutputStream newZos = new ZipOutputStream(new FileOutputStream(dest));
-		for (Enumeration<? extends ZipEntry> oldEntries = oldJarFile.entries(); 
-			 oldEntries.hasMoreElements(); ) {
-			
-			ZipEntry oldEntry = oldEntries.nextElement();			
-			if (!oldEntry.isDirectory()) {
-				ZipEntry newEntry = new ZipEntry(oldEntry.getName());
-				newZos.putNextEntry(newEntry);
-				InputStream is = oldJarFile.getInputStream(oldEntry);
-				if (oldEntry.getName().equals("META-INF/MANIFEST.MF") && 
-					!extraManifestHeaders.isEmpty()) {
-					
-					BufferedReader in = new BufferedReader(new InputStreamReader(is));
-					for (String line = in.readLine(); line != null && !line.trim().isEmpty();
-						 line = in.readLine()) {
-						
-						newZos.write(line.getBytes());
-						newZos.write(NEW_LINE);
-					}
-					in.close();				
-					newZos.write(MANIFEST_HEADER_COMMENT_START.getBytes());
-					List<String> sequencedHeaderNames = 
-						new ArrayList<>(extraManifestHeaders.stringPropertyNames());
-					Collections.sort(sequencedHeaderNames);
-					for (String sequencedHeaderName : sequencedHeaderNames) {
-						String headerName = sequencedHeaderName.substring(1);
-						String headerValue = extraManifestHeaders.getProperty(sequencedHeaderName);
-						String line = headerName + ": " + headerValue;
-						newZos.write(line.getBytes());
-						newZos.write(NEW_LINE);
-					}
-				} else {
-					copyStream(is, newZos);
-					newEntry.setTime(oldEntry.getTime());
+	private static void copyJarWithExtraManifestHeaders(File src, File dest, Properties extraManifestHeaders) throws IOException {
+		try (var oldJarFile = new ZipFile(src); var newZos = new ZipOutputStream(new FileOutputStream(dest))) {
+			for (var oldEntries = oldJarFile.entries(); oldEntries.hasMoreElements(); ) {
+				var oldEntry = oldEntries.nextElement();
+				if (!oldEntry.isDirectory()) {
+					createNewEntry(oldJarFile, oldEntry, newZos, extraManifestHeaders);
 				}
-				is.close();	
-				newZos.closeEntry();
 			}
 		}
-		
-		newZos.flush();
-		newZos.close();
-		oldJarFile.close();
+	}
+	
+	private static void createNewEntry(ZipFile oldJarFile, ZipEntry oldEntry, ZipOutputStream newZos, Properties extraManifestHeaders) throws IOException {
+		var newEntry = new ZipEntry(oldEntry.getName());
+		newZos.putNextEntry(newEntry);
+		try (var is = oldJarFile.getInputStream(oldEntry)) {
+			if (oldEntry.getName().equals("META-INF/MANIFEST.MF") && !extraManifestHeaders.isEmpty()) {
+				try (var in = new BufferedReader(new InputStreamReader(is))) {
+					for (var line = in.readLine(); line != null && !line.trim().isEmpty(); line = in.readLine()) {
+						newZos.write(line.getBytes());
+						newZos.write(NEW_LINE);
+					}
+				}
+				newZos.write(MANIFEST_HEADER_COMMENT_START.getBytes());
+				var sequencedHeaderNames = new ArrayList<>(extraManifestHeaders.stringPropertyNames());
+				Collections.sort(sequencedHeaderNames);
+				for (var sequencedHeaderName : sequencedHeaderNames) {
+					var headerName = sequencedHeaderName.substring(1);
+					var headerValue = extraManifestHeaders.getProperty(sequencedHeaderName);
+					var line = headerName + ": " + headerValue;
+					newZos.write(line.getBytes());
+					newZos.write(NEW_LINE);
+				}
+			} else {
+				copyStream(is, newZos);
+				newEntry.setTime(oldEntry.getTime());
+			}
+		}
+		newZos.closeEntry();
 	}
 	
 	private static void copyStream(InputStream is, OutputStream os) {
-	     final int buffer_size = 1024;
+	     var bufferSize = 1024;
 	     try {
-	         byte[] bytes = new byte[buffer_size];
+	         var bytes = new byte[bufferSize];
 	         for(; ; ) {
-	           int count = is.read(bytes, 0, buffer_size);
-	           if (count == -1) {
-	               break;
-	           }
-	           os.write(bytes, 0, count);
+				 var count = is.read(bytes, 0, bufferSize);
+				 if (count == -1) {
+					 break;
+				 }
+				 os.write(bytes, 0, count);
 	         }
-	     } catch (Throwable t) {
-	    	 throw new RuntimeException(t);
+	     } catch (Exception e) {
+	    	 	throw new IllegalStateException(e);
 	     }
 	 }
 
 	public static Properties getManifestHeaders(File aJarFile) throws IOException {
-		ZipFile zipFile = new ZipFile(aJarFile);
-		Properties properties = new Properties();		
-		try {			
-			ZipEntry zipEntry = zipFile.getEntry("META-INF/MANIFEST.MF");
-			InputStream is = zipFile.getInputStream(zipEntry);
-			properties.load(is);
-			is.close();
-		} catch (Throwable t) {
-		} 
-		zipFile.close();
-		return properties;		
+		var properties = new Properties();
+		try (var zipFile = new ZipFile(aJarFile)) {
+			var zipEntry = zipFile.getEntry("META-INF/MANIFEST.MF");
+			try (var is = zipFile.getInputStream(zipEntry)) {
+				properties.load(is);
+			}			
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+		return properties;
+	}
+	
+	private JarHelper() {
 	}
 	
 }

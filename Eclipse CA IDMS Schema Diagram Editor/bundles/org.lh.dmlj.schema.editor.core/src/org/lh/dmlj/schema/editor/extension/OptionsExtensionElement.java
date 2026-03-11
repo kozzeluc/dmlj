@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -25,21 +25,17 @@ import java.util.List;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 public class OptionsExtensionElement extends AbstractExtensionElement {
-
-	private List<OptionExtensionElement> 	  optionExtensionElements;
+	private List<OptionExtensionElement> optionExtensionElements;
 	private List<OptionGroupExtensionElement> optionGroupExtensionElements;
 	
 	public OptionsExtensionElement(IConfigurationElement configElement) {
-		super(configElement);		
+		super(configElement);
 	}
 	
 	public List<OptionExtensionElement> getOptionExtensionElements() {		
 		if (optionExtensionElements == null) {
 			optionExtensionElements = new ArrayList<>();
-			List<OptionExtensionElement> options =
-				ExtensionElementFactory.getExtensionElements(configElement, 
-															 ELEMENT_OPTION, 
-															 OptionExtensionElement.class);		
+			var options = ExtensionElementFactory.getExtensionElements(configElement, ELEMENT_OPTION, OptionExtensionElement.class);		
 			optionExtensionElements.addAll(options);
 		}
 		return optionExtensionElements;
@@ -48,10 +44,7 @@ public class OptionsExtensionElement extends AbstractExtensionElement {
 	public List<OptionGroupExtensionElement> getOptionGroupExtensionElements() {		
 		if (optionGroupExtensionElements == null) {
 			optionGroupExtensionElements = new ArrayList<>();
-			List<OptionGroupExtensionElement> optionGroups =
-				ExtensionElementFactory.getExtensionElements(configElement, 
-															 ELEMENT_OPTION_GROUP, 
-															 OptionGroupExtensionElement.class);		
+			var optionGroups = ExtensionElementFactory.getExtensionElements(configElement, ELEMENT_OPTION_GROUP, OptionGroupExtensionElement.class);		
 			optionGroupExtensionElements.addAll(optionGroups);
 		}
 		return optionGroupExtensionElements;

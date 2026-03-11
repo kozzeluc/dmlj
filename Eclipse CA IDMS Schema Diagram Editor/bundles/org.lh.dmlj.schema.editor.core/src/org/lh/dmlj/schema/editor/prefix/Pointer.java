@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,22 +21,16 @@ import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Role;
 
 /**
- * Represents a pointer in a record's prefix.  The prefix position does not have to be set, i.e. it
- * can be zero (in the case of the owner next pointer type) or null (all other pointer types).
+ * Represents a pointer in a record's prefix. The prefix position does not have to be set, i.e. it can be zero
+ * (in the case of the owner next pointer type) or null (all other pointer types).
  */
-public class Pointer<T extends Role> {
+public class Pointer {
+	protected final Role role;
+	protected final PointerType type;
+	private String recordName;
+	private String setName;
 	
-	protected T   		  role;
-	protected PointerType type;
-	private String 		  recordName;
-	private String 		  setName;
-	
-	protected Pointer() {
-		throw new UnsupportedOperationException("disabled constructor");
-	}
-	
-	protected Pointer(T role, PointerType type) {
-		super();	
+	protected Pointer(Role role, PointerType type) {
 		this.role = role;
 		this.type = type;
 		if (isOwnerDefined()) {			
@@ -70,7 +64,7 @@ public class Pointer<T extends Role> {
 		return recordName;
 	}
 	
-	public T getRole() {
+	public Role getRole() {
 		return role;
 	}
 	
@@ -91,9 +85,8 @@ public class Pointer<T extends Role> {
 	}
 	
 	public String toString() {
-		return "Pointer (record=" + recordName + " set=" + setName + " role=" + 
-			   (role instanceof OwnerRole ? "owner" : "member") + " position=" + 
-			   getCurrentPositionInPrefix() + ")";
+		return "Pointer (record=" + recordName + " set=" + setName + " role=" + (role instanceof OwnerRole ? "owner" : "member") + 
+				" position=" + getCurrentPositionInPrefix() + ")";
 	}
 	
 }

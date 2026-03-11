@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,7 +16,6 @@
  */
 package org.lh.dmlj.schema.editor.property.section;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -31,10 +30,6 @@ import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 import org.lh.dmlj.schema.editor.property.handler.IEditHandler;
 
 public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection {
-
-	public SetConnectorPropertiesSection() {
-		super();
-	}
 	
 	@Override
 	protected EObject getAttributeOwner(EAttribute attribute) {
@@ -47,16 +42,13 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 
 	@Override
 	public List<EAttribute> getAttributes() {
-		List<EAttribute> attributes = new ArrayList<>();
-		attributes.add(SchemaPackage.eINSTANCE.getConnector_Label());
-		return attributes;
+		return List.of(SchemaPackage.eINSTANCE.getConnector_Label());
 	}	
 	
 	@Override
 	public EObject getEditableObject(EAttribute attribute) {
 		if (attribute == SchemaPackage.eINSTANCE.getConnector_Label()) {
-			// although there will always be 2 connectors involved, capturing
-			// the model changes from the first will do
+			// although there will always be 2 connectors involved, capturing the model changes from the first will do
 			return target.getConnectionParts().get(0).getConnector();
 		}
 		return super.getEditableObject(attribute);
@@ -64,34 +56,28 @@ public class SetConnectorPropertiesSection extends AbstractSetPropertiesSection 
 	
 	@Override
 	public IEditHandler getEditHandler(EAttribute attribute, Object newValue) {
-		
 		if (attribute != SchemaPackage.eINSTANCE.getConnector_Label()) {		
 			return super.getEditHandler(attribute, newValue);
 		}
 		
-		// we need to set the label on both connectors, so go grab them (they 
-		// should always be there)
-		Connector[] connector = new Connector[2];
-		connector[0] = target.getConnectionParts().get(0).getConnector();
-		connector[1] = target.getConnectionParts().get(1).getConnector();
+		// we need to set the label on both connectors, so go grab them (they should always be there)
+		var connector = new Connector[] {
+				target.getConnectionParts().get(0).getConnector(),
+				target.getConnectionParts().get(1).getConnector()};
 		
 		// create 2 SetStringAttributeCommands to set the new label
-		String value = (String) newValue;
-		String label = getLabel(attribute);
-		Command[] command = new Command[2];
-		command[0] = new SetObjectAttributeCommand(connector[0], attribute, 
-												   value, label);
-		command[1] = new SetObjectAttributeCommand(connector[1], attribute, 
-												   value, label);
+		var value = (String) newValue;
+		var label = getLabel(attribute);
+		var command = new Command[] {
+				new SetObjectAttributeCommand(connector[0], attribute, value, label),
+				new SetObjectAttributeCommand(connector[1], attribute, value, label)};
 		
-		// create a compound command containing the 2 commands and wrap the result in an 
-		// IEditHandler; it is perfectly OK to use the SET_PROPERTY model change type here because
-		// the connector label is entered in the Properties view (and that's where that model change
-		// type stands for)
-		ModelChangeContext context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
-		context.putContextData(target.getConnectionParts().get(0).getConnector(), // first connector
-							   SchemaPackage.eINSTANCE.getConnector_Label()); 
-		final ModelChangeCompoundCommand cc = new ModelChangeCompoundCommand(); 
+		// create a compound command containing the 2 commands and wrap the result in an IEditHandler; it is
+		// perfectly OK to use the SET_PROPERTY model change type here because the connector label is entered in
+		// the Properties view (and that's where that model change type stands for)
+		var context = new ModelChangeContext(ModelChangeType.SET_PROPERTY);
+		context.putContextData(target.getConnectionParts().get(0).getConnector(), SchemaPackage.eINSTANCE.getConnector_Label());
+		var cc = new ModelChangeCompoundCommand(); 
 		cc.setLabel(command[0].getLabel());
 		cc.setContext(context);
 		cc.add(command[0]);

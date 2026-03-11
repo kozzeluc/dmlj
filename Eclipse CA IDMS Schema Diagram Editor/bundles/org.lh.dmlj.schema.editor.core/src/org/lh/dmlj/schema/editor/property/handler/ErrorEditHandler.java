@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,16 +19,9 @@ package org.lh.dmlj.schema.editor.property.handler;
 import org.eclipse.gef.commands.Command;
 
 public class ErrorEditHandler implements IEditHandler {
-
 	private String message;
 	
-	@SuppressWarnings("unused")
-	private ErrorEditHandler() {
-		super();
-	}
-	
 	public ErrorEditHandler(String message) {
-		super();
 		this.message = message;
 	}
 	

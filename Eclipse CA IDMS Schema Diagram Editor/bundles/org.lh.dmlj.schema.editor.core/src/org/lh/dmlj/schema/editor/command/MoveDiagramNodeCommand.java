@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,6 +16,8 @@
  */
 package org.lh.dmlj.schema.editor.command;
 
+import java.util.function.Supplier;
+
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.DiagramLabel;
@@ -25,43 +27,29 @@ import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.SystemOwner;
 
 public class MoveDiagramNodeCommand extends ModelChangeBasicCommand {
+	private DiagramNode diagramNode;
+	protected Supplier<? extends DiagramNode> diagramNodeSupplier;
+	protected int x;
+	protected int y;
 	
 	private DiagramLocation diagramLocation;	
+	private int oldX;
+	private int oldY;
 	
-	private DiagramNode diagramNode;
-	private int 		oldX;
-	private int 		oldY;
-	protected int 		x;
-	protected int 		y;
-	
-	protected ISupplier<? extends DiagramNode> diagramNodeSupplier;
-	
-	@SuppressWarnings("unused")
-	private MoveDiagramNodeCommand() {
-		super();
-	}
 	
 	public MoveDiagramNodeCommand(DiagramNode diagramNode, int x, int y) {
 		super();		
 		this.diagramNode = diagramNode;
 		this.x = x;
 		this.y = y;
-		if (diagramNode instanceof SchemaRecord) {
-			setLabel("Move record " + ((SchemaRecord)diagramNode).getName());
-		} else if (diagramNode instanceof SystemOwner) {
-			setLabel("Move index " + 
-					 ((SystemOwner)diagramNode).getSet().getName());
-		} else if (diagramNode instanceof ConnectionLabel) {
-			setLabel("Move connection label for set " + 
-					 ((ConnectionLabel)diagramNode).getMemberRole()
-					 							   .getSet()
-					 							   .getName());
-		} else if (diagramNode instanceof Connector) {
-			setLabel("Move connector for set " + 
-					 ((Connector)diagramNode).getConnectionPart()
-					 				     	 .getMemberRole()
-					 				     	 .getSet()
-					 					  	 .getName());
+		if (diagramNode instanceof SchemaRecord schemaRecord) {
+			setLabel("Move record " + schemaRecord.getName());
+		} else if (diagramNode instanceof SystemOwner systemOwner) {
+			setLabel("Move index " + systemOwner.getSet().getName());
+		} else if (diagramNode instanceof ConnectionLabel connectionLabel) {
+			setLabel("Move connection label for set " + connectionLabel.getMemberRole().getSet().getName());
+		} else if (diagramNode instanceof Connector connector) {
+			setLabel("Move connector for set " + connector.getConnectionPart().getMemberRole().getSet().getName());
 		} else if (diagramNode instanceof DiagramLabel) {
 			setLabel("Move diagram label");
 		} else {
@@ -69,8 +57,7 @@ public class MoveDiagramNodeCommand extends ModelChangeBasicCommand {
 		}
 	}
 	
-	public MoveDiagramNodeCommand(ISupplier<? extends DiagramNode> diagramNodeSupplier, int x, int y) {
-		super();		
+	public MoveDiagramNodeCommand(Supplier<? extends DiagramNode> diagramNodeSupplier, int x, int y) {
 		this.diagramNodeSupplier = diagramNodeSupplier;
 		this.x = x;
 		this.y = y;		
@@ -80,7 +67,7 @@ public class MoveDiagramNodeCommand extends ModelChangeBasicCommand {
 	@Override
 	public void execute() {
 		if (diagramNodeSupplier != null) {
-			diagramNode = diagramNodeSupplier.supply();
+			diagramNode = diagramNodeSupplier.get();
 		}
 		diagramLocation = diagramNode.getDiagramLocation();
 		oldX = diagramLocation.getX();
@@ -98,6 +85,18 @@ public class MoveDiagramNodeCommand extends ModelChangeBasicCommand {
 	public void undo() {
 		diagramLocation.setX(oldX);
 		diagramLocation.setY(oldY);
+	}
+	
+	public DiagramNode getDiagramNode() {
+		return diagramNode;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
 	}
 	
 }

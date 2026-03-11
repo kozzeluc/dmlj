@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,15 +18,12 @@ package org.lh.dmlj.schema.editor.outline.part;
 
 import org.eclipse.gef.EditPolicy;
 import org.lh.dmlj.schema.DiagramLabel;
-import org.lh.dmlj.schema.INodeTextProvider;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
 import org.lh.dmlj.schema.editor.policy.DiagramLabelComponentEditPolicy;
 
 public class DiagramLabelTreeEditPart extends AbstractSchemaTreeEditPart<DiagramLabel> {
 
-	public DiagramLabelTreeEditPart(DiagramLabel diagramLabel, 
-									IModelChangeProvider modelChangeProvider) {
-		
+	public DiagramLabelTreeEditPart(DiagramLabel diagramLabel, IModelChangeProvider modelChangeProvider) {
 		super(diagramLabel, modelChangeProvider);
 	}
 	
@@ -44,8 +41,8 @@ public class DiagramLabelTreeEditPart extends AbstractSchemaTreeEditPart<Diagram
 	}
 
 	@Override
-	protected INodeTextProvider<DiagramLabel> getNodeTextProvider() {
-		return getModel();
-	}	
+	protected WrappedNodeTextProvider getNodeTextProvider() {
+		return new WrappedNodeTextProvider(getModel());
+	}
 
 }

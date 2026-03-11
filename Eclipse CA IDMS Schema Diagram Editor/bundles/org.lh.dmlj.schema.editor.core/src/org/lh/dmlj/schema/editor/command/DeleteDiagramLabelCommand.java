@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,10 +22,10 @@ import org.lh.dmlj.schema.DiagramLabel;
 import org.lh.dmlj.schema.Schema;
 
 public class DeleteDiagramLabelCommand extends ModelChangeBasicCommand {
+	private final DiagramData diagramData;
 	
-	private DiagramData diagramData;
 	private DiagramLabel diagramLabel;
-	private int	i; // index of diagram label diagram location
+	private int	diagramLabelLocationIndex;
 	
 	public DeleteDiagramLabelCommand(Schema schema) {
 		super("Delete diagram label");
@@ -35,7 +35,7 @@ public class DeleteDiagramLabelCommand extends ModelChangeBasicCommand {
 	@Override
 	public void execute() {
 		diagramLabel = diagramData.getLabel();
-		i = diagramData.getLocations().indexOf(diagramLabel.getDiagramLocation());
+		diagramLabelLocationIndex = diagramData.getLocations().indexOf(diagramLabel.getDiagramLocation());
 		redo();		
 	}
 
@@ -49,7 +49,7 @@ public class DeleteDiagramLabelCommand extends ModelChangeBasicCommand {
 	@Override
 	public void undo() {
 		Assert.isTrue(diagramData.getLabel() == null);	
-		diagramData.getLocations().add(i, diagramLabel.getDiagramLocation());		
+		diagramData.getLocations().add(diagramLabelLocationIndex, diagramLabel.getDiagramLocation());		
 		diagramLabel.setDiagramData(diagramData);		
 	}
 	

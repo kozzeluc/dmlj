@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,12 +18,10 @@ package org.lh.dmlj.schema.editor.prefix;
 
 
 public class PointerDescription {
-	
-	private String setName;
-	private PointerType pointerType;
+	private final String setName;
+	private final PointerType pointerType;
 	
 	public PointerDescription(String setName, PointerType pointerType) {
-		super();
 		this.setName = setName;
 		this.pointerType = pointerType;
 	}

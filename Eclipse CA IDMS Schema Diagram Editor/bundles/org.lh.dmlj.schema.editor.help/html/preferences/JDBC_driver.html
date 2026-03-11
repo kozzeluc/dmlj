@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<html>
+<html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<title>IDMS JDBC Driver</title>
@@ -13,48 +13,48 @@ The diagram editor can connect to your dictionaries in order to create diagrams 
 you have installed the IDMS JDBC driver into the Eclipse workbench and have configured <b>IDMS Server</b> and an 
 <b>application catalog</b> in at least 1 of your central versions.
 <br><br>
-You will have to find and download the IDMS JDBC driver yourself; it is a file called <b>idmsjdbc.jar</b>.  Please note 
+You will have to find and download the IDMS JDBC driver yourself; it is a file called <b>idmsjdbc.jar</b>. Please note 
 that this file needs to be transformed in a so-called <i>OSGI bundle</i> to make it suitable for use within Eclipse;
-don't worry, the diagram editor can do this for you.  Save the idmsjdbc.jar file somewhere on your workstation and then 
+don't worry, the diagram editor can do this for you. Save the idmsjdbc.jar file somewhere on your workstation and then 
 install it in your Eclipse workbench following the procedure described below.
 <br><br>
 Don't be intimidated by the steps necessary to install the JDBC driver because once this is done, there is no easier
-way to generate diagrams for your schemas !
+way to generate diagrams for your schemas!
 <h2>Installing the IDMS JDBC driver</h2>
 Open the <a href="preferences_dialog.html">preferences dialog</a> and go to the diagram editor's Import/Dictionary/Driver 
-section; since you have not yet  installed the driver, you will see the following :<br><br>
+section; since you have not yet  installed the driver, you will see the following:<br><br>
 <img src="../../images/JDBC_driver_not_installed.png" alt="[JDBC driver not installed]">
 <br><br>
 Go up 1 level to the diagram editor's Import/Dictionary section and you will find a button labeled 
-'Install Driver NOW...' :
+"Install Driver NOW...":
 <br><br>
 <img src="../../images/preferences_install_JDBC_driver.png" alt="[JDBC driver not installed]">
 <br><br>
-Press this button to start the installation of the IDMS JDBC driver in your Eclipse workbench :
+Press this button to start the installation of the IDMS JDBC driver in your Eclipse workbench:
 <br><br>
 <img src="../../images/preferences_JDBC_jar_file_selection.png" alt="[JDBC .jar file selection]">
 <br><br>
-Select the idmsjdbc.jar file on your workstation's file system using the button labeled 'Select...'; then press the 'OK'
-button and you will notice that a button labeled 'Please restart your workbench !' will appear; press that button :
+Select the idmsjdbc.jar file on your workstation's file system using the button labeled "Select..."; then press the "OK"
+button and you will notice that a button labeled "Please restart your workbench!" will appear; press that button:
 <br><br>
 <img src="../../images/preferences_restart_workbench.png" alt="[restart workbench]">
 <br><br>
 After your Eclipse workbench has restarted, open the <a href="preferences_dialog.html">preferences dialog</a> again and 
-now you should see the IDMS JDBC driver version information for the file you installed :
+now you should see the IDMS JDBC driver version information for the file you installed:
 <br><br>
 <img src="../../images/JDBC_driver_installed.png" alt="[JDBC driver installed]">
 <br><br>
-When you see the version information, the JDBC driver was installed correctly.  The driver version is retrieved from the
-actual driver (the <code>javax.sql.Driver</code> implementation); the diagram editor just reports this version.  The
+When you see the version information, the JDBC driver was installed correctly. The driver version is retrieved from the
+actual driver (the <code>javax.sql.Driver</code> implementation); the diagram editor just reports this version. The
 provider plug-in information is taken from the <i>OSGI bundle</i> properties that were added to the META-INF/MANIFEST.MF 
 file when importing the idmsjdbc.jar file.
 <h2>Troubleshooting</h2>
 Should the above procedure not work for you then you can try to install the IDMS JDBC driver into your Eclipse workbench
-like so :
+like so:
 <ul>
 <li>Stop your Eclipse workbench.<br><br></li>
 <li><b>Edit the META-INF/MANIFEST.MF</b> file in idmsjdbc.jar using a tool like 7-Zip (.jar files are like .zip files) 
-and add the following lines to it :<br>
+and add the following lines to it:<br>
 <code><pre>
 Bundle-ManifestVersion: 2
 Bundle-Name: CA IDMS Server JDBC Driver
@@ -74,7 +74,7 @@ Export-Package: ca.idms.dsi,
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 </pre></code>
 Copy the version information from <code>Implementation-Version</code> to <code>Bundle-Version</code> and make sure to 
-have an empty line after <code>Bundle-RequiredExecutionEnvironment: JavaSE-11</code>.  Don't forget to save your work
+have an empty line after <code>Bundle-RequiredExecutionEnvironment: JavaSE-11</code>. Don't forget to save your work
 (in the idmsjdbc.jar file).
 <br><br>
 You have just transformed the idmsjdbc.jar file to an <b>OSGI bundle</b> that is ready to be picked up by Eclipse.
@@ -82,9 +82,9 @@ You have just transformed the idmsjdbc.jar file to an <b>OSGI bundle</b> that is
 </li>
 <li>In your <b>Eclipse installation folder</b> (there is always a file called <i>eclipse.ini</i> in this folder as well 
 as a <i>features</i> and a <i>plugins</i> folder, so hopefully this helps you in locating this folder on your PC's file
-system), <b>create a folder called <i>dropins</i></b> if it not yet exists.  On the Mac, the Eclipse installation folder 
+system), <b>create a folder called <i>dropins</i></b> if it not yet exists. On the Mac, the Eclipse installation folder 
 is beneath your Applications folder; right-click on the Eclipse icon (in the Applications folder) and then select the <i>Show 
-Package Contents</i> menu item :
+Package Contents</i> menu item:
 <br><br>
 <img src="../../images/Eclipse_application_context_menu.png" alt="[Eclipse application context menu]">
 <br><br>

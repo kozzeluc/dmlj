@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,19 +22,16 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 
 public class SetBooleanAttributeCommand extends ModelChangeBasicCommand {
-	
-	private EObject 	 		   owner;
-	private EStructuralFeature[] features;
+	private final EObject owner;
+	private final EStructuralFeature[] features;
+	private final boolean newValue;
 	
 	private boolean	oldValue;
-	private boolean	newValue;			
 		
-	public SetBooleanAttributeCommand(EObject owner, EAttribute attribute, boolean newValue, 
-									  String attributeLabel) {		
-		
+	public SetBooleanAttributeCommand(EObject owner, EAttribute attribute, boolean newValue, String attributeLabel) {		
 		super("Set '" + attributeLabel + "' to " + newValue);
 		this.owner = owner;
-		this.features = new EStructuralFeature[] {attribute};
+		this.features = new EStructuralFeature[] { attribute };
 		oldValue = (boolean) owner.eGet(attribute);
 		this.newValue = newValue;
 	}

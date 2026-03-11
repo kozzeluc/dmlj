@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -29,30 +29,25 @@ import org.lh.dmlj.schema.RecordProcedureCallVerb;
 import org.lh.dmlj.schema.VsamLengthType;
 import org.lh.dmlj.schema.editor.importtool.IRecordDataCollector;
 
-public class RecordDataCollector 
-	implements IRecordDataCollector<SchemaSyntaxWrapper> {
+public class RecordDataCollector implements IRecordDataCollector<SchemaSyntaxWrapper> {
+	private static final String PAGES = " PAGES";
+	private static final String ON_ERROR_DURING = "ON ERROR DURING";
+	private static final String FOR = " FOR ";
+	private static final String OFFSET = " OFFSET ";
+	private static final String VERSION = " VERSION ";
+	private static final String WITHIN_AREA = "         WITHIN AREA ";
 
 	private static List<String> getProcedureLines(SchemaSyntaxWrapper context) {
-
-		List<String> list = new ArrayList<>();
-		String scanItem = "         CALL ";				
-		for (String line : context.getLines()) {
-			if (line.startsWith(scanItem)) {				
-				list.add(line);
-			}
-		}		
-		return list;
-	}	
-	
-	public RecordDataCollector() {
-		super();
-	}	
+		return context.getLines().stream()
+				.filter(line -> line.startsWith("         CALL "))
+				.toList();
+	}
 
 	@Override
 	public String getAreaName(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
-			if (line.startsWith("         WITHIN AREA ")) {
-				String p = line.substring(21).trim();
+		for (var line : context.getLines()) {
+			if (line.startsWith(WITHIN_AREA)) {
+				var p = line.substring(21).trim();
 				int i = p.indexOf(" ");
 				if (i > -1) {
 					return p.substring(0, i);
@@ -66,9 +61,9 @@ public class RecordDataCollector
 
 	@Override
 	public String getBaseName(SchemaSyntaxWrapper context) { 
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("*+           SYNONYM OF PRIMARY RECORD ")) {
-				int i = line.indexOf(" VERSION ");
+				var i = line.indexOf(VERSION);
 				return line.substring(39, i);
 			}
 		}
@@ -77,10 +72,10 @@ public class RecordDataCollector
 
 	@Override
 	public short getBaseVersion(SchemaSyntaxWrapper context) {		
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("*+           SYNONYM OF PRIMARY RECORD ")) {
-				int i = line.indexOf(" VERSION ");
-				return Short.valueOf(line.substring(i + 9).trim()).shortValue();
+				var i = line.indexOf(VERSION);
+				return Short.parseShort(line.substring(i + 9).trim());
 			}
 		}		
 		return getSynonymVersion(context);
@@ -88,17 +83,17 @@ public class RecordDataCollector
 
 	@Override
 	public DuplicatesOption getCalcKeyDuplicatesOption(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("             DUPLICATES ARE ")) {
-				if (line.substring(28).startsWith("BY DBKEY")) {
+				if (line.startsWith("BY DBKEY", 28)) {
 					return DuplicatesOption.BY_DBKEY;
-				} else if (line.substring(28).startsWith("FIRST")) {
+				} else if (line.startsWith("FIRST", 28)) {
 					return DuplicatesOption.FIRST;
-				} else if (line.substring(28).startsWith("LAST")) {
+				} else if (line.startsWith("LAST", 28)) {
 					return DuplicatesOption.LAST;
-				} else if (line.substring(28).startsWith("NOT ALLOWED")) {
+				} else if (line.startsWith("NOT ALLOWED", 28)) {
 					return DuplicatesOption.NOT_ALLOWED;
-				} else if (line.substring(28).startsWith("UNORDERED")) {
+				} else if (line.startsWith("UNORDERED", 28)) {
 					return DuplicatesOption.UNORDERED;
 				}
 			}
@@ -108,62 +103,65 @@ public class RecordDataCollector
 
 	@Override
 	public Collection<String> getCalcKeyElementNames(SchemaSyntaxWrapper context) {
-		List<String> list = new ArrayList<>();		
-		int i = 0;
-		while (!context.getLines().get(i).startsWith("         LOCATION MODE IS CALC USING ( ") &&
-			   !context.getLines().get(i).startsWith("         LOCATION MODE IS VSAM CALC USING ( ")) {			
-			
-			i += 1;
-		}
-		boolean vsam = context.getLines().get(i).indexOf("VSAM CALC") > -1;
-		while (i < context.getLines().size()) {
-			if (context.getLines().get(i).trim().equals(")")) {
-				// we've processed all elements; no relevant data on this line
-				break;
-			}
-			int j;
-			if (context.getLines().get(i).startsWith("         LOCATION MODE IS CALC USING ( ") ||
-				context.getLines().get(i).startsWith("         LOCATION MODE IS VSAM CALC USING ( ")) {
-				
-				// first line
-				j = 39;
-				if (vsam) {
-					j += 5;
-				}
-			} else {
-				j = 15;
-			}
-			StringBuilder p = 
-				new StringBuilder(context.getLines().get(i).substring(j).trim());
-			if (p.toString().endsWith(" )")) {
-				p.setLength(p.length() - 2);
-			}
-			StringTokenizer tokenizer = new StringTokenizer(p.toString());
-			while (tokenizer.hasMoreTokens()) {
-				list.add(tokenizer.nextToken());
-			}
-			if (context.getLines().get(i).trim().endsWith(" )")) {
+		var list = new ArrayList<String>();
+		var i = computeFirstLineOfInterestIndex(context);
+		while (i < context.getLines().size() && !context.getLines().get(i).trim().equals(")")) {
+			var line = context.getLines().get(i);
+			var elementNames = extractElementNames(line);
+			list.addAll(elementNames);
+			if (line.trim().endsWith(" )")) {
 				// we've processed all elements
 				break;
 			} 
 			i += 1;
 		} 		
 		return list;
-	}	
+	}
+	
+	private int computeFirstLineOfInterestIndex(SchemaSyntaxWrapper context) {
+		var i = 0;
+		while (!context.getLines().get(i).startsWith("         LOCATION MODE IS CALC USING ( ") &&
+			   !context.getLines().get(i).startsWith("         LOCATION MODE IS VSAM CALC USING ( ")) {			
+			
+			i += 1;
+		}
+		return i;
+	}
+	
+	private List<String> extractElementNames(String line) {
+		var list = new ArrayList<String>();
+		int i;
+		if (line.startsWith("         LOCATION MODE IS CALC USING ( ")) {	
+			i = 39;
+		} else if (line.startsWith("         LOCATION MODE IS VSAM CALC USING ( ")) {
+			i = 44;
+		} else {
+			i = 15;
+		}
+		var p = new StringBuilder(line.substring(i).trim());
+		if (p.toString().endsWith(" )")) {
+			p.setLength(p.length() - 2);
+		}
+		var tokenizer = new StringTokenizer(p.toString());
+		while (tokenizer.hasMoreTokens()) {
+			list.add(tokenizer.nextToken());
+		}
+		return list;
+	}
 
 	@Override
 	public LocationMode getLocationMode(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         LOCATION MODE IS ")) {
-				if (line.substring(26).startsWith("CALC ")) {
+				if (line.startsWith("CALC ", 26)) {
 					return LocationMode.CALC;
-				} else if (line.substring(26).startsWith("VIA ")) {
+				} else if (line.startsWith("VIA ", 26)) {
 					return LocationMode.VIA;
-				} else if (line.substring(26).startsWith("DIRECT")) {
+				} else if (line.startsWith("DIRECT", 26)) {
 					return LocationMode.DIRECT;
-				} else if (line.substring(26).startsWith("VSAM CALC")) {
+				} else if (line.startsWith("VSAM CALC", 26)) {
 					return LocationMode.VSAM_CALC;
-				} else if (line.substring(26).startsWith("VSAM")) {
+				} else if (line.startsWith("VSAM", 26)) {
 					return LocationMode.VSAM;
 				}
 			}
@@ -173,10 +171,10 @@ public class RecordDataCollector
 
 	@Override
 	public Short getMinimumFragmentLength(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         MINIMUM FRAGMENT LENGTH IS ")) {
-				int i = line.indexOf(" ", 36);
-				String p = line.substring(36, i);
+				var i = line.indexOf(" ", 36);
+				var p = line.substring(36, i);
 				return Short.valueOf(p);
 			}
 		}
@@ -185,10 +183,10 @@ public class RecordDataCollector
 
 	@Override
 	public Short getMinimumRootLength(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         MINIMUM ROOT LENGTH IS ")) {
-				int i = line.indexOf(" ", 32);
-				String p = line.substring(32, i);
+				var i = line.indexOf(" ", 32);
+				var p = line.substring(32, i);
 				return Short.valueOf(p);
 			}
 		}
@@ -203,14 +201,11 @@ public class RecordDataCollector
 	@Override
 	public Integer getOffsetOffsetPageCount(SchemaSyntaxWrapper context) {
 		//          WITHIN AREA INS-DEMO-REGION OFFSET 5 PAGES FOR 45 PAGES
-		for (String line : context.getLines()) {
-			if (line.startsWith("         WITHIN AREA ") &&
-				line.indexOf(" OFFSET ") > -1 &&
-				line.indexOf(" PAGES FOR ") > -1) {
-				
-				int i = line.indexOf(" OFFSET ");
-				int j = line.indexOf(" PAGES FOR ");
-				return Integer.valueOf(line.substring(i + 8, j).trim());				
+		for (var line : context.getLines()) {
+			if (line.startsWith(WITHIN_AREA) && line.contains(OFFSET) && line.contains(" PAGES FOR ")) {
+				var i = line.indexOf(OFFSET);
+				var j = line.indexOf(" PAGES FOR ");
+				return Integer.valueOf(line.substring(i + 8, j).trim());
 			}
 		}
 		return null;
@@ -219,13 +214,10 @@ public class RecordDataCollector
 	@Override
 	public Short getOffsetOffsetPercent(SchemaSyntaxWrapper context) {
 		//      WITHIN AREA ALMAI101 OFFSET 5 PERCENT FOR 20 PERCENT
-		for (String line : context.getLines()) {
-			if (line.startsWith("         WITHIN AREA ") &&
-				line.indexOf(" OFFSET ") > -1 &&
-				line.indexOf(" PERCENT FOR ") > -1) {
-				
-				int i = line.indexOf(" OFFSET ");
-				int j = line.indexOf(" PERCENT FOR ", i);
+		for (var line : context.getLines()) {
+			if (line.startsWith(WITHIN_AREA) && line.contains(OFFSET) && line.contains(" PERCENT FOR ")) {
+				var i = line.indexOf(OFFSET);
+				var j = line.indexOf(" PERCENT FOR ", i);
 				return Short.valueOf(line.substring(i + 8, j).trim());				
 			}
 		}
@@ -235,14 +227,10 @@ public class RecordDataCollector
 	@Override
 	public Integer getOffsetPageCount(SchemaSyntaxWrapper context) {
 		//          WITHIN AREA INS-DEMO-REGION OFFSET 5 PAGES FOR 45 PAGES
-		for (String line : context.getLines()) {
-			if (line.startsWith("         WITHIN AREA ") &&
-				line.indexOf(" OFFSET ") > -1 &&
-				line.indexOf(" FOR ") > -1 &&
-				line.trim().endsWith(" PAGES")) {
-				
-				int i = line.indexOf(" FOR ");
-				int j = line.indexOf(" PAGES", i);
+		for (var line : context.getLines()) {
+			if (line.startsWith(WITHIN_AREA) && line.contains(OFFSET) && line.contains(FOR) && line.trim().endsWith(PAGES)) {
+				var i = line.indexOf(FOR);
+				var j = line.indexOf(PAGES, i);
 				return Integer.valueOf(line.substring(i + 5, j).trim());				
 			}
 		}
@@ -252,14 +240,10 @@ public class RecordDataCollector
 	@Override
 	public Short getOffsetPercent(SchemaSyntaxWrapper context) {
 		//      WITHIN AREA ALMAI101 OFFSET 5 PERCENT FOR 20 PERCENT
-		for (String line : context.getLines()) {
-			if (line.startsWith("         WITHIN AREA ") &&
-				line.indexOf(" OFFSET ") > -1 &&
-				line.indexOf(" FOR ") > -1 &&
-				line.trim().endsWith(" PERCENT")) {
-				
-				int i = line.indexOf(" FOR ");
-				int j = line.indexOf(" PERCENT", i);
+		for (var line : context.getLines()) {
+			if (line.startsWith(WITHIN_AREA) && line.contains(OFFSET) && line.contains(FOR) && line.trim().endsWith(" PERCENT")) {
+				var i = line.indexOf(FOR);
+				var j = line.indexOf(" PERCENT", i);
 				return Short.valueOf(line.substring(i + 5, j).trim());				
 			}
 		}
@@ -268,85 +252,70 @@ public class RecordDataCollector
 
 	@Override
 	public Collection<ProcedureCallTime> getProcedureCallTimes(SchemaSyntaxWrapper context) {
+		var procedureNames = new ArrayList<>(getProceduresCalled(context));
+		var procedureLines = getProcedureLines(context);
 		
-		List<String> procedureNames = new ArrayList<>(getProceduresCalled(context));
-		List<String> procedureLines = getProcedureLines(context);
-		
-		List<ProcedureCallTime> list = new ArrayList<>();
-		
-		for (int k = 0; k < procedureLines.size(); k++) {
+		var list = new ArrayList<ProcedureCallTime>();
+		for (var k = 0; k < procedureLines.size(); k++) {
+			var procedureName = procedureNames.get(k);
+			var line = procedureLines.get(k);
 			
-			String procedureName = procedureNames.get(k);
-			String line = procedureLines.get(k);
+			var i = line.indexOf(" " + procedureName + " ") + procedureName.length() + 2;
 			
-			int i = line.indexOf(" " + procedureName + " ") + procedureName.length() + 2;
-			
-			if (line.substring(i).startsWith("ON ERROR DURING")) {
+			if (line.startsWith(ON_ERROR_DURING, i)) {
 				list.add(ProcedureCallTime.ON_ERROR_DURING);
 			} else {
-				int j = line.indexOf(" ", i);
+				var j = line.indexOf(" ", i);
 				String p;
 				if (j > -1) {
 					p = line.substring(i, j);
 				} else {
 					p = line.substring(i);
 				}
-				ProcedureCallTime procedureCallTime = 
-					ProcedureCallTime.valueOf(p);
-				list.add(procedureCallTime);
+				list.add(ProcedureCallTime.valueOf(p));
 			}
 		}
-		
 		return list;
-		
 	}
 
 	@Override
 	public Collection<RecordProcedureCallVerb> getProcedureCallVerbs(SchemaSyntaxWrapper context) {
+		var procedureNames = new ArrayList<>(getProceduresCalled(context));
+		var procedureLines = getProcedureLines(context);		
 		
-		List<String> procedureNames = new ArrayList<>(getProceduresCalled(context));
-		List<String> procedureLines = getProcedureLines(context);		
+		var list = new ArrayList<RecordProcedureCallVerb>();
+		for (var k = 0; k < procedureLines.size(); k++) {
+			var procedureName = procedureNames.get(k);
+			var line = procedureLines.get(k);
 		
-		List<RecordProcedureCallVerb> list = new ArrayList<>();
-		
-		for (int k = 0; k < procedureLines.size(); k++) {
-			
-			String procedureName = procedureNames.get(k);
-			String line = procedureLines.get(k);
-		
-			int i = line.indexOf(" " + procedureName + " ") + procedureName.length() + 2;
+			var i = line.indexOf(" " + procedureName + " ") + procedureName.length() + 2;
 			int j;
-			if (line.substring(i).startsWith("ON ERROR DURING")) {
+			if (line.startsWith(ON_ERROR_DURING, i)) {
 				j = i + 15;
 			} else {
 				j = line.indexOf(" ", i);
 			}			
 			if (j > -1) {
-				String p = line.substring(j).trim();
-				if (p.equals("")) {
+				var p = line.substring(j).trim();
+				if (p.isEmpty()) {
 					list.add(RecordProcedureCallVerb.EVERY_DML_FUNCTION);									
-				} else {										
-					RecordProcedureCallVerb recordProcedureCallVerb =
-						RecordProcedureCallVerb.valueOf(p);
-					list.add(recordProcedureCallVerb);					
+				} else {						
+					list.add(RecordProcedureCallVerb.valueOf(p));
 				}
 			} else {
 				list.add(RecordProcedureCallVerb.EVERY_DML_FUNCTION);
 			}
-			
 		}
-		
 		return list;
-		
 	}
 
 	@Override
 	public Collection<String> getProceduresCalled(SchemaSyntaxWrapper context) {
-		List<String> list = new ArrayList<>();
-		for (String line : context.getLines()) {
+		var list = new ArrayList<String>();
+		for (var line : context.getLines()) {
 			if (line.startsWith("         CALL ")) {
-				int i = line.indexOf(" ", 14);
-				String procedureName = line.substring(14, i).trim();
+				var i = line.indexOf(" ", 14);
+				var procedureName = line.substring(14, i).trim();
 				list.add(procedureName);
 			}
 		}
@@ -355,9 +324,9 @@ public class RecordDataCollector
 
 	@Override
 	public short getRecordId(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         RECORD ID IS ")) {
-				return Short.valueOf(line.substring(22).trim()).shortValue();
+				return Short.parseShort(line.substring(22).trim());
 			}
 		}		
 		return -1;
@@ -366,11 +335,9 @@ public class RecordDataCollector
 	@Override
 	public String getSymbolicSubareaName(SchemaSyntaxWrapper context) {
 		//      WITHIN AREA ALMAI101 SUBAREA AREA1
-		for (String line : context.getLines()) {
-			if (line.indexOf("WITHIN AREA ") > -1 &&
-			    line.indexOf(" SUBAREA ") > -1) {
-			    	
-			    int i = line.indexOf(" SUBAREA ");
+		for (var line : context.getLines()) {
+			if (line.contains("WITHIN AREA ") && line.contains(" SUBAREA ")) {
+			    var i = line.indexOf(" SUBAREA ");
 				return line.substring(i + 9).trim();
 			}
 		}
@@ -379,15 +346,15 @@ public class RecordDataCollector
 	
 	@Override
 	public String getSynonymName(SchemaSyntaxWrapper context) { 
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         SHARE STRUCTURE OF RECORD ")) {
-				int i = line.indexOf(" VERSION ");
+				var i = line.indexOf(VERSION);
 				return line.substring(35, i);
 			}
 		}
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("*+       USES STRUCTURE OF RECORD ")) {
-				int i = line.indexOf(" VERSION ");
+				var i = line.indexOf(VERSION);
 				return line.substring(34, i);
 			}
 		}
@@ -396,16 +363,16 @@ public class RecordDataCollector
 
 	@Override
 	public short getSynonymVersion(SchemaSyntaxWrapper context) {		
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         SHARE STRUCTURE OF RECORD ")) {
-				int i = line.indexOf(" VERSION ");
-				return Short.valueOf(line.substring(i + 9).trim()).shortValue();
+				var i = line.indexOf(VERSION);
+				return Short.parseShort(line.substring(i + 9).trim());
 			}
 		}
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("*+       USES STRUCTURE OF RECORD ")) {
-				int i = line.indexOf(" VERSION ");
-				return Short.valueOf(line.substring(i + 9).trim()).shortValue();
+				var i = line.indexOf(VERSION);
+				return Short.parseShort(line.substring(i + 9).trim());
 			}
 		}
 		return 1;
@@ -414,12 +381,10 @@ public class RecordDataCollector
 	@Override
 	public Short getViaDisplacementPageCount(SchemaSyntaxWrapper context) {
 		// [...] DISPLACEMENT 5 PAGES
-		for (String line : context.getLines()) {
-			if (line.indexOf("DISPLACEMENT ") > -1 &&
-			    line.trim().endsWith(" PAGES")) {
-			    	
-			    int i = line.indexOf("DISPLACEMENT ");
-			    int j = line.indexOf(" PAGES", i);
+		for (var line : context.getLines()) {
+			if (line.contains("DISPLACEMENT ") && line.trim().endsWith(PAGES)) {
+			    var i = line.indexOf("DISPLACEMENT ");
+			    var j = line.indexOf(PAGES, i);
 				return Short.valueOf(line.substring(i + 13, j).trim());
 			}
 		}
@@ -428,7 +393,7 @@ public class RecordDataCollector
 
 	@Override
 	public String getViaSetName(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         LOCATION MODE IS VIA ")) {				
 				return line.substring(30, line.indexOf(" ", 30));
 			}
@@ -439,9 +404,9 @@ public class RecordDataCollector
 	@Override
 	public String getViaSymbolicDisplacementName(SchemaSyntaxWrapper context) {
 		// [...] DISPLACEMENT USING DISPL1
-		for (String line : context.getLines()) {
-			if (line.indexOf("DISPLACEMENT USING ") > -1) {
-			    int i = line.indexOf("DISPLACEMENT USING ");
+		for (var line : context.getLines()) {
+			if (line.contains("DISPLACEMENT USING ")) {
+			    var i = line.indexOf("DISPLACEMENT USING ");
 			    return line.substring(i + 19).trim();
 			}
 		}
@@ -450,7 +415,7 @@ public class RecordDataCollector
 
 	@Override
 	public VsamLengthType getVsamLengthType(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         VSAM TYPE IS ")) {				
 				if (line.substring(22).toUpperCase().startsWith("FIXED LENGTH")) {
 					return VsamLengthType.FIXED;
@@ -464,7 +429,7 @@ public class RecordDataCollector
 
 	@Override
 	public boolean isVsamSpanned(SchemaSyntaxWrapper context) {
-		for (String line : context.getLines()) {
+		for (var line : context.getLines()) {
 			if (line.startsWith("         VSAM TYPE IS ")) {				
 				return line.trim().toUpperCase().endsWith(" SPANNED");
 			}

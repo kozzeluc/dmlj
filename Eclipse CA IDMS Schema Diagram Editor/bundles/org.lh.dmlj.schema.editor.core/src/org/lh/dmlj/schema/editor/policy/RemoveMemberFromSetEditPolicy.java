@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,17 +21,14 @@ import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.editor.command.DeleteSetOrIndexCommandCreationAssistant;
-import org.lh.dmlj.schema.editor.command.IModelChangeCommand;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeContext;
 import org.lh.dmlj.schema.editor.command.infrastructure.ModelChangeType;
 
 public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
-	
 	private MemberRole memberRole;
 	private boolean allowRemovalOfSet;
 	
 	public RemoveMemberFromSetEditPolicy(MemberRole memberRole, boolean allowRemovalOfSet) {
-		super();
 		this.memberRole = memberRole;
 		this.allowRemovalOfSet = allowRemovalOfSet;
 	}
@@ -49,19 +46,16 @@ public class RemoveMemberFromSetEditPolicy extends ComponentEditPolicy {
 			} else {
 				modelChangeType = ModelChangeType.DELETE_USER_OWNED_SET;
 			}
-			ModelChangeContext context = new ModelChangeContext(modelChangeType);
-			context.putContextData(memberRole.getSet());
-			IModelChangeCommand command = 
-				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
+			var context = new ModelChangeContext(modelChangeType);
+			context.putContextData(memberRole.getSet(), ModelChangeContext.setContextDataAssembler);
+			var command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole.getSet());
 			command.setContext(context);
 			return (Command) command;
 		} else if (!removingLastMember()) {	
 			// create a command to remove the member record type from the set
-			ModelChangeContext context = 
-				new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
-			context.putContextData(memberRole);
-			IModelChangeCommand command = 
-				DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
+			var context = new ModelChangeContext(ModelChangeType.REMOVE_MEMBER_FROM_SET);
+			context.putContextData(memberRole, ModelChangeContext.memberRoleContextDataAssembler);
+			var command = DeleteSetOrIndexCommandCreationAssistant.getCommand(memberRole);
 			command.setContext(context);
 			return (Command) command;
 		}

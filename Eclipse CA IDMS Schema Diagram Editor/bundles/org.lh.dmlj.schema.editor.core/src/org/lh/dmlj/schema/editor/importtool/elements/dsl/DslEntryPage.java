@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,6 +17,8 @@
 package org.lh.dmlj.schema.editor.importtool.elements.dsl;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -24,7 +26,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.lh.dmlj.schema.SchemaRecord;
@@ -32,24 +33,14 @@ import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.dsl.builder.model.ModelFromDslBuilderForJava;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 
 public class DslEntryPage extends AbstractDataEntryPage {
-	
 	private Text textDsl;
 
-	public DslEntryPage() {
-		super();
-	}
-
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	@Override
 	public Control createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		Layout layout = new GridLayout(2, false);
+		var container = new Composite(parent, SWT.NONE);
+		var layout = new GridLayout(2, false);
 		container.setLayout(layout);
 		
 		textDsl = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -60,11 +51,11 @@ public class DslEntryPage extends AbstractDataEntryPage {
 			}
 		});
 		textDsl.setFont(SWTResourceManager.getFont("Courier New", 10, SWT.NORMAL));
-		GridData gd_textDsl = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2);
-		gd_textDsl.heightHint = 200;
-		textDsl.setLayoutData(gd_textDsl);
+		var gdTextDsl = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2);
+		gdTextDsl.heightHint = 200;
+		textDsl.setLayoutData(gdTextDsl);
 		
-		Button btnValidate = new Button(container, SWT.NONE);
+		var btnValidate = new Button(container, SWT.NONE);
 		btnValidate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -73,7 +64,7 @@ public class DslEntryPage extends AbstractDataEntryPage {
 		});
 		btnValidate.setText("Validate");
 		
-		Button btnReset = new Button(container, SWT.NONE);
+		var btnReset = new Button(container, SWT.NONE);
 		btnReset.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -91,8 +82,8 @@ public class DslEntryPage extends AbstractDataEntryPage {
 	}
 	
 	private void initialize() {
-		SchemaRecord record = getContext().getAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD);
-		textDsl.setText(Tools.generateRecordElementsDSL(record));
+		SchemaRecord schemaRecord = getContext().getAttribute(IDataEntryContext.CURRENT_SCHEMA_RECORD);
+		textDsl.setText(Tools.generateRecordElementsDSL(schemaRecord));
 	}
 	
 	private void invalidate() {
@@ -105,22 +96,19 @@ public class DslEntryPage extends AbstractDataEntryPage {
 	}
 	
 	private void validate() {
-		
-		boolean pageComplete = true;
+		var pageComplete = true;
 		getController().setErrorMessage(null);
-		
 		try {
-			StringBuilder recordDsl = new StringBuilder();
+			var recordDsl = new StringBuilder();
 			recordDsl.append("elements \"\"\"\n");
 			recordDsl.append(textDsl.getText());			
 			recordDsl.append("\n\"\"\"");
-			SchemaRecord dummyRecord = ModelFromDslBuilderForJava.record(recordDsl.toString());
+			var dummyRecord = ModelFromDslBuilderForJava.record(recordDsl.toString());
 			getContext().setAttribute(IDataEntryContext.RECORD, dummyRecord);
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			getController().setErrorMessage(t.getMessage());
 			pageComplete = false;
 		}
-		
 		getController().setPageComplete(pageComplete);
 	}
 

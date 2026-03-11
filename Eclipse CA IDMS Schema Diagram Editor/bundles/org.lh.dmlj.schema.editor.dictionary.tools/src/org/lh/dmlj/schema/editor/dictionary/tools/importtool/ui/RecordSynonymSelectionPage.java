@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2021  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,10 +18,11 @@ package org.lh.dmlj.schema.editor.dictionary.tools.importtool.ui;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
+import java.util.Objects;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -39,39 +40,29 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.lh.dmlj.schema.editor.dictionary.tools.importtool.context.ContextAttributeKeys;
-import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IQuery;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.IRowProcessor;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.JdbcTools;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.Query;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.schema.RecordElementsImportSession;
 import org.lh.dmlj.schema.editor.dictionary.tools.jdbc.ui.VirtualKeysConfirmationHandler;
 import org.lh.dmlj.schema.editor.dictionary.tools.model.Dictionary;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn_079;
-import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr_036;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Rcdsyn079;
+import org.lh.dmlj.schema.editor.dictionary.tools.table.Sr036;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 
 public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
-
-	private Composite composite;
+	private final List<Rcdsyn079> rcdsyn079s = new ArrayList<>();	
+	
 	private Table table;
 	private Text textRecordSynonymName;
-	private Button btnFind;
-	private List<Rcdsyn_079> rcdsyn_079s = new ArrayList<>();
+	private Button btnFind;	
 	
-	public RecordSynonymSelectionPage() {
-		super();
-	}
-
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	@Override
 	public Control createControl(Composite parent) {
-		composite = new Composite(parent, SWT.NONE);
-		
+		var composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(3, false));
 		
-		Label lblRecordSynonymName = new Label(composite, SWT.NONE);
+		var lblRecordSynonymName = new Label(composite, SWT.NONE);
 		lblRecordSynonymName.setText("Record synonym name:");
 		
 		textRecordSynonymName = new Text(composite, SWT.BORDER);
@@ -92,10 +83,10 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 		});
 		btnFind.setText("Find");
 		
-		Label lblNewLabel = new Label(composite, SWT.NONE);
-		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
-		gd_lblNewLabel.verticalIndent = 5;
-		lblNewLabel.setLayoutData(gd_lblNewLabel);
+		var lblNewLabel = new Label(composite, SWT.NONE);
+		var gdLblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
+		gdLblNewLabel.verticalIndent = 5;
+		lblNewLabel.setLayoutData(gdLblNewLabel);
 		lblNewLabel.setText("Record synonyms that match your request:");
 		
 		table = new Table(composite, SWT.BORDER | SWT.FULL_SELECTION);
@@ -105,17 +96,17 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 				validatePage(null);
 			}
 		});
-		GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
-		gd_table.heightHint = 175;
-		table.setLayoutData(gd_table);
+		var gdTable = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
+		gdTable.heightHint = 175;
+		table.setLayoutData(gdTable);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		TableColumn tblclmnRecordSynonym = new TableColumn(table, SWT.RIGHT);
+		var tblclmnRecordSynonym = new TableColumn(table, SWT.RIGHT);
 		tblclmnRecordSynonym.setWidth(225);
 		tblclmnRecordSynonym.setText("Record Synonym");
 		
-		TableColumn tblclmnBaseRecord = new TableColumn(table, SWT.LEFT);
+		var tblclmnBaseRecord = new TableColumn(table, SWT.LEFT);
 		tblclmnBaseRecord.setWidth(225);
 		tblclmnBaseRecord.setText("Base Record");
 		
@@ -125,64 +116,59 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 	}
 	
 	protected void findRecordSynonyms() {
-		
-		String recordSynonymName = textRecordSynonymName.getText().trim().toUpperCase();
+		var recordSynonymName = textRecordSynonymName.getText().trim().toUpperCase();
 		textRecordSynonymName.setText(recordSynonymName);
 		
 		table.deselectAll();
 		table.removeAll();		
 		
-		rcdsyn_079s.clear();
+		rcdsyn079s.clear();
 		
-		final List<TableEntry> tableEntries = new ArrayList<>();
+		var tableEntries = new ArrayList<TableEntry>();
 		Dictionary dictionary = getContext().getAttribute(ContextAttributeKeys.DICTIONARY);
-		Stack<RecordElementsImportSession> session = new Stack<>();
-		Stack<Throwable> throwableToPass = new Stack<>();
+		var session = new ArrayDeque<RecordElementsImportSession>();
+		var throwableToPass = new ArrayDeque<Throwable>();
 		try {
-			final RecordElementsImportSession fSession = new RecordElementsImportSession(dictionary, recordSynonymName);
+			var fSession = new RecordElementsImportSession(dictionary, recordSynonymName);
 			session.push(fSession);
 			fSession.open();
-			VirtualKeysConfirmationHandler.handleConfirmation(fSession, 
-				() -> {
-					IQuery query = new Query.Builder().forRecordSynonymList(fSession).build();
-					fSession.runQuery(query, new IRowProcessor() {
-						@Override
-						public void processRow(ResultSet row) throws SQLException {					
-							
-							Sr_036 sr_036 = new Sr_036();
-							sr_036.setRowid(JdbcTools.getRowid(row, Sr_036.ROWID));
-							sr_036.setSrNam_036(row.getString(Sr_036.SR_NAM_036));
-							sr_036.setRcdVers_036(row.getShort(Sr_036.RCD_VERS_036));
-											
-							Rcdsyn_079 rcdsyn_079 = new Rcdsyn_079();
-							rcdsyn_079.setRowid(JdbcTools.getRowid(row, Rcdsyn_079.ROWID));
-							rcdsyn_079.setRsynName_079(row.getString(Rcdsyn_079.RSYN_NAME_079));
-							rcdsyn_079.setRsynVer_079(row.getShort(Rcdsyn_079.RSYN_VER_079));
-							rcdsyn_079.setSr_036(sr_036);
-							sr_036.setRcdsyn_079(rcdsyn_079);
-							rcdsyn_079s.add(rcdsyn_079);					
-							
-							TableEntry tableEntry = new TableEntry();
-							tableEntries.add(tableEntry);	
-							tableEntry.recordSynonymVersion = rcdsyn_079.getRsynVer_079();
-							tableEntry.recordName = sr_036.getSrNam_036();
-							tableEntry.recordVersion = sr_036.getRcdVers_036(); 				
-						}
-					});
-				}, 
-				() -> throwableToPass.push(new RuntimeException("IDMSNTWK catalog Schema is defined WITH VIRTUAL KEYS")));			
-		} catch (Throwable t) {
-			throwableToPass.push(t);
+			VirtualKeysConfirmationHandler.handleConfirmation(fSession, () -> {
+				var query = new Query.Builder().forRecordSynonymList(fSession).build();
+				fSession.runQuery(query, new IRowProcessor() {
+					@Override
+					public void processRow(ResultSet row) throws SQLException {
+						var sr036 = new Sr036();
+						sr036.setRowid(JdbcTools.getRowid(row, Sr036.ROWID));
+						sr036.setSrNam036(row.getString(Sr036.SR_NAM_036));
+						sr036.setRcdVers036(row.getShort(Sr036.RCD_VERS_036));
+										
+						var rcdsyn079 = new Rcdsyn079();
+						rcdsyn079.setRowid(JdbcTools.getRowid(row, Rcdsyn079.ROWID));
+						rcdsyn079.setRsynName079(row.getString(Rcdsyn079.RSYN_NAME_079));
+						rcdsyn079.setRsynVer079(row.getShort(Rcdsyn079.RSYN_VER_079));
+						rcdsyn079.setSr036(sr036);
+						sr036.setRcdsyn079(rcdsyn079);
+						rcdsyn079s.add(rcdsyn079);					
+						
+						var tableEntry = new TableEntry();
+						tableEntries.add(tableEntry);	
+						tableEntry.recordSynonymVersion = rcdsyn079.getRsynVer079();
+						tableEntry.recordName = sr036.getSrNam036();
+						tableEntry.recordVersion = sr036.getRcdVers036(); 				
+					}
+				});
+			}, () -> throwableToPass.push(new RuntimeException("IDMSNTWK catalog Schema is defined WITH VIRTUAL KEYS")));
+		} catch (Exception e) {
+			throwableToPass.push(e);
 		} finally {
 			if (!session.isEmpty()) {
 				session.pop().close();
 			}
 		}
 		
-		
 		Collections.sort(tableEntries);
-		for (TableEntry tableEntry : tableEntries) {
-			TableItem item = new TableItem(table, SWT.NONE);
+		for (var tableEntry : tableEntries) {
+			var item = new TableItem(table, SWT.NONE);
 			item.setText(0, recordSynonymName + " version " + tableEntry.recordSynonymVersion);
 			item.setText(1, tableEntry.recordName + " version " + tableEntry.recordVersion);
 		}
@@ -192,31 +178,47 @@ public class RecordSynonymSelectionPage extends AbstractDataEntryPage {
 	}
 	
 	private void validatePage(Throwable throwableToPass) {
-		
 		getController().setPageComplete(false);
-		String errorMessage = throwableToPass != null ? throwableToPass.getMessage() : null;
+		var errorMessage = throwableToPass != null ? throwableToPass.getMessage() : null;
 		getController().setErrorMessage(errorMessage);
 		
 		if (table.getSelectionCount() > 0) {			
-			int selectionIndex = table.getSelectionIndex();
-			getContext().setAttribute(ContextAttributeKeys.RCDSYN_079, rcdsyn_079s.get(selectionIndex));
+			var selectionIndex = table.getSelectionIndex();
+			getContext().setAttribute(ContextAttributeKeys.RCDSYN_079, rcdsyn079s.get(selectionIndex));
 			getController().setPageComplete(true);
 		} else {
 			getContext().clearAttribute(ContextAttributeKeys.RCDSYN_079);			
-		}	
-		
+		}
 		btnFind.setEnabled(!textRecordSynonymName.getText().trim().isEmpty());
 	}	
 	
 	private static class TableEntry implements Comparable<TableEntry> {
-		
-		private int    recordSynonymVersion;
+		private int recordSynonymVersion;
 		private String recordName;
-		private int    recordVersion;
+		private int recordVersion;
 
 		@Override
 		public int compareTo(TableEntry other) {
 			return recordSynonymVersion - other.recordSynonymVersion;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(recordName, recordSynonymVersion, recordVersion);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			TableEntry other = (TableEntry) obj;
+			return Objects.equals(recordName, other.recordName)
+					&& recordSynonymVersion == other.recordSynonymVersion
+					&& recordVersion == other.recordVersion;
 		}
 		
 	}

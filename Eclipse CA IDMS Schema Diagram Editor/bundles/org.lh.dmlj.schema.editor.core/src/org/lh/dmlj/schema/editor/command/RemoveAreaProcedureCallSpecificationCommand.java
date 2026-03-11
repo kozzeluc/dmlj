@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,20 +21,18 @@ import org.lh.dmlj.schema.Procedure;
 import org.lh.dmlj.schema.SchemaArea;
 
 public class RemoveAreaProcedureCallSpecificationCommand extends ModelChangeBasicCommand {
+	protected final AreaProcedureCallSpecification callSpec;
 	
-	protected AreaProcedureCallSpecification callSpec;
 	private SchemaArea area;
 	private Procedure procedure;
 	private int areaInsertionIndex;
 
 	public RemoveAreaProcedureCallSpecificationCommand(AreaProcedureCallSpecification callSpec) {
-		super();
 		this.callSpec = callSpec;
 	}
 	
 	@Override
 	public void execute() {
-		
 		area = callSpec.getArea();
 		procedure = callSpec.getProcedure();
 		

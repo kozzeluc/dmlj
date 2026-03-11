@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,8 +22,7 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.lh.dmlj.schema.editor.figure.VsamIndexFigure;
 
 /**
- * An anchor that will locate the (owner) connection endpoint at the bottom of 
- * its target VSAM index figure.
+ * An anchor that will locate the (owner) connection endpoint at the bottom of its target VSAM index figure.
  */
 public class VsamIndexSourceAnchor extends AbstractConnectionAnchor {
 
@@ -41,7 +40,7 @@ public class VsamIndexSourceAnchor extends AbstractConnectionAnchor {
 	 */
 	@Override
 	public Point getLocation(Point originalReference) {
-		PrecisionPoint origin = new PrecisionPoint(getOwner().getBounds().getBottom());
+		var origin = new PrecisionPoint(getOwner().getBounds().getBottom());
 		getOwner().translateToAbsolute(origin);
 		return origin;
 	}

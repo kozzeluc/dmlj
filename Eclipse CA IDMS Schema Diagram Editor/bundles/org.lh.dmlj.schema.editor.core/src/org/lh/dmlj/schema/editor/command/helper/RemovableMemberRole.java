@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.lh.dmlj.schema.ConnectionLabel;
-import org.lh.dmlj.schema.ConnectionPart;
-import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 import org.lh.dmlj.schema.Element;
 import org.lh.dmlj.schema.Key;
@@ -32,16 +29,14 @@ import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SetOrder;
-import org.lh.dmlj.schema.editor.prefix.PointerType;
 import org.lh.dmlj.schema.editor.prefix.PrefixFactory;
 import org.lh.dmlj.schema.editor.prefix.PrefixForPointerRemoval;
 import org.lh.dmlj.schema.editor.prefix.PrefixUtil;
 
 public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
-	
 	private Schema schema;
 	
-	private SchemaRecord record;
+	private SchemaRecord schemaRecord;
 	private int indexOfRoleInRecordsMemberRoles;
 	private PrefixForPointerRemoval prefix;
 		
@@ -61,7 +56,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	private List<DiagramLocation> additionalObsoleteLocations;
 
 	public RemovableMemberRole(MemberRole role) {
-		this(role, new ArrayList<DiagramLocation>());
+		this(role, new ArrayList<>());
 	}
 	
 	public RemovableMemberRole(MemberRole role, List<DiagramLocation> additionalObsoleteLocations) {
@@ -79,9 +74,9 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	}
 
 	private void rememberRecordData() {
-		record = role.getRecord();
-		indexOfRoleInRecordsMemberRoles = record.getMemberRoles().indexOf(role);
-		PointerType[] definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
+		schemaRecord = role.getRecord();
+		indexOfRoleInRecordsMemberRoles = schemaRecord.getMemberRoles().indexOf(role);
+		var definedPointerTypes = PrefixUtil.getDefinedPointerTypes(role);
 		prefix = PrefixFactory.newPrefixForPointerRemoval(role, definedPointerTypes);
 	}
 	
@@ -101,65 +96,55 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	
 	private void rememberSortKeyData() {
 		sortKey = role.getSortKey();
-		indexOfSortKeyInRecordsKeys = record.getKeys().indexOf(sortKey);		
-		for (KeyElement keyElement : sortKey.getElements()) {
+		indexOfSortKeyInRecordsKeys = schemaRecord.getKeys().indexOf(sortKey);		
+		for (var keyElement : sortKey.getElements()) {
 			indexesOfKeyElementsInElementsKeyElements.add(new KeyElementIndex(keyElement));
 		}
 	}
 
 	private void rememberConnectionPartData() {		
-		ConnectionPart connectionPart = role.getConnectionParts().get(0);
-		DiagramData diagramData = schema.getDiagramData();
-		indexOfConnectionPartInDiagramDatasConnectionParts = 
-			diagramData.getConnectionParts().indexOf(connectionPart);
+		var connectionPart = role.getConnectionParts().get(0);
+		var diagramData = schema.getDiagramData();
+		indexOfConnectionPartInDiagramDatasConnectionParts = diagramData.getConnectionParts().indexOf(connectionPart);
 	}
 	
 	private void rememberConnectionLabelData() {		
-		ConnectionLabel connectionLabel = role.getConnectionLabel();
-		DiagramData diagramData = schema.getDiagramData();
-		indexOfConnectionLabelInDiagramDatasConnectionLabels = 
-			diagramData.getConnectionLabels().indexOf(connectionLabel);		
+		var connectionLabel = role.getConnectionLabel();
+		var diagramData = schema.getDiagramData();
+		indexOfConnectionLabelInDiagramDatasConnectionLabels = diagramData.getConnectionLabels().indexOf(connectionLabel);		
 	}
 	
 	private void rememberDiagramLocationData() {
+		var diagramData = schema.getDiagramData();
 		
-		DiagramData diagramData = schema.getDiagramData();
-		
-		ConnectionPart connectionPart = role.getConnectionParts().get(0);
-		DiagramLocation sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 
+		var connectionPart = role.getConnectionParts().get(0);
+		var sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 
 		if (sourceEndpointLocation != null) {
-			DiagramLocationIndex sourceEndpointLocationIndex = 
-				new DiagramLocationIndex(sourceEndpointLocation, 
-										 diagramData.getLocations().indexOf(sourceEndpointLocation));
+			var sourceEndpointLocationIndex = 
+					new DiagramLocationIndex(sourceEndpointLocation, diagramData.getLocations().indexOf(sourceEndpointLocation));
 			indexesInDiagramDatasLocations.add(sourceEndpointLocationIndex);
 		}
-		DiagramLocation targetEndpointLocation = connectionPart.getTargetEndpointLocation();
+		var targetEndpointLocation = connectionPart.getTargetEndpointLocation();
 		if (targetEndpointLocation != null) {
-			DiagramLocationIndex targetEndpointLocationIndex = 
-				new DiagramLocationIndex(targetEndpointLocation, 
-										 diagramData.getLocations().indexOf(targetEndpointLocation));
+			var targetEndpointLocationIndex = 
+					new DiagramLocationIndex(targetEndpointLocation,diagramData.getLocations().indexOf(targetEndpointLocation));
 			indexesInDiagramDatasLocations.add(targetEndpointLocationIndex);
 		}
 		
-		ConnectionLabel connectionLabel = role.getConnectionLabel();		
-		DiagramLocationIndex connectionLabelIndex = 
-			new DiagramLocationIndex(connectionLabel.getDiagramLocation(), 
-									 diagramData.getLocations()
-									 			.indexOf(connectionLabel.getDiagramLocation()));
-		indexesInDiagramDatasLocations.add(connectionLabelIndex);		
-		
+		var connectionLabel = role.getConnectionLabel();		
+		var connectionLabelIndex = new DiagramLocationIndex(connectionLabel.getDiagramLocation(),
+				diagramData.getLocations().indexOf(connectionLabel.getDiagramLocation()));
+		indexesInDiagramDatasLocations.add(connectionLabelIndex);	
 	}
 	
 	private void rememberAdditionalObsoleteLocations(List<DiagramLocation> additionalObsoleteLocations) {
-		
 		this.additionalObsoleteLocations = additionalObsoleteLocations;
 		
-		DiagramData diagramData = schema.getDiagramData();
+		var diagramData = schema.getDiagramData();
 		
-		for (DiagramLocation obsoleteLocation : additionalObsoleteLocations) {
-			DiagramLocationIndex companyingLocationIndex = 
-				new DiagramLocationIndex(obsoleteLocation, 
-										 diagramData.getLocations().indexOf(obsoleteLocation));
+		for (var obsoleteLocation : additionalObsoleteLocations) {
+			var companyingLocationIndex = 
+					new DiagramLocationIndex(obsoleteLocation, diagramData.getLocations().indexOf(obsoleteLocation));
 			indexesInDiagramDatasLocations.add(companyingLocationIndex);
 		}
 		
@@ -178,7 +163,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 
 	private void removeRecordData() {
 		prefix.removePointers();		
-		record.getMemberRoles().remove(role);
+		schemaRecord.getMemberRoles().remove(role);
 	}
 	
 	private void removeSetData() {
@@ -194,37 +179,37 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	}	
 	
 	private void removeSortKey() {		
-		for (KeyElement keyElement : role.getSortKey().getElements()) {
+		for (var keyElement : role.getSortKey().getElements()) {
 			keyElement.setElement(null);
 		}		
 		role.setSortKey(null);
-		record.getKeys().remove(sortKey);
+		schemaRecord.getKeys().remove(sortKey);
 	}
 
 	private void removeConnectionPartData() {
-		ConnectionPart connectionPart = role.getConnectionParts().get(0);
-		DiagramData diagramData = schema.getDiagramData();
+		var connectionPart = role.getConnectionParts().get(0);
+		var diagramData = schema.getDiagramData();
 		diagramData.getConnectionParts().remove(connectionPart);
-		DiagramLocation sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 		
+		var sourceEndpointLocation = connectionPart.getSourceEndpointLocation(); 		
 		if (sourceEndpointLocation != null) {
 			diagramData.getLocations().remove(sourceEndpointLocation);
 		}
-		DiagramLocation targetEndpointLocation = connectionPart.getTargetEndpointLocation();
+		var targetEndpointLocation = connectionPart.getTargetEndpointLocation();
 		if (targetEndpointLocation != null) {
 			diagramData.getLocations().remove(targetEndpointLocation);
 		}
 	}
 	
 	private void removeConnectionLabelData() {
-		ConnectionLabel connectionLabel = role.getConnectionLabel(); 
-		DiagramData diagramData = schema.getDiagramData();
+		var connectionLabel = role.getConnectionLabel(); 
+		var diagramData = schema.getDiagramData();
 		diagramData.getConnectionLabels().remove(connectionLabel);
 		diagramData.getLocations().remove(connectionLabel.getDiagramLocation());	
 	}	
 	
 	private void removeAdditionalObsoleteLocations() {		
-		DiagramData diagramData = schema.getDiagramData();
-		for (DiagramLocation obsoleteLocation : additionalObsoleteLocations) {
+		var diagramData = schema.getDiagramData();
+		for (var obsoleteLocation : additionalObsoleteLocations) {
 			diagramData.getLocations().remove(obsoleteLocation);
 		}
 	}
@@ -237,7 +222,7 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	
 	private void restoreRecordData(){
 		prefix.reset();	
-		record.getMemberRoles().add(indexOfRoleInRecordsMemberRoles, role);
+		schemaRecord.getMemberRoles().add(indexOfRoleInRecordsMemberRoles, role);
 	}	
 	
 	private void restoreSetData(){
@@ -254,9 +239,8 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	}	
 
 	private void restoreSortKey() {						
-		for (KeyElement keyElement : sortKey.getElements()) {			
-			KeyElementIndex keyElementIndex = 
-				KeyElementIndex.find(indexesOfKeyElementsInElementsKeyElements, keyElement);
+		for (var keyElement : sortKey.getElements()) {			
+			var keyElementIndex = KeyElementIndex.find(indexesOfKeyElementsInElementsKeyElements, keyElement);
 			keyElementIndex.element.getKeyElements().add(keyElementIndex.value, keyElement);
 		}		
 		role.setSortKey(sortKey);
@@ -264,37 +248,32 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 	}	
 
 	private void restoreConnectionPartData() {	
-		ConnectionPart connectionPart = role.getConnectionParts().get(0);
-		DiagramData diagramData = schema.getDiagramData();
-		diagramData.getConnectionParts().add(indexOfConnectionPartInDiagramDatasConnectionParts, 
-											 connectionPart);		
+		var connectionPart = role.getConnectionParts().get(0);
+		var diagramData = schema.getDiagramData();
+		diagramData.getConnectionParts().add(indexOfConnectionPartInDiagramDatasConnectionParts, connectionPart);		
 	}	
 	
 	private void restoreConnectionLabelData() {	
-		ConnectionLabel connectionLabel = role.getConnectionLabel();
-		DiagramData diagramData = schema.getDiagramData();
+		var connectionLabel = role.getConnectionLabel();
+		var diagramData = schema.getDiagramData();
 		diagramData.getConnectionLabels().add(indexOfConnectionLabelInDiagramDatasConnectionLabels, 
 											  connectionLabel);		
 	}
 	
 	private void restoreDiagramLocationData() {		
-		DiagramData diagramData = schema.getDiagramData();
-		for (DiagramLocationIndex diagramLocationIndex :  indexesInDiagramDatasLocations) {
-			diagramData.getLocations().add(diagramLocationIndex.value, 
-										   diagramLocationIndex.diagramLocation);
+		var diagramData = schema.getDiagramData();
+		for (var diagramLocationIndex :  indexesInDiagramDatasLocations) {
+			diagramData.getLocations().add(diagramLocationIndex.value, diagramLocationIndex.diagramLocation);
 		}
 	}	
 	
 	private static class KeyElementIndex {
-		
 		private Element element;
 		private KeyElement keyElement;
 		private int value;
 		
-		private static KeyElementIndex find(List<KeyElementIndex> containingList,
-											KeyElement searchItem) {
-			
-			for (KeyElementIndex keyElementIndex : containingList) {
+		private static KeyElementIndex find(List<KeyElementIndex> containingList, KeyElement searchItem) {
+			for (var keyElementIndex : containingList) {
 				if (keyElementIndex.keyElement == searchItem) {
 					return keyElementIndex;
 				}
@@ -310,8 +289,8 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 		}
 		
 	}
+	
 	static class DiagramLocationIndex implements Comparable<DiagramLocationIndex> {
-		
 		DiagramLocation diagramLocation;
 		int value;
 		
@@ -324,6 +303,16 @@ public class RemovableMemberRole extends AbstractRemovableRole<MemberRole> {
 		@Override
 		public int compareTo(DiagramLocationIndex other) {			
 			return value - other.value;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			return super.equals(obj);
+		}
+		
+		@Override
+		public int hashCode() {
+			return super.hashCode();
 		}
 				
 	}

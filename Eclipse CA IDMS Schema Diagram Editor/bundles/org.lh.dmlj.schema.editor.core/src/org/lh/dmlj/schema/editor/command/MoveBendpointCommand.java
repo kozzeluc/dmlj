@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,21 +19,22 @@ package org.lh.dmlj.schema.editor.command;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.DiagramLocation;
 
-public class MoveBendpointCommand extends ModelChangeBasicCommand {	
-	
-	private DiagramLocation 	   bendpoint;	
+public class MoveBendpointCommand extends ModelChangeBasicCommand {
+	private final DiagramLocation bendpoint;
+	private final int newX;
+	private final int newY;
 	
 	private int oldX;
 	private int oldY;
-	
-	private int newX;
-	private int newY;
-	
+		
 	public MoveBendpointCommand(ConnectionPart connectionPart, int index, int x, int y) {
-		super();
 		bendpoint = connectionPart.getBendpointLocations().get(index);
 		newX = x;
 		newY = y;
+		var connectionPartIndex = connectionPart.getMemberRole().getConnectionParts().indexOf(connectionPart);
+		var label = "Move bendpoint with index %s for set %s (connection part index: %d) member %s".formatted(index,
+				connectionPart.getMemberRole().getSet().getName(), connectionPartIndex, connectionPart.getMemberRole().getRecord().getName());
+		setLabel(label);
 	}
 	
 	@Override
@@ -53,6 +54,18 @@ public class MoveBendpointCommand extends ModelChangeBasicCommand {
 	public void undo() {
 		bendpoint.setX(oldX);
 		bendpoint.setY(oldY);
+	}
+
+	public DiagramLocation getBendpoint() {
+		return bendpoint;
+	}
+
+	public int getNewX() {
+		return newX;
+	}
+
+	public int getNewY() {
+		return newY;
 	}
 	
 }

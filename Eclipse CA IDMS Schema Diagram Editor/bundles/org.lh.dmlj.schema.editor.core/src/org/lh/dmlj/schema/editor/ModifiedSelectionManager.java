@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,123 +16,73 @@
  */
 package org.lh.dmlj.schema.editor;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-import org.eclipse.gef.*;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.SelectionManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
- * A selection manager that prevents nested parts from being selected
- * when their parent or grandparent part is selected.
+ * A selection manager that prevents nested parts from being selected when their parent or grandparent part is selected.
  */
-class ModifiedSelectionManager extends SelectionManager
-{
+class ModifiedSelectionManager extends SelectionManager {
 	private final GraphicalViewer viewer;
+
+	private static boolean checkAncestors(EditPart partOfInterest, Predicate<EditPart> predicate) {
+		return partOfInterest != null && Stream.iterate(partOfInterest.getParent(), Objects::nonNull, EditPart::getParent)
+				.anyMatch(predicate);
+	}	
 
 	public ModifiedSelectionManager(GraphicalViewer viewer) {
 		this.viewer = viewer;
 	}
 	
 	/**
-	 * Override the superclass behavior
-	 * to cycle through the each of the selected EditParts 
-	 * and removes any which have a selected ancestor.
+	 * Cycle through each of the selected EditParts and remove all that have a selected ancestor.
 	 */
+	@Override
 	public void setSelection(ISelection selection) {
-		
-		// Build a collection of originally selected parts
-		// and a collection from which nested parts are removed
-		
-		List<?> oldSelection = ((IStructuredSelection) selection).toList();
-		final List<Object> newSelection = new ArrayList<Object>(oldSelection.size());
-		newSelection.addAll(oldSelection);
-
-		// Cycle through all selected parts and remove nested parts
-		// which have a parent or grandparent part that is selected
-		
-		Iterator<Object> iter = newSelection.iterator();
-		while (iter.hasNext())
-			if (containsAncestor(newSelection, (EditPart) iter.next()))
-				iter.remove();
-		
-		// Pass the revised selection to the superclass implementation
-		// to perform the actual selection
-		
-		super.setSelection(new StructuredSelection(newSelection));
+		List<?> currentlySelectedEditParts = ((IStructuredSelection) selection).toList();
+		var selectedEditPartsThatAreAncestorFree = currentlySelectedEditParts.stream()
+				.map(EditPart.class::cast)
+				.filter(part -> !checkAncestors(part, currentlySelectedEditParts::contains))
+				.toList();
+		super.setSelection(new StructuredSelection(selectedEditPartsThatAreAncestorFree));
 	}
 	
 	/**
-	 * Override the superclass behavior
-	 * to adjust the selection based upon whether the editpart
-	 * is a nested part of an already selected ancestor
-	 * or is an ancestor of already selected parts.
+	 * Adjust the selection based upon whether the editpart is a nested part of an already selected ancestor or
+	 * is an ancestor of (an) already selected part(s).
 	 */
+	@Override
 	public void appendSelection(EditPart part) {
 		List<?> selection = ((IStructuredSelection) getSelection()).toList();
 		
-		// If "nothing" is selected then getSelection() returns
-		// the viewer's primary edit part in which case the 
-		// specified part should be selected.
-		
+		// If "nothing" is selected then getSelection() returns the viewer's primary edit part in which case the 
+		// specified part should be selected.		
 		if (selection.size() == 1 && selection.get(0) == viewer.getContents()) {
 			super.appendSelection(part);
 			return;
 		}
 		
-		// If the selection already contains an ancestor 
-		// of the specified part then don't select the part
-		
-		if (containsAncestor(selection, part))
+		// If the selection already contains an ancestor of the specified part then don't select the part
+		if (checkAncestors(part, selection::contains)) {
 			return;
-
-		// Deselect any currently selected parts
-		// which have the new part as an ancestor 
-		
-		Iterator<?> iter = new ArrayList<Object>(selection).iterator();
-		while (iter.hasNext()) {
-			EditPart each = (EditPart) iter.next();
-			if (isAncestor(part, each))
-				deselect(each);
 		}
-		
-		// Call the superclass implemention to select the part
+
+		// Deselect any currently selected parts which have the new part as an ancestor
+		selection.stream()
+				.map(EditPart.class::cast)
+				.filter(aSelectedPart -> checkAncestors(part, ancestor -> ancestor == aSelectedPart))
+				.forEach(this::deselect);
 		
 		super.appendSelection(part);
 	}
-
-	/**
-	 * Determine if the specified ancestor is indeed an ancestor
-	 * of the specified part.
-	 * 
-	 * @param ancestor the ancestor (not <code>null</code>)
-	 * @param part the part (not <code>null</code>)
-	 * @return <code>true</code> if the ancestor is indeed an ancestor
-	 * 		of the specified part, else false
-	 */
-	private static boolean isAncestor(EditPart ancestor, EditPart part) {
-		while (part != null) {
-			part = part.getParent();
-			if (part == ancestor)
-				return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Determine if the specified collection contains an ancestor
-	 * of the specified edit part
-	 * 
-	 * @param list the collection of edit parts (not <code>null</code>)
-	 * @param part the EditPart (not <code>null</code>)
-	 * @return <code>true</code> if the collection contains an ancestor
-	 * 		of the specified edit part, else <code>false</code>
-	 */
-	private static boolean containsAncestor(final List<?> list, EditPart part) {
-		while (part != null) {
-			part = part.getParent();
-			if (list.contains(part))
-				return true;
-		}
-		return false;
-	}
+	
 }

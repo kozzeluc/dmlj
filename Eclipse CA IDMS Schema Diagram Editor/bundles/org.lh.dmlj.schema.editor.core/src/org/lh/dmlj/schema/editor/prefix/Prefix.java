@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,34 +16,25 @@
  */
 package org.lh.dmlj.schema.editor.prefix;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.lh.dmlj.schema.SchemaRecord;
 
 public class Prefix {
+	protected final SchemaRecord schemaRecord;
+	protected final List<Pointer> pointers;
 	
-	protected List<Pointer<?>> pointers;
-	protected SchemaRecord     record;
-	
-	@SuppressWarnings("unused")
-	private Prefix() {
-		// disabled constructor
-		super(); 
+	Prefix(SchemaRecord schemaRecord, List<Pointer> pointers) {
+		this.schemaRecord = schemaRecord;
+		this.pointers = List.copyOf(pointers);
 	}
 	
-	Prefix(SchemaRecord record, List<Pointer<?>> pointers) {
-		super();
-		this.record = record;
-		this.pointers = new ArrayList<>(pointers);
-	}
-	
-	public List<Pointer<?>> getPointers() {
-		return new ArrayList<>(pointers);		
+	public List<Pointer> getPointers() {
+		return pointers;
 	}
 	
 	public SchemaRecord getRecord() {
-		return record;
+		return schemaRecord;
 	}
 
 }

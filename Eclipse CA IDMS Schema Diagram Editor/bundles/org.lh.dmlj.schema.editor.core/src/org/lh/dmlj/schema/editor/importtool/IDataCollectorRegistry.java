@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,28 +19,24 @@ package org.lh.dmlj.schema.editor.importtool;
 
 public interface IDataCollectorRegistry {
 
-	<T> IAreaDataCollector<T> getAreaDataCollector(Class<T> _class);
+	<T> IAreaDataCollector<T> getAreaDataCollector(Class<T> type);
 	
-	<T> IElementDataCollector<T> getElementDataCollector(Class<T> _class);
+	<T> IElementDataCollector<T> getElementDataCollector(Class<T> type);
 	
-	<T> IRecordDataCollector<T> getRecordDataCollector(Class<T> _class);
+	<T> IRecordDataCollector<T> getRecordDataCollector(Class<T> type);
 	
 	ISchemaDataCollector getSchemaDataCollector();
 	
-	<T> ISetDataCollector<T> getSetDataCollector(Class<T> _class);	
+	<T> ISetDataCollector<T> getSetDataCollector(Class<T> type);
 	
-	<T> void registerAreaDataCollector(Class<T> _class, 
-									   IAreaDataCollector<T> dataCollector);		
+	<T> void registerAreaDataCollector(Class<T> type, IAreaDataCollector<T> dataCollector);		
 	
-	<T> void registerElementDataCollector(Class<T> _class, 
-										  IElementDataCollector<T> dataCollector);		
+	<T> void registerElementDataCollector(Class<T> type, IElementDataCollector<T> dataCollector);		
 
-	<T> void registerRecordDataCollector(Class<T> _class, 
-										 IRecordDataCollector<T> dataCollector);	
+	<T> void registerRecordDataCollector(Class<T> type, IRecordDataCollector<T> dataCollector);
 
 	void registerSchemaDataCollector(ISchemaDataCollector dataCollector);		
 
-	<T> void registerSetDataCollector(Class<T> _class, 
-									  ISetDataCollector<T> dataCollector);		
+	<T> void registerSetDataCollector(Class<T> type, ISetDataCollector<T> dataCollector);
 	
 }

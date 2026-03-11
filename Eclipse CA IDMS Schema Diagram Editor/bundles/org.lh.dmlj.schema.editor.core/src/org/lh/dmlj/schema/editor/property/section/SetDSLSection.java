@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -19,17 +19,19 @@ package org.lh.dmlj.schema.editor.property.section;
 import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
-import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.SystemOwner;
 import org.lh.dmlj.schema.VsamIndex;
 import org.lh.dmlj.schema.editor.dsl.builder.syntax.SetSyntaxBuilder;
 
 public class SetDSLSection extends AbstractSectionWithStyledText {
-	
-	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS =
-		new Class[] {ConnectionLabel.class, ConnectionPart.class, 
-					 Connector.class, SystemOwner.class, Set.class, VsamIndex.class};
+	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS = new Class[] {
+			ConnectionLabel.class,
+			ConnectionPart.class,
+			Connector.class,
+			SystemOwner.class,
+			Set.class,
+			VsamIndex.class};
 
 	public SetDSLSection() {
 		super(VALID_EDIT_PART_MODEL_OBJECTS);
@@ -38,23 +40,19 @@ public class SetDSLSection extends AbstractSectionWithStyledText {
 	@Override
 	protected String getValue(Object editPartModelObject) {
 		Set set;
-		if (editPartModelObject instanceof ConnectionPart) {
-			MemberRole memberRole = ((ConnectionPart) editPartModelObject).getMemberRole();
+		if (editPartModelObject instanceof ConnectionPart connectionPart) {
+			var memberRole = connectionPart.getMemberRole();
 			set = memberRole.getSet();
-		} else if (editPartModelObject instanceof ConnectionLabel) {
-			ConnectionLabel connectionLabel = (ConnectionLabel) editPartModelObject;
+		} else if (editPartModelObject instanceof ConnectionLabel connectionLabel) {
 			set = connectionLabel.getMemberRole().getSet();
-		} else if (editPartModelObject instanceof Connector) {
-			Connector connector = (Connector) editPartModelObject;
+		} else if (editPartModelObject instanceof Connector connector) {
 			set = connector.getConnectionPart().getMemberRole().getSet();
-		} else if (editPartModelObject instanceof Set) {
-			set = (Set) editPartModelObject;						
-		} else if (editPartModelObject instanceof VsamIndex) {
-			VsamIndex vsamIndex = (VsamIndex) editPartModelObject;
+		} else if (editPartModelObject instanceof SystemOwner systemOwner) {
+			set = systemOwner.getSet();				
+		} else if (editPartModelObject instanceof VsamIndex vsamIndex) {
 			set = vsamIndex.getSet();
-		} else {
-			SystemOwner systemOwner = (SystemOwner) editPartModelObject;
-			set = systemOwner.getSet();
+		} else {			
+			set = (Set) editPartModelObject;
 		}
 		return new SetSyntaxBuilder().build(set);		
 	}

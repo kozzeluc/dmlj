@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -37,47 +37,32 @@ import org.lh.dmlj.schema.editor.common.NamingConventions;
 import org.lh.dmlj.schema.editor.common.ValidationResult;
 
 public class AddProcedureDialog extends TitleAreaDialog {
-
-	private List<String> currentList;
-	private String 		 procedureName;
-	private Text 		 textProcedureName;
+	private final List<String> currentList;
+	private String procedureName;
 	
-	/**
-	 * Create the dialog.
-	 * @param parentShell
-	 */
+	private Text textProcedureName;
+		
 	public AddProcedureDialog(Shell parentShell, List<String> currentList) {
 		super(parentShell);
-		setHelpAvailable(false);
 		this.currentList = currentList;
+		setHelpAvailable(false);
 	}
-
-	/**
-	 * Create contents of the button bar.
-	 * @param parent
-	 */
+	
 	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-				true);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.CANCEL_LABEL, false);
+	protected Point getInitialSize() {
+		return new Point(400, 250);
 	}
-
-	/**
-	 * Create contents of the dialog.
-	 * @param parent
-	 */
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setMessage("Specify a procedure that compresses a record occurrence's data portion.");
 		setTitle("Add database procedure used for COMPRESSION");
-		Composite area = (Composite) super.createDialogArea(parent);
-		Composite container = new Composite(area, SWT.NONE);
+		var area = (Composite) super.createDialogArea(parent);
+		var container = new Composite(area, SWT.NONE);
 		container.setLayout(new GridLayout(2, false));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		Label lblName = new Label(container, SWT.NONE);
+		var lblName = new Label(container, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText("Procedure name:");
 		
@@ -94,19 +79,17 @@ public class AddProcedureDialog extends TitleAreaDialog {
 				validate();
 			}
 		});
-		GridData gd_textProcdureName = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_textProcdureName.widthHint = 100;
-		textProcedureName.setLayoutData(gd_textProcdureName);
+		var gdTextProcdureName = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gdTextProcdureName.widthHint = 100;
+		textProcedureName.setLayoutData(gdTextProcdureName);
 
 		return area;
 	}
-	
-	/**
-	 * Return the initial size of the dialog.
-	 */
+		
 	@Override
-	protected Point getInitialSize() {
-		return new Point(400, 250);
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	public String getProcedureName() {
@@ -114,30 +97,21 @@ public class AddProcedureDialog extends TitleAreaDialog {
 	}
 	
 	private void validate() {
-	
 		setErrorMessage(null);
-		boolean ok = true;
+		var ok = true;
 		
-		String p = 
-			NamingConventions.Type.PROCEDURE_NAME.toString().toLowerCase().replaceAll("_", " ");
-
-		// convert the name to upper case and check its validity 
 		procedureName = textProcedureName.getText().trim().toUpperCase();
-		ValidationResult validationResult = 
-			NamingConventions.validate(procedureName, NamingConventions.Type.PROCEDURE_NAME);
+		var validationResult = NamingConventions.validate(procedureName, NamingConventions.Type.PROCEDURE_NAME);
 		if (currentList.contains(procedureName)) {
-			String message = "Procedure already specified for compression";
-			setErrorMessage(message);
+			setErrorMessage("Procedure already specified for compression");
 			ok = false;
 		} else if (validationResult.getStatus() != ValidationResult.Status.OK) {
-			String message = 
-				"Invalid " + p + ": " + procedureName + " (" + validationResult.getMessage() + ")";
+			var message = "Invalid %s: %s (%s)".formatted(NamingConventions.Type.PROCEDURE_NAME.toString().toLowerCase().replace("_", " "),
+							procedureName, validationResult.getMessage());
 			setErrorMessage(message);
 			ok = false;
 		}
-				
 		getButton(IDialogConstants.OK_ID).setEnabled(ok);
-		
 	}
 	
 }

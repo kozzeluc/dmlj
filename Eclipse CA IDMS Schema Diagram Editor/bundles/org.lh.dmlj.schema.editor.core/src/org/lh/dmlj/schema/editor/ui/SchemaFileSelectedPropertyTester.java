@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,77 +22,55 @@ import java.io.FileReader;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 
 public class SchemaFileSelectedPropertyTester extends PropertyTester {
 
-	public SchemaFileSelectedPropertyTester() {
-		super();
-	}
-
 	@Override
-	public boolean test(Object receiver, String property, Object[] args,
-					    Object expectedValue) {
-
-		ISelection selection;
-		try {
-			selection = PlatformUI.getWorkbench()
-			 					  .getActiveWorkbenchWindow()
-					 			  .getSelectionService()
-					 			  .getSelection();
-		} catch (Throwable t) {
-			return false;
-		}
-		if (selection.isEmpty() || 
-			!(selection instanceof IStructuredSelection)) {
-			
-			return false;
-		}
-		IStructuredSelection ss = (IStructuredSelection) selection;
-		if (!(ss.getFirstElement() instanceof IFile)) {
-			return false;
-		}
-		
-		IFile iFile = (IFile) ss.getFirstElement();
-		File file = iFile.getLocation().toFile();		
-		
-		boolean validSchema = false;
-		if (file.getName().endsWith(".schema")) {
-			try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-				String line = in.readLine();
-				if (line == null || 
-					!line.trim().equals("<?xml version=\"1.0\" encoding=\"ASCII\"?>")) {
-					
-					throw new RuntimeException("not a valid schema file");
-				}
-				line = in.readLine();
-				if (line == null || 
-					!line.trim().startsWith("<org.lh.dmlj.schema:Schema")) {
-					
-					throw new RuntimeException("not a valid schema file");
-				}
-				validSchema = true;
-			} catch (Throwable t) {
-			}
-		} else if (file.getName().endsWith(".schemadsl")) {
-			try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-				String line = in.readLine();
-				if (line == null || !line.trim().startsWith("name '") ||
-					!line.trim().endsWith("'")) {
-					
-					throw new RuntimeException("not a valid schemadsl file");
-				}
-				line = in.readLine();
-				if (line == null || !line.trim().startsWith("version ")) {					
-					throw new RuntimeException("not a valid schemadsl file");
-				}
-				validSchema = true;
-			} catch (Throwable t) {
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+		var selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+		if (!selection.isEmpty() && selection instanceof IStructuredSelection ss && ss.getFirstElement() instanceof IFile iFile) {	
+			var file = iFile.getLocation().toFile();
+			if (file.getName().endsWith(".schema")) {
+				return testSchemaFile(file);
+			} else if (file.getName().endsWith(".schemadsl")) {
+				return testSchemadslFile(file);
 			}
 		}
-		return validSchema;
+		return false;
+	}
+	
+	private boolean testSchemaFile(File file) {
+		try (var in = new BufferedReader(new FileReader(file))) {
+			var line = in.readLine();
+			if (line == null || !line.trim().equals("<?xml version=\"1.0\" encoding=\"ASCII\"?>")) {
+				throw new IllegalStateException("not a valid schema file");
+			}
+			line = in.readLine();
+			if (line == null || !line.trim().startsWith("<org.lh.dmlj.schema:Schema")) {
+				throw new IllegalStateException("not a valid schema file");
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	private boolean testSchemadslFile(File file) {
+		try (var in = new BufferedReader(new FileReader(file))) {
+			var line = in.readLine();
+			if (line == null || !line.trim().startsWith("name '") || !line.trim().endsWith("'")) {
+				throw new IllegalStateException("not a valid schemadsl file");
+			}
+			line = in.readLine();
+			if (line == null || !line.trim().startsWith("version ")) {					
+				throw new IllegalStateException("not a valid schemadsl file");
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

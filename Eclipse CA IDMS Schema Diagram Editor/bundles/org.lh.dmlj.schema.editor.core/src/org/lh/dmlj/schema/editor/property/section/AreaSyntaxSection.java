@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,9 +20,7 @@ import org.lh.dmlj.schema.SchemaArea;
 import org.lh.dmlj.schema.editor.template.AreaTemplate;
 
 public class AreaSyntaxSection extends AbstractSyntaxSection {
-	
-	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS =
-		new Class[] {SchemaArea.class};
+	private static final Class<?>[] VALID_EDIT_PART_MODEL_OBJECTS = new Class[] { SchemaArea.class };
 	
 	public AreaSyntaxSection() {
 		super(VALID_EDIT_PART_MODEL_OBJECTS, new AreaTemplate());
@@ -30,7 +28,7 @@ public class AreaSyntaxSection extends AbstractSyntaxSection {
 	
 	@Override
 	protected Object[] getTemplateParametersOtherThanTemplateObject() {
-		return new Object[] {Boolean.FALSE};
+		return new Object[] { Boolean.FALSE };
 	}
 	
 }

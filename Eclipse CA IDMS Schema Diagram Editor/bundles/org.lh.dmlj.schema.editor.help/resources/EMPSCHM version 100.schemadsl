@@ -8,6 +8,12 @@ diagram {
     snapToGuides
 }
 
+area 'INS-DEMO-REGION'
+
+area 'ORG-DEMO-REGION'
+
+area 'EMP-DEMO-REGION'
+
 record 'COVERAGE' {
     shareStructure 'COVERAGE version 100'
     recordId 400
@@ -385,9 +391,9 @@ record 'JOB' {
     minimumRootLength 24
     minimumFragmentLength 296
 
-    call 'IDMSCOMP BEFORE STORE'
-    call 'IDMSCOMP BEFORE MODIFY'
-    call 'IDMSDCOM AFTER GET'
+    callProcedure 'IDMSCOMP BEFORE STORE'
+    callProcedure 'IDMSCOMP BEFORE MODIFY'
+    callProcedure 'IDMSDCOM AFTER GET'
 
     elements """
         02 JOB-ID-0440 picture 9(4)

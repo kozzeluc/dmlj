@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,13 +16,10 @@
  */
 package org.lh.dmlj.schema.editor.part;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.ConnectionEditPart;
@@ -30,12 +27,10 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreateConnectionRequest;
-import org.lh.dmlj.schema.ConnectionLabel;
 import org.lh.dmlj.schema.ConnectionPart;
 import org.lh.dmlj.schema.Connector;
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.SchemaPackage;
-import org.lh.dmlj.schema.Set;
 import org.lh.dmlj.schema.editor.anchor.ConnectorAnchor;
 import org.lh.dmlj.schema.editor.command.infrastructure.CommandExecutionMode;
 import org.lh.dmlj.schema.editor.command.infrastructure.IModelChangeProvider;
@@ -47,43 +42,31 @@ import org.lh.dmlj.schema.editor.palette.IMultipleMemberSetPlaceHolder;
 import org.lh.dmlj.schema.editor.policy.ConnectorComponentEditPolicy;
 
 public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<Connector> {
-
 	private MemberRole memberRole;
-	
-	private ConnectorEditPart() {
-		super(null, null); // disabled constructor
-	}
 	
 	public ConnectorEditPart(Connector connector, IModelChangeProvider modelChangeProvider) {
 		super(connector, modelChangeProvider);
-		// keep track of the MemberRole because if connectors are deleted, the 
-		// reference to that MemberRole will be nullified in the ConnectionPart
+		// keep track of the MemberRole because if connectors are deleted, the reference to that MemberRole will
+		// be nullified in the ConnectionPart
 		this.memberRole = connector.getConnectionPart().getMemberRole();
 	}	
 	
 	@Override
 	public void afterModelChange(ModelChangeContext context) {
-		if ((context.getModelChangeType() == ModelChangeType.MOVE_CONNECTOR ||
-			 context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
+		if ((context.getModelChangeType() == ModelChangeType.MOVE_CONNECTOR || context.getModelChangeType() == ModelChangeType.MOVE_GROUP_OF_DIAGRAM_NODES) &&
 			context.appliesTo(getModel())) {
-			
-			// the connector was moved
+						
 			refreshVisuals();			
 			refreshConnections();			
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY &&
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getConnector_Label()) &&
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getConnector_Label()) &&
 				   context.appliesTo((memberRole.getConnectionParts().get(0).getConnector()))) {
 			
-			// the connector label is set; refresh the edit part's visuals (note that the context
-			// data ALWAYS refers to the FIRST connector in this situation, although both connectors
-			// are impacted) 
+			// the connector label is set; refresh the edit part's visuals (note that the context data ALWAYS
+			// refers to the FIRST connector in this situation, although both connectors are impacted)
 			refreshVisuals();			
-		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
-				   context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-				   (context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-				    Boolean.TRUE.equals(context.getListenerData())) ||
-				    context.getCommandExecutionMode() == CommandExecutionMode.UNDO &&
-				    context.appliesTo(getModel().getConnectionPart().getMemberRole().getSet())) {
+		} else if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+				   (context.getCommandExecutionMode() != CommandExecutionMode.UNDO && Boolean.TRUE.equals(context.getListenerData())) ||
+				    context.getCommandExecutionMode() == CommandExecutionMode.UNDO && context.appliesTo(getModel().getConnectionPart().getMemberRole().getSet())) {
 			
 			// the set name has changed (execute/undo/redo)
 			refreshVisuals();						
@@ -92,14 +75,12 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 	
 	@Override
 	public void beforeModelChange(ModelChangeContext context) {
-		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && 
-			context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
-			context.getCommandExecutionMode() != CommandExecutionMode.UNDO &&
-			context.appliesTo(getModel().getConnectionPart().getMemberRole().getSet())) {
+		if (context.getModelChangeType() == ModelChangeType.SET_PROPERTY && context.isPropertySet(SchemaPackage.eINSTANCE.getSet_Name()) &&
+			context.getCommandExecutionMode() != CommandExecutionMode.UNDO && context.appliesTo(getModel().getConnectionPart().getMemberRole().getSet())) {
 					
-			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's 
-			// listener's data so that we can respond to this when processing the after model change 
-			// event (so we can update the figure's tooltip)
+			// the model set's name is changing (execute/redo); put Boolean.TRUE in the context's listener's data
+			// so that we can respond to this when processing the after model change event (so we can update the
+			// figure's tooltip)
 			context.setListenerData(Boolean.TRUE);
 		}
 	}
@@ -114,19 +95,19 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 	
 	@Override
 	protected IFigure createFigure() {
-		Figure figure = new ConnectorFigure();
+		var figure = new ConnectorFigure();
 		
 		// add a tooltip containing the set's name...
         String adjustedSetName;
-        Set set = getModel().getConnectionPart().getMemberRole().getSet();
+        var set = getModel().getConnectionPart().getMemberRole().getSet();
         if (set.getName().endsWith("_")) {
-            StringBuilder p = new StringBuilder(set.getName());
+            var p = new StringBuilder(set.getName());
             p.setLength(p.length() - 1);
             adjustedSetName = p.toString();
         } else {
             adjustedSetName = set.getName();
         }
-        Label tooltip = new Label(adjustedSetName);
+        var tooltip = new Label(adjustedSetName);
         figure.setToolTip(tooltip);
         
         return figure;
@@ -136,29 +117,21 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 		return memberRole;
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
+	@Override	
 	protected List<ConnectionPart> getModelSourceConnections() {
-		MemberRole memberRole = getModel().getConnectionPart().getMemberRole();
-		if (getModel().getConnectionPart() == memberRole.getConnectionParts().get(1)) {
-			List<ConnectionPart> connectionParts = new ArrayList<>();
-			connectionParts.add(getModel().getConnectionPart());
-			return connectionParts;
+		if (getModel().getConnectionPart() == getModel().getConnectionPart().getMemberRole().getConnectionParts().get(1)) {
+			return List.of(getModel().getConnectionPart());
 		} else {
-			return Collections.EMPTY_LIST;
+			return List.of();
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected List<ConnectionPart> getModelTargetConnections() {
-		MemberRole memberRole = getModel().getConnectionPart().getMemberRole();
-		if (getModel().getConnectionPart() == memberRole.getConnectionParts().get(0)) {
-			List<ConnectionPart> connectionParts = new ArrayList<>();
-			connectionParts.add(getModel().getConnectionPart());
-			return connectionParts;
+		if (getModel().getConnectionPart() == getModel().getConnectionPart().getMemberRole().getConnectionParts().get(0)) {
+			return List.of(getModel().getConnectionPart());
 		} else {
-			return Collections.EMPTY_LIST;
+			return List.of();
 		}		
 	}
 
@@ -184,44 +157,46 @@ public class ConnectorEditPart extends AbstractNonResizableDiagramNodeEditPart<C
 	
 	@Override
 	public EditPart getTargetEditPart(Request request) {
-		
-		// we need to do something special ONLY in the case when adding a member record type to a
-		// (possibly already multiple-member) set...
-		if (!(request instanceof CreateConnectionRequest) ||
-			((CreateConnectionRequest) request).getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
-							
+		// we need to do something special ONLY in the case when adding a member record type to a (possibly
+		// already multiple-member) set...
+		if (!(request instanceof CreateConnectionRequest createConnectionRequest) || createConnectionRequest.getNewObjectType() != IMultipleMemberSetPlaceHolder.class) {
 			return super.getTargetEditPart(request);
 		}
 		
-		// ... if the user has already selected a set, just have the default behaviour proceed
-		CreateConnectionRequest cRequest = (CreateConnectionRequest) request;
+		// ...if the user has already selected a set, just have the default behaviour proceed
+		var cRequest = (CreateConnectionRequest) request;
 		if (cRequest.getSourceEditPart() != null) {			
 			return super.getTargetEditPart(request);			
 		}		
 		
-		// ...we want the line that is drawn, to start at the owner of the set, so 'redirect' to the
-		// connection label edit part and have that take care of everything
-		ConnectionLabel connectionLabel = memberRole.getConnectionLabel();
-		SetDescriptionEditPart setDescriptionEditPart = 
-			(SetDescriptionEditPart) getViewer().getEditPartRegistry().get(connectionLabel);
-		Assert.isNotNull(setDescriptionEditPart, "no edit part for set description: " + 
-						 memberRole.getSet().getName() + " (" + memberRole.getRecord(). getName() +
-						 ")");
+		// ...we want the line that is drawn, to start at the owner of the set, so 'redirect' to the connection
+		// label edit part and have that take care of everything
+		var connectionLabel = memberRole.getConnectionLabel();
+		var setDescriptionEditPart = (SetDescriptionEditPart) getViewer().getEditPartRegistry().get(connectionLabel);
+		Assert.isNotNull(setDescriptionEditPart, "no edit part for set description: " + memberRole.getSet().getName() +
+				" (" + memberRole.getRecord(). getName() + ")");
 		return setDescriptionEditPart;
 		
 	}	
 
 	@Override
 	protected void setFigureData() {
-		Connector connector = getModel();
-		ConnectorFigure figure = (ConnectorFigure) getFigure();
+		var connector = getModel();
+		var figure = (ConnectorFigure) getFigure();
 		figure.setLabel(connector.getLabel());
 		
-		// we need to manipulate the set name in the case of some dictionary sets (DDLCATLOD area, 
-		// which has the same structure as DDLDCLOD)...
-		Set set = getModel().getConnectionPart().getMemberRole().getSet();
-		String adjustedSetName = Tools.removeTrailingUnderscore(set.getName());
+		// we need to manipulate the set name in the case of some dictionary sets (DDLCATLOD area, which has the
+		// same structure as DDLDCLOD)...
+		var set = getModel().getConnectionPart().getMemberRole().getSet();
+		var adjustedSetName = Tools.removeTrailingUnderscore(set.getName());
 		figure.setName(adjustedSetName);
+	}
+	
+	@Override
+	protected void refreshConnections() {
+		var connectionPart = getModel().getConnectionPart();
+		var editPart = EditPart.class.cast(getViewer().getEditPartRegistry().get(connectionPart));
+		editPart.refresh();
 	}
 	
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,29 +24,22 @@ import org.lh.dmlj.schema.editor.importtool.AbstractRecordLayoutManager;
 
 public class StandardRecordLayoutManager extends AbstractRecordLayoutManager {
 
-	public StandardRecordLayoutManager() {
-		super();
-	}
-
 	@Override
-	public void layout(List<SchemaRecord> records, Properties configuredParms,
-					   Properties userParms) {
-		// since we know how many records the schema contains, compute the
-		// number of columns so that it is about the same as the number of 
-		// rows...
-		int columnCount = (int) Math.ceil(Math.sqrt((double) records.size()));
-		int maxX = getSuggestedLeftMargin() + 
-				   (columnCount - 1) * getSuggestedHorizontalIncrement();
-		int x = getSuggestedLeftMargin();
-		int y = getSuggestedTopMargin();
-		for (SchemaRecord record : records) {
-			setDiagramData(record, x, y);
+	public void layout(List<SchemaRecord> records, Properties configuredParms, Properties userParms) {
+		// since we know how many records the schema contains, compute the number of columns so that it is about
+		// the same as the number of rows...
+		var columnCount = (int) Math.ceil(Math.sqrt(records.size()));
+		var maxX = getSuggestedLeftMargin() + (columnCount - 1) * getSuggestedHorizontalIncrement();
+		var x = getSuggestedLeftMargin();
+		var y = getSuggestedTopMargin();
+		for (var schemaRecord : records) {
+			setDiagramData(schemaRecord, x, y);
 			x += getSuggestedHorizontalIncrement();
 			if (x > maxX) {
 				x = getSuggestedLeftMargin();
 				y += getSuggestedVerticalIncrement();
 			}
-		}		
+		}
 	}
 
 }

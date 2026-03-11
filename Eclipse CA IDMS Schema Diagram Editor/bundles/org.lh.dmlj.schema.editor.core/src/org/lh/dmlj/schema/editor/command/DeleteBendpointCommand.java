@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,26 +17,21 @@
 package org.lh.dmlj.schema.editor.command;
 
 import org.lh.dmlj.schema.ConnectionPart;
-import org.lh.dmlj.schema.DiagramData;
 import org.lh.dmlj.schema.DiagramLocation;
 
-public class DeleteBendpointCommand extends AbstractBendpointCommand {	
-	
-	protected ConnectionPart connectionPart;
+public class DeleteBendpointCommand extends AbstractBendpointCommand {
 	private DiagramLocation bendpoint;
 	
 	private int locationsIndex;
 	
 	public DeleteBendpointCommand(ConnectionPart connectionPart, int connectionPartIndex) {
 		super(connectionPart, connectionPartIndex);
-		this.connectionPart = connectionPart;
 	}
 	
 	@Override
 	public void execute() {
 		bendpoint = connectionPart.getBendpointLocations().get(connectionPartIndex);
-		DiagramData diagramData = 
-			connectionPart.getMemberRole().getSet().getSchema().getDiagramData();
+		var diagramData = connectionPart.getMemberRole().getSet().getSchema().getDiagramData();
 		locationsIndex = diagramData.getLocations().indexOf(bendpoint);
 		redo();
 	}	

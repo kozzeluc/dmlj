@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -16,6 +16,7 @@
  */
 package org.lh.dmlj.schema.editor.prefix;
 
+import static java.util.Comparator.comparing;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_INDEX;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_NEXT;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.MEMBER_OWNER;
@@ -24,31 +25,24 @@ import static org.lh.dmlj.schema.editor.prefix.PointerType.OWNER_NEXT;
 import static org.lh.dmlj.schema.editor.prefix.PointerType.OWNER_PRIOR;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.lh.dmlj.schema.MemberRole;
 import org.lh.dmlj.schema.OwnerRole;
 import org.lh.dmlj.schema.Role;
 import org.lh.dmlj.schema.SchemaRecord;
 
-public class PrefixUtil {
+public final class PrefixUtil {
 
-	static List<Pointer<?>> asSortedList(List<Pointer<?>> unsortedPointerList) {
-		List<Pointer<?>> sortedPointers = new ArrayList<>(unsortedPointerList);
-		Collections.sort(sortedPointers, new Comparator<Pointer<?>>() {
-			@Override
-			public int compare(Pointer<?> pointer1, Pointer<?> pointer2) {
-				return pointer1.getCurrentPositionInPrefix() - 
-					   pointer2.getCurrentPositionInPrefix();
-			}			
-		});	
-		return sortedPointers;
+	static List<Pointer> asSortedList(List<Pointer> unsortedPointerList) {
+		return unsortedPointerList.stream()
+				.sorted(comparing(Pointer::getCurrentPositionInPrefix))
+				.toList();
 	}
 
 	public static PointerType[] getDefinedPointerTypes(MemberRole role) {
-		List<PointerType> pointersToRemoveInMember = new ArrayList<>();		
+		var pointersToRemoveInMember = new ArrayList<PointerType>();		
 		if (role.getNextDbkeyPosition() != null) {
 			pointersToRemoveInMember.add(PointerType.MEMBER_NEXT);
 		}
@@ -61,72 +55,61 @@ public class PrefixUtil {
 		if (role.getIndexDbkeyPosition() != null) {
 			pointersToRemoveInMember.add(PointerType.MEMBER_INDEX);
 		}
-		PointerType[] pointersToRemoveAsArray = 
-			pointersToRemoveInMember.toArray(new PointerType[] {});		
-		return pointersToRemoveAsArray;	
+		return pointersToRemoveInMember.toArray(new PointerType[] {});
 	}
 	
 	public static PointerType[] getDefinedPointerTypes(OwnerRole role) {
-		List<PointerType> pointersToRemoveInOwner = new ArrayList<>();		
+		var pointersToRemoveInOwner = new ArrayList<PointerType>();		
 		if (role.getNextDbkeyPosition() != 0) {
 			pointersToRemoveInOwner.add(PointerType.OWNER_NEXT);
 		}
 		if (role.getPriorDbkeyPosition() != null) {
 			pointersToRemoveInOwner.add(PointerType.OWNER_PRIOR);
 		}
-		PointerType[] pointersToRemoveAsArray = 
-			pointersToRemoveInOwner.toArray(new PointerType[] {});
-		return pointersToRemoveAsArray;
+		return pointersToRemoveInOwner.toArray(new PointerType[] {});
 	}	
 	
-	static Pointer<?> getPointer(List<Pointer<?>> pointers, PointerDescription desired) {
-		for (Pointer<?> pointer : pointers) {
-			if (pointer.getSetName().equals(desired.getSetName()) &&
-				pointer.getType() == desired.getPointerType()) {
-				
-				return pointer;
-			}
-		}
-		throw new IllegalArgumentException("not found: " + desired.toString());
+	static Pointer getPointer(List<Pointer> pointers, PointerDescription desired) {
+		return pointers.stream()
+				.filter(pointer -> pointer.getSetName().equals(desired.getSetName()))
+				.filter(pointer -> pointer.getType() == desired.getPointerType())
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("not found: " + desired.toString()));
 	}
 	
-	public static List<PointerDescription> getPointerDescriptions(SchemaRecord record) {
-		List<PointerDescription> pointerDescriptions = new ArrayList<>();
-		for (Pointer<?> pointer : PrefixFactory.newPrefixForInquiry(record).getPointers()) {
-			PointerDescription pointerDescription = 
-				new PointerDescription(pointer.getSetName(), pointer.getType());
-			pointerDescriptions.add(pointerDescription);
-		}
-		return pointerDescriptions;
+	public static List<PointerDescription> getPointerDescriptions(SchemaRecord schemaRecord) {
+		return PrefixFactory.newPrefixForInquiry(schemaRecord).getPointers().stream()
+				.map(pointer -> new PointerDescription(pointer.getSetName(), pointer.getType()))
+				.toList();
 	}
 	
-	static List<Pointer<?>> getPointersForRecord(SchemaRecord record) {
-		List<Pointer<?>> pointers = new ArrayList<>();
-		for (OwnerRole ownerRole : record.getOwnerRoles()) {
-			Pointer<OwnerRole> ownerNext = PointerFactory.newPointer(ownerRole, OWNER_NEXT);
+	static List<Pointer> getPointersForRecord(SchemaRecord schemaRecord) {
+		var pointers = new ArrayList<Pointer>();
+		for (var ownerRole : schemaRecord.getOwnerRoles()) {
+			var ownerNext = PointerFactory.newPointer(ownerRole, OWNER_NEXT);
 			if (ownerNext.getCurrentPositionInPrefix() != null) {
 				// this should always be the case but we do not enforce it
 				pointers.add(ownerNext);
 			}
-			Pointer<OwnerRole> ownerPrior = PointerFactory.newPointer(ownerRole, OWNER_PRIOR);
+			var ownerPrior = PointerFactory.newPointer(ownerRole, OWNER_PRIOR);
 			if (ownerPrior.getCurrentPositionInPrefix() != null) {
 				pointers.add(ownerPrior);
 			}
 		}
-		for (MemberRole memberRole : record.getMemberRoles()) {
-			Pointer<MemberRole> memberNext = PointerFactory.newPointer(memberRole, MEMBER_NEXT);
+		for (var memberRole : schemaRecord.getMemberRoles()) {
+			var memberNext = PointerFactory.newPointer(memberRole, MEMBER_NEXT);
 			if (memberNext.getCurrentPositionInPrefix() != null) {
 				pointers.add(memberNext);
 			}	
-			Pointer<MemberRole> memberPrior = PointerFactory.newPointer(memberRole, MEMBER_PRIOR);
+			var memberPrior = PointerFactory.newPointer(memberRole, MEMBER_PRIOR);
 			if (memberPrior.getCurrentPositionInPrefix() != null) {
 				pointers.add(memberPrior);
 			}
-			Pointer<MemberRole> memberOwner = PointerFactory.newPointer(memberRole, MEMBER_OWNER);
+			var memberOwner = PointerFactory.newPointer(memberRole, MEMBER_OWNER);
 			if (memberOwner.getCurrentPositionInPrefix() != null) {
 				pointers.add(memberOwner);
 			}
-			Pointer<MemberRole> memberIndex = PointerFactory.newPointer(memberRole, MEMBER_INDEX);
+			var memberIndex = PointerFactory.newPointer(memberRole, MEMBER_INDEX);
 			if (memberIndex.getCurrentPositionInPrefix() != null) {
 				pointers.add(memberIndex);
 			}
@@ -135,21 +118,18 @@ public class PrefixUtil {
 	}
 	
 	static <T extends Role> Short getPositionInPrefix(T role, PointerType type) {
-		
 		if (!isPointerTypeValid(role, type)) {
 			throw new IllegalArgumentException("no pointer of type " + type + " for " + role);
 		}
-		
-		if (role instanceof OwnerRole) {
-			OwnerRole ownerRole = (OwnerRole) role;
+		if (role instanceof OwnerRole ownerRole) {
 			if (type == OWNER_NEXT) {
-				short nextDbkeyPosition = ownerRole.getNextDbkeyPosition();
+				var nextDbkeyPosition = ownerRole.getNextDbkeyPosition();
 				return nextDbkeyPosition != 0 ? Short.valueOf(nextDbkeyPosition) : null;
 			} else {
 				return ownerRole.getPriorDbkeyPosition();
 			}
 		} else {
-			MemberRole memberRole = (MemberRole) role;
+			var memberRole = (MemberRole) role;
 			if (type == MEMBER_NEXT) {
 				return memberRole.getNextDbkeyPosition();
 			} else if (type == MEMBER_PRIOR) {
@@ -160,46 +140,33 @@ public class PrefixUtil {
 				return memberRole.getIndexDbkeyPosition();
 			}
 		}
-		
 	}	
 	
-	static boolean isPointerListConsistent(List<Pointer<?>> pointers) {
-		for (int i = 0; i < pointers.size(); i++) {
-			if (pointers.get(i).getCurrentPositionInPrefix() != (i + 1)) {
-				return false;
-			}
-		}
-		return true;
+	static boolean isPointerListConsistent(List<Pointer> pointers) {
+		return IntStream.range(0, pointers.size())
+				.allMatch(i -> pointers.get(i).getCurrentPositionInPrefix() == i + 1);
 	}
 	
 	static <T extends Role> boolean isPointerTypeValid(T role, PointerType type) {
-		return role instanceof OwnerRole && (type == OWNER_NEXT || type == OWNER_PRIOR) ||
-			   role instanceof MemberRole && (type == MEMBER_NEXT || type == MEMBER_PRIOR  || 
-										      type == MEMBER_OWNER  || type == MEMBER_INDEX);		
+		return role instanceof OwnerRole && (type == OWNER_NEXT || type == OWNER_PRIOR) || 
+			   role instanceof MemberRole && (type == MEMBER_NEXT || type == MEMBER_PRIOR || type == MEMBER_OWNER  || type == MEMBER_INDEX);
 	}
 	
 	static boolean isPositionInPrefixValid(short positionInPrefix) {
 		return positionInPrefix > 0 && positionInPrefix < 8181;
 	}
 	
-	public static void reorder(List<Pointer<?>> pointers, List<PointerDescription> desiredOrder) {
-		List<Pointer<?>> newPointerOrder = new ArrayList<>();
-		for (PointerDescription pointerDescription : desiredOrder) {
-			newPointerOrder.add(getPointer(pointers, pointerDescription));
-		}
-		pointers.clear();
-		pointers.addAll(newPointerOrder);
+	public static List<Pointer> reorder(List<Pointer> pointers, List<PointerDescription> desiredOrder) {
+		return desiredOrder.stream()
+				.map(pointerDescription -> getPointer(pointers, pointerDescription))
+				.toList();
 	}
 	
-	static <T extends Role> void setPositionInPrefix(T role, PointerType type,
-															Short newPositionInPrefix) {
-	
+	static <T extends Role> void setPositionInPrefix(T role, PointerType type, Short newPositionInPrefix) {
 		if (!isPointerTypeValid(role, type)) {
 			throw new IllegalArgumentException("no pointer of type " + type + " for " + role);
-		}	
-		
-		if (role instanceof OwnerRole) {
-			OwnerRole ownerRole = (OwnerRole) role;
+		}		
+		if (role instanceof OwnerRole ownerRole) {
 			if (type == OWNER_NEXT) {				
 				if (newPositionInPrefix != null) {
 					ownerRole.setNextDbkeyPosition(newPositionInPrefix.shortValue());
@@ -210,7 +177,7 @@ public class PrefixUtil {
 				ownerRole.setPriorDbkeyPosition(newPositionInPrefix);
 			}
 		} else {
-			MemberRole memberRole = (MemberRole) role;
+			var memberRole = (MemberRole) role;
 			if (type == MEMBER_NEXT) {
 				memberRole.setNextDbkeyPosition(newPositionInPrefix);
 			} else if (type == MEMBER_PRIOR) {
@@ -222,6 +189,9 @@ public class PrefixUtil {
 			}
 		}		
 		
+	}
+	
+	private PrefixUtil() {
 	}
 	
 }

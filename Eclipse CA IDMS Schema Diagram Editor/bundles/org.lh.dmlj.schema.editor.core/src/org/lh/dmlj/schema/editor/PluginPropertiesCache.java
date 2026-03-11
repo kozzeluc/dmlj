@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -17,7 +17,6 @@
 package org.lh.dmlj.schema.editor;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -27,32 +26,31 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 
-public abstract class PluginPropertiesCache {
-
+public final class PluginPropertiesCache {
 	private static final String PLUGIN_PROPERTIES = "plugin.properties";
 	
 	private static Map<String, PropertyResourceBundle> map = new HashMap<>();
 
 	public static String get(Plugin plugin, String key) {		
-		String bundleSymbolicName = plugin.getBundle().getSymbolicName(); 
+		var bundleSymbolicName = plugin.getBundle().getSymbolicName(); 
 		if (!map.containsKey(bundleSymbolicName)) {
 			// load the plugin.properties file from the given plug-in:
-			try {
-				InputStream in = 
-					FileLocator.openStream(plugin.getBundle(), new Path(PLUGIN_PROPERTIES), false);
-				PropertyResourceBundle propertyResourceBundle = new PropertyResourceBundle(in);
-				in.close();
+			try (var in = FileLocator.openStream(plugin.getBundle(), new Path(PLUGIN_PROPERTIES), false)) {				
+				var propertyResourceBundle = new PropertyResourceBundle(in);
 				map.put(bundleSymbolicName, propertyResourceBundle);				
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				throw new IllegalStateException(e);
 			}
 		}
-		PropertyResourceBundle propertyResourceBundle = map.get(bundleSymbolicName);
+		var propertyResourceBundle = map.get(bundleSymbolicName);
 		try {
 			return propertyResourceBundle.getString(key);
 		} catch (MissingResourceException e) {
 			return null;
 		}
+	}
+	
+	private PluginPropertiesCache() {
 	}
 	
 }

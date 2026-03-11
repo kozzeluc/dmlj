@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -24,34 +24,29 @@ import org.eclipse.draw2d.text.ParagraphTextLayout;
 import org.eclipse.draw2d.text.TextFlow;
 import org.lh.dmlj.schema.editor.Plugin;
 
-public class SetDescriptionFigure extends Figure {	
-	
-	// We append each line in the set description with 2 spaces; if we don't 
-	// this, a weird kind of truncation takes place on the longest line.  Since 
-	// we currently don't offer the ability to edit a set description, the user 
-	// will not notice this.
+public class SetDescriptionFigure extends Figure {
+	// We append each line in the set description with 2 spaces; if we don'tdo  this, a weird kind of truncation
+	// takes place on the longest line. Since we currently don't offer the ability to edit a set description, the
+	// user will not notice this.
 	private static final String FILLER = "  ";
 	
 	private TextFlow textFlow;
 	
-	private String   name;
-	private String 	 pointers;
-	private String 	 membershipOption;
-	private String   order;
-	private String	 sortKeys;
-	private String	 systemOwnerArea;
+	private String name;
+	private String pointers;
+	private String membershipOption;
+	private String order;
+	private String sortKeys;
+	private String systemOwnerArea;
 	
 	public SetDescriptionFigure() {
-		super();		
-		
 		setOpaque(true);
 		
-		FlowPage flowPage = new FlowPage();
+		var flowPage = new FlowPage();
 		
 		textFlow = new TextFlow();
 		textFlow.setFont(Plugin.getDefault().getFigureFont());
-		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow,
-													      ParagraphTextLayout.WORD_WRAP_SOFT));		
+		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_SOFT));
 		
 		flowPage.add(textFlow);
 		
@@ -68,8 +63,7 @@ public class SetDescriptionFigure extends Figure {
 	public void setName(String name) {
 		this.name = name;
 		setTextFlowText();
-		Label tooltip = new Label(name);
-		setToolTip(tooltip);
+		setToolTip(new Label(name));
 	}
 
 	public void setOrder(String order) {
@@ -94,7 +88,7 @@ public class SetDescriptionFigure extends Figure {
 	}
 
 	private void setTextFlowText() {
-		StringBuilder p = new StringBuilder();
+		var p = new StringBuilder();
 		
 		p.append(name);
 		p.append(FILLER);

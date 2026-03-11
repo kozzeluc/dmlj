@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -18,14 +18,9 @@ package org.lh.dmlj.schema.editor.importtool;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.lh.dmlj.schema.editor.wizard._import.schema.Context;
-import org.lh.dmlj.schema.editor.wizard._import.schema.Controller;
 
 public abstract class AbstractDataEntryPage {
-
-	@Context
-	private IDataEntryContext 		 context;
-	@Controller
+	private IDataEntryContext context;
 	private IDataEntryPageController controller;
 
 	public void aboutToShow() {		
@@ -46,6 +41,14 @@ public abstract class AbstractDataEntryPage {
 
 	public boolean isPageRelevant() {
 		return true;
-	}	
+	}
+	
+	public void setContext(IDataEntryContext context) {
+		this.context = context;
+	}
+	
+	public void setController(IDataEntryPageController controller) {
+		this.controller = controller;
+	}
 
 }

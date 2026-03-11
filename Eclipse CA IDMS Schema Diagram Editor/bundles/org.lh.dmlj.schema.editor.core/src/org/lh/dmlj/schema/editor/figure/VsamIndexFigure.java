@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -21,25 +21,22 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
 
 public class VsamIndexFigure extends PolygonShape {
-	
 	public static final int UNSCALED_HEIGHT = 22;
 	public static final int UNSCALED_WIDTH = 22;
 	
-	
 	public VsamIndexFigure() {
-		super();
-		
 		setOpaque(true);
 		
 		setLineStyle(SWT.LINE_DASH);
 		
-		Rectangle r = new Rectangle(0, 0, UNSCALED_WIDTH, UNSCALED_HEIGHT);
-		setStart(r.getTopLeft());
-		addPoint(r.getTopLeft());
-		addPoint(r.getTopRight());
-		addPoint(r.getBottom());
-		addPoint(r.getTopLeft());
-		setEnd(r.getTopLeft());
-		setPreferredSize(r.getSize().expand(1, 1));
+		var rectangle = new Rectangle(0, 0, UNSCALED_WIDTH, UNSCALED_HEIGHT);
+		setStart(rectangle.getTopLeft());
+		addPoint(rectangle.getTopLeft());
+		addPoint(rectangle.getTopRight());
+		addPoint(rectangle.getBottom());
+		addPoint(rectangle.getTopLeft());
+		setEnd(rectangle.getTopLeft());
+		setPreferredSize(rectangle.getSize().expand(1, 1));
 	}
+	
 }

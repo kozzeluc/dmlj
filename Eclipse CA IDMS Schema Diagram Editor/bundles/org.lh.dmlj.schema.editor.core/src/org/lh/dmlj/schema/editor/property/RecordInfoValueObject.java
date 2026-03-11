@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Luc Hermans
+ * Copyright (C) 2025  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -20,22 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecordInfoValueObject {
-
-	private String  					 description;
-	private List<ElementInfoValueObject> elementInfoValueObjects = new ArrayList<>();
-	private String  					 establishedBy;
-	private String  					 documentId;	
-	private String  					 documentName;
-	private String  					 locationMode;
-	private String  					 memberOf;
-	private String  					 ownerOf;
-	private String						 recordLength;
-	private String  				  	 recordName;
-	private String  					 withinArea;
+	private final List<ElementInfoValueObject> elementInfoValueObjects = new ArrayList<>();
 	
-	public RecordInfoValueObject() {
-		super();
-	}
+	private String description;
+	private String establishedBy;
+	private String documentId;	
+	private String documentName;
+	private String locationMode;
+	private String memberOf;
+	private String ownerOf;
+	private String recordLength;
+	private String recordName;
+	private String withinArea;
 
 	public String getDescription() {
 		return description;
