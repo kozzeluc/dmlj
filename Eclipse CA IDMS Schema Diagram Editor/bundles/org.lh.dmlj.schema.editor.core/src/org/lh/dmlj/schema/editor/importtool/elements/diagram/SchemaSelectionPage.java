@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2025  Luc Hermans
+ * Copyright (C) 2026  Luc Hermans
  * 
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -22,9 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -47,6 +44,7 @@ import org.eclipse.ui.PlatformUI;
 import org.lh.dmlj.schema.Schema;
 import org.lh.dmlj.schema.SchemaRecord;
 import org.lh.dmlj.schema.editor.SchemaEditor;
+import org.lh.dmlj.schema.editor.common.Tools;
 import org.lh.dmlj.schema.editor.importtool.AbstractDataEntryPage;
 import org.lh.dmlj.schema.editor.importtool.IDataEntryContext;
 
@@ -118,16 +116,7 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		btnBrowse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				var fileDialog = new FileDialog(Display.getCurrent().getActiveShell());
-				fileDialog.setText("Select a .schema File");
-				fileDialog.setFileName(textFileSystem.getText());
-				fileDialog.setFilterExtensions(new String[] {"*.schema"});
-				var newValue = fileDialog.open();							
-				if (newValue != null) {
-					textFileSystem.setText(newValue);
-					textFileSystem.redraw();
-					validate();
-				}
+				selectSchemaOrSchemadslFile();
 			}
 		});
 		btnBrowse.setText("Browse...");
@@ -136,6 +125,19 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 		validate();
 		
 		return container;
+	}
+	
+	private void selectSchemaOrSchemadslFile() {
+		var fileDialog = new FileDialog(Display.getCurrent().getActiveShell());
+		fileDialog.setText("Select a .schema File");
+		fileDialog.setFileName(textFileSystem.getText());
+		fileDialog.setFilterExtensions(new String[] { "*.*", "*.schema", "*.schemadsl" });
+		var newValue = fileDialog.open();
+		if (newValue != null) {
+			textFileSystem.setText(newValue);
+			textFileSystem.redraw();
+			validate();
+		}
 	}
 
 	private void enableAndDisable() {
@@ -208,12 +210,8 @@ public class SchemaSelectionPage extends AbstractDataEntryPage {
 				pageComplete = false;
 			} else {
 				try {
-					var resourceSet = new ResourceSetImpl();
-					resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("schema", new XMIResourceFactoryImpl());
 					var schemaFile = new File(textFileSystem.getText());
-					var uri = URI.createFileURI(schemaFile.getAbsolutePath());
-					var resource = resourceSet.getResource(uri, true);
-					var schema = (Schema) resource.getContents().get(0);					
+					var schema = Tools.readFromFile(schemaFile);
 					if (currentSchemaFile.equals(schemaFile) && !currentEditor.isDirty()) {
 						// use the current schema if the current editor is not dirty
 						getContext().setAttribute(IDataEntryContext.SCHEMA, currentSchema);
